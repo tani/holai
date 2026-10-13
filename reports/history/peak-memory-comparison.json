@@ -1,0 +1,43 @@
+{
+  "metric": "peak resident set size from Linux wait4 ru_maxrss; KiB; per child process",
+  "runs": [
+    {
+      "variant": "baseline",
+      "peak_rss_kib": 245556,
+      "peak_rss_mib": 239.801,
+      "elapsed_seconds": 286.73,
+      "user_seconds": 278.06,
+      "system_seconds": 8.463,
+      "compiled_source_files": 0,
+      "loaded_core_files": 46,
+      "fresh_process": true,
+      "restored_heap": false,
+      "initial_counts": {
+        "types": 22,
+        "constants": 303,
+        "definitions": 263,
+        "axioms": 3
+      }
+    },
+    {
+      "variant": "defunc",
+      "peak_rss_kib": 205384,
+      "peak_rss_mib": 200.57,
+      "elapsed_seconds": 114.337,
+      "user_seconds": 109.28,
+      "system_seconds": 4.785,
+      "compiled_source_files": 0,
+      "loaded_core_files": 46,
+      "fresh_process": true,
+      "restored_heap": false,
+      "initial_counts": {
+        "types": 22,
+        "constants": 303,
+        "definitions": 263,
+        "axioms": 3
+      }
+    }
+  ],
+  "peak_rss_reduction_percent": 16.36,
+  "measurement_scope": "whole SBCL process; compiled-file-only full standard-core initialization and exit; one sequential run per variant"
+}

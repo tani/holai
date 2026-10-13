@@ -1,0 +1,10 @@
+* text=auto
+*.ml text eol=lf
+*.lisp text eol=lf
+*.asd text eol=lf
+*.py text eol=lf
+*.sh text eol=lf
+*.md text eol=lf
+*.json text eol=lf
+Makefile text eol=lf
+/vendor/** -text

@@ -1,0 +1,478 @@
+{
+  "compiler": "4.14.1",
+  "compiler_command": [
+    "ocamlopt",
+    "-w",
+    "-a",
+    "-pp",
+    "camlp5r -I /workspace/scratch/6bf0bb049b86/toolchain/root/usr/lib/ocaml/camlp5 -I /workspace/scratch/6bf0bb049b86/hol2cl-defunc-experiment/_build pa_j.cmo",
+    "unix.cmxa",
+    "nums.cmxa",
+    "/workspace/scratch/6bf0bb049b86/hol2cl-defunc-experiment/_build/native-startup/native_startup.ml",
+    "-o",
+    "/workspace/scratch/6bf0bb049b86/hol2cl-defunc-experiment/_build/native-startup/native-startup"
+  ],
+  "compiler_flags": "default ocamlopt optimization; -w -a suppresses warnings",
+  "compiled_source_files_during_timed_run": 0,
+  "core_files": [
+    "system.ml",
+    "lib.ml",
+    "fusion.ml",
+    "basics.ml",
+    "nets.ml",
+    "printer.ml",
+    "preterm.ml",
+    "parser.ml",
+    "equal.ml",
+    "bool.ml",
+    "drule.ml",
+    "tactics.ml",
+    "itab.ml",
+    "simp.ml",
+    "theorems.ml",
+    "ind_defs.ml",
+    "class.ml",
+    "trivia.ml",
+    "canon.ml",
+    "meson.ml",
+    "firstorder.ml",
+    "metis.ml",
+    "thecops.ml",
+    "quot.ml",
+    "impconv.ml",
+    "pair.ml",
+    "compute.ml",
+    "nums.ml",
+    "recursion.ml",
+    "arith.ml",
+    "wf.ml",
+    "calc_num.ml",
+    "normalizer.ml",
+    "grobner.ml",
+    "ind_types.ml",
+    "lists.ml",
+    "realax.ml",
+    "calc_int.ml",
+    "realarith.ml",
+    "real.ml",
+    "calc_rat.ml",
+    "int.ml",
+    "sets.ml",
+    "iterate.ml",
+    "cart.ml",
+    "define.ml"
+  ],
+  "source_pins_unchanged": true,
+  "compile_seconds": 21.490420037996955,
+  "compiler_stack_mib": 64,
+  "source_sha256": "34279296f4a7a001f4e8ff0238d27d086b06d28af4bf57e548c0fb6d0c73a95f",
+  "runs": [
+    {
+      "run": 1,
+      "initialization_wall_seconds": 13.715221882,
+      "initialization_cpu_seconds": 13.711138,
+      "wall_seconds_start_to_exit": 13.727247470000293,
+      "user_seconds": 13.663524,
+      "system_seconds": 0.052787999999999995,
+      "peak_rss_kib": 43748,
+      "peak_rss_mib": 42.72265625,
+      "initial_counts": [
+        22,
+        303,
+        263,
+        3
+      ],
+      "normalized_initialization_matches": true
+    },
+    {
+      "run": 2,
+      "initialization_wall_seconds": 13.780887127,
+      "initialization_cpu_seconds": 13.777866,
+      "wall_seconds_start_to_exit": 13.793656795998686,
+      "user_seconds": 13.747342,
+      "system_seconds": 0.036112,
+      "peak_rss_kib": 43520,
+      "peak_rss_mib": 42.5,
+      "initial_counts": [
+        22,
+        303,
+        263,
+        3
+      ],
+      "normalized_initialization_matches": true
+    },
+    {
+      "run": 3,
+      "initialization_wall_seconds": 13.561510086,
+      "initialization_cpu_seconds": 13.555285,
+      "wall_seconds_start_to_exit": 13.576965223997831,
+      "user_seconds": 13.486521,
+      "system_seconds": 0.075997,
+      "peak_rss_kib": 43364,
+      "peak_rss_mib": 42.34765625,
+      "initial_counts": [
+        22,
+        303,
+        263,
+        3
+      ],
+      "normalized_initialization_matches": true
+    }
+  ],
+  "medians": {
+    "initialization_wall_seconds": 13.715221882,
+    "initialization_cpu_seconds": 13.711138,
+    "wall_seconds_start_to_exit": 13.727247470000293,
+    "peak_rss_mib": 42.5
+  },
+  "peak_metric": "Linux wait4.ru_maxrss, KiB, per child",
+  "sbcl_historical": {
+    "variant": "defunc-list-tuples",
+    "fresh_process": true,
+    "restored_heap": false,
+    "compiled_source_files": 0,
+    "loaded_core_files": 46,
+    "wall_seconds_start_to_exit": 93.567,
+    "user_seconds": 89.672,
+    "system_seconds": 3.854,
+    "peak_rss_kib": 204012,
+    "peak_rss_mib": 199.23,
+    "peak_metric": "Linux wait4.ru_maxrss, KiB, per child",
+    "load_wall_seconds_sum": 93.307,
+    "load_cpu_seconds_sum": 93.273,
+    "load_gc_seconds_sum": 5.432,
+    "load_allocated_bytes_sum": 113611745136,
+    "initial_counts": {
+      "types": 22,
+      "constants": 303,
+      "definitions": 263,
+      "axioms": 3
+    },
+    "source_files": [
+      {
+        "file": "system.ml",
+        "wall_seconds": 0.0,
+        "cpu_seconds": 0.000182,
+        "gc_seconds": 0.0,
+        "allocated_bytes": 32768
+      },
+      {
+        "file": "lib.ml",
+        "wall_seconds": 0.0,
+        "cpu_seconds": 0.002608,
+        "gc_seconds": 0.0,
+        "allocated_bytes": 669216
+      },
+      {
+        "file": "fusion.ml",
+        "wall_seconds": 0.004,
+        "cpu_seconds": 0.002549,
+        "gc_seconds": 0.0,
+        "allocated_bytes": 726320
+      },
+      {
+        "file": "basics.ml",
+        "wall_seconds": 0.0,
+        "cpu_seconds": 0.001817,
+        "gc_seconds": 0.0,
+        "allocated_bytes": 248688
+      },
+      {
+        "file": "nets.ml",
+        "wall_seconds": 0.008,
+        "cpu_seconds": 0.004284,
+        "gc_seconds": 0.0,
+        "allocated_bytes": 1154880
+      },
+      {
+        "file": "printer.ml",
+        "wall_seconds": 0.0,
+        "cpu_seconds": 0.002804,
+        "gc_seconds": 0.0,
+        "allocated_bytes": 549456
+      },
+      {
+        "file": "preterm.ml",
+        "wall_seconds": 0.004,
+        "cpu_seconds": 0.002366,
+        "gc_seconds": 0.0,
+        "allocated_bytes": 790800
+      },
+      {
+        "file": "parser.ml",
+        "wall_seconds": 0.0,
+        "cpu_seconds": 0.001729,
+        "gc_seconds": 0.0,
+        "allocated_bytes": 702272
+      },
+      {
+        "file": "equal.ml",
+        "wall_seconds": 0.004,
+        "cpu_seconds": 0.000967,
+        "gc_seconds": 0.0,
+        "allocated_bytes": 222176
+      },
+      {
+        "file": "bool.ml",
+        "wall_seconds": 0.016001,
+        "cpu_seconds": 0.015946,
+        "gc_seconds": 0.0,
+        "allocated_bytes": 25697984
+      },
+      {
+        "file": "drule.ml",
+        "wall_seconds": 0.0,
+        "cpu_seconds": 0.002792,
+        "gc_seconds": 0.0,
+        "allocated_bytes": 588736
+      },
+      {
+        "file": "tactics.ml",
+        "wall_seconds": 0.004,
+        "cpu_seconds": 0.003632,
+        "gc_seconds": 0.0,
+        "allocated_bytes": 1827808
+      },
+      {
+        "file": "itab.ml",
+        "wall_seconds": 0.0,
+        "cpu_seconds": 0.000336,
+        "gc_seconds": 0.0,
+        "allocated_bytes": 63504
+      },
+      {
+        "file": "simp.ml",
+        "wall_seconds": 0.020001,
+        "cpu_seconds": 0.017677,
+        "gc_seconds": 0.011941,
+        "allocated_bytes": 4568864
+      },
+      {
+        "file": "theorems.ml",
+        "wall_seconds": 0.188005,
+        "cpu_seconds": 0.188573,
+        "gc_seconds": 0.025877,
+        "allocated_bytes": 204009760
+      },
+      {
+        "file": "ind_defs.ml",
+        "wall_seconds": 0.004,
+        "cpu_seconds": 0.005321,
+        "gc_seconds": 0.0,
+        "allocated_bytes": 3867456
+      },
+      {
+        "file": "class.ml",
+        "wall_seconds": 0.104004,
+        "cpu_seconds": 0.10485,
+        "gc_seconds": 0.007898,
+        "allocated_bytes": 125466112
+      },
+      {
+        "file": "trivia.ml",
+        "wall_seconds": 0.016,
+        "cpu_seconds": 0.013914,
+        "gc_seconds": 0.0,
+        "allocated_bytes": 20527152
+      },
+      {
+        "file": "canon.ml",
+        "wall_seconds": 0.044001,
+        "cpu_seconds": 0.042786,
+        "gc_seconds": 0.002367,
+        "allocated_bytes": 60264832
+      },
+      {
+        "file": "meson.ml",
+        "wall_seconds": 0.016001,
+        "cpu_seconds": 0.016875,
+        "gc_seconds": 0.002358,
+        "allocated_bytes": 15392928
+      },
+      {
+        "file": "firstorder.ml",
+        "wall_seconds": 0.0,
+        "cpu_seconds": 0.000969,
+        "gc_seconds": 0.0,
+        "allocated_bytes": 190144
+      },
+      {
+        "file": "metis.ml",
+        "wall_seconds": 0.064002,
+        "cpu_seconds": 0.062072,
+        "gc_seconds": 0.0,
+        "allocated_bytes": 29104224
+      },
+      {
+        "file": "thecops.ml",
+        "wall_seconds": 0.016,
+        "cpu_seconds": 0.016496,
+        "gc_seconds": 0.0,
+        "allocated_bytes": 16562608
+      },
+      {
+        "file": "quot.ml",
+        "wall_seconds": 0.180006,
+        "cpu_seconds": 0.182402,
+        "gc_seconds": 0.042217,
+        "allocated_bytes": 141491888
+      },
+      {
+        "file": "impconv.ml",
+        "wall_seconds": 0.056001,
+        "cpu_seconds": 0.052322,
+        "gc_seconds": 0.002577,
+        "allocated_bytes": 68992272
+      },
+      {
+        "file": "pair.ml",
+        "wall_seconds": 0.216006,
+        "cpu_seconds": 0.219437,
+        "gc_seconds": 0.013146,
+        "allocated_bytes": 265061872
+      },
+      {
+        "file": "compute.ml",
+        "wall_seconds": 0.008001,
+        "cpu_seconds": 0.007351,
+        "gc_seconds": 0.0,
+        "allocated_bytes": 4222256
+      },
+      {
+        "file": "nums.ml",
+        "wall_seconds": 0.080003,
+        "cpu_seconds": 0.076741,
+        "gc_seconds": 0.00571,
+        "allocated_bytes": 95454816
+      },
+      {
+        "file": "recursion.ml",
+        "wall_seconds": 0.0,
+        "cpu_seconds": 0.000473,
+        "gc_seconds": 0.0,
+        "allocated_bytes": 95904
+      },
+      {
+        "file": "arith.ml",
+        "wall_seconds": 3.680112,
+        "cpu_seconds": 3.67949,
+        "gc_seconds": 0.221266,
+        "allocated_bytes": 4965162096
+      },
+      {
+        "file": "wf.ml",
+        "wall_seconds": 2.668081,
+        "cpu_seconds": 2.665117,
+        "gc_seconds": 0.1646,
+        "allocated_bytes": 3388525072
+      },
+      {
+        "file": "calc_num.ml",
+        "wall_seconds": 3.64411,
+        "cpu_seconds": 3.643599,
+        "gc_seconds": 0.245187,
+        "allocated_bytes": 4259643104
+      },
+      {
+        "file": "normalizer.ml",
+        "wall_seconds": 0.31201,
+        "cpu_seconds": 0.311422,
+        "gc_seconds": 0.02236,
+        "allocated_bytes": 376022640
+      },
+      {
+        "file": "grobner.ml",
+        "wall_seconds": 0.34001,
+        "cpu_seconds": 0.341264,
+        "gc_seconds": 0.019859,
+        "allocated_bytes": 512284848
+      },
+      {
+        "file": "ind_types.ml",
+        "wall_seconds": 0.496015,
+        "cpu_seconds": 0.493686,
+        "gc_seconds": 0.032472,
+        "allocated_bytes": 493752560
+      },
+      {
+        "file": "lists.ml",
+        "wall_seconds": 1.68005,
+        "cpu_seconds": 1.681831,
+        "gc_seconds": 0.086927,
+        "allocated_bytes": 1933476304
+      },
+      {
+        "file": "realax.ml",
+        "wall_seconds": 1.152036,
+        "cpu_seconds": 1.152168,
+        "gc_seconds": 0.066749,
+        "allocated_bytes": 1464767888
+      },
+      {
+        "file": "calc_int.ml",
+        "wall_seconds": 0.528016,
+        "cpu_seconds": 0.529157,
+        "gc_seconds": 0.036539,
+        "allocated_bytes": 852271600
+      },
+      {
+        "file": "realarith.ml",
+        "wall_seconds": 1.068032,
+        "cpu_seconds": 1.066972,
+        "gc_seconds": 0.076421,
+        "allocated_bytes": 1185184640
+      },
+      {
+        "file": "real.ml",
+        "wall_seconds": 4.696143,
+        "cpu_seconds": 4.691423,
+        "gc_seconds": 0.249396,
+        "allocated_bytes": 5874924896
+      },
+      {
+        "file": "calc_rat.ml",
+        "wall_seconds": 2.096063,
+        "cpu_seconds": 2.094819,
+        "gc_seconds": 0.09603,
+        "allocated_bytes": 2400126064
+      },
+      {
+        "file": "int.ml",
+        "wall_seconds": 5.612171,
+        "cpu_seconds": 5.612324,
+        "gc_seconds": 0.262831,
+        "allocated_bytes": 6580359936
+      },
+      {
+        "file": "sets.ml",
+        "wall_seconds": 27.264832,
+        "cpu_seconds": 27.252422,
+        "gc_seconds": 1.630391,
+        "allocated_bytes": 34237073072
+      },
+      {
+        "file": "iterate.ml",
+        "wall_seconds": 23.22471,
+        "cpu_seconds": 23.219577,
+        "gc_seconds": 1.286745,
+        "allocated_bytes": 28209930944
+      },
+      {
+        "file": "cart.ml",
+        "wall_seconds": 6.300192,
+        "cpu_seconds": 6.300152,
+        "gc_seconds": 0.384272,
+        "allocated_bytes": 7463780720
+      },
+      {
+        "file": "define.ml",
+        "wall_seconds": 7.492232,
+        "cpu_seconds": 7.486854,
+        "gc_seconds": 0.436351,
+        "allocated_bytes": 8325911056
+      }
+    ]
+  },
+  "comparison_limit": "SBCL is a historical single-run measurement, not a contemporaneous paired experiment.",
+  "historical_sbcl_to_ocamlopt_wall_ratio": 6.816151614115105
+}

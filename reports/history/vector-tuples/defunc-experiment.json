@@ -1,0 +1,355 @@
+{
+  "variant": "defunc-only",
+  "fresh_process": true,
+  "restored_heap": false,
+  "compiled_source_files": 0,
+  "loaded_core_files": 46,
+  "wall_seconds_start_to_exit": 119.039,
+  "load_wall_seconds_sum": 118.792,
+  "load_cpu_seconds_sum": 118.717,
+  "load_gc_seconds_sum": 6.495,
+  "load_allocated_bytes_sum": 123976654272,
+  "source_files": [
+    {
+      "file": "system.ml",
+      "wall_seconds": 0.0,
+      "cpu_seconds": 0.000185,
+      "gc_seconds": 0.0,
+      "allocated_bytes": 32752
+    },
+    {
+      "file": "lib.ml",
+      "wall_seconds": 0.004,
+      "cpu_seconds": 0.00296,
+      "gc_seconds": 0.0,
+      "allocated_bytes": 669312
+    },
+    {
+      "file": "fusion.ml",
+      "wall_seconds": 0.004,
+      "cpu_seconds": 0.002291,
+      "gc_seconds": 0.0,
+      "allocated_bytes": 728080
+    },
+    {
+      "file": "basics.ml",
+      "wall_seconds": 0.0,
+      "cpu_seconds": 0.001535,
+      "gc_seconds": 0.0,
+      "allocated_bytes": 248048
+    },
+    {
+      "file": "nets.ml",
+      "wall_seconds": 0.004,
+      "cpu_seconds": 0.003345,
+      "gc_seconds": 0.0,
+      "allocated_bytes": 1155088
+    },
+    {
+      "file": "printer.ml",
+      "wall_seconds": 0.0,
+      "cpu_seconds": 0.001942,
+      "gc_seconds": 0.0,
+      "allocated_bytes": 550208
+    },
+    {
+      "file": "preterm.ml",
+      "wall_seconds": 0.004,
+      "cpu_seconds": 0.001835,
+      "gc_seconds": 0.0,
+      "allocated_bytes": 758544
+    },
+    {
+      "file": "parser.ml",
+      "wall_seconds": 0.0,
+      "cpu_seconds": 0.00226,
+      "gc_seconds": 0.0,
+      "allocated_bytes": 735184
+    },
+    {
+      "file": "equal.ml",
+      "wall_seconds": 0.004,
+      "cpu_seconds": 0.0009,
+      "gc_seconds": 0.0,
+      "allocated_bytes": 221888
+    },
+    {
+      "file": "bool.ml",
+      "wall_seconds": 0.016001,
+      "cpu_seconds": 0.016987,
+      "gc_seconds": 0.0,
+      "allocated_bytes": 26853024
+    },
+    {
+      "file": "drule.ml",
+      "wall_seconds": 0.0,
+      "cpu_seconds": 0.001632,
+      "gc_seconds": 0.0,
+      "allocated_bytes": 540560
+    },
+    {
+      "file": "tactics.ml",
+      "wall_seconds": 0.016,
+      "cpu_seconds": 0.014411,
+      "gc_seconds": 0.009585,
+      "allocated_bytes": 1879664
+    },
+    {
+      "file": "itab.ml",
+      "wall_seconds": 0.0,
+      "cpu_seconds": 0.000363,
+      "gc_seconds": 0.0,
+      "allocated_bytes": 96048
+    },
+    {
+      "file": "simp.ml",
+      "wall_seconds": 0.004,
+      "cpu_seconds": 0.005401,
+      "gc_seconds": 0.0,
+      "allocated_bytes": 4765424
+    },
+    {
+      "file": "theorems.ml",
+      "wall_seconds": 0.200006,
+      "cpu_seconds": 0.200012,
+      "gc_seconds": 0.027796,
+      "allocated_bytes": 216636656
+    },
+    {
+      "file": "ind_defs.ml",
+      "wall_seconds": 0.004,
+      "cpu_seconds": 0.003821,
+      "gc_seconds": 0.0,
+      "allocated_bytes": 4114304
+    },
+    {
+      "file": "class.ml",
+      "wall_seconds": 0.108004,
+      "cpu_seconds": 0.106018,
+      "gc_seconds": 0.005076,
+      "allocated_bytes": 133347888
+    },
+    {
+      "file": "trivia.ml",
+      "wall_seconds": 0.02,
+      "cpu_seconds": 0.020031,
+      "gc_seconds": 0.002301,
+      "allocated_bytes": 21804928
+    },
+    {
+      "file": "canon.ml",
+      "wall_seconds": 0.056002,
+      "cpu_seconds": 0.055995,
+      "gc_seconds": 0.001874,
+      "allocated_bytes": 64872544
+    },
+    {
+      "file": "meson.ml",
+      "wall_seconds": 0.016001,
+      "cpu_seconds": 0.018118,
+      "gc_seconds": 0.0,
+      "allocated_bytes": 16542848
+    },
+    {
+      "file": "firstorder.ml",
+      "wall_seconds": 0.004,
+      "cpu_seconds": 0.00119,
+      "gc_seconds": 0.0,
+      "allocated_bytes": 258576
+    },
+    {
+      "file": "metis.ml",
+      "wall_seconds": 0.076002,
+      "cpu_seconds": 0.078336,
+      "gc_seconds": 0.012872,
+      "allocated_bytes": 30121824
+    },
+    {
+      "file": "thecops.ml",
+      "wall_seconds": 0.020001,
+      "cpu_seconds": 0.020314,
+      "gc_seconds": 0.0,
+      "allocated_bytes": 17465216
+    },
+    {
+      "file": "quot.ml",
+      "wall_seconds": 0.184006,
+      "cpu_seconds": 0.18222,
+      "gc_seconds": 0.028801,
+      "allocated_bytes": 155097584
+    },
+    {
+      "file": "impconv.ml",
+      "wall_seconds": 0.064001,
+      "cpu_seconds": 0.06417,
+      "gc_seconds": 0.002896,
+      "allocated_bytes": 74908672
+    },
+    {
+      "file": "pair.ml",
+      "wall_seconds": 0.252008,
+      "cpu_seconds": 0.252396,
+      "gc_seconds": 0.015573,
+      "allocated_bytes": 286988896
+    },
+    {
+      "file": "compute.ml",
+      "wall_seconds": 0.008,
+      "cpu_seconds": 0.007261,
+      "gc_seconds": 0.0,
+      "allocated_bytes": 4358336
+    },
+    {
+      "file": "nums.ml",
+      "wall_seconds": 0.084003,
+      "cpu_seconds": 0.083364,
+      "gc_seconds": 0.005415,
+      "allocated_bytes": 103194064
+    },
+    {
+      "file": "recursion.ml",
+      "wall_seconds": 0.0,
+      "cpu_seconds": 0.000522,
+      "gc_seconds": 0.0,
+      "allocated_bytes": 63728
+    },
+    {
+      "file": "arith.ml",
+      "wall_seconds": 4.684142,
+      "cpu_seconds": 4.682535,
+      "gc_seconds": 0.247327,
+      "allocated_bytes": 5401524384
+    },
+    {
+      "file": "wf.ml",
+      "wall_seconds": 3.192096,
+      "cpu_seconds": 3.191156,
+      "gc_seconds": 0.18128,
+      "allocated_bytes": 3690147184
+    },
+    {
+      "file": "calc_num.ml",
+      "wall_seconds": 4.304131,
+      "cpu_seconds": 4.305607,
+      "gc_seconds": 0.257717,
+      "allocated_bytes": 4684583536
+    },
+    {
+      "file": "normalizer.ml",
+      "wall_seconds": 0.340012,
+      "cpu_seconds": 0.337204,
+      "gc_seconds": 0.021609,
+      "allocated_bytes": 406673504
+    },
+    {
+      "file": "grobner.ml",
+      "wall_seconds": 0.440012,
+      "cpu_seconds": 0.440814,
+      "gc_seconds": 0.029313,
+      "allocated_bytes": 559410112
+    },
+    {
+      "file": "ind_types.ml",
+      "wall_seconds": 0.476014,
+      "cpu_seconds": 0.477759,
+      "gc_seconds": 0.023353,
+      "allocated_bytes": 536621744
+    },
+    {
+      "file": "lists.ml",
+      "wall_seconds": 2.000061,
+      "cpu_seconds": 1.999854,
+      "gc_seconds": 0.099466,
+      "allocated_bytes": 2097102784
+    },
+    {
+      "file": "realax.ml",
+      "wall_seconds": 1.416043,
+      "cpu_seconds": 1.415257,
+      "gc_seconds": 0.081068,
+      "allocated_bytes": 1596924624
+    },
+    {
+      "file": "calc_int.ml",
+      "wall_seconds": 0.62402,
+      "cpu_seconds": 0.62454,
+      "gc_seconds": 0.033289,
+      "allocated_bytes": 923085376
+    },
+    {
+      "file": "realarith.ml",
+      "wall_seconds": 1.236037,
+      "cpu_seconds": 1.232025,
+      "gc_seconds": 0.073009,
+      "allocated_bytes": 1293074880
+    },
+    {
+      "file": "real.ml",
+      "wall_seconds": 5.996181,
+      "cpu_seconds": 5.99562,
+      "gc_seconds": 0.263316,
+      "allocated_bytes": 6472057760
+    },
+    {
+      "file": "calc_rat.ml",
+      "wall_seconds": 2.536077,
+      "cpu_seconds": 2.530211,
+      "gc_seconds": 0.152845,
+      "allocated_bytes": 2682774464
+    },
+    {
+      "file": "int.ml",
+      "wall_seconds": 7.488227,
+      "cpu_seconds": 7.48183,
+      "gc_seconds": 0.338628,
+      "allocated_bytes": 7305268128
+    },
+    {
+      "file": "sets.ml",
+      "wall_seconds": 35.529074,
+      "cpu_seconds": 35.52129,
+      "gc_seconds": 1.992207,
+      "allocated_bytes": 37370795520
+    },
+    {
+      "file": "iterate.ml",
+      "wall_seconds": 29.240884,
+      "cpu_seconds": 29.205809,
+      "gc_seconds": 1.569716,
+      "allocated_bytes": 30550724032
+    },
+    {
+      "file": "cart.ml",
+      "wall_seconds": 8.95227,
+      "cpu_seconds": 8.945647,
+      "gc_seconds": 0.51301,
+      "allocated_bytes": 8173174016
+    },
+    {
+      "file": "define.ml",
+      "wall_seconds": 9.184276,
+      "cpu_seconds": 9.180522,
+      "gc_seconds": 0.505564,
+      "allocated_bytes": 9063702336
+    }
+  ],
+  "baseline_fasl_restart_wall_seconds": 273.191,
+  "baseline_original_ocaml_wall_seconds": 61.832,
+  "baseline_original_mode": "bytecode",
+  "baseline_profiled_allocated_bytes": 86147668048,
+  "baseline_profiled_gc_seconds": 38.286,
+  "native_checks": 122,
+  "protocol_checks": 27,
+  "matching_output_lines": 1124,
+  "initial_counts": {
+    "types": 22,
+    "constants": 303,
+    "definitions": 263,
+    "axioms": 3
+  },
+  "speedup_against_fasl_baseline": 2.295,
+  "reduction_percent_against_fasl_baseline": 56.43,
+  "baseline_profiled_core_allocated_bytes": 86128050432,
+  "baseline_profiled_core_gc_seconds": 38.28675,
+  "allocation_comparison_scope": "core component loads; baseline sampled CPU profile, experiment unprofiled measurement"
+}

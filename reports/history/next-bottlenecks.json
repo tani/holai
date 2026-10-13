@@ -1,0 +1,425 @@
+{
+  "scope": "defunc-only diagnostic; implementation unchanged",
+  "fresh_process": true,
+  "restored_heap": false,
+  "compiled_source_files": 0,
+  "loaded_core_files": 46,
+  "initial_counts": [
+    22,
+    303,
+    263,
+    3
+  ],
+  "profiler": "SBCL 2.2.9 sb-sprof CPU 10ms max-depth128",
+  "samples": 11370,
+  "profiled_bootstrap_wall_seconds": 125.031,
+  "profiled_bootstrap_cpu_seconds": 124.968651,
+  "profiled_bootstrap_gc_seconds": 10.889,
+  "profiled_bootstrap_allocated_bytes": 124025193904,
+  "source_files": [
+    {
+      "file": "system.ml",
+      "wall_seconds": 0.0,
+      "cpu_seconds": 0.0,
+      "gc_seconds": 0.0,
+      "allocated_bytes": 32768
+    },
+    {
+      "file": "lib.ml",
+      "wall_seconds": 0.004001,
+      "cpu_seconds": 0.004,
+      "gc_seconds": 0.0,
+      "allocated_bytes": 670336
+    },
+    {
+      "file": "fusion.ml",
+      "wall_seconds": 0.0,
+      "cpu_seconds": 0.0,
+      "gc_seconds": 0.0,
+      "allocated_bytes": 744064
+    },
+    {
+      "file": "basics.ml",
+      "wall_seconds": 0.004,
+      "cpu_seconds": 0.004004,
+      "gc_seconds": 0.0,
+      "allocated_bytes": 274480
+    },
+    {
+      "file": "nets.ml",
+      "wall_seconds": 0.004,
+      "cpu_seconds": 0.003999,
+      "gc_seconds": 0.0,
+      "allocated_bytes": 1126112
+    },
+    {
+      "file": "printer.ml",
+      "wall_seconds": 0.0,
+      "cpu_seconds": 0.0,
+      "gc_seconds": 0.0,
+      "allocated_bytes": 533488
+    },
+    {
+      "file": "preterm.ml",
+      "wall_seconds": 0.004,
+      "cpu_seconds": 0.004,
+      "gc_seconds": 0.0,
+      "allocated_bytes": 755504
+    },
+    {
+      "file": "parser.ml",
+      "wall_seconds": 0.0,
+      "cpu_seconds": 0.0,
+      "gc_seconds": 0.0,
+      "allocated_bytes": 733824
+    },
+    {
+      "file": "equal.ml",
+      "wall_seconds": 0.004,
+      "cpu_seconds": 0.003996,
+      "gc_seconds": 0.0,
+      "allocated_bytes": 219760
+    },
+    {
+      "file": "bool.ml",
+      "wall_seconds": 0.016001,
+      "cpu_seconds": 0.016006,
+      "gc_seconds": 0.0,
+      "allocated_bytes": 26852656
+    },
+    {
+      "file": "drule.ml",
+      "wall_seconds": 0.02,
+      "cpu_seconds": 0.020019,
+      "gc_seconds": 0.016507,
+      "allocated_bytes": 538208
+    },
+    {
+      "file": "tactics.ml",
+      "wall_seconds": 0.008001,
+      "cpu_seconds": 0.008228,
+      "gc_seconds": 0.0,
+      "allocated_bytes": 1837616
+    },
+    {
+      "file": "itab.ml",
+      "wall_seconds": 0.0,
+      "cpu_seconds": 0.0,
+      "gc_seconds": 0.0,
+      "allocated_bytes": 63584
+    },
+    {
+      "file": "simp.ml",
+      "wall_seconds": 0.008,
+      "cpu_seconds": 0.007777,
+      "gc_seconds": 0.0,
+      "allocated_bytes": 4830096
+    },
+    {
+      "file": "theorems.ml",
+      "wall_seconds": 0.224007,
+      "cpu_seconds": 0.223964,
+      "gc_seconds": 0.034283,
+      "allocated_bytes": 216593120
+    },
+    {
+      "file": "ind_defs.ml",
+      "wall_seconds": 0.004,
+      "cpu_seconds": 0.003996,
+      "gc_seconds": 0.0,
+      "allocated_bytes": 4115712
+    },
+    {
+      "file": "class.ml",
+      "wall_seconds": 0.112004,
+      "cpu_seconds": 0.111996,
+      "gc_seconds": 0.008779,
+      "allocated_bytes": 133380000
+    },
+    {
+      "file": "trivia.ml",
+      "wall_seconds": 0.024,
+      "cpu_seconds": 0.023988,
+      "gc_seconds": 0.002213,
+      "allocated_bytes": 21774304
+    },
+    {
+      "file": "canon.ml",
+      "wall_seconds": 0.060002,
+      "cpu_seconds": 0.060006,
+      "gc_seconds": 0.002663,
+      "allocated_bytes": 64876896
+    },
+    {
+      "file": "meson.ml",
+      "wall_seconds": 0.016001,
+      "cpu_seconds": 0.016001,
+      "gc_seconds": 0.0,
+      "allocated_bytes": 16541872
+    },
+    {
+      "file": "firstorder.ml",
+      "wall_seconds": 0.004,
+      "cpu_seconds": 0.004001,
+      "gc_seconds": 0.0,
+      "allocated_bytes": 258560
+    },
+    {
+      "file": "metis.ml",
+      "wall_seconds": 0.132004,
+      "cpu_seconds": 0.132041,
+      "gc_seconds": 0.046446,
+      "allocated_bytes": 30022896
+    },
+    {
+      "file": "thecops.ml",
+      "wall_seconds": 0.044002,
+      "cpu_seconds": 0.044036,
+      "gc_seconds": 0.0,
+      "allocated_bytes": 17501792
+    },
+    {
+      "file": "quot.ml",
+      "wall_seconds": 0.204005,
+      "cpu_seconds": 0.204308,
+      "gc_seconds": 0.024752,
+      "allocated_bytes": 154955696
+    },
+    {
+      "file": "impconv.ml",
+      "wall_seconds": 0.112005,
+      "cpu_seconds": 0.111677,
+      "gc_seconds": 0.010512,
+      "allocated_bytes": 74891200
+    },
+    {
+      "file": "pair.ml",
+      "wall_seconds": 0.340011,
+      "cpu_seconds": 0.339988,
+      "gc_seconds": 0.0377,
+      "allocated_bytes": 286942096
+    },
+    {
+      "file": "compute.ml",
+      "wall_seconds": 0.008,
+      "cpu_seconds": 0.007993,
+      "gc_seconds": 0.0,
+      "allocated_bytes": 4393088
+    },
+    {
+      "file": "nums.ml",
+      "wall_seconds": 0.116004,
+      "cpu_seconds": 0.115989,
+      "gc_seconds": 0.008871,
+      "allocated_bytes": 103220992
+    },
+    {
+      "file": "recursion.ml",
+      "wall_seconds": 0.0,
+      "cpu_seconds": 0.0,
+      "gc_seconds": 0.0,
+      "allocated_bytes": 63440
+    },
+    {
+      "file": "arith.ml",
+      "wall_seconds": 5.368171,
+      "cpu_seconds": 5.36687,
+      "gc_seconds": 0.503591,
+      "allocated_bytes": 5401560512
+    },
+    {
+      "file": "wf.ml",
+      "wall_seconds": 3.660117,
+      "cpu_seconds": 3.657907,
+      "gc_seconds": 0.345786,
+      "allocated_bytes": 3690392608
+    },
+    {
+      "file": "calc_num.ml",
+      "wall_seconds": 5.080162,
+      "cpu_seconds": 5.07812,
+      "gc_seconds": 0.514757,
+      "allocated_bytes": 4684613984
+    },
+    {
+      "file": "normalizer.ml",
+      "wall_seconds": 0.384012,
+      "cpu_seconds": 0.383797,
+      "gc_seconds": 0.030875,
+      "allocated_bytes": 406682480
+    },
+    {
+      "file": "grobner.ml",
+      "wall_seconds": 0.468015,
+      "cpu_seconds": 0.467752,
+      "gc_seconds": 0.049799,
+      "allocated_bytes": 559393408
+    },
+    {
+      "file": "ind_types.ml",
+      "wall_seconds": 0.548018,
+      "cpu_seconds": 0.547958,
+      "gc_seconds": 0.041407,
+      "allocated_bytes": 536662512
+    },
+    {
+      "file": "lists.ml",
+      "wall_seconds": 2.156069,
+      "cpu_seconds": 2.155037,
+      "gc_seconds": 0.142935,
+      "allocated_bytes": 2097002208
+    },
+    {
+      "file": "realax.ml",
+      "wall_seconds": 1.456047,
+      "cpu_seconds": 1.4556,
+      "gc_seconds": 0.131683,
+      "allocated_bytes": 1597001712
+    },
+    {
+      "file": "calc_int.ml",
+      "wall_seconds": 0.688022,
+      "cpu_seconds": 0.687828,
+      "gc_seconds": 0.067883,
+      "allocated_bytes": 923058320
+    },
+    {
+      "file": "realarith.ml",
+      "wall_seconds": 1.204038,
+      "cpu_seconds": 1.203933,
+      "gc_seconds": 0.122228,
+      "allocated_bytes": 1293012064
+    },
+    {
+      "file": "real.ml",
+      "wall_seconds": 6.708213,
+      "cpu_seconds": 6.683857,
+      "gc_seconds": 0.525818,
+      "allocated_bytes": 6472080304
+    },
+    {
+      "file": "calc_rat.ml",
+      "wall_seconds": 3.152101,
+      "cpu_seconds": 3.155434,
+      "gc_seconds": 0.234218,
+      "allocated_bytes": 2682726064
+    },
+    {
+      "file": "int.ml",
+      "wall_seconds": 7.844247,
+      "cpu_seconds": 7.840405,
+      "gc_seconds": 0.642757,
+      "allocated_bytes": 7305231776
+    },
+    {
+      "file": "sets.ml",
+      "wall_seconds": 35.793131,
+      "cpu_seconds": 35.779519,
+      "gc_seconds": 3.146234,
+      "allocated_bytes": 37370435312
+    },
+    {
+      "file": "iterate.ml",
+      "wall_seconds": 30.240948,
+      "cpu_seconds": 30.230837,
+      "gc_seconds": 2.516258,
+      "allocated_bytes": 30550794784
+    },
+    {
+      "file": "cart.ml",
+      "wall_seconds": 8.776263,
+      "cpu_seconds": 8.774283,
+      "gc_seconds": 0.724679,
+      "allocated_bytes": 8173421936
+    },
+    {
+      "file": "define.ml",
+      "wall_seconds": 9.848303,
+      "cpu_seconds": 9.846345,
+      "gc_seconds": 0.940747,
+      "allocated_bytes": 9063544272
+    }
+  ],
+  "sets_and_iterate_unprofiled_cpu_fraction": 0.5452218216430671,
+  "hotspots": [
+    {
+      "name": "compare",
+      "self_percent": 6.1,
+      "inclusive_percent": 13.4
+    },
+    {
+      "name": "tuple",
+      "self_percent": 2.2,
+      "inclusive_percent": 10.4
+    },
+    {
+      "name": "compare-vectors",
+      "self_percent": 1.8,
+      "inclusive_percent": 9.7
+    },
+    {
+      "name": "pthread_sigmask",
+      "self_percent": 11.9,
+      "inclusive_percent": 11.9
+    },
+    {
+      "name": "make-condition",
+      "self_percent": 0.9,
+      "inclusive_percent": 4.7
+    },
+    {
+      "name": "partial-closure",
+      "self_percent": 1.3,
+      "inclusive_percent": 2.7
+    },
+    {
+      "name": "runtime-funcall",
+      "self_percent": 1.0,
+      "inclusive_percent": 1.0
+    }
+  ],
+  "pthread_sigmask_sets_caller": "interrupt_handle_pending -> maybe_gc -> pthread_sigmask",
+  "tuple_probe": {
+    "iterations_per_run": 2000000,
+    "runs": {
+      "generic": [
+        {
+          "cpu_seconds": 0.095996,
+          "allocated_bytes": 159970416
+        },
+        {
+          "cpu_seconds": 0.093684,
+          "allocated_bytes": 159970384
+        },
+        {
+          "cpu_seconds": 0.097863,
+          "allocated_bytes": 159970384
+        }
+      ],
+      "direct-vector": [
+        {
+          "cpu_seconds": 0.027849,
+          "allocated_bytes": 95986800
+        },
+        {
+          "cpu_seconds": 0.029296,
+          "allocated_bytes": 95986800
+        },
+        {
+          "cpu_seconds": 0.029002,
+          "allocated_bytes": 95986800
+        }
+      ]
+    },
+    "median_speedup": 3.3099786221639884,
+    "allocation_reduction_fraction": 0.39997143471256524
+  },
+  "limitations": [
+    "inclusive percentages overlap; do not sum",
+    "CPU samples are not elapsed-time attribution or call counts",
+    "profiler perturbs GC and elapsed time",
+    "tuple microprobe is not full initialization speedup",
+    "no new peak-RSS measurement",
+    "sets slice intentionally ends early; not complete initialization"
+  ]
+}

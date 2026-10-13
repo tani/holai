@@ -1,0 +1,23 @@
+{
+  "mode": "optional",
+  "run": 2,
+  "wall_seconds_start_to_exit": 82.0388913959905,
+  "user_seconds": 79.847864,
+  "system_seconds": 2.153529,
+  "peak_rss_kib": 249824,
+  "peak_rss_mib": 243.96875,
+  "load_wall_seconds_sum": 81.778505,
+  "load_cpu_seconds_sum": 81.748395,
+  "load_gc_seconds_sum": 3.249949,
+  "load_allocated_bytes_sum": 55728246304,
+  "fresh_process": true,
+  "restored_heap": false,
+  "compiled_source_files": 0,
+  "loaded_core_files": 46,
+  "initial_counts": [
+    22,
+    303,
+    263,
+    3
+  ]
+}

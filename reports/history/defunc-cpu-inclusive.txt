@@ -1,0 +1,89 @@
+
+Number of samples:   11370
+Sample interval:     0.01 seconds
+Total sampling time: 113.7 seconds
+Graph cycles:        0
+Sampled threads:
+   #<THREAD "finalizer" RUNNING {10013A8003}> (512/1048576 bytes, 5 hash buckets)
+   #<THREAD "main thread" RUNNING {10013A81B3}> (5741848/8388608 bytes, 10323 hash buckets)
+
+           Self        Total        Cumul
+  Nr  Count     %  Count     %  Count     %    Calls  Function
+------------------------------------------------------------------------
+   2      4   0.0  11337  99.7      4   0.0        -  SB-SPROF::UNAVAILABLE-FRAMES
+   4      0   0.0  10838  95.3      4   0.0        -  (LABELS SB-FASL::LOAD-STREAM-1 :IN LOAD)
+   6      0   0.0  10838  95.3      4   0.0        -  SB-FASL::CALL-WITH-LOAD-BINDINGS
+   8      0   0.0  10833  95.3      4   0.0        -  LOAD
+  10      0   0.0  10755  94.6      4   0.0        -  SB-INT:SIMPLE-EVAL-IN-LEXENV
+  12      0   0.0  10751  94.6      4   0.0        -  EVAL-TLF
+  14      0   0.0  10747  94.5      4   0.0        -  (LABELS SB-FASL::EVAL-FORM :IN SB-INT:LOAD-AS-SOURCE)
+  16      0   0.0  10744  94.5      4   0.0        -  (LAMBDA (SB-KERNEL:FORM &KEY :CURRENT-INDEX &ALLOW-OTHER-KEYS) :IN SB-INT:LOAD-AS-SOURCE)
+  18      0   0.0  10738  94.4      4   0.0        -  SB-C::%DO-FORMS-FROM-INFO
+  20      0   0.0  10736  94.4      4   0.0        -  SB-INT:LOAD-AS-SOURCE
+  22      0   0.0  10709  94.2      4   0.0        -  CALL-WITH-TIMING
+  24      0   0.0  10652  93.7      4   0.0        -  (LAMBDA NIL :IN "/workspace/scratch/6bf0bb049b86/hol2cl-defunc-experiment/tests/profile-performance.lisp")
+  26      0   0.0  10582  93.1      4   0.0        -  SB-IMPL::PROCESS-EVAL/LOAD-OPTIONS
+  28      0   0.0  10574  93.0      4   0.0        -  SB-IMPL::TOPLEVEL-INIT
+  30      0   0.0  10567  92.9      4   0.0        -  (FLET SB-UNIX::BODY :IN SB-IMPL::START-LISP)
+  32      0   0.0  10561  92.9      4   0.0        -  (FLET "WITHOUT-INTERRUPTS-BODY-3" :IN SB-IMPL::START-LISP)
+  34      0   0.0  10546  92.8      4   0.0        -  SB-IMPL::%START-LISP
+  36      0   0.0  10544  92.7      4   0.0        -  foreign function call_into_lisp_
+  38     25   0.2   4871  42.8     29   0.3        -  (LABELS HOL2CL.LIB:TRYFIND :IN "/workspace/scratch/6bf0bb049b86/hol2cl-defunc-experiment/generated/lib.lisp")
+  40     31   0.3   3053  26.9     60   0.5        -  (LABELS HOL2CL.SIMP:REWRITES_CONV :IN "/workspace/scratch/6bf0bb049b86/hol2cl-defunc-experiment/generated/simp.lisp")
+  42     22   0.2   2865  25.2     82   0.7        -  (LABELS #:CURRIED193 :IN "/workspace/scratch/6bf0bb049b86/hol2cl-defunc-experiment/generated/equal.lisp")
+  44     20   0.2   2717  23.9    102   0.9        -  (LABELS #:CURRIED257 :IN "/workspace/scratch/6bf0bb049b86/hol2cl-defunc-experiment/generated/equal.lisp")
+  46     21   0.2   2708  23.8    123   1.1        -  (LABELS #:CURRIED156 :IN "/workspace/scratch/6bf0bb049b86/hol2cl-defunc-experiment/generated/equal.lisp")
+  48     11   0.1   2683  23.6    134   1.2        -  (LABELS #:CURRIED295 :IN "/workspace/scratch/6bf0bb049b86/hol2cl-defunc-experiment/generated/equal.lisp")
+  50     11   0.1   2230  19.6    145   1.3        -  (LABELS #:CURRIED188 :IN #:CURRIED181)
+  52     46   0.4   2166  19.1    191   1.7        -  (LABELS HOL2CL.LIB::MAPF~LOCAL~114 :IN HOL2CL.LIB:MAP)
+  54      3   0.0   1979  17.4    194   1.7        -  (LABELS #:CURRIED6 :IN HOL2CL.MESON.MESON:MESON_EXPAND_CONT)
+  56      9   0.1   1967  17.3    203   1.8        -  (LABELS HOL2CL.MESON.MESON:MESON_EXPAND :IN "/workspace/scratch/6bf0bb049b86/hol2cl-defunc-experiment/generated/meson.lisp")
+  58      3   0.0   1952  17.2    206   1.8        -  (LABELS HOL2CL.MESON.MESON::EXPAND_GOAL~LOCAL~1557 :IN HOL2CL.MESON.MESON:EXPAND_GOAL)
+  60     10   0.1   1936  17.0    216   1.9        -  (LABELS HOL2CL.MESON.MESON::EXPAND_GOALS :IN HOL2CL.MESON.MESON:EXPAND_GOAL)
+  62      2   0.0   1919  16.9    218   1.9        -  (LABELS HOL2CL.MESON.MESON:MESON_EXPAND_CONT :IN "/workspace/scratch/6bf0bb049b86/hol2cl-defunc-experiment/generated/meson.lisp")
+  64     20   0.2   1852  16.3    238   2.1        -  (LABELS HOL2CL.EQUAL::TOP_DEPTH_QCONV :IN "/workspace/scratch/6bf0bb049b86/hol2cl-defunc-experiment/generated/equal.lisp")
+  66      6   0.1   1827  16.1    244   2.1        -  (LABELS #:CURRIED56 :IN HOL2CL.MESON.MESON:EXPAND_GOAL)
+  68     49   0.4   1796  15.8    293   2.6        -  (LABELS HOL2CL.LIB:O :IN "/workspace/scratch/6bf0bb049b86/hol2cl-defunc-experiment/generated/lib.lisp")
+  70     10   0.1   1646  14.5    303   2.7        -  (LABELS HOL2CL.EQUAL::REPEATQC :IN "/workspace/scratch/6bf0bb049b86/hol2cl-defunc-experiment/generated/equal.lisp")
+  72      1   0.0   1616  14.2    304   2.7        -  (LABELS HOL2CL.TACTICS::SEQAPPLY :IN "/workspace/scratch/6bf0bb049b86/hol2cl-defunc-experiment/generated/tactics.lisp")
+  74     53   0.5   1613  14.2    357   3.1        -  (LABELS HOL2CL.LIB:ITLIST :IN "/workspace/scratch/6bf0bb049b86/hol2cl-defunc-experiment/generated/lib.lisp")
+  76      6   0.1   1568  13.8    363   3.2        -  (LABELS #:CURRIED10 :IN HOL2CL.SIMP:REWRITES_CONV)
+  78      2   0.0   1561  13.7    365   3.2        -  (LABELS HOL2CL.EQUAL:ORELSEC :IN "/workspace/scratch/6bf0bb049b86/hol2cl-defunc-experiment/generated/equal.lisp")
+  80    697   6.1   1528  13.4   1062   9.3        -  HOL2CL.RUNTIME:COMPARE
+  82      3   0.0   1502  13.2   1065   9.4        -  (LABELS HOL2CL.EQUAL:THENC :IN "/workspace/scratch/6bf0bb049b86/hol2cl-defunc-experiment/generated/equal.lisp")
+  84      0   0.0   1473  13.0   1065   9.4        -  (LABELS #:CURRIED279 :IN "/workspace/scratch/6bf0bb049b86/hol2cl-defunc-experiment/generated/tactics.lisp")
+  86     65   0.6   1470  12.9   1130   9.9        -  (LABELS HOL2CL.NETS::FOLLOW :IN "/workspace/scratch/6bf0bb049b86/hol2cl-defunc-experiment/generated/nets.lisp")
+  88     24   0.2   1469  12.9   1154  10.1        -  (LABELS #:CURRIED249 :IN "/workspace/scratch/6bf0bb049b86/hol2cl-defunc-experiment/generated/nets.lisp")
+  90      0   0.0   1437  12.6   1154  10.1        -  (LABELS #:CURRIED209 :IN "/workspace/scratch/6bf0bb049b86/hol2cl-defunc-experiment/generated/tactics.lisp")
+  92      0   0.0   1353  11.9   1154  10.1        -  foreign function maybe_gc
+  94      0   0.0   1353  11.9   1154  10.1        -  foreign function interrupt_handle_pending
+  96   1352  11.9   1352  11.9   2506  22.0        -  foreign function pthread_sigmask
+  98      1   0.0   1295  11.4   2507  22.0        -  (LABELS #:CURRIED6 :IN HOL2CL.MESON.MESON:CACHECONTS)
+ 100     19   0.2   1225  10.8   2526  22.2        -  (LABELS HOL2CL.MESON.MESON:MESON_SINGLE_EXPAND :IN "/workspace/scratch/6bf0bb049b86/hol2cl-defunc-experiment/generated/meson.lisp")
+ 102      1   0.0   1209  10.6   2527  22.2        -  (LABELS HOL2CL.EQUAL:ABS_CONV :IN "/workspace/scratch/6bf0bb049b86/hol2cl-defunc-experiment/generated/equal.lisp")
+ 104      6   0.1   1204  10.6   2533  22.3        -  (LABELS #:CURRIED94 :IN HOL2CL.MESON.MESON:EXPAND_GOAL)
+ 106    253   2.2   1184  10.4   2786  24.5        -  HOL2CL.RUNTIME:TUPLE
+ 108    209   1.8   1107   9.7   2995  26.3        -  HOL2CL.RUNTIME::COMPARE-VECTORS
+ 110      0   0.0   1090   9.6   2995  26.3        -  (LABELS #:CURRIED288 :IN HOL2CL.MESON.MESON:EXPAND_GOAL)
+ 112      1   0.0    994   8.7   2996  26.4        -  (LABELS HOL2CL.EQUAL:CONV_RULE :IN "/workspace/scratch/6bf0bb049b86/hol2cl-defunc-experiment/generated/equal.lisp")
+ 114      0   0.0    968   8.5   2996  26.4        -  SB-FASL::LOAD-FASL-GROUP
+ 116      6   0.1    929   8.2   3002  26.4        -  (LABELS HOL2CL.SIMP::TOP_DEPTH_SQCONV~LOCAL~1494 :IN "/workspace/scratch/6bf0bb049b86/hol2cl-defunc-experiment/generated/simp.lisp")
+ 118      8   0.1    924   8.1   3010  26.5        -  (LABELS #:CURRIED627 :IN "/workspace/scratch/6bf0bb049b86/hol2cl-defunc-experiment/generated/simp.lisp")
+ 120      0   0.0    902   7.9   3010  26.5        -  (LAMBDA NIL :IN SB-FASL::LOAD-AS-FASL)
+ 122     10   0.1    895   7.9   3020  26.6        -  (LABELS #:CURRIED486 :IN "/workspace/scratch/6bf0bb049b86/hol2cl-defunc-experiment/generated/drule.lisp")
+ 124     15   0.1    844   7.4   3035  26.7        -  (LABELS HOL2CL.EQUAL::REDEPTH_QCONV :IN "/workspace/scratch/6bf0bb049b86/hol2cl-defunc-experiment/generated/equal.lisp")
+ 126    452   4.0    841   7.4   3487  30.7        -  REPLACE
+ 128     16   0.1    841   7.4   3503  30.8        -  HOL2CL.RUNTIME:FAILWITH
+ 130      0   0.0    831   7.3   3503  30.8        -  SB-IMPL::CALL-WITH-LOADER-PACKAGE-NAMES
+ 132      0   0.0    766   6.7   3503  30.8        -  SB-FASL::LOAD-AS-FASL
+ 134     25   0.2    755   6.6   3528  31.0        -  (LABELS #:CURRIED260 :IN "/workspace/scratch/6bf0bb049b86/hol2cl-defunc-experiment/generated/nets.lisp")
+ 136    124   1.1    746   6.6   3652  32.1        -  (LABELS HOL2CL.FUSION.HOL::ORDA :IN "/workspace/scratch/6bf0bb049b86/hol2cl-defunc-experiment/generated/fusion.lisp")
+ 138      1   0.0    744   6.5   3653  32.1        -  (LABELS HOL2CL.REALARITH::OVERALL :IN #:CURRIED0)
+ 140      0   0.0    720   6.3   3653  32.1        -  (LABELS HOL2CL.TACTICS:ORELSE :IN "/workspace/scratch/6bf0bb049b86/hol2cl-defunc-experiment/generated/tactics.lisp")
+ 142      0   0.0    718   6.3   3653  32.1        -  (LABELS #:CURRIED742 :IN "/workspace/scratch/6bf0bb049b86/hol2cl-defunc-experiment/generated/realarith.lisp")
+ 144    155   1.4    717   6.3   3808  33.5        -  (LABELS HOL2CL.LIB:ASSOC :IN "/workspace/scratch/6bf0bb049b86/hol2cl-defunc-experiment/generated/lib.lisp")
+ 146      1   0.0    683   6.0   3809  33.5        -  (LABELS #:CURRIED345 :IN HOL2CL.MESON.MESON:EXPAND_GOAL)
+ 148      0   0.0    677   6.0   3809  33.5        -  (LABELS HOL2CL.TACTICS:BY :IN "/workspace/scratch/6bf0bb049b86/hol2cl-defunc-experiment/generated/tactics.lisp")
+ 150      2   0.0    672   5.9   3811  33.5        -  (LABELS #:CURRIED214 :IN "/workspace/scratch/6bf0bb049b86/hol2cl-defunc-experiment/generated/drule.lisp")
+------------------------------------------------------------------------
+        385   3.4                                     elsewhere

@@ -1,0 +1,16 @@
+/_build/
+/bin/
+/dist/
+/_opam/
+__pycache__/
+*.py[cod]
+*.cmi
+*.cmo
+*.cmx
+*.cmxa
+*.cma
+*.o
+*.a
+*.fasl
+/generated/*.map.json
+.DS_Store

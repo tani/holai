@@ -1,0 +1,707 @@
+{
+  "original_ocaml": [
+    {
+      "operation": "load",
+      "file": "system.ml",
+      "seconds": 0.0
+    },
+    {
+      "operation": "load",
+      "file": "lib.ml",
+      "seconds": 0.0
+    },
+    {
+      "operation": "load",
+      "file": "fusion.ml",
+      "seconds": 0.0
+    },
+    {
+      "operation": "load",
+      "file": "basics.ml",
+      "seconds": 0.0
+    },
+    {
+      "operation": "load",
+      "file": "nets.ml",
+      "seconds": 0.0
+    },
+    {
+      "operation": "load",
+      "file": "printer.ml",
+      "seconds": 0.0
+    },
+    {
+      "operation": "load",
+      "file": "preterm.ml",
+      "seconds": 0.0
+    },
+    {
+      "operation": "load",
+      "file": "parser.ml",
+      "seconds": 0.0
+    },
+    {
+      "operation": "load",
+      "file": "equal.ml",
+      "seconds": 0.0
+    },
+    {
+      "operation": "load",
+      "file": "bool.ml",
+      "seconds": 0.009
+    },
+    {
+      "operation": "load",
+      "file": "drule.ml",
+      "seconds": 0.0
+    },
+    {
+      "operation": "load",
+      "file": "tactics.ml",
+      "seconds": 0.0
+    },
+    {
+      "operation": "load",
+      "file": "itab.ml",
+      "seconds": 0.0
+    },
+    {
+      "operation": "load",
+      "file": "simp.ml",
+      "seconds": 0.002
+    },
+    {
+      "operation": "load",
+      "file": "theorems.ml",
+      "seconds": 0.084
+    },
+    {
+      "operation": "load",
+      "file": "ind_defs.ml",
+      "seconds": 0.002
+    },
+    {
+      "operation": "load",
+      "file": "class.ml",
+      "seconds": 0.051
+    },
+    {
+      "operation": "load",
+      "file": "trivia.ml",
+      "seconds": 0.009
+    },
+    {
+      "operation": "load",
+      "file": "canon.ml",
+      "seconds": 0.026
+    },
+    {
+      "operation": "load",
+      "file": "meson.ml",
+      "seconds": 0.006
+    },
+    {
+      "operation": "load",
+      "file": "firstorder.ml",
+      "seconds": 0.0
+    },
+    {
+      "operation": "load",
+      "file": "metis.ml",
+      "seconds": 0.006
+    },
+    {
+      "operation": "load",
+      "file": "thecops.ml",
+      "seconds": 0.006
+    },
+    {
+      "operation": "load",
+      "file": "quot.ml",
+      "seconds": 0.073
+    },
+    {
+      "operation": "load",
+      "file": "impconv.ml",
+      "seconds": 0.027
+    },
+    {
+      "operation": "load",
+      "file": "pair.ml",
+      "seconds": 0.13
+    },
+    {
+      "operation": "load",
+      "file": "compute.ml",
+      "seconds": 0.001
+    },
+    {
+      "operation": "load",
+      "file": "nums.ml",
+      "seconds": 0.049
+    },
+    {
+      "operation": "load",
+      "file": "recursion.ml",
+      "seconds": 0.0
+    },
+    {
+      "operation": "load",
+      "file": "arith.ml",
+      "seconds": 2.404
+    },
+    {
+      "operation": "load",
+      "file": "wf.ml",
+      "seconds": 1.938
+    },
+    {
+      "operation": "load",
+      "file": "calc_num.ml",
+      "seconds": 2.22
+    },
+    {
+      "operation": "load",
+      "file": "normalizer.ml",
+      "seconds": 0.184
+    },
+    {
+      "operation": "load",
+      "file": "grobner.ml",
+      "seconds": 0.227
+    },
+    {
+      "operation": "load",
+      "file": "ind_types.ml",
+      "seconds": 0.27
+    },
+    {
+      "operation": "load",
+      "file": "lists.ml",
+      "seconds": 1.106
+    },
+    {
+      "operation": "load",
+      "file": "realax.ml",
+      "seconds": 0.745
+    },
+    {
+      "operation": "load",
+      "file": "calc_int.ml",
+      "seconds": 0.34
+    },
+    {
+      "operation": "load",
+      "file": "realarith.ml",
+      "seconds": 0.621
+    },
+    {
+      "operation": "load",
+      "file": "real.ml",
+      "seconds": 3.139
+    },
+    {
+      "operation": "load",
+      "file": "calc_rat.ml",
+      "seconds": 1.366
+    },
+    {
+      "operation": "load",
+      "file": "int.ml",
+      "seconds": 3.618
+    },
+    {
+      "operation": "load",
+      "file": "sets.ml",
+      "seconds": 19.201
+    },
+    {
+      "operation": "load",
+      "file": "iterate.ml",
+      "seconds": 15.462
+    },
+    {
+      "operation": "load",
+      "file": "cart.ml",
+      "seconds": 3.552
+    },
+    {
+      "operation": "load",
+      "file": "define.ml",
+      "seconds": 4.932
+    }
+  ],
+  "sbcl": [
+    {
+      "operation": "compile",
+      "file": "system.ml",
+      "seconds": 0.004
+    },
+    {
+      "operation": "load",
+      "file": "system.ml",
+      "seconds": 0.0
+    },
+    {
+      "operation": "compile",
+      "file": "lib.ml",
+      "seconds": 0.256
+    },
+    {
+      "operation": "load",
+      "file": "lib.ml",
+      "seconds": 0.004
+    },
+    {
+      "operation": "compile",
+      "file": "fusion.ml",
+      "seconds": 0.208
+    },
+    {
+      "operation": "load",
+      "file": "fusion.ml",
+      "seconds": 0.0
+    },
+    {
+      "operation": "compile",
+      "file": "basics.ml",
+      "seconds": 0.164
+    },
+    {
+      "operation": "load",
+      "file": "basics.ml",
+      "seconds": 0.004
+    },
+    {
+      "operation": "compile",
+      "file": "nets.ml",
+      "seconds": 0.292
+    },
+    {
+      "operation": "load",
+      "file": "nets.ml",
+      "seconds": 0.008
+    },
+    {
+      "operation": "compile",
+      "file": "printer.ml",
+      "seconds": 0.316
+    },
+    {
+      "operation": "load",
+      "file": "printer.ml",
+      "seconds": 0.008
+    },
+    {
+      "operation": "compile",
+      "file": "preterm.ml",
+      "seconds": 0.248
+    },
+    {
+      "operation": "load",
+      "file": "preterm.ml",
+      "seconds": 0.004
+    },
+    {
+      "operation": "compile",
+      "file": "parser.ml",
+      "seconds": 0.28
+    },
+    {
+      "operation": "load",
+      "file": "parser.ml",
+      "seconds": 0.004
+    },
+    {
+      "operation": "compile",
+      "file": "equal.ml",
+      "seconds": 0.048
+    },
+    {
+      "operation": "load",
+      "file": "equal.ml",
+      "seconds": 0.0
+    },
+    {
+      "operation": "compile",
+      "file": "bool.ml",
+      "seconds": 0.116
+    },
+    {
+      "operation": "load",
+      "file": "bool.ml",
+      "seconds": 0.128
+    },
+    {
+      "operation": "compile",
+      "file": "drule.ml",
+      "seconds": 0.192
+    },
+    {
+      "operation": "load",
+      "file": "drule.ml",
+      "seconds": 0.0
+    },
+    {
+      "operation": "compile",
+      "file": "tactics.ml",
+      "seconds": 0.236
+    },
+    {
+      "operation": "load",
+      "file": "tactics.ml",
+      "seconds": 0.008
+    },
+    {
+      "operation": "compile",
+      "file": "itab.ml",
+      "seconds": 0.012
+    },
+    {
+      "operation": "load",
+      "file": "itab.ml",
+      "seconds": 0.0
+    },
+    {
+      "operation": "compile",
+      "file": "simp.ml",
+      "seconds": 0.24
+    },
+    {
+      "operation": "load",
+      "file": "simp.ml",
+      "seconds": 0.012
+    },
+    {
+      "operation": "compile",
+      "file": "theorems.ml",
+      "seconds": 0.048
+    },
+    {
+      "operation": "load",
+      "file": "theorems.ml",
+      "seconds": 0.636
+    },
+    {
+      "operation": "compile",
+      "file": "ind_defs.ml",
+      "seconds": 0.08
+    },
+    {
+      "operation": "load",
+      "file": "ind_defs.ml",
+      "seconds": 0.036
+    },
+    {
+      "operation": "compile",
+      "file": "class.ml",
+      "seconds": 0.06
+    },
+    {
+      "operation": "load",
+      "file": "class.ml",
+      "seconds": 0.396
+    },
+    {
+      "operation": "compile",
+      "file": "trivia.ml",
+      "seconds": 0.008
+    },
+    {
+      "operation": "load",
+      "file": "trivia.ml",
+      "seconds": 0.052
+    },
+    {
+      "operation": "compile",
+      "file": "canon.ml",
+      "seconds": 0.688
+    },
+    {
+      "operation": "load",
+      "file": "canon.ml",
+      "seconds": 0.184
+    },
+    {
+      "operation": "compile",
+      "file": "meson.ml",
+      "seconds": 0.464
+    },
+    {
+      "operation": "load",
+      "file": "meson.ml",
+      "seconds": 0.04
+    },
+    {
+      "operation": "compile",
+      "file": "firstorder.ml",
+      "seconds": 0.052
+    },
+    {
+      "operation": "load",
+      "file": "firstorder.ml",
+      "seconds": 0.004
+    },
+    {
+      "operation": "compile",
+      "file": "metis.ml",
+      "seconds": 5.792
+    },
+    {
+      "operation": "load",
+      "file": "metis.ml",
+      "seconds": 0.06
+    },
+    {
+      "operation": "compile",
+      "file": "thecops.ml",
+      "seconds": 0.68
+    },
+    {
+      "operation": "load",
+      "file": "thecops.ml",
+      "seconds": 0.04
+    },
+    {
+      "operation": "compile",
+      "file": "quot.ml",
+      "seconds": 0.028
+    },
+    {
+      "operation": "load",
+      "file": "quot.ml",
+      "seconds": 0.32
+    },
+    {
+      "operation": "compile",
+      "file": "impconv.ml",
+      "seconds": 1.796
+    },
+    {
+      "operation": "load",
+      "file": "impconv.ml",
+      "seconds": 0.332
+    },
+    {
+      "operation": "compile",
+      "file": "pair.ml",
+      "seconds": 0.088
+    },
+    {
+      "operation": "load",
+      "file": "pair.ml",
+      "seconds": 0.792
+    },
+    {
+      "operation": "compile",
+      "file": "compute.ml",
+      "seconds": 0.416
+    },
+    {
+      "operation": "load",
+      "file": "compute.ml",
+      "seconds": 0.04
+    },
+    {
+      "operation": "compile",
+      "file": "nums.ml",
+      "seconds": 0.036
+    },
+    {
+      "operation": "load",
+      "file": "nums.ml",
+      "seconds": 0.34
+    },
+    {
+      "operation": "compile",
+      "file": "recursion.ml",
+      "seconds": 0.032
+    },
+    {
+      "operation": "load",
+      "file": "recursion.ml",
+      "seconds": 0.0
+    },
+    {
+      "operation": "compile",
+      "file": "arith.ml",
+      "seconds": 0.368
+    },
+    {
+      "operation": "load",
+      "file": "arith.ml",
+      "seconds": 11.848
+    },
+    {
+      "operation": "compile",
+      "file": "wf.ml",
+      "seconds": 0.08
+    },
+    {
+      "operation": "load",
+      "file": "wf.ml",
+      "seconds": 7.532
+    },
+    {
+      "operation": "compile",
+      "file": "calc_num.ml",
+      "seconds": 3.268
+    },
+    {
+      "operation": "load",
+      "file": "calc_num.ml",
+      "seconds": 10.268
+    },
+    {
+      "operation": "compile",
+      "file": "normalizer.ml",
+      "seconds": 0.348
+    },
+    {
+      "operation": "load",
+      "file": "normalizer.ml",
+      "seconds": 1.128
+    },
+    {
+      "operation": "compile",
+      "file": "grobner.ml",
+      "seconds": 0.396
+    },
+    {
+      "operation": "load",
+      "file": "grobner.ml",
+      "seconds": 1.288
+    },
+    {
+      "operation": "compile",
+      "file": "ind_types.ml",
+      "seconds": 0.484
+    },
+    {
+      "operation": "load",
+      "file": "ind_types.ml",
+      "seconds": 1.168
+    },
+    {
+      "operation": "compile",
+      "file": "lists.ml",
+      "seconds": 0.216
+    },
+    {
+      "operation": "load",
+      "file": "lists.ml",
+      "seconds": 4.44
+    },
+    {
+      "operation": "compile",
+      "file": "realax.ml",
+      "seconds": 0.472
+    },
+    {
+      "operation": "load",
+      "file": "realax.ml",
+      "seconds": 3.424
+    },
+    {
+      "operation": "compile",
+      "file": "calc_int.ml",
+      "seconds": 0.096
+    },
+    {
+      "operation": "load",
+      "file": "calc_int.ml",
+      "seconds": 2.016
+    },
+    {
+      "operation": "compile",
+      "file": "realarith.ml",
+      "seconds": 0.228
+    },
+    {
+      "operation": "load",
+      "file": "realarith.ml",
+      "seconds": 2.84
+    },
+    {
+      "operation": "compile",
+      "file": "real.ml",
+      "seconds": 0.256
+    },
+    {
+      "operation": "load",
+      "file": "real.ml",
+      "seconds": 14.032
+    },
+    {
+      "operation": "compile",
+      "file": "calc_rat.ml",
+      "seconds": 0.088
+    },
+    {
+      "operation": "load",
+      "file": "calc_rat.ml",
+      "seconds": 5.548
+    },
+    {
+      "operation": "compile",
+      "file": "int.ml",
+      "seconds": 0.46
+    },
+    {
+      "operation": "load",
+      "file": "int.ml",
+      "seconds": 14.712
+    },
+    {
+      "operation": "compile",
+      "file": "sets.ml",
+      "seconds": 0.78
+    },
+    {
+      "operation": "load",
+      "file": "sets.ml",
+      "seconds": 79.694
+    },
+    {
+      "operation": "compile",
+      "file": "iterate.ml",
+      "seconds": 0.44
+    },
+    {
+      "operation": "load",
+      "file": "iterate.ml",
+      "seconds": 61.758
+    },
+    {
+      "operation": "compile",
+      "file": "cart.ml",
+      "seconds": 0.072
+    },
+    {
+      "operation": "load",
+      "file": "cart.ml",
+      "seconds": 19.049
+    },
+    {
+      "operation": "compile",
+      "file": "define.ml",
+      "seconds": 0.492
+    },
+    {
+      "operation": "load",
+      "file": "define.ml",
+      "seconds": 18.705
+    }
+  ],
+  "original_wall_seconds": 61.832,
+  "sbcl_compile_load_wall_seconds": 287.686,
+  "initial_counts": {
+    "types": 22,
+    "constants": 303,
+    "definitions": 263,
+    "axioms": 3
+  },
+  "source_files": 46,
+  "sbcl_control_stack_mebibytes": 256,
+  "core_timeout_seconds": 600
+}

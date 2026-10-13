@@ -1,0 +1,51 @@
+{
+  "variant": "original-1.0.0",
+  "fasl_restart": {
+    "wall_seconds_start_to_exit": 273.191,
+    "core_load_seconds_sum": 272.927,
+    "compiled_source_files": 0,
+    "loaded_core_files": 46,
+    "initial_counts": {
+      "types": 22,
+      "constants": 303,
+      "definitions": 263,
+      "axioms": 3
+    },
+    "fresh_process": true,
+    "restored_heap": false,
+    "largest_loads": [
+      {
+        "file": "sets",
+        "seconds": 84.591
+      },
+      {
+        "file": "iterate",
+        "seconds": 63.294
+      },
+      {
+        "file": "define",
+        "seconds": 19.449
+      },
+      {
+        "file": "cart",
+        "seconds": 18.181
+      },
+      {
+        "file": "int",
+        "seconds": 15.712
+      }
+    ]
+  },
+  "cpu_profile": {
+    "sample_interval_seconds": 0.02,
+    "samples": 12392,
+    "load_cpu_seconds_sum": 275.534152,
+    "load_gc_seconds_sum": 38.28675,
+    "load_allocated_bytes_sum": 86128050432,
+    "weak_table_lock_inclusive_sample_percent": 42.4,
+    "funcall_inclusive_sample_percent": 34.5,
+    "function_value_inclusive_sample_percent": 30.5
+  },
+  "original_ocaml_wall_seconds": 61.832,
+  "original_ocaml_mode": "bytecode"
+}

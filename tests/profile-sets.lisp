@@ -1,0 +1,16 @@
+;;; Diagnostic slice: stop after sets initialization; not a complete startup run.
+(require :asdf)
+(require :sb-sprof)
+(defmethod asdf:perform :before ((op asdf:compile-op) (component asdf:cl-source-file))
+  (error "Unexpected compilation: ~a" (asdf:component-pathname component)))
+(defmethod asdf:perform :around ((op asdf:load-op) (component asdf:cl-source-file))
+  (if (string= (asdf:component-name component) "sets")
+      (progn
+        (sb-sprof:start-profiling :mode :cpu :sample-interval 0.01 :max-samples 10000 :max-depth 128)
+        (unwind-protect (time (call-next-method)) (sb-sprof:stop-profiling))
+        (with-open-file (out "reports/defunc-sets-graph.txt" :direction :output :if-exists :supersede)
+          (sb-sprof:report :type :graph :max 100 :stream out :show-progress nil))
+        (format t "~&SETS_PROFILE_COMPLETE~%")
+        (throw 'sets-complete nil))
+      (call-next-method)))
+(catch 'sets-complete (load "tests/bootstrap.lisp"))

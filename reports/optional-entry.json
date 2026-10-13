@@ -1,0 +1,234 @@
+{
+  "runs": [
+    {
+      "mode": "optional",
+      "run": 1,
+      "wall_seconds_start_to_exit": 81.87595326099836,
+      "user_seconds": 79.506126,
+      "system_seconds": 2.33663,
+      "peak_rss_kib": 249336,
+      "peak_rss_mib": 243.4921875,
+      "load_wall_seconds_sum": 81.598495,
+      "load_cpu_seconds_sum": 81.57371499999999,
+      "load_gc_seconds_sum": 3.2609369999999998,
+      "load_allocated_bytes_sum": 55728067232,
+      "fresh_process": true,
+      "restored_heap": false,
+      "compiled_source_files": 0,
+      "loaded_core_files": 46,
+      "initial_counts": [
+        22,
+        303,
+        263,
+        3
+      ]
+    },
+    {
+      "mode": "baseline",
+      "run": 1,
+      "wall_seconds_start_to_exit": 98.26133230100095,
+      "user_seconds": 94.153595,
+      "system_seconds": 4.073105,
+      "peak_rss_kib": 213260,
+      "peak_rss_mib": 208.26171875,
+      "load_wall_seconds_sum": 98.01101299999999,
+      "load_cpu_seconds_sum": 97.977874,
+      "load_gc_seconds_sum": 5.649918,
+      "load_allocated_bytes_sum": 113611753552,
+      "fresh_process": true,
+      "restored_heap": false,
+      "compiled_source_files": 0,
+      "loaded_core_files": 46,
+      "initial_counts": [
+        22,
+        303,
+        263,
+        3
+      ]
+    },
+    {
+      "mode": "baseline",
+      "run": 2,
+      "wall_seconds_start_to_exit": 97.4185732180049,
+      "user_seconds": 93.38835,
+      "system_seconds": 3.990402,
+      "peak_rss_kib": 214592,
+      "peak_rss_mib": 209.5625,
+      "load_wall_seconds_sum": 97.150975,
+      "load_cpu_seconds_sum": 97.12063500000001,
+      "load_gc_seconds_sum": 5.7301150000000005,
+      "load_allocated_bytes_sum": 113611417920,
+      "fresh_process": true,
+      "restored_heap": false,
+      "compiled_source_files": 0,
+      "loaded_core_files": 46,
+      "initial_counts": [
+        22,
+        303,
+        263,
+        3
+      ]
+    },
+    {
+      "mode": "optional",
+      "run": 2,
+      "wall_seconds_start_to_exit": 82.0388913959905,
+      "user_seconds": 79.847864,
+      "system_seconds": 2.153529,
+      "peak_rss_kib": 249824,
+      "peak_rss_mib": 243.96875,
+      "load_wall_seconds_sum": 81.778505,
+      "load_cpu_seconds_sum": 81.748395,
+      "load_gc_seconds_sum": 3.249949,
+      "load_allocated_bytes_sum": 55728246304,
+      "fresh_process": true,
+      "restored_heap": false,
+      "compiled_source_files": 0,
+      "loaded_core_files": 46,
+      "initial_counts": [
+        22,
+        303,
+        263,
+        3
+      ]
+    }
+  ],
+  "micro": {
+    "baseline": {
+      "excess": {
+        "median_cpu_seconds": 0.014351,
+        "median_allocated_bytes": 33562112,
+        "repetitions": 300000
+      },
+      "flet-complete": {
+        "median_cpu_seconds": 0.034453,
+        "median_allocated_bytes": 95993216,
+        "repetitions": 2000000
+      },
+      "global-complete": {
+        "median_cpu_seconds": 0.037393,
+        "median_allocated_bytes": 95975424,
+        "repetitions": 2000000
+      },
+      "labels-complete": {
+        "median_cpu_seconds": 0.033409,
+        "median_allocated_bytes": 95993216,
+        "repetitions": 2000000
+      },
+      "lambda-complete": {
+        "median_cpu_seconds": 0.038623,
+        "median_allocated_bytes": 95975424,
+        "repetitions": 2000000
+      },
+      "partial-create-call": {
+        "median_cpu_seconds": 0.022976,
+        "median_allocated_bytes": 47964928,
+        "repetitions": 300000
+      },
+      "partial-existing": {
+        "median_cpu_seconds": 0.038326,
+        "median_allocated_bytes": 95975424,
+        "repetitions": 1000000
+      },
+      "runtime-funcall": {
+        "median_cpu_seconds": 0.029154,
+        "median_allocated_bytes": 47987712,
+        "repetitions": 1000000
+      }
+    },
+    "optional": {
+      "excess": {
+        "median_cpu_seconds": 0.006698,
+        "median_allocated_bytes": 9568256,
+        "repetitions": 300000
+      },
+      "flet-complete": {
+        "median_cpu_seconds": 0.017738,
+        "median_allocated_bytes": 0,
+        "repetitions": 2000000
+      },
+      "global-complete": {
+        "median_cpu_seconds": 0.017251,
+        "median_allocated_bytes": 0,
+        "repetitions": 2000000
+      },
+      "labels-complete": {
+        "median_cpu_seconds": 0.015448,
+        "median_allocated_bytes": 0,
+        "repetitions": 2000000
+      },
+      "lambda-complete": {
+        "median_cpu_seconds": 0.01663,
+        "median_allocated_bytes": 0,
+        "repetitions": 2000000
+      },
+      "partial-create-call": {
+        "median_cpu_seconds": 0.0138,
+        "median_allocated_bytes": 28750336,
+        "repetitions": 300000
+      },
+      "partial-existing": {
+        "median_cpu_seconds": 0.028637,
+        "median_allocated_bytes": 47987712,
+        "repetitions": 1000000
+      },
+      "runtime-funcall": {
+        "median_cpu_seconds": 0.012021,
+        "median_allocated_bytes": 0,
+        "repetitions": 1000000
+      }
+    }
+  },
+  "run_order": [
+    "optional",
+    "baseline",
+    "baseline",
+    "optional"
+  ],
+  "medians": {
+    "baseline": {
+      "wall_seconds_start_to_exit": 97.83995275950292,
+      "peak_rss_mib": 208.912109375,
+      "load_cpu_seconds_sum": 97.5492545,
+      "load_gc_seconds_sum": 5.6900165000000005,
+      "load_allocated_bytes_sum": 113611585736.0
+    },
+    "optional": {
+      "wall_seconds_start_to_exit": 81.95742232849443,
+      "peak_rss_mib": 243.73046875,
+      "load_cpu_seconds_sum": 81.661055,
+      "load_gc_seconds_sum": 3.2554429999999996,
+      "load_allocated_bytes_sum": 55728156768.0
+    }
+  },
+  "peak_metric": "Linux per-child wait4.ru_maxrss in KiB",
+  "limitation": "Two fresh processes each; independent roots/caches; not statistically conclusive.",
+  "wall_reduction_percent": 16.233174672568374,
+  "allocation_reduction_percent": 50.948526589976574,
+  "peak_rss_change_percent": 16.666510849546114,
+  "baseline_runtime_sha256": "32a70e3d189b6b8969422c611ff7d2111cfac424abd117130062bd08617ef72d",
+  "candidate_runtime_sha256": "57a026eba7629bdd35ff30e23db60cd5ae639406ceb8d7a4fb2903c74aa4a117",
+  "checks": {
+    "sbcl_checks": 122,
+    "defunc_protocol_checks": 27,
+    "optional_entry_checks": 84,
+    "tuple_list_checks": 16,
+    "differential_observations": 1124
+  },
+  "displayed_disassembly_bytes": {
+    "before": [
+      329,
+      40,
+      329,
+      329,
+      78
+    ],
+    "after": [
+      211,
+      40,
+      211,
+      211,
+      382
+    ]
+  }
+}
