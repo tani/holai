@@ -2,7 +2,7 @@
 
 Holai translates the pinned HOL Light standard core from OCaml to readable
 Common Lisp for **SBCL + Trivia**. The translator itself is written in OCaml.
-It preserves source names, bindings, scopes, declaration order and recursive
+It preserves source bindings, scopes, declaration order and recursive
 algorithms. It accepts Common Lisp's argument evaluation order rather than
 adding temporaries to reproduce OCaml's order.
 
@@ -35,6 +35,16 @@ measurement scripts, which use per-child `wait4.ru_maxrss`.
 The existing `hol2cl` CLI, Lisp package names and ASDF systems are retained.
 For example, `ocamlrun bin/hol2cl translate --output-dir generated <files...>`
 translates inputs; `scan` reports supported constructs and source diagnostics.
+
+## Generated names
+
+Ordinary names stay unchanged. Primes become stars (`x'` → `x*`), reserved
+binders become `t*`/`nil*`, and collisions add stars (`mk_comb` / `MK_COMB*`).
+Allocated names are shared by definitions, references and exports. Generated
+core source no longer requires `|...|` symbol quoting; literal strings are
+unchanged. See [STAR-NAMES.md](reports/STAR-NAMES.md) for exact rules and examples.
+Public Lisp spellings change in this version; update manually written callers
+using the generated declarations. Benchmarks below predate this naming change.
 
 ## Current implementation and validation
 

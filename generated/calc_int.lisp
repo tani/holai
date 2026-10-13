@@ -194,11 +194,11 @@
     AP_TERM)
   (:shadowing-import-from
     :hol2cl.fusion.hol
-    |mk_comb|
     TRANS
     rator
     rand
-    |INST|
+    mk_comb
+    INST*
     Const
     concl
     Comb)
@@ -344,25 +344,25 @@
 
 (defparameter mk_realintconst
   (let ((cast_tm (parse_term "real_of_num")) (neg_tm (parse_term "(--)")))
-    (fletc ((mk_numconst (n) (|mk_comb| (tuple cast_tm (funcall mk_numeral n)))))
+    (fletc ((mk_numconst (n) (mk_comb (tuple cast_tm (funcall mk_numeral n)))))
       (lambdac (x)
-        (if (< x num_0) (|mk_comb| (tuple neg_tm (mk_numconst (- x)))) (mk_numconst x))))))
+        (if (< x num_0) (mk_comb (tuple neg_tm (mk_numconst (- x)))) (mk_numconst x))))))
 
 (defunc is_ratconst (tm)
   (match tm
-    ((Comb (Comb (Const "real_div" _) p~local~106) q)
+    ((Comb (Comb (Const "real_div" _) p*) q)
       (cl:and
-        (is_realintconst p~local~106)
+        (is_realintconst p*)
         (cl:and
           (is_realintconst q)
-          (let ((m (dest_realintconst p~local~106)) (n (dest_realintconst q)))
+          (let ((m (dest_realintconst p*)) (n (dest_realintconst q)))
             (cl:and (> n num_1) (= (gcd-num m n) num_1))))))
     (_ (is_realintconst tm))))
 
 (defunc rat_of_term (tm)
   (match tm
-    ((Comb (Comb (Const "real_div" _) p~local~146) q)
-      (let ((m (dest_realintconst p~local~146)) (n (dest_realintconst q)))
+    ((Comb (Comb (Const "real_div" _) p*) q)
+      (let ((m (dest_realintconst p*)) (n (dest_realintconst q)))
         (if (cl:and (> n num_1) (= (gcd-num m n) num_1)) (/ m n) (failwith "rat_of_term"))))
     (_ (dest_realintconst tm))))
 
@@ -370,12 +370,11 @@
   (let ((div_tm (parse_term "(/)")))
     (lambdac (x)
       (match (numdom x)
-        ((tuple p~local~189 q)
-          (let ((ptm (funcall mk_realintconst p~local~189)))
+        ((tuple p* q)
+          (let ((ptm (funcall mk_realintconst p*)))
             (if (= q num_1)
               ptm
-              (|mk_comb|
-                (tuple (|mk_comb| (tuple div_tm ptm)) (funcall mk_realintconst q))))))))))
+              (mk_comb (tuple (mk_comb (tuple div_tm ptm)) (funcall mk_realintconst q))))))))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Some elementary "bootstrapping" lemmas we need below.                     *)
@@ -678,7 +677,7 @@
             (REWRITE_TAC (cl:cons LE (cl:cons ADD_EQ_0 nil))))))
       ((cl:cons pth_le1 (cl:cons pth_le2a (cl:cons pth_le2b (cl:cons pth_le3 nil))))
         (let
-          ((REAL_INT_LE_CONV~local~695
+          ((REAL_INT_LE_CONV*
             (funcall
               FIRST_CONV
               (cl:cons
@@ -715,7 +714,7 @@
                   (funcall CONV_TAC TAUT))))
             ((cl:cons pth_lt1 (cl:cons pth_lt2a (cl:cons pth_lt2b (cl:cons pth_lt3 nil))))
               (let
-                ((REAL_INT_LT_CONV~local~727
+                ((REAL_INT_LT_CONV*
                   (funcall
                     FIRST_CONV
                     (cl:cons
@@ -752,7 +751,7 @@
                     pth_ge1
                     (cl:cons pth_ge2a (cl:cons pth_ge2b (cl:cons pth_ge3 nil))))
                     (let
-                      ((REAL_INT_GE_CONV~local~759
+                      ((REAL_INT_GE_CONV*
                         (funcall
                           FIRST_CONV
                           (cl:cons
@@ -793,7 +792,7 @@
                           pth_gt1
                           (cl:cons pth_gt2a (cl:cons pth_gt2b (cl:cons pth_gt3 nil))))
                           (let
-                            ((REAL_INT_GT_CONV~local~791
+                            ((REAL_INT_GT_CONV*
                               (funcall
                                 FIRST_CONV
                                 (cl:cons
@@ -844,7 +843,7 @@
                                   pth_eq1b
                                   (cl:cons pth_eq2a (cl:cons pth_eq2b nil))))
                                 (let
-                                  ((REAL_INT_EQ_CONV~local~823
+                                  ((REAL_INT_EQ_CONV*
                                     (funcall
                                       FIRST_CONV
                                       (cl:cons
@@ -861,28 +860,28 @@
                                             NUM2_EQ_CONV)
                                           nil)))))
                                   (tuple
-                                    REAL_INT_LE_CONV~local~695
-                                    REAL_INT_LT_CONV~local~727
-                                    REAL_INT_GE_CONV~local~759
-                                    REAL_INT_GT_CONV~local~791
-                                    REAL_INT_EQ_CONV~local~823)))))))))))))))))
+                                    REAL_INT_LE_CONV*
+                                    REAL_INT_LT_CONV*
+                                    REAL_INT_GE_CONV*
+                                    REAL_INT_GT_CONV*
+                                    REAL_INT_EQ_CONV*)))))))))))))))))
   ((tuple
-    REAL_INT_LE_CONV~local~655
-    REAL_INT_LT_CONV~local~657
-    REAL_INT_GE_CONV~local~651
-    REAL_INT_GT_CONV~local~653
-    REAL_INT_EQ_CONV~local~649)
+    REAL_INT_LE_CONV*
+    REAL_INT_LT_CONV*
+    REAL_INT_GE_CONV*
+    REAL_INT_GT_CONV*
+    REAL_INT_EQ_CONV*)
     (setf
       REAL_INT_EQ_CONV
-      REAL_INT_EQ_CONV~local~649
+      REAL_INT_EQ_CONV*
       REAL_INT_GE_CONV
-      REAL_INT_GE_CONV~local~651
+      REAL_INT_GE_CONV*
       REAL_INT_GT_CONV
-      REAL_INT_GT_CONV~local~653
+      REAL_INT_GT_CONV*
       REAL_INT_LE_CONV
-      REAL_INT_LE_CONV~local~655
+      REAL_INT_LE_CONV*
       REAL_INT_LT_CONV
-      REAL_INT_LT_CONV~local~657)))
+      REAL_INT_LT_CONV*)))
 
 (defparameter REAL_INT_NEG_CONV
   (let
@@ -992,20 +991,17 @@
             (lambdac (tm)
               (handler-case
                 (match (funcall dest tm)
-                  ((tuple l r~local~1178)
-                    (if
-                      (cl:or
-                        (not (is_realintconst l))
-                        (not (is_realintconst r~local~1178)))
+                  ((tuple l r*)
+                    (if (cl:or (not (is_realintconst l)) (not (is_realintconst r*)))
                       (failwith "")
                       (if (= (rator l) neg_tm)
-                        (if (= (rator r~local~1178) neg_tm)
+                        (if (= (rator r*) neg_tm)
                           (let*
                             ((th1
-                              (|INST|
+                              (INST*
                                 (cl:cons
                                   (tuple (rand (rand l)) m_tm)
-                                  (cl:cons (tuple (rand (rand r~local~1178)) n_tm) nil))
+                                  (cl:cons (tuple (rand (rand r*)) n_tm) nil))
                                 pth1))
                               (tm1 (rand (rand (rand (concl th1)))))
                               (th2
@@ -1013,18 +1009,18 @@
                                   neg_tm
                                   (AP_TERM amp_tm (funcall NUM_ADD_CONV tm1)))))
                             (TRANS th1 th2))
-                          (let ((m (rand (rand l))) (n (rand r~local~1178)))
+                          (let ((m (rand (rand l))) (n (rand r*)))
                             (let
-                              ((|m'| (funcall dest_numeral m))
-                                (|n'| (funcall dest_numeral n)))
-                              (if (<= |m'| |n'|)
+                              ((m* (funcall dest_numeral m))
+                                (n* (funcall dest_numeral n)))
+                              (if (<= m* n*)
                                 (let*
-                                  ((p~local~1386 (funcall mk_numeral (- |n'| |m'|)))
+                                  ((p* (funcall mk_numeral (- n* m*)))
                                     (th1
-                                      (|INST|
+                                      (INST*
                                         (cl:cons
                                           (tuple m m_tm)
-                                          (cl:cons (tuple p~local~1386 n_tm) nil))
+                                          (cl:cons (tuple p* n_tm) nil))
                                         pth2))
                                     (th2
                                       (funcall
@@ -1033,12 +1029,12 @@
                                     (th3 (AP_TERM (rator tm) (AP_TERM amp_tm (SYM th2)))))
                                   (TRANS th3 th1))
                                 (let*
-                                  ((p~local~1338 (funcall mk_numeral (- |m'| |n'|)))
+                                  ((p* (funcall mk_numeral (- m* n*)))
                                     (th1
-                                      (|INST|
+                                      (INST*
                                         (cl:cons
                                           (tuple n m_tm)
-                                          (cl:cons (tuple p~local~1338 n_tm) nil))
+                                          (cl:cons (tuple p* n_tm) nil))
                                         pth3))
                                     (th2
                                       (funcall
@@ -1049,19 +1045,19 @@
                                     (th3 (AP_TERM neg_tm (AP_TERM amp_tm (SYM th2))))
                                     (th4 (AP_THM (AP_TERM add_tm th3) (rand tm))))
                                   (TRANS th4 th1))))))
-                        (if (= (rator r~local~1178) neg_tm)
-                          (let ((m (rand l)) (n (rand (rand r~local~1178))))
+                        (if (= (rator r*) neg_tm)
+                          (let ((m (rand l)) (n (rand (rand r*))))
                             (let
-                              ((|m'| (funcall dest_numeral m))
-                                (|n'| (funcall dest_numeral n)))
-                              (if (<= |n'| |m'|)
+                              ((m* (funcall dest_numeral m))
+                                (n* (funcall dest_numeral n)))
+                              (if (<= n* m*)
                                 (let*
-                                  ((p~local~1269 (funcall mk_numeral (- |m'| |n'|)))
+                                  ((p* (funcall mk_numeral (- m* n*)))
                                     (th1
-                                      (|INST|
+                                      (INST*
                                         (cl:cons
                                           (tuple n m_tm)
-                                          (cl:cons (tuple p~local~1269 n_tm) nil))
+                                          (cl:cons (tuple p* n_tm) nil))
                                         pth4))
                                     (th2
                                       (funcall
@@ -1071,12 +1067,12 @@
                                     (th4 (AP_THM th3 (rand tm))))
                                   (TRANS th4 th1))
                                 (let*
-                                  ((p~local~1223 (funcall mk_numeral (- |n'| |m'|)))
+                                  ((p* (funcall mk_numeral (- n* m*)))
                                     (th1
-                                      (|INST|
+                                      (INST*
                                         (cl:cons
                                           (tuple m m_tm)
-                                          (cl:cons (tuple p~local~1223 n_tm) nil))
+                                          (cl:cons (tuple p* n_tm) nil))
                                         pth5))
                                     (th2
                                       (funcall
@@ -1087,19 +1083,19 @@
                                   (TRANS th4 th1)))))
                           (let*
                             ((th1
-                              (|INST|
+                              (INST*
                                 (cl:cons
                                   (tuple (rand l) m_tm)
-                                  (cl:cons (tuple (rand r~local~1178) n_tm) nil))
+                                  (cl:cons (tuple (rand r*) n_tm) nil))
                                 pth6))
                               (tm1 (rand (rand (concl th1))))
                               (th2 (AP_TERM amp_tm (funcall NUM_ADD_CONV tm1))))
                             (TRANS th1 th2)))))))
                 (hol2cl.runtime:ocaml-condition
-                  (exception~1172)
-                  (match exception~1172
+                  (exception~1159)
+                  (match exception~1159
                     ((Failure _) (failwith "REAL_INT_ADD_CONV"))
-                    (_ (raise exception~1172))))))))))))
+                    (_ (raise exception~1159))))))))))))
 
 (defparameter REAL_INT_SUB_CONV
   (THENC
@@ -1185,17 +1181,16 @@
   (let
     ((convlist
       (map
-        (lambdac (arg~1748)
-          (match arg~1748
+        (lambdac (arg~1730)
+          (match arg~1730
             ((tuple pat the_conv)
               (match (funcall strip_comb pat)
-                ((tuple c~local~1753 args)
-                  (tuple c~local~1753 (funcall length args) the_conv))))))
+                ((tuple c* args) (tuple c* (funcall length args) the_conv))))))
         real_int_red_conv_list)))
     (lambdac (compset)
       (itlist
-        (lambdac (newc arg~1774)
-          (match arg~1774 ((cl:type hol2cl.runtime::unit-value) (add_conv newc compset))))
+        (lambdac (newc arg~1755)
+          (match arg~1755 ((cl:type hol2cl.runtime::unit-value) (add_conv newc compset))))
         convlist
         unit))))
 

@@ -299,14 +299,14 @@
     AP_TERM)
   (:shadowing-import-from
     :hol2cl.fusion.hol
-    |mk_comb|
     type_of
     TRANS
     rator
     rand
+    mk_comb
     mk_abs
     is_comb
-    |INST|
+    INST*
     EQ_MP
     dest_eq
     dest_comb
@@ -316,7 +316,6 @@
     ASSUME)
   (:shadowing-import-from
     :hol2cl.lib
-    |\|=>|
     union
     undefined
     undefine
@@ -344,7 +343,8 @@
     combine
     choose
     apply
-    --)
+    --
+    *=>)
   (:shadowing-import-from :hol2cl.meson MESON_TAC)
   (:shadowing-import-from :hol2cl.nets empty_net)
   (:shadowing-import-from :hol2cl.normalizer SEMIRING_NORMALIZERS_CONV)
@@ -876,14 +876,11 @@
           (let
             ((net
               (itlist
-                (lambdac (th~local~679)
-                  (net_of_conv
-                    (funcall lhand (concl th~local~679))
-                    (funcall PART_MATCH lhand th~local~679)))
+                (lambdac (th*)
+                  (net_of_conv (funcall lhand (concl th*)) (funcall PART_MATCH lhand th*)))
                 (funcall CONJUNCTS th)
                 empty_net)))
-            (lambdac (th~local~693)
-              (funcall MP (REWRITES_CONV net (concl th~local~693)) th~local~693)))))
+            (lambdac (th*) (funcall MP (REWRITES_CONV net (concl th*)) th*)))))
       (x_tm (parse_term "x:real"))
       (y_tm (parse_term "y:real"))
       (neg_tm (parse_term "(--):real->real"))
@@ -905,8 +902,8 @@
       (xy_eq (parse_term "x:real = y"))
       (xy_ne (parse_term "~(x:real = y)")))
     (let ((is_ge (is_binop ge_tm)) (is_gt (is_binop gt_tm)) (is_req (is_binop eq_tm)))
-      (lambdac (arg~753)
-        (match arg~753
+      (lambdac (arg~751)
+        (match arg~751
           ((tuple
             mk_numeric
             NUMERIC_EQ_CONV
@@ -918,46 +915,42 @@
             POLY_MUL_CONV
             absconv1
             absconv2
-            prover~local~765)
+            prover*)
             (fletc
               ((REAL_INEQ_CONV
-                (pth~local~768 tm)
+                (pth* tm)
                 (match (dest_comb tm)
-                  ((tuple lop r~local~772)
+                  ((tuple lop r*)
                     (let
                       ((th
-                        (|INST|
-                          (cl:cons
-                            (tuple (rand lop) x_tm)
-                            (cl:cons (tuple r~local~772 y_tm) nil))
-                          pth~local~768)))
+                        (INST*
+                          (cl:cons (tuple (rand lop) x_tm) (cl:cons (tuple r* y_tm) nil))
+                          pth*)))
                       (TRANS th (funcall LAND_CONV POLY_CONV (rand (concl th)))))))))
               (match
                 (tuple
                   (map #'REAL_INEQ_CONV (funcall CONJUNCTS pth))
-                  (let ((pth~local~1381 (last (funcall CONJUNCTS pth))))
+                  (let ((pth* (last (funcall CONJUNCTS pth))))
                     (lambdac (tm)
                       (match (dest_eq tm)
-                        ((tuple l r~local~1388)
+                        ((tuple l r*)
                           (let*
                             ((th
-                              (|INST|
-                                (cl:cons
-                                  (tuple l x_tm)
-                                  (cl:cons (tuple r~local~1388 y_tm) nil))
-                                pth~local~1381))
+                              (INST*
+                                (cl:cons (tuple l x_tm) (cl:cons (tuple r* y_tm) nil))
+                                pth*))
                               (th_p
                                 (funcall
                                   POLY_CONV
                                   (funcall lhand (funcall lhand (rand (concl th))))))
                               (th_x (AP_TERM neg_tm th_p))
                               (th_n (CONV_RULE (RAND_CONV POLY_NEG_CONV) th_x))
-                              (|th'|
+                              (th*
                                 (funcall
                                   MK_DISJ
                                   (AP_THM (AP_TERM gt_tm th_p) z_tm)
                                   (AP_THM (AP_TERM gt_tm th_n) z_tm))))
-                            (TRANS th |th'|)))))))
+                            (TRANS th th*)))))))
                 ((tuple
                   (cl:cons
                     REAL_LT_CONV
@@ -986,34 +979,33 @@
                           (cl:cons
                             (tuple
                               xy_nlt
-                              (lambdac (|t|) (funcall REAL_NOT_LT_CONV (rand |t|))))
+                              (lambdac (t*) (funcall REAL_NOT_LT_CONV (rand t*))))
                             (cl:cons
                               (tuple xy_le REAL_LE_CONV)
                               (cl:cons
                                 (tuple
                                   xy_nle
-                                  (lambdac (|t|) (funcall REAL_NOT_LE_CONV (rand |t|))))
+                                  (lambdac (t*) (funcall REAL_NOT_LE_CONV (rand t*))))
                                 (cl:cons
                                   (tuple xy_gt REAL_GT_CONV)
                                   (cl:cons
                                     (tuple
                                       xy_ngt
-                                      (lambdac (|t|)
-                                        (funcall REAL_NOT_GT_CONV (rand |t|))))
+                                      (lambdac (t*) (funcall REAL_NOT_GT_CONV (rand t*))))
                                     (cl:cons
                                       (tuple xy_ge REAL_GE_CONV)
                                       (cl:cons
                                         (tuple
                                           xy_nge
-                                          (lambdac (|t|)
-                                            (funcall REAL_NOT_GE_CONV (rand |t|))))
+                                          (lambdac (t*)
+                                            (funcall REAL_NOT_GE_CONV (rand t*))))
                                         (cl:cons
                                           (tuple xy_eq REAL_EQ_CONV)
                                           (cl:cons
                                             (tuple
                                               xy_ne
-                                              (lambdac (|t|)
-                                                (funcall REAL_NOT_EQ_CONV (rand |t|))))
+                                              (lambdac (t*)
+                                                (funcall REAL_NOT_EQ_CONV (rand t*))))
                                             nil))))))))))
                         empty_net))
                       (net_double
@@ -1022,38 +1014,38 @@
                           (cl:cons
                             (tuple
                               xy_lt
-                              (lambdac (|t|)
+                              (lambdac (t*)
                                 (tuple
-                                  (funcall REAL_LT_CONV |t|)
-                                  (funcall REAL_NOT_LT_CONV |t|))))
+                                  (funcall REAL_LT_CONV t*)
+                                  (funcall REAL_NOT_LT_CONV t*))))
                             (cl:cons
                               (tuple
                                 xy_le
-                                (lambdac (|t|)
+                                (lambdac (t*)
                                   (tuple
-                                    (funcall REAL_LE_CONV |t|)
-                                    (funcall REAL_NOT_LE_CONV |t|))))
+                                    (funcall REAL_LE_CONV t*)
+                                    (funcall REAL_NOT_LE_CONV t*))))
                               (cl:cons
                                 (tuple
                                   xy_gt
-                                  (lambdac (|t|)
+                                  (lambdac (t*)
                                     (tuple
-                                      (funcall REAL_GT_CONV |t|)
-                                      (funcall REAL_NOT_GT_CONV |t|))))
+                                      (funcall REAL_GT_CONV t*)
+                                      (funcall REAL_NOT_GT_CONV t*))))
                                 (cl:cons
                                   (tuple
                                     xy_ge
-                                    (lambdac (|t|)
+                                    (lambdac (t*)
                                       (tuple
-                                        (funcall REAL_GE_CONV |t|)
-                                        (funcall REAL_NOT_GE_CONV |t|))))
+                                        (funcall REAL_GE_CONV t*)
+                                        (funcall REAL_NOT_GE_CONV t*))))
                                   (cl:cons
                                     (tuple
                                       xy_eq
-                                      (lambdac (|t|)
+                                      (lambdac (t*)
                                         (tuple
-                                          (funcall REAL_EQ_CONV |t|)
-                                          (funcall REAL_NOT_EQ_CONV |t|))))
+                                          (funcall REAL_EQ_CONV t*)
+                                          (funcall REAL_NOT_EQ_CONV t*))))
                                     nil)))))
                           empty_net)))
                     (let
@@ -1084,14 +1076,14 @@
                                   (funcall LAND_CONV POLY_MUL_CONV)
                                   (funcall SPEC tm (funcall rule th))))))
                           (SQUARE_RULE
-                            (lambdac (|t|)
+                            (lambdac (t*)
                               (CONV_RULE
                                 (funcall LAND_CONV POLY_MUL_CONV)
-                                (funcall SPEC |t| pth_square)))))
+                                (funcall SPEC t* pth_square)))))
                         (fletc
                           ((hol_of_positivstellensatz
-                            (arg~994)
-                            (match arg~994
+                            (arg~989)
+                            (match arg~989
                               ((tuple eqs les lts)
                                 (labelsc
                                   ((translate
@@ -1104,32 +1096,32 @@
                                         (EQT_ELIM
                                           (funcall
                                             NUMERIC_EQ_CONV
-                                            (|mk_comb|
+                                            (mk_comb
                                               (tuple
-                                                (|mk_comb|
+                                                (mk_comb
                                                   (tuple eq_tm (funcall mk_numeric x)))
                                                 z_tm)))))
                                       ((Rational_le x)
                                         (EQT_ELIM
                                           (funcall
                                             NUMERIC_GE_CONV
-                                            (|mk_comb|
+                                            (mk_comb
                                               (tuple
-                                                (|mk_comb|
+                                                (mk_comb
                                                   (tuple ge_tm (funcall mk_numeric x)))
                                                 z_tm)))))
                                       ((Rational_lt x)
                                         (EQT_ELIM
                                           (funcall
                                             NUMERIC_GT_CONV
-                                            (|mk_comb|
+                                            (mk_comb
                                               (tuple
-                                                (|mk_comb|
+                                                (mk_comb
                                                   (tuple gt_tm (funcall mk_numeric x)))
                                                 z_tm)))))
-                                      ((Square |t|) (funcall SQUARE_RULE |t|))
-                                      ((Eqmul |t| p~local~1063)
-                                        (funcall EMUL_RULE |t| (translate p~local~1063)))
+                                      ((Square t*) (funcall SQUARE_RULE t*))
+                                      ((Eqmul t* p*)
+                                        (funcall EMUL_RULE t* (translate p*)))
                                       ((Sum p1 p2)
                                         (funcall
                                           ADD_RULE
@@ -1173,14 +1165,12 @@
                                     (match (partition (o is_req #'concl) dun)
                                       ((tuple eq ne)
                                         (match (partition (o is_ge #'concl) ne)
-                                          ((tuple le~local~1140 nl)
-                                            (let
-                                              ((lt~local~1143
-                                                (filter (o is_gt #'concl) nl)))
+                                          ((tuple le* nl)
+                                            (let ((lt* (filter (o is_gt #'concl) nl)))
                                               (funcall
-                                                prover~local~765
+                                                prover*
                                                 #'hol_of_positivstellensatz
-                                                (tuple eq le~local~1140 lt~local~1143))))))))
+                                                (tuple eq le* lt*))))))))
                                   ((cl:cons th oths)
                                     (let ((tm (concl th)))
                                       (if (funcall is_conj tm)
@@ -1201,16 +1191,16 @@
                                           (overall (cl:cons th dun) oths))))))))
                               (lambdac (tm)
                                 (let
-                                  ((|NNF_NORM_CONV'|
+                                  ((NNF_NORM_CONV*
                                     (funcall
                                       GEN_NNF_CONV
                                       cl:nil
                                       (tuple
                                         (funcall CACHE_CONV REAL_INEQ_NORM_CONV)
-                                        (lambdac (|t|) (failwith ""))))))
+                                        (lambdac (t*) (failwith ""))))))
                                   (labelsc
                                     ((absremover
-                                      (|t|)
+                                      (t*)
                                       (THENC
                                         (funcall
                                           TOP_DEPTH_CONV
@@ -1219,9 +1209,9 @@
                                             (BINOP_CONV (funcall LAND_CONV POLY_CONV))))
                                         (TRY_CONV
                                           (THENC
-                                            (THENC absconv2 |NNF_NORM_CONV'|)
+                                            (THENC absconv2 NNF_NORM_CONV*)
                                             (BINOP_CONV #'absremover)))
-                                        |t|)))
+                                        t*)))
                                     (let*
                                       ((th0 (funcall init_conv (funcall mk_neg tm)))
                                         (tm0 (rand (concl th0)))
@@ -1265,7 +1255,7 @@
                                                           th3))))))))))
                                       (funcall
                                         MP
-                                        (|INST| (cl:cons (tuple tm p_tm) nil) pth_final)
+                                        (INST* (cl:cons (tuple tm p_tm) nil) pth_final)
                                         th))))))))))))))))))))
 
 ;; (* ------------------------------------------------------------------------- *)
@@ -1277,35 +1267,34 @@
 (defparameter REAL_LINEAR_PROVER
   (let
     ((linear_add (funcall combine (function-value #'+ 2) (lambdac (z) (= z num_0))))
-      (linear_cmul
-        (lambdac (c~local~1475) (funcall mapf (lambdac (x) (* c~local~1475 x)))))
+      (linear_cmul (lambdac (c*) (funcall mapf (lambdac (x) (* c* x)))))
       (one_tm (parse_term "&1")))
     (fletc
       ((contradictory
-        (p~local~1487 arg~1489)
-        (match arg~1489
-          ((tuple e~local~1491 _)
+        (p* arg~1477)
+        (match arg~1477
+          ((tuple e* _)
             (cl:or
-              (cl:and (is_undefined e~local~1491) (not (funcall p~local~1487 num_0)))
+              (cl:and (is_undefined e*) (not (funcall p* num_0)))
               (cl:and
-                (= (dom e~local~1491) (cl:cons one_tm nil))
-                (not (funcall p~local~1487 (apply e~local~1491 one_tm)))))))))
+                (= (dom e*) (cl:cons one_tm nil))
+                (not (funcall p* (apply e* one_tm)))))))))
       (labelsc
         ((linear_ineqs
-          (vars arg~1517)
-          (match arg~1517
+          (vars arg~1504)
+          (match arg~1504
             ((tuple les lts)
               (handler-case
                 (find (contradictory (lambdac (x) (> x num_0))) lts)
                 (hol2cl.runtime:ocaml-condition
-                  (exception~1521)
-                  (match exception~1521
+                  (exception~1508)
+                  (match exception~1508
                     ((Failure _)
                       (handler-case
                         (find (contradictory (lambdac (x) (>= x num_0))) les)
                         (hol2cl.runtime:ocaml-condition
-                          (exception~1524)
-                          (match exception~1524
+                          (exception~1511)
+                          (match exception~1511
                             ((Failure _)
                               (if (= vars nil)
                                 (failwith "linear_ineqs: no contradiction")
@@ -1317,42 +1306,38 @@
                                         (funcall
                                           length
                                           (filter
-                                            (lambdac (arg~1533)
-                                              (match arg~1533
-                                                ((tuple e~local~1535 _)
-                                                  (>
-                                                    (tryapplyd e~local~1535 v num_0)
-                                                    num_0))))
+                                            (lambdac (arg~1520)
+                                              (match arg~1520
+                                                ((tuple e* _)
+                                                  (> (tryapplyd e* v num_0) num_0))))
                                             ineqs))
                                         (funcall
                                           length
                                           (filter
-                                            (lambdac (arg~1550)
-                                              (match arg~1550
-                                                ((tuple e~local~1552 _)
-                                                  (<
-                                                    (tryapplyd e~local~1552 v num_0)
-                                                    num_0))))
+                                            (lambdac (arg~1536)
+                                              (match arg~1536
+                                                ((tuple e* _)
+                                                  (< (tryapplyd e* v num_0) num_0))))
                                             ineqs)))))
                                     (let
                                       ((v
                                         (fst
                                           (hd
                                             (sort
-                                              (lambdac (arg~1569 arg~1573)
-                                                (match arg~1569
-                                                  ((tuple _ i~local~1571)
-                                                    (match arg~1573
-                                                      ((tuple _ j) (< i~local~1571 j))))))
+                                              (lambdac (arg~1554 arg~1557)
+                                                (match arg~1554
+                                                  ((tuple _ i*)
+                                                    (match arg~1557
+                                                      ((tuple _ j) (< i* j))))))
                                               (map
                                                 (lambdac (v) (tuple v (blowup v)))
                                                 vars))))))
                                       (fletc
                                         ((addup
-                                          (arg~1598 arg~1602 acc)
-                                          (match arg~1598
+                                          (arg~1582 arg~1586 acc)
+                                          (match arg~1582
                                             ((tuple e1 p1)
-                                              (match arg~1602
+                                              (match arg~1586
                                                 ((tuple e2 p2)
                                                   (let
                                                     ((c1 (tryapplyd e1 v num_0))
@@ -1360,80 +1345,69 @@
                                                     (if (>= (* c1 c2) num_0)
                                                       acc
                                                       (let
-                                                        ((|e1'|
+                                                        ((e1*
                                                           (funcall
                                                             linear_cmul
                                                             (abs-num c2)
                                                             e1))
-                                                          (|e2'|
+                                                          (e2*
                                                             (funcall
                                                               linear_cmul
                                                               (abs-num c1)
                                                               e2))
-                                                          (|p1'|
+                                                          (p1*
                                                             (make-Product
                                                               (make-Rational_lt
                                                                 (abs-num c2))
                                                               p1))
-                                                          (|p2'|
+                                                          (p2*
                                                             (make-Product
                                                               (make-Rational_lt
                                                                 (abs-num c1))
                                                               p2)))
                                                         (cl:cons
                                                           (tuple
-                                                            (funcall
-                                                              linear_add
-                                                              |e1'|
-                                                              |e2'|)
-                                                            (make-Sum |p1'| |p2'|))
+                                                            (funcall linear_add e1* e2*)
+                                                            (make-Sum p1* p2*))
                                                           acc))))))))))
                                         (match
                                           (tuple
                                             (partition
-                                              (lambdac (arg~1758)
-                                                (match arg~1758
-                                                  ((tuple e~local~1760 _)
-                                                    (=
-                                                      (tryapplyd e~local~1760 v num_0)
-                                                      num_0))))
+                                              (lambdac (arg~1740)
+                                                (match arg~1740
+                                                  ((tuple e* _)
+                                                    (= (tryapplyd e* v num_0) num_0))))
                                               les)
                                             (partition
-                                              (lambdac (arg~1774)
-                                                (match arg~1774
-                                                  ((tuple e~local~1776 _)
-                                                    (=
-                                                      (tryapplyd e~local~1776 v num_0)
-                                                      num_0))))
+                                              (lambdac (arg~1755)
+                                                (match arg~1755
+                                                  ((tuple e* _)
+                                                    (= (tryapplyd e* v num_0) num_0))))
                                               lts))
                                           ((tuple (tuple les0 les1) (tuple lts0 lts1))
                                             (match
                                               (tuple
                                                 (partition
-                                                  (lambdac (arg~1719)
-                                                    (match arg~1719
-                                                      ((tuple e~local~1721 _)
-                                                        (>
-                                                          (tryapplyd e~local~1721 v num_0)
-                                                          num_0))))
+                                                  (lambdac (arg~1703)
+                                                    (match arg~1703
+                                                      ((tuple e* _)
+                                                        (> (tryapplyd e* v num_0) num_0))))
                                                   les1)
                                                 (partition
-                                                  (lambdac (arg~1735)
-                                                    (match arg~1735
-                                                      ((tuple e~local~1737 _)
-                                                        (>
-                                                          (tryapplyd e~local~1737 v num_0)
-                                                          num_0))))
+                                                  (lambdac (arg~1718)
+                                                    (match arg~1718
+                                                      ((tuple e* _)
+                                                        (> (tryapplyd e* v num_0) num_0))))
                                                   lts1))
                                               ((tuple (tuple lesp lesn) (tuple ltsp ltsn))
                                                 (let
-                                                  ((|les'|
+                                                  ((les*
                                                     (itlist
                                                       (lambdac (ep1)
                                                         (itlist (addup ep1) lesp))
                                                       lesn
                                                       les0))
-                                                    (|lts'|
+                                                    (lts*
                                                       (itlist
                                                         (lambdac (ep1)
                                                           (itlist
@@ -1449,19 +1423,19 @@
                                                           lts0))))
                                                   (linear_ineqs
                                                     (subtract vars (cl:cons v nil))
-                                                    (tuple |les'| |lts'|)))))))))))))
-                            (_ (raise exception~1524))))))
-                    (_ (raise exception~1521)))))))))
+                                                    (tuple les* lts*)))))))))))))
+                            (_ (raise exception~1511))))))
+                    (_ (raise exception~1508)))))))))
         (labelsc
           ((linear_eqs
-            (arg~1823)
-            (match arg~1823
+            (arg~1803)
+            (match arg~1803
               ((tuple eqs les lts)
                 (handler-case
                   (find (contradictory (lambdac (x) (= x num_0))) eqs)
                   (hol2cl.runtime:ocaml-condition
-                    (exception~1828)
-                    (match exception~1828
+                    (exception~1808)
+                    (match exception~1808
                       ((Failure _)
                         (match eqs
                           (nil
@@ -1474,80 +1448,67 @@
                                     nil)
                                   (cl:cons one_tm nil))))
                               (linear_ineqs vars (tuple les lts))))
-                          ((cl:cons (tuple e~local~1853 p~local~1856) es)
-                            (if (is_undefined e~local~1853)
+                          ((cl:cons (tuple e* p*) es)
+                            (if (is_undefined e*)
                               (linear_eqs (tuple es les lts))
-                              (match (choose (funcall undefine one_tm e~local~1853))
-                                ((tuple x c~local~1863)
+                              (match (choose (funcall undefine one_tm e*))
+                                ((tuple x c*)
                                   (fletc
                                     ((xform
-                                      (arg~1867)
-                                      (match arg~1867
-                                        ((cl:and inp (tuple |t| q))
-                                          (let ((d (tryapplyd |t| x num_0)))
+                                      (arg~1844)
+                                      (match arg~1844
+                                        ((cl:and inp (tuple t* q))
+                                          (let ((d (tryapplyd t* x num_0)))
                                             (if (= d num_0)
                                               inp
                                               (let*
-                                                ((k~local~1877
-                                                  (/
-                                                    (* (- d) (abs-num c~local~1863))
-                                                    c~local~1863))
-                                                  (|e'|
-                                                    (funcall
-                                                      linear_cmul
-                                                      k~local~1877
-                                                      e~local~1853))
-                                                  (|t'|
-                                                    (funcall
-                                                      linear_cmul
-                                                      (abs-num c~local~1863)
-                                                      |t|))
-                                                  (|p'|
+                                                ((k* (/ (* (- d) (abs-num c*)) c*))
+                                                  (e** (funcall linear_cmul k* e*))
+                                                  (t**
+                                                    (funcall linear_cmul (abs-num c*) t*))
+                                                  (p**
                                                     (make-Eqmul
-                                                      (funcall term_of_rat k~local~1877)
-                                                      p~local~1856))
-                                                  (|q'|
+                                                      (funcall term_of_rat k*)
+                                                      p*))
+                                                  (q*
                                                     (make-Product
-                                                      (make-Rational_lt
-                                                        (abs-num c~local~1863))
+                                                      (make-Rational_lt (abs-num c*))
                                                       q)))
                                                 (tuple
-                                                  (funcall linear_add |e'| |t'|)
-                                                  (make-Sum |p'| |q'|)))))))))
+                                                  (funcall linear_add e** t**)
+                                                  (make-Sum p** q*)))))))))
                                     (linear_eqs
                                       (tuple
                                         (map #'xform es)
                                         (map #'xform les)
                                         (map #'xform lts))))))))))
-                      (_ (raise exception~1828)))))))))
+                      (_ (raise exception~1808)))))))))
           (fletc
             ((linear_prover
-              (arg~1970)
-              (match arg~1970
-                ((tuple eq le~local~1973 lt~local~1975)
+              (arg~1946)
+              (match arg~1946
+                ((tuple eq le* lt*)
                   (let
                     ((eqs
                       (map2
-                        (lambdac (p~local~1980 n) (tuple p~local~1980 (make-Axiom_eq n)))
+                        (lambdac (p* n) (tuple p* (make-Axiom_eq n)))
                         eq
                         (-- 0 (- (funcall length eq) 1))))
                       (les
                         (map2
-                          (lambdac (p~local~1996 n)
-                            (tuple p~local~1996 (make-Axiom_le n)))
-                          le~local~1973
-                          (-- 0 (- (funcall length le~local~1973) 1))))
+                          (lambdac (p* n) (tuple p* (make-Axiom_le n)))
+                          le*
+                          (-- 0 (- (funcall length le*) 1))))
                       (lts
                         (map2
-                          (lambdac (p~local~2012 n)
-                            (tuple p~local~2012 (make-Axiom_lt n)))
-                          lt~local~1975
-                          (-- 0 (- (funcall length lt~local~1975) 1)))))
+                          (lambdac (p* n) (tuple p* (make-Axiom_lt n)))
+                          lt*
+                          (-- 0 (- (funcall length lt*) 1)))))
                     (linear_eqs (tuple eqs les lts)))))))
             (let
               ((lin_of_hol
                 (let
-                  ((one_tm~local~2039 (parse_term "&1"))
+                  ((one_tm* (parse_term "&1"))
                     (zero_tm (parse_term "&0"))
                     (add_tm (parse_term "(+):real->real->real"))
                     (mul_tm (parse_term "(*):real->real->real")))
@@ -1557,23 +1518,23 @@
                       (if (= tm zero_tm)
                         undefined
                         (if (not (is_comb tm))
-                          (|\|=>| tm (num 1))
+                          (*=> tm (num 1))
                           (if (is_ratconst tm)
-                            (|\|=>| one_tm~local~2039 (rat_of_term tm))
+                            (*=> one_tm* (rat_of_term tm))
                             (match (dest_comb tm)
-                              ((tuple lop r~local~2055)
+                              ((tuple lop r*)
                                 (if (not (is_comb lop))
-                                  (|\|=>| tm (num 1))
+                                  (*=> tm (num 1))
                                   (match (dest_comb lop)
                                     ((tuple op l)
                                       (if (= op add_tm)
                                         (funcall
                                           linear_add
                                           (lin_of_hol l)
-                                          (lin_of_hol r~local~2055))
+                                          (lin_of_hol r*))
                                         (if (cl:and (= op mul_tm) (is_ratconst l))
-                                          (|\|=>| r~local~2055 (rat_of_term l))
-                                          (|\|=>| tm (num 1))))))))))))))
+                                          (*=> r* (rat_of_term l))
+                                          (*=> tm (num 1))))))))))))))
                     #'lin_of_hol))))
               (fletc
                 ((is_alien
@@ -1606,15 +1567,13 @@
                           (REWRITE_RULE
                             (cl:cons (funcall GSYM real_gt) nil)
                             (funcall SPEC n_tm REAL_POS_LT))))
-                      (lambdac (translator arg~2198)
-                        (match arg~2198
-                          ((tuple eq le~local~2201 lt~local~2203)
+                      (lambdac (translator arg~2167)
+                        (match arg~2167
+                          ((tuple eq le* lt*)
                             (let
                               ((eq_pols (map (o (o lin_of_hol lhand) #'concl) eq))
-                                (le_pols
-                                  (map (o (o lin_of_hol lhand) #'concl) le~local~2201))
-                                (lt_pols
-                                  (map (o (o lin_of_hol lhand) #'concl) lt~local~2203)))
+                                (le_pols (map (o (o lin_of_hol lhand) #'concl) le*))
+                                (lt_pols (map (o (o lin_of_hol lhand) #'concl) lt*)))
                               (let
                                 ((all_aliens
                                   (filter
@@ -1626,48 +1585,41 @@
                                 (match (partition #'is_suc_alien all_aliens)
                                   ((tuple suc_aliens aliens)
                                     (let*
-                                      ((|le_pols'|
+                                      ((le_pols*
                                         (append
                                           le_pols
-                                          (map (lambdac (v) (|\|=>| v (num 1))) aliens)))
-                                        (|lt_pols'|
+                                          (map (lambdac (v) (*=> v (num 1))) aliens)))
+                                        (lt_pols*
                                           (append
                                             lt_pols
-                                            (map
-                                              (lambdac (v) (|\|=>| v (num 1)))
-                                              suc_aliens))))
+                                            (map (lambdac (v) (*=> v (num 1))) suc_aliens))))
                                       (match
-                                        (linear_prover
-                                          (tuple eq_pols |le_pols'| |lt_pols'|))
+                                        (linear_prover (tuple eq_pols le_pols* lt_pols*))
                                         ((tuple _ proof)
                                           (let*
-                                            ((|le'|
+                                            ((le**
                                               (append
-                                                le~local~2201
+                                                le*
                                                 (map
-                                                  (lambdac (a~local~2269)
-                                                    (|INST|
-                                                      (cl:cons
-                                                        (tuple (rand a~local~2269) n_tm)
-                                                        nil)
+                                                  (lambdac (a*)
+                                                    (INST*
+                                                      (cl:cons (tuple (rand a*) n_tm) nil)
                                                       pth))
                                                   aliens)))
-                                              (|lt'|
+                                              (lt**
                                                 (append
-                                                  lt~local~2203
+                                                  lt*
                                                   (map
-                                                    (lambdac (a~local~2285)
-                                                      (|INST|
+                                                    (lambdac (a*)
+                                                      (INST*
                                                         (cl:cons
-                                                          (tuple
-                                                            (dest_suc_alien a~local~2285)
-                                                            n_tm)
+                                                          (tuple (dest_suc_alien a*) n_tm)
                                                           nil)
                                                         pth_suc))
                                                     suc_aliens))))
                                             (funcall
                                               translator
-                                              (tuple eq |le'| |lt'|)
+                                              (tuple eq le** lt**)
                                               proof)))))))))))))))))))))))
 
 ;; (* ------------------------------------------------------------------------- *)
@@ -1857,95 +1809,81 @@
           (let
             ((is_max (is_binop (parse_term "real_max")))
               (is_min (is_binop (parse_term "real_min")))
-              (is_abs~local~2492
-                (lambdac (|t|) (cl:and (is_comb |t|) (= (rator |t|) abs_tm)))))
+              (is_abs* (lambdac (t*) (cl:and (is_comb t*) (= (rator t*) abs_tm)))))
             (fletc
               ((eliminate_construct
-                (p~local~2510 c~local~2512 tm)
+                (p* c* tm)
                 (let*
-                  ((|t|
-                    (find_term
-                      (lambdac (|t|) (cl:and (funcall p~local~2510 |t|) (free_in |t| tm)))
-                      tm))
-                    (v (funcall genvar (type_of |t|)))
+                  ((t*
+                    (find_term (lambdac (t*) (cl:and (funcall p* t*) (free_in t* tm))) tm))
+                    (v (funcall genvar (type_of t*)))
                     (th0
                       (SYM
                         (BETA_CONV
-                          (|mk_comb|
+                          (mk_comb
                             (tuple
                               (mk_abs
-                                (tuple v (funcall subst (cl:cons (tuple v |t|) nil) tm)))
-                              |t|))))))
+                                (tuple v (funcall subst (cl:cons (tuple v t*) nil) tm)))
+                              t*))))))
                   (match (dest_comb (rand (concl th0)))
                     ((tuple p ax)
                       (CONV_RULE
                         (RAND_CONV (BINOP_CONV (RAND_CONV #'BETA_CONV)))
-                        (TRANS th0 (funcall c~local~2512 p ax))))))))
+                        (TRANS th0 (funcall c* p ax))))))))
               (let
                 ((elim_abs
                   (eliminate_construct
-                    is_abs~local~2492
-                    (lambdac (p~local~2573 ax)
-                      (|INST|
-                        (cl:cons
-                          (tuple p~local~2573 p_tm)
-                          (cl:cons (tuple (rand ax) x_tm) nil))
+                    is_abs*
+                    (lambdac (p* ax)
+                      (INST*
+                        (cl:cons (tuple p* p_tm) (cl:cons (tuple (rand ax) x_tm) nil))
                         pth_abs))))
                   (elim_max
                     (eliminate_construct
                       is_max
-                      (lambdac (p~local~2591 ax)
+                      (lambdac (p* ax)
                         (match (dest_comb ax)
-                          ((tuple ax~local~2594 y)
-                            (|INST|
+                          ((tuple ax* y)
+                            (INST*
                               (cl:cons
-                                (tuple p~local~2591 p_tm)
+                                (tuple p* p_tm)
                                 (cl:cons
-                                  (tuple (rand ax~local~2594) x_tm)
+                                  (tuple (rand ax*) x_tm)
                                   (cl:cons (tuple y y_tm) nil)))
                               pth_max))))))
                   (elim_min
                     (eliminate_construct
                       is_min
-                      (lambdac (p~local~2622 ax)
+                      (lambdac (p* ax)
                         (match (dest_comb ax)
-                          ((tuple ax~local~2625 y)
-                            (|INST|
+                          ((tuple ax* y)
+                            (INST*
                               (cl:cons
-                                (tuple p~local~2622 p_tm)
+                                (tuple p* p_tm)
                                 (cl:cons
-                                  (tuple (rand ax~local~2625) x_tm)
+                                  (tuple (rand ax*) x_tm)
                                   (cl:cons (tuple y y_tm) nil)))
                               pth_min)))))))
                 (funcall
                   FIRST_CONV
                   (cl:cons elim_abs (cl:cons elim_max (cl:cons elim_min nil))))))))))
-    (lambdac (arg~2664)
-      (match arg~2664
-        ((tuple
-          mkconst
-          EQ
-          GE~local~2669
-          GT~local~2671
-          NORM
-          NEG
-          ADD~local~2666
-          MUL
-          PROVER~local~2676)
+    (lambdac (arg~2621)
+      (match arg~2621
+        ((tuple mkconst EQ GE* GT* NORM NEG ADD* MUL PROVER*)
           (funcall
             GEN_REAL_ARITH~1
             (tuple
               mkconst
               EQ
-              GE~local~2669
-              GT~local~2671
+              GE*
+              GT*
               NORM
               NEG
-              ADD~local~2666
+              ADD*
               MUL
               ABSMAXMIN_ELIM_CONV1
               ABSMAXMIN_ELIM_CONV2
-              PROVER~local~2676)))))))
+              PROVER*)))))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Incorporate that. This gets overwritten again in "calc_rat.ml".           *)

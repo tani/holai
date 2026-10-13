@@ -28,7 +28,7 @@
         CONJ_ASSOC
         CONJ_SYM
         DESTRUCT_TAC
-        DESTRUCT_TAC~local~1421
+        DESTRUCT_TAC**
         DISJ_ACI
         DISJ_ASSOC
         DISJ_SYM
@@ -46,19 +46,19 @@
         EXISTS_UNIQUE_REFL
         EXISTS_UNIQUE_THM
         FIX_TAC
-        FIX_TAC~local~1425
+        FIX_TAC**
         FORALL_AND_THM
         FORALL_SIMP
         FORALL_UNWIND_THM1
         FORALL_UNWIND_THM2
         HYP_TAC
-        HYP_TAC~local~1427
+        HYP_TAC**
         IMP_CLAUSES
         IMP_CONJ
         IMP_CONJ_ALT
         IMP_IMP
         INTRO_TAC
-        INTRO_TAC~local~1423
+        INTRO_TAC**
         LEFT_AND_EXISTS_THM
         LEFT_AND_FORALL_THM
         LEFT_EXISTS_AND_THM
@@ -96,12 +96,12 @@
         UNWIND_THM2
         WLOG_RELATION
         atom
-        conj~local~1125
+        conj*
         destruct
         disj
         fix_rename
         fix_var
-        hyp_tac~local~1360
+        hyp_tac*
         obtain
         pa_action
         pa_conj
@@ -196,7 +196,7 @@
     CONJ_ASSOC
     CONJ_SYM
     DESTRUCT_TAC
-    DESTRUCT_TAC~local~1421
+    DESTRUCT_TAC**
     DISJ_ACI
     DISJ_ASSOC
     DISJ_SYM
@@ -214,19 +214,19 @@
     EXISTS_UNIQUE_REFL
     EXISTS_UNIQUE_THM
     FIX_TAC
-    FIX_TAC~local~1425
+    FIX_TAC**
     FORALL_AND_THM
     FORALL_SIMP
     FORALL_UNWIND_THM1
     FORALL_UNWIND_THM2
     HYP_TAC
-    HYP_TAC~local~1427
+    HYP_TAC**
     IMP_CLAUSES
     IMP_CONJ
     IMP_CONJ_ALT
     IMP_IMP
     INTRO_TAC
-    INTRO_TAC~local~1423
+    INTRO_TAC**
     LEFT_AND_EXISTS_THM
     LEFT_AND_FORALL_THM
     LEFT_EXISTS_AND_THM
@@ -264,12 +264,12 @@
     UNWIND_THM2
     WLOG_RELATION
     atom
-    conj~local~1125
+    conj*
     destruct
     disj
     fix_rename
     fix_var
-    hyp_tac~local~1360
+    hyp_tac*
     obtain
     pa_action
     pa_conj
@@ -316,7 +316,6 @@
     check)
   (:shadowing-import-from
     :hol2cl.parser
-    |\|\|\||
     Resword
     possibly
     parse_term
@@ -332,7 +331,8 @@
     atleast
     a
     >>
-    ++)
+    ++
+    ***)
   (:shadowing-import-from :hol2cl.printer name_of isalpha isalnum)
   (:shadowing-import-from
     :hol2cl.runtime
@@ -1117,25 +1117,23 @@
 (match
   (let
     ((PURE_GEN_TAC
-      (lambdac (arg~822)
-        (match arg~822
-          ((tuple asl w~local~825)
+      (lambdac (arg~818)
+        (match arg~818
+          ((tuple asl w*)
             (handler-case
               (let*
-                ((x (fst (funcall dest_forall w~local~825)))
+                ((x (fst (funcall dest_forall w*)))
                   (avoids
                     (itlist
                       (o (o #'union #'thm_frees) (function-value #'snd 1))
                       asl
-                      (frees w~local~825))))
-                (if (mem x avoids)
-                  (fail unit)
-                  (funcall X_GEN_TAC x (tuple asl w~local~825))))
+                      (frees w*))))
+                (if (mem x avoids) (fail unit) (funcall X_GEN_TAC x (tuple asl w*))))
               (hol2cl.runtime:ocaml-condition
-                (exception~827)
-                (match exception~827
+                (exception~822)
+                (match exception~822
                   ((Failure _) (failwith "PURE_GEN_TAC"))
-                  (_ (raise exception~827)))))))))
+                  (_ (raise exception~822)))))))))
       (NAME_GEN_TAC
         (lambdac (s gl)
           (let
@@ -1188,13 +1186,13 @@
               #'PULL_FORALL)))))
     (fletc
       ((pa_ident
-        (p~local~993 arg~995)
-        (match arg~995
-          ((trivia:guard (cl:cons (Ident s) rest) (funcall p~local~993 s)) (tuple s rest))
+        (p* arg~989)
+        (match arg~989
+          ((trivia:guard (cl:cons (Ident s) rest) (funcall p* s)) (tuple s rest))
           (_ (raise (make-Noparse))))))
       (let ((pa_label (pa_ident isalnum)) (pa_var (pa_ident isalpha)))
         (let
-          ((fix_tac~local~1017
+          ((fix_tac*
             (fletc
               ((fix_var
                 (v)
@@ -1203,8 +1201,8 @@
                   (funcall CONV_TAC (funcall NAME_PULL_FORALL_CONV v))
                   PURE_GEN_TAC))
                 (fix_rename
-                  (arg~1029)
-                  (match arg~1029
+                  (arg~1021)
+                  (match arg~1021
                     ((tuple u (cl:cons v nil))
                       (funcall
                         THEN
@@ -1229,16 +1227,16 @@
                             (a (make-Resword "]")))
                           (function-value #'fst 1)))))
                     (>>
-                      (many (|\|\|\|| (>> pa_rename #'fix_rename) (>> pa_var #'fix_var)))
+                      (many (*** (>> pa_rename #'fix_rename) (>> pa_var #'fix_var)))
                       #'EVERY)))
                   (star (possibly (>> (a (make-Ident "*")) (K unit)))))
                 (>>
                   (++ vars star)
-                  (lambdac (arg~1099)
-                    (match arg~1099
+                  (lambdac (arg~1091)
+                    (match arg~1091
                       ((tuple tac nil) tac)
                       ((tuple tac _) (funcall THEN tac (REPEAT #'GEN_TAC)))))))))
-            (destruct_tac~local~1019
+            (destruct_tac*
               (let ((OBTAINL_THEN (o #'EVERY_TCL (map OBTAIN_THEN))))
                 (labelsc
                   ((destruct (inp) (disj inp))
@@ -1246,10 +1244,10 @@
                       (inp)
                       (let ((DISJ_CASES_LIST (end_itlist #'DISJ_CASES_THEN2)))
                         (>>
-                          (listof #'conj~local~1125 (a (make-Resword "|")) "Disjunction")
+                          (listof #'conj* (a (make-Resword "|")) "Disjunction")
                           DISJ_CASES_LIST
                           inp)))
-                    (conj~local~1125
+                    (conj*
                       (inp)
                       (>> (atleast 1 #'atom) (end_itlist #'CONJUNCTS_THEN2) inp))
                     (obtain
@@ -1269,8 +1267,8 @@
                       (inp)
                       (let
                         ((label
-                          (lambdac (arg~1185)
-                            (match arg~1185
+                          (lambdac (arg~1176)
+                            (match arg~1176
                               ((cl:cons (Ident "_") res) (tuple (K #'ALL_TAC) res))
                               ((cl:cons (Ident "+") res) (tuple #'MP_TAC res))
                               ((trivia:guard (cl:cons (Ident s) res) (funcall isalnum s))
@@ -1284,34 +1282,32 @@
                                   (function-value #'snd 1))
                                 (a (make-Resword ")")))
                               (function-value #'fst 1))))
-                        (|\|\|\|| (|\|\|\|| #'obtain label) paren inp))))
+                        (*** (*** #'obtain label) paren inp))))
                   #'destruct))))
           (let
-            ((intro_tac~local~1243
+            ((intro_tac*
               (let
                 ((number
-                  (lambdac (arg~1248)
-                    (match arg~1248
+                  (lambdac (arg~1238)
+                    (match arg~1238
                       ((cl:cons (Ident s) rest)
                         (handler-case
                           (tuple
                             (check (partial (function-value #'<= 2) 1) (int-of-string s))
                             rest)
                           (hol2cl.runtime:ocaml-condition
-                            (exception~1256)
-                            (match exception~1256
+                            (exception~1246)
+                            (match exception~1246
                               ((Failure _) (raise (make-Noparse)))
-                              (_ (raise exception~1256))))))
+                              (_ (raise exception~1246))))))
                       (_ (raise (make-Noparse))))))
                   (pa_fix
-                    (>>
-                      (++ (a (make-Ident "!")) fix_tac~local~1017)
-                      (function-value #'snd 1)))
-                  (pa_dest (>> destruct_tac~local~1019 #'DISCH_THEN)))
+                    (>> (++ (a (make-Ident "!")) fix_tac*) (function-value #'snd 1)))
+                  (pa_dest (>> destruct_tac* #'DISCH_THEN)))
                 (let
                   ((pa_prefix
                     (elistof
-                      (|\|\|\|| pa_fix pa_dest)
+                      (*** pa_fix pa_dest)
                       (a (make-Resword ";"))
                       "Prefix intro pattern")))
                   (labelsc
@@ -1323,7 +1319,7 @@
                           (uncurry (function-value #'append 2)))
                         #'EVERY
                         toks))
-                      (pa_postfix (toks) (|\|\|\|| #'pa_conj #'pa_disj toks))
+                      (pa_postfix (toks) (*** #'pa_conj #'pa_disj toks))
                       (pa_conj
                         (toks)
                         (let
@@ -1350,66 +1346,54 @@
                             toks))))
                     #'pa_intro)))))
             (fletc
-              ((hyp_tac~local~1360
+              ((hyp_tac*
                 (rule)
                 (fletc
                   ((pa_action
-                    (arg~1364)
-                    (match arg~1364
+                    (arg~1353)
+                    (match arg~1353
                       ((cl:cons (Resword ":") rest) (tuple #'REMOVE_THEN rest))
                       ((cl:cons (Resword "->") rest) (tuple #'USE_THEN rest))
                       (_ (raise (make-Noparse))))))
                   (>>
-                    (++ pa_label (possibly (++ #'pa_action destruct_tac~local~1019)))
-                    (lambdac (arg~1391)
-                      (match arg~1391
+                    (++ pa_label (possibly (++ #'pa_action destruct_tac*)))
+                    (lambdac (arg~1380)
+                      (match arg~1380
                         ((tuple lbl (cl:cons (tuple action tac) nil))
                           (funcall action lbl (o tac rule)))
                         ((tuple lbl _) (REMOVE_THEN lbl (o (LABEL_TAC lbl) rule)))))))))
               (fletc
-                ((DESTRUCT_TAC~local~1421
+                ((DESTRUCT_TAC**
                   (s)
-                  (match
-                    (o
-                      (o (fix "Destruct pattern" destruct_tac~local~1019) lex)
-                      #'explode
-                      s)
+                  (match (o (o (fix "Destruct pattern" destruct_tac*) lex) #'explode s)
                     ((tuple tac rest)
                       (if (= rest nil) tac (failwith "Garbage after destruct pattern")))))
-                  (INTRO_TAC~local~1423
+                  (INTRO_TAC**
                     (s)
-                    (match
-                      (o
-                        (o (fix "Introduction pattern" intro_tac~local~1243) lex)
-                        #'explode
-                        s)
+                    (match (o (o (fix "Introduction pattern" intro_tac*) lex) #'explode s)
                       ((tuple tac rest)
                         (if (= rest nil) tac (failwith "Garbage after intro pattern")))))
-                  (FIX_TAC~local~1425
+                  (FIX_TAC**
                     (s)
-                    (match (o (o fix_tac~local~1017 lex) #'explode s)
+                    (match (o (o fix_tac* lex) #'explode s)
                       ((tuple tac rest)
                         (if (= rest nil) tac (failwith "FIX_TAC: invalid pattern")))))
-                  (HYP_TAC~local~1427
+                  (HYP_TAC**
                     (s rule)
-                    (match (o (o (hyp_tac~local~1360 rule) lex) #'explode s)
+                    (match (o (o (hyp_tac* rule) lex) #'explode s)
                       ((tuple tac rest)
                         (if (= rest nil) tac (failwith "HYP_TAC: invalid pattern"))))))
-                (tuple
-                  #'DESTRUCT_TAC~local~1421
-                  #'FIX_TAC~local~1425
-                  #'INTRO_TAC~local~1423
-                  #'HYP_TAC~local~1427))))))))
-  ((tuple DESTRUCT_TAC~local~803 FIX_TAC~local~805 INTRO_TAC~local~809 HYP_TAC~local~807)
+                (tuple #'DESTRUCT_TAC** #'FIX_TAC** #'INTRO_TAC** #'HYP_TAC**))))))))
+  ((tuple DESTRUCT_TAC* FIX_TAC* INTRO_TAC* HYP_TAC*)
     (setf
       DESTRUCT_TAC
-      DESTRUCT_TAC~local~803
+      DESTRUCT_TAC*
       FIX_TAC
-      FIX_TAC~local~805
+      FIX_TAC*
       HYP_TAC
-      HYP_TAC~local~807
+      HYP_TAC*
       INTRO_TAC
-      INTRO_TAC~local~809)))
+      INTRO_TAC*)))
 
 (defunc CLAIM_TAC (s tm) (SUBGOAL_THEN tm (funcall DESTRUCT_TAC s)))
 

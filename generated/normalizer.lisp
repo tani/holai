@@ -87,9 +87,9 @@
     rator
     rand
     mk_var
-    |MK_COMB|
+    MK_COMB*
     is_comb
-    |INST|
+    INST*
     dest_comb
     concl)
   (:shadowing-import-from :hol2cl.lib tl striplist o num_1 num_0 map K itlist hd)
@@ -229,7 +229,7 @@
                                     (funcall
                                       THEN
                                       (MAP_EVERY
-                                        (lambdac (|t|) (UNDISCH_THEN |t| (K #'ALL_TAC)))
+                                        (lambdac (t*) (UNDISCH_THEN t* (K #'ALL_TAC)))
                                         (cl:cons
                                           (parse_term
                                             "!x:A y z. add x (add y z) = add (add x y) z")
@@ -392,9 +392,9 @@
                       (dest_pow
                         (lambdac (tm)
                           (match (dest_binop pow_tm tm)
-                            ((tuple l r~local~273)
-                              (if (funcall is_numeral r~local~273)
-                                (tuple l r~local~273)
+                            ((tuple l r*)
+                              (if (funcall is_numeral r*)
+                                (tuple l r*)
                                 (failwith "dest_pow"))))))
                       (is_add (is_binop add_tm))
                       (is_mul (is_binop mul_tm)))
@@ -405,7 +405,7 @@
                           rth
                           true_tm
                           true_tm
-                          (lambdac (|t|) (tuple |t| |t|))
+                          (lambdac (t*) (tuple t* t*))
                           (K cl:nil))
                         (let
                           ((nthm_1 (funcall SPEC x_tm (funcall CONJUNCT1 rth)))
@@ -425,21 +425,21 @@
                             ((POWVAR_MUL_CONV
                               (tm)
                               (match (funcall dest_mul tm)
-                                ((tuple l r~local~305)
+                                ((tuple l r*)
                                   (if
                                     (cl:and
                                       (funcall is_semiring_constant l)
-                                      (funcall is_semiring_constant r~local~305))
+                                      (funcall is_semiring_constant r*))
                                     (funcall SEMIRING_MUL_CONV tm)
                                     (handler-case
                                       (match (funcall dest_pow l)
                                         ((tuple lx ln)
                                           (handler-case
-                                            (match (funcall dest_pow r~local~305)
+                                            (match (funcall dest_pow r*)
                                               ((tuple rx rn)
                                                 (let
                                                   ((th1
-                                                    (|INST|
+                                                    (INST*
                                                       (cl:cons
                                                         (tuple lx x_tm)
                                                         (cl:cons
@@ -454,12 +454,12 @@
                                                           tm1
                                                           (funcall NUM_ADD_CONV tm2))))))))
                                             (hol2cl.runtime:ocaml-condition
-                                              (exception~360)
-                                              (match exception~360
+                                              (exception~358)
+                                              (match exception~358
                                                 ((Failure _)
                                                   (let
                                                     ((th1
-                                                      (|INST|
+                                                      (INST*
                                                         (cl:cons
                                                           (tuple lx x_tm)
                                                           (cl:cons (tuple ln q_tm) nil))
@@ -471,17 +471,17 @@
                                                           (AP_TERM
                                                             tm1
                                                             (funcall NUM_SUC_CONV tm2)))))))
-                                                (_ (raise exception~360)))))))
+                                                (_ (raise exception~358)))))))
                                       (hol2cl.runtime:ocaml-condition
-                                        (exception~307)
-                                        (match exception~307
+                                        (exception~305)
+                                        (match exception~305
                                           ((Failure _)
                                             (handler-case
-                                              (match (funcall dest_pow r~local~305)
+                                              (match (funcall dest_pow r*)
                                                 ((tuple rx rn)
                                                   (let
                                                     ((th1
-                                                      (|INST|
+                                                      (INST*
                                                         (cl:cons
                                                           (tuple rx x_tm)
                                                           (cl:cons (tuple rn q_tm) nil))
@@ -494,32 +494,30 @@
                                                             tm1
                                                             (funcall NUM_SUC_CONV tm2))))))))
                                               (hol2cl.runtime:ocaml-condition
-                                                (exception~310)
-                                                (match exception~310
+                                                (exception~308)
+                                                (match exception~308
                                                   ((Failure _)
-                                                    (|INST|
+                                                    (INST*
                                                       (cl:cons (tuple l x_tm) nil)
                                                       pthm_32))
-                                                  (_ (raise exception~310))))))
-                                          (_ (raise exception~307))))))))))
+                                                  (_ (raise exception~308))))))
+                                          (_ (raise exception~305))))))))))
                             (fletc
                               ((MONOMIAL_DEONE
                                 (th)
                                 (handler-case
                                   (match (funcall dest_mul (rand (concl th)))
-                                    ((tuple l r~local~462)
+                                    ((tuple l r*)
                                       (if (= l one_tm)
                                         (TRANS
                                           th
-                                          (|INST|
-                                            (cl:cons (tuple r~local~462 x_tm) nil)
-                                            pthm_01))
+                                          (INST* (cl:cons (tuple r* x_tm) nil) pthm_01))
                                         th)))
                                   (hol2cl.runtime:ocaml-condition
-                                    (exception~457)
-                                    (match exception~457
+                                    (exception~455)
+                                    (match exception~455
                                       ((Failure _) th)
-                                      (_ (raise exception~457)))))))
+                                      (_ (raise exception~455)))))))
                               (let*
                                 ((MONOMIAL_POW_CONV
                                   (labelsc
@@ -530,7 +528,7 @@
                                         (if (funcall is_semiring_constant bod)
                                           (funcall SEMIRING_POW_CONV tm)
                                           (match (dest_comb bod)
-                                            ((tuple lop r~local~493)
+                                            ((tuple lop r*)
                                               (if (not (is_comb lop))
                                                 (REFL tm)
                                                 (match (dest_comb lop)
@@ -538,34 +536,34 @@
                                                     (if
                                                       (cl:and
                                                         (= op pow_tm)
-                                                        (funcall is_numeral r~local~493))
+                                                        (funcall is_numeral r*))
                                                       (let
                                                         ((th1
-                                                          (|INST|
+                                                          (INST*
                                                             (cl:cons
                                                               (tuple l x_tm)
                                                               (cl:cons
-                                                                (tuple r~local~493 p_tm)
+                                                                (tuple r* p_tm)
                                                                 (cl:cons
                                                                   (tuple ntm q_tm)
                                                                   nil)))
                                                             pthm_34)))
                                                         (match
                                                           (dest_comb (rand (concl th1)))
-                                                          ((tuple l~local~573 r)
+                                                          ((tuple l* r)
                                                             (TRANS
                                                               th1
                                                               (AP_TERM
-                                                                l~local~573
+                                                                l*
                                                                 (funcall NUM_MULT_CONV r))))))
                                                       (if (= op mul_tm)
                                                         (let
                                                           ((th1
-                                                            (|INST|
+                                                            (INST*
                                                               (cl:cons
                                                                 (tuple l x_tm)
                                                                 (cl:cons
-                                                                  (tuple r~local~493 y_tm)
+                                                                  (tuple r* y_tm)
                                                                   (cl:cons
                                                                     (tuple ntm q_tm)
                                                                     nil)))
@@ -584,35 +582,35 @@
                                                                       (thr
                                                                         (MONOMIAL_POW
                                                                           z
-                                                                          r~local~493
+                                                                          r*
                                                                           ntm)))
                                                                     (TRANS
                                                                       th1
-                                                                      (|MK_COMB|
+                                                                      (MK_COMB*
                                                                         (tuple
                                                                           (AP_TERM x thl)
                                                                           thr)))))))))
                                                         (REFL tm))))))))))))
                                     (lambdac (tm)
                                       (match (dest_comb tm)
-                                        ((tuple lop r~local~629)
+                                        ((tuple lop r*)
                                           (match (dest_comb lop)
                                             ((tuple op l)
                                               (if
                                                 (cl:or
                                                   (<> op pow_tm)
-                                                  (not (funcall is_numeral r~local~629)))
+                                                  (not (funcall is_numeral r*)))
                                                 (failwith "MONOMIAL_POW_CONV")
-                                                (if (= r~local~629 zeron_tm)
-                                                  (|INST|
+                                                (if (= r* zeron_tm)
+                                                  (INST*
                                                     (cl:cons (tuple l x_tm) nil)
                                                     pthm_35)
-                                                  (if (= r~local~629 onen_tm)
-                                                    (|INST|
+                                                  (if (= r* onen_tm)
+                                                    (INST*
                                                       (cl:cons (tuple l x_tm) nil)
                                                       pthm_36)
                                                     (MONOMIAL_DEONE
-                                                      (MONOMIAL_POW tm l r~local~629))))))))))))
+                                                      (MONOMIAL_POW tm l r*))))))))))))
                                   (MONOMIAL_MUL_CONV
                                     (fletc
                                       ((powvar
@@ -621,20 +619,20 @@
                                           one_tm
                                           (handler-case
                                             (match (dest_comb tm)
-                                              ((tuple lop r~local~692)
+                                              ((tuple lop r*)
                                                 (match (dest_comb lop)
                                                   ((tuple op l)
                                                     (if
                                                       (cl:and
                                                         (= op pow_tm)
-                                                        (funcall is_numeral r~local~692))
+                                                        (funcall is_numeral r*))
                                                       l
                                                       (failwith ""))))))
                                             (hol2cl.runtime:ocaml-condition
-                                              (exception~687)
-                                              (match exception~687
+                                              (exception~681)
+                                              (match exception~681
                                                 ((Failure _) tm)
-                                                (_ (raise exception~687))))))))
+                                                (_ (raise exception~681))))))))
                                       (fletc
                                         ((vorder
                                           (x y)
@@ -647,14 +645,13 @@
                                                 (if (funcall variable_order x y) (- 1) 1))))))
                                         (labelsc
                                           ((MONOMIAL_MUL
-                                            (tm l r~local~752)
+                                            (tm l r*)
                                             (handler-case
                                               (match (funcall dest_mul l)
                                                 ((tuple lx ly)
                                                   (let ((vl (powvar lx)))
                                                     (handler-case
-                                                      (match
-                                                        (funcall dest_mul r~local~752)
+                                                      (match (funcall dest_mul r*)
                                                         ((tuple rx ry)
                                                           (let*
                                                             ((vr (powvar rx))
@@ -662,7 +659,7 @@
                                                             (if (= ord 0)
                                                               (let
                                                                 ((th1
-                                                                  (|INST|
+                                                                  (INST*
                                                                     (cl:cons
                                                                       (tuple lx lx_tm)
                                                                       (cl:cons
@@ -725,7 +722,7 @@
                                                                     pthm_16
                                                                     pthm_17))
                                                                   (th1
-                                                                    (|INST|
+                                                                    (INST*
                                                                       (cl:cons
                                                                         (tuple lx lx_tm)
                                                                         (cl:cons
@@ -755,23 +752,23 @@
                                                                               (rand tm3)
                                                                               tm4))))))))))))
                                                       (hol2cl.runtime:ocaml-condition
-                                                        (exception~916)
-                                                        (match exception~916
+                                                        (exception~908)
+                                                        (match exception~908
                                                           ((Failure _)
                                                             (let*
-                                                              ((vr (powvar r~local~752))
+                                                              ((vr (powvar r*))
                                                                 (ord (vorder vl vr)))
                                                               (if (= ord 0)
                                                                 (let
                                                                   ((th1
-                                                                    (|INST|
+                                                                    (INST*
                                                                       (cl:cons
                                                                         (tuple lx lx_tm)
                                                                         (cl:cons
                                                                           (tuple ly ly_tm)
                                                                           (cl:cons
                                                                             (tuple
-                                                                              r~local~752
+                                                                              r*
                                                                               rx_tm)
                                                                             nil)))
                                                                       pthm_18)))
@@ -796,7 +793,7 @@
                                                                 (if (< ord 0)
                                                                   (let
                                                                     ((th1
-                                                                      (|INST|
+                                                                      (INST*
                                                                         (cl:cons
                                                                           (tuple lx lx_tm)
                                                                           (cl:cons
@@ -805,7 +802,7 @@
                                                                               ly_tm)
                                                                             (cl:cons
                                                                               (tuple
-                                                                                r~local~752
+                                                                                r*
                                                                                 rx_tm)
                                                                               nil)))
                                                                         pthm_19)))
@@ -825,24 +822,21 @@
                                                                                   (rand
                                                                                     tm3)
                                                                                   tm4))))))))
-                                                                  (|INST|
+                                                                  (INST*
                                                                     (cl:cons
                                                                       (tuple l lx_tm)
                                                                       (cl:cons
-                                                                        (tuple
-                                                                          r~local~752
-                                                                          rx_tm)
+                                                                        (tuple r* rx_tm)
                                                                         nil))
                                                                     pthm_20)))))
-                                                          (_ (raise exception~916))))))))
+                                                          (_ (raise exception~908))))))))
                                               (hol2cl.runtime:ocaml-condition
-                                                (exception~754)
-                                                (match exception~754
+                                                (exception~746)
+                                                (match exception~746
                                                   ((Failure _)
                                                     (let ((vl (powvar l)))
                                                       (handler-case
-                                                        (match
-                                                          (funcall dest_mul r~local~752)
+                                                        (match (funcall dest_mul r*)
                                                           ((tuple rx ry)
                                                             (let*
                                                               ((vr (powvar rx))
@@ -850,7 +844,7 @@
                                                               (if (= ord 0)
                                                                 (let
                                                                   ((th1
-                                                                    (|INST|
+                                                                    (INST*
                                                                       (cl:cons
                                                                         (tuple l lx_tm)
                                                                         (cl:cons
@@ -879,7 +873,7 @@
                                                                 (if (> ord 0)
                                                                   (let
                                                                     ((th1
-                                                                      (|INST|
+                                                                      (INST*
                                                                         (cl:cons
                                                                           (tuple l lx_tm)
                                                                           (cl:cons
@@ -910,44 +904,41 @@
                                                                                   tm4))))))))
                                                                   (REFL tm))))))
                                                         (hol2cl.runtime:ocaml-condition
-                                                          (exception~760)
-                                                          (match exception~760
+                                                          (exception~752)
+                                                          (match exception~752
                                                             ((Failure _)
                                                               (let*
-                                                                ((vr (powvar r~local~752))
+                                                                ((vr (powvar r*))
                                                                   (ord (vorder vl vr)))
                                                                 (if (= ord 0)
                                                                   (POWVAR_MUL_CONV tm)
                                                                   (if (> ord 0)
-                                                                    (|INST|
+                                                                    (INST*
                                                                       (cl:cons
                                                                         (tuple l lx_tm)
                                                                         (cl:cons
-                                                                          (tuple
-                                                                            r~local~752
-                                                                            rx_tm)
+                                                                          (tuple r* rx_tm)
                                                                           nil))
                                                                       pthm_20)
                                                                     (REFL tm)))))
-                                                            (_ (raise exception~760)))))))
-                                                  (_ (raise exception~754)))))))
+                                                            (_ (raise exception~752)))))))
+                                                  (_ (raise exception~746)))))))
                                           (lambdac (tm)
                                             (match (funcall dest_mul tm)
-                                              ((tuple l r~local~1207)
-                                                (MONOMIAL_DEONE
-                                                  (MONOMIAL_MUL tm l r~local~1207)))))))))
+                                              ((tuple l r*)
+                                                (MONOMIAL_DEONE (MONOMIAL_MUL tm l r*)))))))))
                                   (POLYNOMIAL_MONOMIAL_MUL_CONV
                                     (labelsc
                                       ((PMM_CONV
                                         (tm)
                                         (match (funcall dest_mul tm)
-                                          ((tuple l r~local~1228)
+                                          ((tuple l r*)
                                             (handler-case
-                                              (match (funcall dest_add r~local~1228)
+                                              (match (funcall dest_add r*)
                                                 ((tuple y z)
                                                   (let
                                                     ((th1
-                                                      (|INST|
+                                                      (INST*
                                                         (cl:cons
                                                           (tuple l x_tm)
                                                           (cl:cons
@@ -960,7 +951,7 @@
                                                           ((tuple tm3 tm4)
                                                             (let
                                                               ((th2
-                                                                (|MK_COMB|
+                                                                (MK_COMB*
                                                                   (tuple
                                                                     (AP_TERM
                                                                       tm3
@@ -970,21 +961,21 @@
                                                                     (PMM_CONV tm2)))))
                                                               (TRANS th1 th2)))))))))
                                               (hol2cl.runtime:ocaml-condition
-                                                (exception~1230)
-                                                (match exception~1230
+                                                (exception~1220)
+                                                (match exception~1220
                                                   ((Failure _)
                                                     (funcall MONOMIAL_MUL_CONV tm))
-                                                  (_ (raise exception~1230)))))))))
+                                                  (_ (raise exception~1220)))))))))
                                       #'PMM_CONV)))
                                 (fletc
                                   ((MONOMIAL_ADD_CONV
                                     (tm)
                                     (match (funcall dest_add tm)
-                                      ((tuple l r~local~1303)
+                                      ((tuple l r*)
                                         (if
                                           (cl:and
                                             (funcall is_semiring_constant l)
-                                            (funcall is_semiring_constant r~local~1303))
+                                            (funcall is_semiring_constant r*))
                                           (funcall SEMIRING_ADD_CONV tm)
                                           (let
                                             ((th1
@@ -996,45 +987,37 @@
                                                     (funcall lhand l)))
                                                 (if
                                                   (cl:and
-                                                    (funcall is_mul r~local~1303)
+                                                    (funcall is_mul r*)
                                                     (funcall
                                                       is_semiring_constant
-                                                      (funcall lhand r~local~1303)))
-                                                  (|INST|
+                                                      (funcall lhand r*)))
+                                                  (INST*
                                                     (cl:cons
                                                       (tuple (funcall lhand l) a_tm)
                                                       (cl:cons
-                                                        (tuple
-                                                          (funcall lhand r~local~1303)
-                                                          b_tm)
+                                                        (tuple (funcall lhand r*) b_tm)
                                                         (cl:cons
-                                                          (tuple (rand r~local~1303) m_tm)
+                                                          (tuple (rand r*) m_tm)
                                                           nil)))
                                                     pthm_02)
-                                                  (|INST|
+                                                  (INST*
                                                     (cl:cons
                                                       (tuple (funcall lhand l) a_tm)
-                                                      (cl:cons
-                                                        (tuple r~local~1303 m_tm)
-                                                        nil))
+                                                      (cl:cons (tuple r* m_tm) nil))
                                                     pthm_03))
                                                 (if
                                                   (cl:and
-                                                    (funcall is_mul r~local~1303)
+                                                    (funcall is_mul r*)
                                                     (funcall
                                                       is_semiring_constant
-                                                      (funcall lhand r~local~1303)))
-                                                  (|INST|
+                                                      (funcall lhand r*)))
+                                                  (INST*
                                                     (cl:cons
-                                                      (tuple
-                                                        (funcall lhand r~local~1303)
-                                                        a_tm)
+                                                      (tuple (funcall lhand r*) a_tm)
                                                       (cl:cons (tuple l m_tm) nil))
                                                     pthm_04)
-                                                  (|INST|
-                                                    (cl:cons
-                                                      (tuple r~local~1303 m_tm)
-                                                      nil)
+                                                  (INST*
+                                                    (cl:cons (tuple r* m_tm) nil)
                                                     pthm_05)))))
                                             (match (dest_comb (rand (concl th1)))
                                               ((tuple tm1 tm2)
@@ -1050,7 +1033,7 @@
                                                       (if (= (funcall lhand tm5) zero_tm)
                                                         (TRANS
                                                           th3
-                                                          (|INST|
+                                                          (INST*
                                                             (cl:cons
                                                               (tuple (rand tm5) m_tm)
                                                               nil)
@@ -1071,15 +1054,15 @@
                                             ((tuple x n)
                                               (tuple x (funcall dest_numeral n))))
                                           (hol2cl.runtime:ocaml-condition
-                                            (exception~1460)
-                                            (match exception~1460
+                                            (exception~1449)
+                                            (match exception~1449
                                               ((Failure _)
                                                 (tuple
                                                   tm
                                                   (if (funcall is_semiring_constant tm)
                                                     num_0
                                                     num_1)))
-                                              (_ (raise exception~1460)))))))
+                                              (_ (raise exception~1449)))))))
                                       (let*
                                         ((morder
                                           (labelsc
@@ -1135,22 +1118,20 @@
                                                   (if (not (funcall is_add tm))
                                                     th
                                                     (match (dest_comb tm)
-                                                      ((tuple lop r~local~1600)
+                                                      ((tuple lop r*)
                                                         (let ((l (rand lop)))
                                                           (if (= l zero_tm)
                                                             (TRANS
                                                               th
-                                                              (|INST|
+                                                              (INST*
                                                                 (cl:cons
-                                                                  (tuple
-                                                                    r~local~1600
-                                                                    a_tm)
+                                                                  (tuple r* a_tm)
                                                                   nil)
                                                                 pthm_07))
-                                                            (if (= r~local~1600 zero_tm)
+                                                            (if (= r* zero_tm)
                                                               (TRANS
                                                                 th
-                                                                (|INST|
+                                                                (INST*
                                                                   (cl:cons
                                                                     (tuple l a_tm)
                                                                     nil)
@@ -1160,54 +1141,43 @@
                                                 ((PADD
                                                   (tm)
                                                   (match (funcall dest_add tm)
-                                                    ((tuple l r~local~1648)
+                                                    ((tuple l r*)
                                                       (if (= l zero_tm)
-                                                        (|INST|
-                                                          (cl:cons
-                                                            (tuple r~local~1648 a_tm)
-                                                            nil)
+                                                        (INST*
+                                                          (cl:cons (tuple r* a_tm) nil)
                                                           pthm_07)
-                                                        (if (= r~local~1648 zero_tm)
-                                                          (|INST|
+                                                        (if (= r* zero_tm)
+                                                          (INST*
                                                             (cl:cons (tuple l a_tm) nil)
                                                             pthm_08)
                                                           (if (funcall is_add l)
                                                             (match (funcall dest_add l)
-                                                              ((tuple
-                                                                a~local~1788
-                                                                b~local~1790)
-                                                                (if
-                                                                  (funcall
-                                                                    is_add
-                                                                    r~local~1648)
+                                                              ((tuple a* b*)
+                                                                (if (funcall is_add r*)
                                                                   (match
-                                                                    (funcall
-                                                                      dest_add
-                                                                      r~local~1648)
-                                                                    ((tuple
-                                                                      c~local~1898
-                                                                      d)
+                                                                    (funcall dest_add r*)
+                                                                    ((tuple c* d)
                                                                       (let
                                                                         ((ord
                                                                           (funcall
                                                                             morder
-                                                                            a~local~1788
-                                                                            c~local~1898)))
+                                                                            a*
+                                                                            c*)))
                                                                         (if (= ord 0)
                                                                           (let
                                                                             ((th1
-                                                                              (|INST|
+                                                                              (INST*
                                                                                 (cl:cons
                                                                                   (tuple
-                                                                                    a~local~1788
+                                                                                    a*
                                                                                     a_tm)
                                                                                   (cl:cons
                                                                                     (tuple
-                                                                                      b~local~1790
+                                                                                      b*
                                                                                       b_tm)
                                                                                     (cl:cons
                                                                                       (tuple
-                                                                                        c~local~1898
+                                                                                        c*
                                                                                         c_tm)
                                                                                       (cl:cons
                                                                                         (tuple
@@ -1238,7 +1208,7 @@
                                                                                       (DEZERO_RULE
                                                                                         (TRANS
                                                                                           th1
-                                                                                          (|MK_COMB|
+                                                                                          (MK_COMB*
                                                                                             (tuple
                                                                                               th2
                                                                                               (PADD
@@ -1247,29 +1217,29 @@
                                                                             ((th1
                                                                               (if
                                                                                 (> ord 0)
-                                                                                (|INST|
+                                                                                (INST*
                                                                                   (cl:cons
                                                                                     (tuple
-                                                                                      a~local~1788
+                                                                                      a*
                                                                                       a_tm)
                                                                                     (cl:cons
                                                                                       (tuple
-                                                                                        b~local~1790
+                                                                                        b*
                                                                                         b_tm)
                                                                                       (cl:cons
                                                                                         (tuple
-                                                                                          r~local~1648
+                                                                                          r*
                                                                                           c_tm)
                                                                                         nil)))
                                                                                   pthm_24)
-                                                                                (|INST|
+                                                                                (INST*
                                                                                   (cl:cons
                                                                                     (tuple
                                                                                       l
                                                                                       a_tm)
                                                                                     (cl:cons
                                                                                       (tuple
-                                                                                        c~local~1898
+                                                                                        c*
                                                                                         c_tm)
                                                                                       (cl:cons
                                                                                         (tuple
@@ -1296,23 +1266,23 @@
                                                                     ((ord
                                                                       (funcall
                                                                         morder
-                                                                        a~local~1788
-                                                                        r~local~1648)))
+                                                                        a*
+                                                                        r*)))
                                                                     (if (= ord 0)
                                                                       (let
                                                                         ((th1
-                                                                          (|INST|
+                                                                          (INST*
                                                                             (cl:cons
                                                                               (tuple
-                                                                                a~local~1788
+                                                                                a*
                                                                                 a_tm)
                                                                               (cl:cons
                                                                                 (tuple
-                                                                                  b~local~1790
+                                                                                  b*
                                                                                   b_tm)
                                                                                 (cl:cons
                                                                                   (tuple
-                                                                                    r~local~1648
+                                                                                    r*
                                                                                     c_tm)
                                                                                   nil)))
                                                                             pthm_26)))
@@ -1342,18 +1312,18 @@
                                                                       (if (> ord 0)
                                                                         (let
                                                                           ((th1
-                                                                            (|INST|
+                                                                            (INST*
                                                                               (cl:cons
                                                                                 (tuple
-                                                                                  a~local~1788
+                                                                                  a*
                                                                                   a_tm)
                                                                                 (cl:cons
                                                                                   (tuple
-                                                                                    b~local~1790
+                                                                                    b*
                                                                                     b_tm)
                                                                                   (cl:cons
                                                                                     (tuple
-                                                                                      r~local~1648
+                                                                                      r*
                                                                                       c_tm)
                                                                                     nil)))
                                                                               pthm_24)))
@@ -1373,43 +1343,37 @@
                                                                                     (PADD
                                                                                       tm2)))))))
                                                                         (DEZERO_RULE
-                                                                          (|INST|
+                                                                          (INST*
                                                                             (cl:cons
                                                                               (tuple
                                                                                 l
                                                                                 a_tm)
                                                                               (cl:cons
                                                                                 (tuple
-                                                                                  r~local~1648
+                                                                                  r*
                                                                                   c_tm)
                                                                                 nil))
                                                                             pthm_27))))))))
-                                                            (if
-                                                              (funcall
-                                                                is_add
-                                                                r~local~1648)
-                                                              (match
-                                                                (funcall
-                                                                  dest_add
-                                                                  r~local~1648)
-                                                                ((tuple c~local~1680 d)
+                                                            (if (funcall is_add r*)
+                                                              (match (funcall dest_add r*)
+                                                                ((tuple c* d)
                                                                   (let
                                                                     ((ord
                                                                       (funcall
                                                                         morder
                                                                         l
-                                                                        c~local~1680)))
+                                                                        c*)))
                                                                     (if (= ord 0)
                                                                       (let
                                                                         ((th1
-                                                                          (|INST|
+                                                                          (INST*
                                                                             (cl:cons
                                                                               (tuple
                                                                                 l
                                                                                 a_tm)
                                                                               (cl:cons
                                                                                 (tuple
-                                                                                  c~local~1680
+                                                                                  c*
                                                                                   c_tm)
                                                                                 (cl:cons
                                                                                   (tuple
@@ -1444,14 +1408,14 @@
                                                                         (REFL tm)
                                                                         (let
                                                                           ((th1
-                                                                            (|INST|
+                                                                            (INST*
                                                                               (cl:cons
                                                                                 (tuple
                                                                                   l
                                                                                   a_tm)
                                                                                 (cl:cons
                                                                                   (tuple
-                                                                                    c~local~1680
+                                                                                    c*
                                                                                     c_tm)
                                                                                   (cl:cons
                                                                                     (tuple
@@ -1476,22 +1440,19 @@
                                                                                       tm2))))))))))))
                                                               (let
                                                                 ((ord
-                                                                  (funcall
-                                                                    morder
-                                                                    l
-                                                                    r~local~1648)))
+                                                                  (funcall morder l r*)))
                                                                 (if (= ord 0)
                                                                   (MONOMIAL_ADD_CONV tm)
                                                                   (if (> ord 0)
                                                                     (DEZERO_RULE
                                                                       (REFL tm))
                                                                     (DEZERO_RULE
-                                                                      (|INST|
+                                                                      (INST*
                                                                         (cl:cons
                                                                           (tuple l a_tm)
                                                                           (cl:cons
                                                                             (tuple
-                                                                              r~local~1648
+                                                                              r*
                                                                               c_tm)
                                                                             nil))
                                                                         pthm_27)))))))))))))
@@ -1501,23 +1462,19 @@
                                               ((PMUL
                                                 (tm)
                                                 (match (funcall dest_mul tm)
-                                                  ((tuple l r~local~2069)
+                                                  ((tuple l r*)
                                                     (if (not (funcall is_add l))
                                                       (funcall
                                                         POLYNOMIAL_MONOMIAL_MUL_CONV
                                                         tm)
-                                                      (if
-                                                        (not
-                                                          (funcall is_add r~local~2069))
+                                                      (if (not (funcall is_add r*))
                                                         (let
                                                           ((th1
-                                                            (|INST|
+                                                            (INST*
                                                               (cl:cons
                                                                 (tuple l a_tm)
                                                                 (cl:cons
-                                                                  (tuple
-                                                                    r~local~2069
-                                                                    b_tm)
+                                                                  (tuple r* b_tm)
                                                                   nil))
                                                               pthm_09)))
                                                           (TRANS
@@ -1526,24 +1483,16 @@
                                                               POLYNOMIAL_MONOMIAL_MUL_CONV
                                                               (rand (concl th1)))))
                                                         (match (funcall dest_add l)
-                                                          ((tuple
-                                                            a~local~2071
-                                                            b~local~2073)
+                                                          ((tuple a* b*)
                                                             (let
                                                               ((th1
-                                                                (|INST|
+                                                                (INST*
                                                                   (cl:cons
-                                                                    (tuple
-                                                                      a~local~2071
-                                                                      a_tm)
+                                                                    (tuple a* a_tm)
                                                                     (cl:cons
-                                                                      (tuple
-                                                                        b~local~2073
-                                                                        b_tm)
+                                                                      (tuple b* b_tm)
                                                                       (cl:cons
-                                                                        (tuple
-                                                                          r~local~2069
-                                                                          c_tm)
+                                                                        (tuple r* c_tm)
                                                                         nil)))
                                                                   pthm_10)))
                                                               (match
@@ -1562,7 +1511,7 @@
                                                                           (th3
                                                                             (TRANS
                                                                               th1
-                                                                              (|MK_COMB|
+                                                                              (MK_COMB*
                                                                                 (tuple
                                                                                   th2
                                                                                   (PMUL
@@ -1575,25 +1524,21 @@
                                                                               (concl th3))))))))))))))))))
                                               (lambdac (tm)
                                                 (match (funcall dest_mul tm)
-                                                  ((tuple l r~local~2174)
+                                                  ((tuple l r*)
                                                     (if (= l zero_tm)
-                                                      (|INST|
-                                                        (cl:cons
-                                                          (tuple r~local~2174 a_tm)
-                                                          nil)
+                                                      (INST*
+                                                        (cl:cons (tuple r* a_tm) nil)
                                                         pthm_11)
-                                                      (if (= r~local~2174 zero_tm)
-                                                        (|INST|
+                                                      (if (= r* zero_tm)
+                                                        (INST*
                                                           (cl:cons (tuple l a_tm) nil)
                                                           pthm_12)
                                                         (if (= l one_tm)
-                                                          (|INST|
-                                                            (cl:cons
-                                                              (tuple r~local~2174 a_tm)
-                                                              nil)
+                                                          (INST*
+                                                            (cl:cons (tuple r* a_tm) nil)
                                                             pthm_13)
-                                                          (if (= r~local~2174 one_tm)
-                                                            (|INST|
+                                                          (if (= r* one_tm)
+                                                            (INST*
                                                               (cl:cons (tuple l a_tm) nil)
                                                               pthm_14)
                                                             (PMUL tm))))))))))
@@ -1604,17 +1549,17 @@
                                                 (match (funcall dest_pow tm)
                                                   ((tuple l n)
                                                     (if (= n zeron_tm)
-                                                      (|INST|
+                                                      (INST*
                                                         (cl:cons (tuple l x_tm) nil)
                                                         pthm_35)
                                                       (if (= n onen_tm)
-                                                        (|INST|
+                                                        (INST*
                                                           (cl:cons (tuple l x_tm) nil)
                                                           pthm_36)
                                                         (let*
                                                           ((th1 (funcall num_CONV n))
                                                             (th2
-                                                              (|INST|
+                                                              (INST*
                                                                 (cl:cons
                                                                   (tuple l x_tm)
                                                                   (cl:cons
@@ -1653,15 +1598,13 @@
                                           ((POLYNOMIAL_NEG_CONV
                                             (tm)
                                             (match (dest_comb tm)
-                                              ((tuple l r~local~2329)
+                                              ((tuple l r*)
                                                 (if (<> l neg_tm)
                                                   (failwith "POLYNOMIAL_NEG_CONV")
                                                   (let
                                                     ((th1
-                                                      (|INST|
-                                                        (cl:cons
-                                                          (tuple r~local~2329 x_tm)
-                                                          nil)
+                                                      (INST*
+                                                        (cl:cons (tuple r* x_tm) nil)
                                                         nthm_1)))
                                                     (TRANS
                                                       th1
@@ -1672,15 +1615,13 @@
                                             ((POLYNOMIAL_SUB_CONV
                                               (tm)
                                               (match (funcall dest_sub tm)
-                                                ((tuple l r~local~2361)
+                                                ((tuple l r*)
                                                   (let
                                                     ((th1
-                                                      (|INST|
+                                                      (INST*
                                                         (cl:cons
                                                           (tuple l x_tm)
-                                                          (cl:cons
-                                                            (tuple r~local~2361 y_tm)
-                                                            nil))
+                                                          (cl:cons (tuple r* y_tm) nil))
                                                         nthm_2)))
                                                     (match (dest_comb (rand (concl th1)))
                                                       ((tuple tm1 tm2)
@@ -1707,14 +1648,13 @@
                                                     (funcall is_semiring_constant tm))
                                                   (REFL tm)
                                                   (match (dest_comb tm)
-                                                    ((tuple lop r~local~2409)
+                                                    ((tuple lop r*)
                                                       (if (= lop neg_tm)
                                                         (let
                                                           ((th1
                                                             (AP_TERM
                                                               lop
-                                                              (POLYNOMIAL_CONV
-                                                                r~local~2409))))
+                                                              (POLYNOMIAL_CONV r*))))
                                                           (TRANS
                                                             th1
                                                             (POLYNOMIAL_NEG_CONV
@@ -1726,9 +1666,7 @@
                                                               (if
                                                                 (cl:and
                                                                   (= op pow_tm)
-                                                                  (funcall
-                                                                    is_numeral
-                                                                    r~local~2409))
+                                                                  (funcall is_numeral r*))
                                                                 (let
                                                                   ((th1
                                                                     (AP_THM
@@ -1736,7 +1674,7 @@
                                                                         op
                                                                         (POLYNOMIAL_CONV
                                                                           l))
-                                                                      r~local~2409)))
+                                                                      r*)))
                                                                   (TRANS
                                                                     th1
                                                                     (funcall
@@ -1750,14 +1688,14 @@
                                                                       (= op sub_tm)))
                                                                   (let*
                                                                     ((th1
-                                                                      (|MK_COMB|
+                                                                      (MK_COMB*
                                                                         (tuple
                                                                           (AP_TERM
                                                                             op
                                                                             (POLYNOMIAL_CONV
                                                                               l))
                                                                           (POLYNOMIAL_CONV
-                                                                            r~local~2409))))
+                                                                            r*))))
                                                                       (fn
                                                                         (if (= op add_tm)
                                                                           POLYNOMIAL_ADD_CONV
@@ -1821,5 +1759,5 @@
         rth
         (tuple is_semiring_constant SEMIRING_ADD_CONV SEMIRING_MUL_CONV SEMIRING_POW_CONV)
         (function-value #'< 2))
-      ((tuple _ _ _ _ _ NUM_NORMALIZE_CONV~local~2735) NUM_NORMALIZE_CONV~local~2735))))
+      ((tuple _ _ _ _ _ NUM_NORMALIZE_CONV*) NUM_NORMALIZE_CONV*))))
 

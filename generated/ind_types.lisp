@@ -31,7 +31,7 @@
         FNIL
         FORALL_OPTION_THM
         FORALL_UNWIND_CONV
-        FORALL_UNWIND_CONV~local~8063
+        FORALL_UNWIND_CONV*
         INJA
         INJA_INJ
         INJF
@@ -61,7 +61,7 @@
         SCRUB_EQUATION
         TRIV_IMP_CONV
         UNWIND_CONV
-        UNWIND_CONV~local~7691
+        UNWIND_CONV*
         ZBOT
         ZCONSTR
         ZCONSTR_ZBOT
@@ -106,7 +106,7 @@
         mk_exclauses
         mk_injector
         mk_inls
-        mk_inls~local~3972
+        mk_inls*
         mk_newcon
         mk_newfun
         mk_rule
@@ -229,7 +229,7 @@
     FNIL
     FORALL_OPTION_THM
     FORALL_UNWIND_CONV
-    FORALL_UNWIND_CONV~local~8063
+    FORALL_UNWIND_CONV*
     INJA
     INJA_INJ
     INJF
@@ -259,7 +259,7 @@
     SCRUB_EQUATION
     TRIV_IMP_CONV
     UNWIND_CONV
-    UNWIND_CONV~local~7691
+    UNWIND_CONV*
     ZBOT
     ZCONSTR
     ZCONSTR_ZBOT
@@ -304,7 +304,7 @@
     mk_exclauses
     mk_injector
     mk_inls
-    mk_inls~local~3972
+    mk_inls*
     mk_newcon
     mk_newfun
     mk_rule
@@ -442,7 +442,7 @@
     MK_FORALL
     MK_EXISTS
     MATCH_MP
-    |INSTANTIATE|)
+    INSTANTIATE*)
   (:shadowing-import-from
     :hol2cl.equal
     TRY_CONV
@@ -473,8 +473,6 @@
   (:shadowing-import-from :hol2cl.fusion mk_fun_ty mk_eq is_eq bty)
   (:shadowing-import-from
     :hol2cl.fusion.hol
-    |mk_comb|
-    |inst|
     vsubst
     tyvars
     type_of
@@ -487,13 +485,15 @@
     mk_var
     mk_type
     mk_const
-    |MK_COMB|
+    MK_COMB*
+    mk_comb
     mk_abs
     is_vartype
     is_var
     is_comb
     INST_TYPE
-    |INST|
+    INST*
+    inst
     hyp
     get_type_arity
     get_const_type
@@ -1143,14 +1143,14 @@
     (parse_term
       "ZRECSPACE (ZBOT:num->A->bool) /\\
     (!c i r. (!n. ZRECSPACE (r n)) ==> ZRECSPACE (ZCONSTR c i r))"))
-  ((tuple ZRECSPACE_RULES~local~495 ZRECSPACE_INDUCT~local~493 ZRECSPACE_CASES~local~491)
+  ((tuple ZRECSPACE_RULES* ZRECSPACE_INDUCT* ZRECSPACE_CASES*)
     (setf
       ZRECSPACE_CASES
-      ZRECSPACE_CASES~local~491
+      ZRECSPACE_CASES*
       ZRECSPACE_INDUCT
-      ZRECSPACE_INDUCT~local~493
+      ZRECSPACE_INDUCT*
       ZRECSPACE_RULES
-      ZRECSPACE_RULES~local~495)))
+      ZRECSPACE_RULES*)))
 
 (defparameter recspace_tydef
   (new_basic_type_definition
@@ -1419,8 +1419,8 @@
               (funcall
                 THEN
                 (FIRST_ASSUM
-                  (lambdac (|t|)
-                    (GEN_REWRITE_TAC #'BINDER_CONV (cl:cons (funcall GSYM |t|) nil))))
+                  (lambdac (t*)
+                    (GEN_REWRITE_TAC #'BINDER_CONV (cl:cons (funcall GSYM t*) nil))))
                 (REWRITE_TAC
                   (cl:cons (funcall GSYM CONSTR_BOT) (cl:cons EXISTS_UNIQUE_REFL nil))))
               (cl:cons
@@ -1584,23 +1584,21 @@
   (let
     ((sucivate
       (let ((zero (parse_term "0")) (suc (parse_term "SUC")))
-        (lambdac (n) (funpow n (curry #'|mk_comb| suc) zero)))))
+        (lambdac (n) (funpow n (curry #'mk_comb suc) zero)))))
     (fletc
       ((SCRUB_EQUATION
-        (eq arg~1110)
-        (match arg~1110
+        (eq arg~1107)
+        (match arg~1107
           ((tuple th insts)
-            (let ((|eq'| (itlist subst (map (lambdac (|t|) (cl:cons |t| nil)) insts) eq)))
-              (match (dest_eq |eq'|)
-                ((tuple l r~local~1126)
+            (let ((eq* (itlist subst (map (lambdac (t*) (cl:cons t* nil)) insts) eq)))
+              (match (dest_eq eq*)
+                ((tuple l r*)
                   (tuple
                     (funcall
                       MP
-                      (|INST|
-                        (cl:cons (tuple r~local~1126 l) nil)
-                        (funcall DISCH |eq'| th))
-                      (REFL r~local~1126))
-                    (cl:cons (tuple r~local~1126 l) insts)))))))))
+                      (INST* (cl:cons (tuple r* l) nil) (funcall DISCH eq* th))
+                      (REFL r*))
+                    (cl:cons (tuple r* l) insts)))))))))
       (let
         ((justify_inductive_type_model
           (let
@@ -1612,15 +1610,15 @@
                 (s1 s2)
                 (if (= s1 nil)
                   s2
-                  (let ((h1 (hd s1)) (|s1'| (tl s1)))
+                  (let ((h1 (hd s1)) (s1* (tl s1)))
                     (handler-case
                       (match (remove (lambdac (h2) (= h2 h1)) s2)
-                        ((tuple _ |s2'|) (cl:cons h1 (munion |s1'| |s2'|))))
+                        ((tuple _ s2*) (cl:cons h1 (munion s1* s2*))))
                       (hol2cl.runtime:ocaml-condition
-                        (exception~1175)
-                        (match exception~1175
-                          ((Failure _) (cl:cons h1 (munion |s1'| s2)))
-                          (_ (raise exception~1175)))))))))
+                        (exception~1171)
+                        (match exception~1171
+                          ((Failure _) (cl:cons h1 (munion s1* s2)))
+                          (_ (raise exception~1171)))))))))
               (lambdac (def)
                 (match (unzip def)
                   ((tuple newtys rights)
@@ -1643,60 +1641,58 @@
                                 (mk_type (tuple "prod" (cl:cons ty1 (cl:cons ty2 nil)))))
                               alltys)
                             (hol2cl.runtime:ocaml-condition
-                              (exception~1240)
-                              (match exception~1240
+                              (exception~1236)
+                              (match exception~1236
                                 ((Failure _) bool_ty)
-                                (_ (raise exception~1240))))))
+                                (_ (raise exception~1236))))))
                         (recty (mk_type (tuple "recspace" (cl:cons pty nil))))
-                        (constr~local~1265
+                        (constr*
                           (mk_const (tuple "CONSTR" (cl:cons (tuple pty aty) nil))))
-                        (fcons~local~1275
+                        (fcons*
                           (mk_const (tuple "FCONS" (cl:cons (tuple recty aty) nil))))
                         (bot (mk_const (tuple "BOTTOM" (cl:cons (tuple pty aty) nil))))
                         (bottail (mk_abs (tuple n_tm bot))))
                       (fletc
                         ((mk_constructor
-                          (n arg~1301)
-                          (match arg~1301
+                          (n arg~1295)
+                          (match arg~1295
                             ((tuple cname cargs)
                               (let*
                                 ((ttys
                                   (map (lambdac (ty) (if (mem ty newtys) recty ty)) cargs))
                                   (args (funcall make_args "a" nil ttys)))
                                 (match
-                                  (partition (lambdac (|t|) (= (type_of |t|) recty)) args)
+                                  (partition (lambdac (t*) (= (type_of t*) recty)) args)
                                   ((tuple rargs iargs)
                                     (labelsc
                                       ((mk_injector
-                                        (epstms~local~1324
-                                          alltys~local~1326
-                                          iargs~local~1328)
-                                        (if (= alltys~local~1326 nil)
+                                        (epstms* alltys* iargs*)
+                                        (if (= alltys* nil)
                                           nil
-                                          (let ((ty (hd alltys~local~1326)))
+                                          (let ((ty (hd alltys*)))
                                             (handler-case
                                               (match
                                                 (remove
-                                                  (lambdac (|t|) (= (type_of |t|) ty))
-                                                  iargs~local~1328)
-                                                ((tuple a~local~1345 |iargs'|)
+                                                  (lambdac (t*) (= (type_of t*) ty))
+                                                  iargs*)
+                                                ((tuple a* iargs**)
                                                   (cl:cons
-                                                    a~local~1345
+                                                    a*
                                                     (mk_injector
-                                                      (tl epstms~local~1324)
-                                                      (tl alltys~local~1326)
-                                                      |iargs'|))))
+                                                      (tl epstms*)
+                                                      (tl alltys*)
+                                                      iargs**))))
                                               (hol2cl.runtime:ocaml-condition
-                                                (exception~1333)
-                                                (match exception~1333
+                                                (exception~1324)
+                                                (match exception~1324
                                                   ((Failure _)
                                                     (cl:cons
-                                                      (hd epstms~local~1324)
+                                                      (hd epstms*)
                                                       (mk_injector
-                                                        (tl epstms~local~1324)
-                                                        (tl alltys~local~1326)
-                                                        iargs~local~1328)))
-                                                  (_ (raise exception~1333)))))))))
+                                                        (tl epstms*)
+                                                        (tl alltys*)
+                                                        iargs*)))
+                                                  (_ (raise exception~1324)))))))))
                                       (let*
                                         ((iarg
                                           (handler-case
@@ -1704,15 +1700,11 @@
                                               (curry mk_pair)
                                               (mk_injector epstms alltys iargs))
                                             (hol2cl.runtime:ocaml-condition
-                                              (exception~1376)
-                                              (match exception~1376
+                                              (exception~1366)
+                                              (match exception~1366
                                                 ((Failure _) beps_tm)
-                                                (_ (raise exception~1376))))))
-                                          (rarg
-                                            (itlist
-                                              (mk_binop fcons~local~1275)
-                                              rargs
-                                              bottail))
+                                                (_ (raise exception~1366))))))
+                                          (rarg (itlist (mk_binop fcons*) rargs bottail))
                                           (conty
                                             (itlist
                                               #'mk_fun_ty
@@ -1721,7 +1713,7 @@
                                           (condef
                                             (list_mk_comb
                                               (tuple
-                                                constr~local~1265
+                                                constr*
                                                 (cl:cons
                                                   (funcall sucivate n)
                                                   (cl:cons iarg (cl:cons rarg nil)))))))
@@ -1732,12 +1724,12 @@
                                             (list_mk_abs (tuple args condef)))))))))))))
                         (labelsc
                           ((mk_constructors
-                            (n rights~local~1447)
-                            (if (= rights~local~1447 nil)
+                            (n rights*)
+                            (if (= rights* nil)
                               nil
                               (cl:cons
-                                (mk_constructor n (hd rights~local~1447))
-                                (mk_constructors (+ n 1) (tl rights~local~1447))))))
+                                (mk_constructor n (hd rights*))
+                                (mk_constructors (+ n 1) (tl rights*))))))
                           (let*
                             ((condefs
                               (mk_constructors
@@ -1747,25 +1739,25 @@
                               (predty (mk_fun_ty recty bool_ty))
                               (edefs
                                 (itlist
-                                  (lambdac (arg~1481 acc)
-                                    (match arg~1481
+                                  (lambdac (arg~1470 acc)
+                                    (match arg~1470
                                       ((tuple x l)
-                                        (append (map (lambdac (|t|) (tuple x |t|)) l) acc))))
+                                        (append (map (lambdac (t*) (tuple x t*)) l) acc))))
                                   def
                                   nil))
                               (idefs
                                 (map2
-                                  (lambdac (arg~1503 def~local~1508)
-                                    (match arg~1503
-                                      ((tuple r~local~1506 (tuple _ atys))
-                                        (tuple (tuple r~local~1506 atys) def~local~1508))))
+                                  (lambdac (arg~1492 def*)
+                                    (match arg~1492
+                                      ((tuple r* (tuple _ atys))
+                                        (tuple (tuple r* atys) def*))))
                                   edefs
                                   condefs)))
                             (fletc
                               ((mk_rule
-                                (arg~1525)
-                                (match arg~1525
-                                  ((tuple (tuple r~local~1530 a~local~1527) condef)
+                                (arg~1512)
+                                (match arg~1512
+                                  ((tuple (tuple r* a*) condef)
                                     (match (dest_eq condef)
                                       ((tuple left right)
                                         (match (funcall strip_abs right)
@@ -1777,7 +1769,7 @@
                                                     (lambdac (arg argty sofar)
                                                       (if (mem argty newtys)
                                                         (cl:cons
-                                                          (|mk_comb|
+                                                          (mk_comb
                                                             (tuple
                                                               (mk_var
                                                                 (tuple
@@ -1787,15 +1779,13 @@
                                                           sofar)
                                                         sofar))
                                                     args
-                                                    a~local~1527
+                                                    a*
                                                     nil))
                                                 (conc
-                                                  (|mk_comb|
+                                                  (mk_comb
                                                     (tuple
                                                       (mk_var
-                                                        (tuple
-                                                          (dest_vartype r~local~1530)
-                                                          predty))
+                                                        (tuple (dest_vartype r*) predty))
                                                       lapp)))
                                                 (rule
                                                   (if (= conds nil)
@@ -1849,7 +1839,7 @@
                               ((follow_horn
                                 (thm)
                                 (let*
-                                  ((preds~local~1718
+                                  ((preds*
                                     (map
                                       (o (function-value #'fst 1) strip_comb)
                                       (funcall
@@ -1857,14 +1847,12 @@
                                         (funcall lhand (concl thm)))))
                                     (asms
                                       (map
-                                        (lambdac (p~local~1729)
+                                        (lambdac (p*)
                                           (find
                                             (lambdac (th)
-                                              (=
-                                                (fst (funcall strip_comb (concl th)))
-                                                p~local~1729))
+                                              (= (fst (funcall strip_comb (concl th))) p*))
                                             sofar))
-                                        preds~local~1718)))
+                                        preds*)))
                                   (MATCH_MP thm (end_itlist CONJ asms)))))
                               (let ((newth (tryfind #'follow_horn useful)))
                                 (exhaust_inhabitations ths (cl:cons newth sofar))))))))
@@ -1872,10 +1860,10 @@
                         ((ithms (exhaust_inhabitations imps bases))
                           (exths
                             (map
-                              (lambdac (p~local~1774)
+                              (lambdac (p*)
                                 (find
                                   (lambdac (th)
-                                    (= (fst (funcall strip_comb (concl th))) p~local~1774))
+                                    (= (fst (funcall strip_comb (concl th))) p*))
                                   ithms))
                               preds)))
                         exths))))))))
@@ -1925,31 +1913,28 @@
                                         (let*
                                           ((dest
                                             (snd (assoc (rev_assoc v asmlist) consindex)))
-                                            (|ty'| (hd (snd (dest_type (type_of dest)))))
-                                            (|v'|
-                                              (mk_var (tuple (fst (dest_var v)) |ty'|))))
-                                          (tuple (|mk_comb| (tuple dest |v'|)) |v'|))
+                                            (ty* (hd (snd (dest_type (type_of dest)))))
+                                            (v* (mk_var (tuple (fst (dest_var v)) ty*))))
+                                          (tuple (mk_comb (tuple dest v*)) v*))
                                         (hol2cl.runtime:ocaml-condition
-                                          (exception~1918)
-                                          (match exception~1918
+                                          (exception~1900)
+                                          (match exception~1900
                                             ((Failure _) (tuple v v))
-                                            (_ (raise exception~1918)))))))
+                                            (_ (raise exception~1900)))))))
                                     (match (unzip (map #'modify_arg oldargs))
                                       ((tuple newrights newargs)
                                         (let*
                                           ((retmk (fst (assoc cpred consindex)))
                                             (defbod
-                                              (|mk_comb|
+                                              (mk_comb
                                                 (tuple
                                                   retmk
                                                   (list_mk_comb (tuple oldcon newrights)))))
                                             (defrt (list_mk_abs (tuple newargs defbod)))
                                             (expth
                                               (find
-                                                (lambdac (th~local~1975)
-                                                  (=
-                                                    (funcall lhand (concl th~local~1975))
-                                                    oldcon))
+                                                (lambdac (th*)
+                                                  (= (funcall lhand (concl th*)) oldcon))
                                                 defs))
                                             (rexpth (SUBS_CONV (cl:cons expth nil) defrt))
                                             (deflf
@@ -1982,11 +1967,11 @@
                                 #'body)
                               #'rand)
                             (funcall hol2cl.basics:conjuncts (rand bod))))
-                          (|consindex'|
+                          (consindex*
                             (map
                               (lambdac (v)
-                                (let ((w~local~2086 (rev_assoc v corlist)))
-                                  (tuple w~local~2086 (assoc w~local~2086 consindex))))
+                                (let ((w* (rev_assoc v corlist)))
+                                  (tuple w* (assoc w* consindex))))
                               avs))
                           (recty
                             (o
@@ -2008,30 +1993,27 @@
                                     #'type_of)
                                   (function-value #'snd 1))
                                 (function-value #'snd 1))
-                              |consindex'|))
+                              consindex*))
                           (ptypes (map (C #'mk_fun_ty bool_ty) newtys))
                           (preds (funcall make_args "P" nil ptypes))
                           (args (funcall make_args "x" nil (map (K recty) preds)))
                           (lambs
                             (map2
-                              (lambdac (arg~2149 arg~2155)
-                                (match arg~2149
-                                  ((tuple r~local~2153 (tuple m d))
-                                    (match arg~2155
-                                      ((tuple p~local~2159 a~local~2157)
+                              (lambdac (arg~2129 arg~2134)
+                                (match arg~2129
+                                  ((tuple r* (tuple m d))
+                                    (match arg~2134
+                                      ((tuple p* a*)
                                         (mk_abs
                                           (tuple
-                                            a~local~2157
+                                            a*
                                             (funcall
                                               mk_conj
                                               (tuple
-                                                (|mk_comb|
-                                                  (tuple r~local~2153 a~local~2157))
-                                                (|mk_comb|
-                                                  (tuple
-                                                    p~local~2159
-                                                    (|mk_comb| (tuple m a~local~2157)))))))))))))
-                              |consindex'|
+                                                (mk_comb (tuple r* a*))
+                                                (mk_comb
+                                                  (tuple p* (mk_comb (tuple m a*)))))))))))))
+                              consindex*
                               (zip preds args))))
                         (SPECL lambs ith))))))
                 (fletc
@@ -2089,12 +2071,11 @@
                                                   (funcall lhand asmin))))
                                             (argsgen
                                               (map
-                                                (lambdac (tm~local~2350)
+                                                (lambdac (tm*)
                                                   (mk_var
                                                     (tuple
-                                                      (fst
-                                                        (dest_var (rand tm~local~2350)))
-                                                      (type_of tm~local~2350))))
+                                                      (fst (dest_var (rand tm*)))
+                                                      (type_of tm*))))
                                                 argsin))
                                             (asmgen
                                               (funcall subst (zip argsgen argsin) asmin))
@@ -2107,7 +2088,7 @@
                                                       (rand (rand asmgen))))
                                                   asmgen)))
                                             (th1
-                                              (|INST|
+                                              (INST*
                                                 (zip argsin argsgen)
                                                 (SPEC_ALL (ASSUME asmquant))))
                                             (th2 (funcall MP th1 (end_itlist CONJ pths)))
@@ -2154,14 +2135,14 @@
                                 ((tuple av bimp)
                                   (let ((pv (funcall lhand (body (rator (rand bimp))))))
                                     (match (dest_comb pv)
-                                      ((tuple p~local~2478 v)
-                                        (match (assoc p~local~2478 consindex)
+                                      ((tuple p* v)
+                                        (match (assoc p* consindex)
                                           ((tuple mk dest)
                                             (let*
                                               ((ty (hd (snd (dest_type (type_of dest)))))
-                                                (|v'|
+                                                (v*
                                                   (mk_var (tuple (fst (dest_var v)) ty)))
-                                                (dv (|mk_comb| (tuple dest |v'|)))
+                                                (dv (mk_comb (tuple dest v*)))
                                                 (th1
                                                   (funcall PRERULE (funcall SPEC dv th)))
                                                 (th2
@@ -2173,7 +2154,7 @@
                                                 (th3 (CONV_RULE #'BETA_CONV th2)))
                                               (funcall
                                                 GEN
-                                                |v'|
+                                                v*
                                                 (funcall FINRULE (funcall CONJUNCT2 th3)))))))))))))))))
                     (fletc
                       ((derive_induction_theorem
@@ -2186,10 +2167,8 @@
                               (funcall
                                 hol2cl.basics:conjuncts
                                 (funcall lhand (concl iith)))))
-                            (asm~local~2575
-                              (funcall list_mk_conj (map (o lhand #'concl) bths)))
-                            (ths
-                              (map2 MP bths (funcall CONJUNCTS (ASSUME asm~local~2575))))
+                            (asm* (funcall list_mk_conj (map (o lhand #'concl) bths)))
+                            (ths (map2 MP bths (funcall CONJUNCTS (ASSUME asm*))))
                             (th1 (funcall MP iith (end_itlist CONJ ths)))
                             (th2
                               (end_itlist
@@ -2197,7 +2176,7 @@
                                 (map
                                   (finish_induction_conclusion consindex tybijpairs)
                                   (funcall CONJUNCTS th1))))
-                            (th3 (funcall DISCH asm~local~2575 th2))
+                            (th3 (funcall DISCH asm* th2))
                             (preds
                               (map
                                 (o (o #'rator #'body) #'rand)
@@ -2251,16 +2230,13 @@
                               ((args (funcall make_args "a" nil domtys))
                                 (rights
                                   (map2
-                                    (lambdac (arg~2733 a~local~2736)
-                                      (match arg~2733
+                                    (lambdac (arg~2707 a*)
+                                      (match arg~2707
                                         ((tuple _ (tuple _ d))
                                           (mk_abs
                                             (tuple
-                                              a~local~2736
-                                              (|mk_comb|
-                                                (tuple
-                                                  fn
-                                                  (|mk_comb| (tuple d a~local~2736)))))))))
+                                              a*
+                                              (mk_comb (tuple fn (mk_comb (tuple d a*)))))))))
                                     consindex
                                     args))
                                 (eqs (map2 (curry mk_eq) fns rights))
@@ -2269,7 +2245,7 @@
                                   (map
                                     (lambdac (th1)
                                       (tryfind
-                                        (lambdac (th2) (|MK_COMB| (tuple th2 th1)))
+                                        (lambdac (th2) (MK_COMB* (tuple th2 th1)))
                                         fdefs))
                                     conthms))
                                 (fxths2
@@ -2279,12 +2255,12 @@
                                     fxths1)))
                               (fletc
                                 ((mk_tybijcons
-                                  (arg~2792)
-                                  (match arg~2792
+                                  (arg~2765)
+                                  (match arg~2765
                                     ((tuple th1 th2)
                                       (let*
                                         ((th3
-                                          (|INST|
+                                          (INST*
                                             (cl:cons
                                               (tuple
                                                 (rand (funcall lhand (concl th1)))
@@ -2326,10 +2302,8 @@
                                                   (funcall lhand (concl th1))))
                                               (ths2
                                                 (map
-                                                  (lambdac (|t|)
-                                                    (EQ_MP
-                                                      (SYM (funcall SCONV |t|))
-                                                      TRUTH))
+                                                  (lambdac (t*)
+                                                    (EQ_MP (SYM (funcall SCONV t*)) TRUTH))
                                                   tms1)))
                                             (funcall
                                               ERULE
@@ -2411,8 +2385,8 @@
                                               (if (free_in v t1)
                                                 hol2cl.pair:FST
                                                 hol2cl.pair:SND)))
-                                            (|tup'| (rand (concl PAIR_th))))
-                                          (if (= |tup'| v)
+                                            (tup* (rand (concl PAIR_th))))
+                                          (if (= tup* v)
                                             PAIR_th
                                             (let
                                               ((th (extract_arg (rand (concl PAIR_th)) v)))
@@ -2423,9 +2397,8 @@
                                       (hd
                                         (snd (dest_type (type_of (fst (hd consindex)))))))
                                       (domty (hd (snd (dest_type recty))))
-                                      (i~local~3084 (mk_var (tuple "i" domty)))
-                                      (r~local~3086
-                                        (mk_var (tuple "r" (mk_fun_ty numty recty)))))
+                                      (i* (mk_var (tuple "i" domty)))
+                                      (r* (mk_var (tuple "r" (mk_fun_ty numty recty)))))
                                     (let*
                                       ((mks
                                         (map
@@ -2435,10 +2408,10 @@
                                           consindex))
                                         (mkindex
                                           (map
-                                            (lambdac (|t|)
+                                            (lambdac (t*)
                                               (tuple
-                                                (hd (tl (snd (dest_type (type_of |t|)))))
-                                                |t|))
+                                                (hd (tl (snd (dest_type (type_of t*)))))
+                                                t*))
                                             mks)))
                                       (lambdac (cth)
                                         (let*
@@ -2462,16 +2435,14 @@
                                                               (map
                                                                 (extract_arg itm)
                                                                 iargs))
-                                                              (|cargs'|
+                                                              (cargs*
                                                                 (map
                                                                   (o
                                                                     (o
                                                                       (funcall
                                                                         subst
                                                                         (cl:cons
-                                                                          (tuple
-                                                                            i~local~3084
-                                                                            itm)
+                                                                          (tuple i* itm)
                                                                           nil))
                                                                       lhand)
                                                                     #'concl)
@@ -2488,32 +2459,25 @@
                                                                       1))))
                                                               (rindexed
                                                                 (map
-                                                                  (curry
-                                                                    #'|mk_comb|
-                                                                    r~local~3086)
+                                                                  (curry #'mk_comb r*)
                                                                   indices))
-                                                              (|rargs'|
+                                                              (rargs*
                                                                 (map2
-                                                                  (lambdac
-                                                                    (a~local~3173 rx)
-                                                                    (|mk_comb|
+                                                                  (lambdac (a* rx)
+                                                                    (mk_comb
                                                                       (tuple
-                                                                        (assoc
-                                                                          a~local~3173
-                                                                          mkindex)
+                                                                        (assoc a* mkindex)
                                                                         rx)))
                                                                   artys
                                                                   rindexed))
-                                                              (|sargs'|
+                                                              (sargs*
                                                                 (map
-                                                                  (curry #'|mk_comb| s)
+                                                                  (curry #'mk_comb s)
                                                                   indices))
                                                               (allargs
                                                                 (append
-                                                                  |cargs'|
-                                                                  (append
-                                                                    |rargs'|
-                                                                    |sargs'|)))
+                                                                  cargs*
+                                                                  (append rargs* sargs*)))
                                                               (funty
                                                                 (itlist
                                                                   (o
@@ -2537,9 +2501,9 @@
                                                             (list_mk_abs
                                                               (tuple
                                                                 (cl:cons
-                                                                  i~local~3084
+                                                                  i*
                                                                   (cl:cons
-                                                                    r~local~3086
+                                                                    r*
                                                                     (cl:cons s nil)))
                                                                 (list_mk_comb
                                                                   (tuple funarg allargs)))))))))))))))))))))
@@ -2561,18 +2525,14 @@
                                           consindex)
                                         conthms))
                                       (ty (type_of (hd isocons)))
-                                      (fcons~local~3310
+                                      (fcons*
                                         (mk_const
                                           (tuple "FCONS" (cl:cons (tuple ty aty) nil))))
-                                      (fnil~local~3312
+                                      (fnil*
                                         (mk_const
                                           (tuple "FNIL" (cl:cons (tuple ty aty) nil)))))
                                     (let*
-                                      ((bigfun
-                                        (itlist
-                                          (mk_binop fcons~local~3310)
-                                          isocons
-                                          fnil~local~3312))
+                                      ((bigfun (itlist (mk_binop fcons*) isocons fnil*))
                                         (eth (ISPEC bigfun CONSTR_REC))
                                         (fn
                                           (rator
@@ -2591,11 +2551,11 @@
                                         (LCONV (funcall REWR_CONV (ASSUME betm)))
                                         (fnths
                                           (map
-                                            (lambdac (|t|)
+                                            (lambdac (t*)
                                               (funcall
                                                 RIGHT_BETAS
-                                                (cl:cons (bndvar (rand |t|)) nil)
-                                                (ASSUME |t|)))
+                                                (cl:cons (bndvar (rand t*)) nil)
+                                                (ASSUME t*)))
                                             (hyp rath)))
                                         (SIMPER
                                           (PURE_REWRITE_RULE
@@ -2665,16 +2625,16 @@
                                                         (function-value #'snd 1))
                                                       consindex)))
                                                 (map
-                                                  (lambdac (ty~local~3492)
+                                                  (lambdac (ty*)
                                                     (find
-                                                      (lambdac (|t|)
+                                                      (lambdac (t*)
                                                         (=
                                                           (hd
                                                             (snd
                                                               (dest_type
                                                                 (type_of
-                                                                  (funcall lhand |t|)))))
-                                                          ty~local~3492))
+                                                                  (funcall lhand t*)))))
+                                                          ty*))
                                                       unseqs))
                                                   tys)))
                                             (rethm (itlist EXISTS_EQUATION seqs rthm))
@@ -2701,8 +2661,8 @@
                                       (map (o (hol2cl.lib:repeat #'rator) #'concl) neths))
                                     (mkdests
                                       (map
-                                        (lambdac (arg~3577)
-                                          (match arg~3577
+                                        (lambdac (arg~3544)
+                                          (match arg~3544
                                             ((tuple th _)
                                               (let ((tm (funcall lhand (concl th))))
                                                 (tuple (rator tm) (rator (rand tm)))))))
@@ -2782,9 +2742,9 @@
             (listof #'parse_type_clause (a (make-Resword ";")) "type definition")))
           (lambdac (s)
             (match (o (o parse_type_definition lex) #'explode s)
-              ((tuple spec~local~3789 rst)
+              ((tuple spec* rst)
                 (if (= rst nil)
-                  spec~local~3789
+                  spec*
                   (failwith "parse_inductive_type_specification: junk after def"))))))))))
 
 ;; (* ------------------------------------------------------------------------- *)
@@ -2800,8 +2760,8 @@
   (funcall
     define_type_raw~1
     (funcall parse_inductive_type_specification "sum = INL A | INR B"))
-  ((tuple sum_INDUCT~local~3818 sum_RECURSION~local~3820)
-    (setf sum_INDUCT sum_INDUCT~local~3818 sum_RECURSION sum_RECURSION~local~3820)))
+  ((tuple sum_INDUCT* sum_RECURSION*)
+    (setf sum_INDUCT sum_INDUCT* sum_RECURSION sum_RECURSION*)))
 
 (defparameter OUTL
   (funcall new_recursive_definition sum_RECURSION (parse_term "OUTL (INL x :A+B) = x")))
@@ -2827,10 +2787,10 @@
         (labelsc
           ((mk_sum
             (tys)
-            (let ((k~local~3853 (funcall length tys)))
-              (if (= k~local~3853 1)
+            (let ((k* (funcall length tys)))
+              (if (= k* 1)
                 (hd tys)
-                (match (chop_list (int-div k~local~3853 2) tys)
+                (match (chop_list (int-div k* 2) tys)
                   ((tuple tys1 tys2)
                     (mk_type
                       (tuple "sum" (cl:cons (mk_sum tys1) (cl:cons (mk_sum tys2) nil))))))))))
@@ -2858,28 +2818,26 @@
                                       (tuple ty1 aty)
                                       (cl:cons (tuple ty2 bty) nil))))))
                             (append
-                              (map (curry #'|mk_comb| inl) inls1)
-                              (map (curry #'|mk_comb| inr) inls2)))))))))
+                              (map (curry #'mk_comb inl) inls1)
+                              (map (curry #'mk_comb inr) inls2)))))))))
                 (lambdac (ty)
                   (let ((bods (mk_inls ty)))
-                    (map
-                      (lambdac (|t|) (mk_abs (tuple (find_term #'is_var |t|) |t|)))
-                      bods)))))
+                    (map (lambdac (t*) (mk_abs (tuple (find_term #'is_var t*) t*))) bods)))))
               (mk_outls
                 (labelsc
-                  ((mk_inls~local~3972
+                  ((mk_inls*
                     (sof ty)
                     (if (funcall is_vartype ty)
                       (cl:cons sof nil)
                       (match (dest_type ty)
                         ((tuple _ (cl:cons ty1 (cl:cons ty2 nil)))
                           (let
-                            ((outl~local~3978
+                            ((outl*
                               (mk_const
                                 (tuple
                                   "OUTL"
                                   (cl:cons (tuple ty1 aty) (cl:cons (tuple ty2 bty) nil)))))
-                              (outr~local~3980
+                              (outr*
                                 (mk_const
                                   (tuple
                                     "OUTR"
@@ -2887,34 +2845,30 @@
                                       (tuple ty1 aty)
                                       (cl:cons (tuple ty2 bty) nil))))))
                             (append
-                              (mk_inls~local~3972
-                                (|mk_comb| (tuple outl~local~3978 sof))
-                                ty1)
-                              (mk_inls~local~3972
-                                (|mk_comb| (tuple outr~local~3980 sof))
-                                ty2))))))))
+                              (mk_inls* (mk_comb (tuple outl* sof)) ty1)
+                              (mk_inls* (mk_comb (tuple outr* sof)) ty2))))))))
                   (lambdac (ty)
                     (let ((x (mk_var (tuple "x" ty))))
-                      (map (curry #'mk_abs x) (mk_inls~local~3972 x ty)))))))
+                      (map (curry #'mk_abs x) (mk_inls* x ty)))))))
             (fletc
               ((mk_newfun
-                (fn outl~local~4054)
+                (fn outl*)
                 (match (dest_var fn)
                   ((tuple s ty)
                     (let* ((dty (hd (snd (dest_type ty)))) (x (mk_var (tuple "x" dty))))
-                      (match (dest_abs outl~local~4054)
+                      (match (dest_abs outl*)
                         ((tuple y bod)
                           (let*
-                            ((r~local~4070
+                            ((r*
                               (mk_abs
                                 (tuple
                                   x
                                   (funcall
                                     vsubst
-                                    (cl:cons (tuple (|mk_comb| (tuple fn x)) y) nil)
+                                    (cl:cons (tuple (mk_comb (tuple fn x)) y) nil)
                                     bod))))
-                              (l (mk_var (tuple s (type_of r~local~4070))))
-                              (th1 (ASSUME (funcall mk_eq (tuple l r~local~4070)))))
+                              (l (mk_var (tuple s (type_of r*))))
+                              (th1 (ASSUME (funcall mk_eq (tuple l r*)))))
                             (funcall RIGHT_BETAS (cl:cons x nil) th1)))))))))
               (lambdac (th)
                 (match (funcall strip_forall (concl th))
@@ -2927,9 +2881,8 @@
                             (let*
                               ((tys
                                 (map
-                                  (lambdac (i~local~4128)
-                                    (mk_vartype
-                                      (string-concat "Z" (string-of-int i~local~4128))))
+                                  (lambdac (i*)
+                                    (mk_vartype (string-concat "Z" (string-of-int i*))))
                                   (-- 0 (- n 1))))
                                 (sty (mk_sum tys))
                                 (inls (funcall mk_inls sty))
@@ -2944,59 +2897,51 @@
                                           (hd (funcall hol2cl.basics:conjuncts bod)))))))
                                   (ith (INST_TYPE (cl:cons (tuple sty zty) nil) th)))
                                 (match (funcall strip_forall (concl ith))
-                                  ((tuple avs~local~4167 ebod~local~4169)
-                                    (match (funcall strip_exists ebod~local~4169)
-                                      ((tuple evs~local~4173 bod~local~4171)
+                                  ((tuple avs* ebod*)
+                                    (match (funcall strip_exists ebod*)
+                                      ((tuple evs* bod*)
                                         (let*
-                                          ((|fns'|
-                                            (map2 #'mk_newfun evs~local~4173 outls))
+                                          ((fns* (map2 #'mk_newfun evs* outls))
                                             (fnalist
                                               (zip
-                                                evs~local~4173
-                                                (map (o (o #'rator lhs) #'concl) |fns'|)))
-                                            (inlalist (zip evs~local~4173 inls))
-                                            (outlalist (zip evs~local~4173 outls)))
+                                                evs*
+                                                (map (o (o #'rator lhs) #'concl) fns*)))
+                                            (inlalist (zip evs* inls))
+                                            (outlalist (zip evs* outls)))
                                           (fletc
                                             ((hack_clause
                                               (tm)
                                               (match (funcall strip_forall tm)
                                                 ((tuple avs bod)
                                                   (match (dest_eq bod)
-                                                    ((tuple l r~local~4203)
-                                                      (match
-                                                        (funcall strip_comb r~local~4203)
+                                                    ((tuple l r*)
+                                                      (match (funcall strip_comb r*)
                                                         ((tuple fn args)
                                                           (let
                                                             ((pargs
                                                               (map
-                                                                (lambdac (a~local~4208)
+                                                                (lambdac (a*)
                                                                   (let
-                                                                    ((g~local~4210
+                                                                    ((g*
                                                                       (funcall
                                                                         genvar
-                                                                        (type_of
-                                                                          a~local~4208))))
-                                                                    (if
-                                                                      (is_var
-                                                                        a~local~4208)
-                                                                      (tuple
-                                                                        g~local~4210
-                                                                        g~local~4210)
+                                                                        (type_of a*))))
+                                                                    (if (is_var a*)
+                                                                      (tuple g* g*)
                                                                       (let
-                                                                        ((outl~local~4215
+                                                                        ((outl*
                                                                           (assoc
-                                                                            (rator
-                                                                              a~local~4208)
+                                                                            (rator a*)
                                                                             outlalist)))
                                                                         (tuple
-                                                                          (|mk_comb|
+                                                                          (mk_comb
                                                                             (tuple
-                                                                              outl~local~4215
-                                                                              g~local~4210))
-                                                                          g~local~4210)))))
+                                                                              outl*
+                                                                              g*))
+                                                                          g*)))))
                                                                 args)))
                                                             (match (unzip pargs)
-                                                              ((tuple |args'| |args''|)
+                                                              ((tuple args* args**)
                                                                 (let*
                                                                   ((inl
                                                                     (assoc
@@ -3012,33 +2957,31 @@
                                                                         (o
                                                                           #'mk_fun_ty
                                                                           #'type_of)
-                                                                        |args'|
+                                                                        args*
                                                                         rty))
-                                                                    (|fn'|
+                                                                    (fn*
                                                                       (mk_var
                                                                         (tuple
                                                                           (fst
                                                                             (dest_var fn))
                                                                           nty)))
-                                                                    (|r'|
+                                                                    (r**
                                                                       (list_mk_abs
                                                                         (tuple
-                                                                          |args''|
-                                                                          (|mk_comb|
+                                                                          args**
+                                                                          (mk_comb
                                                                             (tuple
                                                                               inl
                                                                               (list_mk_comb
                                                                                 (tuple
-                                                                                  |fn'|
-                                                                                  |args'|))))))))
-                                                                  (tuple |r'| fn)))))))))))))
+                                                                                  fn*
+                                                                                  args*))))))))
+                                                                  (tuple r** fn)))))))))))))
                                             (let*
                                               ((defs
                                                 (map
                                                   #'hack_clause
-                                                  (funcall
-                                                    hol2cl.basics:conjuncts
-                                                    bod~local~4171)))
+                                                  (funcall hol2cl.basics:conjuncts bod*)))
                                                 (jth
                                                   (funcall
                                                     BETA_RULE
@@ -3051,14 +2994,12 @@
                                                       (funcall strip_exists (concl jth))))))
                                               (fletc
                                                 ((finish_clause
-                                                  (th~local~4328)
+                                                  (th*)
                                                   (match
-                                                    (funcall
-                                                      strip_forall
-                                                      (concl th~local~4328))
+                                                    (funcall strip_forall (concl th*))
                                                     ((tuple avs bod)
                                                       (let
-                                                        ((outl~local~4332
+                                                        ((outl*
                                                           (assoc
                                                             (rator (funcall lhand bod))
                                                             outlalist)))
@@ -3068,8 +3009,8 @@
                                                           (funcall
                                                             BETA_RULE
                                                             (AP_TERM
-                                                              outl~local~4332
-                                                              (SPECL avs th~local~4328)))))))))
+                                                              outl*
+                                                              (SPECL avs th*)))))))))
                                                 (let*
                                                   ((cth
                                                     (end_itlist
@@ -3081,7 +3022,7 @@
                                                     (eth
                                                       (GEN_REWRITE_RULE
                                                         ONCE_DEPTH_CONV
-                                                        (map #'SYM |fns'|)
+                                                        (map #'SYM fns*)
                                                         dth))
                                                     (fth
                                                       (itlist
@@ -3090,33 +3031,26 @@
                                                           (function-value #'snd 1)
                                                           fnalist)
                                                         eth))
-                                                    (dtms (map (o #'hd #'hyp) |fns'|))
+                                                    (dtms (map (o #'hd #'hyp) fns*))
                                                     (gth
                                                       (itlist
-                                                        (lambdac
-                                                          (e~local~4386 th~local~4388)
-                                                          (match (dest_eq e~local~4386)
-                                                            ((tuple l r~local~4391)
+                                                        (lambdac (e* th*)
+                                                          (match (dest_eq e*)
+                                                            ((tuple l r*)
                                                               (funcall
                                                                 MP
-                                                                (|INST|
+                                                                (INST*
                                                                   (cl:cons
-                                                                    (tuple r~local~4391 l)
+                                                                    (tuple r* l)
                                                                     nil)
-                                                                  (funcall
-                                                                    DISCH
-                                                                    e~local~4386
-                                                                    th~local~4388))
-                                                                (REFL r~local~4391)))))
+                                                                  (funcall DISCH e* th*))
+                                                                (REFL r*)))))
                                                         dtms
                                                         fth))
                                                     (hth
                                                       (PROVE_HYP
                                                         jth
-                                                        (itlist
-                                                          #'SIMPLE_CHOOSE
-                                                          evs~local~4173
-                                                          gth)))
+                                                        (itlist #'SIMPLE_CHOOSE evs* gth)))
                                                     (xvs
                                                       (map
                                                         (o
@@ -3149,12 +3083,8 @@
   (funcall
     define_type_raw~2
     (funcall parse_inductive_type_specification "option = NONE | SOME A"))
-  ((tuple option_INDUCT~local~4517 option_RECURSION~local~4519)
-    (setf
-      option_INDUCT
-      option_INDUCT~local~4517
-      option_RECURSION
-      option_RECURSION~local~4519)))
+  ((tuple option_INDUCT* option_RECURSION*)
+    (setf option_INDUCT option_INDUCT* option_RECURSION option_RECURSION*)))
 
 (defparameter list_INDUCT nil)
 
@@ -3164,8 +3094,8 @@
   (funcall
     define_type_raw~2
     (funcall parse_inductive_type_specification "list = NIL | CONS A list"))
-  ((tuple list_INDUCT~local~4532 list_RECURSION~local~4534)
-    (setf list_INDUCT list_INDUCT~local~4532 list_RECURSION list_RECURSION~local~4534)))
+  ((tuple list_INDUCT* list_RECURSION*)
+    (setf list_INDUCT list_INDUCT* list_RECURSION list_RECURSION*)))
 
 (defparameter FORALL_OPTION_THM
   (prove
@@ -3211,24 +3141,24 @@
               ((rt (end_itlist (curry mk_pair) args))
                 (ty (mk_fun_ty (type_of pat) (type_of rt)))
                 (fn (funcall genvar ty))
-                (dtm (funcall mk_eq (tuple (|mk_comb| (tuple fn pat)) rt)))
+                (dtm (funcall mk_eq (tuple (mk_comb (tuple fn pat)) rt)))
                 (eth
                   (funcall
                     prove_recursive_functions_exist
                     ax
                     (list_mk_forall (tuple args dtm))))
-                (|args'| (variants args args))
-                (atm (funcall mk_eq (tuple pat (list_mk_comb (tuple f |args'|)))))
+                (args* (variants args args))
+                (atm (funcall mk_eq (tuple pat (list_mk_comb (tuple f args*)))))
                 (ath (ASSUME atm))
                 (bth (AP_TERM fn ath))
                 (cth1 (SPECL args (ASSUME (snd (funcall dest_exists (concl eth))))))
-                (cth2 (|INST| (zip |args'| args) cth1))
+                (cth2 (INST* (zip args* args) cth1))
                 (pth (TRANS (TRANS (SYM cth1) bth) cth2))
                 (qth (funcall DEPAIR pth))
                 (qtm (concl qth))
                 (rth
                   (rev_itlist
-                    (C (curry #'|MK_COMB|))
+                    (C (curry #'MK_COMB*))
                     (funcall CONJUNCTS (ASSUME qtm))
                     (REFL f)))
                 (tth
@@ -3236,7 +3166,7 @@
                     IMP_ANTISYM_RULE
                     (funcall DISCH atm qth)
                     (funcall DISCH qtm rth)))
-                (uth (funcall GENL args (funcall GENL |args'| tth))))
+                (uth (funcall GENL args (funcall GENL args* tth))))
               (PROVE_HYP eth (SIMPLE_CHOOSE fn uth)))))))
       (lambdac (ax)
         (let*
@@ -3271,12 +3201,12 @@
                     genvar
                     (mk_type
                       (tuple "fun" (cl:cons (type_of (hd pat)) (cl:cons num_ty nil))))))
-                (ls (map (curry #'|mk_comb| fn) pat))
+                (ls (map (curry #'mk_comb fn) pat))
                 (defs
                   (map2
-                    (lambdac (l r~local~4819)
+                    (lambdac (l r*)
                       (list_mk_forall
-                        (tuple (frees (rand l)) (funcall mk_eq (tuple l r~local~4819)))))
+                        (tuple (frees (rand l)) (funcall mk_eq (tuple l r*)))))
                     ls
                     nums))
                 (eth
@@ -3286,24 +3216,22 @@
                   (let*
                     ((REWRITE
                       (GEN_REWRITE_RULE ONCE_DEPTH_CONV (funcall CONJUNCTS (ASSUME bod))))
-                      (|pat'|
+                      (pat*
                         (map
-                          (lambdac (|t|)
+                          (lambdac (t*)
                             (match
-                              (if (funcall is_numeral |t|)
-                                (tuple |t| nil)
-                                (funcall strip_comb |t|))
+                              (if (funcall is_numeral t*)
+                                (tuple t* nil)
+                                (funcall strip_comb t*))
                               ((tuple f args)
                                 (list_mk_comb (tuple f (variants args args))))))
                           pat))
-                      (pairs (allopairs (curry mk_eq) pat |pat'|))
+                      (pairs (allopairs (curry mk_eq) pat pat*))
                       (nths (map (o (o REWRITE (AP_TERM fn)) #'ASSUME) pairs))
                       (fths
                         (map2
-                          (lambdac (|t| th)
-                            (funcall
-                              NEGATE
-                              (funcall DISCH |t| (CONV_RULE NUM_EQ_CONV th))))
+                          (lambdac (t* th)
+                            (funcall NEGATE (funcall DISCH t* (CONV_RULE NUM_EQ_CONV th))))
                           pairs
                           nths)))
                     (funcall
@@ -3347,8 +3275,8 @@
       (let
         ((xts
           (map
-            (lambdac (|t|)
-              (list_mk_exists (tuple (frees |t|) (funcall mk_eq (tuple x |t|)))))
+            (lambdac (t*)
+              (list_mk_exists (tuple (frees t*) (funcall mk_eq (tuple x t*)))))
             rpats)))
         (mk_abs (tuple x (funcall list_mk_disj xts))))))
     (fletc
@@ -3357,15 +3285,15 @@
         (match (funcall strip_exists tm)
           ((tuple evs bod)
             (match (dest_eq bod)
-              ((tuple l r~local~5010)
-                (if (= l r~local~5010)
+              ((tuple l r*)
+                (if (= l r*)
                   (REFL l)
-                  (match (tuple (funcall strip_comb l) (funcall strip_comb r~local~5010))
+                  (match (tuple (funcall strip_comb l) (funcall strip_comb r*))
                     ((tuple (tuple lf largs) (tuple rf rargs))
                       (if (= lf rf)
                         (let*
                           ((ths (map (o #'ASSUME mk_eq) (zip rargs largs)))
-                            (th1 (rev_itlist (C (curry #'|MK_COMB|)) ths (REFL lf))))
+                            (th1 (rev_itlist (C (curry #'MK_COMB*)) ths (REFL lf))))
                           (itlist EXISTS_EQUATION (map #'concl ths) (SYM th1)))
                         (failwith "prove_triv")))))))))))
       (labelsc
@@ -3373,14 +3301,14 @@
           (tm)
           (if (funcall is_disj tm)
             (match (funcall dest_disj tm)
-              ((tuple l r~local~5081)
+              ((tuple l r*)
                 (handler-case
-                  (funcall DISJ1 (prove_triv l) r~local~5081)
+                  (funcall DISJ1 (prove_triv l) r*)
                   (hol2cl.runtime:ocaml-condition
-                    (exception~5083)
-                    (match exception~5083
-                      ((Failure _) (funcall DISJ2 l (prove_disj r~local~5081)))
-                      (_ (raise exception~5083)))))))
+                    (exception~5020)
+                    (match exception~5020
+                      ((Failure _) (funcall DISJ2 l (prove_disj r*)))
+                      (_ (raise exception~5020)))))))
             (prove_triv tm))))
         (fletc
           ((prove_eclause
@@ -3403,8 +3331,7 @@
                     (map
                       (o (function-value #'snd 1) strip_forall)
                       (funcall hol2cl.basics:conjuncts (funcall lhand bod))))
-                    (pats
-                      (map (lambdac (|t|) (if (funcall is_imp |t|) (rand |t|) |t|)) cls))
+                    (pats (map (lambdac (t*) (if (funcall is_imp t*) (rand t*) t*)) cls))
                     (spats (map #'dest_comb pats))
                     (preds (itlist (o #'insert (function-value #'fst 1)) spats nil))
                     (rpatlist
@@ -3413,9 +3340,8 @@
                           (map
                             (function-value #'snd 1)
                             (filter
-                              (lambdac (arg~5175)
-                                (match arg~5175
-                                  ((tuple p~local~5177 x) (= p~local~5177 pr))))
+                              (lambdac (arg~5112)
+                                (match arg~5112 ((tuple p* x) (= p* pr))))
                               spats)))
                         preds))
                     (xs
@@ -3425,7 +3351,7 @@
                         (freesl pats)
                         (map (o #'type_of #'hd) rpatlist)))
                     (xpreds (map2 #'mk_exclauses xs rpatlist))
-                    (ith (funcall BETA_RULE (|INST| (zip xpreds preds) (SPEC_ALL th))))
+                    (ith (funcall BETA_RULE (INST* (zip xpreds preds) (SPEC_ALL th))))
                     (eclauses
                       (funcall
                         hol2cl.basics:conjuncts
@@ -3456,22 +3382,22 @@
 
 (defparameter injectivity_store (ref nil))
 
-(defunc extend_rectype_net (arg~5298)
-  (match arg~5298
+(defunc extend_rectype_net (arg~5234)
+  (match arg~5234
     ((tuple tyname (tuple _ _ rth))
       (let
         ((ths1
           (handler-case
             (cl:cons (funcall prove_constructors_distinct rth) nil)
             (hol2cl.runtime:ocaml-condition
-              (exception~5304)
-              (match exception~5304 ((Failure _) nil) (_ (raise exception~5304))))))
+              (exception~5240)
+              (match exception~5240 ((Failure _) nil) (_ (raise exception~5240))))))
           (ths2
             (handler-case
               (cl:cons (funcall prove_constructors_injective rth) nil)
               (hol2cl.runtime:ocaml-condition
-                (exception~5313)
-                (match exception~5313 ((Failure _) nil) (_ (raise exception~5313)))))))
+                (exception~5249)
+                (match exception~5249 ((Failure _) nil) (_ (raise exception~5249)))))))
         (let ((canon_thl (itlist (funcall mk_rewrites cl:nil) (append ths1 ths2) nil)))
           (progn
             (assign
@@ -3596,8 +3522,8 @@
           (handler-case
             (assoc cty (zip itys iths))
             (hol2cl.runtime:ocaml-condition
-              (exception~5576)
-              (match exception~5576
+              (exception~5512)
+              (match exception~5512
                 ((Failure _)
                   (if (not (exists (C #'occurs_in cty) itys))
                     (INST_TYPE (cl:cons (tuple cty aty) nil) ISO_REFL)
@@ -3611,7 +3537,7 @@
                             (string-concat
                               "lift_type_bijections: Unexpected type operator \""
                               (string-concat tycon "\""))))))))
-                (_ (raise exception~5576))))))))
+                (_ (raise exception~5512))))))))
       (let*
         ((DE_EXISTENTIALIZE_RULE
           (let*
@@ -3647,7 +3573,7 @@
                       (th2
                         (CONV_RULE
                           #'BETA_CONV
-                          (UNDISCH (|INST| (cl:cons (tuple gv v1) nil) th1)))))
+                          (UNDISCH (INST* (cl:cons (tuple gv v1) nil) th1)))))
                     (match (DE_EXISTENTIALIZE_RULE th2)
                       ((tuple vs th3) (tuple (cl:cons gv vs) th3)))))))
               #'DE_EXISTENTIALIZE_RULE)))
@@ -3670,10 +3596,10 @@
                                   (cl:and (= c0 c1) (cl:and (= dty0 rty1) (= rty0 dty1))))))))))))))))
           (fletc
             ((prove_inductive_types_isomorphic
-              (n k~local~5785 arg~5787 arg~5791)
-              (match arg~5787
+              (n k* arg~5722 arg~5726)
+              (match arg~5722
                 ((tuple ith0 rth0)
-                  (match arg~5791
+                  (match arg~5726
                     ((tuple ith1 rth1)
                       (let
                         ((sth0 (SPEC_ALL rth0))
@@ -3686,11 +3612,9 @@
                           ((tuple (tuple pevs0 pbod0) (tuple pevs1 pbod1))
                             (match
                               (tuple
+                                (chop_list k* (funcall hol2cl.basics:conjuncts pbod0))
                                 (chop_list
-                                  k~local~5785
-                                  (funcall hol2cl.basics:conjuncts pbod0))
-                                (chop_list
-                                  k~local~5785
+                                  k*
                                   (snd
                                     (chop_list n (funcall hol2cl.basics:conjuncts pbod1)))))
                               ((tuple (tuple pcjs0 qcjs0) (tuple pcjs1 qcjs1))
@@ -3700,10 +3624,8 @@
                                       (zip (map grab_type pcjs1) (map grab_type pcjs0))))
                                     (tyal1
                                       (map
-                                        (lambdac (arg~5822)
-                                          (match arg~5822
-                                            ((tuple a~local~5824 b~local~5826)
-                                              (tuple b~local~5826 a~local~5824))))
+                                        (lambdac (arg~5757)
+                                          (match arg~5757 ((tuple a* b*) (tuple b* a*))))
                                         tyal0))
                                     (tyins0
                                       (map
@@ -3730,12 +3652,12 @@
                                         (match
                                           (tuple
                                             (chop_list
-                                              k~local~5785
+                                              k*
                                               (map
                                                 (o (function-value #'snd 1) strip_forall)
                                                 (funcall hol2cl.basics:conjuncts bod0)))
                                             (chop_list
-                                              k~local~5785
+                                              k*
                                               (map
                                                 (o (function-value #'snd 1) strip_forall)
                                                 (snd
@@ -3746,8 +3668,8 @@
                                             (let
                                               ((rcjs1
                                                 (map
-                                                  (lambdac (|t|)
-                                                    (find (clause_corresponds |t|) rcjsx))
+                                                  (lambdac (t*)
+                                                    (find (clause_corresponds t*) rcjsx))
                                                   rcjs0)))
                                               (fletc
                                                 ((proc_clause
@@ -3767,36 +3689,34 @@
                                                                     wargs0))
                                                                   (nestf0
                                                                     (map
-                                                                      (lambdac
-                                                                        (a~local~5918)
+                                                                      (lambdac (a*)
                                                                         (can
                                                                           (find
-                                                                            (lambdac (|t|)
+                                                                            (lambdac (t*)
                                                                               (cl:and
                                                                                 (is_comb
-                                                                                  |t|)
+                                                                                  t*)
                                                                                 (=
                                                                                   (rand
-                                                                                    |t|)
-                                                                                  a~local~5918))))
+                                                                                    t*)
+                                                                                  a*))))
                                                                           wargs0))
                                                                       vargs0))
                                                                   (targs0
                                                                     (map2
-                                                                      (lambdac
-                                                                        (a~local~5936 f)
+                                                                      (lambdac (a* f)
                                                                         (if f
                                                                           (find
-                                                                            (lambdac (|t|)
+                                                                            (lambdac (t*)
                                                                               (cl:and
                                                                                 (is_comb
-                                                                                  |t|)
+                                                                                  t*)
                                                                                 (=
                                                                                   (rand
-                                                                                    |t|)
-                                                                                  a~local~5936)))
+                                                                                    t*)
+                                                                                  a*)))
                                                                             wargs0)
-                                                                          a~local~5936))
+                                                                          a*))
                                                                       vargs0
                                                                       nestf0))
                                                                   (gvlist0
@@ -3838,28 +3758,27 @@
                                                                             (targs1
                                                                               (map2
                                                                                 (lambdac
-                                                                                  (a~local~5993
-                                                                                    f)
+                                                                                  (a* f)
                                                                                   (if f
                                                                                     (find
                                                                                       (lambdac
-                                                                                        (|t|)
+                                                                                        (t*)
                                                                                         (cl:and
                                                                                           (is_comb
-                                                                                            |t|)
+                                                                                            t*)
                                                                                           (=
                                                                                             (rand
-                                                                                              |t|)
-                                                                                            a~local~5993)))
+                                                                                              t*)
+                                                                                            a*)))
                                                                                       wargs1)
-                                                                                    a~local~5993))
+                                                                                    a*))
                                                                                 vargs1
                                                                                 nestf0))
                                                                             (gvlist1
                                                                               (zip
                                                                                 wargs1
                                                                                 gargs1))
-                                                                            (xargs~local~6018
+                                                                            (xargs*
                                                                               (map
                                                                                 (lambdac
                                                                                   (v)
@@ -3879,7 +3798,7 @@
                                                                                             strip_comb
                                                                                             (rand
                                                                                               l0)))
-                                                                                        xargs~local~6018))))
+                                                                                        xargs*))))
                                                                                 vc1)))
                                                                           (tuple
                                                                             inst0
@@ -3895,11 +3814,11 @@
                                                       ((uth0
                                                         (funcall
                                                           BETA_RULE
-                                                          (|INST| insts0 tth0)))
+                                                          (INST* insts0 tth0)))
                                                         (uth1
                                                           (funcall
                                                             BETA_RULE
-                                                            (|INST| insts1 tth1))))
+                                                            (INST* insts1 tth1))))
                                                       (match
                                                         (tuple
                                                           (funcall
@@ -3909,8 +3828,8 @@
                                                             DE_EXISTENTIALIZE_RULE
                                                             uth1))
                                                         ((tuple
-                                                          (tuple efvs0 sth0~local~6104)
-                                                          (tuple efvs1 sth1~local~6107))
+                                                          (tuple efvs0 sth0*)
+                                                          (tuple efvs1 sth1*))
                                                           (let*
                                                             ((efvs2
                                                               (map
@@ -3955,12 +3874,8 @@
                                                                   ctm1))
                                                               (eee
                                                                 (map
-                                                                  (lambdac (n~local~6158)
-                                                                    (=
-                                                                      (int-mod
-                                                                        n~local~6158
-                                                                        2)
-                                                                      0))
+                                                                  (lambdac (n*)
+                                                                    (= (int-mod n* 2) 0))
                                                                   (--
                                                                     0
                                                                     (-
@@ -3995,9 +3910,9 @@
                                                                         TRIV_ANTE_RULE
                                                                         (REWRITE_RULE
                                                                           (cl:cons
-                                                                            sth0~local~6104
+                                                                            sth0*
                                                                             (cl:cons
-                                                                              sth1~local~6107
+                                                                              sth1*
                                                                               nil)))))
                                                                     (jth0
                                                                       (let*
@@ -4035,9 +3950,9 @@
                                                                                     ith0)))
                                                                               (itlist
                                                                                 (lambdac
-                                                                                  (arg~6225)
+                                                                                  (arg~6151)
                                                                                   (match
-                                                                                    arg~6225
+                                                                                    arg~6151
                                                                                     ((tuple
                                                                                       _
                                                                                       x
@@ -4053,7 +3968,7 @@
                                                                           (ctvs
                                                                             (map
                                                                               (lambdac
-                                                                                (p~local~6242)
+                                                                                (p*)
                                                                                 (let
                                                                                   ((x
                                                                                     (mk_var
@@ -4063,20 +3978,20 @@
                                                                                           (snd
                                                                                             (dest_type
                                                                                               (type_of
-                                                                                                p~local~6242))))))))
+                                                                                                p*))))))))
                                                                                   (tuple
                                                                                     (mk_abs
                                                                                       (tuple
                                                                                         x
                                                                                         t_tm))
-                                                                                    p~local~6242)))
+                                                                                    p*)))
                                                                               tvs)))
                                                                         (funcall
                                                                           DETRIV_RULE
-                                                                          (|INST|
+                                                                          (INST*
                                                                             ctvs
                                                                             (itlist
-                                                                              |INSTANTIATE|
+                                                                              INSTANTIATE*
                                                                               cinsts
                                                                               itha)))))
                                                                     (jth1
@@ -4116,9 +4031,9 @@
                                                                                     ith1)))
                                                                               (itlist
                                                                                 (lambdac
-                                                                                  (arg~6303)
+                                                                                  (arg~6228)
                                                                                   (match
-                                                                                    arg~6303
+                                                                                    arg~6228
                                                                                     ((tuple
                                                                                       _
                                                                                       x
@@ -4134,7 +4049,7 @@
                                                                           (ctvs
                                                                             (map
                                                                               (lambdac
-                                                                                (p~local~6320)
+                                                                                (p*)
                                                                                 (let
                                                                                   ((x
                                                                                     (mk_var
@@ -4144,20 +4059,20 @@
                                                                                           (snd
                                                                                             (dest_type
                                                                                               (type_of
-                                                                                                p~local~6320))))))))
+                                                                                                p*))))))))
                                                                                   (tuple
                                                                                     (mk_abs
                                                                                       (tuple
                                                                                         x
                                                                                         t_tm))
-                                                                                    p~local~6320)))
+                                                                                    p*)))
                                                                               tvs)))
                                                                         (funcall
                                                                           DETRIV_RULE
-                                                                          (|INST|
+                                                                          (INST*
                                                                             ctvs
                                                                             (itlist
-                                                                              |INSTANTIATE|
+                                                                              INSTANTIATE*
                                                                               cinsts
                                                                               itha))))))
                                                                   (let*
@@ -4187,8 +4102,8 @@
                                                                       cth6
                                                                       (funcall
                                                                         CONJ
-                                                                        sth0~local~6104
-                                                                        sth1~local~6107)))))))))))))))))))))))))))))))
+                                                                        sth0*
+                                                                        sth1*)))))))))))))))))))))))))))))))
             (fletc
               ((SCRUB_ASSUMPTION
                 (th)
@@ -4196,24 +4111,22 @@
                   ((hyps (hyp th))
                     (eqn
                       (find
-                        (lambdac (|t|)
-                          (let ((x (funcall lhs |t|)))
+                        (lambdac (t*)
+                          (let ((x (funcall lhs t*)))
                             (forall (lambdac (u) (not (free_in x (rand u)))) hyps)))
                         hyps)))
                   (match (dest_eq eqn)
-                    ((tuple l r~local~6531)
+                    ((tuple l r*)
                       (funcall
                         MP
-                        (|INST|
-                          (cl:cons (tuple r~local~6531 l) nil)
-                          (funcall DISCH eqn th))
-                        (REFL r~local~6531)))))))
+                        (INST* (cl:cons (tuple r* l) nil) (funcall DISCH eqn th))
+                        (REFL r*)))))))
               (fletc
                 ((define_type_basecase
                   (def)
                   (fletc ((add_id (s) (fst (dest_var (funcall genvar bool_ty)))))
-                    (let ((|def'| (map (F_F #'I (map (F_F #'add_id #'I))) def)))
-                      (funcall define_type_raw~2 |def'|)))))
+                    (let ((def* (map (F_F #'I (map (F_F #'add_id #'I))) def)))
+                      (funcall define_type_raw~2 def*)))))
                 (let*
                   ((SIMPLE_BETA_RULE
                     (o
@@ -4242,8 +4155,8 @@
                         (handler-case
                           (rev_assoc ty alist)
                           (hol2cl.runtime:ocaml-condition
-                            (exception~6631)
-                            (match exception~6631
+                            (exception~6554)
+                            (match exception~6554
                               ((Failure _)
                                 (handler-case
                                   (match (dest_type ty)
@@ -4251,20 +4164,20 @@
                                       (mk_type
                                         (tuple tycon (map (modify_type alist) tyargs)))))
                                   (hol2cl.runtime:ocaml-condition
-                                    (exception~6634)
-                                    (match exception~6634
+                                    (exception~6557)
+                                    (match exception~6557
                                       ((Failure _) ty)
-                                      (_ (raise exception~6634))))))
-                              (_ (raise exception~6631)))))))
+                                      (_ (raise exception~6557))))))
+                              (_ (raise exception~6554)))))))
                       (fletc
                         ((modify_item
-                          (alist arg~6660)
-                          (match arg~6660
+                          (alist arg~6583)
+                          (match arg~6583
                             ((tuple s l) (tuple s (map (modify_type alist) l))))))
                         (fletc
                           ((modify_clause
-                            (alist arg~6675)
-                            (match arg~6675
+                            (alist arg~6598)
+                            (match arg~6598
                               ((tuple l lis) (tuple l (map (modify_item alist) lis))))))
                           (fletc
                             ((recover_clause
@@ -4284,15 +4197,15 @@
                                         (handler-case
                                           (assoc tycon (deref inductive_type_store))
                                           (hol2cl.runtime:ocaml-condition
-                                            (exception~6843)
-                                            (match exception~6843
+                                            (exception~6765)
+                                            (match exception~6765
                                               ((Failure _)
                                                 (failwith
                                                   (string-concat
                                                     "Can't find definition for nested type: "
                                                     tycon)))
-                                              (_ (raise exception~6843)))))
-                                        ((tuple k~local~6718 ith rth)
+                                              (_ (raise exception~6765)))))
+                                        ((tuple k* ith rth)
                                           (match
                                             (funcall
                                               strip_exists
@@ -4320,24 +4233,24 @@
                                                       (lambdac (vty)
                                                         (type_match vty nty nil))
                                                       rtys))
-                                                  (|cjs'|
+                                                  (cjs*
                                                     (map
-                                                      (o (funcall |inst| tyins) #'rand)
-                                                      (fst (chop_list k~local~6718 cjs))))
+                                                      (o (funcall inst tyins) #'rand)
+                                                      (fst (chop_list k* cjs))))
                                                   (mtys
                                                     (itlist
                                                       (o #'insert #'type_of)
-                                                      |cjs'|
+                                                      cjs*
                                                       nil))
                                                   (pcons
                                                     (map
                                                       (lambdac (ty)
                                                         (filter
-                                                          (lambdac (|t|)
-                                                            (= (type_of |t|) ty))
-                                                          |cjs'|))
+                                                          (lambdac (t*)
+                                                            (= (type_of t*) ty))
+                                                          cjs*))
                                                       mtys))
-                                                  (|cls'|
+                                                  (cls*
                                                     (zip
                                                       mtys
                                                       (map
@@ -4353,16 +4266,16 @@
                                                               id))
                                                           ty))
                                                       mtys))
-                                                  (|cls''|
+                                                  (cls**
                                                     (map
                                                       (F_F
                                                         (modify_type tyal)
                                                         (map (modify_item tyal)))
-                                                      |cls'|)))
+                                                      cls*)))
                                                 (tuple
-                                                  k~local~6718
+                                                  k*
                                                   tyal
-                                                  |cls''|
+                                                  cls**
                                                   (INST_TYPE tyins ith)
                                                   (INST_TYPE tyins rth))))))))))))
                               (labelsc
@@ -4400,7 +4313,7 @@
                                               (lambdac (t1 t2) (occurs_in t2 t1))
                                               rectys))))
                                         (match (create_auxiliary_clauses nty)
-                                          ((tuple k~local~6907 tyal ncls ith rth)
+                                          ((tuple k* tyal ncls ith rth)
                                             (let
                                               ((cls
                                                 (append
@@ -4431,10 +4344,9 @@
                                                             (let ((s (dest_vartype ty)))
                                                               (tuple
                                                                 (find
-                                                                  (lambdac (|t|)
+                                                                  (lambdac (t*)
                                                                     (=
-                                                                      (fst
-                                                                        (dest_type |t|))
+                                                                      (fst (dest_type t*))
                                                                       s))
                                                                   xnewtys)
                                                                 ty)))
@@ -4446,7 +4358,7 @@
                                                     (match
                                                       (prove_inductive_types_isomorphic
                                                         n
-                                                        k~local~6907
+                                                        k*
                                                         (tuple ith0 rth0)
                                                         (tuple ith1 rth1))
                                                       ((tuple isoth rclauses)
@@ -4482,8 +4394,8 @@
                                                               (filter
                                                                 (lambdac (ty)
                                                                   (exists
-                                                                    (lambdac (|t|)
-                                                                      (occurs_in |t| ty))
+                                                                    (lambdac (t*)
+                                                                      (occurs_in t* ty))
                                                                     isotys))
                                                                 vtylist))
                                                             (atylist
@@ -4494,15 +4406,15 @@
                                                                     #'dest_fun_ty))
                                                                 ctylist
                                                                 nil))
-                                                            (|isoths'|
+                                                            (isoths*
                                                               (map
                                                                 (lift_type_bijections
                                                                   isoths)
                                                                 (filter
                                                                   (lambdac (ty)
                                                                     (exists
-                                                                      (lambdac (|t|)
-                                                                        (occurs_in |t| ty))
+                                                                      (lambdac (t*)
+                                                                        (occurs_in t* ty))
                                                                       isotys))
                                                                   atylist)))
                                                             (cisoths
@@ -4510,7 +4422,7 @@
                                                                 (o
                                                                   BETA_RULE
                                                                   (lift_type_bijections
-                                                                    |isoths'|))
+                                                                    isoths*))
                                                                 ctylist))
                                                             (uisoths
                                                               (map ISO_USAGE_RULE cisoths))
@@ -4532,7 +4444,7 @@
                                                                   rclauses
                                                                   (map
                                                                     SIMPLE_ISO_EXPAND_RULE
-                                                                    |isoths'|))
+                                                                    isoths*))
                                                                 irth4))
                                                             (irth6
                                                               (hol2cl.lib:repeat
@@ -4540,7 +4452,7 @@
                                                                 irth5))
                                                             (ncjs
                                                               (filter
-                                                                (lambdac (|t|)
+                                                                (lambdac (t*)
                                                                   (exists
                                                                     (lambdac (v)
                                                                       (not (is_var v)))
@@ -4553,7 +4465,7 @@
                                                                             (snd
                                                                               (funcall
                                                                                 strip_forall
-                                                                                |t|))))))))
+                                                                                t*))))))))
                                                                 (funcall
                                                                   hol2cl.basics:conjuncts
                                                                   (snd
@@ -4583,7 +4495,7 @@
                                                                             (funcall
                                                                               genvar
                                                                               bool_ty))))
-                                                                      (def~local~7112
+                                                                      (def*
                                                                         (funcall
                                                                           mk_eq
                                                                           (tuple
@@ -4596,7 +4508,7 @@
                                                                       (dth
                                                                         (funcall
                                                                           new_definition
-                                                                          def~local~7112)))
+                                                                          def*)))
                                                                     (funcall
                                                                       SIMPLE_BETA_RULE
                                                                       dth))))))
@@ -4623,7 +4535,7 @@
                                             def)
                                           nil)))
                                     (match (define_type_nested def)
-                                      ((tuple p~local~7242 ith0 rth0)
+                                      ((tuple p* ith0 rth0)
                                         (match (funcall strip_forall (concl rth0))
                                           ((tuple avs etm)
                                             (let*
@@ -4650,7 +4562,7 @@
                                                     relcls))
                                                 (cdefs
                                                   (map2
-                                                    (lambdac (s r~local~7273)
+                                                    (lambdac (s r*)
                                                       (SYM
                                                         (funcall
                                                           new_definition
@@ -4658,10 +4570,8 @@
                                                             mk_eq
                                                             (tuple
                                                               (mk_var
-                                                                (tuple
-                                                                  s
-                                                                  (type_of r~local~7273)))
-                                                              r~local~7273)))))
+                                                                (tuple s (type_of r*)))
+                                                              r*)))))
                                                     truecons
                                                     gencons))
                                                 (tavs
@@ -4677,7 +4587,7 @@
                                                     tavs
                                                     (SUBS cdefs (SPECL tavs rth0)))))
                                               (let*
-                                                ((retval (tuple p~local~7242 ith1 rth1))
+                                                ((retval (tuple p* ith1 rth1))
                                                   (newentries
                                                     (map
                                                       (lambdac (s)
@@ -4712,8 +4622,8 @@
     (let ((retval (assoc s (deref the_inductive_types))))
       (progn (warn cl:t "Benign redefinition of inductive type") retval))
     (hol2cl.runtime:ocaml-condition
-      (exception~7405)
-      (match exception~7405
+      (exception~7323)
+      (match exception~7323
         ((Failure _)
           (let*
             ((defspec (funcall parse_inductive_type_specification s))
@@ -4730,24 +4640,24 @@
                   (= (funcall length (setify constructors)) (funcall length constructors)))
                 (failwith "define_type: multiple instances of a constructor")
                 (if (exists (o (can #'get_type_arity) #'dest_vartype) newtypes)
-                  (let ((|t| (find (can #'get_type_arity) (map #'dest_vartype newtypes))))
+                  (let ((t* (find (can #'get_type_arity) (map #'dest_vartype newtypes))))
                     (failwith
                       (string-concat
                         "define_type: type :"
-                        (string-concat |t| " already defined"))))
+                        (string-concat t* " already defined"))))
                   (if (exists (can #'get_const_type) constructors)
-                    (let ((|t| (find (can #'get_const_type) constructors)))
+                    (let ((t* (find (can #'get_const_type) constructors)))
                       (failwith
                         (string-concat
                           "define_type: constant "
-                          (string-concat |t| " already defined"))))
+                          (string-concat t* " already defined"))))
                     (let ((retval (funcall define_type_raw defspec)))
                       (progn
                         (assign
                           the_inductive_types
                           (cl:cons (tuple s retval) (deref the_inductive_types)))
                         retval))))))))
-        (_ (raise exception~7405))))))
+        (_ (raise exception~7323))))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Unwinding, and application of patterns. Add easy cases to default net.    *)
@@ -4838,10 +4748,10 @@
                 (handler-case
                   (THENC econv (BINDER_CONV (conv bc)) tm)
                   (hol2cl.runtime:ocaml-condition
-                    (exception~7624)
-                    (match exception~7624
+                    (exception~7540)
+                    (match exception~7540
                       ((Failure _) (funcall bc tm))
-                      (_ (raise exception~7624)))))))
+                      (_ (raise exception~7540)))))))
               #'conv)))
           (BREAK_CONS_CONV
             (let
@@ -4857,7 +4767,7 @@
                     (funcall TOP_SWEEP_CONV (REWRITES_CONV (deref basic_rectype_net))))
                     (conv1 (if (funcall is_conj tm) (funcall LAND_CONV conv0) conv0)))
                   (THENC conv1 conv2 tm)))))
-          (UNWIND_CONV~local~7672
+          (UNWIND_CONV*
             (let
               ((baseconv
                 (GEN_REWRITE_CONV
@@ -4872,7 +4782,7 @@
                           (funcall EQT_INTRO (funcall GSYM (SPEC_ALL EXISTS_REFL)))
                           nil)))))))
               (labelsc
-                ((UNWIND_CONV~local~7691
+                ((UNWIND_CONV*
                   (tm)
                   (match (funcall strip_exists tm)
                     ((tuple evs bod)
@@ -4881,28 +4791,20 @@
                           (let
                             ((eq
                               (find
-                                (lambdac (tm~local~7705)
+                                (lambdac (tm*)
                                   (cl:and
-                                    (is_eq tm~local~7705)
-                                    (match (dest_eq tm~local~7705)
-                                      ((tuple l r~local~7708)
+                                    (is_eq tm*)
+                                    (match (dest_eq tm*)
+                                      ((tuple l r*)
                                         (cl:or
-                                          (cl:and
-                                            (mem l evs)
-                                            (not (free_in l r~local~7708)))
-                                          (cl:and
-                                            (mem r~local~7708 evs)
-                                            (not (free_in r~local~7708 l))))))))
+                                          (cl:and (mem l evs) (not (free_in l r*)))
+                                          (cl:and (mem r* evs) (not (free_in r* l))))))))
                                 eqs)))
                             (match (dest_eq eq)
-                              ((tuple l r~local~7740)
+                              ((tuple l r*)
                                 (let*
-                                  ((v
-                                    (if
-                                      (cl:and (mem l evs) (not (free_in l r~local~7740)))
-                                      l
-                                      r~local~7740))
-                                    (|cjs'| (cl:cons eq (subtract eqs (cl:cons eq nil))))
+                                  ((v (if (cl:and (mem l evs) (not (free_in l r*))) l r*))
+                                    (cjs* (cl:cons eq (subtract eqs (cl:cons eq nil))))
                                     (n
                                       (-
                                         (funcall length evs)
@@ -4912,7 +4814,7 @@
                                         CONJ_ACI_RULE
                                         (funcall
                                           mk_eq
-                                          (tuple bod (funcall list_mk_conj |cjs'|)))))
+                                          (tuple bod (funcall list_mk_conj cjs*)))))
                                     (th2 (itlist MK_EXISTS evs th1))
                                     (th3
                                       (funpow
@@ -4920,15 +4822,13 @@
                                         #'BINDER_CONV
                                         (funcall PUSH_EXISTS_CONV baseconv)
                                         (rand (concl th2)))))
-                                  (CONV_RULE
-                                    (RAND_CONV #'UNWIND_CONV~local~7691)
-                                    (TRANS th2 th3))))))
+                                  (CONV_RULE (RAND_CONV #'UNWIND_CONV*) (TRANS th2 th3))))))
                           (hol2cl.runtime:ocaml-condition
-                            (exception~7699)
-                            (match exception~7699
+                            (exception~7613)
+                            (match exception~7613
                               ((Failure _) (REFL tm))
-                              (_ (raise exception~7699))))))))))
-                #'UNWIND_CONV~local~7691)))
+                              (_ (raise exception~7613))))))))))
+                #'UNWIND_CONV*)))
           (MATCH_SEQPATTERN_CONV
             (THENC
               (GEN_REWRITE_CONV #'I (cl:cons pth_1 nil))
@@ -4945,7 +4845,7 @@
                             (THENC
                               (GEN_REWRITE_CONV #'I (cl:cons pth_2 nil))
                               BREAK_CONS_CONV)))
-                        UNWIND_CONV~local~7672)
+                        UNWIND_CONV*)
                       (GEN_REWRITE_CONV
                         DEPTH_CONV
                         (cl:cons
@@ -4956,7 +4856,7 @@
             (lambdac (tm)
               (let*
                 ((th1 (GEN_REWRITE_CONV #'I (cl:cons pth_3 nil) tm))
-                  (|tm'| (body (rand (funcall lhand (rand (concl th1))))))
+                  (tm* (body (rand (funcall lhand (rand (concl th1))))))
                   (th2
                     (THENC
                       (THENC
@@ -4965,18 +4865,16 @@
                             (THENC
                               (GEN_REWRITE_CONV #'I (cl:cons pth_4 nil))
                               (RAND_CONV BREAK_CONS_CONV)))
-                          UNWIND_CONV~local~7672)
+                          UNWIND_CONV*)
                         (GEN_REWRITE_CONV
                           DEPTH_CONV
                           (cl:cons
                             (funcall EQT_INTRO (SPEC_ALL EQ_REFL))
                             (cl:cons AND_CLAUSES nil))))
                       (GEN_REWRITE_CONV DEPTH_CONV (cl:cons EXISTS_SIMP nil))
-                      |tm'|)))
+                      tm*)))
                 (fletc
-                  ((conv
-                    (tm~local~7910)
-                    (if (= tm~local~7910 (funcall lhand (concl th2))) th2 (fail unit))))
+                  ((conv (tm**) (if (= tm** (funcall lhand (concl th2))) th2 (fail unit))))
                   (CONV_RULE
                     (RAND_CONV
                       (RATOR_CONV
@@ -5026,10 +4924,10 @@
                           MATCH_ONEPATTERN_CONV_TRIV))
                       nil)))))
             (tuple
-              (CHANGED_CONV UNWIND_CONV~local~7672)
+              (CHANGED_CONV UNWIND_CONV*)
               (ORELSEC MATCH_SEQPATTERN_CONV_GEN MATCH_ONEPATTERN_CONV_GEN)))))))
-  ((tuple UNWIND_CONV~local~7518 MATCH_CONV~local~7516)
-    (setf MATCH_CONV MATCH_CONV~local~7516 UNWIND_CONV UNWIND_CONV~local~7518)))
+  ((tuple UNWIND_CONV* MATCH_CONV*)
+    (setf MATCH_CONV MATCH_CONV* UNWIND_CONV UNWIND_CONV*)))
 
 (defparameter FORALL_UNWIND_CONV
   (let*
@@ -5041,10 +4939,10 @@
             (handler-case
               (THENC econv (BINDER_CONV (conv bc)) tm)
               (hol2cl.runtime:ocaml-condition
-                (exception~8024)
-                (match exception~8024
+                (exception~7934)
+                (match exception~7934
                   ((Failure _) (funcall bc tm))
-                  (_ (raise exception~8024)))))))
+                  (_ (raise exception~7934)))))))
           #'conv)))
       (baseconv
         (GEN_REWRITE_CONV
@@ -5057,7 +4955,7 @@
                 (MESON nil (parse_term "(!x. x = a ==> q x) <=> q a"))
                 (cl:cons (MESON nil (parse_term "(!x. a = x ==> q x) <=> q a")) nil)))))))
     (labelsc
-      ((FORALL_UNWIND_CONV~local~8063
+      ((FORALL_UNWIND_CONV*
         (tm)
         (handler-case
           (match (funcall strip_forall tm)
@@ -5068,30 +4966,25 @@
                     ((eqs (funcall hol2cl.basics:conjuncts ant))
                       (eq
                         (find
-                          (lambdac (tm~local~8079)
+                          (lambdac (tm*)
                             (cl:and
-                              (is_eq tm~local~8079)
-                              (match (dest_eq tm~local~8079)
-                                ((tuple l r~local~8082)
+                              (is_eq tm*)
+                              (match (dest_eq tm*)
+                                ((tuple l r*)
                                   (cl:or
-                                    (cl:and (mem l avs) (not (free_in l r~local~8082)))
-                                    (cl:and
-                                      (mem r~local~8082 avs)
-                                      (not (free_in r~local~8082 l))))))))
+                                    (cl:and (mem l avs) (not (free_in l r*)))
+                                    (cl:and (mem r* avs) (not (free_in r* l))))))))
                           eqs)))
                     (match (dest_eq eq)
-                      ((tuple l r~local~8114)
+                      ((tuple l r*)
                         (let*
-                          ((v
-                            (if (cl:and (mem l avs) (not (free_in l r~local~8114)))
-                              l
-                              r~local~8114))
-                            (|cjs'| (cl:cons eq (subtract eqs (cl:cons eq nil))))
+                          ((v (if (cl:and (mem l avs) (not (free_in l r*))) l r*))
+                            (cjs* (cl:cons eq (subtract eqs (cl:cons eq nil))))
                             (n (- (funcall length avs) (+ 1 (index v (funcall rev avs)))))
                             (th1
                               (funcall
                                 CONJ_ACI_RULE
-                                (funcall mk_eq (tuple ant (funcall list_mk_conj |cjs'|)))))
+                                (funcall mk_eq (tuple ant (funcall list_mk_conj cjs*)))))
                             (th2 (AP_THM (AP_TERM (rator (rator bod)) th1) con))
                             (th3 (itlist MK_FORALL avs th2))
                             (th4
@@ -5100,11 +4993,9 @@
                                 #'BINDER_CONV
                                 (funcall PUSH_FORALL_CONV baseconv)
                                 (rand (concl th3)))))
-                          (CONV_RULE
-                            (RAND_CONV #'FORALL_UNWIND_CONV~local~8063)
-                            (TRANS th3 th4))))))))))
+                          (CONV_RULE (RAND_CONV #'FORALL_UNWIND_CONV*) (TRANS th3 th4))))))))))
           (hol2cl.runtime:ocaml-condition
-            (exception~8066)
-            (match exception~8066 ((Failure _) (REFL tm)) (_ (raise exception~8066)))))))
-      #'FORALL_UNWIND_CONV~local~8063)))
+            (exception~7975)
+            (match exception~7975 ((Failure _) (REFL tm)) (_ (raise exception~7975)))))))
+      #'FORALL_UNWIND_CONV*)))
 

@@ -54,7 +54,7 @@
         BUTLAST_APPEND
         BUTLAST_CLAUSES
         CHAR_EQ_CONV
-        CHAR_EQ_CONV~local~4112
+        CHAR_EQ_CONV*
         CONS_11
         CONS_HD_TL
         EL
@@ -105,6 +105,7 @@
         LIST_CONV
         LIST_EQ
         LIST_INDUCT_TAC
+        LIST_OF_SEQ*
         LIST_OF_SEQ_CONV
         LIST_OF_SEQ_EQ_NIL
         LIST_OF_SEQ_EQ_SELF
@@ -152,7 +153,7 @@
         REVERSE_REVERSE
         STRING_DISTINCTNESS
         STRING_EQ_CONV
-        STRING_EQ_CONV~local~4114
+        STRING_EQ_CONV*
         SURJECTIVE_MAP
         TL
         ZIP
@@ -164,9 +165,10 @@
         conv
         dest_char
         dest_string
-        dest_string~local~3510
+        dest_string*
         findneq
         list_CASES
+        list_of_seq
         mk_bool
         mk_char
         mk_code
@@ -174,10 +176,8 @@
         mk_flist
         mk_list
         mk_string
-        mk_string~local~3621
-        prefix
-        |LIST_OF_SEQ|
-        |list_of_seq|)
+        mk_string*
+        prefix)
       (:export
         ALL
         ALL2
@@ -265,6 +265,7 @@
         LIST_CONV
         LIST_EQ
         LIST_INDUCT_TAC
+        LIST_OF_SEQ*
         LIST_OF_SEQ_CONV
         LIST_OF_SEQ_EQ_NIL
         LIST_OF_SEQ_EQ_SELF
@@ -320,13 +321,12 @@
         dest_char
         dest_string
         list_CASES
+        list_of_seq
         mk_char
         mk_cons
         mk_flist
         mk_list
-        mk_string
-        |LIST_OF_SEQ|
-        |list_of_seq|))))
+        mk_string))))
 
 (defpackage :hol2cl.lists
   (:use :cl)
@@ -367,7 +367,7 @@
     BUTLAST_APPEND
     BUTLAST_CLAUSES
     CHAR_EQ_CONV
-    CHAR_EQ_CONV~local~4112
+    CHAR_EQ_CONV*
     CONS_11
     CONS_HD_TL
     EL
@@ -418,6 +418,7 @@
     LIST_CONV
     LIST_EQ
     LIST_INDUCT_TAC
+    LIST_OF_SEQ*
     LIST_OF_SEQ_CONV
     LIST_OF_SEQ_EQ_NIL
     LIST_OF_SEQ_EQ_SELF
@@ -465,7 +466,7 @@
     REVERSE_REVERSE
     STRING_DISTINCTNESS
     STRING_EQ_CONV
-    STRING_EQ_CONV~local~4114
+    STRING_EQ_CONV*
     SURJECTIVE_MAP
     TL
     ZIP
@@ -477,9 +478,10 @@
     conv
     dest_char
     dest_string
-    dest_string~local~3510
+    dest_string*
     findneq
     list_CASES
+    list_of_seq
     mk_bool
     mk_char
     mk_code
@@ -487,10 +489,8 @@
     mk_flist
     mk_list
     mk_string
-    mk_string~local~3621
-    prefix
-    |LIST_OF_SEQ|
-    |list_of_seq|)
+    mk_string*
+    prefix)
   (:shadowing-import-from :cl not char-code - + *)
   (:shadowing-import-from
     :hol2cl.arith
@@ -554,18 +554,18 @@
     AP_TERM)
   (:shadowing-import-from
     :hol2cl.fusion.hol
-    |mk_comb|
-    |inst|
     type_of
     TRANS
     REFL
     rator
     rand
     mk_const
+    mk_comb
     is_const
     is_abs
     INST_TYPE
-    |INST|
+    INST*
+    inst
     frees
     dest_type
     dest_eq
@@ -751,6 +751,7 @@
     LIST_CONV
     LIST_EQ
     LIST_INDUCT_TAC
+    LIST_OF_SEQ*
     LIST_OF_SEQ_CONV
     LIST_OF_SEQ_EQ_NIL
     LIST_OF_SEQ_EQ_SELF
@@ -806,13 +807,12 @@
     dest_char
     dest_string
     list_CASES
+    list_of_seq
     mk_char
     mk_cons
     mk_flist
     mk_list
-    mk_string
-    |LIST_OF_SEQ|
-    |list_of_seq|))
+    mk_string))
 
 (in-package :hol2cl.lists)
 
@@ -823,7 +823,7 @@
 
 (defparameter LIST_INDUCT_TAC
   (let
-    ((list_INDUCT~local~2
+    ((list_INDUCT*
       (prove
         (tuple
           (parse_term
@@ -831,7 +831,7 @@
           (funcall MATCH_ACCEPT_TAC list_INDUCT)))))
     (funcall
       THENL
-      (funcall THEN (MATCH_MP_TAC list_INDUCT~local~2) #'CONJ_TAC)
+      (funcall THEN (MATCH_MP_TAC list_INDUCT*) #'CONJ_TAC)
       (cl:cons
         #'ALL_TAC
         (cl:cons (funcall THEN (funcall THEN #'GEN_TAC #'GEN_TAC) DISCH_TAC) nil)))))
@@ -1042,7 +1042,7 @@
       "(PAIRWISE (r:A->A->bool) [] <=> T) /\\
    (PAIRWISE (r:A->A->bool) (CONS h t) <=> ALL (r h) t /\\ PAIRWISE r t)")))
 
-(defparameter |list_of_seq|
+(defparameter list_of_seq
   (funcall
     new_recursive_definition
     num_RECURSION
@@ -2370,7 +2370,7 @@
         (funcall
           ASM_REWRITE_TAC
           (cl:cons
-            |list_of_seq|
+            list_of_seq
             (cl:cons LENGTH (cl:cons LENGTH_APPEND (cl:cons ADD_CLAUSES nil)))))))))
 
 (defparameter EL_LIST_OF_SEQ
@@ -2389,7 +2389,7 @@
               INDUCT_TAC)
             (REWRITE_TAC
               (cl:cons
-                |list_of_seq|
+                list_of_seq
                 (cl:cons LT (cl:cons EL_APPEND (cl:cons LENGTH_LIST_OF_SEQ nil))))))
           (REPEAT #'STRIP_TAC))
         (funcall
@@ -2427,9 +2427,9 @@
         (funcall THEN (funcall THEN #'GEN_TAC #'GEN_TAC) INDUCT_TAC)
         (funcall
           ASM_REWRITE_TAC
-          (cl:cons MAP (cl:cons |list_of_seq| (cl:cons MAP_APPEND (cl:cons o_THM nil)))))))))
+          (cl:cons MAP (cl:cons list_of_seq (cl:cons MAP_APPEND (cl:cons o_THM nil)))))))))
 
-(defparameter |LIST_OF_SEQ|
+(defparameter LIST_OF_SEQ*
   (prove
     (tuple
       (parse_term
@@ -2446,7 +2446,7 @@
               THEN
               (funcall
                 THEN
-                (REWRITE_TAC (cl:cons (funcall CONJUNCT1 |list_of_seq|) nil))
+                (REWRITE_TAC (cl:cons (funcall CONJUNCT1 list_of_seq) nil))
                 (REPEAT #'GEN_TAC))
               (REWRITE_TAC
                 (cl:cons
@@ -2463,37 +2463,37 @@
 ;; (* ------------------------------------------------------------------------- *)
 
 
-(defunc mk_cons (h |t|)
+(defunc mk_cons (h t*)
   (handler-case
     (let ((cons (mk_const (tuple "CONS" (cl:cons (tuple (type_of h) aty) nil)))))
-      (|mk_comb| (tuple (|mk_comb| (tuple cons h)) |t|)))
+      (mk_comb (tuple (mk_comb (tuple cons h)) t*)))
     (hol2cl.runtime:ocaml-condition
-      (exception~2461)
-      (match exception~2461 ((Failure _) (failwith "mk_cons")) (_ (raise exception~2461))))))
+      (exception~2460)
+      (match exception~2460 ((Failure _) (failwith "mk_cons")) (_ (raise exception~2460))))))
 
-(defunc mk_list (arg~2487)
-  (match arg~2487
+(defunc mk_list (arg~2486)
+  (match arg~2486
     ((tuple tms ty)
       (handler-case
-        (let ((|nil| (mk_const (tuple "NIL" (cl:cons (tuple ty aty) nil)))))
+        (let ((nil* (mk_const (tuple "NIL" (cl:cons (tuple ty aty) nil)))))
           (if (= tms nil)
-            |nil|
+            nil*
             (let ((cons (mk_const (tuple "CONS" (cl:cons (tuple ty aty) nil)))))
-              (hol2cl.lib:itlist (mk_binop cons) tms |nil|))))
+              (hol2cl.lib:itlist (mk_binop cons) tms nil*))))
         (hol2cl.runtime:ocaml-condition
-          (exception~2491)
-          (match exception~2491
+          (exception~2490)
+          (match exception~2490
             ((Failure _) (failwith "mk_list"))
-            (_ (raise exception~2491))))))))
+            (_ (raise exception~2490))))))))
 
 (defunc mk_flist (tms)
   (handler-case
     (mk_list (tuple tms (type_of (hol2cl.lib:hd tms))))
     (hol2cl.runtime:ocaml-condition
-      (exception~2533)
-      (match exception~2533
+      (exception~2532)
+      (match exception~2532
         ((Failure _) (failwith "mk_flist"))
-        (_ (raise exception~2533))))))
+        (_ (raise exception~2532))))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Extra monotonicity theorems for inductive definitions.                    *)
@@ -2588,7 +2588,7 @@
               (cl:cons (tuple (hol2cl.lib:hd (snd (dest_type (type_of ltm)))) aty) nil)))
             (match
               (tuple
-                (hol2cl.lib:map (funcall |inst| tyin) avars)
+                (hol2cl.lib:map (funcall inst tyin) avars)
                 (hol2cl.lib:map (INST_TYPE tyin) pths))
               ((tuple
                 (cl:cons h_tm (cl:cons n_tm (cl:cons t_tm nil)))
@@ -2598,13 +2598,13 @@
                     (th)
                     (match (dest_comb (rand (concl th)))
                       ((tuple altm ntm)
-                        (let ((ltm~local~2692 (rand (rand altm))))
-                          (if (funcall is_cons ltm~local~2692)
-                            (match (funcall dest_cons ltm~local~2692)
+                        (let ((ltm* (rand (rand altm))))
+                          (if (funcall is_cons ltm*)
+                            (match (funcall dest_cons ltm*)
                               ((tuple htm ttm)
                                 (let
                                   ((th1
-                                    (|INST|
+                                    (INST*
                                       (cl:cons
                                         (tuple htm h_tm)
                                         (cl:cons
@@ -2619,14 +2619,14 @@
                                             th1
                                             (AP_TERM ftm (funcall NUM_SUC_CONV stm)))))
                                         (conv (TRANS th th2))))))))
-                            (TRANS th (|INST| (cl:cons (tuple ntm n_tm) nil) pth_base))))))))
+                            (TRANS th (INST* (cl:cons (tuple ntm n_tm) nil) pth_base))))))))
                   (handler-case
-                    (conv (|INST| (cl:cons (tuple (rand tm) t_tm) nil) pth_init))
+                    (conv (INST* (cl:cons (tuple (rand tm) t_tm) nil) pth_init))
                     (hol2cl.runtime:ocaml-condition
-                      (exception~2765)
-                      (match exception~2765
+                      (exception~2763)
+                      (match exception~2763
                         ((Failure _) (failwith "LENGTH_CONV"))
-                        (_ (raise exception~2765))))))))))
+                        (_ (raise exception~2763))))))))))
         (_ (failwith "LENGTH_CONV"))))))
 
 (defparameter EL_CONV
@@ -2648,7 +2648,7 @@
               (cl:cons (tuple (hol2cl.lib:hd (snd (dest_type (type_of ltm)))) aty) nil)))
             (match
               (tuple
-                (hol2cl.lib:map (funcall |inst| tyin) avars)
+                (hol2cl.lib:map (funcall inst tyin) avars)
                 (hol2cl.lib:map (INST_TYPE tyin) pths))
               ((tuple
                 (cl:cons h_tm (cl:cons m_tm (cl:cons n_tm (cl:cons t_tm nil))))
@@ -2657,26 +2657,26 @@
                   ((conv
                     (th)
                     (match (dest_comb (rand (concl th)))
-                      ((tuple entm ltm~local~2870)
-                        (match (funcall dest_cons ltm~local~2870)
+                      ((tuple entm ltm*)
+                        (match (funcall dest_cons ltm*)
                           ((tuple htm ttm)
                             (match (dest_comb entm)
-                              ((tuple etm ntm~local~2875)
-                                (let ((n (funcall dest_numeral ntm~local~2875)))
+                              ((tuple etm ntm*)
+                                (let ((n (funcall dest_numeral ntm*)))
                                   (if (= n num_0)
                                     (TRANS
                                       th
-                                      (|INST|
+                                      (INST*
                                         (cl:cons
                                           (tuple htm h_tm)
                                           (cl:cons (tuple ttm t_tm) nil))
                                         pth_base))
                                     (let*
-                                      ((th1 (funcall num_CONV ntm~local~2875))
+                                      ((th1 (funcall num_CONV ntm*))
                                         (th2
-                                          (|INST|
+                                          (INST*
                                             (cl:cons
-                                              (tuple ntm~local~2875 n_tm)
+                                              (tuple ntm* n_tm)
                                               (cl:cons
                                                 (tuple (rand (rand (concl th1))) m_tm)
                                                 (cl:cons
@@ -2688,10 +2688,10 @@
                   (handler-case
                     (conv (REFL tm))
                     (hol2cl.runtime:ocaml-condition
-                      (exception~2955)
-                      (match exception~2955
+                      (exception~2951)
+                      (match exception~2951
                         ((Failure _) (failwith "EL_CONV"))
-                        (_ (raise exception~2955))))))))))
+                        (_ (raise exception~2951))))))))))
         (_ (failwith "EL_CONV"))))))
 
 (defparameter REVERSE_CONV
@@ -2719,7 +2719,7 @@
               (cl:cons (tuple (hol2cl.lib:hd (snd (dest_type (type_of ltm)))) aty) nil)))
             (match
               (tuple
-                (hol2cl.lib:map (funcall |inst| tyin) avars)
+                (hol2cl.lib:map (funcall inst tyin) avars)
                 (hol2cl.lib:map (INST_TYPE tyin) pths))
               ((tuple
                 (cl:cons h_tm (cl:cons l_tm (cl:cons t_tm nil)))
@@ -2728,31 +2728,29 @@
                   ((conv
                     (th)
                     (match (dest_comb (rand (concl th)))
-                      ((tuple ahtm ltm~local~3052)
+                      ((tuple ahtm ltm*)
                         (let ((httm (rand (rand ahtm))))
                           (if (funcall is_cons httm)
                             (match (funcall dest_cons httm)
                               ((tuple htm ttm)
                                 (let
                                   ((th1
-                                    (|INST|
+                                    (INST*
                                       (cl:cons
                                         (tuple htm h_tm)
                                         (cl:cons
-                                          (tuple ltm~local~3052 l_tm)
+                                          (tuple ltm* l_tm)
                                           (cl:cons (tuple ttm t_tm) nil)))
                                       pth_step)))
                                   (conv (TRANS th th1)))))
-                            (TRANS
-                              th
-                              (|INST| (cl:cons (tuple ltm~local~3052 l_tm) nil) pth_base))))))))
+                            (TRANS th (INST* (cl:cons (tuple ltm* l_tm) nil) pth_base))))))))
                   (handler-case
-                    (conv (|INST| (cl:cons (tuple tm l_tm) nil) pth_init))
+                    (conv (INST* (cl:cons (tuple tm l_tm) nil) pth_init))
                     (hol2cl.runtime:ocaml-condition
-                      (exception~3108)
-                      (match exception~3108
+                      (exception~3103)
+                      (match exception~3103
                         ((Failure _) (failwith "REVERSE_CONV"))
-                        (_ (raise exception~3108))))))))))
+                        (_ (raise exception~3103))))))))))
         (_ (failwith "REVERSE_CONV"))))))
 
 (defparameter LIST_OF_SEQ_CONV
@@ -2771,7 +2769,7 @@
               APPEND
               (cl:cons
                 APPEND_NIL
-                (cl:cons |list_of_seq| (cl:cons (funcall GSYM APPEND_ASSOC) nil))))))))
+                (cl:cons list_of_seq (cl:cons (funcall GSYM APPEND_ASSOC) nil))))))))
       (pths (hol2cl.lib:map #'UNDISCH_ALL (funcall CONJUNCTS pthc)))
       (avars (sort (function-value #'< 2) (frees (concl pthc)))))
     (lambdac (tm)
@@ -2780,7 +2778,7 @@
           (let ((tyin (cl:cons (tuple (snd (dest_fun_ty (type_of ftm))) aty) nil)))
             (match
               (tuple
-                (hol2cl.lib:map (funcall |inst| tyin) avars)
+                (hol2cl.lib:map (funcall inst tyin) avars)
                 (hol2cl.lib:map (INST_TYPE tyin) pths)
                 (is_abs ftm))
               ((tuple
@@ -2793,28 +2791,26 @@
                     (match (dest_comb (rand (concl th)))
                       ((tuple nftm ltm)
                         (match (dest_comb (rand nftm))
-                          ((tuple lftm ntm~local~3216)
-                            (let*
-                              ((ftm~local~3218 (rand lftm))
-                                (n (funcall dest_numeral ntm~local~3216)))
+                          ((tuple lftm ntm*)
+                            (let* ((ftm* (rand lftm)) (n (funcall dest_numeral ntm*)))
                               (if (= n num_0)
                                 (TRANS
                                   th
-                                  (|INST|
+                                  (INST*
                                     (cl:cons
-                                      (tuple ftm~local~3218 f_tm)
+                                      (tuple ftm* f_tm)
                                       (cl:cons (tuple ltm l_tm) nil))
                                     pth_base))
                                 (let*
-                                  ((th1 (funcall num_CONV ntm~local~3216))
+                                  ((th1 (funcall num_CONV ntm*))
                                     (th2
-                                      (|INST|
+                                      (INST*
                                         (cl:cons
-                                          (tuple ntm~local~3216 n_tm)
+                                          (tuple ntm* n_tm)
                                           (cl:cons
                                             (tuple (rand (rand (concl th1))) m_tm)
                                             (cl:cons
-                                              (tuple ftm~local~3218 f_tm)
+                                              (tuple ftm* f_tm)
                                               (cl:cons (tuple ltm l_tm) nil))))
                                         pth_step))
                                     (th3 (TRANS th (PROVE_HYP th1 th2)))
@@ -2836,12 +2832,12 @@
                                                           xtm))))))))))))
                                   (conv th4))))))))))
                   (handler-case
-                    (conv (|INST| (cl:cons (tuple tm l_tm) nil) pth_init))
+                    (conv (INST* (cl:cons (tuple tm l_tm) nil) pth_init))
                     (hol2cl.runtime:ocaml-condition
-                      (exception~3338)
-                      (match exception~3338
+                      (exception~3331)
+                      (match exception~3331
                         ((Failure _) (failwith "LIST_OF_SEQ_CONV"))
-                        (_ (raise exception~3338))))))))))
+                        (_ (raise exception~3331))))))))))
         (_ (failwith "LIST_OF_SEQ_CONV"))))))
 
 ;; (* ------------------------------------------------------------------------- *)
@@ -2855,8 +2851,8 @@
 (defparameter char_RECURSION nil)
 
 (match (define_type "char = ASCII bool bool bool bool bool bool bool bool")
-  ((tuple char_INDUCT~local~3395 char_RECURSION~local~3397)
-    (setf char_INDUCT char_INDUCT~local~3395 char_RECURSION char_RECURSION~local~3397)))
+  ((tuple char_INDUCT* char_RECURSION*)
+    (setf char_INDUCT char_INDUCT* char_RECURSION char_RECURSION*)))
 
 (funcall new_type_abbrev (tuple "string" (parse_type "char list")))
 
@@ -2875,15 +2871,12 @@
 (match
   (fletc
     ((bool_of_term
-      (|t|)
-      (match |t|
-        ((Const "T" _) cl:t)
-        ((Const "F" _) cl:nil)
-        (_ (failwith "bool_of_term")))))
+      (t*)
+      (match t* ((Const "T" _) cl:t) ((Const "F" _) cl:nil) (_ (failwith "bool_of_term")))))
     (fletc
       ((code_of_term
-        (|t|)
-        (match (funcall strip_comb |t|)
+        (t*)
+        (match (funcall strip_comb t*)
           ((tuple f tms)
             (if
               (cl:or
@@ -2892,13 +2885,12 @@
                 (not (= (funcall hol2cl.lib:length tms) 8)))
               (failwith "code_of_term")
               (hol2cl.lib:itlist
-                (lambdac (b~local~3461 f~local~3463)
-                  (if b~local~3461 (+ 1 (* 2 f~local~3463)) (* 2 f~local~3463)))
+                (lambdac (b* f*) (if b* (+ 1 (* 2 f*)) (* 2 f*)))
                 (hol2cl.lib:map #'bool_of_term (funcall rev tms))
                 0))))))
       (let ((char_of_term (o (function-value #'char-chr 1) #'code_of_term)))
         (fletc
-          ((dest_string~local~3510
+          ((dest_string*
             (tm)
             (handler-case
               (let ((tms (dest_list tm)))
@@ -2915,46 +2907,41 @@
                         tms)))
                     (string-escaped (implode ccs)))))
               (hol2cl.runtime:ocaml-condition
-                (exception~3513)
-                (match exception~3513
+                (exception~3495)
+                (match exception~3495
                   ((Failure _) (failwith "dest_string"))
-                  (_ (raise exception~3513)))))))
+                  (_ (raise exception~3495)))))))
           (fletc
             ((mk_bool
-              (b~local~3547)
+              (b*)
               (match (tuple (parse_term "T") (parse_term "F"))
-                ((tuple true_tm false_tm) (if b~local~3547 true_tm false_tm)))))
+                ((tuple true_tm false_tm) (if b* true_tm false_tm)))))
             (let*
               ((mk_code
                 (let ((ascii_tm (parse_term "ASCII")))
                   (fletc
                     ((mk_code
-                      (c~local~3569)
+                      (c*)
                       (let
                         ((lis
                           (hol2cl.lib:map
-                            (lambdac (i~local~3572)
-                              (mk_bool
-                                (=
-                                  (int-mod
-                                    (int-div c~local~3569 (int-lsl 1 i~local~3572))
-                                    2)
-                                  1)))
+                            (lambdac (i*)
+                              (mk_bool (= (int-mod (int-div c* (int-lsl 1 i*)) 2) 1)))
                             (-- 0 7))))
                         (hol2cl.lib:itlist
-                          (lambdac (x y) (|mk_comb| (tuple y x)))
+                          (lambdac (x y) (mk_comb (tuple y x)))
                           lis
                           ascii_tm))))
                     (let ((codes (array-map #'mk_code (array-of-list (-- 0 255)))))
-                      (lambdac (c~local~3607) (array-get codes c~local~3607))))))
-                (mk_char~local~3616 (o mk_code (function-value #'char-code 1))))
+                      (lambdac (c*) (array-get codes c*))))))
+                (mk_char* (o mk_code (function-value #'char-code 1))))
               (fletc
-                ((mk_string~local~3621
+                ((mk_string*
                   (s)
                   (let
                     ((ns
                       (hol2cl.lib:map
-                        (lambdac (i~local~3625) (char-code (string-get s i~local~3625)))
+                        (lambdac (i*) (char-code (string-get s i*)))
                         (-- 0 (- (string-length s) 1)))))
                     (mk_list (tuple (hol2cl.lib:map mk_code ns) (parse_type "char"))))))
                 (let*
@@ -3023,7 +3010,7 @@
                                   (cl:append
                                     (hol2cl.lib:zip bvars cvars)
                                     (hol2cl.lib:zip cvars bvars)))
-                                  (f (o (o (o EQF_INTRO (|INST| ilist)) GSYM) EQF_ELIM)))
+                                  (f (o (o (o EQF_INTRO (INST* ilist)) GSYM) EQF_ELIM)))
                                 (hol2cl.lib:map f ASCII_NEQS_FT))))
                           (labelsc
                             ((prefix
@@ -3031,37 +3018,37 @@
                               (if (= n 0)
                                 nil
                                 (match l
-                                  ((cl:cons h |t|) (cl:cons h (prefix (- n 1) |t|)))
+                                  ((cl:cons h t*) (cl:cons h (prefix (- n 1) t*)))
                                   (_ l)))))
                             (labelsc
                               ((findneq
-                                (n prefix~local~3715 a~local~3717 b~local~3719)
-                                (match (tuple a~local~3717 b~local~3719)
+                                (n prefix* a* b*)
+                                (match (tuple a* b*)
                                   ((tuple (cl:cons b1 a) (cl:cons b2 b))
                                     (if (<> b1 b2)
                                       (tuple
                                         n
-                                        (funcall rev prefix~local~3715)
+                                        (funcall rev prefix*)
                                         (bool_of_term b2)
                                         a
                                         b)
-                                      (findneq (+ n 1) (cl:cons b1 prefix~local~3715) a b)))
+                                      (findneq (+ n 1) (cl:cons b1 prefix*) a b)))
                                   ((tuple _ _) (fail unit)))))
                               (lambdac (c1 c2)
                                 (match
                                   (tuple (funcall strip_comb c1) (funcall strip_comb c2))
-                                  ((tuple (tuple _ a~local~3764) (tuple _ b~local~3766))
-                                    (match (findneq 0 nil a~local~3764 b~local~3766)
-                                      ((tuple n p~local~3770 b s1 s2)
+                                  ((tuple (tuple _ a*) (tuple _ b*))
+                                    (match (findneq 0 nil a* b*)
+                                      ((tuple n p* b s1 s2)
                                         (let
                                           ((ss1 (funpow n #'hol2cl.lib:tl bvars))
                                             (ss2 (funpow n #'hol2cl.lib:tl cvars)))
                                           (let*
                                             ((pp (prefix n avars))
                                               (pth (if b ASCII_NEQS_FT ASCII_NEQS_TF)))
-                                            (|INST|
+                                            (INST*
                                               (cl:append
-                                                (hol2cl.lib:zip p~local~3770 pp)
+                                                (hol2cl.lib:zip p* pp)
                                                 (cl:append
                                                   (hol2cl.lib:zip s1 ss1)
                                                   (hol2cl.lib:zip s2 ss2)))
@@ -3106,38 +3093,33 @@
                                     (if (= s2 niltm)
                                       NIL_EQ_THM
                                       (match (tuple (rand (rator s2)) (rand s2))
-                                        ((tuple c2 s2~local~4024)
-                                          (|INST|
+                                        ((tuple c2 s2*)
+                                          (INST*
                                             (cl:cons
                                               (tuple c2 xtm)
-                                              (cl:cons (tuple s2~local~4024 xstm) nil))
+                                              (cl:cons (tuple s2* xstm) nil))
                                             NIL_NEQ_CONS))))
                                     (match (tuple (rand (rator s1)) (rand s1))
-                                      ((tuple c1 s1~local~3926)
+                                      ((tuple c1 s1*)
                                         (if (= s2 niltm)
-                                          (|INST|
+                                          (INST*
                                             (cl:cons
                                               (tuple c1 xtm)
-                                              (cl:cons (tuple s1~local~3926 xstm) nil))
+                                              (cl:cons (tuple s1* xstm) nil))
                                             CONS_NEQ_NIL)
                                           (match (tuple (rand (rator s2)) (rand s2))
-                                            ((tuple c2 s2~local~3929)
+                                            ((tuple c2 s2*)
                                               (if (= c1 c2)
                                                 (let
                                                   ((th1
-                                                    (|INST|
+                                                    (INST*
                                                       (cl:cons
                                                         (tuple c1 xtm)
                                                         (cl:cons
-                                                          (tuple s1~local~3926 xstm)
-                                                          (cl:cons
-                                                            (tuple s2~local~3929 ystm)
-                                                            nil)))
+                                                          (tuple s1* xstm)
+                                                          (cl:cons (tuple s2* ystm) nil)))
                                                       CONS_EQ_THM))
-                                                    (th2
-                                                      (STRING_DISTINCTNESS
-                                                        s1~local~3926
-                                                        s2~local~3929)))
+                                                    (th2 (STRING_DISTINCTNESS s1* s2*)))
                                                   (TRANS th1 th2))
                                                 (let*
                                                   ((ilist
@@ -3146,25 +3128,23 @@
                                                       (cl:cons
                                                         (tuple c2 ytm)
                                                         (cl:cons
-                                                          (tuple s1~local~3926 xstm)
-                                                          (cl:cons
-                                                            (tuple s2~local~3929 ystm)
-                                                            nil)))))
-                                                    (itm (|INST| ilist CONS_NEQ_THM)))
+                                                          (tuple s1* xstm)
+                                                          (cl:cons (tuple s2* ystm) nil)))))
+                                                    (itm (INST* ilist CONS_NEQ_THM)))
                                                   (funcall
                                                     MP
                                                     itm
                                                     (funcall CHAR_DISTINCTNESS c1 c2))))))))))))
                                 #'STRING_DISTINCTNESS)))))))
                   (fletc
-                    ((CHAR_EQ_CONV~local~4112
+                    ((CHAR_EQ_CONV*
                       (tm)
                       (match (dest_eq tm)
                         ((tuple c1 c2)
                           (if (= (compare c1 c2) 0)
                             (funcall EQT_INTRO (REFL c1))
                             (funcall CHAR_DISTINCTNESS c1 c2)))))
-                      (STRING_EQ_CONV~local~4114
+                      (STRING_EQ_CONV*
                         (tm)
                         (match (dest_eq tm)
                           ((tuple ltm rtm)
@@ -3173,29 +3153,23 @@
                               (funcall STRING_DISTINCTNESS ltm rtm))))))
                     (tuple
                       char_of_term
-                      mk_char~local~3616
-                      #'dest_string~local~3510
-                      #'mk_string~local~3621
-                      #'CHAR_EQ_CONV~local~4112
-                      #'STRING_EQ_CONV~local~4114))))))))))
-  ((tuple
-    dest_char~local~3427
-    mk_char~local~3431
-    dest_string~local~3429
-    mk_string~local~3433
-    CHAR_EQ_CONV~local~3423
-    STRING_EQ_CONV~local~3425)
+                      mk_char*
+                      #'dest_string*
+                      #'mk_string*
+                      #'CHAR_EQ_CONV*
+                      #'STRING_EQ_CONV*))))))))))
+  ((tuple dest_char* mk_char* dest_string* mk_string* CHAR_EQ_CONV* STRING_EQ_CONV*)
     (setf
       CHAR_EQ_CONV
-      CHAR_EQ_CONV~local~3423
+      CHAR_EQ_CONV*
       STRING_EQ_CONV
-      STRING_EQ_CONV~local~3425
+      STRING_EQ_CONV*
       dest_char
-      dest_char~local~3427
+      dest_char*
       dest_string
-      dest_string~local~3429
+      dest_string*
       mk_char
-      mk_char~local~3431
+      mk_char*
       mk_string
-      mk_string~local~3433)))
+      mk_string*)))
 

@@ -59,8 +59,29 @@ let rec own_names items = List.concat_map (function
      | _ -> List.map constructor_name (constructors d.tdDef)) (v ds)
  | StExc (_,ec,_) -> (match v ec with EcTuple (_,c) -> [constructor_name c] | _ -> [])
  | StDcl (_,is) -> own_names (v is) | _ -> []) items
+let source_spelling = function
+ | "f_f_" -> "F_F" | "then_" -> "THEN"
+ | "thenc_" -> "THENC" | "thenl_" -> "THENL" | "orelse_" -> "ORELSE"
+ | "orelsec_" -> "ORELSEC" | "then_tcl_" -> "THEN_TCL" | "orelse_tcl_" -> "ORELSE_TCL"
+ | s -> s
+let name_priority s =
+ if String.lowercase_ascii s=s then 0
+ else if String.exists (function 'a'..'z' -> true | _ -> false) s then 1 else 2
+let compare_source_names a b =
+ let p=compare (name_priority a) (name_priority b) in
+ if p=0 then String.compare a b else p
+let allocate_star forbidden printed =
+ let rec choose printed =
+   let logical=String.uppercase_ascii printed in
+   if forbidden logical then choose (printed^"*") else printed,logical in
+ choose printed
+let control_names = ["LAMBDA";"FUNCTION";"PROGN";"FLET";"LABELS";"QUOTE";
+ "BLOCK";"RETURN-FROM";"CATCH";"THROW";"UNWIND-PROTECT";"HANDLER-CASE";
+ "DECLARE";"THE";"DEFUN";"DEFPARAMETER";"DEFPACKAGE";"IN-PACKAGE";
+ "EVAL-WHEN";"LET";"LET*";"SETF";"IF";"COND";"DEFUNC";"LAMBDAC";
+ "LABELSC";"FLETC"]
 type context = {
- package:string; source:string; text:string; own:string list; collisions:SS.t;
+ package:string; source:string; text:string; own:string list; spellings:(string * string) SM.t;
  totals:int SM.t; mutable occurrences:int SM.t; mutable globals:SS.t;
  mutable local_functions:SS.t; mutable local_symbols:SS.t; mutable makers:SS.t;
  next:int ref; mutable imports:binding SM.t; mutable exports:binding SM.t;
@@ -70,45 +91,42 @@ type context = {
 let context ?(counter=ref 0) ?(reference_observer=ref (fun (_:binding) -> ())) ?lexical_prefix package source text items =
  let own=own_names items in
  let totals=List.fold_left (fun m s -> SM.add s (1+Option.value (SM.find_opt s m) ~default:0) m) SM.empty own in
- let cases=List.fold_left (fun m s -> let k=String.uppercase_ascii s in SM.add k (SS.add s (Option.value (SM.find_opt k m) ~default:SS.empty)) m) SM.empty own in
- let collisions=SM.fold (fun _ names set -> if SS.cardinal names>1 then SS.union set names else set) cases SS.empty in
- {package;source;text;own;collisions;totals;occurrences=SM.empty;globals=SS.empty;local_functions=SS.empty;local_symbols=SS.empty;makers=SS.empty;next=counter;
+ let spellings,_=List.fold_left (fun (names,used) source ->
+   let printed,logical=allocate_star (fun logical -> SS.mem logical used || List.mem logical control_names)
+       (Sexp.symbol (source_spelling source)) in
+   SM.add source (printed,logical) names,SS.add logical used)
+   (SM.empty,SS.empty) (List.sort_uniq compare_source_names own) in
+ {package;source;text;own;spellings;totals;occurrences=SM.empty;globals=SS.empty;local_functions=SS.empty;local_symbols=SS.empty;makers=SS.empty;next=counter;
   imports=SM.empty;exports=SM.empty;dependencies=[];rules=SM.empty;lexical_prefix;metadata=[];reference_observer;owned_logicals=None}
 let fresh c stem = incr c.next; stem^"~"^string_of_int !(c.next)
-let source_spelling = function
- | "f_f_" -> "F_F" | "then_" -> "THEN"
- | "thenc_" -> "THENC" | "thenl_" -> "THENL" | "orelse_" -> "ORELSE"
- | "orelsec_" -> "ORELSEC" | "then_tcl_" -> "THEN_TCL" | "orelse_tcl_" -> "ORELSE_TCL"
- | s -> s
 let spelling c s =
- let s=source_spelling s in
- let printed=if SS.mem s c.collisions then Sexp.exact_symbol s else Sexp.symbol s in
- let logical=if String.length printed>0 && printed.[0]='|' then s else String.uppercase_ascii s in
- printed,logical
+ match SM.find_opt s c.spellings with Some spelling -> spelling | None ->
+ let printed=Sexp.symbol (source_spelling s) in printed,String.uppercase_ascii printed
 let global c source_name kind =
  let n=1+Option.value (SM.find_opt source_name c.occurrences) ~default:0 in
  c.occurrences<-SM.add source_name n c.occurrences;
  let total=Option.value (SM.find_opt source_name c.totals) ~default:1 in
- let s=if n<total then source_name^"~"^string_of_int n else source_name in
- let s=match c.lexical_prefix with None -> s | Some prefix -> prefix^"."^s in
- let printed,logical=if SS.mem source_name c.collisions then Sexp.exact_symbol s,s else spelling c s in
+ let base,_=spelling c source_name in
+ let printed=if n<total then base^"~"^string_of_int n else base in
+ let printed=match c.lexical_prefix with None -> printed | Some prefix -> Sexp.symbol prefix^"."^printed in
+ let logical=String.uppercase_ascii printed in
  incr c.next;
  let b={id= !(c.next);source_name;package=(if c.lexical_prefix=None then c.package else "");printed;logical;kind;labels=[]} in
  (match kind with Value -> c.globals<-SS.add logical c.globals | _ -> ()); b
 let local c env source_name kind =
  let printed,logical=spelling c source_name in
- let syntax_conflict=match kind with Function _ -> List.mem logical
-   ["LAMBDA";"FUNCTION";"PROGN";"FLET";"LABELS";"QUOTE";"BLOCK";"RETURN-FROM";
-    "CATCH";"THROW";"UNWIND-PROTECT";"HANDLER-CASE";"DECLARE";"THE";
-    "DEFUN";"DEFPARAMETER";"DEFPACKAGE";"IN-PACKAGE";"EVAL-WHEN"] | _ -> false in
- let printed,logical = if logical="PI" || syntax_conflict || SS.mem logical c.globals || SM.mem logical c.imports || SM.exists (fun _ (b:binding) -> b.logical=logical) env.values || List.mem source_name c.own
-   then let s=fresh c (source_name^"~local") in spelling c s else printed,logical in
+ let forbidden logical =
+   List.mem logical control_names || SS.mem logical c.globals || SM.mem logical c.imports ||
+   SM.exists (fun _ (b:binding) -> b.logical=logical) env.values ||
+   List.exists (fun source -> snd (spelling c source)=logical) c.own in
+ let printed,logical=allocate_star forbidden printed in
  (match kind with Function _ -> c.local_functions<-SS.add printed c.local_functions | _ -> ());
  c.local_symbols<-SS.add logical c.local_symbols;
  incr c.next; {id= !(c.next);source_name;package="";printed;logical;kind;labels=[]}
 let external_binding package name kind =
- let printed=Sexp.symbol name in
- {id=0;source_name=name;package;printed;logical=(if printed.[0]='|' then name else String.uppercase_ascii name);kind;labels=[]}
+ (* Fixed foreign targets retain their native spelling, including CL constants. *)
+ let printed=name in
+ {id=0;source_name=name;package;printed;logical=String.uppercase_ascii printed;kind;labels=[]}
 let reference c (b:binding) =
  !(c.reference_observer) b;
  if b.package="" || b.package=c.package then b.printed
@@ -130,8 +148,7 @@ let mark c loc rule form =
                line=Ploc.line_nb loc;rule},form)
 let maker_spelling (b:binding) =
  let logical="MAKE-"^b.logical in
- if b.printed.[0]='|' then Sexp.exact_symbol logical,logical
- else "make-"^b.printed,logical
+ "make-"^b.printed,logical
 let maker c (b:binding) k = reference c {b with printed=k.maker;logical=k.maker_logical;kind=Function k.fields}
 let base_environment () =
  let spec=[

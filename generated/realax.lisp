@@ -75,6 +75,7 @@
         HREAL_OF_NUM_EQ
         HREAL_OF_NUM_LE
         HREAL_OF_NUM_MUL
+        NADD_ADD*
         NADD_ADDITIVE
         NADD_ADD_ASSOC
         NADD_ADD_LCANCEL
@@ -95,6 +96,7 @@
         NADD_EQ_REFL
         NADD_EQ_SYM
         NADD_EQ_TRANS
+        NADD_INV*
         NADD_INV_0
         NADD_INV_WELLDEF
         NADD_LBOUND
@@ -113,6 +115,7 @@
         NADD_LE_TRANS
         NADD_LE_WELLDEF
         NADD_LE_WELLDEF_LEMMA
+        NADD_MUL*
         NADD_MULTIPLICATIVE
         NADD_MUL_ASSOC
         NADD_MUL_LID
@@ -131,6 +134,7 @@
         NADD_MUL_WELLDEF
         NADD_MUL_WELLDEF_LEMMA
         NADD_NONZERO
+        NADD_OF_NUM*
         NADD_OF_NUM_ADD
         NADD_OF_NUM_EQ
         NADD_OF_NUM_LE
@@ -214,8 +218,12 @@
         is_nadd
         is_nadd_0
         nadd_abs
+        nadd_add
         nadd_eq
+        nadd_inv
         nadd_le
+        nadd_mul
+        nadd_of_num
         nadd_rep
         nadd_rinv
         prioritize_num
@@ -248,15 +256,7 @@
         treal_le
         treal_mul
         treal_neg
-        treal_of_num
-        |NADD_ADD|
-        |NADD_INV|
-        |NADD_MUL|
-        |NADD_OF_NUM|
-        |nadd_add|
-        |nadd_inv|
-        |nadd_mul|
-        |nadd_of_num|)
+        treal_of_num)
       (:export
         BOUNDS_DIVIDED
         BOUNDS_IGNORE
@@ -316,6 +316,7 @@
         HREAL_OF_NUM_EQ
         HREAL_OF_NUM_LE
         HREAL_OF_NUM_MUL
+        NADD_ADD*
         NADD_ADDITIVE
         NADD_ADD_ASSOC
         NADD_ADD_LCANCEL
@@ -336,6 +337,7 @@
         NADD_EQ_REFL
         NADD_EQ_SYM
         NADD_EQ_TRANS
+        NADD_INV*
         NADD_INV_0
         NADD_INV_WELLDEF
         NADD_LBOUND
@@ -354,6 +356,7 @@
         NADD_LE_TRANS
         NADD_LE_WELLDEF
         NADD_LE_WELLDEF_LEMMA
+        NADD_MUL*
         NADD_MULTIPLICATIVE
         NADD_MUL_ASSOC
         NADD_MUL_LID
@@ -372,6 +375,7 @@
         NADD_MUL_WELLDEF
         NADD_MUL_WELLDEF_LEMMA
         NADD_NONZERO
+        NADD_OF_NUM*
         NADD_OF_NUM_ADD
         NADD_OF_NUM_EQ
         NADD_OF_NUM_LE
@@ -454,8 +458,12 @@
         is_nadd
         is_nadd_0
         nadd_abs
+        nadd_add
         nadd_eq
+        nadd_inv
         nadd_le
+        nadd_mul
+        nadd_of_num
         nadd_rep
         nadd_rinv
         prioritize_num
@@ -488,15 +496,7 @@
         treal_le
         treal_mul
         treal_neg
-        treal_of_num
-        |NADD_ADD|
-        |NADD_INV|
-        |NADD_MUL|
-        |NADD_OF_NUM|
-        |nadd_add|
-        |nadd_inv|
-        |nadd_mul|
-        |nadd_of_num|))))
+        treal_of_num))))
 
 (defpackage :hol2cl.realax
   (:use :cl)
@@ -559,6 +559,7 @@
     HREAL_OF_NUM_EQ
     HREAL_OF_NUM_LE
     HREAL_OF_NUM_MUL
+    NADD_ADD*
     NADD_ADDITIVE
     NADD_ADD_ASSOC
     NADD_ADD_LCANCEL
@@ -579,6 +580,7 @@
     NADD_EQ_REFL
     NADD_EQ_SYM
     NADD_EQ_TRANS
+    NADD_INV*
     NADD_INV_0
     NADD_INV_WELLDEF
     NADD_LBOUND
@@ -597,6 +599,7 @@
     NADD_LE_TRANS
     NADD_LE_WELLDEF
     NADD_LE_WELLDEF_LEMMA
+    NADD_MUL*
     NADD_MULTIPLICATIVE
     NADD_MUL_ASSOC
     NADD_MUL_LID
@@ -615,6 +618,7 @@
     NADD_MUL_WELLDEF
     NADD_MUL_WELLDEF_LEMMA
     NADD_NONZERO
+    NADD_OF_NUM*
     NADD_OF_NUM_ADD
     NADD_OF_NUM_EQ
     NADD_OF_NUM_LE
@@ -698,8 +702,12 @@
     is_nadd
     is_nadd_0
     nadd_abs
+    nadd_add
     nadd_eq
+    nadd_inv
     nadd_le
+    nadd_mul
+    nadd_of_num
     nadd_rep
     nadd_rinv
     prioritize_num
@@ -732,15 +740,7 @@
     treal_le
     treal_mul
     treal_neg
-    treal_of_num
-    |NADD_ADD|
-    |NADD_INV|
-    |NADD_MUL|
-    |NADD_OF_NUM|
-    |nadd_add|
-    |nadd_inv|
-    |nadd_mul|
-    |nadd_of_num|)
+    treal_of_num)
   (:shadowing-import-from :cl not)
   (:shadowing-import-from
     :hol2cl.arith
@@ -859,9 +859,9 @@
     REFL
     new_basic_type_definition
     mk_type
-    |MK_COMB|
+    MK_COMB*
     is_var
-    |INST|
+    INST*
     dest_eq
     concl
     ASSUME)
@@ -1039,6 +1039,7 @@
     HREAL_OF_NUM_EQ
     HREAL_OF_NUM_LE
     HREAL_OF_NUM_MUL
+    NADD_ADD*
     NADD_ADDITIVE
     NADD_ADD_ASSOC
     NADD_ADD_LCANCEL
@@ -1059,6 +1060,7 @@
     NADD_EQ_REFL
     NADD_EQ_SYM
     NADD_EQ_TRANS
+    NADD_INV*
     NADD_INV_0
     NADD_INV_WELLDEF
     NADD_LBOUND
@@ -1077,6 +1079,7 @@
     NADD_LE_TRANS
     NADD_LE_WELLDEF
     NADD_LE_WELLDEF_LEMMA
+    NADD_MUL*
     NADD_MULTIPLICATIVE
     NADD_MUL_ASSOC
     NADD_MUL_LID
@@ -1095,6 +1098,7 @@
     NADD_MUL_WELLDEF
     NADD_MUL_WELLDEF_LEMMA
     NADD_NONZERO
+    NADD_OF_NUM*
     NADD_OF_NUM_ADD
     NADD_OF_NUM_EQ
     NADD_OF_NUM_LE
@@ -1177,8 +1181,12 @@
     is_nadd
     is_nadd_0
     nadd_abs
+    nadd_add
     nadd_eq
+    nadd_inv
     nadd_le
+    nadd_mul
+    nadd_of_num
     nadd_rep
     nadd_rinv
     prioritize_num
@@ -1211,15 +1219,7 @@
     treal_le
     treal_mul
     treal_neg
-    treal_of_num
-    |NADD_ADD|
-    |NADD_INV|
-    |NADD_MUL|
-    |NADD_OF_NUM|
-    |nadd_add|
-    |nadd_inv|
-    |nadd_mul|
-    |nadd_of_num|))
+    treal_of_num))
 
 (in-package :hol2cl.realax)
 
@@ -1476,11 +1476,11 @@
                 THEN
                 (SUBST_ALL_TAC th)
                 (match (dest_eq (concl th))
-                  ((tuple l r~local~472)
-                    (if (cl:and (is_var l) (not (vfree_in l r~local~472)))
+                  ((tuple l r*)
+                    (if (cl:and (is_var l) (not (vfree_in l r*)))
                       #'ALL_TAC
                       (funcall ASSUME_TAC th))))))))))
-      (|DIST_ELIM_TAC'|
+      (DIST_ELIM_TAC*
         (funcall
           THEN
           (funcall
@@ -1527,36 +1527,24 @@
               "(!m n p. dist(m,p) <= dist(m,n) + dist(n,p)) /\\
      (!m n p q. dist(m + n,p + q) <= dist(m,p) + dist(n,q)) /\\
      (!m n p q. dist(m,p) <= dist(m + n,p + q) + dist(n,q))")
-            |DIST_ELIM_TAC'|)))
+            DIST_ELIM_TAC*)))
       ((tuple
-        DIST_LE_CASES~local~529
-        DIST_ADDBOUND~local~531
-        (cl:cons
-          DIST_TRIANGLE~local~537
-          (cl:cons DIST_ADD2~local~533 (cl:cons DIST_ADD2_REV~local~535 nil))))
-        (tuple
-          DIST_LE_CASES~local~529
-          DIST_ADDBOUND~local~531
-          DIST_TRIANGLE~local~537
-          DIST_ADD2~local~533
-          DIST_ADD2_REV~local~535))))
-  ((tuple
-    DIST_LE_CASES~local~440
-    DIST_ADDBOUND~local~438
-    DIST_TRIANGLE~local~442
-    DIST_ADD2~local~434
-    DIST_ADD2_REV~local~436)
+        DIST_LE_CASES*
+        DIST_ADDBOUND*
+        (cl:cons DIST_TRIANGLE* (cl:cons DIST_ADD2* (cl:cons DIST_ADD2_REV* nil))))
+        (tuple DIST_LE_CASES* DIST_ADDBOUND* DIST_TRIANGLE* DIST_ADD2* DIST_ADD2_REV*))))
+  ((tuple DIST_LE_CASES* DIST_ADDBOUND* DIST_TRIANGLE* DIST_ADD2* DIST_ADD2_REV*)
     (setf
       DIST_ADD2
-      DIST_ADD2~local~434
+      DIST_ADD2*
       DIST_ADD2_REV
-      DIST_ADD2_REV~local~436
+      DIST_ADD2_REV*
       DIST_ADDBOUND
-      DIST_ADDBOUND~local~438
+      DIST_ADDBOUND*
       DIST_LE_CASES
-      DIST_LE_CASES~local~440
+      DIST_LE_CASES*
       DIST_TRIANGLE
-      DIST_TRIANGLE~local~442)))
+      DIST_TRIANGLE*)))
 
 (defparameter DIST_TRIANGLE_LE
   (prove
@@ -1948,8 +1936,7 @@
 (defparameter nadd_rep nil)
 
 (match (new_basic_type_definition "nadd" (tuple "mk_nadd" "dest_nadd") is_nadd_0)
-  ((tuple nadd_abs~local~1172 nadd_rep~local~1174)
-    (setf nadd_abs nadd_abs~local~1172 nadd_rep nadd_rep~local~1174)))
+  ((tuple nadd_abs* nadd_rep*) (setf nadd_abs nadd_abs* nadd_rep nadd_rep*)))
 
 (override_interface (tuple "fn" (parse_term "dest_nadd")))
 
@@ -2410,16 +2397,16 @@
 
 (override_interface (tuple "&" (parse_term "nadd_of_num:num->nadd")))
 
-(defparameter |nadd_of_num| (funcall new_definition (parse_term "&k = afn(\\n. k * n)")))
+(defparameter nadd_of_num (funcall new_definition (parse_term "&k = afn(\\n. k * n)")))
 
-(defparameter |NADD_OF_NUM|
+(defparameter NADD_OF_NUM*
   (prove
     (tuple
       (parse_term "!k. fn(&k) = \\n. k * n")
       (funcall
         THEN
         (REWRITE_TAC
-          (cl:cons |nadd_of_num| (cl:cons (funcall GSYM nadd_rep) (cl:cons is_nadd nil))))
+          (cl:cons nadd_of_num (cl:cons (funcall GSYM nadd_rep) (cl:cons is_nadd nil))))
         (REWRITE_TAC (cl:cons DIST_REFL (cl:cons LE_0 (cl:cons MULT_AC nil))))))))
 
 (defparameter NADD_OF_NUM_WELLDEF
@@ -2443,7 +2430,7 @@
             THEN
             (funcall THEN (REPEAT #'GEN_TAC) #'EQ_TAC)
             (REWRITE_TAC (cl:cons NADD_OF_NUM_WELLDEF nil)))
-          (REWRITE_TAC (cl:cons nadd_eq (cl:cons |NADD_OF_NUM| nil))))
+          (REWRITE_TAC (cl:cons nadd_eq (cl:cons NADD_OF_NUM* nil))))
         (REWRITE_TAC
           (cl:cons
             (funcall GSYM DIST_RMUL)
@@ -2789,7 +2776,7 @@
   (prove
     (tuple
       (parse_term "!x. ?n. x <<= &n")
-      (REWRITE_TAC (cl:cons nadd_le (cl:cons |NADD_OF_NUM| (cl:cons NADD_BOUND nil)))))))
+      (REWRITE_TAC (cl:cons nadd_le (cl:cons NADD_OF_NUM* (cl:cons NADD_BOUND nil)))))))
 
 (defparameter NADD_OF_NUM_LE
   (prove
@@ -2800,15 +2787,15 @@
         (funcall
           THEN
           (REPEAT #'GEN_TAC)
-          (REWRITE_TAC (cl:cons nadd_le (cl:cons |NADD_OF_NUM| nil))))
+          (REWRITE_TAC (cl:cons nadd_le (cl:cons NADD_OF_NUM* nil))))
         (REWRITE_TAC (cl:cons BOUNDS_LINEAR nil))))))
 
 (override_interface (tuple "++" (parse_term "nadd_add:nadd->nadd->nadd")))
 
-(defparameter |nadd_add|
+(defparameter nadd_add
   (funcall new_definition (parse_term "x ++ y = afn(\\n. fn x n + fn y n)")))
 
-(defparameter |NADD_ADD|
+(defparameter NADD_ADD*
   (prove
     (tuple
       (parse_term "!x y. fn(x ++ y) = \\n. fn x n + fn y n")
@@ -2835,7 +2822,7 @@
                           (REPEAT #'GEN_TAC)
                           (REWRITE_TAC
                             (cl:cons
-                              |nadd_add|
+                              nadd_add
                               (cl:cons (funcall GSYM nadd_rep) (cl:cons is_nadd nil)))))
                         (funcall
                           X_CHOOSE_TAC
@@ -2876,7 +2863,7 @@
                   (funcall
                     THEN
                     (REPEAT #'GEN_TAC)
-                    (REWRITE_TAC (cl:cons nadd_eq (cl:cons |NADD_ADD| nil))))
+                    (REWRITE_TAC (cl:cons nadd_eq (cl:cons NADD_ADD* nil))))
                   (DISCH_THEN
                     (CONJUNCTS_THEN2
                       (funcall X_CHOOSE_TAC (parse_term "B1:num"))
@@ -2900,7 +2887,7 @@
         THEN
         (funcall
           THEN
-          (funcall THEN (REPEAT #'GEN_TAC) (REWRITE_TAC (cl:cons |nadd_add| nil)))
+          (funcall THEN (REPEAT #'GEN_TAC) (REWRITE_TAC (cl:cons nadd_add nil)))
           (GEN_REWRITE_TAC (o #'RAND_CONV ONCE_DEPTH_CONV) (cl:cons ADD_SYM nil)))
         (REWRITE_TAC (cl:cons NADD_EQ_REFL nil))))))
 
@@ -2910,8 +2897,8 @@
       (parse_term "!x y z. (x ++ (y ++ z)) === ((x ++ y) ++ z)")
       (funcall
         THEN
-        (funcall THEN (REPEAT #'GEN_TAC) (ONCE_REWRITE_TAC (cl:cons |nadd_add| nil)))
-        (REWRITE_TAC (cl:cons |NADD_ADD| (cl:cons ADD_ASSOC (cl:cons NADD_EQ_REFL nil))))))))
+        (funcall THEN (REPEAT #'GEN_TAC) (ONCE_REWRITE_TAC (cl:cons nadd_add nil)))
+        (REWRITE_TAC (cl:cons NADD_ADD* (cl:cons ADD_ASSOC (cl:cons NADD_EQ_REFL nil))))))))
 
 (defparameter NADD_ADD_LID
   (prove
@@ -2922,7 +2909,7 @@
         (funcall
           THEN
           #'GEN_TAC
-          (REWRITE_TAC (cl:cons nadd_eq (cl:cons |NADD_ADD| (cl:cons |NADD_OF_NUM| nil)))))
+          (REWRITE_TAC (cl:cons nadd_eq (cl:cons NADD_ADD* (cl:cons NADD_OF_NUM* nil)))))
         (REWRITE_TAC
           (cl:cons
             MULT_CLAUSES
@@ -2935,7 +2922,7 @@
       (funcall
         THEN
         (REPEAT #'GEN_TAC)
-        (REWRITE_TAC (cl:cons nadd_eq (cl:cons |NADD_ADD| (cl:cons DIST_LADD nil))))))))
+        (REWRITE_TAC (cl:cons nadd_eq (cl:cons NADD_ADD* (cl:cons DIST_LADD nil))))))))
 
 (defparameter NADD_LE_ADD
   (prove
@@ -2948,7 +2935,7 @@
           (funcall
             THEN
             (REPEAT #'GEN_TAC)
-            (REWRITE_TAC (cl:cons nadd_le (cl:cons |NADD_ADD| nil))))
+            (REWRITE_TAC (cl:cons nadd_le (cl:cons NADD_ADD* nil))))
           (funcall EXISTS_TAC (parse_term "0")))
         (REWRITE_TAC (cl:cons ADD_CLAUSES (cl:cons LE_ADD nil)))))))
 
@@ -2983,7 +2970,7 @@
                     (DISCH_THEN
                       (X_CHOOSE_THEN (parse_term "d:num->num") (o ASSUME_TAC GSYM))))
                   (funcall EXISTS_TAC (parse_term "afn d")))
-                (REWRITE_TAC (cl:cons nadd_eq (cl:cons |NADD_ADD| nil))))
+                (REWRITE_TAC (cl:cons nadd_eq (cl:cons NADD_ADD* nil))))
               (funcall EXISTS_TAC (parse_term "B:num")))
             (funcall X_GEN_TAC (parse_term "n:num")))
           (SUBGOAL_THEN (parse_term "fn(afn d) = d") #'SUBST1_TAC))
@@ -3090,15 +3077,15 @@
       (parse_term "!m n. &m ++ &n === &(m + n)")
       (funcall
         THEN
-        (REWRITE_TAC (cl:cons nadd_eq (cl:cons |NADD_OF_NUM| (cl:cons |NADD_ADD| nil))))
+        (REWRITE_TAC (cl:cons nadd_eq (cl:cons NADD_OF_NUM* (cl:cons NADD_ADD* nil))))
         (REWRITE_TAC (cl:cons RIGHT_ADD_DISTRIB (cl:cons DIST_REFL (cl:cons LE_0 nil))))))))
 
 (override_interface (tuple "**" (parse_term "nadd_mul:nadd->nadd->nadd")))
 
-(defparameter |nadd_mul|
+(defparameter nadd_mul
   (funcall new_definition (parse_term "x ** y = afn(\\n. fn x (fn y n))")))
 
-(defparameter |NADD_MUL|
+(defparameter NADD_MUL*
   (prove
     (tuple
       (parse_term "!x y. fn(x ** y) = \\n. fn x (fn y n)")
@@ -3129,7 +3116,7 @@
                               (REPEAT #'GEN_TAC)
                               (REWRITE_TAC
                                 (cl:cons
-                                  |nadd_mul|
+                                  nadd_mul
                                   (cl:cons (funcall GSYM nadd_rep) (cl:cons is_nadd nil)))))
                             (funcall
                               X_CHOOSE_TAC
@@ -3249,7 +3236,7 @@
                                           THEN
                                           (REPEAT #'GEN_TAC)
                                           (REWRITE_TAC
-                                            (cl:cons nadd_eq (cl:cons |NADD_MUL| nil))))
+                                            (cl:cons nadd_eq (cl:cons NADD_MUL* nil))))
                                         (X_CHOOSE_THEN
                                           (parse_term "A1:num")
                                           #'MP_TAC
@@ -3297,8 +3284,8 @@
       (parse_term "!x y z. (x ** (y ** z)) === ((x ** y) ** z)")
       (funcall
         THEN
-        (funcall THEN (REPEAT #'GEN_TAC) (ONCE_REWRITE_TAC (cl:cons |nadd_mul| nil)))
-        (REWRITE_TAC (cl:cons |NADD_MUL| (cl:cons NADD_EQ_REFL nil)))))))
+        (funcall THEN (REPEAT #'GEN_TAC) (ONCE_REWRITE_TAC (cl:cons nadd_mul nil)))
+        (REWRITE_TAC (cl:cons NADD_MUL* (cl:cons NADD_EQ_REFL nil)))))))
 
 (defparameter NADD_MUL_LID
   (prove
@@ -3306,8 +3293,7 @@
       (parse_term "!x. (&1 ** x) === x")
       (funcall
         THEN
-        (REWRITE_TAC
-          (cl:cons |NADD_OF_NUM| (cl:cons |nadd_mul| (cl:cons MULT_CLAUSES nil))))
+        (REWRITE_TAC (cl:cons NADD_OF_NUM* (cl:cons nadd_mul (cl:cons MULT_CLAUSES nil))))
         (REWRITE_TAC (cl:cons nadd_abs (cl:cons NADD_EQ_REFL (cl:cons ETA_AX nil))))))))
 
 (defparameter NADD_LDISTRIB
@@ -3323,7 +3309,7 @@
             (funcall
               THEN
               (funcall THEN (REPEAT #'GEN_TAC) (REWRITE_TAC (cl:cons nadd_eq nil)))
-              (REWRITE_TAC (cl:cons |NADD_ADD| (cl:cons |NADD_MUL| nil))))
+              (REWRITE_TAC (cl:cons NADD_ADD* (cl:cons NADD_MUL* nil))))
             (funcall
               X_CHOOSE_TAC
               (parse_term "B:num")
@@ -3352,7 +3338,7 @@
                     (funcall
                       THEN
                       (REPEAT #'GEN_TAC)
-                      (REWRITE_TAC (cl:cons nadd_eq (cl:cons |NADD_MUL| nil))))
+                      (REWRITE_TAC (cl:cons nadd_eq (cl:cons NADD_MUL* nil))))
                     (DISCH_THEN (funcall X_CHOOSE_TAC (parse_term "B1:num"))))
                   (funcall
                     X_CHOOSE_TAC
@@ -3413,7 +3399,7 @@
       (parse_term "!m n. &m ** &n === &(m * n)")
       (funcall
         THEN
-        (REWRITE_TAC (cl:cons nadd_eq (cl:cons |NADD_OF_NUM| (cl:cons |NADD_MUL| nil))))
+        (REWRITE_TAC (cl:cons nadd_eq (cl:cons NADD_OF_NUM* (cl:cons NADD_MUL* nil))))
         (REWRITE_TAC (cl:cons MULT_ASSOC (cl:cons DIST_REFL (cl:cons LE_0 nil))))))))
 
 ;; (* ------------------------------------------------------------------------- *)
@@ -3431,7 +3417,7 @@
         (REWRITE_TAC
           (cl:cons
             nadd_le
-            (cl:cons |NADD_OF_NUM| (cl:cons MULT_CLAUSES (cl:cons LE_0 nil)))))))))
+            (cl:cons NADD_OF_NUM* (cl:cons MULT_CLAUSES (cl:cons LE_0 nil)))))))))
 
 (defparameter NADD_EQ_IMP_LE
   (prove
@@ -3516,7 +3502,7 @@
               (funcall
                 THEN
                 (REPEAT #'GEN_TAC)
-                (REWRITE_TAC (cl:cons nadd_le (cl:cons |NADD_ADD| nil))))
+                (REWRITE_TAC (cl:cons nadd_le (cl:cons NADD_ADD* nil))))
               (GEN_REWRITE_TAC
                 (o (o LAND_CONV (funpow 2 #'BINDER_CONV)) #'RAND_CONV)
                 (cl:cons ADD_SYM nil)))
@@ -3622,7 +3608,7 @@
                                               (REWRITE_TAC
                                                 (cl:cons
                                                   NOT_FORALL_THM
-                                                  (cl:cons |NADD_OF_NUM| nil))))
+                                                  (cl:cons NADD_OF_NUM* nil))))
                                             (REWRITE_TAC
                                               (cl:cons
                                                 MULT_CLAUSES
@@ -3636,7 +3622,7 @@
                                             (cl:cons (parse_term "B * N") nil))))
                                       (funcall X_GEN_TAC (parse_term "i:num")))
                                     (REWRITE_TAC
-                                      (cl:cons |NADD_MUL| (cl:cons |NADD_OF_NUM| nil))))
+                                      (cl:cons NADD_MUL* (cl:cons NADD_OF_NUM* nil))))
                                   (MATCH_MP_TAC
                                     (GEN_ALL
                                       (fst
@@ -4283,10 +4269,10 @@
                                             (cl:cons
                                               nadd_le
                                               (cl:cons
-                                                |NADD_ADD|
+                                                NADD_ADD*
                                                 (cl:cons
-                                                  |NADD_MUL|
-                                                  (cl:cons |NADD_OF_NUM| nil)))))
+                                                  NADD_MUL*
+                                                  (cl:cons NADD_OF_NUM* nil)))))
                                           (ONCE_REWRITE_TAC (cl:cons ADD_SYM nil)))
                                         (REWRITE_TAC
                                           (cl:cons ADD1 (cl:cons RIGHT_ADD_DISTRIB nil))))
@@ -4356,8 +4342,8 @@
                             (cl:cons
                               nadd_le
                               (cl:cons
-                                |NADD_ADD|
-                                (cl:cons |NADD_MUL| (cl:cons |NADD_OF_NUM| nil)))))
+                                NADD_ADD*
+                                (cl:cons NADD_MUL* (cl:cons NADD_OF_NUM* nil)))))
                           (funcall EXISTS_TAC (parse_term "0")))
                         (REWRITE_TAC (cl:cons ADD_CLAUSES (cl:cons MULT_CLAUSES nil))))
                       #'GEN_TAC)
@@ -4474,8 +4460,8 @@
                           (cl:cons
                             nadd_le
                             (cl:cons
-                              |NADD_MUL|
-                              (cl:cons |NADD_OF_NUM| (cl:cons MULT_CLAUSES nil))))))
+                              NADD_MUL*
+                              (cl:cons NADD_OF_NUM* (cl:cons MULT_CLAUSES nil))))))
                       (DISCH_THEN
                         (X_CHOOSE_THEN
                           (parse_term "A1:num")
@@ -4541,8 +4527,8 @@
                                     (cl:cons
                                       nadd_le
                                       (cl:cons
-                                        |NADD_MUL|
-                                        (cl:cons |NADD_OF_NUM| (cl:cons MULT_CLAUSES nil))))))
+                                        NADD_MUL*
+                                        (cl:cons NADD_OF_NUM* (cl:cons MULT_CLAUSES nil))))))
                                 (DISCH_THEN
                                   (X_CHOOSE_THEN
                                     (parse_term "A1:num")
@@ -4689,10 +4675,10 @@
                         (cl:cons MULT_CLAUSES (cl:cons LE_0 (cl:cons nadd_rinv nil)))))
                     (FIRST_ASSUM (o #'MP_TAC (MATCH_MP DIVISION))))
                   (DISCH_THEN
-                    (lambdac (|t|)
+                    (lambdac (t*)
                       (GEN_REWRITE_TAC
                         #'RAND_CONV
-                        (cl:cons (funcall CONJUNCT1 (SPEC_ALL |t|)) nil)))))
+                        (cl:cons (funcall CONJUNCT1 (SPEC_ALL t*)) nil)))))
                 (GEN_REWRITE_TAC LAND_CONV (cl:cons MULT_SYM nil)))
               (REWRITE_TAC (cl:cons LE_ADD nil)))
             nil))))))
@@ -5445,14 +5431,14 @@
 ;; (* ------------------------------------------------------------------------- *)
 
 
-(defparameter |nadd_inv|
+(defparameter nadd_inv
   (funcall
     new_definition
     (parse_term "nadd_inv(x) = if x === &0 then &0 else afn(nadd_rinv x)")))
 
 (override_interface (tuple "inv" (parse_term "nadd_inv:nadd->nadd")))
 
-(defparameter |NADD_INV|
+(defparameter NADD_INV*
   (prove
     (tuple
       (parse_term "!x. fn(nadd_inv x) = if x === &0 then (\\n. 0) else nadd_rinv x")
@@ -5466,9 +5452,9 @@
               THEN
               (funcall
                 THEN
-                (funcall THEN #'GEN_TAC (REWRITE_TAC (cl:cons |nadd_inv| nil)))
+                (funcall THEN #'GEN_TAC (REWRITE_TAC (cl:cons nadd_inv nil)))
                 (ASM_CASES_TAC (parse_term "x === &0")))
-              (funcall ASM_REWRITE_TAC (cl:cons |NADD_OF_NUM| (cl:cons MULT_CLAUSES nil))))
+              (funcall ASM_REWRITE_TAC (cl:cons NADD_OF_NUM* (cl:cons MULT_CLAUSES nil))))
             (REWRITE_TAC (cl:cons (funcall GSYM nadd_rep) (cl:cons is_nadd nil))))
           (MATCH_MP_TAC NADD_MUL_LINV_LEMMA8))
         (POP_ASSUM ACCEPT_TAC)))))
@@ -5494,7 +5480,7 @@
                     (funcall
                       THEN
                       (funcall THEN #'GEN_TAC DISCH_TAC)
-                      (REWRITE_TAC (cl:cons nadd_eq (cl:cons |NADD_MUL| nil))))
+                      (REWRITE_TAC (cl:cons nadd_eq (cl:cons NADD_MUL* nil))))
                     (ONCE_REWRITE_TAC (cl:cons BOUNDS_DIVIDED nil)))
                   (X_CHOOSE_THEN
                     (parse_term "A1:num")
@@ -5503,7 +5489,7 @@
                       (cl:cons (parse_term "inv(x)") (cl:cons (parse_term "x:nadd") nil))
                       NADD_ALTMUL)))
                 (REWRITE_TAC
-                  (cl:cons DIST_LMUL (cl:cons |NADD_OF_NUM| (cl:cons MULT_CLAUSES nil)))))
+                  (cl:cons DIST_LMUL (cl:cons NADD_OF_NUM* (cl:cons MULT_CLAUSES nil)))))
               (FIRST_ASSUM
                 (o
                   (funcall X_CHOOSE_TAC (parse_term "N:num"))
@@ -5582,14 +5568,14 @@
                 (GEN_REWRITE_TAC
                   (o (o LAND_CONV #'RAND_CONV) LAND_CONV)
                   (cl:cons MULT_SYM nil)))
-              (funcall ASM_REWRITE_TAC (cl:cons |NADD_INV| nil)))
+              (funcall ASM_REWRITE_TAC (cl:cons NADD_INV* nil)))
             nil))))))
 
 (defparameter NADD_INV_0
   (prove
     (tuple
       (parse_term "inv(&0) === &0")
-      (REWRITE_TAC (cl:cons |nadd_inv| (cl:cons NADD_EQ_REFL nil))))))
+      (REWRITE_TAC (cl:cons nadd_inv (cl:cons NADD_EQ_REFL nil))))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Welldefinedness follows from already established principles because if    *)
@@ -5638,7 +5624,7 @@
                           (cl:cons
                             (funcall
                               ASM_REWRITE_TAC
-                              (cl:cons |nadd_inv| (cl:cons NADD_EQ_REFL nil)))
+                              (cl:cons nadd_inv (cl:cons NADD_EQ_REFL nil)))
                             nil)))
                       (cl:cons
                         (funcall
@@ -5717,8 +5703,8 @@
     (tuple NADD_EQ_REFL NADD_EQ_TRANS)
     "hreal_of_num"
     NADD_OF_NUM_WELLDEF)
-  ((tuple hreal_of_num~local~6522 hreal_of_num_th~local~6524)
-    (setf hreal_of_num hreal_of_num~local~6522 hreal_of_num_th hreal_of_num_th~local~6524)))
+  ((tuple hreal_of_num* hreal_of_num_th*)
+    (setf hreal_of_num hreal_of_num* hreal_of_num_th hreal_of_num_th*)))
 
 (defparameter hreal_add nil)
 
@@ -5731,8 +5717,8 @@
     (tuple NADD_EQ_REFL NADD_EQ_TRANS)
     "hreal_add"
     NADD_ADD_WELLDEF)
-  ((tuple hreal_add~local~6542 hreal_add_th~local~6544)
-    (setf hreal_add hreal_add~local~6542 hreal_add_th hreal_add_th~local~6544)))
+  ((tuple hreal_add* hreal_add_th*)
+    (setf hreal_add hreal_add* hreal_add_th hreal_add_th*)))
 
 (defparameter hreal_mul nil)
 
@@ -5745,8 +5731,8 @@
     (tuple NADD_EQ_REFL NADD_EQ_TRANS)
     "hreal_mul"
     NADD_MUL_WELLDEF)
-  ((tuple hreal_mul~local~6562 hreal_mul_th~local~6564)
-    (setf hreal_mul hreal_mul~local~6562 hreal_mul_th hreal_mul_th~local~6564)))
+  ((tuple hreal_mul* hreal_mul_th*)
+    (setf hreal_mul hreal_mul* hreal_mul_th hreal_mul_th*)))
 
 (defparameter hreal_le nil)
 
@@ -5759,8 +5745,7 @@
     (tuple NADD_EQ_REFL NADD_EQ_TRANS)
     "hreal_le"
     NADD_LE_WELLDEF)
-  ((tuple hreal_le~local~6582 hreal_le_th~local~6584)
-    (setf hreal_le hreal_le~local~6582 hreal_le_th hreal_le_th~local~6584)))
+  ((tuple hreal_le* hreal_le_th*) (setf hreal_le hreal_le* hreal_le_th hreal_le_th*)))
 
 (defparameter hreal_inv nil)
 
@@ -5773,8 +5758,8 @@
     (tuple NADD_EQ_REFL NADD_EQ_TRANS)
     "hreal_inv"
     NADD_INV_WELLDEF)
-  ((tuple hreal_inv~local~6602 hreal_inv_th~local~6604)
-    (setf hreal_inv hreal_inv~local~6602 hreal_inv_th hreal_inv_th~local~6604)))
+  ((tuple hreal_inv* hreal_inv_th*)
+    (setf hreal_inv hreal_inv* hreal_inv_th hreal_inv_th*)))
 
 (defparameter HREAL_COMPLETE
   (let*
@@ -5888,89 +5873,89 @@
                                           NADD_LDISTRIB
                                           (cl:cons NADD_MUL_LINV (cl:cons NADD_INV_0 nil))))))))))))))))))))))
   ((cl:cons
-    HREAL_OF_NUM_EQ~local~6745
+    HREAL_OF_NUM_EQ*
     (cl:cons
-      HREAL_OF_NUM_LE~local~6747
+      HREAL_OF_NUM_LE*
       (cl:cons
-        HREAL_OF_NUM_ADD~local~6743
+        HREAL_OF_NUM_ADD*
         (cl:cons
-          HREAL_OF_NUM_MUL~local~6749
+          HREAL_OF_NUM_MUL*
           (cl:cons
-            HREAL_LE_REFL~local~6729
+            HREAL_LE_REFL*
             (cl:cons
-              HREAL_LE_TRANS~local~6733
+              HREAL_LE_TRANS*
               (cl:cons
-                HREAL_LE_ANTISYM~local~6725
+                HREAL_LE_ANTISYM*
                 (cl:cons
-                  HREAL_LE_TOTAL~local~6731
+                  HREAL_LE_TOTAL*
                   (cl:cons
-                    HREAL_LE_ADD~local~6723
+                    HREAL_LE_ADD*
                     (cl:cons
-                      HREAL_LE_EXISTS~local~6727
+                      HREAL_LE_EXISTS*
                       (cl:cons
-                        HREAL_ARCH~local~6719
+                        HREAL_ARCH*
                         (cl:cons
-                          HREAL_ADD_SYM~local~6717
+                          HREAL_ADD_SYM*
                           (cl:cons
-                            HREAL_ADD_ASSOC~local~6709
+                            HREAL_ADD_ASSOC*
                             (cl:cons
-                              HREAL_ADD_LID~local~6715
+                              HREAL_ADD_LID*
                               (cl:cons
-                                HREAL_ADD_LCANCEL~local~6711
+                                HREAL_ADD_LCANCEL*
                                 (cl:cons
-                                  HREAL_MUL_SYM~local~6741
+                                  HREAL_MUL_SYM*
                                   (cl:cons
-                                    HREAL_MUL_ASSOC~local~6735
+                                    HREAL_MUL_ASSOC*
                                     (cl:cons
-                                      HREAL_MUL_LID~local~6737
+                                      HREAL_MUL_LID*
                                       (cl:cons
-                                        HREAL_ADD_LDISTRIB~local~6713
+                                        HREAL_ADD_LDISTRIB*
                                         (cl:cons
-                                          HREAL_MUL_LINV~local~6739
-                                          (cl:cons HREAL_INV_0~local~6721 nil)))))))))))))))))))))
+                                          HREAL_MUL_LINV*
+                                          (cl:cons HREAL_INV_0* nil)))))))))))))))))))))
     (setf
       HREAL_ADD_ASSOC
-      HREAL_ADD_ASSOC~local~6709
+      HREAL_ADD_ASSOC*
       HREAL_ADD_LCANCEL
-      HREAL_ADD_LCANCEL~local~6711
+      HREAL_ADD_LCANCEL*
       HREAL_ADD_LDISTRIB
-      HREAL_ADD_LDISTRIB~local~6713
+      HREAL_ADD_LDISTRIB*
       HREAL_ADD_LID
-      HREAL_ADD_LID~local~6715
+      HREAL_ADD_LID*
       HREAL_ADD_SYM
-      HREAL_ADD_SYM~local~6717
+      HREAL_ADD_SYM*
       HREAL_ARCH
-      HREAL_ARCH~local~6719
+      HREAL_ARCH*
       HREAL_INV_0
-      HREAL_INV_0~local~6721
+      HREAL_INV_0*
       HREAL_LE_ADD
-      HREAL_LE_ADD~local~6723
+      HREAL_LE_ADD*
       HREAL_LE_ANTISYM
-      HREAL_LE_ANTISYM~local~6725
+      HREAL_LE_ANTISYM*
       HREAL_LE_EXISTS
-      HREAL_LE_EXISTS~local~6727
+      HREAL_LE_EXISTS*
       HREAL_LE_REFL
-      HREAL_LE_REFL~local~6729
+      HREAL_LE_REFL*
       HREAL_LE_TOTAL
-      HREAL_LE_TOTAL~local~6731
+      HREAL_LE_TOTAL*
       HREAL_LE_TRANS
-      HREAL_LE_TRANS~local~6733
+      HREAL_LE_TRANS*
       HREAL_MUL_ASSOC
-      HREAL_MUL_ASSOC~local~6735
+      HREAL_MUL_ASSOC*
       HREAL_MUL_LID
-      HREAL_MUL_LID~local~6737
+      HREAL_MUL_LID*
       HREAL_MUL_LINV
-      HREAL_MUL_LINV~local~6739
+      HREAL_MUL_LINV*
       HREAL_MUL_SYM
-      HREAL_MUL_SYM~local~6741
+      HREAL_MUL_SYM*
       HREAL_OF_NUM_ADD
-      HREAL_OF_NUM_ADD~local~6743
+      HREAL_OF_NUM_ADD*
       HREAL_OF_NUM_EQ
-      HREAL_OF_NUM_EQ~local~6745
+      HREAL_OF_NUM_EQ*
       HREAL_OF_NUM_LE
-      HREAL_OF_NUM_LE~local~6747
+      HREAL_OF_NUM_LE*
       HREAL_OF_NUM_MUL
-      HREAL_OF_NUM_MUL~local~6749)))
+      HREAL_OF_NUM_MUL*)))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Consequential theorems needed later.                                      *)
@@ -6220,7 +6205,7 @@
                   (REPEAT #'GEN_TAC))
                 (DISCH_THEN
                   (o
-                    (o (o #'MP_TAC #'|MK_COMB|) (F_F (AP_TERM (parse_term "(+)")) #'I))
+                    (o (o #'MP_TAC #'MK_COMB*) (F_F (AP_TERM (parse_term "(+)")) #'I))
                     #'CONJ_PAIR)))
               (GEN_REWRITE_TAC (o LAND_CONV LAND_CONV) (cl:cons HREAL_ADD_SYM nil)))
             (REWRITE_TAC
@@ -7132,8 +7117,8 @@
     (tuple TREAL_EQ_REFL TREAL_EQ_TRANS)
     "real_of_num"
     TREAL_OF_NUM_WELLDEF)
-  ((tuple real_of_num~local~8481 real_of_num_th~local~8483)
-    (setf real_of_num real_of_num~local~8481 real_of_num_th real_of_num_th~local~8483)))
+  ((tuple real_of_num* real_of_num_th*)
+    (setf real_of_num real_of_num* real_of_num_th real_of_num_th*)))
 
 (defparameter real_neg nil)
 
@@ -7146,8 +7131,7 @@
     (tuple TREAL_EQ_REFL TREAL_EQ_TRANS)
     "real_neg"
     TREAL_NEG_WELLDEF)
-  ((tuple real_neg~local~8501 real_neg_th~local~8503)
-    (setf real_neg real_neg~local~8501 real_neg_th real_neg_th~local~8503)))
+  ((tuple real_neg* real_neg_th*) (setf real_neg real_neg* real_neg_th real_neg_th*)))
 
 (defparameter real_add nil)
 
@@ -7160,8 +7144,7 @@
     (tuple TREAL_EQ_REFL TREAL_EQ_TRANS)
     "real_add"
     TREAL_ADD_WELLDEF)
-  ((tuple real_add~local~8521 real_add_th~local~8523)
-    (setf real_add real_add~local~8521 real_add_th real_add_th~local~8523)))
+  ((tuple real_add* real_add_th*) (setf real_add real_add* real_add_th real_add_th*)))
 
 (defparameter real_mul nil)
 
@@ -7174,8 +7157,7 @@
     (tuple TREAL_EQ_REFL TREAL_EQ_TRANS)
     "real_mul"
     TREAL_MUL_WELLDEF)
-  ((tuple real_mul~local~8541 real_mul_th~local~8543)
-    (setf real_mul real_mul~local~8541 real_mul_th real_mul_th~local~8543)))
+  ((tuple real_mul* real_mul_th*) (setf real_mul real_mul* real_mul_th real_mul_th*)))
 
 (defparameter real_le nil)
 
@@ -7188,8 +7170,7 @@
     (tuple TREAL_EQ_REFL TREAL_EQ_TRANS)
     "real_le"
     TREAL_LE_WELLDEF)
-  ((tuple real_le~local~8561 real_le_th~local~8563)
-    (setf real_le real_le~local~8561 real_le_th real_le_th~local~8563)))
+  ((tuple real_le* real_le_th*) (setf real_le real_le* real_le_th real_le_th*)))
 
 (defparameter real_inv nil)
 
@@ -7202,8 +7183,7 @@
     (tuple TREAL_EQ_REFL TREAL_EQ_TRANS)
     "real_inv"
     TREAL_INV_WELLDEF)
-  ((tuple real_inv~local~8581 real_inv_th~local~8583)
-    (setf real_inv real_inv~local~8581 real_inv_th real_inv_th~local~8583)))
+  ((tuple real_inv* real_inv_th*) (setf real_inv real_inv* real_inv_th real_inv_th*)))
 
 (defparameter REAL_ADD_ASSOC nil)
 
@@ -7298,85 +7278,85 @@
                                           TREAL_OF_NUM_ADD
                                           (cl:cons TREAL_OF_NUM_MUL nil)))))))))))))))))))))
   ((cl:cons
-    REAL_ADD_SYM~local~8645
+    REAL_ADD_SYM*
     (cl:cons
-      REAL_ADD_ASSOC~local~8637
+      REAL_ADD_ASSOC*
       (cl:cons
-        REAL_ADD_LID~local~8641
+        REAL_ADD_LID*
         (cl:cons
-          REAL_ADD_LINV~local~8643
+          REAL_ADD_LINV*
           (cl:cons
-            REAL_MUL_SYM~local~8667
+            REAL_MUL_SYM*
             (cl:cons
-              REAL_MUL_ASSOC~local~8661
+              REAL_MUL_ASSOC*
               (cl:cons
-                REAL_MUL_LID~local~8663
+                REAL_MUL_LID*
                 (cl:cons
-                  REAL_ADD_LDISTRIB~local~8639
+                  REAL_ADD_LDISTRIB*
                   (cl:cons
-                    REAL_LE_REFL~local~8655
+                    REAL_LE_REFL*
                     (cl:cons
-                      REAL_LE_ANTISYM~local~8649
+                      REAL_LE_ANTISYM*
                       (cl:cons
-                        REAL_LE_TRANS~local~8659
+                        REAL_LE_TRANS*
                         (cl:cons
-                          REAL_LE_TOTAL~local~8657
+                          REAL_LE_TOTAL*
                           (cl:cons
-                            REAL_LE_LADD_IMP~local~8651
+                            REAL_LE_LADD_IMP*
                             (cl:cons
-                              REAL_LE_MUL~local~8653
+                              REAL_LE_MUL*
                               (cl:cons
-                                REAL_INV_0~local~8647
+                                REAL_INV_0*
                                 (cl:cons
-                                  REAL_MUL_LINV~local~8665
+                                  REAL_MUL_LINV*
                                   (cl:cons
-                                    REAL_OF_NUM_EQ~local~8671
+                                    REAL_OF_NUM_EQ*
                                     (cl:cons
-                                      REAL_OF_NUM_LE~local~8673
+                                      REAL_OF_NUM_LE*
                                       (cl:cons
-                                        REAL_OF_NUM_ADD~local~8669
-                                        (cl:cons REAL_OF_NUM_MUL~local~8675 nil))))))))))))))))))))
+                                        REAL_OF_NUM_ADD*
+                                        (cl:cons REAL_OF_NUM_MUL* nil))))))))))))))))))))
     (setf
       REAL_ADD_ASSOC
-      REAL_ADD_ASSOC~local~8637
+      REAL_ADD_ASSOC*
       REAL_ADD_LDISTRIB
-      REAL_ADD_LDISTRIB~local~8639
+      REAL_ADD_LDISTRIB*
       REAL_ADD_LID
-      REAL_ADD_LID~local~8641
+      REAL_ADD_LID*
       REAL_ADD_LINV
-      REAL_ADD_LINV~local~8643
+      REAL_ADD_LINV*
       REAL_ADD_SYM
-      REAL_ADD_SYM~local~8645
+      REAL_ADD_SYM*
       REAL_INV_0
-      REAL_INV_0~local~8647
+      REAL_INV_0*
       REAL_LE_ANTISYM
-      REAL_LE_ANTISYM~local~8649
+      REAL_LE_ANTISYM*
       REAL_LE_LADD_IMP
-      REAL_LE_LADD_IMP~local~8651
+      REAL_LE_LADD_IMP*
       REAL_LE_MUL
-      REAL_LE_MUL~local~8653
+      REAL_LE_MUL*
       REAL_LE_REFL
-      REAL_LE_REFL~local~8655
+      REAL_LE_REFL*
       REAL_LE_TOTAL
-      REAL_LE_TOTAL~local~8657
+      REAL_LE_TOTAL*
       REAL_LE_TRANS
-      REAL_LE_TRANS~local~8659
+      REAL_LE_TRANS*
       REAL_MUL_ASSOC
-      REAL_MUL_ASSOC~local~8661
+      REAL_MUL_ASSOC*
       REAL_MUL_LID
-      REAL_MUL_LID~local~8663
+      REAL_MUL_LID*
       REAL_MUL_LINV
-      REAL_MUL_LINV~local~8665
+      REAL_MUL_LINV*
       REAL_MUL_SYM
-      REAL_MUL_SYM~local~8667
+      REAL_MUL_SYM*
       REAL_OF_NUM_ADD
-      REAL_OF_NUM_ADD~local~8669
+      REAL_OF_NUM_ADD*
       REAL_OF_NUM_EQ
-      REAL_OF_NUM_EQ~local~8671
+      REAL_OF_NUM_EQ*
       REAL_OF_NUM_LE
-      REAL_OF_NUM_LE~local~8673
+      REAL_OF_NUM_LE*
       REAL_OF_NUM_MUL
-      REAL_OF_NUM_MUL~local~8675)))
+      REAL_OF_NUM_MUL*)))
 
 (funcall parse_as_prefix "--")
 
@@ -7418,8 +7398,8 @@
                                 (tuple "&" (parse_term "real_of_num:num->real"))
                                 nil))))))))))))))))
 
-(defunc prioritize_real (arg~8877)
-  (match arg~8877
+(defunc prioritize_real (arg~8801)
+  (match arg~8801
     ((cl:type hol2cl.runtime::unit-value)
       (prioritize_overload (mk_type (tuple "real" nil))))))
 
@@ -7524,7 +7504,7 @@
                                               (funcall
                                                 THEN
                                                 (MP_TAC
-                                                  (|INST|
+                                                  (INST*
                                                     (cl:cons
                                                       (tuple
                                                         (parse_term "dest_real x")

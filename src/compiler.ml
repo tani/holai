@@ -665,7 +665,7 @@ and resolve_module c env name me : modul * (Sexp.t -> Sexp.t) * package_result l
    {m with public},wrap,ps
  | MeStr (_,items) ->
    let lexical_prefix=match c.lexical_prefix with None -> None | Some prefix -> Some (if prefix="" then name else prefix^"."^name) in
-   let package=if lexical_prefix=None then c.package^"."^String.lowercase_ascii name else c.package in
+   let package=if lexical_prefix=None then c.package^"."^String.lowercase_ascii (Sexp.symbol name) else c.package in
    let child=context ~counter:c.next ~reference_observer:c.reference_observer ?lexical_prefix package c.source c.text (v items) in
    let out=structure child env None (v items) in
    if lexical_prefix<>None then c.metadata<-c.metadata@child.metadata;

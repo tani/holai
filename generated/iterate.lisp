@@ -193,7 +193,7 @@
         NUMSEG_COMBINE_L
         NUMSEG_COMBINE_R
         NUMSEG_CONV
-        NUMSEG_CONV~local~649
+        NUMSEG_CONV*
         NUMSEG_EMPTY
         NUMSEG_LE
         NUMSEG_LREC
@@ -866,7 +866,7 @@
     NUMSEG_COMBINE_L
     NUMSEG_COMBINE_R
     NUMSEG_CONV
-    NUMSEG_CONV~local~649
+    NUMSEG_CONV*
     NUMSEG_EMPTY
     NUMSEG_LE
     NUMSEG_LREC
@@ -1141,7 +1141,7 @@
     rand
     is_const
     INST_TYPE
-    |INST|
+    INST*
     dest_const
     dest_comb
     concl
@@ -2133,7 +2133,7 @@
       (m_tm (parse_term "m:num"))
       (n_tm (parse_term "n:num")))
     (labelsc
-      ((NUMSEG_CONV~local~649
+      ((NUMSEG_CONV*
         (tm)
         (match (dest_comb tm)
           ((tuple nstm nt)
@@ -2145,27 +2145,25 @@
                     (if (< n m)
                       (MP_CONV
                         NUM_LT_CONV
-                        (|INST|
+                        (INST*
                           (cl:cons (tuple mt m_tm) (cl:cons (tuple nt n_tm) nil))
                           pth_0))
                       (if (= n m)
-                        (|INST| (cl:cons (tuple mt m_tm) nil) pth_1)
+                        (INST* (cl:cons (tuple mt m_tm) nil) pth_1)
                         (let
                           ((th
                             (MP_CONV
                               NUM_LE_CONV
-                              (|INST|
+                              (INST*
                                 (cl:cons (tuple mt m_tm) (cl:cons (tuple nt n_tm) nil))
                                 pth_2))))
                           (CONV_RULE
                             (funpow
                               2
                               #'RAND_CONV
-                              (THENC
-                                (funcall LAND_CONV NUM_SUC_CONV)
-                                #'NUMSEG_CONV~local~649))
+                              (THENC (funcall LAND_CONV NUM_SUC_CONV) #'NUMSEG_CONV*))
                             th))))))))))))
-      #'NUMSEG_CONV~local~649)))
+      #'NUMSEG_CONV*)))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Topological sorting of a finite set.                                      *)
@@ -6340,8 +6338,8 @@
                 (funcall
                   THEN
                   (FIRST_ASSUM
-                    (lambdac (|t|)
-                      (ONCE_REWRITE_TAC (cl:cons (MATCH_MP NSUM_NSUM_RESTRICT |t|) nil))))
+                    (lambdac (t*)
+                      (ONCE_REWRITE_TAC (cl:cons (MATCH_MP NSUM_NSUM_RESTRICT t*) nil))))
                   (MATCH_MP_TAC NSUM_EQ))
                 (funcall ASM_SIMP_TAC (cl:cons NSUM_CONST (cl:cons FINITE_RESTRICT nil))))
               (REWRITE_TAC (cl:cons MULT_CLAUSES nil)))
@@ -7297,7 +7295,7 @@
                           (if (< n m)
                             (let
                               ((th1
-                                (|INST|
+                                (INST*
                                   (cl:cons
                                     (tuple ftm f_tm)
                                     (cl:cons
@@ -7312,14 +7310,14 @@
                             (if (= n m)
                               (CONV_RULE
                                 (RAND_CONV (TRY_CONV #'BETA_CONV))
-                                (|INST|
+                                (INST*
                                   (cl:cons
                                     (tuple ftm f_tm)
                                     (cl:cons (tuple mtm m_tm) nil))
                                   pth_1))
                               (let*
                                 ((th1
-                                  (|INST|
+                                  (INST*
                                     (cl:cons
                                       (tuple ftm f_tm)
                                       (cl:cons
@@ -9345,7 +9343,7 @@
                           (if (< n m)
                             (let
                               ((th1
-                                (|INST|
+                                (INST*
                                   (cl:cons
                                     (tuple ftm f_tm)
                                     (cl:cons
@@ -9360,14 +9358,14 @@
                             (if (= n m)
                               (CONV_RULE
                                 (RAND_CONV (TRY_CONV #'BETA_CONV))
-                                (|INST|
+                                (INST*
                                   (cl:cons
                                     (tuple ftm f_tm)
                                     (cl:cons (tuple mtm m_tm) nil))
                                   pth_1))
                               (let*
                                 ((th1
-                                  (|INST|
+                                  (INST*
                                     (cl:cons
                                       (tuple ftm f_tm)
                                       (cl:cons

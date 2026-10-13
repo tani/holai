@@ -63,18 +63,18 @@
     GENL
     DISCH
     CONJ)
-  (:shadowing-import-from :hol2cl.drule term_match PART_MATCH |INSTANTIATE|)
+  (:shadowing-import-from :hol2cl.drule term_match PART_MATCH INSTANTIATE*)
   (:shadowing-import-from :hol2cl.equal SYM REDEPTH_CONV lhand)
   (:shadowing-import-from :hol2cl.fusion mk_fun_ty mk_eq aconv)
   (:shadowing-import-from
     :hol2cl.fusion.hol
-    |mk_comb|
     type_of
     REFL
     rator
     rand
+    mk_comb
     is_var
-    |INST|
+    INST*
     hyp
     frees
     EQ_MP
@@ -167,8 +167,7 @@
                         lhand)
                       (function-value #'snd 1))
                     strip_forall))
-                (findax
-                  (C #'assoc (map (lambdac (|t|) (tuple (funcall f |t|) |t|)) axcls)))
+                (findax (C #'assoc (map (lambdac (t*) (tuple (funcall f t*) t*)) axcls)))
                 (raxs
                   (map
                     (o
@@ -197,37 +196,35 @@
                 (urtm (list_mk_exists (tuple urfns tm))))
               (let*
                 ((insts (funcall term_match nil axtm urtm))
-                  (ixth (funcall |INSTANTIATE| insts axth)))
+                  (ixth (funcall INSTANTIATE* insts axth)))
                 (match (funcall strip_exists (concl ixth))
                   ((tuple ixvs ixbody)
                     (let*
                       ((ixtm (funcall subst (zip urfns ixvs) ixbody))
                         (ixths (funcall hol2cl.bool:CONJUNCTS (ASSUME ixtm)))
                         (rixths
-                          (map
-                            (lambdac (|t|) (find (o (aconv |t|) #'concl) ixths))
-                            rawcls))
+                          (map (lambdac (t*) (find (o (aconv t*) #'concl) ixths)) rawcls))
                         (rixth (itlist #'SIMPLE_EXISTS ufns (end_itlist CONJ rixths))))
                       (PROVE_HYP ixth (itlist #'SIMPLE_CHOOSE urfns rixth))))))))))))
     (fletc
       ((canonize
-        (|t|)
-        (match (funcall strip_forall |t|)
+        (t*)
+        (match (funcall strip_forall t*)
           ((tuple avs bod)
             (match (dest_eq bod)
-              ((tuple l r~local~194)
+              ((tuple l r*)
                 (match (funcall strip_comb l)
                   ((tuple fn args)
                     (let ((rarg (hd args)) (vargs (tl args)))
                       (let
-                        ((|l'| (|mk_comb| (tuple fn rarg)))
-                          (|r'| (list_mk_abs (tuple vargs r~local~194))))
+                        ((l* (mk_comb (tuple fn rarg)))
+                          (r** (list_mk_abs (tuple vargs r*))))
                         (let*
                           ((fvs (frees rarg))
                             (def
                               (ASSUME
                                 (list_mk_forall
-                                  (tuple fvs (funcall mk_eq (tuple |l'| |r'|)))))))
+                                  (tuple fvs (funcall mk_eq (tuple l* r**)))))))
                           (funcall GENL avs (funcall RIGHT_BETAS vargs (SPECL fvs def))))))))))))))
       (fletc
         ((prove_canon_recursive_functions_exist
@@ -244,37 +241,36 @@
           ((reshuffle
             (fn args acc)
             (let
-              ((|args'|
-                (uncurry (C (function-value #'append 2)) (partition #'is_var args))))
-              (if (= args |args'|)
+              ((args* (uncurry (C (function-value #'append 2)) (partition #'is_var args))))
+              (if (= args args*)
                 acc
                 (let*
                   ((gvs (map (o genvar #'type_of) args))
-                    (|gvs'| (map (C #'assoc (zip args gvs)) |args'|))
+                    (gvs* (map (C #'assoc (zip args gvs)) args*))
                     (lty
                       (itlist
                         (o #'mk_fun_ty #'type_of)
-                        |gvs'|
+                        gvs*
                         (funpow
                           (funcall length gvs)
                           (o (o (o #'hd #'tl) (function-value #'snd 1)) #'dest_type)
                           (type_of fn))))
-                    (|fn'| (funcall genvar lty))
+                    (fn* (funcall genvar lty))
                     (def
                       (funcall
                         mk_eq
                         (tuple
                           fn
-                          (list_mk_abs (tuple gvs (list_mk_comb (tuple |fn'| |gvs'|))))))))
+                          (list_mk_abs (tuple gvs (list_mk_comb (tuple fn* gvs*))))))))
                   (cl:cons (ASSUME def) acc)))))
             (scrub_def
-              (|t| th)
-              (match (dest_eq |t|)
-                ((tuple l r~local~381)
+              (t* th)
+              (match (dest_eq t*)
+                ((tuple l r*)
                   (funcall
                     MP
-                    (|INST| (cl:cons (tuple r~local~381 l) nil) (funcall DISCH |t| th))
-                    (REFL r~local~381))))))
+                    (INST* (cl:cons (tuple r* l) nil) (funcall DISCH t* th))
+                    (REFL r*))))))
           (lambdac (ax tm)
             (let*
               ((rawcls (funcall conjuncts tm))
@@ -302,22 +298,22 @@
     (fletc
       ((find_redefinition
         (tm th)
-        (let ((|th'| (funcall PART_MATCH #'I th tm)))
-          (progn (ignore-value (funcall PART_MATCH #'I |th'| (concl th))) |th'|))))
+        (let ((th* (funcall PART_MATCH #'I th tm)))
+          (progn (ignore-value (funcall PART_MATCH #'I th* (concl th))) th*))))
       (lambdac (ax tm)
         (handler-case
           (let ((th (tryfind (find_redefinition tm) (deref the_recursive_definitions))))
             (progn (warn cl:t "Benign redefinition of recursive function") th))
           (hol2cl.runtime:ocaml-condition
-            (exception~520)
-            (match exception~520
+            (exception~518)
+            (match exception~518
               ((Failure _)
                 (let*
                   ((rawcls (funcall conjuncts tm))
                     (spcls (map (o (function-value #'snd 1) strip_forall) rawcls))
                     (lpats (map (o strip_comb lhand) spcls))
                     (ufns (itlist (o #'insert (function-value #'fst 1)) lpats nil))
-                    (fvs (map (lambdac (|t|) (subtract (frees |t|) ufns)) rawcls))
+                    (fvs (map (lambdac (t*) (subtract (frees t*) ufns)) rawcls))
                     (gcls (map2 (curry #'list_mk_forall) fvs rawcls))
                     (eth
                       (funcall
@@ -339,5 +335,5 @@
                             the_recursive_definitions
                             (cl:cons th (deref the_recursive_definitions)))
                           th))))))
-              (_ (raise exception~520)))))))))
+              (_ (raise exception~518)))))))))
 

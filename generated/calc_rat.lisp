@@ -42,7 +42,7 @@
         REAL_LE_TRANS_LTE
         REAL_POLY_ADD_CONV
         REAL_POLY_CONV
-        REAL_POLY_CONV~local~1754
+        REAL_POLY_CONV*
         REAL_POLY_MUL_CONV
         REAL_POLY_NEG_CONV
         REAL_POLY_POW_CONV
@@ -161,7 +161,7 @@
     REAL_LE_TRANS_LTE
     REAL_POLY_ADD_CONV
     REAL_POLY_CONV
-    REAL_POLY_CONV~local~1754
+    REAL_POLY_CONV*
     REAL_POLY_MUL_CONV
     REAL_POLY_NEG_CONV
     REAL_POLY_POW_CONV
@@ -291,9 +291,9 @@
     REFL
     rator
     rand
-    |MK_COMB|
+    MK_COMB*
     is_comb
-    |INST|
+    INST*
     EQ_MP
     dest_eq
     dest_comb
@@ -327,7 +327,7 @@
   (:shadowing-import-from :hol2cl.printer string_of_term)
   (:shadowing-import-from
     :hol2cl.real
-    |real_sgn|
+    real_sgn
     REAL_POW_INV
     REAL_POW_EQ_0
     REAL_POW_DIV
@@ -793,12 +793,12 @@
       ((RAW_REAL_RAT_LE_CONV
         (tm)
         (match (funcall dest_le tm)
-          ((tuple l r~local~351)
-            (match (tuple (funcall dest_div l) (funcall dest_div r~local~351))
+          ((tuple l r*)
+            (match (tuple (funcall dest_div l) (funcall dest_div r*))
               ((tuple (tuple lx ly) (tuple rx ry))
                 (let*
                   ((th0
-                    (|INST|
+                    (INST*
                       (cl:cons
                         (tuple lx x1)
                         (cl:cons
@@ -842,12 +842,12 @@
       ((RAW_REAL_RAT_LT_CONV
         (tm)
         (match (funcall dest_lt tm)
-          ((tuple l r~local~472)
-            (match (tuple (funcall dest_div l) (funcall dest_div r~local~472))
+          ((tuple l r*)
+            (match (tuple (funcall dest_div l) (funcall dest_div r*))
               ((tuple (tuple lx ly) (tuple rx ry))
                 (let*
                   ((th0
-                    (|INST|
+                    (INST*
                       (cl:cons
                         (tuple lx x1)
                         (cl:cons
@@ -881,18 +881,18 @@
       (x2 (parse_term "x2:real"))
       (y1 (parse_term "y1:real"))
       (y2 (parse_term "y2:real"))
-      (dest_eq~local~566 (dest_binop (parse_term "(=) :real->real->bool")))
+      (dest_eq* (dest_binop (parse_term "(=) :real->real->bool")))
       (dest_div (dest_binop (parse_term "(/)"))))
     (fletc
       ((RAW_REAL_RAT_EQ_CONV
         (tm)
-        (match (funcall dest_eq~local~566 tm)
-          ((tuple l r~local~596)
-            (match (tuple (funcall dest_div l) (funcall dest_div r~local~596))
+        (match (funcall dest_eq* tm)
+          ((tuple l r*)
+            (match (tuple (funcall dest_div l) (funcall dest_div r*))
               ((tuple (tuple lx ly) (tuple rx ry))
                 (let*
                   ((th0
-                    (|INST|
+                    (INST*
                       (cl:cons
                         (tuple lx x1)
                         (cl:cons
@@ -911,7 +911,7 @@
 (defparameter REAL_RAT_SGN_CONV
   (THENC
     (THENC
-      (GEN_REWRITE_CONV #'I (cl:cons |real_sgn| nil))
+      (GEN_REWRITE_CONV #'I (cl:cons real_sgn nil))
       (RATOR_CONV (funcall LAND_CONV REAL_RAT_LT_CONV)))
     (ORELSEC
       (GEN_REWRITE_CONV #'I (cl:cons (funcall CONJUNCT1 (SPEC_ALL COND_CLAUSES)) nil))
@@ -951,26 +951,24 @@
         (handler-case
           (funcall conv1 tm)
           (hol2cl.runtime:ocaml-condition
-            (exception~733)
-            (match exception~733
+            (exception~729)
+            (match exception~729
               ((Failure _)
                 (handler-case
                   (match (dest_comb tm)
-                    ((tuple l r~local~742)
+                    ((tuple l r*)
                       (if
                         (cl:and
                           (= l ptm)
-                          (cl:and
-                            (is_realintconst r~local~742)
-                            (> (dest_realintconst r~local~742) num_0)))
+                          (cl:and (is_realintconst r*) (> (dest_realintconst r*) num_0)))
                         (REFL tm)
                         (fail unit))))
                   (hol2cl.runtime:ocaml-condition
-                    (exception~736)
-                    (match exception~736
+                    (exception~732)
+                    (match exception~732
                       ((Failure _) (failwith "REAL_RAT_NEG_CONV"))
-                      (_ (raise exception~736))))))
-              (_ (raise exception~733)))))))))
+                      (_ (raise exception~732))))))
+              (_ (raise exception~729)))))))))
 
 (defparameter REAL_RAT_ABS_CONV
   (let
@@ -1102,39 +1100,37 @@
         (match (funcall dest_addop tm)
           ((tuple r1 r2)
             (match (tuple (funcall dest_divop r1) (funcall dest_divop r2))
-              ((tuple (tuple |x1'| |y1'|) (tuple |x2'| |y2'|))
+              ((tuple (tuple x1* y1*) (tuple x2* y2*))
                 (let
-                  ((x1n (dest_realintconst |x1'|))
-                    (y1n (dest_realintconst |y1'|))
-                    (x2n (dest_realintconst |x2'|))
-                    (y2n (dest_realintconst |y2'|)))
+                  ((x1n (dest_realintconst x1*))
+                    (y1n (dest_realintconst y1*))
+                    (x2n (dest_realintconst x2*))
+                    (y2n (dest_realintconst y2*)))
                   (let ((x3n (+ (* x1n y2n) (* x2n y1n))) (y3n (* y1n y2n)))
                     (let*
                       ((d (gcd-num x3n y3n))
-                        (|x3n'| (quo-num x3n d))
-                        (|y3n'| (quo-num y3n d)))
+                        (x3n* (quo-num x3n d))
+                        (y3n* (quo-num y3n d)))
                       (match
-                        (if (> |y3n'| (num 0))
-                          (tuple |x3n'| |y3n'|)
-                          (tuple (- |x3n'|) (- |y3n'|)))
-                        ((tuple |x3n''| |y3n''|)
+                        (if (> y3n* (num 0)) (tuple x3n* y3n*) (tuple (- x3n*) (- y3n*)))
+                        ((tuple x3n** y3n**)
                           (let
-                            ((|x3'| (funcall mk_realintconst |x3n''|))
-                              (|y3'| (funcall mk_realintconst |y3n''|)))
+                            ((x3* (funcall mk_realintconst x3n**))
+                              (y3* (funcall mk_realintconst y3n**)))
                             (let*
                               ((th0
-                                (|INST|
+                                (INST*
                                   (cl:cons
-                                    (tuple |x1'| x1)
+                                    (tuple x1* x1)
                                     (cl:cons
-                                      (tuple |y1'| y1)
+                                      (tuple y1* y1)
                                       (cl:cons
-                                        (tuple |x2'| x2)
+                                        (tuple x2* x2)
                                         (cl:cons
-                                          (tuple |y2'| y2)
+                                          (tuple y2* y2)
                                           (cl:cons
-                                            (tuple |x3'| x3)
-                                            (cl:cons (tuple |y3'| y3) nil))))))
+                                            (tuple x3* x3)
+                                            (cl:cons (tuple y3* y3) nil))))))
                                   pth))
                                 (th1 (funpow 3 (MP_CONV REAL_INT_LT_CONV) th0)))
                               (match (dest_eq (fst (funcall dest_imp (concl th1))))
@@ -1234,22 +1230,22 @@
         (match (funcall dest_mulop tm)
           ((tuple r1 r2)
             (match (tuple (funcall dest_divop r1) (funcall dest_divop r2))
-              ((tuple (tuple |x1'| |y1'|) (tuple |x2'| |y2'|))
+              ((tuple (tuple x1* y1*) (tuple x2* y2*))
                 (let
-                  ((x1n (dest_realintconst |x1'|))
-                    (y1n (dest_realintconst |y1'|))
-                    (x2n (dest_realintconst |x2'|))
-                    (y2n (dest_realintconst |y2'|)))
+                  ((x1n (dest_realintconst x1*))
+                    (y1n (dest_realintconst y1*))
+                    (x2n (dest_realintconst x2*))
+                    (y2n (dest_realintconst y2*)))
                   (let ((d1n (gcd-num x1n y2n)) (d2n (gcd-num x2n y1n)))
                     (if (cl:and (= d1n num_1) (= d2n num_1))
                       (let*
                         ((th0
-                          (|INST|
+                          (INST*
                             (cl:cons
-                              (tuple |x1'| x1)
+                              (tuple x1* x1)
                               (cl:cons
-                                (tuple |y1'| y1)
-                                (cl:cons (tuple |x2'| x2) (cl:cons (tuple |y2'| y2) nil))))
+                                (tuple y1* y1)
+                                (cl:cons (tuple x2* x2) (cl:cons (tuple y2* y2) nil))))
                             pth_nocancel))
                           (th1 (BINOP_CONV REAL_INT_MUL_CONV (rand (concl th0)))))
                         (TRANS th0 th1))
@@ -1259,34 +1255,34 @@
                           (v1n (quo-num y1n d2n))
                           (v2n (quo-num y2n d1n)))
                         (let
-                          ((|u1'| (funcall mk_realintconst u1n))
-                            (|u2'| (funcall mk_realintconst u2n))
-                            (|v1'| (funcall mk_realintconst v1n))
-                            (|v2'| (funcall mk_realintconst v2n))
-                            (|d1'| (funcall mk_realintconst d1n))
-                            (|d2'| (funcall mk_realintconst d2n)))
+                          ((u1* (funcall mk_realintconst u1n))
+                            (u2* (funcall mk_realintconst u2n))
+                            (v1* (funcall mk_realintconst v1n))
+                            (v2* (funcall mk_realintconst v2n))
+                            (d1* (funcall mk_realintconst d1n))
+                            (d2* (funcall mk_realintconst d2n)))
                           (let*
                             ((th0
-                              (|INST|
+                              (INST*
                                 (cl:cons
-                                  (tuple |x1'| x1)
+                                  (tuple x1* x1)
                                   (cl:cons
-                                    (tuple |y1'| y1)
+                                    (tuple y1* y1)
                                     (cl:cons
-                                      (tuple |x2'| x2)
+                                      (tuple x2* x2)
                                       (cl:cons
-                                        (tuple |y2'| y2)
+                                        (tuple y2* y2)
                                         (cl:cons
-                                          (tuple |u1'| u1)
+                                          (tuple u1* u1)
                                           (cl:cons
-                                            (tuple |v1'| v1)
+                                            (tuple v1* v1)
                                             (cl:cons
-                                              (tuple |u2'| u2)
+                                              (tuple u2* u2)
                                               (cl:cons
-                                                (tuple |v2'| v2)
+                                                (tuple v2* v2)
                                                 (cl:cons
-                                                  (tuple |d1'| d1)
-                                                  (cl:cons (tuple |d2'| d2) nil))))))))))
+                                                  (tuple d1* d1)
+                                                  (cl:cons (tuple d2* d2) nil))))))))))
                                 pth_cancel))
                               (th1
                                 (EQT_ELIM
@@ -1405,17 +1401,16 @@
   (let
     ((convlist
       (map
-        (lambdac (arg~1623)
-          (match arg~1623
+        (lambdac (arg~1618)
+          (match arg~1618
             ((tuple pat the_conv)
               (match (funcall strip_comb pat)
-                ((tuple c~local~1628 args)
-                  (tuple c~local~1628 (funcall length args) the_conv))))))
+                ((tuple c* args) (tuple c* (funcall length args) the_conv))))))
         real_rat_red_conv_list)))
     (lambdac (compset)
       (itlist
-        (lambdac (newc arg~1649)
-          (match arg~1649 ((cl:type hol2cl.runtime::unit-value) (add_conv newc compset))))
+        (lambdac (newc arg~1643)
+          (match arg~1643 ((cl:type hol2cl.runtime::unit-value) (add_conv newc compset))))
         convlist
         unit))))
 
@@ -1451,25 +1446,25 @@
     (tuple #'is_ratconst REAL_RAT_ADD_CONV REAL_RAT_MUL_CONV REAL_RAT_POW_CONV)
     (function-value #'< 2))
   ((tuple
-    REAL_POLY_NEG_CONV~local~1697
-    REAL_POLY_ADD_CONV~local~1691
-    REAL_POLY_SUB_CONV~local~1701
-    REAL_POLY_MUL_CONV~local~1695
-    REAL_POLY_POW_CONV~local~1699
-    REAL_POLY_CONV~local~1693)
+    REAL_POLY_NEG_CONV*
+    REAL_POLY_ADD_CONV*
+    REAL_POLY_SUB_CONV*
+    REAL_POLY_MUL_CONV*
+    REAL_POLY_POW_CONV*
+    REAL_POLY_CONV*)
     (setf
       REAL_POLY_ADD_CONV
-      REAL_POLY_ADD_CONV~local~1691
+      REAL_POLY_ADD_CONV*
       REAL_POLY_CONV~1
-      REAL_POLY_CONV~local~1693
+      REAL_POLY_CONV*
       REAL_POLY_MUL_CONV
-      REAL_POLY_MUL_CONV~local~1695
+      REAL_POLY_MUL_CONV*
       REAL_POLY_NEG_CONV
-      REAL_POLY_NEG_CONV~local~1697
+      REAL_POLY_NEG_CONV*
       REAL_POLY_POW_CONV
-      REAL_POLY_POW_CONV~local~1699
+      REAL_POLY_POW_CONV*
       REAL_POLY_SUB_CONV
-      REAL_POLY_SUB_CONV~local~1701)))
+      REAL_POLY_SUB_CONV*)))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Extend normalizer to handle "inv" and division by rational constants, and *)
@@ -1491,38 +1486,34 @@
       (min_tm (parse_term "min:real->real->real"))
       (div_conv (funcall REWR_CONV real_div)))
     (labelsc
-      ((REAL_POLY_CONV~local~1754
+      ((REAL_POLY_CONV*
         (tm)
         (if (cl:or (not (is_comb tm)) (is_ratconst tm))
           (REFL tm)
           (match (dest_comb tm)
-            ((tuple lop r~local~1758)
+            ((tuple lop r*)
               (if (= lop neg_tm)
-                (let ((th1 (AP_TERM lop (REAL_POLY_CONV~local~1754 r~local~1758))))
+                (let ((th1 (AP_TERM lop (REAL_POLY_CONV* r*))))
                   (TRANS th1 (funcall REAL_POLY_NEG_CONV (rand (concl th1)))))
                 (if (= lop inv_tm)
-                  (let ((th1 (AP_TERM lop (REAL_POLY_CONV~local~1754 r~local~1758))))
+                  (let ((th1 (AP_TERM lop (REAL_POLY_CONV* r*))))
                     (TRANS th1 (TRY_CONV REAL_RAT_INV_CONV (rand (concl th1)))))
                   (if (= lop abs_tm)
-                    (AP_TERM lop (REAL_POLY_CONV~local~1754 r~local~1758))
+                    (AP_TERM lop (REAL_POLY_CONV* r*))
                     (if (not (is_comb lop))
                       (REFL tm)
                       (match (dest_comb lop)
                         ((tuple op l)
                           (if (= op pow_tm)
-                            (let
-                              ((th1
-                                (AP_THM
-                                  (AP_TERM op (REAL_POLY_CONV~local~1754 l))
-                                  r~local~1758)))
+                            (let ((th1 (AP_THM (AP_TERM op (REAL_POLY_CONV* l)) r*)))
                               (TRANS th1 (TRY_CONV REAL_POLY_POW_CONV (rand (concl th1)))))
                             (if (cl:or (= op add_tm) (cl:or (= op mul_tm) (= op sub_tm)))
                               (let*
                                 ((th1
-                                  (|MK_COMB|
+                                  (MK_COMB*
                                     (tuple
-                                      (AP_TERM op (REAL_POLY_CONV~local~1754 l))
-                                      (REAL_POLY_CONV~local~1754 r~local~1758))))
+                                      (AP_TERM op (REAL_POLY_CONV* l))
+                                      (REAL_POLY_CONV* r*))))
                                   (fn
                                     (if (= op add_tm)
                                       REAL_POLY_ADD_CONV
@@ -1532,16 +1523,14 @@
                                 (TRANS th1 (funcall fn (rand (concl th1)))))
                               (if (= op div_tm)
                                 (let ((th1 (funcall div_conv tm)))
-                                  (TRANS
-                                    th1
-                                    (REAL_POLY_CONV~local~1754 (rand (concl th1)))))
+                                  (TRANS th1 (REAL_POLY_CONV* (rand (concl th1)))))
                                 (if (cl:or (= op min_tm) (= op max_tm))
-                                  (|MK_COMB|
+                                  (MK_COMB*
                                     (tuple
-                                      (AP_TERM op (REAL_POLY_CONV~local~1754 l))
-                                      (REAL_POLY_CONV~local~1754 r~local~1758)))
+                                      (AP_TERM op (REAL_POLY_CONV* l))
+                                      (REAL_POLY_CONV* r*)))
                                   (REFL tm))))))))))))))))
-      #'REAL_POLY_CONV~local~1754)))
+      #'REAL_POLY_CONV*)))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Basic ring and ideal conversions.                                         *)
@@ -1624,15 +1613,11 @@
             (let ((th (funcall init tm)))
               (EQ_MP (SYM th) (funcall pure (rand (concl th))))))
           (lambdac (tms tm)
-            (if (forall (lambdac (|t|) (= (type_of |t|) real_ty)) (cl:cons tm tms))
+            (if (forall (lambdac (t*) (= (type_of t*) real_ty)) (cl:cons tm tms))
               (funcall ideal tms tm)
               (failwith "real_ideal_cofactors: not all terms have type :real")))))))
-  ((tuple REAL_RING~local~1930 real_ideal_cofactors~local~1932)
-    (setf
-      REAL_RING
-      REAL_RING~local~1930
-      real_ideal_cofactors
-      real_ideal_cofactors~local~1932)))
+  ((tuple REAL_RING* real_ideal_cofactors*)
+    (setf REAL_RING REAL_RING* real_ideal_cofactors real_ideal_cofactors*)))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Conversion for ideal membership.                                          *)
@@ -1646,17 +1631,17 @@
     (lambdac (tms tm)
       (let*
         ((cfs (funcall real_ideal_cofactors tms tm))
-          (|tm'| (end_itlist mk_add (map2 mk_mul cfs tms)))
+          (tm* (end_itlist mk_add (map2 mk_mul cfs tms)))
           (th (funcall REAL_POLY_CONV tm))
-          (|th'| (funcall REAL_POLY_CONV |tm'|)))
-        (TRANS th (SYM |th'|))))))
+          (th* (funcall REAL_POLY_CONV tm*)))
+        (TRANS th (SYM th*))))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Further specialize GEN_REAL_ARITH and REAL_ARITH (final versions).        *)
 ;; (* ------------------------------------------------------------------------- *)
 
 
-(defunc GEN_REAL_ARITH (PROVER~local~2112)
+(defunc GEN_REAL_ARITH (PROVER*)
   (funcall
     hol2cl.realarith:GEN_REAL_ARITH
     (tuple
@@ -1668,7 +1653,7 @@
       REAL_POLY_NEG_CONV
       REAL_POLY_ADD_CONV
       REAL_POLY_MUL_CONV
-      PROVER~local~2112)))
+      PROVER*)))
 
 (defparameter REAL_ARITH
   (let
@@ -1678,14 +1663,14 @@
       (handler-case
         (let ((th (funcall init tm))) (EQ_MP (SYM th) (funcall pure (rand (concl th)))))
         (hol2cl.runtime:ocaml-condition
-          (exception~2137)
-          (match exception~2137
+          (exception~2120)
+          (match exception~2120
             ((Failure m)
               (failwith
                 (string-concat
                   "REAL_ARITH `"
                   (string-concat (funcall string_of_term tm) (string-concat "`: " m)))))
-            (_ (raise exception~2137))))))))
+            (_ (raise exception~2120))))))))
 
 (defparameter REAL_ARITH_TAC (funcall CONV_TAC REAL_ARITH))
 
@@ -1781,7 +1766,7 @@
                 #'I
                 (cl:cons (funcall TAUT (parse_term "(T ==> p) <=> p")) nil)))))))
     (let
-      ((prenex_conv~local~2305
+      ((prenex_conv*
         (THENC
           (THENC
             (THENC
@@ -1796,14 +1781,14 @@
             (cl:cons (funcall REAL_ARITH (parse_term "x < y <=> x < y /\\ ~(x = y)")) nil))))
         (setup_conv (THENC (THENC NNF_CONV WEAK_CNF_CONV) #'CONJ_CANON_CONV))
         (core_rule
-          (lambdac (|t|)
+          (lambdac (t*)
             (handler-case
-              (funcall REAL_RING |t|)
+              (funcall REAL_RING t*)
               (hol2cl.runtime:ocaml-condition
-                (exception~2340)
-                (match exception~2340
-                  ((Failure _) (funcall REAL_ARITH |t|))
-                  (_ (raise exception~2340)))))))
+                (exception~2322)
+                (match exception~2322
+                  ((Failure _) (funcall REAL_ARITH t*))
+                  (_ (raise exception~2322)))))))
         (is_inv
           (let
             ((inv_tm (parse_term "inv:real->real"))
@@ -1815,26 +1800,26 @@
       (fletc
         ((BASIC_REAL_FIELD
           (tm)
-          (fletc ((is_freeinv (|t|) (cl:and (funcall is_inv |t|) (free_in |t| tm))))
+          (fletc ((is_freeinv (t*) (cl:and (funcall is_inv t*) (free_in t* tm))))
             (let*
               ((itms (setify (map #'rand (funcall find_terms #'is_freeinv tm))))
                 (hyps
                   (map
-                    (lambdac (|t|)
-                      (CONV_RULE easy_nz_conv (funcall SPEC |t| REAL_MUL_RINV)))
+                    (lambdac (t*)
+                      (CONV_RULE easy_nz_conv (funcall SPEC t* REAL_MUL_RINV)))
                     itms))
-                (|tm'|
+                (tm*
                   (itlist
-                    (lambdac (th |t|) (funcall mk_imp (tuple (concl th) |t|)))
+                    (lambdac (th t*) (funcall mk_imp (tuple (concl th) t*)))
                     hyps
                     tm))
-                (th1 (funcall setup_conv |tm'|))
+                (th1 (funcall setup_conv tm*))
                 (cjs (funcall conjuncts (rand (concl th1))))
                 (ths (map core_rule cjs))
                 (th2 (EQ_MP (SYM th1) (end_itlist CONJ ths))))
               (rev_itlist (C MP) hyps th2)))))
         (lambdac (tm)
-          (let* ((th0 (funcall prenex_conv~local~2305 tm)) (tm0 (rand (concl th0))))
+          (let* ((th0 (funcall prenex_conv* tm)) (tm0 (rand (concl th0))))
             (match (funcall strip_forall tm0)
               ((tuple avs bod)
                 (let*
@@ -1911,7 +1896,7 @@
                               (funcall REAL_ARITH (parse_term "&0 < &1 + abs x"))
                               (cl:cons REAL_MUL_LZERO nil)))))
                       (MAP_EVERY
-                        (lambdac (|t|) (SPEC_TAC (tuple |t| |t|)))
+                        (lambdac (t*) (SPEC_TAC (tuple t* t*)))
                         (cl:cons
                           (parse_term "y:real")
                           (cl:cons (parse_term "x:real") nil))))

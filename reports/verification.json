@@ -63,6 +63,8 @@
   "sbcl_checks": 122,
   "defunc_protocol_checks": 27,
   "optional_entry_checks": 84,
+  "star_naming_observations": 9,
+  "escaped_symbol_delimiters_in_core": 0,
   "tuple_list_checks": 16,
   "differential_observations": 1124,
   "serialized_observations": 1117,
@@ -127,8 +129,8 @@
   "initialization_raw_message_multisets_equal": false,
   "initialization_cpu_time_rows": 2,
   "initialization_transcript_equal": false,
-  "initialization_ocaml_sha256": "e8691953360f50690957d4314a5d49f1d15ba14b88505a91f4fc59c9c93ce28d",
-  "initialization_sbcl_sha256": "a24d97c650639cb633adea836bcb8a11252aef3997cfc4a0ce6d772841376bee",
+  "initialization_ocaml_sha256": "67e39a635565a7cc2d548f022cbcd10db202cffbf92a604af5903bb89a54f071",
+  "initialization_sbcl_sha256": "d8c20cf2b4ea5f2134e91ef33c2efdc7ce8f8f6bf581393aa2e6f8dafa132fcf",
   "observations_sha256": "9c235f013b362ba4c838574b2d484a98823a29031ba31394fef0b080278f77a9",
   "core_source_map_entries": 194839,
   "fixture_inclusive_source_map_entries": 205341,
@@ -143,5 +145,6 @@
     "ocaml": "4.14.1",
     "camlp5": "8.02.01",
     "sbcl": "2.2.9"
-  }
+  },
+  "star_allocator_checks": 19
 }

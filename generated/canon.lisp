@@ -23,7 +23,7 @@
         CNF_CONV
         CONDS_CELIM_CONV
         CONDS_ELIM_CONV
-        CONDS_ELIM_CONV~local~3547
+        CONDS_ELIM_CONV*
         CONJ_ACI_RULE
         CONJ_CANON_CONV
         DISJ_ACI_RULE
@@ -37,7 +37,8 @@
         LAMBDA_ELIM_CONV
         NNFC_CONV
         NNF_CONV
-        NNF_CONV~local~1085
+        NNF_CONV*
+        NNF_CONV**
         NNF_DCONV
         NOT_DISJ
         NOT_DISJ_PAIR
@@ -50,7 +51,7 @@
         SKOLEM_CONV
         WEAK_CNF_CONV
         WEAK_DNF_CONV
-        assoc~local~2878
+        assoc*
         conv
         distrib
         distribute
@@ -66,8 +67,7 @@
         substrongdnf
         use_fun
         weakcnf
-        weakdnf
-        |NNF_CONV'|)
+        weakdnf)
       (:export
         ASM_FOL_TAC
         ASSOC_CONV
@@ -100,7 +100,7 @@
     CNF_CONV
     CONDS_CELIM_CONV
     CONDS_ELIM_CONV
-    CONDS_ELIM_CONV~local~3547
+    CONDS_ELIM_CONV*
     CONJ_ACI_RULE
     CONJ_CANON_CONV
     DISJ_ACI_RULE
@@ -114,7 +114,8 @@
     LAMBDA_ELIM_CONV
     NNFC_CONV
     NNF_CONV
-    NNF_CONV~local~1085
+    NNF_CONV*
+    NNF_CONV**
     NNF_DCONV
     NOT_DISJ
     NOT_DISJ_PAIR
@@ -127,7 +128,7 @@
     SKOLEM_CONV
     WEAK_CNF_CONV
     WEAK_DNF_CONV
-    assoc~local~2878
+    assoc*
     conv
     distrib
     distribute
@@ -143,8 +144,7 @@
     substrongdnf
     use_fun
     weakcnf
-    weakdnf
-    |NNF_CONV'|)
+    weakdnf)
   (:shadowing-import-from :cl not min append -)
   (:shadowing-import-from
     :hol2cl.basics
@@ -239,7 +239,6 @@
   (:shadowing-import-from :hol2cl.fusion mk_fun_ty mk_eq)
   (:shadowing-import-from
     :hol2cl.fusion.hol
-    |mk_comb|
     variant
     type_of
     Tyapp
@@ -248,12 +247,13 @@
     rator
     rand
     mk_var
-    |MK_COMB|
+    MK_COMB*
+    mk_comb
     is_var
     is_const
     is_abs
     INST_TYPE
-    |INST|
+    INST*
     hyp
     freesl
     frees
@@ -267,14 +267,13 @@
     Comb
     bool_ty
     BETA
-    |Abs|
     aty
     ASSUME
-    |ABS|)
+    ABS*
+    Abs)
   (:shadowing-import-from :hol2cl.ind_defs RIGHT_BETAS)
   (:shadowing-import-from
     :hol2cl.lib
-    |\|->|
     W
     undefined
     tl
@@ -297,7 +296,8 @@
     curry
     C
     assoc
-    apply)
+    apply
+    *->)
   (:shadowing-import-from :hol2cl.parser parse_term)
   (:shadowing-import-from
     :hol2cl.runtime
@@ -435,22 +435,22 @@
       (let ((tm (concl th)))
         (if (funcall is_conj tm)
           (match (CONJ_PAIR th) ((tuple th1 th2) (mk_fun th1 (mk_fun th2 fn))))
-          (funcall |\|->| tm th fn))))
+          (funcall *-> tm th fn))))
       (use_fun
         (fn tm)
         (if (funcall is_conj tm)
           (match (funcall dest_conj tm)
-            ((tuple l r~local~67) (funcall CONJ (use_fun fn l) (use_fun fn r~local~67))))
+            ((tuple l r*) (funcall CONJ (use_fun fn l) (use_fun fn r*))))
           (apply fn tm))))
     (lambdac (fm)
       (match (dest_eq fm)
-        ((tuple p~local~86 |p'|)
-          (if (= p~local~86 |p'|)
-            (REFL p~local~86)
+        ((tuple p* p**)
+          (if (= p* p**)
+            (REFL p*)
             (let
-              ((th (use_fun (mk_fun (ASSUME p~local~86) undefined) |p'|))
-                (|th'| (use_fun (mk_fun (ASSUME |p'|) undefined) p~local~86)))
-              (funcall IMP_ANTISYM_RULE (DISCH_ALL th) (DISCH_ALL |th'|)))))))))
+              ((th (use_fun (mk_fun (ASSUME p*) undefined) p**))
+                (th* (use_fun (mk_fun (ASSUME p**) undefined) p*)))
+              (funcall IMP_ANTISYM_RULE (DISCH_ALL th) (DISCH_ALL th*)))))))))
 
 (defparameter DISJ_ACI_RULE
   (let
@@ -464,16 +464,16 @@
       ((NOT_DISJ_PAIR
         (th)
         (match (funcall dest_disj (rand (concl th)))
-          ((tuple p~local~155 q)
-            (let ((ilist (cl:cons (tuple p~local~155 a_tm) (cl:cons (tuple q b_tm) nil))))
+          ((tuple p* q)
+            (let ((ilist (cl:cons (tuple p* a_tm) (cl:cons (tuple q b_tm) nil))))
               (tuple
-                (PROVE_HYP th (|INST| ilist pth_left))
-                (PROVE_HYP th (|INST| ilist pth_right)))))))
+                (PROVE_HYP th (INST* ilist pth_left))
+                (PROVE_HYP th (INST* ilist pth_right)))))))
         (NOT_DISJ
           (th1 th2)
           (let
             ((th3
-              (|INST|
+              (INST*
                 (cl:cons
                   (tuple (rand (concl th1)) a_tm)
                   (cl:cons (tuple (rand (concl th2)) b_tm) nil))
@@ -485,32 +485,26 @@
           (let ((tm (rand (concl th))))
             (if (funcall is_disj tm)
               (match (NOT_DISJ_PAIR th) ((tuple th1 th2) (mk_fun th1 (mk_fun th2 fn))))
-              (funcall |\|->| tm th fn))))
+              (funcall *-> tm th fn))))
           (use_fun
             (fn tm)
             (if (funcall is_disj tm)
               (match (funcall dest_disj tm)
-                ((tuple l r~local~247) (NOT_DISJ (use_fun fn l) (use_fun fn r~local~247))))
+                ((tuple l r*) (NOT_DISJ (use_fun fn l) (use_fun fn r*))))
               (apply fn tm))))
         (lambdac (fm)
           (match (dest_eq fm)
-            ((tuple p~local~266 |p'|)
-              (if (= p~local~266 |p'|)
-                (REFL p~local~266)
+            ((tuple p* p**)
+              (if (= p* p**)
+                (REFL p*)
                 (let
-                  ((th
-                    (use_fun
-                      (mk_fun (ASSUME (funcall mk_neg p~local~266)) undefined)
-                      |p'|))
-                    (|th'|
-                      (use_fun
-                        (mk_fun (ASSUME (funcall mk_neg |p'|)) undefined)
-                        p~local~266)))
-                  (let ((th1 (funcall IMP_ANTISYM_RULE (DISCH_ALL th) (DISCH_ALL |th'|))))
+                  ((th (use_fun (mk_fun (ASSUME (funcall mk_neg p*)) undefined) p**))
+                    (th* (use_fun (mk_fun (ASSUME (funcall mk_neg p**)) undefined) p*)))
+                  (let ((th1 (funcall IMP_ANTISYM_RULE (DISCH_ALL th) (DISCH_ALL th*))))
                     (PROVE_HYP
                       th1
-                      (|INST|
-                        (cl:cons (tuple p~local~266 a_tm) (cl:cons (tuple |p'| b_tm) nil))
+                      (INST*
+                        (cl:cons (tuple p* a_tm) (cl:cons (tuple p** b_tm) nil))
                         pth_neg))))))))))))
 
 ;; (* ------------------------------------------------------------------------- *)
@@ -519,12 +513,12 @@
 
 
 (defunc CONJ_CANON_CONV (tm)
-  (let ((|tm'| (funcall list_mk_conj (setify (funcall conjuncts tm)))))
-    (funcall CONJ_ACI_RULE (funcall mk_eq (tuple tm |tm'|)))))
+  (let ((tm* (funcall list_mk_conj (setify (funcall conjuncts tm)))))
+    (funcall CONJ_ACI_RULE (funcall mk_eq (tuple tm tm*)))))
 
 (defunc DISJ_CANON_CONV (tm)
-  (let ((|tm'| (funcall list_mk_disj (setify (funcall disjuncts tm)))))
-    (funcall DISJ_ACI_RULE (funcall mk_eq (tuple tm |tm'|)))))
+  (let ((tm* (funcall list_mk_disj (setify (funcall disjuncts tm)))))
+    (funcall DISJ_ACI_RULE (funcall mk_eq (tuple tm tm*)))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* General NNF conversion. The user supplies some conversion to be applied   *)
@@ -615,8 +609,8 @@
       pth_not_imp
       pth_eq
       pth_not_eq
-      |pth_eq'|
-      |pth_not_eq'|
+      pth_eq*
+      pth_not_eq*
       (cl:cons pth_not_forall (cl:cons pth_not_exists (cl:cons pth_not_exu nil)))
       pth_exu
       p_tm
@@ -625,155 +619,147 @@
         ((NNF_DCONV
           (cf baseconvs tm)
           (match tm
-            ((Comb (Comb (Const "/\\" _) l) r~local~375)
-              (match
-                (tuple (NNF_DCONV cf baseconvs l) (NNF_DCONV cf baseconvs r~local~375))
+            ((Comb (Comb (Const "/\\" _) l) r*)
+              (match (tuple (NNF_DCONV cf baseconvs l) (NNF_DCONV cf baseconvs r*))
                 ((tuple (tuple th_lp th_ln) (tuple th_rp th_rn))
                   (tuple
-                    (|MK_COMB| (tuple (AP_TERM and_tm th_lp) th_rp))
+                    (MK_COMB* (tuple (AP_TERM and_tm th_lp) th_rp))
                     (TRANS
-                      (|INST|
-                        (cl:cons (tuple l p_tm) (cl:cons (tuple r~local~375 q_tm) nil))
+                      (INST*
+                        (cl:cons (tuple l p_tm) (cl:cons (tuple r* q_tm) nil))
                         pth_not_and)
-                      (|MK_COMB| (tuple (AP_TERM or_tm th_ln) th_rn)))))))
-            ((Comb (Comb (Const "\\/" _) l) r~local~429)
-              (match
-                (tuple (NNF_DCONV cf baseconvs l) (NNF_DCONV cf baseconvs r~local~429))
+                      (MK_COMB* (tuple (AP_TERM or_tm th_ln) th_rn)))))))
+            ((Comb (Comb (Const "\\/" _) l) r*)
+              (match (tuple (NNF_DCONV cf baseconvs l) (NNF_DCONV cf baseconvs r*))
                 ((tuple (tuple th_lp th_ln) (tuple th_rp th_rn))
                   (tuple
-                    (|MK_COMB| (tuple (AP_TERM or_tm th_lp) th_rp))
+                    (MK_COMB* (tuple (AP_TERM or_tm th_lp) th_rp))
                     (TRANS
-                      (|INST|
-                        (cl:cons (tuple l p_tm) (cl:cons (tuple r~local~429 q_tm) nil))
+                      (INST*
+                        (cl:cons (tuple l p_tm) (cl:cons (tuple r* q_tm) nil))
                         pth_not_or)
-                      (|MK_COMB| (tuple (AP_TERM and_tm th_ln) th_rn)))))))
-            ((Comb (Comb (Const "==>" _) l) r~local~483)
-              (match
-                (tuple (NNF_DCONV cf baseconvs l) (NNF_DCONV cf baseconvs r~local~483))
+                      (MK_COMB* (tuple (AP_TERM and_tm th_ln) th_rn)))))))
+            ((Comb (Comb (Const "==>" _) l) r*)
+              (match (tuple (NNF_DCONV cf baseconvs l) (NNF_DCONV cf baseconvs r*))
                 ((tuple (tuple th_lp th_ln) (tuple th_rp th_rn))
                   (tuple
                     (TRANS
-                      (|INST|
-                        (cl:cons (tuple l p_tm) (cl:cons (tuple r~local~483 q_tm) nil))
+                      (INST*
+                        (cl:cons (tuple l p_tm) (cl:cons (tuple r* q_tm) nil))
                         pth_imp)
-                      (|MK_COMB| (tuple (AP_TERM or_tm th_ln) th_rp)))
+                      (MK_COMB* (tuple (AP_TERM or_tm th_ln) th_rp)))
                     (TRANS
-                      (|INST|
-                        (cl:cons (tuple l p_tm) (cl:cons (tuple r~local~483 q_tm) nil))
+                      (INST*
+                        (cl:cons (tuple l p_tm) (cl:cons (tuple r* q_tm) nil))
                         pth_not_imp)
-                      (|MK_COMB| (tuple (AP_TERM and_tm th_lp) th_rn)))))))
-            ((Comb
-              (Comb (Const "=" (Tyapp "fun" (cl:cons (Tyapp "bool" _) _))) l)
-              r~local~549)
-              (match
-                (tuple (NNF_DCONV cf baseconvs l) (NNF_DCONV cf baseconvs r~local~549))
+                      (MK_COMB* (tuple (AP_TERM and_tm th_lp) th_rn)))))))
+            ((Comb (Comb (Const "=" (Tyapp "fun" (cl:cons (Tyapp "bool" _) _))) l) r*)
+              (match (tuple (NNF_DCONV cf baseconvs l) (NNF_DCONV cf baseconvs r*))
                 ((tuple (tuple th_lp th_ln) (tuple th_rp th_rn))
                   (if cf
                     (tuple
                       (TRANS
-                        (|INST|
-                          (cl:cons (tuple l p_tm) (cl:cons (tuple r~local~549 q_tm) nil))
-                          |pth_eq'|)
-                        (|MK_COMB|
+                        (INST*
+                          (cl:cons (tuple l p_tm) (cl:cons (tuple r* q_tm) nil))
+                          pth_eq*)
+                        (MK_COMB*
                           (tuple
                             (AP_TERM
                               and_tm
-                              (|MK_COMB| (tuple (AP_TERM or_tm th_lp) th_rn)))
-                            (|MK_COMB| (tuple (AP_TERM or_tm th_ln) th_rp)))))
+                              (MK_COMB* (tuple (AP_TERM or_tm th_lp) th_rn)))
+                            (MK_COMB* (tuple (AP_TERM or_tm th_ln) th_rp)))))
                       (TRANS
-                        (|INST|
-                          (cl:cons (tuple l p_tm) (cl:cons (tuple r~local~549 q_tm) nil))
-                          |pth_not_eq'|)
-                        (|MK_COMB|
+                        (INST*
+                          (cl:cons (tuple l p_tm) (cl:cons (tuple r* q_tm) nil))
+                          pth_not_eq*)
+                        (MK_COMB*
                           (tuple
                             (AP_TERM
                               and_tm
-                              (|MK_COMB| (tuple (AP_TERM or_tm th_lp) th_rp)))
-                            (|MK_COMB| (tuple (AP_TERM or_tm th_ln) th_rn))))))
+                              (MK_COMB* (tuple (AP_TERM or_tm th_lp) th_rp)))
+                            (MK_COMB* (tuple (AP_TERM or_tm th_ln) th_rn))))))
                     (tuple
                       (TRANS
-                        (|INST|
-                          (cl:cons (tuple l p_tm) (cl:cons (tuple r~local~549 q_tm) nil))
+                        (INST*
+                          (cl:cons (tuple l p_tm) (cl:cons (tuple r* q_tm) nil))
                           pth_eq)
-                        (|MK_COMB|
+                        (MK_COMB*
                           (tuple
                             (AP_TERM
                               or_tm
-                              (|MK_COMB| (tuple (AP_TERM and_tm th_lp) th_rp)))
-                            (|MK_COMB| (tuple (AP_TERM and_tm th_ln) th_rn)))))
+                              (MK_COMB* (tuple (AP_TERM and_tm th_lp) th_rp)))
+                            (MK_COMB* (tuple (AP_TERM and_tm th_ln) th_rn)))))
                       (TRANS
-                        (|INST|
-                          (cl:cons (tuple l p_tm) (cl:cons (tuple r~local~549 q_tm) nil))
+                        (INST*
+                          (cl:cons (tuple l p_tm) (cl:cons (tuple r* q_tm) nil))
                           pth_not_eq)
-                        (|MK_COMB|
+                        (MK_COMB*
                           (tuple
                             (AP_TERM
                               or_tm
-                              (|MK_COMB| (tuple (AP_TERM and_tm th_lp) th_rn)))
-                            (|MK_COMB| (tuple (AP_TERM and_tm th_ln) th_rp))))))))))
+                              (MK_COMB* (tuple (AP_TERM and_tm th_lp) th_rn)))
+                            (MK_COMB* (tuple (AP_TERM and_tm th_ln) th_rp))))))))))
             ((Comb
               (cl:and
                 q
                 (Const "!" (Tyapp "fun" (cl:cons (Tyapp "fun" (cl:cons ty _)) _))))
-              (cl:and bod (|Abs| x |t|)))
-              (match (NNF_DCONV cl:t baseconvs |t|)
+              (cl:and bod (Abs x t*)))
+              (match (NNF_DCONV cl:t baseconvs t*)
                 ((tuple th_p th_n)
                   (tuple
-                    (AP_TERM q (|ABS| x th_p))
+                    (AP_TERM q (ABS* x th_p))
                     (let
                       ((th1
-                        (|INST|
+                        (INST*
                           (cl:cons
                             (tuple bod (mk_var (tuple "P" (mk_fun_ty ty bool_ty))))
                             nil)
                           (INST_TYPE (cl:cons (tuple ty aty) nil) pth_not_forall)))
-                        (th2
-                          (TRANS (AP_TERM not_tm (BETA (|mk_comb| (tuple bod x)))) th_n)))
+                        (th2 (TRANS (AP_TERM not_tm (BETA (mk_comb (tuple bod x)))) th_n)))
                       (TRANS th1 (funcall MK_EXISTS x th2)))))))
             ((Comb
               (cl:and
                 q
                 (Const "?" (Tyapp "fun" (cl:cons (Tyapp "fun" (cl:cons ty _)) _))))
-              (cl:and bod (|Abs| x |t|)))
-              (match (NNF_DCONV cf baseconvs |t|)
+              (cl:and bod (Abs x t*)))
+              (match (NNF_DCONV cf baseconvs t*)
                 ((tuple th_p th_n)
                   (tuple
-                    (AP_TERM q (|ABS| x th_p))
+                    (AP_TERM q (ABS* x th_p))
                     (let
                       ((th1
-                        (|INST|
+                        (INST*
                           (cl:cons
                             (tuple bod (mk_var (tuple "P" (mk_fun_ty ty bool_ty))))
                             nil)
                           (INST_TYPE (cl:cons (tuple ty aty) nil) pth_not_exists)))
-                        (th2
-                          (TRANS (AP_TERM not_tm (BETA (|mk_comb| (tuple bod x)))) th_n)))
+                        (th2 (TRANS (AP_TERM not_tm (BETA (mk_comb (tuple bod x)))) th_n)))
                       (TRANS th1 (funcall MK_FORALL x th2)))))))
             ((Comb
               (Const "?!" (Tyapp "fun" (cl:cons (Tyapp "fun" (cl:cons ty _)) _)))
-              (cl:and bod (|Abs| x |t|)))
+              (cl:and bod (Abs x t*)))
               (match
-                (tuple (variant (cl:cons x (frees |t|)) x) (NNF_DCONV cf baseconvs |t|))
+                (tuple (variant (cl:cons x (frees t*)) x) (NNF_DCONV cf baseconvs t*))
                 ((tuple y (tuple th_p th_n))
                   (let ((eq (funcall mk_eq (tuple y x))))
                     (match
                       (tuple
                         (funcall baseconvs eq)
-                        (BETA (|mk_comb| (tuple bod x)))
-                        (BETA_CONV (|mk_comb| (tuple bod y))))
-                      ((tuple (tuple eth_p eth_n) bth |bth'|)
+                        (BETA (mk_comb (tuple bod x)))
+                        (BETA_CONV (mk_comb (tuple bod y))))
+                      ((tuple (tuple eth_p eth_n) bth bth*)
                         (let
-                          ((|th_p'| (|INST| (cl:cons (tuple y x) nil) th_p))
-                            (|th_n'| (|INST| (cl:cons (tuple y x) nil) th_n)))
+                          ((th_p* (INST* (cl:cons (tuple y x) nil) th_p))
+                            (th_n* (INST* (cl:cons (tuple y x) nil) th_n)))
                           (let
                             ((th1
-                              (|INST|
+                              (INST*
                                 (cl:cons
                                   (tuple bod (mk_var (tuple "P" (mk_fun_ty ty bool_ty))))
                                   nil)
                                 (INST_TYPE (cl:cons (tuple ty aty) nil) pth_exu)))
-                              (|th1'|
-                                (|INST|
+                              (th1*
+                                (INST*
                                   (cl:cons
                                     (tuple
                                       bod
@@ -781,7 +767,7 @@
                                     nil)
                                   (INST_TYPE (cl:cons (tuple ty aty) nil) pth_not_exu)))
                               (th2
-                                (|MK_COMB|
+                                (MK_COMB*
                                   (tuple
                                     (AP_TERM
                                       and_tm
@@ -792,19 +778,19 @@
                                       (funcall
                                         MK_FORALL
                                         y
-                                        (|MK_COMB|
+                                        (MK_COMB*
                                           (tuple
                                             (AP_TERM
                                               or_tm
                                               (TRANS (AP_TERM not_tm bth) th_n))
-                                            (|MK_COMB|
+                                            (MK_COMB*
                                               (tuple
                                                 (AP_TERM
                                                   or_tm
-                                                  (TRANS (AP_TERM not_tm |bth'|) |th_n'|))
+                                                  (TRANS (AP_TERM not_tm bth*) th_n*))
                                                 eth_p)))))))))
-                              (|th2'|
-                                (|MK_COMB|
+                              (th2*
+                                (MK_COMB*
                                   (tuple
                                     (AP_TERM
                                       or_tm
@@ -818,115 +804,108 @@
                                       (funcall
                                         MK_EXISTS
                                         y
-                                        (|MK_COMB|
+                                        (MK_COMB*
                                           (tuple
                                             (AP_TERM and_tm (TRANS bth th_p))
-                                            (|MK_COMB|
+                                            (MK_COMB*
                                               (tuple
-                                                (AP_TERM and_tm (TRANS |bth'| |th_p'|))
+                                                (AP_TERM and_tm (TRANS bth* th_p*))
                                                 eth_n))))))))))
-                            (tuple (TRANS th1 th2) (TRANS |th1'| |th2'|))))))))))
-            ((Comb (Const "~" _) |t|)
-              (match (NNF_DCONV cf baseconvs |t|)
+                            (tuple (TRANS th1 th2) (TRANS th1* th2*))))))))))
+            ((Comb (Const "~" _) t*)
+              (match (NNF_DCONV cf baseconvs t*)
                 ((tuple th1 th2)
                   (tuple
                     th2
-                    (TRANS (|INST| (cl:cons (tuple |t| p_tm) nil) pth_not_not) th1)))))
+                    (TRANS (INST* (cl:cons (tuple t* p_tm) nil) pth_not_not) th1)))))
             (_
               (handler-case
                 (funcall baseconvs tm)
                 (hol2cl.runtime:ocaml-condition
-                  (exception~1071)
-                  (match exception~1071
+                  (exception~1062)
+                  (match exception~1062
                     ((Failure _) (tuple (REFL tm) (REFL (funcall mk_neg tm))))
-                    (_ (raise exception~1071)))))))))
+                    (_ (raise exception~1062)))))))))
         (labelsc
-          ((NNF_CONV~local~1085
-            (cf arg~1089 tm)
-            (match arg~1089
+          ((NNF_CONV*
+            (cf arg~1079 tm)
+            (match arg~1079
               ((cl:and baseconvs (tuple base1 base2))
                 (match tm
-                  ((Comb (Comb (Const "/\\" _) l) r~local~1096)
+                  ((Comb (Comb (Const "/\\" _) l) r*)
                     (let
-                      ((th_lp (NNF_CONV~local~1085 cf baseconvs l))
-                        (th_rp (NNF_CONV~local~1085 cf baseconvs r~local~1096)))
-                      (|MK_COMB| (tuple (AP_TERM and_tm th_lp) th_rp))))
-                  ((Comb (Comb (Const "\\/" _) l) r~local~1123)
+                      ((th_lp (NNF_CONV* cf baseconvs l))
+                        (th_rp (NNF_CONV* cf baseconvs r*)))
+                      (MK_COMB* (tuple (AP_TERM and_tm th_lp) th_rp))))
+                  ((Comb (Comb (Const "\\/" _) l) r*)
                     (let
-                      ((th_lp (NNF_CONV~local~1085 cf baseconvs l))
-                        (th_rp (NNF_CONV~local~1085 cf baseconvs r~local~1123)))
-                      (|MK_COMB| (tuple (AP_TERM or_tm th_lp) th_rp))))
-                  ((Comb (Comb (Const "==>" _) l) r~local~1150)
+                      ((th_lp (NNF_CONV* cf baseconvs l))
+                        (th_rp (NNF_CONV* cf baseconvs r*)))
+                      (MK_COMB* (tuple (AP_TERM or_tm th_lp) th_rp))))
+                  ((Comb (Comb (Const "==>" _) l) r*)
                     (let
-                      ((th_ln (|NNF_CONV'| cf baseconvs l))
-                        (th_rp (NNF_CONV~local~1085 cf baseconvs r~local~1150)))
+                      ((th_ln (NNF_CONV** cf baseconvs l))
+                        (th_rp (NNF_CONV* cf baseconvs r*)))
                       (TRANS
-                        (|INST|
-                          (cl:cons (tuple l p_tm) (cl:cons (tuple r~local~1150 q_tm) nil))
+                        (INST*
+                          (cl:cons (tuple l p_tm) (cl:cons (tuple r* q_tm) nil))
                           pth_imp)
-                        (|MK_COMB| (tuple (AP_TERM or_tm th_ln) th_rp)))))
+                        (MK_COMB* (tuple (AP_TERM or_tm th_ln) th_rp)))))
                   ((Comb
                     (Comb (Const "=" (Tyapp "fun" (cl:cons (Tyapp "bool" _) _))) l)
-                    r~local~1189)
-                    (match
-                      (tuple (NNF_DCONV cf base2 l) (NNF_DCONV cf base2 r~local~1189))
+                    r*)
+                    (match (tuple (NNF_DCONV cf base2 l) (NNF_DCONV cf base2 r*))
                       ((tuple (tuple th_lp th_ln) (tuple th_rp th_rn))
                         (if cf
                           (TRANS
-                            (|INST|
-                              (cl:cons
-                                (tuple l p_tm)
-                                (cl:cons (tuple r~local~1189 q_tm) nil))
-                              |pth_eq'|)
-                            (|MK_COMB|
+                            (INST*
+                              (cl:cons (tuple l p_tm) (cl:cons (tuple r* q_tm) nil))
+                              pth_eq*)
+                            (MK_COMB*
                               (tuple
                                 (AP_TERM
                                   and_tm
-                                  (|MK_COMB| (tuple (AP_TERM or_tm th_lp) th_rn)))
-                                (|MK_COMB| (tuple (AP_TERM or_tm th_ln) th_rp)))))
+                                  (MK_COMB* (tuple (AP_TERM or_tm th_lp) th_rn)))
+                                (MK_COMB* (tuple (AP_TERM or_tm th_ln) th_rp)))))
                           (TRANS
-                            (|INST|
-                              (cl:cons
-                                (tuple l p_tm)
-                                (cl:cons (tuple r~local~1189 q_tm) nil))
+                            (INST*
+                              (cl:cons (tuple l p_tm) (cl:cons (tuple r* q_tm) nil))
                               pth_eq)
-                            (|MK_COMB|
+                            (MK_COMB*
                               (tuple
                                 (AP_TERM
                                   or_tm
-                                  (|MK_COMB| (tuple (AP_TERM and_tm th_lp) th_rp)))
-                                (|MK_COMB| (tuple (AP_TERM and_tm th_ln) th_rn)))))))))
+                                  (MK_COMB* (tuple (AP_TERM and_tm th_lp) th_rp)))
+                                (MK_COMB* (tuple (AP_TERM and_tm th_ln) th_rn)))))))))
                   ((Comb
                     (cl:and
                       q
                       (Const "!" (Tyapp "fun" (cl:cons (Tyapp "fun" (cl:cons ty _)) _))))
-                    (|Abs| x |t|))
-                    (let ((th_p (NNF_CONV~local~1085 cl:t baseconvs |t|)))
-                      (AP_TERM q (|ABS| x th_p))))
+                    (Abs x t*))
+                    (let ((th_p (NNF_CONV* cl:t baseconvs t*))) (AP_TERM q (ABS* x th_p))))
                   ((Comb
                     (cl:and
                       q
                       (Const "?" (Tyapp "fun" (cl:cons (Tyapp "fun" (cl:cons ty _)) _))))
-                    (|Abs| x |t|))
-                    (let ((th_p (NNF_CONV~local~1085 cf baseconvs |t|)))
-                      (AP_TERM q (|ABS| x th_p))))
+                    (Abs x t*))
+                    (let ((th_p (NNF_CONV* cf baseconvs t*))) (AP_TERM q (ABS* x th_p))))
                   ((Comb
                     (Const "?!" (Tyapp "fun" (cl:cons (Tyapp "fun" (cl:cons ty _)) _)))
-                    (cl:and bod (|Abs| x |t|)))
+                    (cl:and bod (Abs x t*)))
                     (match
-                      (tuple (variant (cl:cons x (frees |t|)) x) (NNF_DCONV cf base2 |t|))
+                      (tuple (variant (cl:cons x (frees t*)) x) (NNF_DCONV cf base2 t*))
                       ((tuple y (tuple th_p th_n))
                         (let ((eq (funcall mk_eq (tuple y x))))
                           (match
                             (tuple
                               (funcall base2 eq)
-                              (BETA (|mk_comb| (tuple bod x)))
-                              (BETA_CONV (|mk_comb| (tuple bod y))))
-                            ((tuple (tuple eth_p eth_n) bth |bth'|)
+                              (BETA (mk_comb (tuple bod x)))
+                              (BETA_CONV (mk_comb (tuple bod y))))
+                            ((tuple (tuple eth_p eth_n) bth bth*)
                               (let*
-                                ((|th_n'| (|INST| (cl:cons (tuple y x) nil) th_n))
+                                ((th_n* (INST* (cl:cons (tuple y x) nil) th_n))
                                   (th1
-                                    (|INST|
+                                    (INST*
                                       (cl:cons
                                         (tuple
                                           bod
@@ -934,7 +913,7 @@
                                         nil)
                                       (INST_TYPE (cl:cons (tuple ty aty) nil) pth_exu)))
                                   (th2
-                                    (|MK_COMB|
+                                    (MK_COMB*
                                       (tuple
                                         (AP_TERM
                                           and_tm
@@ -945,145 +924,130 @@
                                           (funcall
                                             MK_FORALL
                                             y
-                                            (|MK_COMB|
+                                            (MK_COMB*
                                               (tuple
                                                 (AP_TERM
                                                   or_tm
                                                   (TRANS (AP_TERM not_tm bth) th_n))
-                                                (|MK_COMB|
+                                                (MK_COMB*
                                                   (tuple
                                                     (AP_TERM
                                                       or_tm
-                                                      (TRANS
-                                                        (AP_TERM not_tm |bth'|)
-                                                        |th_n'|))
+                                                      (TRANS (AP_TERM not_tm bth*) th_n*))
                                                     eth_p))))))))))
                                 (TRANS th1 th2))))))))
-                  ((Comb (Const "~" _) |t|) (|NNF_CONV'| cf baseconvs |t|))
+                  ((Comb (Const "~" _) t*) (NNF_CONV** cf baseconvs t*))
                   (_
                     (handler-case
                       (funcall base1 tm)
                       (hol2cl.runtime:ocaml-condition
-                        (exception~1488)
-                        (match exception~1488
+                        (exception~1474)
+                        (match exception~1474
                           ((Failure _) (REFL tm))
-                          (_ (raise exception~1488))))))))))
-            (|NNF_CONV'|
-              (cf arg~1504 tm)
-              (match arg~1504
+                          (_ (raise exception~1474))))))))))
+            (NNF_CONV**
+              (cf arg~1490 tm)
+              (match arg~1490
                 ((cl:and baseconvs (tuple base1 base2))
                   (match tm
-                    ((Comb (Comb (Const "/\\" _) l) r~local~1511)
+                    ((Comb (Comb (Const "/\\" _) l) r*)
                       (let
-                        ((th_ln (|NNF_CONV'| cf baseconvs l))
-                          (th_rn (|NNF_CONV'| cf baseconvs r~local~1511)))
+                        ((th_ln (NNF_CONV** cf baseconvs l))
+                          (th_rn (NNF_CONV** cf baseconvs r*)))
                         (TRANS
-                          (|INST|
-                            (cl:cons
-                              (tuple l p_tm)
-                              (cl:cons (tuple r~local~1511 q_tm) nil))
+                          (INST*
+                            (cl:cons (tuple l p_tm) (cl:cons (tuple r* q_tm) nil))
                             pth_not_and)
-                          (|MK_COMB| (tuple (AP_TERM or_tm th_ln) th_rn)))))
-                    ((Comb (Comb (Const "\\/" _) l) r~local~1550)
+                          (MK_COMB* (tuple (AP_TERM or_tm th_ln) th_rn)))))
+                    ((Comb (Comb (Const "\\/" _) l) r*)
                       (let
-                        ((th_ln (|NNF_CONV'| cf baseconvs l))
-                          (th_rn (|NNF_CONV'| cf baseconvs r~local~1550)))
+                        ((th_ln (NNF_CONV** cf baseconvs l))
+                          (th_rn (NNF_CONV** cf baseconvs r*)))
                         (TRANS
-                          (|INST|
-                            (cl:cons
-                              (tuple l p_tm)
-                              (cl:cons (tuple r~local~1550 q_tm) nil))
+                          (INST*
+                            (cl:cons (tuple l p_tm) (cl:cons (tuple r* q_tm) nil))
                             pth_not_or)
-                          (|MK_COMB| (tuple (AP_TERM and_tm th_ln) th_rn)))))
-                    ((Comb (Comb (Const "==>" _) l) r~local~1589)
+                          (MK_COMB* (tuple (AP_TERM and_tm th_ln) th_rn)))))
+                    ((Comb (Comb (Const "==>" _) l) r*)
                       (let
-                        ((th_lp (NNF_CONV~local~1085 cf baseconvs l))
-                          (th_rn (|NNF_CONV'| cf baseconvs r~local~1589)))
+                        ((th_lp (NNF_CONV* cf baseconvs l))
+                          (th_rn (NNF_CONV** cf baseconvs r*)))
                         (TRANS
-                          (|INST|
-                            (cl:cons
-                              (tuple l p_tm)
-                              (cl:cons (tuple r~local~1589 q_tm) nil))
+                          (INST*
+                            (cl:cons (tuple l p_tm) (cl:cons (tuple r* q_tm) nil))
                             pth_not_imp)
-                          (|MK_COMB| (tuple (AP_TERM and_tm th_lp) th_rn)))))
+                          (MK_COMB* (tuple (AP_TERM and_tm th_lp) th_rn)))))
                     ((Comb
                       (Comb (Const "=" (Tyapp "fun" (cl:cons (Tyapp "bool" _) _))) l)
-                      r~local~1628)
-                      (match
-                        (tuple (NNF_DCONV cf base2 l) (NNF_DCONV cf base2 r~local~1628))
+                      r*)
+                      (match (tuple (NNF_DCONV cf base2 l) (NNF_DCONV cf base2 r*))
                         ((tuple (tuple th_lp th_ln) (tuple th_rp th_rn))
                           (if cf
                             (TRANS
-                              (|INST|
-                                (cl:cons
-                                  (tuple l p_tm)
-                                  (cl:cons (tuple r~local~1628 q_tm) nil))
-                                |pth_not_eq'|)
-                              (|MK_COMB|
+                              (INST*
+                                (cl:cons (tuple l p_tm) (cl:cons (tuple r* q_tm) nil))
+                                pth_not_eq*)
+                              (MK_COMB*
                                 (tuple
                                   (AP_TERM
                                     and_tm
-                                    (|MK_COMB| (tuple (AP_TERM or_tm th_lp) th_rp)))
-                                  (|MK_COMB| (tuple (AP_TERM or_tm th_ln) th_rn)))))
+                                    (MK_COMB* (tuple (AP_TERM or_tm th_lp) th_rp)))
+                                  (MK_COMB* (tuple (AP_TERM or_tm th_ln) th_rn)))))
                             (TRANS
-                              (|INST|
-                                (cl:cons
-                                  (tuple l p_tm)
-                                  (cl:cons (tuple r~local~1628 q_tm) nil))
+                              (INST*
+                                (cl:cons (tuple l p_tm) (cl:cons (tuple r* q_tm) nil))
                                 pth_not_eq)
-                              (|MK_COMB|
+                              (MK_COMB*
                                 (tuple
                                   (AP_TERM
                                     or_tm
-                                    (|MK_COMB| (tuple (AP_TERM and_tm th_lp) th_rn)))
-                                  (|MK_COMB| (tuple (AP_TERM and_tm th_ln) th_rp)))))))))
+                                    (MK_COMB* (tuple (AP_TERM and_tm th_lp) th_rn)))
+                                  (MK_COMB* (tuple (AP_TERM and_tm th_ln) th_rp)))))))))
                     ((Comb
                       (Const "!" (Tyapp "fun" (cl:cons (Tyapp "fun" (cl:cons ty _)) _)))
-                      (cl:and bod (|Abs| x |t|)))
+                      (cl:and bod (Abs x t*)))
                       (let*
-                        ((th_n (|NNF_CONV'| cf baseconvs |t|))
+                        ((th_n (NNF_CONV** cf baseconvs t*))
                           (th1
-                            (|INST|
+                            (INST*
                               (cl:cons
                                 (tuple bod (mk_var (tuple "P" (mk_fun_ty ty bool_ty))))
                                 nil)
                               (INST_TYPE (cl:cons (tuple ty aty) nil) pth_not_forall)))
                           (th2
-                            (TRANS (AP_TERM not_tm (BETA (|mk_comb| (tuple bod x)))) th_n)))
+                            (TRANS (AP_TERM not_tm (BETA (mk_comb (tuple bod x)))) th_n)))
                         (TRANS th1 (funcall MK_EXISTS x th2))))
                     ((Comb
                       (Const "?" (Tyapp "fun" (cl:cons (Tyapp "fun" (cl:cons ty _)) _)))
-                      (cl:and bod (|Abs| x |t|)))
+                      (cl:and bod (Abs x t*)))
                       (let*
-                        ((th_n (|NNF_CONV'| cl:t baseconvs |t|))
+                        ((th_n (NNF_CONV** cl:t baseconvs t*))
                           (th1
-                            (|INST|
+                            (INST*
                               (cl:cons
                                 (tuple bod (mk_var (tuple "P" (mk_fun_ty ty bool_ty))))
                                 nil)
                               (INST_TYPE (cl:cons (tuple ty aty) nil) pth_not_exists)))
                           (th2
-                            (TRANS (AP_TERM not_tm (BETA (|mk_comb| (tuple bod x)))) th_n)))
+                            (TRANS (AP_TERM not_tm (BETA (mk_comb (tuple bod x)))) th_n)))
                         (TRANS th1 (funcall MK_FORALL x th2))))
                     ((Comb
                       (Const "?!" (Tyapp "fun" (cl:cons (Tyapp "fun" (cl:cons ty _)) _)))
-                      (cl:and bod (|Abs| x |t|)))
+                      (cl:and bod (Abs x t*)))
                       (match
-                        (tuple
-                          (variant (cl:cons x (frees |t|)) x)
-                          (NNF_DCONV cf base2 |t|))
+                        (tuple (variant (cl:cons x (frees t*)) x) (NNF_DCONV cf base2 t*))
                         ((tuple y (tuple th_p th_n))
                           (let ((eq (funcall mk_eq (tuple y x))))
                             (match
                               (tuple
                                 (funcall base2 eq)
-                                (BETA (|mk_comb| (tuple bod x)))
-                                (BETA_CONV (|mk_comb| (tuple bod y))))
-                              ((tuple (tuple eth_p eth_n) bth |bth'|)
+                                (BETA (mk_comb (tuple bod x)))
+                                (BETA_CONV (mk_comb (tuple bod y))))
+                              ((tuple (tuple eth_p eth_n) bth bth*)
                                 (let*
-                                  ((|th_p'| (|INST| (cl:cons (tuple y x) nil) th_p))
-                                    (|th1'|
-                                      (|INST|
+                                  ((th_p* (INST* (cl:cons (tuple y x) nil) th_p))
+                                    (th1*
+                                      (INST*
                                         (cl:cons
                                           (tuple
                                             bod
@@ -1092,8 +1056,8 @@
                                         (INST_TYPE
                                           (cl:cons (tuple ty aty) nil)
                                           pth_not_exu)))
-                                    (|th2'|
-                                      (|MK_COMB|
+                                    (th2*
+                                      (MK_COMB*
                                         (tuple
                                           (AP_TERM
                                             or_tm
@@ -1107,29 +1071,27 @@
                                             (funcall
                                               MK_EXISTS
                                               y
-                                              (|MK_COMB|
+                                              (MK_COMB*
                                                 (tuple
                                                   (AP_TERM and_tm (TRANS bth th_p))
-                                                  (|MK_COMB|
+                                                  (MK_COMB*
                                                     (tuple
-                                                      (AP_TERM
-                                                        and_tm
-                                                        (TRANS |bth'| |th_p'|))
+                                                      (AP_TERM and_tm (TRANS bth* th_p*))
                                                       eth_n))))))))))
-                                  (TRANS |th1'| |th2'|))))))))
-                    ((Comb (Const "~" _) |t|)
-                      (let ((th1 (NNF_CONV~local~1085 cf baseconvs |t|)))
-                        (TRANS (|INST| (cl:cons (tuple |t| p_tm) nil) pth_not_not) th1)))
+                                  (TRANS th1* th2*))))))))
+                    ((Comb (Const "~" _) t*)
+                      (let ((th1 (NNF_CONV* cf baseconvs t*)))
+                        (TRANS (INST* (cl:cons (tuple t* p_tm) nil) pth_not_not) th1)))
                     (_
-                      (let ((|tm'| (funcall mk_neg tm)))
+                      (let ((tm* (funcall mk_neg tm)))
                         (handler-case
-                          (funcall base1 |tm'|)
+                          (funcall base1 tm*)
                           (hol2cl.runtime:ocaml-condition
-                            (exception~1999)
-                            (match exception~1999
-                              ((Failure _) (REFL |tm'|))
-                              (_ (raise exception~1999))))))))))))
-          #'NNF_CONV~local~1085)))))
+                            (exception~1981)
+                            (match exception~1981
+                              ((Failure _) (REFL tm*))
+                              (_ (raise exception~1981))))))))))))
+          #'NNF_CONV*)))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Some common special cases.                                                *)
@@ -1140,13 +1102,13 @@
   (funcall
     GEN_NNF_CONV
     cl:nil
-    (tuple ALL_CONV (lambdac (|t|) (tuple (REFL |t|) (REFL (funcall mk_neg |t|)))))))
+    (tuple ALL_CONV (lambdac (t*) (tuple (REFL t*) (REFL (funcall mk_neg t*)))))))
 
 (defparameter NNFC_CONV
   (funcall
     GEN_NNF_CONV
     cl:t
-    (tuple ALL_CONV (lambdac (|t|) (tuple (REFL |t|) (REFL (funcall mk_neg |t|)))))))
+    (tuple ALL_CONV (lambdac (t*) (tuple (REFL t*) (REFL (funcall mk_neg t*)))))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Skolemize a term already in NNF (doesn't matter if it's not prenex).      *)
@@ -1234,30 +1196,22 @@
       ((distribute
         (tm)
         (match tm
-          ((Comb
-            (Comb (Const "/\\" _) a~local~2266)
-            (Comb (Comb (Const "\\/" _) b~local~2268) c~local~2270))
+          ((Comb (Comb (Const "/\\" _) a*) (Comb (Comb (Const "\\/" _) b*) c*))
             (let
               ((th
-                (|INST|
+                (INST*
                   (cl:cons
-                    (tuple a~local~2266 a_tm)
-                    (cl:cons
-                      (tuple b~local~2268 b_tm)
-                      (cl:cons (tuple c~local~2270 c_tm) nil)))
+                    (tuple a* a_tm)
+                    (cl:cons (tuple b* b_tm) (cl:cons (tuple c* c_tm) nil)))
                   pth1)))
               (TRANS th (BINOP_CONV #'distribute (rand (concl th))))))
-          ((Comb
-            (Comb (Const "/\\" _) (Comb (Comb (Const "\\/" _) a~local~2309) b~local~2311))
-            c~local~2313)
+          ((Comb (Comb (Const "/\\" _) (Comb (Comb (Const "\\/" _) a*) b*)) c*)
             (let
               ((th
-                (|INST|
+                (INST*
                   (cl:cons
-                    (tuple a~local~2309 a_tm)
-                    (cl:cons
-                      (tuple b~local~2311 b_tm)
-                      (cl:cons (tuple c~local~2313 c_tm) nil)))
+                    (tuple a* a_tm)
+                    (cl:cons (tuple b* b_tm) (cl:cons (tuple c* c_tm) nil)))
                   pth2)))
               (TRANS th (BINOP_CONV #'distribute (rand (concl th))))))
           (_ (REFL tm)))))
@@ -1270,26 +1224,23 @@
           ((weakdnf
             (tm)
             (match tm
-              ((cl:or (Comb (Const "!" _) (|Abs| _ _)) (Comb (Const "?" _) (|Abs| _ _)))
+              ((cl:or (Comb (Const "!" _) (Abs _ _)) (Comb (Const "?" _) (Abs _ _)))
                 (BINDER_CONV #'weakdnf tm))
               ((Comb (Comb (Const "\\/" _) _) _) (BINOP_CONV #'weakdnf tm))
-              ((Comb (Comb (cl:and op (Const "/\\" _)) l) r~local~2398)
-                (let
-                  ((th
-                    (|MK_COMB| (tuple (AP_TERM op (weakdnf l)) (weakdnf r~local~2398)))))
+              ((Comb (Comb (cl:and op (Const "/\\" _)) l) r*)
+                (let ((th (MK_COMB* (tuple (AP_TERM op (weakdnf l)) (weakdnf r*)))))
                   (TRANS th (distribute (rand (concl th))))))
               (_ (REFL tm))))
             (substrongdnf
               (tm)
               (match tm
-                ((cl:or (Comb (Const "!" _) (|Abs| _ _)) (Comb (Const "?" _) (|Abs| _ _)))
+                ((cl:or (Comb (Const "!" _) (Abs _ _)) (Comb (Const "?" _) (Abs _ _)))
                   (BINDER_CONV #'strongdnf tm))
                 ((Comb (Comb (Const "\\/" _) _) _) (BINOP_CONV #'substrongdnf tm))
-                ((Comb (Comb (cl:and op (Const "/\\" _)) l) r~local~2461)
+                ((Comb (Comb (cl:and op (Const "/\\" _)) l) r*)
                   (let
                     ((th
-                      (|MK_COMB|
-                        (tuple (AP_TERM op (substrongdnf l)) (substrongdnf r~local~2461)))))
+                      (MK_COMB* (tuple (AP_TERM op (substrongdnf l)) (substrongdnf r*)))))
                     (TRANS th (distribute (rand (concl th))))))
                 (_ (REFL tm))))
             (strongdnf
@@ -1297,8 +1248,8 @@
               (let ((th (substrongdnf tm)))
                 (TRANS th (funcall strengthen (rand (concl th)))))))
           (tuple #'weakdnf #'strongdnf)))))
-  ((tuple WEAK_DNF_CONV~local~2242 DNF_CONV~local~2240)
-    (setf DNF_CONV DNF_CONV~local~2240 WEAK_DNF_CONV WEAK_DNF_CONV~local~2242)))
+  ((tuple WEAK_DNF_CONV* DNF_CONV*)
+    (setf DNF_CONV DNF_CONV* WEAK_DNF_CONV WEAK_DNF_CONV*)))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Likewise for CNF.                                                         *)
@@ -1320,30 +1271,22 @@
       ((distribute
         (tm)
         (match tm
-          ((Comb
-            (Comb (Const "\\/" _) a~local~2542)
-            (Comb (Comb (Const "/\\" _) b~local~2544) c~local~2546))
+          ((Comb (Comb (Const "\\/" _) a*) (Comb (Comb (Const "/\\" _) b*) c*))
             (let
               ((th
-                (|INST|
+                (INST*
                   (cl:cons
-                    (tuple a~local~2542 a_tm)
-                    (cl:cons
-                      (tuple b~local~2544 b_tm)
-                      (cl:cons (tuple c~local~2546 c_tm) nil)))
+                    (tuple a* a_tm)
+                    (cl:cons (tuple b* b_tm) (cl:cons (tuple c* c_tm) nil)))
                   pth1)))
               (TRANS th (BINOP_CONV #'distribute (rand (concl th))))))
-          ((Comb
-            (Comb (Const "\\/" _) (Comb (Comb (Const "/\\" _) a~local~2585) b~local~2587))
-            c~local~2589)
+          ((Comb (Comb (Const "\\/" _) (Comb (Comb (Const "/\\" _) a*) b*)) c*)
             (let
               ((th
-                (|INST|
+                (INST*
                   (cl:cons
-                    (tuple a~local~2585 a_tm)
-                    (cl:cons
-                      (tuple b~local~2587 b_tm)
-                      (cl:cons (tuple c~local~2589 c_tm) nil)))
+                    (tuple a* a_tm)
+                    (cl:cons (tuple b* b_tm) (cl:cons (tuple c* c_tm) nil)))
                   pth2)))
               (TRANS th (BINOP_CONV #'distribute (rand (concl th))))))
           (_ (REFL tm)))))
@@ -1356,26 +1299,23 @@
           ((weakcnf
             (tm)
             (match tm
-              ((cl:or (Comb (Const "!" _) (|Abs| _ _)) (Comb (Const "?" _) (|Abs| _ _)))
+              ((cl:or (Comb (Const "!" _) (Abs _ _)) (Comb (Const "?" _) (Abs _ _)))
                 (BINDER_CONV #'weakcnf tm))
               ((Comb (Comb (Const "/\\" _) _) _) (BINOP_CONV #'weakcnf tm))
-              ((Comb (Comb (cl:and op (Const "\\/" _)) l) r~local~2674)
-                (let
-                  ((th
-                    (|MK_COMB| (tuple (AP_TERM op (weakcnf l)) (weakcnf r~local~2674)))))
+              ((Comb (Comb (cl:and op (Const "\\/" _)) l) r*)
+                (let ((th (MK_COMB* (tuple (AP_TERM op (weakcnf l)) (weakcnf r*)))))
                   (TRANS th (distribute (rand (concl th))))))
               (_ (REFL tm))))
             (substrongcnf
               (tm)
               (match tm
-                ((cl:or (Comb (Const "!" _) (|Abs| _ _)) (Comb (Const "?" _) (|Abs| _ _)))
+                ((cl:or (Comb (Const "!" _) (Abs _ _)) (Comb (Const "?" _) (Abs _ _)))
                   (BINDER_CONV #'strongcnf tm))
                 ((Comb (Comb (Const "/\\" _) _) _) (BINOP_CONV #'substrongcnf tm))
-                ((Comb (Comb (cl:and op (Const "\\/" _)) l) r~local~2737)
+                ((Comb (Comb (cl:and op (Const "\\/" _)) l) r*)
                   (let
                     ((th
-                      (|MK_COMB|
-                        (tuple (AP_TERM op (substrongcnf l)) (substrongcnf r~local~2737)))))
+                      (MK_COMB* (tuple (AP_TERM op (substrongcnf l)) (substrongcnf r*)))))
                     (TRANS th (distribute (rand (concl th))))))
                 (_ (REFL tm))))
             (strongcnf
@@ -1383,8 +1323,8 @@
               (let ((th (substrongcnf tm)))
                 (TRANS th (funcall strengthen (rand (concl th)))))))
           (tuple #'weakcnf #'strongcnf)))))
-  ((tuple WEAK_CNF_CONV~local~2518 CNF_CONV~local~2516)
-    (setf CNF_CONV CNF_CONV~local~2516 WEAK_CNF_CONV WEAK_CNF_CONV~local~2518)))
+  ((tuple WEAK_CNF_CONV* CNF_CONV*)
+    (setf CNF_CONV CNF_CONV* WEAK_CNF_CONV WEAK_CNF_CONV*)))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Simply right-associate w.r.t. a binary operator.                          *)
@@ -1392,8 +1332,8 @@
 
 
 (defunc ASSOC_CONV (th)
-  (let ((|th'| (SYM (SPEC_ALL th))))
-    (match (dest_comb (funcall rhs (concl |th'|)))
+  (let ((th* (SYM (SPEC_ALL th))))
+    (match (dest_comb (funcall rhs (concl th*)))
       ((tuple opx yopz)
         (match (dest_comb opx)
           ((tuple op x)
@@ -1403,33 +1343,31 @@
                   (tm)
                   (match tm
                     ((trivia:guard
-                      (Comb (Comb |op'| (Comb (Comb |op''| p~local~2808) q)) r~local~2811)
-                      (cl:and (= |op'| op) (= |op''| op)))
+                      (Comb (Comb op* (Comb (Comb op** p*) q)) r*)
+                      (cl:and (= op* op) (= op** op)))
                       (let
                         ((th1
-                          (|INST|
+                          (INST*
                             (cl:cons
-                              (tuple p~local~2808 x)
-                              (cl:cons (tuple q y) (cl:cons (tuple r~local~2811 z) nil)))
-                            |th'|)))
+                              (tuple p* x)
+                              (cl:cons (tuple q y) (cl:cons (tuple r* z) nil)))
+                            th*)))
                         (match (dest_comb (rand (concl th1)))
-                          ((tuple l |r'|)
+                          ((tuple l r**)
                             (let*
-                              ((th2 (AP_TERM l (distrib |r'|)))
+                              ((th2 (AP_TERM l (distrib r**)))
                                 (th3 (distrib (rand (concl th2)))))
                               (TRANS th1 (TRANS th2 th3)))))))
                     (_ (REFL tm)))))
                 (labelsc
-                  ((assoc~local~2878
+                  ((assoc*
                     (tm)
                     (match tm
-                      ((trivia:guard
-                        (Comb (cl:and l (Comb |op'| p~local~2883)) q)
-                        (= |op'| op))
-                        (let ((th~local~2896 (AP_TERM l (assoc~local~2878 q))))
-                          (TRANS th~local~2896 (distrib (rand (concl th~local~2896))))))
+                      ((trivia:guard (Comb (cl:and l (Comb op* p*)) q) (= op* op))
+                        (let ((th** (AP_TERM l (assoc* q))))
+                          (TRANS th** (distrib (rand (concl th**))))))
                       (_ (REFL tm)))))
-                  #'assoc~local~2878)))))))))
+                  #'assoc*)))))))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Eliminate select terms from a goal.                                       *)
@@ -1488,14 +1426,14 @@
             ((SELECT_ELIM_ICONV
               (tm)
               (let*
-                ((|t| (find_term is_select tm))
-                  (th1 (funcall SELECT_AX_THM |t|))
+                ((t* (find_term is_select tm))
+                  (th1 (funcall SELECT_AX_THM t*))
                   (itm (funcall mk_imp (tuple (concl th1) tm)))
                   (th2 (DISCH_ALL (funcall MP (ASSUME itm) th1)))
-                  (fvs (frees |t|))
-                  (fty (itlist (o #'mk_fun_ty #'type_of) fvs (type_of |t|)))
+                  (fvs (frees t*))
+                  (fty (itlist (o #'mk_fun_ty #'type_of) fvs (type_of t*)))
                   (fn (funcall genvar fty))
-                  (atm (list_mk_abs (tuple fvs |t|))))
+                  (atm (list_mk_abs (tuple fvs t*))))
                 (let*
                   ((rawdef (funcall mk_eq (tuple fn atm)))
                     (def
@@ -1507,19 +1445,19 @@
                     (th5 (funcall IMP_TRANS (funcall DISCH gtm th4) th2)))
                   (funcall
                     MP
-                    (|INST| (cl:cons (tuple atm fn) nil) (funcall DISCH rawdef th5))
+                    (INST* (cl:cons (tuple atm fn) nil) (funcall DISCH rawdef th5))
                     (REFL atm))))))
             (labelsc
               ((SELECT_ELIMS_ICONV
                 (tm)
                 (handler-case
-                  (let* ((th (SELECT_ELIM_ICONV tm)) (|tm'| (funcall lhand (concl th))))
-                    (funcall IMP_TRANS (SELECT_ELIMS_ICONV |tm'|) th))
+                  (let* ((th (SELECT_ELIM_ICONV tm)) (tm* (funcall lhand (concl th))))
+                    (funcall IMP_TRANS (SELECT_ELIMS_ICONV tm*) th))
                   (hol2cl.runtime:ocaml-condition
-                    (exception~3173)
-                    (match exception~3173
+                    (exception~3130)
+                    (match exception~3130
                       ((Failure _) (funcall DISCH tm (ASSUME tm)))
-                      (_ (raise exception~3173)))))))
+                      (_ (raise exception~3130)))))))
               #'SELECT_ELIMS_ICONV)))))
     (funcall
       THEN
@@ -1565,22 +1503,22 @@
                   (cl:or (funcall is_exists tm) (funcall is_uexists tm)))
                 (find_lambda (body (rand tm)))
                 (match (dest_comb tm)
-                  ((tuple l r~local~3247)
+                  ((tuple l r*)
                     (handler-case
                       (find_lambda l)
                       (hol2cl.runtime:ocaml-condition
-                        (exception~3249)
-                        (match exception~3249
-                          ((Failure _) (find_lambda r~local~3247))
-                          (_ (raise exception~3249)))))))))))))
+                        (exception~3205)
+                        (match exception~3205
+                          ((Failure _) (find_lambda r*))
+                          (_ (raise exception~3205)))))))))))))
       (labelsc
         ((ELIM_LAMBDA
           (conv tm)
           (handler-case
             (funcall conv tm)
             (hol2cl.runtime:ocaml-condition
-              (exception~3295)
-              (match exception~3295
+              (exception~3251)
+              (match exception~3251
                 ((Failure _)
                   (if (is_abs tm)
                     (ABS_CONV (ELIM_LAMBDA conv) tm)
@@ -1592,7 +1530,7 @@
                           (cl:or (funcall is_exists tm) (funcall is_uexists tm)))
                         (BINDER_CONV (ELIM_LAMBDA conv) tm)
                         (funcall COMB_CONV (ELIM_LAMBDA conv) tm)))))
-                (_ (raise exception~3295)))))))
+                (_ (raise exception~3251)))))))
         (let
           ((APPLY_PTH
             (let
@@ -1611,7 +1549,7 @@
                   ((tuple v bod)
                     (let*
                       ((vs (frees atm))
-                        (|vs'| (append vs (cl:cons v nil)))
+                        (vs* (append vs (cl:cons v nil)))
                         (aatm (list_mk_abs (tuple vs atm)))
                         (f (funcall genvar (type_of aatm)))
                         (eq (funcall mk_eq (tuple f aatm)))
@@ -1620,8 +1558,7 @@
                         (th3 (funcall APPLY_PTH (funcall GEN f (DISCH_ALL th2)))))
                       (CONV_RULE
                         (RAND_CONV
-                          (BINDER_CONV
-                            (funcall LAND_CONV (funcall HALF_MK_ABS_CONV |vs'|))))
+                          (BINDER_CONV (funcall LAND_CONV (funcall HALF_MK_ABS_CONV vs*))))
                         th3)))))))
             (labelsc
               ((conv
@@ -1629,10 +1566,10 @@
                 (handler-case
                   (THENC #'LAMB1_CONV #'conv tm)
                   (hol2cl.runtime:ocaml-condition
-                    (exception~3422)
-                    (match exception~3422
+                    (exception~3378)
+                    (match exception~3378
                       ((Failure _) (REFL tm))
-                      (_ (raise exception~3422)))))))
+                      (_ (raise exception~3378)))))))
               #'conv)))))))
 
 ;; (* ------------------------------------------------------------------------- *)
@@ -1658,7 +1595,7 @@
             THEN
             (BOOL_CASES_TAC (parse_term "b:bool"))
             (funcall ASM_REWRITE_TAC nil)))))
-      (|th_cond'|
+      (th_cond*
         (prove
           (tuple
             (parse_term
@@ -1673,7 +1610,7 @@
       (true_tm (parse_term "T")))
     (let
       ((match_th (MATCH_MP th_cond))
-        (|match_th'| (MATCH_MP |th_cond'|))
+        (match_th* (MATCH_MP th_cond*))
         (propsimp_conv (funcall DEPTH_CONV (REWRITES_CONV propsimps)))
         (proptsimp_conv
           (let ((cnv (TRY_CONV (REWRITES_CONV propsimps)))) (THENC (BINOP_CONV cnv) cnv))))
@@ -1681,31 +1618,31 @@
         ((find_conditional
           (fvs tm)
           (match tm
-            ((Comb s |t|)
+            ((Comb s t*)
               (if (cl:and (is_cond tm) (= (intersect (frees (funcall lhand s)) fvs) nil))
                 tm
                 (handler-case
                   (find_conditional fvs s)
                   (hol2cl.runtime:ocaml-condition
-                    (exception~3510)
-                    (match exception~3510
-                      ((Failure _) (find_conditional fvs |t|))
-                      (_ (raise exception~3510)))))))
-            ((|Abs| x |t|) (find_conditional (cl:cons x fvs) |t|))
+                    (exception~3464)
+                    (match exception~3464
+                      ((Failure _) (find_conditional fvs t*))
+                      (_ (raise exception~3464)))))))
+            ((Abs x t*) (find_conditional (cl:cons x fvs) t*))
             (_ (failwith "find_conditional")))))
         (labelsc
-          ((CONDS_ELIM_CONV~local~3547
+          ((CONDS_ELIM_CONV*
             (dfl tm)
             (handler-case
               (let*
-                ((|t| (find_conditional nil tm))
-                  (p~local~3609 (funcall lhand (rator |t|)))
+                ((t* (find_conditional nil tm))
+                  (p* (funcall lhand (rator t*)))
                   (th_new
-                    (if (cl:or (= p~local~3609 false_tm) (= p~local~3609 true_tm))
+                    (if (cl:or (= p* false_tm) (= p* true_tm))
                       (funcall propsimp_conv tm)
                       (let
-                        ((asm_0 (funcall mk_eq (tuple p~local~3609 false_tm)))
-                          (asm_1 (funcall mk_eq (tuple p~local~3609 true_tm))))
+                        ((asm_0 (funcall mk_eq (tuple p* false_tm)))
+                          (asm_1 (funcall mk_eq (tuple p* true_tm))))
                         (let
                           ((simp_0 (net_of_thm cl:nil (ASSUME asm_0) propsimps))
                             (simp_1 (net_of_thm cl:nil (ASSUME asm_1) propsimps)))
@@ -1725,35 +1662,31 @@
                                 (th_3
                                   (if dfl
                                     (funcall match_th th_2)
-                                    (funcall |match_th'| th_2))))
+                                    (funcall match_th* th_2))))
                               (TRANS th_3 (funcall proptsimp_conv (rand (concl th_3)))))))))))
-                (CONV_RULE (RAND_CONV (CONDS_ELIM_CONV~local~3547 dfl)) th_new))
+                (CONV_RULE (RAND_CONV (CONDS_ELIM_CONV* dfl)) th_new))
               (hol2cl.runtime:ocaml-condition
-                (exception~3551)
-                (match exception~3551
+                (exception~3504)
+                (match exception~3504
                   ((Failure _)
                     (if (is_neg tm)
-                      (RAND_CONV (CONDS_ELIM_CONV~local~3547 (not dfl)) tm)
+                      (RAND_CONV (CONDS_ELIM_CONV* (not dfl)) tm)
                       (if (cl:or (funcall is_conj tm) (funcall is_disj tm))
-                        (BINOP_CONV (CONDS_ELIM_CONV~local~3547 dfl) tm)
+                        (BINOP_CONV (CONDS_ELIM_CONV* dfl) tm)
                         (if (cl:or (funcall is_imp tm) (is_iff tm))
                           (COMB2_CONV
-                            (RAND_CONV (CONDS_ELIM_CONV~local~3547 (not dfl)))
-                            (CONDS_ELIM_CONV~local~3547 dfl)
+                            (RAND_CONV (CONDS_ELIM_CONV* (not dfl)))
+                            (CONDS_ELIM_CONV* dfl)
                             tm)
                           (if (funcall is_forall tm)
-                            (BINDER_CONV (CONDS_ELIM_CONV~local~3547 cl:nil) tm)
+                            (BINDER_CONV (CONDS_ELIM_CONV* cl:nil) tm)
                             (if (cl:or (funcall is_exists tm) (funcall is_uexists tm))
-                              (BINDER_CONV (CONDS_ELIM_CONV~local~3547 cl:t) tm)
+                              (BINDER_CONV (CONDS_ELIM_CONV* cl:t) tm)
                               (REFL tm)))))))
-                  (_ (raise exception~3551)))))))
-          (tuple (CONDS_ELIM_CONV~local~3547 cl:t) (CONDS_ELIM_CONV~local~3547 cl:nil))))))
-  ((tuple CONDS_ELIM_CONV~local~3446 CONDS_CELIM_CONV~local~3444)
-    (setf
-      CONDS_CELIM_CONV
-      CONDS_CELIM_CONV~local~3444
-      CONDS_ELIM_CONV
-      CONDS_ELIM_CONV~local~3446)))
+                  (_ (raise exception~3504)))))))
+          (tuple (CONDS_ELIM_CONV* cl:t) (CONDS_ELIM_CONV* cl:nil))))))
+  ((tuple CONDS_ELIM_CONV* CONDS_CELIM_CONV*)
+    (setf CONDS_CELIM_CONV CONDS_CELIM_CONV* CONDS_ELIM_CONV CONDS_ELIM_CONV*)))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Fix up all head arities to be consistent, in "first order logic" style.   *)
@@ -1764,36 +1697,35 @@
 (defparameter ASM_FOL_TAC
   (labelsc
     ((get_heads
-      (lconsts tm arg~3706)
-      (match arg~3706
+      (lconsts tm arg~3658)
+      (match arg~3658
         ((cl:and sofar (tuple cheads vheads))
           (handler-case
             (match (funcall dest_forall tm)
               ((tuple v bod) (get_heads (subtract lconsts (cl:cons v nil)) bod sofar)))
             (hol2cl.runtime:ocaml-condition
-              (exception~3711)
-              (match exception~3711
+              (exception~3663)
+              (match exception~3663
                 ((Failure _)
                   (handler-case
                     (match
                       (handler-case
                         (funcall dest_conj tm)
                         (hol2cl.runtime:ocaml-condition
-                          (exception~3787)
-                          (match exception~3787
+                          (exception~3738)
+                          (match exception~3738
                             ((Failure _) (funcall dest_disj tm))
-                            (_ (raise exception~3787)))))
-                      ((tuple l r~local~3775)
-                        (get_heads lconsts l (get_heads lconsts r~local~3775 sofar))))
+                            (_ (raise exception~3738)))))
+                      ((tuple l r*) (get_heads lconsts l (get_heads lconsts r* sofar))))
                     (hol2cl.runtime:ocaml-condition
-                      (exception~3714)
-                      (match exception~3714
+                      (exception~3666)
+                      (match exception~3666
                         ((Failure _)
                           (handler-case
-                            (let ((|tm'| (dest_neg tm))) (get_heads lconsts |tm'| sofar))
+                            (let ((tm* (dest_neg tm))) (get_heads lconsts tm* sofar))
                             (hol2cl.runtime:ocaml-condition
-                              (exception~3717)
-                              (match exception~3717
+                              (exception~3669)
+                              (match exception~3669
                                 ((Failure _)
                                   (match (funcall strip_comb tm)
                                     ((tuple hop args)
@@ -1810,9 +1742,9 @@
                                                   (insert (tuple hop len) vheads))
                                                 sofar))))
                                         (itlist (get_heads lconsts) args newheads)))))
-                                (_ (raise exception~3717))))))
-                        (_ (raise exception~3714))))))
-                (_ (raise exception~3711)))))))))
+                                (_ (raise exception~3669))))))
+                        (_ (raise exception~3666))))))
+                (_ (raise exception~3663)))))))))
     (fletc ((get_thm_heads (th sofar) (get_heads (freesl (hyp th)) (concl th) sofar)))
       (let
         ((APP_CONV
@@ -1841,23 +1773,23 @@
                       (let*
                         ((th
                           (rev_itlist
-                            (C (curry #'|MK_COMB|))
+                            (C (curry #'MK_COMB*))
                             (map (FOL_CONV hddata) args)
                             (REFL op)))
-                          (|tm'| (rand (concl th)))
+                          (tm* (rand (concl th)))
                           (n
                             (handler-case
                               (- (funcall length args) (assoc op hddata))
                               (hol2cl.runtime:ocaml-condition
-                                (exception~3880)
-                                (match exception~3880
+                                (exception~3831)
+                                (match exception~3831
                                   ((Failure _) 0)
-                                  (_ (raise exception~3880)))))))
-                        (if (= n 0) th (TRANS th (APP_N_CONV n |tm'|))))))))))
+                                  (_ (raise exception~3831)))))))
+                        (if (= n 0) th (TRANS th (APP_N_CONV n tm*))))))))))
             (fletc
               ((GEN_FOL_CONV
-                (arg~3928)
-                (match arg~3928
+                (arg~3879)
+                (match arg~3879
                   ((tuple cheads vheads)
                     (let
                       ((hddata
@@ -1869,25 +1801,24 @@
                                 (let
                                   ((ns
                                     (mapfilter
-                                      (lambdac (arg~3965)
-                                        (match arg~3965
-                                          ((tuple k~local~3967 n)
-                                            (if (= k~local~3967 h) n (fail unit)))))
+                                      (lambdac (arg~3916)
+                                        (match arg~3916
+                                          ((tuple k* n) (if (= k* h) n (fail unit)))))
                                       cheads)))
                                   (if (< (funcall length ns) 2)
                                     (fail unit)
                                     (tuple h (end_itlist (function-value #'min 2) ns))))))
                               (mapfilter #'getmin hops)))
                           (map
-                            (lambdac (|t|)
-                              (if (cl:and (is_const |t|) (= (fst (dest_const |t|)) "="))
-                                (tuple |t| 2)
-                                (tuple |t| 0)))
+                            (lambdac (t*)
+                              (if (cl:and (is_const t*) (= (fst (dest_const t*)) "="))
+                                (tuple t* 2)
+                                (tuple t* 0)))
                             (setify (map (function-value #'fst 1) (append vheads cheads)))))))
                       (FOL_CONV hddata))))))
-              (lambdac (arg~4011)
-                (match arg~4011
-                  ((cl:and gl (tuple asl w~local~4015))
+              (lambdac (arg~3961)
+                (match arg~3961
+                  ((cl:and gl (tuple asl w*))
                     (let
                       ((headsp
                         (itlist
@@ -1903,7 +1834,7 @@
 
 (defunc PROP_ATOM_CONV (conv tm)
   (match tm
-    ((Comb (cl:or (cl:or (Const "!" _) (Const "?" _)) (Const "?!" _)) (|Abs| _ _))
+    ((Comb (cl:or (cl:or (Const "!" _) (Const "?" _)) (Const "?!" _)) (Abs _ _))
       (BINDER_CONV (PROP_ATOM_CONV conv) tm))
     ((Comb
       (Comb

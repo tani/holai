@@ -5,7 +5,7 @@ import json
 import zipfile
 
 root = Path(__file__).resolve().parents[1]
-version = "1.0.0-defunc-optional"
+version = "1.0.0-star-names"
 core = [Path(name).stem for name in json.loads((root / "vendor/CORE_FILES.json").read_text())]
 required = ["DESIGN.md", "AGENTS.md", "README.md", "RELEASE-NOTES.md", "Makefile", "hol2cl-runtime.asd",
             "src/sexp.ml", "src/scope.ml", "src/compiler.ml", "src/frontend.ml", "src/cli.ml",
@@ -44,6 +44,7 @@ required += [f"reports/ocamlopt-startup-run{i}.txt" for i in [1,2,3]]
 required += ["docs/STATIC-CALL-PLAN.md"]
 required += ["scripts/compile-core.sh", "scripts/prepare-optional-baseline.py", "scripts/measure-optional.py", "tests/optional-baseline-core.lisp", "tests/optional-entry.lisp", "tests/optional-inspect.lisp", "tests/optional-benchmark.lisp", "reports/OPTIONAL-ENTRY.md", "reports/optional-entry.json", "reports/optional-before.asm", "reports/optional-after.asm", "reports/optional-baseline-micro.txt", "reports/optional-optional-micro.txt", "reports/optional-checks.txt"]
 required += [f"reports/optional-{mode}-startup-run{i}.{suffix}" for mode in ["baseline", "optional"] for i in [1,2] for suffix in ["json", "txt"]]
+required += ["tests/star-allocator.ml", "tests/fixtures/star_names.ml", "tests/star-names.py", "tests/star-names.lisp", "reports/star-names.json", "reports/STAR-NAMES.md"]
 pins = json.loads((root / "vendor/SOURCES.json").read_text())["input_sha256"]
 required += list(pins)
 for name in required:

@@ -55,6 +55,8 @@
         SUPERADMISSIBLE_T
         SUPERADMISSIBLE_TAIL
         WF_REC_CASES
+        WF_REC_CASES*
+        WF_REC_TAIL_GENERAL*
         admissible
         break_down_admissibility
         close_definition_clauses
@@ -73,9 +75,7 @@
         superadmissible
         tailadmissible
         tuple_function_existence
-        type_instantiate_defining_const
-        |WF_REC_CASES'|
-        |WF_REC_TAIL_GENERAL'|)
+        type_instantiate_defining_const)
       (:export
         ADMISSIBLE_BASE
         ADMISSIBLE_COMB
@@ -109,15 +109,15 @@
         SUPERADMISSIBLE_T
         SUPERADMISSIBLE_TAIL
         WF_REC_CASES
+        WF_REC_CASES*
+        WF_REC_TAIL_GENERAL*
         admissible
         define
         instantiate_casewise_recursion
         prove_general_recursive_function_exists
         pure_prove_recursive_function_exists
         superadmissible
-        tailadmissible
-        |WF_REC_CASES'|
-        |WF_REC_TAIL_GENERAL'|))))
+        tailadmissible))))
 
 (defpackage :hol2cl.define
   (:use :cl)
@@ -163,6 +163,8 @@
     SUPERADMISSIBLE_T
     SUPERADMISSIBLE_TAIL
     WF_REC_CASES
+    WF_REC_CASES*
+    WF_REC_TAIL_GENERAL*
     admissible
     break_down_admissibility
     close_definition_clauses
@@ -181,9 +183,7 @@
     superadmissible
     tailadmissible
     tuple_function_existence
-    type_instantiate_defining_const
-    |WF_REC_CASES'|
-    |WF_REC_TAIL_GENERAL'|)
+    type_instantiate_defining_const)
   (:shadowing-import-from :cl not max append +)
   (:shadowing-import-from
     :hol2cl.arith
@@ -259,11 +259,11 @@
     COND_CASES_TAC)
   (:shadowing-import-from
     :hol2cl.drule
-    |instantiate|
     term_match
     PART_MATCH
     MK_FORALL
     MATCH_MP
+    instantiate
     BETAS_CONV)
   (:shadowing-import-from
     :hol2cl.equal
@@ -296,8 +296,6 @@
   (:shadowing-import-from :hol2cl.fusion mk_fun_ty mk_eq)
   (:shadowing-import-from
     :hol2cl.fusion.hol
-    |mk_comb|
-    |inst|
     vsubst
     variant
     type_of
@@ -308,13 +306,15 @@
     mk_vartype
     mk_var
     mk_type
+    mk_comb
     mk_abs
     is_var
     is_const
     is_comb
     is_abs
     INST_TYPE
-    |INST|
+    INST*
+    inst
     hyp
     freesl
     frees
@@ -327,9 +327,9 @@
     concl
     Comb
     bool_ty
-    |Abs|
     aty
-    ASSUME)
+    ASSUME
+    Abs)
   (:shadowing-import-from
     :hol2cl.ind_types
     list_RECURSION
@@ -542,15 +542,15 @@
     SUPERADMISSIBLE_T
     SUPERADMISSIBLE_TAIL
     WF_REC_CASES
+    WF_REC_CASES*
+    WF_REC_TAIL_GENERAL*
     admissible
     define
     instantiate_casewise_recursion
     prove_general_recursive_function_exists
     pure_prove_recursive_function_exists
     superadmissible
-    tailadmissible
-    |WF_REC_CASES'|
-    |WF_REC_TAIL_GENERAL'|))
+    tailadmissible))
 
 (in-package :hol2cl.define)
 
@@ -1318,7 +1318,7 @@
 ;; (* ------------------------------------------------------------------------- *)
 
 
-(defparameter |WF_REC_TAIL_GENERAL'|
+(defparameter WF_REC_TAIL_GENERAL*
   (prove
     (tuple
       (parse_term
@@ -1397,7 +1397,7 @@
                                                 (funcall
                                                   THEN
                                                   (REPEAT #'STRIP_TAC)
-                                                  (MATCH_MP_TAC |WF_REC_TAIL_GENERAL'|))
+                                                  (MATCH_MP_TAC WF_REC_TAIL_GENERAL*))
                                                 (FIRST_X_ASSUM
                                                   (o
                                                     #'MP_TAC
@@ -1480,7 +1480,7 @@
                            then H2 f (@y. s y = x) else H1 f x:B")))
         (funcall ASM_MESON_TAC nil)))))
 
-(defparameter |WF_REC_CASES'|
+(defparameter WF_REC_CASES*
   (prove
     (tuple
       (parse_term
@@ -1517,7 +1517,7 @@
                     (REPEAT #'GEN_TAC)
                     (REWRITE_TAC (cl:cons IMP_IMP (cl:cons CONJ_ASSOC nil))))
                   (DISCH_THEN (CONJUNCTS_THEN2 #'MP_TAC ASSUME_TAC)))
-                (DISCH_THEN (CHOOSE_THEN (o #'MP_TAC (MATCH_MP |WF_REC_CASES'|)))))
+                (DISCH_THEN (CHOOSE_THEN (o #'MP_TAC (MATCH_MP WF_REC_CASES*)))))
               (MATCH_MP_TAC MONO_EXISTS))
             (REPEAT #'STRIP_TAC))
           (funcall ASM_REWRITE_TAC nil))
@@ -1703,7 +1703,7 @@
             (cl:cons simp1 (cl:cons simp2 (cl:cons simp3 nil)))
             false_tm
             and_tm
-            eq_refl~local~1221)
+            eq_refl*)
             (lambdac (tm)
               (let*
                 ((net (itlist (net_of_thm cl:nil) allsimps (deref basic_rectype_net)))
@@ -1715,8 +1715,8 @@
                         (cl:cons AND_CLAUSES (cl:cons OR_CLAUSES nil))))))
                 (fletc
                   ((SIMPLIFY_CASE_DISTINCTNESS_CLAUSE
-                    (tm~local~1244)
-                    (match (funcall strip_forall tm~local~1244)
+                    (tm*)
+                    (match (funcall strip_forall tm*)
                       ((tuple avs bod)
                         (match (funcall dest_imp bod)
                           ((tuple ant cons)
@@ -1733,25 +1733,23 @@
                                         DISCH
                                         atm
                                         (PURE_REWRITE_CONV
-                                          (cl:cons
-                                            eq_refl~local~1221
-                                            (cl:cons (ASSUME atm) nil))
+                                          (cl:cons eq_refl* (cl:cons (ASSUME atm) nil))
                                           cons)))))
                                 (cth
                                   (handler-case
                                     (funcall simp1 bth)
                                     (hol2cl.runtime:ocaml-condition
-                                      (exception~1277)
-                                      (match exception~1277
+                                      (exception~1272)
+                                      (match exception~1272
                                         ((Failure _)
                                           (handler-case
                                             (funcall simp2 bth)
                                             (hol2cl.runtime:ocaml-condition
-                                              (exception~1280)
-                                              (match exception~1280
+                                              (exception~1275)
+                                              (match exception~1275
                                                 ((Failure _) (funcall simp3 bth))
-                                                (_ (raise exception~1280))))))
-                                        (_ (raise exception~1277)))))))
+                                                (_ (raise exception~1275))))))
+                                        (_ (raise exception~1272)))))))
                               (itlist MK_FORALL avs cth))))))))
                   (THENC
                     (DEPTH_BINOP_CONV and_tm #'SIMPLIFY_CASE_DISTINCTNESS_CLAUSE)
@@ -1843,22 +1841,20 @@
             (n th)
             (if (<= n 1)
               th
-              (fletc
-                ((mkname (i~local~3347) (string-concat "_P" (string-of-int i~local~3347))))
+              (fletc ((mkname (i*) (string-concat "_P" (string-of-int i*))))
                 (let
                   ((ty
                     (end_itlist
-                      (lambdac (s |t|)
-                        (mk_type (tuple "prod" (cl:cons s (cl:cons |t| nil)))))
+                      (lambdac (s t*)
+                        (mk_type (tuple "prod" (cl:cons s (cl:cons t* nil)))))
                       (map (o #'mk_vartype #'mkname) (-- 1 n)))))
                   (fletc
                     ((conv
-                      (i~local~3374)
+                      (i*)
                       (let*
-                        ((name (string-concat "x" (string-of-int i~local~3374)))
+                        ((name (string-concat "x" (string-of-int i*)))
                           (cnv
-                            (ALPHA_CONV
-                              (mk_var (tuple name (mk_vartype (mkname i~local~3374)))))))
+                            (ALPHA_CONV (mk_var (tuple name (mk_vartype (mkname i*)))))))
                         (lambdac (tm)
                           (if (cl:and (is_abs tm) (<> (name_of (bndvar tm)) name))
                             (funcall cnv tm)
@@ -1873,24 +1869,20 @@
               (n th)
               (if (<= n 1)
                 th
-                (fletc
-                  ((mkname
-                    (i~local~3455)
-                    (string-concat "_Q" (string-of-int i~local~3455))))
+                (fletc ((mkname (i*) (string-concat "_Q" (string-of-int i*))))
                   (let
                     ((ty
                       (end_itlist
-                        (lambdac (s |t|)
-                          (mk_type (tuple "prod" (cl:cons s (cl:cons |t| nil)))))
+                        (lambdac (s t*)
+                          (mk_type (tuple "prod" (cl:cons s (cl:cons t* nil)))))
                         (map (o #'mk_vartype #'mkname) (-- 1 n)))))
                     (fletc
                       ((conv
-                        (i~local~3482)
+                        (i*)
                         (let*
-                          ((name (string-concat "t" (string-of-int i~local~3482)))
+                          ((name (string-concat "t" (string-of-int i*)))
                             (cnv
-                              (ALPHA_CONV
-                                (mk_var (tuple name (mk_vartype (mkname i~local~3482)))))))
+                              (ALPHA_CONV (mk_var (tuple name (mk_vartype (mkname i*)))))))
                           (lambdac (tm)
                             (if (cl:and (is_abs tm) (<> (name_of (bndvar tm)) name))
                               (funcall cnv tm)
@@ -1906,25 +1898,25 @@
       ((tuple HACK_PROFORMA EACK_PROFORMA)
         (fletc
           ((APPLY_PROFORMA_TAC
-            (th arg~1461)
-            (match arg~1461
-              ((cl:and gl (tuple asl w~local~1465))
+            (th arg~1456)
+            (match arg~1456
+              ((cl:and gl (tuple asl w*))
                 (let*
-                  ((vs (fst (funcall dest_gabs (body (rand w~local~1465)))))
+                  ((vs (fst (funcall dest_gabs (body (rand w*)))))
                     (n (+ 1 (funcall length (fst (splitlist dest_pair vs))))))
                   (funcall THEN (MATCH_MP_TAC (funcall HACK_PROFORMA n th)) BETA_TAC gl))))))
           (fletc
             ((is_pattern
-              (p~local~1496 n tm)
+              (p* n tm)
               (handler-case
                 (match (funcall strip_comb (snd (funcall strip_exists (body (body tm)))))
                   ((tuple f args)
                     (cl:and
                       (is_const f)
-                      (cl:and (= (name_of f) p~local~1496) (= (funcall length args) n)))))
+                      (cl:and (= (name_of f) p*) (= (funcall length args) n)))))
                 (hol2cl.runtime:ocaml-condition
-                  (exception~1500)
-                  (match exception~1500 ((Failure _) cl:nil) (_ (raise exception~1500)))))))
+                  (exception~1493)
+                  (match exception~1493 ((Failure _) cl:nil) (_ (raise exception~1493)))))))
             (let
               ((SIMPLIFY_MATCH_WELLDEFINED_TAC
                 (let
@@ -1960,16 +1952,16 @@
                 ((headonly
                   (f tm)
                   (match tm
-                    ((Comb s |t|)
-                      (cl:and (headonly f s) (cl:and (headonly f |t|) (not (= |t| f)))))
-                    ((|Abs| x |t|) (headonly f |t|))
+                    ((Comb s t*)
+                      (cl:and (headonly f s) (cl:and (headonly f t*) (not (= t* f)))))
+                    ((Abs x t*) (headonly f t*))
                     (_ cl:t))))
                 (fletc
                   ((MAIN_ADMISS_TAC
-                    (arg~1599)
-                    (match arg~1599
-                      ((cl:and gl (tuple asl w~local~1603))
-                        (match (funcall strip_comb w~local~1603)
+                    (arg~1592)
+                    (match arg~1592
+                      ((cl:and gl (tuple asl w*))
+                        (match (funcall strip_comb w*)
                           ((tuple had args)
                             (if (not (is_const had))
                               (failwith "ADMISS_TAC")
@@ -1978,7 +1970,7 @@
                                   (match (funcall dest_gabs fbod)
                                     ((tuple xtup bod)
                                       (match (funcall strip_comb bod)
-                                        ((tuple hop args~local~1611)
+                                        ((tuple hop args*)
                                           (match (tuple (name_of had) (name_of hop))
                                             ((tuple "superadmissible" "COND")
                                               (APPLY_PROFORMA_TAC SUPERADMISSIBLE_COND gl))
@@ -1986,9 +1978,7 @@
                                               (tuple "superadmissible" "_MATCH")
                                               (=
                                                 (name_of
-                                                  (hol2cl.lib:repeat
-                                                    #'rator
-                                                    (last args~local~1611)))
+                                                  (hol2cl.lib:repeat #'rator (last args*)))
                                                 "_SEQPATTERN"))
                                               (funcall
                                                 THEN
@@ -2005,7 +1995,7 @@
                                               (is_pattern
                                                 "_UNGUARDED_PATTERN"
                                                 2
-                                                (last args~local~1611)))
+                                                (last args*)))
                                               (let*
                                                 ((n
                                                   (funcall
@@ -2013,8 +2003,7 @@
                                                     (fst
                                                       (funcall
                                                         strip_exists
-                                                        (body
-                                                          (body (last args~local~1611)))))))
+                                                        (body (body (last args*)))))))
                                                   (th
                                                     (funcall
                                                       EACK_PROFORMA
@@ -2035,7 +2024,7 @@
                                               (is_pattern
                                                 "_GUARDED_PATTERN"
                                                 3
-                                                (last args~local~1611)))
+                                                (last args*)))
                                               (let*
                                                 ((n
                                                   (funcall
@@ -2043,8 +2032,7 @@
                                                     (fst
                                                       (funcall
                                                         strip_exists
-                                                        (body
-                                                          (body (last args~local~1611)))))))
+                                                        (body (body (last args*)))))))
                                                   (th
                                                     (funcall
                                                       EACK_PROFORMA
@@ -2074,9 +2062,7 @@
                                               (tuple "admissible" "_MATCH")
                                               (=
                                                 (name_of
-                                                  (hol2cl.lib:repeat
-                                                    #'rator
-                                                    (last args~local~1611)))
+                                                  (hol2cl.lib:repeat #'rator (last args*)))
                                                 "_SEQPATTERN"))
                                               (funcall
                                                 THEN
@@ -2124,7 +2110,7 @@
                             (funcall MATCH_ACCEPT_TAC SUPERADMISSIBLE_CONST))
                           #'MAIN_ADMISS_TAC)
                         (MATCH_MP_TAC ADMISSIBLE_IMP_SUPERADMISSIBLE)))
-                      (instantiate_casewise_recursion~local~1868
+                      (instantiate_casewise_recursion*
                         (let
                           ((EXPAND_PAIRED_ALL_CONV
                             (match
@@ -2147,14 +2133,14 @@
                                       (handler-case
                                         (funcall conv0 tm)
                                         (hol2cl.runtime:ocaml-condition
-                                          (exception~1883)
-                                          (match exception~1883
+                                          (exception~1873)
+                                          (match exception~1873
                                             ((Failure _)
                                               (let ((th (funcall conv1 tm)))
                                                 (CONV_RULE
                                                   (funpow 2 #'RAND_CONV #'conv)
                                                   th)))
-                                            (_ (raise exception~1883)))))))
+                                            (_ (raise exception~1873)))))))
                                     #'conv)))))
                             (LAMBDA_PAIR_CONV
                               (let
@@ -2168,7 +2154,7 @@
                                     (match (dest_abs tm)
                                       ((tuple x bod)
                                         (let*
-                                          ((|tm'|
+                                          ((tm*
                                             (funcall
                                               mk_gabs
                                               (tuple
@@ -2177,11 +2163,11 @@
                                                   vsubst
                                                   (cl:cons (tuple parm x) nil)
                                                   bod))))
-                                            (th1 (BETA_CONV (|mk_comb| (tuple tm parm))))
+                                            (th1 (BETA_CONV (mk_comb (tuple tm parm))))
                                             (th2
                                               (funcall
                                                 GEN_BETA_CONV
-                                                (|mk_comb| (tuple |tm'| parm)))))
+                                                (mk_comb (tuple tm* parm)))))
                                           (let*
                                             ((th3 (TRANS th1 (SYM th2)))
                                               (th4
@@ -2194,7 +2180,7 @@
                                               (SYM
                                                 (funcall
                                                   rewr2
-                                                  (funcall mk_eq (tuple tm |tm'|))))
+                                                  (funcall mk_eq (tuple tm tm*))))
                                               th4)))))))))
                             (FORALL_PAIR_CONV
                               (let
@@ -2204,22 +2190,20 @@
                                     (cl:cons (funcall GSYM FORALL_PAIR_THM) nil))))
                                 (labelsc
                                   ((depair
-                                    (l |t|)
+                                    (l t*)
                                     (match l
-                                      ((cl:cons v nil) (REFL |t|))
+                                      ((cl:cons v nil) (REFL t*))
                                       ((cl:cons v vs)
-                                        (funcall rule (BINDER_CONV (depair vs) |t|))))))
+                                        (funcall rule (BINDER_CONV (depair vs) t*))))))
                                   (lambdac (parm parms)
                                     (let*
-                                      ((p~local~2032
+                                      ((p*
                                         (mk_var
                                           (tuple "P" (mk_fun_ty (type_of parm) bool_ty))))
                                         (tm
                                           (list_mk_forall
-                                            (tuple
-                                              parms
-                                              (|mk_comb| (tuple p~local~2032 parm))))))
-                                      (funcall GEN p~local~2032 (SYM (depair parms tm)))))))))
+                                            (tuple parms (mk_comb (tuple p* parm))))))
+                                      (funcall GEN p* (SYM (depair parms tm)))))))))
                           (let
                             ((ELIM_LISTOPS_CONV
                               (THENC
@@ -2277,7 +2261,7 @@
                                                                 ty1
                                                                 (cl:cons ty2 nil)))))
                                                         domtys))
-                                                      (|f'|
+                                                      (f*
                                                         (variant
                                                           (frees tm)
                                                           (mk_var
@@ -2285,29 +2269,29 @@
                                                               (fst (dest_var f))
                                                               (mk_fun_ty dty ranty)))))
                                                       (gvs (map genvar domtys))
-                                                      (|f''|
+                                                      (f**
                                                         (list_mk_abs
                                                           (tuple
                                                             gvs
-                                                            (|mk_comb|
+                                                            (mk_comb
                                                               (tuple
-                                                                |f'|
+                                                                f*
                                                                 (end_itlist
                                                                   (curry mk_pair)
                                                                   gvs))))))
-                                                      (|def'|
+                                                      (def*
                                                         (funcall
                                                           subst
-                                                          (cl:cons (tuple |f''| f) nil)
+                                                          (cl:cons (tuple f** f) nil)
                                                           def))
                                                       (th1
                                                         (funcall
                                                           EXISTS
-                                                          (tuple tm |f''|)
-                                                          (ASSUME |def'|)))
+                                                          (tuple tm f**)
+                                                          (ASSUME def*)))
                                                       (bth
                                                         (BETAS_CONV
-                                                          (list_mk_comb (tuple |f''| gvs)))))
+                                                          (list_mk_comb (tuple f** gvs)))))
                                                     (let
                                                       ((th2
                                                         (GEN_REWRITE_CONV
@@ -2315,7 +2299,7 @@
                                                           (cl:cons bth nil)
                                                           (hd (hyp th1)))))
                                                       (SIMPLE_CHOOSE
-                                                        |f'|
+                                                        f*
                                                         (PROVE_HYP
                                                           (UNDISCH
                                                             (snd
@@ -2327,8 +2311,8 @@
                                   (handler-case
                                     (funcall PART_MATCH #'I EXISTS_REFL def)
                                     (hol2cl.runtime:ocaml-condition
-                                      (exception~2226)
-                                      (match exception~2226
+                                      (exception~2215)
+                                      (match exception~2215
                                         ((Failure _)
                                           (match (funcall dest_exists def)
                                             ((tuple f bod)
@@ -2364,26 +2348,24 @@
                                                             parms))
                                                         (ss
                                                           (map
-                                                            (lambdac (a~local~2269)
+                                                            (lambdac (a*)
                                                               (funcall
                                                                 mk_gabs
                                                                 (tuple
                                                                   parm
                                                                   (end_itlist
                                                                     (curry mk_pair)
-                                                                    a~local~2269))))
+                                                                    a*))))
                                                             arglists))
                                                         (ts
                                                           (map
-                                                            (lambdac (a~local~2281)
+                                                            (lambdac (a*)
                                                               (mk_abs
                                                                 (tuple
                                                                   f
                                                                   (funcall
                                                                     mk_gabs
-                                                                    (tuple
-                                                                      parm
-                                                                      a~local~2281)))))
+                                                                    (tuple parm a*)))))
                                                             rights)))
                                                       (let*
                                                         ((clauses
@@ -2468,11 +2450,11 @@
                                                                     (ASSUME bod2))))
                                                                 (ths4
                                                                   (map2
-                                                                    (lambdac (th |t|)
+                                                                    (lambdac (th t*)
                                                                       (match
                                                                         (funcall
                                                                           strip_forall
-                                                                          |t|)
+                                                                          t*)
                                                                         ((tuple avs tbod)
                                                                           (itlist
                                                                             GEN
@@ -2551,14 +2533,14 @@
                                                                                 th10)))
                                                                           th9)))
                                                                     (PROVE_HYP TRUTH th11)))))))))))))))
-                                        (_ (raise exception~2226)))))))
+                                        (_ (raise exception~2215)))))))
                                 (lambdac (etm)
                                   (let*
                                     ((eth (tuple_function_existence etm))
                                       (dtm (hd (hyp eth)))
                                       (dth (pinstantiate_casewise_recursion dtm)))
                                     (PROVE_HYP dth eth))))))))
-                      (pure_prove_recursive_function_exists~local~2537
+                      (pure_prove_recursive_function_exists*
                         (fletc
                           ((break_down_admissibility
                             (th1)
@@ -2587,7 +2569,7 @@
                                                   (cl:cons (funcall genvar aty) nil)))
                                               (wfasm (find is_exists (hyp th1))))
                                             (match (funcall dest_exists wfasm)
-                                              ((tuple ord bod~local~2582)
+                                              ((tuple ord bod*)
                                                 (let*
                                                   ((SIMP_ADMISS_TAC
                                                     (funcall
@@ -2609,17 +2591,15 @@
                                                               (REPEAT ADMISS_TAC))
                                                             (TRY
                                                               (W
-                                                                (lambdac (arg~2595)
-                                                                  (match arg~2595
-                                                                    ((tuple
-                                                                      asl
-                                                                      w~local~2598)
+                                                                (lambdac (arg~2580)
+                                                                  (match arg~2580
+                                                                    ((tuple asl w*)
                                                                       (let
                                                                         ((v
                                                                           (fst
                                                                             (funcall
                                                                               dest_forall
-                                                                              w~local~2598))))
+                                                                              w*))))
                                                                         (funcall
                                                                           THEN
                                                                           (funcall
@@ -2631,7 +2611,7 @@
                                                                                 v)
                                                                               (MAP_EVERY
                                                                                 (lambdac
-                                                                                  (v~local~2606)
+                                                                                  (v*)
                                                                                   (funcall
                                                                                     THEN
                                                                                     (TRY
@@ -2642,7 +2622,7 @@
                                                                                           nil)))
                                                                                     (funcall
                                                                                       X_GEN_TAC
-                                                                                      v~local~2606)))
+                                                                                      v*)))
                                                                                 parms))
                                                                             (funcall
                                                                               CONV_TAC
@@ -2650,12 +2630,11 @@
                                                                                 TOP_DEPTH_CONV
                                                                                 GEN_BETA_CONV)))
                                                                           (MAP_EVERY
-                                                                            (lambdac
-                                                                              (v~local~2625)
+                                                                            (lambdac (v*)
                                                                               (SPEC_TAC
                                                                                 (tuple
-                                                                                  v~local~2625
-                                                                                  v~local~2625)))
+                                                                                  v*
+                                                                                  v*)))
                                                                             (append
                                                                               (funcall
                                                                                 rev
@@ -2666,44 +2645,41 @@
                                                           (PURE_REWRITE_TAC
                                                             (cl:cons FORALL_SIMP nil)))
                                                         (W
-                                                          (lambdac (arg~2653)
-                                                            (match arg~2653
-                                                              ((tuple asl w~local~2656)
+                                                          (lambdac (arg~2635)
+                                                            (match arg~2635
+                                                              ((tuple asl w*)
                                                                 (MAP_EVERY
-                                                                  (lambdac (|t|)
+                                                                  (lambdac (t*)
                                                                     (SPEC_TAC
-                                                                      (tuple |t| |t|)))
+                                                                      (tuple t* t*)))
                                                                   (subtract
-                                                                    (frees w~local~2656)
+                                                                    (frees w*)
                                                                     (cl:cons ord nil))))))))
                                                       (W
-                                                        (lambdac (arg~2677)
-                                                          (match arg~2677
-                                                            ((tuple asl w~local~2680)
+                                                        (lambdac (arg~2658)
+                                                          (match arg~2658
+                                                            ((tuple asl w*)
                                                               (funcall
                                                                 ACCEPT_TAC
-                                                                (ASSUME w~local~2680))))))))
+                                                                (ASSUME w*))))))))
                                                     (th2
                                                       (TAC_PROOF
                                                         (tuple
-                                                          (tuple nil bod~local~2582)
+                                                          (tuple nil bod*)
                                                           SIMP_ADMISS_TAC)))
                                                     (th3 (SIMPLE_EXISTS ord th2))
                                                     (allasms (hyp th3))
-                                                    (wfasm~local~2703
-                                                      (funcall lhand (concl th2))))
+                                                    (wfasm* (funcall lhand (concl th2))))
                                                   (let*
                                                     ((th4
                                                       (ASSUME
                                                         (funcall
                                                           list_mk_conj
                                                           (cl:cons
-                                                            wfasm~local~2703
+                                                            wfasm*
                                                             (subtract
                                                               allasms
-                                                              (cl:cons
-                                                                wfasm~local~2703
-                                                                nil))))))
+                                                              (cl:cons wfasm* nil))))))
                                                       (th5
                                                         (SIMPLE_CHOOSE
                                                           ord
@@ -2716,12 +2692,12 @@
                             (let
                               ((th
                                 (break_down_admissibility
-                                  (funcall instantiate_casewise_recursion~local~1868 dtm))))
+                                  (funcall instantiate_casewise_recursion* dtm))))
                               (if (= (concl th) dtm)
                                 th
                                 (failwith
                                   "prove_general_recursive_function_exists: sanity"))))))
-                      (prove_general_recursive_function_exists~local~2786
+                      (prove_general_recursive_function_exists*
                         (let
                           ((prove_depth_measure_exists
                             (let ((num_ty (parse_type "num")))
@@ -2747,11 +2723,11 @@
                                                 ((tuple ev cbod)
                                                   (fletc
                                                     ((process_clause
-                                                      (k~local~2809 |t|)
-                                                      (match (funcall strip_forall |t|)
-                                                        ((tuple avs~local~2812 eq)
+                                                      (k* t*)
+                                                      (match (funcall strip_forall t*)
+                                                        ((tuple avs* eq)
                                                           (match (dest_eq eq)
-                                                            ((tuple l r~local~2816)
+                                                            ((tuple l r*)
                                                               (match (dest_comb l)
                                                                 ((tuple fn cargs)
                                                                   (match
@@ -2762,33 +2738,32 @@
                                                                       (let*
                                                                         ((bargs
                                                                           (filter
-                                                                            (lambdac
-                                                                              (t~local~2823)
+                                                                            (lambdac (t**)
                                                                               (=
                                                                                 (type_of
-                                                                                  t~local~2823)
+                                                                                  t**)
                                                                                 ty))
                                                                             args))
-                                                                          (|r'|
+                                                                          (r**
                                                                             (list_mk_binop
                                                                               (parse_term
                                                                                 "(+):num->num->num")
                                                                               (cl:cons
                                                                                 (mk_small_numeral
-                                                                                  k~local~2809)
+                                                                                  k*)
                                                                                 (map
                                                                                   (curry
-                                                                                    #'|mk_comb|
+                                                                                    #'mk_comb
                                                                                     fn)
                                                                                   bargs)))))
                                                                         (list_mk_forall
                                                                           (tuple
-                                                                            avs~local~2812
+                                                                            avs*
                                                                             (funcall
                                                                               mk_eq
                                                                               (tuple
                                                                                 l
-                                                                                |r'|)))))))))))))))
+                                                                                r**)))))))))))))))
                                                     (let*
                                                       ((cjs
                                                         (funcall
@@ -2805,10 +2780,10 @@
                                                         (funcall list_mk_conj def)))))))))))))))))
                           (fletc
                             ((INDUCTIVE_MEASURE_THEN
-                              (tac arg~2934)
-                              (match arg~2934
-                                ((tuple asl w~local~2937)
-                                  (match (funcall dest_exists w~local~2937)
+                              (tac arg~2908)
+                              (match arg~2908
+                                ((tuple asl w*)
+                                  (match (funcall dest_exists w*)
                                     ((tuple ev bod)
                                       (let*
                                         ((ty
@@ -2816,12 +2791,12 @@
                                             (dest_type (fst (dest_fun_ty (type_of ev))))))
                                           (th (funcall prove_depth_measure_exists ty)))
                                         (match (funcall dest_exists (concl th))
-                                          ((tuple |ev'| |bod'|)
+                                          ((tuple ev* bod*)
                                             (let
-                                              ((|th'|
+                                              ((th*
                                                 (INST_TYPE
                                                   (type_match
-                                                    (type_of |ev'|)
+                                                    (type_of ev*)
                                                     (type_of ev)
                                                     nil)
                                                   th)))
@@ -2833,22 +2808,21 @@
                                                     THEN
                                                     (funcall
                                                       THEN
-                                                      (MP_TAC |th'|)
+                                                      (MP_TAC th*)
                                                       (MATCH_MP_TAC MONO_EXISTS))
                                                     #'GEN_TAC)
                                                   (DISCH_THEN
-                                                    (lambdac (th~local~2969)
-                                                      (REWRITE_TAC
-                                                        (cl:cons th~local~2969 nil)))))
+                                                    (lambdac (th**)
+                                                      (REWRITE_TAC (cl:cons th** nil)))))
                                                 tac
-                                                (tuple asl w~local~2937))))))))))))
+                                                (tuple asl w*))))))))))))
                             (let
                               ((CONSTANT_MEASURE_THEN
                                 (let ((one_tm (parse_term "1")))
-                                  (lambdac (tac arg~3007)
-                                    (match arg~3007
-                                      ((tuple asl w~local~3010)
-                                        (match (funcall dest_exists w~local~3010)
+                                  (lambdac (tac arg~2979)
+                                    (match arg~2979
+                                      ((tuple asl w*)
+                                        (match (funcall dest_exists w*)
                                           ((tuple ev bod)
                                             (let ((ty (fst (dest_fun_ty (type_of ev)))))
                                               (funcall
@@ -2858,7 +2832,7 @@
                                                   (mk_abs
                                                     (tuple (funcall genvar ty) one_tm)))
                                                 tac
-                                                (tuple asl w~local~3010)))))))))))
+                                                (tuple asl w*)))))))))))
                               (fletc
                                 ((GUESS_MEASURE_THEN
                                   (tac)
@@ -2950,9 +2924,9 @@
                                           (MESON_TAC (cl:cons WF_MEASURE nil))))))
                                   (labelsc
                                     ((GUESS_WF_THEN
-                                      (tac arg~3128)
-                                      (match arg~3128
-                                        ((tuple asl w~local~3131)
+                                      (tac arg~3099)
+                                      (match arg~3099
+                                        ((tuple asl w*)
                                           (ORELSE
                                             (ORELSE
                                               (funcall
@@ -2977,7 +2951,7 @@
                                                 (REWRITE_TAC
                                                   (cl:cons FORALL_PAIR_THM nil)))
                                               (GUESS_MEASURE_THEN tac))
-                                            (tuple asl w~local~3131))))))
+                                            (tuple asl w*))))))
                                     (let*
                                       ((PRE_GUESS_TAC
                                         (funcall
@@ -2992,18 +2966,16 @@
                                           (let ((false_tm (parse_term "\\x:A y:A. F")))
                                             (ORELSE
                                               (W
-                                                (lambdac (arg~3185)
-                                                  (match arg~3185
-                                                    ((tuple asl w~local~3188)
+                                                (lambdac (arg~3155)
+                                                  (match arg~3155
+                                                    ((tuple asl w*)
                                                       (let
                                                         ((ty
                                                           (fst
                                                             (dest_fun_ty
                                                               (type_of
                                                                 (fst
-                                                                  (funcall
-                                                                    dest_exists
-                                                                    w~local~3188)))))))
+                                                                  (funcall dest_exists w*)))))))
                                                         (funcall
                                                           THEN
                                                           (funcall
@@ -3011,7 +2983,7 @@
                                                             (funcall
                                                               EXISTS_TAC
                                                               (funcall
-                                                                |inst|
+                                                                inst
                                                                 (cl:cons
                                                                   (tuple ty aty)
                                                                   nil)
@@ -3029,7 +3001,7 @@
                                         (let
                                           ((th
                                             (funcall
-                                              pure_prove_recursive_function_exists~local~2537
+                                              pure_prove_recursive_function_exists*
                                               etm)))
                                           (handler-case
                                             (let*
@@ -3044,25 +3016,25 @@
                                                         GUESS_ORDERING_TAC)))))
                                               (PROVE_HYP wth th))
                                             (hol2cl.runtime:ocaml-condition
-                                              (exception~3231)
-                                              (match exception~3231
+                                              (exception~3200)
+                                              (match exception~3200
                                                 ((Failure _) th)
-                                                (_ (raise exception~3231))))))))))))))))
+                                                (_ (raise exception~3200))))))))))))))))
                     (tuple
-                      instantiate_casewise_recursion~local~1868
-                      pure_prove_recursive_function_exists~local~2537
-                      prove_general_recursive_function_exists~local~2786))))))))))
+                      instantiate_casewise_recursion*
+                      pure_prove_recursive_function_exists*
+                      prove_general_recursive_function_exists*))))))))))
   ((tuple
-    instantiate_casewise_recursion~local~1167
-    pure_prove_recursive_function_exists~local~1171
-    prove_general_recursive_function_exists~local~1169)
+    instantiate_casewise_recursion*
+    pure_prove_recursive_function_exists*
+    prove_general_recursive_function_exists*)
     (setf
       instantiate_casewise_recursion
-      instantiate_casewise_recursion~local~1167
+      instantiate_casewise_recursion*
       prove_general_recursive_function_exists
-      prove_general_recursive_function_exists~local~1169
+      prove_general_recursive_function_exists*
       pure_prove_recursive_function_exists
-      pure_prove_recursive_function_exists~local~1171)))
+      pure_prove_recursive_function_exists*)))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Simple "define" function.                                                 *)
@@ -3085,10 +3057,10 @@
                       strip_forall)
                     cjs)
                   (hol2cl.runtime:ocaml-condition
-                    (exception~3583)
-                    (match exception~3583
+                    (exception~3548)
+                    (match exception~3548
                       ((Failure _) (failwith "close_definition_clauses: non-equation"))
-                      (_ (raise exception~3583)))))))
+                      (_ (raise exception~3548)))))))
             (if (<> (funcall length (setify fs)) 1)
               (failwith "close_definition_clauses: defining multiple functions")
               (let ((f (hd fs)))
@@ -3096,15 +3068,12 @@
                   (failwith "close_definition_clauses: fn quantified")
                   (fletc
                     ((do_clause
-                      (|t|)
-                      (match (funcall strip_forall |t|)
-                        ((tuple lvs bod~local~3604)
+                      (t*)
+                      (match (funcall strip_forall t*)
+                        ((tuple lvs bod*)
                           (let
-                            ((fvs
-                              (subtract
-                                (frees (funcall lhs bod~local~3604))
-                                (cl:cons f lvs))))
-                            (SPECL fvs (ASSUME (list_mk_forall (tuple fvs |t|)))))))))
+                            ((fvs (subtract (frees (funcall lhs bod*)) (cl:cons f lvs))))
+                            (SPECL fvs (ASSUME (list_mk_forall (tuple fvs t*)))))))))
                     (let*
                       ((ths (map #'do_clause cjs))
                         (ajs (map (o #'hd #'hyp) ths))
@@ -3120,9 +3089,9 @@
                             (end_itlist CONJ ths))))))))))))))
     (fletc
       ((type_instantiate_defining_const
-        (|t|)
+        (t*)
         (let*
-          ((cjs (funcall hol2cl.basics:conjuncts |t|))
+          ((cjs (funcall hol2cl.basics:conjuncts t*))
             (fs
               (map
                 (o
@@ -3131,37 +3100,35 @@
                 cjs))
             (f (hd fs)))
           (if (not (is_const f))
-            |t|
+            t*
             (let*
               ((fname (name_of f))
                 (f_occurs
                   (funcall
                     find_terms
-                    (lambdac (|t'|)
-                      (cl:and
-                        (is_const |t'|)
-                        (cl:and (= (name_of |t'|) fname) (<> |t'| f))))
-                    |t|)))
+                    (lambdac (t**)
+                      (cl:and (is_const t**) (cl:and (= (name_of t**) fname) (<> t** f))))
+                    t*)))
               (itlist
-                (lambdac (|f'| t_updated)
-                  (funcall |instantiate| (funcall term_match nil |f'| f) t_updated))
+                (lambdac (f* t_updated)
+                  (funcall instantiate (funcall term_match nil f* f) t_updated))
                 f_occurs
-                |t|))))))
+                t*))))))
       (lambdac (tm)
-        (let ((|tm'| (snd (funcall strip_forall tm))))
+        (let ((tm* (snd (funcall strip_forall tm))))
           (handler-case
-            (let ((|tm'~local~3815| (type_instantiate_defining_const |tm'|)))
+            (let ((tm** (type_instantiate_defining_const tm*)))
               (match
                 (tryfind
-                  (lambdac (th) (tuple th (funcall PART_MATCH #'I th |tm'~local~3815|)))
+                  (lambdac (th) (tuple th (funcall PART_MATCH #'I th tm**)))
                   (deref the_definitions))
-                ((tuple th |th'|)
-                  (if (can (funcall PART_MATCH #'I |th'|) (concl th))
-                    (progn (warn cl:t "Benign redefinition") |th'|)
+                ((tuple th th*)
+                  (if (can (funcall PART_MATCH #'I th*) (concl th))
+                    (progn (warn cl:t "Benign redefinition") th*)
                     (failwith "")))))
             (hol2cl.runtime:ocaml-condition
-              (exception~3747)
-              (match exception~3747
+              (exception~3711)
+              (match exception~3711
                 ((Failure _)
                   (match (close_definition_clauses tm)
                     ((tuple f th)
@@ -3180,13 +3147,10 @@
                                 new_specification
                                 (cl:cons (fst (dest_var f)) nil)
                                 th1))
-                            (g~local~3770 (mk_mconst (dest_var f)))
-                            (th3
-                              (PROVE_HYP
-                                th2
-                                (|INST| (cl:cons (tuple g~local~3770 f) nil) th))))
+                            (g* (mk_mconst (dest_var f)))
+                            (th3 (PROVE_HYP th2 (INST* (cl:cons (tuple g* f) nil) th))))
                           (progn
                             (assign the_definitions (cl:cons th3 (deref the_definitions)))
                             th3))))))
-                (_ (raise exception~3747))))))))))
+                (_ (raise exception~3711))))))))))
 

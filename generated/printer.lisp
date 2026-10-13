@@ -20,7 +20,7 @@
       (:use :cl)
       (:shadow
         ARIGHT
-        DEST_BINARY~local~1407
+        DEST_BINARY*
         binders
         bool_of_term
         charcode
@@ -42,19 +42,19 @@
         is_prefix
         is_reserved_word
         isalnum
-        isalnum~local~157
+        isalnum*
         isalpha
-        isalpha~local~153
+        isalpha*
         isbra
-        isbra~local~149
+        isbra*
         isnum
-        isnum~local~155
+        isnum*
         issep
-        issep~local~147
+        issep*
         isspace
-        isspace~local~145
+        isspace*
         issymb
-        issymb~local~151
+        issymb*
         name_of
         parse_as_binder
         parse_as_infix
@@ -104,8 +104,8 @@
         print_set_comprehension
         print_string_or_list
         print_term
+        print_term*
         print_term_sequence
-        print_term~local~1708
         print_thm
         print_to_string
         print_type
@@ -219,7 +219,7 @@
   (:use :cl)
   (:shadow
     ARIGHT
-    DEST_BINARY~local~1407
+    DEST_BINARY*
     binders
     bool_of_term
     charcode
@@ -241,19 +241,19 @@
     is_prefix
     is_reserved_word
     isalnum
-    isalnum~local~157
+    isalnum*
     isalpha
-    isalpha~local~153
+    isalpha*
     isbra
-    isbra~local~149
+    isbra*
     isnum
-    isnum~local~155
+    isnum*
     issep
-    issep~local~147
+    issep*
     isspace
-    isspace~local~145
+    isspace*
     issymb
-    issymb~local~151
+    issymb*
     name_of
     parse_as_binder
     parse_as_infix
@@ -303,8 +303,8 @@
     print_set_comprehension
     print_string_or_list
     print_term
+    print_term*
     print_term_sequence
-    print_term~local~1708
     print_thm
     print_to_string
     print_type
@@ -636,77 +636,37 @@
             (itlist (o (function-value #'max 2) #'charcode) (explode allchars) 256))
           (ctable (array-make csetsize 0)))
         (progn
-          (do_list
-            (lambdac (c~local~79) (array-set ctable (charcode c~local~79) 1))
-            (explode spaces))
-          (do_list
-            (lambdac (c~local~90) (array-set ctable (charcode c~local~90) 2))
-            (explode separators))
-          (do_list
-            (lambdac (c~local~101) (array-set ctable (charcode c~local~101) 4))
-            (explode brackets))
-          (do_list
-            (lambdac (c~local~112) (array-set ctable (charcode c~local~112) 8))
-            (explode symbs))
-          (do_list
-            (lambdac (c~local~123) (array-set ctable (charcode c~local~123) 16))
-            (explode alphas))
-          (do_list
-            (lambdac (c~local~134) (array-set ctable (charcode c~local~134) 32))
-            (explode nums))
+          (do_list (lambdac (c*) (array-set ctable (charcode c*) 1)) (explode spaces))
+          (do_list (lambdac (c*) (array-set ctable (charcode c*) 2)) (explode separators))
+          (do_list (lambdac (c*) (array-set ctable (charcode c*) 4)) (explode brackets))
+          (do_list (lambdac (c*) (array-set ctable (charcode c*) 8)) (explode symbs))
+          (do_list (lambdac (c*) (array-set ctable (charcode c*) 16)) (explode alphas))
+          (do_list (lambdac (c*) (array-set ctable (charcode c*) 32)) (explode nums))
           (fletc
-            ((isspace~local~145
-              (c~local~159)
-              (= (array-get ctable (charcode c~local~159)) 1))
-              (issep~local~147
-                (c~local~167)
-                (= (array-get ctable (charcode c~local~167)) 2))
-              (isbra~local~149
-                (c~local~175)
-                (= (array-get ctable (charcode c~local~175)) 4))
-              (issymb~local~151
-                (c~local~183)
-                (= (array-get ctable (charcode c~local~183)) 8))
-              (isalpha~local~153
-                (c~local~191)
-                (= (array-get ctable (charcode c~local~191)) 16))
-              (isnum~local~155
-                (c~local~199)
-                (= (array-get ctable (charcode c~local~199)) 32))
-              (isalnum~local~157
-                (c~local~207)
-                (>= (array-get ctable (charcode c~local~207)) 16)))
-            (tuple
-              #'isspace~local~145
-              #'issep~local~147
-              #'isbra~local~149
-              #'issymb~local~151
-              #'isalpha~local~153
-              #'isnum~local~155
-              #'isalnum~local~157))))))
-  ((tuple
-    isspace~local~25
-    issep~local~23
-    isbra~local~19
-    issymb~local~27
-    isalpha~local~17
-    isnum~local~21
-    isalnum~local~15)
+            ((isspace* (c*) (= (array-get ctable (charcode c*)) 1))
+              (issep* (c*) (= (array-get ctable (charcode c*)) 2))
+              (isbra* (c*) (= (array-get ctable (charcode c*)) 4))
+              (issymb* (c*) (= (array-get ctable (charcode c*)) 8))
+              (isalpha* (c*) (= (array-get ctable (charcode c*)) 16))
+              (isnum* (c*) (= (array-get ctable (charcode c*)) 32))
+              (isalnum* (c*) (>= (array-get ctable (charcode c*)) 16)))
+            (tuple #'isspace* #'issep* #'isbra* #'issymb* #'isalpha* #'isnum* #'isalnum*))))))
+  ((tuple isspace* issep* isbra* issymb* isalpha* isnum* isalnum*)
     (setf
       isalnum
-      isalnum~local~15
+      isalnum*
       isalpha
-      isalpha~local~17
+      isalpha*
       isbra
-      isbra~local~19
+      isbra*
       isnum
-      isnum~local~21
+      isnum*
       issep
-      issep~local~23
+      issep*
       isspace
-      isspace~local~25
+      isspace*
       issymb
-      issymb~local~27)))
+      issymb*)))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Reserved words.                                                           *)
@@ -768,22 +728,18 @@
       (lambdac (ns) (assign reswords (union (deref reswords) ns)))
       (lambdac (ns) (assign reswords (subtract (deref reswords) ns)))
       (lambdac (n) (mem n (deref reswords)))
-      (lambdac (arg~319)
-        (match arg~319 ((cl:type hol2cl.runtime::unit-value) (deref reswords))))))
-  ((tuple
-    reserve_words~local~241
-    unreserve_words~local~245
-    is_reserved_word~local~239
-    reserved_words~local~243)
+      (lambdac (arg~288)
+        (match arg~288 ((cl:type hol2cl.runtime::unit-value) (deref reswords))))))
+  ((tuple reserve_words* unreserve_words* is_reserved_word* reserved_words*)
     (setf
       is_reserved_word
-      is_reserved_word~local~239
+      is_reserved_word*
       reserve_words
-      reserve_words~local~241
+      reserve_words*
       reserved_words
-      reserved_words~local~243
+      reserved_words*
       unreserve_words
-      unreserve_words~local~245)))
+      unreserve_words*)))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Functions to access the global tables controlling special parse status.   *)
@@ -813,22 +769,18 @@
       (lambdac (n) (assign binder_list (subtract (deref binder_list) (cl:cons n nil))))
       (lambdac (n) (assign binder_list (union (deref binder_list) (cl:cons n nil))))
       (lambdac (n) (mem n (deref binder_list)))
-      (lambdac (arg~379)
-        (match arg~379 ((cl:type hol2cl.runtime::unit-value) (deref binder_list))))))
-  ((tuple
-    unparse_as_binder~local~342
-    parse_as_binder~local~338
-    parses_as_binder~local~340
-    binders~local~336)
+      (lambdac (arg~344)
+        (match arg~344 ((cl:type hol2cl.runtime::unit-value) (deref binder_list))))))
+  ((tuple unparse_as_binder* parse_as_binder* parses_as_binder* binders*)
     (setf
       binders
-      binders~local~336
+      binders*
       parse_as_binder
-      parse_as_binder~local~338
+      parse_as_binder*
       parses_as_binder
-      parses_as_binder~local~340
+      parses_as_binder*
       unparse_as_binder
-      unparse_as_binder~local~342)))
+      unparse_as_binder*)))
 
 (defparameter is_prefix nil)
 
@@ -844,22 +796,18 @@
       (lambdac (n) (assign prefix_list (subtract (deref prefix_list) (cl:cons n nil))))
       (lambdac (n) (assign prefix_list (union (deref prefix_list) (cl:cons n nil))))
       (lambdac (n) (mem n (deref prefix_list)))
-      (lambdac (arg~439)
-        (match arg~439 ((cl:type hol2cl.runtime::unit-value) (deref prefix_list))))))
-  ((tuple
-    unparse_as_prefix~local~402
-    parse_as_prefix~local~398
-    is_prefix~local~396
-    prefixes~local~400)
+      (lambdac (arg~400)
+        (match arg~400 ((cl:type hol2cl.runtime::unit-value) (deref prefix_list))))))
+  ((tuple unparse_as_prefix* parse_as_prefix* is_prefix* prefixes*)
     (setf
       is_prefix
-      is_prefix~local~396
+      is_prefix*
       parse_as_prefix
-      parse_as_prefix~local~398
+      parse_as_prefix*
       prefixes
-      prefixes~local~400
+      prefixes*
       unparse_as_prefix
-      unparse_as_prefix~local~402)))
+      unparse_as_prefix*)))
 
 (defparameter get_infix_status nil)
 
@@ -872,16 +820,16 @@
 (match
   (fletc
     ((cmp
-      (arg~470 arg~475)
-      (match arg~470
+      (arg~427 arg~432)
+      (match arg~427
         ((tuple s (tuple x a))
-          (match arg~475
-            ((tuple |t| (tuple y b))
+          (match arg~432
+            ((tuple t* (tuple y b))
               (cl:or
                 (< x y)
                 (cl:or
                   (cl:and (= x y) (> a b))
-                  (cl:and (= x y) (cl:and (= a b) (< s |t|)))))))))))
+                  (cl:and (= x y) (cl:and (= a b) (< s t*)))))))))))
     (let ((infix_list (ref nil)))
       (tuple
         (lambdac (n)
@@ -890,8 +838,8 @@
             (filter
               (o (partial (function-value #'<> 2) n) (function-value #'fst 1))
               (deref infix_list))))
-        (lambdac (arg~528)
-          (match arg~528
+        (lambdac (arg~485)
+          (match arg~485
             ((tuple n d)
               (assign
                 infix_list
@@ -903,22 +851,18 @@
                       (o (partial (function-value #'<> 2) n) (function-value #'fst 1))
                       (deref infix_list))))))))
         (lambdac (n) (assoc n (deref infix_list)))
-        (lambdac (arg~557)
-          (match arg~557 ((cl:type hol2cl.runtime::unit-value) (deref infix_list)))))))
-  ((tuple
-    unparse_as_infix~local~462
-    parse_as_infix~local~460
-    get_infix_status~local~456
-    infixes~local~458)
+        (lambdac (arg~514)
+          (match arg~514 ((cl:type hol2cl.runtime::unit-value) (deref infix_list)))))))
+  ((tuple unparse_as_infix* parse_as_infix* get_infix_status* infixes*)
     (setf
       get_infix_status
-      get_infix_status~local~456
+      get_infix_status*
       infixes
-      infixes~local~458
+      infixes*
       parse_as_infix
-      parse_as_infix~local~460
+      parse_as_infix*
       unparse_as_infix
-      unparse_as_infix~local~462)))
+      unparse_as_infix*)))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Interface mapping.                                                        *)
@@ -1072,25 +1016,25 @@
         fmt
         s)))
   ((tuple
-    pp_print_colored_const~local~722
-    pp_print_colored_resword~local~728
-    pp_print_colored_binder~local~720
-    pp_print_colored_infix~local~724
-    pp_print_colored_prefix~local~726
-    pp_print_colored_tyvar~local~730)
+    pp_print_colored_const*
+    pp_print_colored_resword*
+    pp_print_colored_binder*
+    pp_print_colored_infix*
+    pp_print_colored_prefix*
+    pp_print_colored_tyvar*)
     (setf
       pp_print_colored_binder
-      pp_print_colored_binder~local~720
+      pp_print_colored_binder*
       pp_print_colored_const
-      pp_print_colored_const~local~722
+      pp_print_colored_const*
       pp_print_colored_infix
-      pp_print_colored_infix~local~724
+      pp_print_colored_infix*
       pp_print_colored_prefix
-      pp_print_colored_prefix~local~726
+      pp_print_colored_prefix*
       pp_print_colored_resword
-      pp_print_colored_resword~local~728
+      pp_print_colored_resword*
       pp_print_colored_tyvar
-      pp_print_colored_tyvar~local~730)))
+      pp_print_colored_tyvar*)))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Printer for types.                                                        *)
@@ -1116,14 +1060,14 @@
         (handler-case
           (dest_vartype ty)
           (hol2cl.runtime:ocaml-condition
-            (exception~840)
-            (match exception~840
+            (exception~789)
+            (match exception~789
               ((Failure _)
                 (handler-case
                   (string-of-num (dest_finty ty))
                   (hol2cl.runtime:ocaml-condition
-                    (exception~843)
-                    (match exception~843
+                    (exception~792)
+                    (match exception~792
                       ((Failure _)
                         (match (dest_type ty)
                           ((tuple con nil) con)
@@ -1149,8 +1093,8 @@
                               (cl:cons (sot 6 ty1) (cl:cons (sot 7 ty2) nil))))
                           ((tuple con args)
                             (string-concat (soc "," cl:t (map (sot 0) args)) con))))
-                      (_ (raise exception~843))))))
-              (_ (raise exception~840)))))))
+                      (_ (raise exception~792))))))
+              (_ (raise exception~789)))))))
       (tuple
         (lambdac (fmt ty) (pp-print-string fmt (sot 0 ty)))
         (lambdac (fmt ty)
@@ -1158,8 +1102,8 @@
             (pp-print-string fmt "`:")
             (pp-print-string fmt (sot 0 ty))
             (pp-print-string fmt "`"))))))
-  ((tuple pp_print_type~local~803 pp_print_qtype~local~801)
-    (setf pp_print_qtype pp_print_qtype~local~801 pp_print_type pp_print_type~local~803)))
+  ((tuple pp_print_type* pp_print_qtype*)
+    (setf pp_print_qtype pp_print_qtype* pp_print_type pp_print_type*)))
 
 ;; (* Reimplementation of pp_print_type/pp_print_qtype, using prettyprinter
 ;;    to properly color strings *)
@@ -1182,11 +1126,11 @@
               (let
                 ((tuple_printer
                   (end_itlist
-                    (lambdac (pp pp_next fmt~local~1021)
+                    (lambdac (pp pp_next fmt*)
                       (progn
-                        (funcall pp fmt~local~1021)
-                        (color_print_str fmt~local~1021 sep)
-                        (funcall pp_next fmt~local~1021)))
+                        (funcall pp fmt*)
+                        (color_print_str fmt* sep)
+                        (funcall pp_next fmt*)))
                     ss)))
                 (match (funcall tuple_printer fmt)
                   ((cl:type hol2cl.runtime::unit-value)
@@ -1197,14 +1141,14 @@
           (handler-case
             (funcall pp_print_colored_tyvar fmt (dest_vartype ty))
             (hol2cl.runtime:ocaml-condition
-              (exception~1062)
-              (match exception~1062
+              (exception~1008)
+              (match exception~1008
                 ((Failure _)
                   (handler-case
                     (color_print_str fmt (string-of-num (dest_finty ty)))
                     (hol2cl.runtime:ocaml-condition
-                      (exception~1065)
-                      (match exception~1065
+                      (exception~1011)
+                      (match exception~1011
                         ((Failure _)
                           (match (dest_type ty)
                             ((tuple con nil) (color_print_str fmt con))
@@ -1236,18 +1180,18 @@
                               (progn
                                 (soc "," cl:t (map (sot 0) args) fmt)
                                 (color_print_str fmt con)))))
-                        (_ (raise exception~1065))))))
-                (_ (raise exception~1062)))))))
+                        (_ (raise exception~1011))))))
+                (_ (raise exception~1008)))))))
         (tuple
           (lambdac (fmt ty) (sot 0 ty fmt))
           (lambdac (fmt ty)
             (progn (pp-print-string fmt "`:") (sot 0 ty fmt) (pp-print-string fmt "`")))))))
-  ((tuple pp_print_colored_type~local~1000 pp_print_colored_qtype~local~998)
+  ((tuple pp_print_colored_type* pp_print_colored_qtype*)
     (setf
       pp_print_colored_qtype
-      pp_print_colored_qtype~local~998
+      pp_print_colored_qtype*
       pp_print_colored_type
-      pp_print_colored_type~local~1000)))
+      pp_print_colored_type*)))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Allow the installation of user printers. Must fail quickly if N/A.        *)
@@ -1276,43 +1220,43 @@
           user_printers
           (snd
             (remove
-              (lambdac (arg~1284) (match arg~1284 ((tuple |s'| _) (= s |s'|))))
+              (lambdac (arg~1224) (match arg~1224 ((tuple s* _) (= s s*))))
               (deref user_printers)))))
       (lambdac (s)
         (assign
           user_color_printers
           (snd
             (remove
-              (lambdac (arg~1302) (match arg~1302 ((tuple |s'| _) (= s |s'|))))
+              (lambdac (arg~1242) (match arg~1242 ((tuple s* _) (= s s*))))
               (deref user_color_printers)))))
       (lambdac (fmt tm)
         (tryfind
-          (lambdac (arg~1321) (match arg~1321 ((tuple _ pr) (funcall pr fmt tm))))
+          (lambdac (arg~1261) (match arg~1261 ((tuple _ pr) (funcall pr fmt tm))))
           (deref user_printers)))
       (lambdac (fmt tm)
         (tryfind
-          (lambdac (arg~1337) (match arg~1337 ((tuple _ pr) (funcall pr fmt tm))))
+          (lambdac (arg~1277) (match arg~1277 ((tuple _ pr) (funcall pr fmt tm))))
           (deref user_color_printers)))))
   ((tuple
-    install_user_printer~local~1246
-    install_user_color_printer~local~1244
-    delete_user_printer~local~1242
-    delete_user_color_printer~local~1240
-    try_user_printer~local~1250
-    try_user_color_printer~local~1248)
+    install_user_printer*
+    install_user_color_printer*
+    delete_user_printer*
+    delete_user_color_printer*
+    try_user_printer*
+    try_user_color_printer*)
     (setf
       delete_user_color_printer
-      delete_user_color_printer~local~1240
+      delete_user_color_printer*
       delete_user_printer
-      delete_user_printer~local~1242
+      delete_user_printer*
       install_user_color_printer
-      install_user_color_printer~local~1244
+      install_user_color_printer*
       install_user_printer
-      install_user_printer~local~1246
+      install_user_printer*
       try_user_color_printer
-      try_user_color_printer~local~1248
+      try_user_color_printer*
       try_user_printer
-      try_user_printer~local~1250)))
+      try_user_printer*)))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Printer for terms.                                                        *)
@@ -1326,47 +1270,47 @@
 (match
   (fletc
     ((reverse_interface
-      (arg~1366)
-      (match arg~1366
+      (arg~1304)
+      (match arg~1304
         ((tuple s0 ty0)
           (if (not (deref reverse_interface_mapping))
             s0
             (handler-case
               (fst
                 (find
-                  (lambdac (arg~1374)
-                    (match arg~1374
-                      ((tuple s (tuple |s'| ty))
-                        (cl:and (= |s'| s0) (can (type_match ty ty0) nil)))))
+                  (lambdac (arg~1312)
+                    (match arg~1312
+                      ((tuple s (tuple s* ty))
+                        (cl:and (= s* s0) (can (type_match ty ty0) nil)))))
                   (deref the_interface)))
               (hol2cl.runtime:ocaml-condition
-                (exception~1370)
-                (match exception~1370 ((Failure _) s0) (_ (raise exception~1370))))))))))
+                (exception~1308)
+                (match exception~1308 ((Failure _) s0) (_ (raise exception~1308))))))))))
     (fletc
-      ((DEST_BINARY~local~1407
-        (c~local~1410 tm)
+      ((DEST_BINARY*
+        (c* tm)
         (handler-case
           (match (dest_comb tm)
             ((tuple il r)
               (match (dest_comb il)
-                ((tuple i~local~1420 l)
+                ((tuple i* l)
                   (if
                     (cl:or
-                      (= i~local~1420 c~local~1410)
+                      (= i* c*)
                       (cl:and
-                        (is_const i~local~1420)
+                        (is_const i*)
                         (cl:and
-                          (is_const c~local~1410)
+                          (is_const c*)
                           (=
-                            (reverse_interface (dest_const i~local~1420))
-                            (reverse_interface (dest_const c~local~1410))))))
+                            (reverse_interface (dest_const i*))
+                            (reverse_interface (dest_const c*))))))
                     (tuple l r)
                     (fail unit))))))
           (hol2cl.runtime:ocaml-condition
-            (exception~1413)
-            (match exception~1413
+            (exception~1349)
+            (match exception~1349
               ((Failure _) (failwith "DEST_BINARY"))
-              (_ (raise exception~1413))))))
+              (_ (raise exception~1349))))))
         (ARIGHT (s) (match (snd (funcall get_infix_status s)) ("right" cl:t) (_ cl:nil))))
       (labelsc
         ((powerof10
@@ -1376,15 +1320,15 @@
             (if (= n (num 1)) cl:t (powerof10 (/ n (num 10)))))))
         (fletc
           ((bool_of_term
-            (|t|)
-            (match |t|
+            (t*)
+            (match t*
               ((Const "T" _) cl:t)
               ((Const "F" _) cl:nil)
               (_ (failwith "bool_of_term")))))
           (fletc
             ((code_of_term
-              (|t|)
-              (match (funcall strip_comb |t|)
+              (t*)
+              (match (funcall strip_comb t*)
                 ((tuple f tms)
                   (if
                     (cl:or
@@ -1392,8 +1336,7 @@
                       (not (= (funcall length tms) 8)))
                     (failwith "code_of_term")
                     (itlist
-                      (lambdac (b f~local~1508)
-                        (if b (+ 1 (* 2 f~local~1508)) (* 2 f~local~1508)))
+                      (lambdac (b f*) (if b (+ 1 (* 2 f*)) (* 2 f*)))
                       (map #'bool_of_term (funcall rev tms))
                       0))))))
             (labelsc
@@ -1432,8 +1375,8 @@
                   ((pdest_cond
                     (tm)
                     (match tm
-                      ((Comb (Comb (Comb (Const "COND" _) i~local~1654) |t|) e)
-                        (tuple (tuple i~local~1654 |t|) e))
+                      ((Comb (Comb (Comb (Const "COND" _) i*) t*) e)
+                        (tuple (tuple i* t*) e))
                       (_ (failwith "pdest_cond")))))
                   (fletc
                     ((print_colored_term
@@ -1449,10 +1392,10 @@
                               (handler-case
                                 (funcall try_user_color_printer fmt tm)
                                 (hol2cl.runtime:ocaml-condition
-                                  (exception~1690)
-                                  (match exception~1690
+                                  (exception~1623)
+                                  (match exception~1623
                                     (_ (funcall try_user_printer fmt tm))
-                                    (_ (raise exception~1690)))))
+                                    (_ (raise exception~1623)))))
                               (funcall try_user_printer fmt tm))))
                           (fletc
                             ((print_numeral
@@ -1461,25 +1404,25 @@
                                 fmt
                                 (string-of-num (funcall dest_numeral tm)))))
                             (labelsc
-                              ((print_term~local~1708
+                              ((print_term*
                                 (prec tm)
                                 (handler-case
                                   (try_user_printers tm)
                                   (hol2cl.runtime:ocaml-condition
-                                    (exception~1731)
-                                    (match exception~1731
+                                    (exception~1663)
+                                    (match exception~1663
                                       ((Failure _)
                                         (handler-case
                                           (print_numeral tm)
                                           (hol2cl.runtime:ocaml-condition
-                                            (exception~1734)
-                                            (match exception~1734
+                                            (exception~1666)
+                                            (match exception~1666
                                               ((Failure _)
                                                 (handler-case
                                                   (print_string_or_list tm)
                                                   (hol2cl.runtime:ocaml-condition
-                                                    (exception~1737)
-                                                    (match exception~1737
+                                                    (exception~1669)
+                                                    (match exception~1669
                                                       ((Failure _)
                                                         (if (funcall is_gabs tm)
                                                           (print_binder prec tm)
@@ -1497,8 +1440,8 @@
                                                                     tm
                                                                     args)
                                                                   (hol2cl.runtime:ocaml-condition
-                                                                    (exception~1749)
-                                                                    (match exception~1749
+                                                                    (exception~1681)
+                                                                    (match exception~1681
                                                                       ((Failure _)
                                                                         (handler-case
                                                                           (print_universal_set
@@ -1506,18 +1449,18 @@
                                                                             tm
                                                                             args)
                                                                           (hol2cl.runtime:ocaml-condition
-                                                                            (exception~1752)
+                                                                            (exception~1684)
                                                                             (match
-                                                                              exception~1752
+                                                                              exception~1684
                                                                               ((Failure _)
                                                                                 (handler-case
                                                                                   (print_finite_set
                                                                                     s
                                                                                     tm)
                                                                                   (hol2cl.runtime:ocaml-condition
-                                                                                    (exception~1755)
+                                                                                    (exception~1687)
                                                                                     (match
-                                                                                      exception~1755
+                                                                                      exception~1687
                                                                                       ((Failure
                                                                                         _)
                                                                                         (handler-case
@@ -1525,9 +1468,9 @@
                                                                                             s
                                                                                             tm)
                                                                                           (hol2cl.runtime:ocaml-condition
-                                                                                            (exception~1758)
+                                                                                            (exception~1690)
                                                                                             (match
-                                                                                              exception~1758
+                                                                                              exception~1690
                                                                                               ((Failure
                                                                                                 _)
                                                                                                 (handler-case
@@ -1536,9 +1479,9 @@
                                                                                                     prec
                                                                                                     tm)
                                                                                                   (hol2cl.runtime:ocaml-condition
-                                                                                                    (exception~1761)
+                                                                                                    (exception~1693)
                                                                                                     (match
-                                                                                                      exception~1761
+                                                                                                      exception~1693
                                                                                                       ((Failure
                                                                                                         _)
                                                                                                         (handler-case
@@ -1546,9 +1489,9 @@
                                                                                                             s
                                                                                                             args)
                                                                                                           (hol2cl.runtime:ocaml-condition
-                                                                                                            (exception~1764)
+                                                                                                            (exception~1696)
                                                                                                             (match
-                                                                                                              exception~1764
+                                                                                                              exception~1696
                                                                                                               ((Failure
                                                                                                                 _)
                                                                                                                 (handler-case
@@ -1557,9 +1500,9 @@
                                                                                                                     prec
                                                                                                                     args)
                                                                                                                   (hol2cl.runtime:ocaml-condition
-                                                                                                                    (exception~1767)
+                                                                                                                    (exception~1699)
                                                                                                                     (match
-                                                                                                                      exception~1767
+                                                                                                                      exception~1699
                                                                                                                       ((Failure
                                                                                                                         _)
                                                                                                                         (handler-case
@@ -1568,9 +1511,9 @@
                                                                                                                             prec
                                                                                                                             args)
                                                                                                                           (hol2cl.runtime:ocaml-condition
-                                                                                                                            (exception~1770)
+                                                                                                                            (exception~1702)
                                                                                                                             (match
-                                                                                                                              exception~1770
+                                                                                                                              exception~1702
                                                                                                                               ((Failure
                                                                                                                                 _)
                                                                                                                                 (handler-case
@@ -1580,9 +1523,9 @@
                                                                                                                                     tm
                                                                                                                                     args)
                                                                                                                                   (hol2cl.runtime:ocaml-condition
-                                                                                                                                    (exception~1773)
+                                                                                                                                    (exception~1705)
                                                                                                                                     (match
-                                                                                                                                      exception~1773
+                                                                                                                                      exception~1705
                                                                                                                                       ((Failure
                                                                                                                                         _)
                                                                                                                                         (handler-case
@@ -1591,9 +1534,9 @@
                                                                                                                                             prec
                                                                                                                                             args)
                                                                                                                                           (hol2cl.runtime:ocaml-condition
-                                                                                                                                            (exception~1776)
+                                                                                                                                            (exception~1708)
                                                                                                                                             (match
-                                                                                                                                              exception~1776
+                                                                                                                                              exception~1708
                                                                                                                                               ((Failure
                                                                                                                                                 _)
                                                                                                                                                 (handler-case
@@ -1603,9 +1546,9 @@
                                                                                                                                                     tm
                                                                                                                                                     args)
                                                                                                                                                   (hol2cl.runtime:ocaml-condition
-                                                                                                                                                    (exception~1779)
+                                                                                                                                                    (exception~1711)
                                                                                                                                                     (match
-                                                                                                                                                      exception~1779
+                                                                                                                                                      exception~1711
                                                                                                                                                       ((Failure
                                                                                                                                                         _)
                                                                                                                                                         (handler-case
@@ -1616,9 +1559,9 @@
                                                                                                                                                             hop
                                                                                                                                                             args)
                                                                                                                                                           (hol2cl.runtime:ocaml-condition
-                                                                                                                                                            (exception~1782)
+                                                                                                                                                            (exception~1714)
                                                                                                                                                             (match
-                                                                                                                                                              exception~1782
+                                                                                                                                                              exception~1714
                                                                                                                                                               ((Failure
                                                                                                                                                                 _)
                                                                                                                                                                 (if
@@ -1639,43 +1582,43 @@
                                                                                                                                                                     tm)))
                                                                                                                                                               (_
                                                                                                                                                                 (raise
-                                                                                                                                                                  exception~1782))))))
+                                                                                                                                                                  exception~1714))))))
                                                                                                                                                       (_
                                                                                                                                                         (raise
-                                                                                                                                                          exception~1779))))))
+                                                                                                                                                          exception~1711))))))
                                                                                                                                               (_
                                                                                                                                                 (raise
-                                                                                                                                                  exception~1776))))))
+                                                                                                                                                  exception~1708))))))
                                                                                                                                       (_
                                                                                                                                         (raise
-                                                                                                                                          exception~1773))))))
+                                                                                                                                          exception~1705))))))
                                                                                                                               (_
                                                                                                                                 (raise
-                                                                                                                                  exception~1770))))))
+                                                                                                                                  exception~1702))))))
                                                                                                                       (_
                                                                                                                         (raise
-                                                                                                                          exception~1767))))))
+                                                                                                                          exception~1699))))))
                                                                                                               (_
                                                                                                                 (raise
-                                                                                                                  exception~1764))))))
+                                                                                                                  exception~1696))))))
                                                                                                       (_
                                                                                                         (raise
-                                                                                                          exception~1761))))))
+                                                                                                          exception~1693))))))
                                                                                               (_
                                                                                                 (raise
-                                                                                                  exception~1758))))))
+                                                                                                  exception~1690))))))
                                                                                       (_
                                                                                         (raise
-                                                                                          exception~1755))))))
+                                                                                          exception~1687))))))
                                                                               (_
                                                                                 (raise
-                                                                                  exception~1752))))))
+                                                                                  exception~1684))))))
                                                                       (_
                                                                         (raise
-                                                                          exception~1749))))))))))
-                                                      (_ (raise exception~1737))))))
-                                              (_ (raise exception~1734))))))
-                                      (_ (raise exception~1731))))))
+                                                                          exception~1681))))))))))
+                                                      (_ (raise exception~1669))))))
+                                              (_ (raise exception~1666))))))
+                                      (_ (raise exception~1663))))))
                                 (print_string_or_list
                                   (tm)
                                   (let ((tms (dest_list tm)))
@@ -1706,8 +1649,8 @@
                                                   "\""))))
                                           (pp-print-string fmt s)))
                                       (hol2cl.runtime:ocaml-condition
-                                        (exception~1888)
-                                        (match exception~1888
+                                        (exception~1820)
+                                        (match exception~1820
                                           ((Failure _)
                                             (progn
                                               (pp-open-box fmt 0)
@@ -1717,7 +1660,7 @@
                                               (pp-close-box fmt unit)
                                               (pp-print-string fmt "]")
                                               (pp-close-box fmt unit)))
-                                          (_ (raise exception~1888)))))))
+                                          (_ (raise exception~1820)))))))
                                 (print_empty_set
                                   (s tm args)
                                   (if
@@ -1769,15 +1712,13 @@
                                           ((tuple bod1 fabs)
                                             (match (dest_comb bod1)
                                               ((tuple bod2 babs)
-                                                (let ((c~local~2066 (rator bod2)))
+                                                (let ((c* (rator bod2)))
                                                   (progn
                                                     (if
-                                                      (<>
-                                                        (fst (dest_const c~local~2066))
-                                                        "SETSPEC")
+                                                      (<> (fst (dest_const c*)) "SETSPEC")
                                                       (fail unit)
                                                       (pp-print-string fmt "{"))
-                                                    (print_term~local~1708 0 fabs)
+                                                    (print_term* 0 fabs)
                                                     (pp-print-string fmt " | ")
                                                     (let
                                                       ((fvs (frees fabs))
@@ -1805,7 +1746,7 @@
                                                             14
                                                             evs)
                                                           (pp-print-string fmt " | "))))
-                                                    (print_term~local~1708 0 babs)
+                                                    (print_term* 0 babs)
                                                     (pp-print-string fmt "}")))))))))))
                                 (print_let_term
                                   (s prec tm)
@@ -1823,29 +1764,27 @@
                                             pp_print_colored_resword
                                             fmt
                                             "let ")
-                                          (print_term~local~1708
-                                            0
-                                            (funcall mk_eq (hd eqs)))
+                                          (print_term* 0 (funcall mk_eq (hd eqs)))
                                           (do_list
-                                            (lambdac (arg~2186)
-                                              (match arg~2186
-                                                ((tuple v |t|)
+                                            (lambdac (arg~2117)
+                                              (match arg~2117
+                                                ((tuple v t*)
                                                   (progn
                                                     (pp-print-break fmt 1 0)
                                                     (color_switch
                                                       pp_print_colored_resword
                                                       fmt
                                                       "and ")
-                                                    (print_term~local~1708
+                                                    (print_term*
                                                       0
-                                                      (funcall mk_eq (tuple v |t|)))))))
+                                                      (funcall mk_eq (tuple v t*)))))))
                                             (tl eqs))
                                           (color_switch
                                             pp_print_colored_resword
                                             fmt
                                             " in")
                                           (pp-print-break fmt 1 0)
-                                          (print_term~local~1708 0 bod)
+                                          (print_term* 0 bod)
                                           (if (= prec 0) unit (pp-print-string fmt ")"))
                                           (pp-close-box fmt unit))))))
                                 (print_decimal
@@ -1886,7 +1825,7 @@
                                           pp_print_colored_resword
                                           fmt
                                           "match ")
-                                        (print_term~local~1708 0 (hd args))
+                                        (print_term* 0 (hd args))
                                         (color_switch
                                           pp_print_colored_resword
                                           fmt
@@ -1929,57 +1868,53 @@
                                                 pp_print_colored_resword
                                                 fmt
                                                 "if ")
-                                              (print_term~local~1708 0 (hd args))
+                                              (print_term* 0 (hd args))
                                               (pp-print-break fmt 0 0)
                                               (color_switch
                                                 pp_print_colored_resword
                                                 fmt
                                                 " then ")
-                                              (print_term~local~1708 0 (hd (tl args)))
+                                              (print_term* 0 (hd (tl args)))
                                               (pp-print-break fmt 0 0)
                                               (color_switch
                                                 pp_print_colored_resword
                                                 fmt
                                                 " else ")
-                                              (print_term~local~1708
-                                                0
-                                                (hd (tl (tl args)))))
+                                              (print_term* 0 (hd (tl (tl args)))))
                                             (progn
                                               (color_switch
                                                 pp_print_colored_resword
                                                 fmt
                                                 "if ")
-                                              (print_term~local~1708 0 (fst (hd ccls)))
+                                              (print_term* 0 (fst (hd ccls)))
                                               (color_switch
                                                 pp_print_colored_resword
                                                 fmt
                                                 " then ")
-                                              (print_term~local~1708 0 (snd (hd ccls)))
+                                              (print_term* 0 (snd (hd ccls)))
                                               (pp-print-break fmt 0 0)
                                               (do_list
-                                                (lambdac (arg~2456)
-                                                  (match arg~2456
-                                                    ((tuple i~local~2458 |t|)
+                                                (lambdac (arg~2387)
+                                                  (match arg~2387
+                                                    ((tuple i* t*)
                                                       (progn
                                                         (color_switch
                                                           pp_print_colored_resword
                                                           fmt
                                                           " else if ")
-                                                        (print_term~local~1708
-                                                          0
-                                                          i~local~2458)
+                                                        (print_term* 0 i*)
                                                         (color_switch
                                                           pp_print_colored_resword
                                                           fmt
                                                           " then ")
-                                                        (print_term~local~1708 0 |t|)
+                                                        (print_term* 0 t*)
                                                         (pp-print-break fmt 0 0)))))
                                                 (tl ccls))
                                               (color_switch
                                                 pp_print_colored_resword
                                                 fmt
                                                 " else ")
-                                              (print_term~local~1708 0 ecl)))))
+                                              (print_term* 0 ecl)))))
                                       (pp-close-box fmt unit)
                                       (if (= prec 0) unit (pp-print-string fmt ")")))))
                                 (print_prefix_app
@@ -2018,10 +1953,10 @@
                                                               "real_of_num"
                                                               (cl:cons "int_of_num" nil)))))))
                                                   (hol2cl.runtime:ocaml-condition
-                                                    (exception~2597)
-                                                    (match exception~2597
+                                                    (exception~2527)
+                                                    (match exception~2527
                                                       ((Failure _) cl:nil)
-                                                      (_ (raise exception~2597)))))))
+                                                      (_ (raise exception~2527)))))))
                                             (cl:and
                                               (= s "~")
                                               (cl:and
@@ -2029,7 +1964,7 @@
                                                 (is_neg (hd args))))))
                                         (pp-print-string fmt " ")
                                         unit)
-                                      (print_term~local~1708 999 (hd args))
+                                      (print_term* 999 (hd args))
                                       (if (= prec 1000) (pp-print-string fmt ")") unit))))
                                 (print_binder_app
                                   (s prec tm args)
@@ -2052,14 +1987,10 @@
                                     (let*
                                       ((bargs
                                         (if (ARIGHT s)
-                                          (match
-                                            (splitlist (DEST_BINARY~local~1407 hop) tm)
+                                          (match (splitlist (DEST_BINARY* hop) tm)
                                             ((tuple tms tmt)
                                               (append tms (cl:cons tmt nil))))
-                                          (match
-                                            (rev_splitlist
-                                              (DEST_BINARY~local~1407 hop)
-                                              tm)
+                                          (match (rev_splitlist (DEST_BINARY* hop) tm)
                                             ((tuple tmt tms) (cl:cons tmt tms)))))
                                         (newprec (fst (funcall get_infix_status s))))
                                       (progn
@@ -2068,7 +1999,7 @@
                                             (pp-open-hvbox fmt 1)
                                             (pp-print-string fmt "("))
                                           (pp-open-hvbox fmt 0))
-                                        (print_term~local~1708 newprec (hd bargs))
+                                        (print_term* newprec (hd bargs))
                                         (do_list
                                           (lambdac (x)
                                             (progn
@@ -2083,7 +2014,7 @@
                                                 (if (mem s (deref prebroken_binops))
                                                   (pp-print-string fmt " ")
                                                   (pp-print-break fmt 1 0)))
-                                              (print_term~local~1708 newprec x)))
+                                              (print_term* newprec x)))
                                           (tl bargs))
                                         (if (<= newprec prec)
                                           (pp-print-string fmt ")")
@@ -2092,7 +2023,7 @@
                                 (print_atom
                                   (hop s)
                                   (let
-                                    ((|s'|
+                                    ((s*
                                       (if
                                         (cl:or
                                           (funcall parses_as_binder s)
@@ -2121,17 +2052,14 @@
                                           (pp-open-box fmt 0)
                                           (pp-print-string fmt "(")
                                           (if (is_const hop)
-                                            (color_switch pp_print_colored_const fmt |s'|)
-                                            (pp-print-string fmt |s'|))
+                                            (color_switch pp_print_colored_const fmt s*)
+                                            (pp-print-string fmt s*))
                                           (if
                                             (cl:and
-                                              (> (string-length |s'|) 0)
+                                              (> (string-length s*) 0)
                                               (funcall
                                                 issymb
-                                                (string-sub
-                                                  |s'|
-                                                  (- (string-length |s'|) 1)
-                                                  1)))
+                                                (string-sub s* (- (string-length s*) 1) 1)))
                                             (pp-print-string fmt " ")
                                             unit)
                                           (pp-print-string fmt ":")
@@ -2144,8 +2072,8 @@
                                           (pp-print-string fmt ")")
                                           (pp-close-box fmt unit))
                                         (if (is_const hop)
-                                          (color_switch pp_print_colored_const fmt |s'|)
-                                          (pp-print-string fmt |s'|))))))
+                                          (color_switch pp_print_colored_const fmt s*)
+                                          (pp-print-string fmt s*))))))
                                 (print_generic_app
                                   (prec tm)
                                   (match (dest_comb tm)
@@ -2153,7 +2081,7 @@
                                       (progn
                                         (pp-open-hvbox fmt 0)
                                         (if (= prec 1000) (pp-print-string fmt "(") unit)
-                                        (print_term~local~1708 999 l)
+                                        (print_term* 999 l)
                                         (if
                                           (handler-case
                                             (mem
@@ -2162,13 +2090,13 @@
                                                 "real_of_num"
                                                 (cl:cons "int_of_num" nil)))
                                             (hol2cl.runtime:ocaml-condition
-                                              (exception~2965)
-                                              (match exception~2965
+                                              (exception~2895)
+                                              (match exception~2895
                                                 ((Failure _) cl:nil)
-                                                (_ (raise exception~2965)))))
+                                                (_ (raise exception~2895)))))
                                           unit
                                           (pp-print-space fmt unit))
-                                        (print_term~local~1708 1000 r)
+                                        (print_term* 1000 r)
                                         (if (= prec 1000) (pp-print-string fmt ")") unit)
                                         (pp-close-box fmt unit)))))
                                 (print_term_sequence
@@ -2176,7 +2104,7 @@
                                   (if (= tms nil)
                                     unit
                                     (progn
-                                      (print_term~local~1708 prec (hd tms))
+                                      (print_term* prec (hd tms))
                                       (let ((ttms (tl tms)))
                                         (if (= ttms nil)
                                           unit
@@ -2194,54 +2122,50 @@
                                           (tuple
                                             sn
                                             (reverse_interface (tuple sn (type_of bt))))))
-                                      ((tuple s |s'|)
+                                      ((tuple s s*)
                                         (labelsc
                                           ((collectvs
-                                            (tm~local~3047)
+                                            (tm*)
                                             (if absf
-                                              (if (is_abs tm~local~3047)
-                                                (match (dest_abs tm~local~3047)
-                                                  ((tuple v |t|)
-                                                    (match (collectvs |t|)
+                                              (if (is_abs tm*)
+                                                (match (dest_abs tm*)
+                                                  ((tuple v t*)
+                                                    (match (collectvs t*)
                                                       ((tuple vs bod)
                                                         (tuple
                                                           (cl:cons (tuple cl:nil v) vs)
                                                           bod)))))
-                                                (if (funcall is_gabs tm~local~3047)
-                                                  (match (funcall dest_gabs tm~local~3047)
-                                                    ((tuple v |t|)
-                                                      (match (collectvs |t|)
+                                                (if (funcall is_gabs tm*)
+                                                  (match (funcall dest_gabs tm*)
+                                                    ((tuple v t*)
+                                                      (match (collectvs t*)
                                                         ((tuple vs bod)
                                                           (tuple
                                                             (cl:cons (tuple cl:t v) vs)
                                                             bod)))))
-                                                  (tuple nil tm~local~3047)))
+                                                  (tuple nil tm*)))
                                               (if
                                                 (cl:and
-                                                  (is_comb tm~local~3047)
-                                                  (= (name_of (rator tm~local~3047)) s))
-                                                (if (is_abs (rand tm~local~3047))
-                                                  (match (dest_abs (rand tm~local~3047))
-                                                    ((tuple v |t|)
-                                                      (match (collectvs |t|)
+                                                  (is_comb tm*)
+                                                  (= (name_of (rator tm*)) s))
+                                                (if (is_abs (rand tm*))
+                                                  (match (dest_abs (rand tm*))
+                                                    ((tuple v t*)
+                                                      (match (collectvs t*)
                                                         ((tuple vs bod)
                                                           (tuple
                                                             (cl:cons (tuple cl:nil v) vs)
                                                             bod)))))
-                                                  (if
-                                                    (funcall is_gabs (rand tm~local~3047))
-                                                    (match
-                                                      (funcall
-                                                        dest_gabs
-                                                        (rand tm~local~3047))
-                                                      ((tuple v |t|)
-                                                        (match (collectvs |t|)
+                                                  (if (funcall is_gabs (rand tm*))
+                                                    (match (funcall dest_gabs (rand tm*))
+                                                      ((tuple v t*)
+                                                        (match (collectvs t*)
                                                           ((tuple vs bod)
                                                             (tuple
                                                               (cl:cons (tuple cl:t v) vs)
                                                               bod)))))
-                                                    (tuple nil tm~local~3047)))
-                                                (tuple nil tm~local~3047)))))
+                                                    (tuple nil tm*)))
+                                                (tuple nil tm*)))))
                                           (match (collectvs tm)
                                             ((tuple vs bod)
                                               (progn
@@ -2253,19 +2177,19 @@
                                                 (color_switch
                                                   pp_print_colored_binder
                                                   fmt
-                                                  |s'|)
-                                                (if (funcall isalnum |s'|)
+                                                  s*)
+                                                (if (funcall isalnum s*)
                                                   (pp-print-string fmt " ")
                                                   unit)
                                                 (do_list
-                                                  (lambdac (arg~3204)
-                                                    (match arg~3204
+                                                  (lambdac (arg~3133)
+                                                    (match arg~3133
                                                       ((tuple b x)
                                                         (progn
                                                           (if b
                                                             (pp-print-string fmt "(")
                                                             unit)
-                                                          (print_term~local~1708 0 x)
+                                                          (print_term* 0 x)
                                                           (if b
                                                             (pp-print-string fmt ")")
                                                             unit)
@@ -2274,13 +2198,13 @@
                                                 (if (fst (last vs))
                                                   (pp-print-string fmt "(")
                                                   unit)
-                                                (print_term~local~1708 0 (snd (last vs)))
+                                                (print_term* 0 (snd (last vs)))
                                                 (if (fst (last vs))
                                                   (pp-print-string fmt ")")
                                                   unit)
                                                 (pp-print-string fmt ".")
                                                 (pp-print-space fmt unit)
-                                                (print_term~local~1708 0 bod)
+                                                (print_term* 0 bod)
                                                 (if (= prec 0)
                                                   unit
                                                   (pp-print-string fmt ")"))
@@ -2288,11 +2212,10 @@
                                 (print_clauses
                                   (cls)
                                   (match cls
-                                    ((cl:cons c~local~3309 nil)
-                                      (print_clause c~local~3309))
-                                    ((cl:cons c~local~3316 cs)
+                                    ((cl:cons c* nil) (print_clause c*))
+                                    ((cl:cons c* cs)
                                       (progn
-                                        (print_clause c~local~3316)
+                                        (print_clause c*)
                                         (pp-print-break fmt 1 0)
                                         (pp-print-string fmt "| ")
                                         (print_clauses cs)))))
@@ -2301,24 +2224,20 @@
                                   (match cl
                                     ((cl:cons p (cl:cons g (cl:cons r nil)))
                                       (progn
-                                        (print_term~local~1708 1 p)
+                                        (print_term* 1 p)
                                         (pp-print-string fmt " when ")
-                                        (print_term~local~1708 1 g)
+                                        (print_term* 1 g)
                                         (pp-print-string fmt " -> ")
-                                        (print_term~local~1708 1 r)))
+                                        (print_term* 1 r)))
                                     ((cl:cons p (cl:cons r nil))
                                       (progn
-                                        (print_term~local~1708 1 p)
+                                        (print_term* 1 p)
                                         (pp-print-string fmt " -> ")
-                                        (print_term~local~1708 1 r))))))
-                              (print_term~local~1708 0)))))))
+                                        (print_term* 1 r))))))
+                              (print_term* 0)))))))
                     (tuple (print_colored_term cl:nil) (print_colored_term cl:t)))))))))))
-  ((tuple pp_print_term~local~1360 pp_print_colored_term~local~1358)
-    (setf
-      pp_print_colored_term
-      pp_print_colored_term~local~1358
-      pp_print_term
-      pp_print_term~local~1360)))
+  ((tuple pp_print_term* pp_print_colored_term*)
+    (setf pp_print_colored_term pp_print_colored_term* pp_print_term pp_print_term*)))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Print term with quotes.                                                   *)
@@ -2338,12 +2257,8 @@
         (funcall (if use_color pp_print_colored_term pp_print_term) fmt tm)
         (pp-print-string fmt "`"))))
     (tuple (fn cl:nil) (fn cl:t)))
-  ((tuple pp_print_qterm~local~3409 pp_print_colored_qterm~local~3407)
-    (setf
-      pp_print_colored_qterm
-      pp_print_colored_qterm~local~3407
-      pp_print_qterm
-      pp_print_qterm~local~3409)))
+  ((tuple pp_print_qterm* pp_print_colored_qterm*)
+    (setf pp_print_colored_qterm pp_print_colored_qterm* pp_print_qterm pp_print_qterm*)))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Printer for theorems.                                                     *)
@@ -2387,12 +2302,8 @@
             (funcall (if use_color pp_print_colored_term pp_print_term) fmt tm)
             (pp-close-box fmt unit))))))
     (tuple (fn cl:nil) (fn cl:t)))
-  ((tuple pp_print_thm~local~3445 pp_print_colored_thm~local~3443)
-    (setf
-      pp_print_colored_thm
-      pp_print_colored_thm~local~3443
-      pp_print_thm
-      pp_print_thm~local~3445)))
+  ((tuple pp_print_thm* pp_print_colored_thm*)
+    (setf pp_print_colored_thm pp_print_colored_thm* pp_print_thm pp_print_thm*)))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Print on standard output.                                                 *)

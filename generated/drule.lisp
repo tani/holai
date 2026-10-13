@@ -19,13 +19,14 @@
       (:use :cl)
       (:shadow
         BETAS_CONV
-        BETAS_CONV~local~374
+        BETAS_CONV*
         BETA_CONVS
         GEN_PART_MATCH
-        GEN_PART_MATCH~local~2294
+        GEN_PART_MATCH*
         GINST
         HIGHER_REWRITE_CONV
         HO_BETAS
+        INSTANTIATE*
         INSTANTIATE_ALL
         MATCH_MP
         MK_CONJ
@@ -34,16 +35,17 @@
         MK_FORALL
         MP_CONV
         PART_MATCH
-        PART_MATCH~local~2292
+        PART_MATCH*
         augment1
         augment_insts
         augment_tyinsts
         betas
         deep_alpha
-        deep_alpha~local~2097
+        deep_alpha*
         free_beta
         get_type_insts
         ho_betas
+        instantiate
         look_fn
         match_bvs
         mk_thm
@@ -60,13 +62,12 @@
         term_unify
         tryalpha
         type_unify
-        unify
-        |INSTANTIATE|
-        |instantiate|)
+        unify)
       (:export
         BETAS_CONV
         GEN_PART_MATCH
         HIGHER_REWRITE_CONV
+        INSTANTIATE*
         INSTANTIATE_ALL
         MATCH_MP
         MK_CONJ
@@ -76,26 +77,26 @@
         MP_CONV
         PART_MATCH
         deep_alpha
+        instantiate
         mk_thm
         new_definition
         term_match
         term_type_unify
         term_unify
-        type_unify
-        |INSTANTIATE|
-        |instantiate|))))
+        type_unify))))
 
 (defpackage :hol2cl.drule
   (:use :cl)
   (:shadow
     BETAS_CONV
-    BETAS_CONV~local~374
+    BETAS_CONV*
     BETA_CONVS
     GEN_PART_MATCH
-    GEN_PART_MATCH~local~2294
+    GEN_PART_MATCH*
     GINST
     HIGHER_REWRITE_CONV
     HO_BETAS
+    INSTANTIATE*
     INSTANTIATE_ALL
     MATCH_MP
     MK_CONJ
@@ -104,16 +105,17 @@
     MK_FORALL
     MP_CONV
     PART_MATCH
-    PART_MATCH~local~2292
+    PART_MATCH*
     augment1
     augment_insts
     augment_tyinsts
     betas
     deep_alpha
-    deep_alpha~local~2097
+    deep_alpha*
     free_beta
     get_type_insts
     ho_betas
+    instantiate
     look_fn
     match_bvs
     mk_thm
@@ -130,9 +132,7 @@
     term_unify
     tryalpha
     type_unify
-    unify
-    |INSTANTIATE|
-    |instantiate|)
+    unify)
   (:shadowing-import-from :cl not append -)
   (:shadowing-import-from
     :hol2cl.basics
@@ -180,8 +180,6 @@
   (:shadowing-import-from :hol2cl.fusion mk_eq aconv)
   (:shadowing-import-from
     :hol2cl.fusion.hol
-    |mk_comb|
-    |inst|
     vsubst
     vfree_in
     variant
@@ -197,14 +195,16 @@
     new_axiom
     mk_var
     mk_const
-    |MK_COMB|
+    MK_COMB*
+    mk_comb
     mk_abs
     is_vartype
     is_var
     is_const
     is_abs
     INST_TYPE
-    |INST|
+    INST*
+    inst
     hyp
     freesl
     frees
@@ -217,10 +217,10 @@
     Const
     concl
     Comb
-    |Abs|
     aty
     ASSUME
-    |ABS|)
+    ABS*
+    Abs)
   (:shadowing-import-from
     :hol2cl.lib
     zip
@@ -280,6 +280,7 @@
     BETAS_CONV
     GEN_PART_MATCH
     HIGHER_REWRITE_CONV
+    INSTANTIATE*
     INSTANTIATE_ALL
     MATCH_MP
     MK_CONJ
@@ -289,14 +290,13 @@
     MP_CONV
     PART_MATCH
     deep_alpha
+    instantiate
     mk_thm
     new_definition
     term_match
     term_type_unify
     term_unify
-    type_unify
-    |INSTANTIATE|
-    |instantiate|))
+    type_unify))
 
 (in-package :hol2cl.drule)
 
@@ -307,9 +307,9 @@
 
 (defunc mk_thm (arg~2)
   (match arg~2
-    ((tuple asl c~local~5)
-      (let ((ax (new_axiom (itlist (curry mk_imp) (funcall rev asl) c~local~5))))
-        (rev_itlist (lambdac (|t| th) (funcall MP th (ASSUME |t|))) (funcall rev asl) ax)))))
+    ((tuple asl c*)
+      (let ((ax (new_axiom (itlist (curry mk_imp) (funcall rev asl) c*))))
+        (rev_itlist (lambdac (t* th) (funcall MP th (ASSUME t*))) (funcall rev asl) ax)))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Derived congruence rules; very useful things!                             *)
@@ -318,21 +318,21 @@
 
 (defparameter MK_CONJ
   (let ((andtm (parse_term "(/\\)")))
-    (lambdac (eq1 eq2) (|MK_COMB| (tuple (AP_TERM andtm eq1) eq2)))))
+    (lambdac (eq1 eq2) (MK_COMB* (tuple (AP_TERM andtm eq1) eq2)))))
 
 (defparameter MK_DISJ
   (let ((ortm (parse_term "(\\/)")))
-    (lambdac (eq1 eq2) (|MK_COMB| (tuple (AP_TERM ortm eq1) eq2)))))
+    (lambdac (eq1 eq2) (MK_COMB* (tuple (AP_TERM ortm eq1) eq2)))))
 
 (defparameter MK_FORALL
   (let ((atm (mk_const (tuple "!" nil))))
     (lambdac (v th)
-      (AP_TERM (funcall |inst| (cl:cons (tuple (type_of v) aty) nil) atm) (|ABS| v th)))))
+      (AP_TERM (funcall inst (cl:cons (tuple (type_of v) aty) nil) atm) (ABS* v th)))))
 
 (defparameter MK_EXISTS
   (let ((atm (mk_const (tuple "?" nil))))
     (lambdac (v th)
-      (AP_TERM (funcall |inst| (cl:cons (tuple (type_of v) aty) nil) atm) (|ABS| v th)))))
+      (AP_TERM (funcall inst (cl:cons (tuple (type_of v) aty) nil) atm) (ABS* v th)))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Eliminate the antecedent of a theorem using a conversion/proof rule.      *)
@@ -346,10 +346,10 @@
         (handler-case
           (funcall MP th (EQT_ELIM ath))
           (hol2cl.runtime:ocaml-condition
-            (exception~115)
-            (match exception~115
+            (exception~114)
+            (match exception~114
               ((Failure _) (funcall MP th ath))
-              (_ (raise exception~115)))))))))
+              (_ (raise exception~114)))))))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Multiple beta-reduction (we use a slight variant below).                  *)
@@ -358,7 +358,7 @@
 
 (defunc BETAS_CONV (tm)
   (match tm
-    ((Comb (|Abs| _ _) _) (BETA_CONV tm))
+    ((Comb (Abs _ _) _) (BETA_CONV tm))
     ((Comb (Comb _ _) _) (THENC (RATOR_CONV #'BETAS_CONV) #'BETA_CONV tm))
     (_ (failwith "BETAS_CONV"))))
 
@@ -367,21 +367,21 @@
 ;; (* ------------------------------------------------------------------------- *)
 
 
-(defparameter |instantiate|
+(defparameter instantiate
   (fletc
     ((betas
       (n tm)
       (match
         (funpow
           n
-          (lambdac (arg~192)
-            (match arg~192 ((tuple l |t|) (tuple (cl:cons (rand |t|) l) (rator |t|)))))
+          (lambdac (arg~190)
+            (match arg~190 ((tuple l t*) (tuple (cl:cons (rand t*) l) (rator t*)))))
           (tuple nil tm))
         ((tuple args lam)
           (rev_itlist
-            (lambdac (a~local~166 l)
+            (lambdac (a* l)
               (match (dest_abs l)
-                ((tuple v b) (funcall vsubst (cl:cons (tuple a~local~166 v) nil) b))))
+                ((tuple v b) (funcall vsubst (cl:cons (tuple a* v) nil) b))))
             args
             lam)))))
     (labelsc
@@ -393,8 +393,8 @@
             (match (dest_abs tm)
               ((tuple bv bod) (mk_abs (tuple bv (ho_betas bcs (body pat) bod)))))
             (hol2cl.runtime:ocaml-condition
-              (exception~216)
-              (match exception~216
+              (exception~214)
+              (match exception~214
                 ((Failure _)
                   (match (funcall strip_comb pat)
                     ((tuple hop args)
@@ -402,8 +402,8 @@
                         (let ((n (rev_assoc hop bcs)))
                           (if (= (funcall length args) n) (betas n tm) (fail unit)))
                         (hol2cl.runtime:ocaml-condition
-                          (exception~221)
-                          (match exception~221
+                          (exception~219)
+                          (match exception~219
                             ((Failure _)
                               (match (dest_comb pat)
                                 ((tuple lpat rpat)
@@ -413,25 +413,25 @@
                                         (let ((lth (ho_betas bcs lpat ltm)))
                                           (handler-case
                                             (let ((rth (ho_betas bcs rpat rtm)))
-                                              (|mk_comb| (tuple lth rth)))
+                                              (mk_comb (tuple lth rth)))
                                             (hol2cl.runtime:ocaml-condition
-                                              (exception~246)
-                                              (match exception~246
-                                                ((Failure _) (|mk_comb| (tuple lth rtm)))
-                                                (_ (raise exception~246))))))
+                                              (exception~244)
+                                              (match exception~244
+                                                ((Failure _) (mk_comb (tuple lth rtm)))
+                                                (_ (raise exception~244))))))
                                         (hol2cl.runtime:ocaml-condition
-                                          (exception~228)
-                                          (match exception~228
+                                          (exception~226)
+                                          (match exception~226
                                             ((Failure _)
                                               (let ((rth (ho_betas bcs rpat rtm)))
-                                                (|mk_comb| (tuple ltm rth))))
-                                            (_ (raise exception~228))))))))))
-                            (_ (raise exception~221))))))))
-                (_ (raise exception~216))))))))
-      (lambdac (arg~325 tm)
-        (match arg~325
+                                                (mk_comb (tuple ltm rth))))
+                                            (_ (raise exception~226))))))))))
+                            (_ (raise exception~219))))))))
+                (_ (raise exception~214))))))))
+      (lambdac (arg~323 tm)
+        (match arg~323
           ((tuple bcs tmin tyin)
-            (let ((itm (if (= tyin nil) tm (funcall |inst| tyin tm))))
+            (let ((itm (if (= tyin nil) tm (funcall inst tyin tm))))
               (if (= tmin nil)
                 itm
                 (let ((ttm (funcall vsubst tmin itm)))
@@ -440,38 +440,35 @@
                     (handler-case
                       (ho_betas bcs itm ttm)
                       (hol2cl.runtime:ocaml-condition
-                        (exception~344)
-                        (match exception~344 ((Failure _) ttm) (_ (raise exception~344)))))))))))))))
+                        (exception~342)
+                        (match exception~342 ((Failure _) ttm) (_ (raise exception~342)))))))))))))))
 
-(defparameter |INSTANTIATE|
+(defparameter INSTANTIATE*
   (labelsc
-    ((BETAS_CONV~local~374
+    ((BETAS_CONV*
       (n tm)
       (if (= n 1)
         (TRY_CONV #'BETA_CONV tm)
-        (THENC (RATOR_CONV (BETAS_CONV~local~374 (- n 1))) (TRY_CONV #'BETA_CONV) tm))))
+        (THENC (RATOR_CONV (BETAS_CONV* (- n 1))) (TRY_CONV #'BETA_CONV) tm))))
     (labelsc
       ((HO_BETAS
         (bcs pat tm)
         (if (cl:or (is_var pat) (is_const pat))
           (fail unit)
           (handler-case
-            (match (dest_abs tm)
-              ((tuple bv bod) (|ABS| bv (HO_BETAS bcs (body pat) bod))))
+            (match (dest_abs tm) ((tuple bv bod) (ABS* bv (HO_BETAS bcs (body pat) bod))))
             (hol2cl.runtime:ocaml-condition
-              (exception~398)
-              (match exception~398
+              (exception~395)
+              (match exception~395
                 ((Failure _)
                   (match (funcall strip_comb pat)
                     ((tuple hop args)
                       (handler-case
                         (let ((n (rev_assoc hop bcs)))
-                          (if (= (funcall length args) n)
-                            (BETAS_CONV~local~374 n tm)
-                            (fail unit)))
+                          (if (= (funcall length args) n) (BETAS_CONV* n tm) (fail unit)))
                         (hol2cl.runtime:ocaml-condition
-                          (exception~403)
-                          (match exception~403
+                          (exception~400)
+                          (match exception~400
                             ((Failure _)
                               (match (dest_comb pat)
                                 ((tuple lpat rpat)
@@ -481,28 +478,28 @@
                                         (let ((lth (HO_BETAS bcs lpat ltm)))
                                           (handler-case
                                             (let ((rth (HO_BETAS bcs rpat rtm)))
-                                              (|MK_COMB| (tuple lth rth)))
+                                              (MK_COMB* (tuple lth rth)))
                                             (hol2cl.runtime:ocaml-condition
-                                              (exception~427)
-                                              (match exception~427
+                                              (exception~424)
+                                              (match exception~424
                                                 ((Failure _) (AP_THM lth rtm))
-                                                (_ (raise exception~427))))))
+                                                (_ (raise exception~424))))))
                                         (hol2cl.runtime:ocaml-condition
-                                          (exception~410)
-                                          (match exception~410
+                                          (exception~407)
+                                          (match exception~407
                                             ((Failure _)
                                               (let ((rth (HO_BETAS bcs rpat rtm)))
                                                 (AP_TERM ltm rth)))
-                                            (_ (raise exception~410))))))))))
-                            (_ (raise exception~403))))))))
-                (_ (raise exception~398))))))))
-      (lambdac (arg~504 th)
-        (match arg~504
+                                            (_ (raise exception~407))))))))))
+                            (_ (raise exception~400))))))))
+                (_ (raise exception~395))))))))
+      (lambdac (arg~501 th)
+        (match arg~501
           ((tuple bcs tmin tyin)
             (let ((ith (if (= tyin nil) th (INST_TYPE tyin th))))
               (if (= tmin nil)
                 ith
-                (let ((tth (|INST| tmin ith)))
+                (let ((tth (INST* tmin ith)))
                   (if (= (hyp tth) (hyp th))
                     (if (= bcs nil)
                       tth
@@ -510,20 +507,20 @@
                         (let ((eth (HO_BETAS bcs (concl ith) (concl tth))))
                           (EQ_MP eth tth))
                         (hol2cl.runtime:ocaml-condition
-                          (exception~525)
-                          (match exception~525
+                          (exception~522)
+                          (match exception~522
                             ((Failure _) tth)
-                            (_ (raise exception~525))))))
+                            (_ (raise exception~522))))))
                     (failwith "INSTANTIATE: term or type var free in assumptions")))))))))))
 
-(defunc INSTANTIATE_ALL (arg~568 th)
-  (match arg~568
-    ((cl:and i~local~570 (tuple _ tmin tyin))
+(defunc INSTANTIATE_ALL (arg~565 th)
+  (match arg~565
+    ((cl:and i* (tuple _ tmin tyin))
       (if (cl:and (= tmin nil) (= tyin nil))
         th
         (let ((hyps (hyp th)))
           (if (= hyps nil)
-            (funcall |INSTANTIATE| i~local~570 th)
+            (funcall INSTANTIATE* i* th)
             (match
               (if (= tyin nil)
                 (tuple nil hyps)
@@ -532,8 +529,8 @@
                     (itlist (o (o #'union #'tyvars) (function-value #'snd 1)) tyin nil)))
                   (partition
                     (lambdac (tm)
-                      (let ((|tvs'| (type_vars_in_term tm)))
-                        (not (= (intersect tvs |tvs'|) nil))))
+                      (let ((tvs* (type_vars_in_term tm)))
+                        (not (= (intersect tvs tvs*) nil))))
                     hyps)))
               ((tuple tyrel tyiirel)
                 (match
@@ -544,13 +541,13 @@
                         (itlist (o (o #'union #'frees) (function-value #'snd 1)) tmin nil)))
                       (partition
                         (lambdac (tm)
-                          (let ((|vs'| (frees tm))) (not (= (intersect vs |vs'|) nil))))
+                          (let ((vs* (frees tm))) (not (= (intersect vs vs*) nil))))
                         tyiirel)))
                   ((tuple tmrel tmirrel)
                     (let*
                       ((rhyps (union tyrel tmrel))
                         (th1 (rev_itlist DISCH rhyps th))
-                        (th2 (funcall |INSTANTIATE| i~local~570 th1)))
+                        (th2 (funcall INSTANTIATE* i* th1)))
                       (funpow (funcall length rhyps) #'UNDISCH th2))))))))))))
 
 ;; (* ------------------------------------------------------------------------- *)
@@ -566,53 +563,53 @@
 (defparameter term_match
   (fletc
     ((safe_inserta
-      (arg~699 l)
-      (match arg~699
+      (arg~695 l)
+      (match arg~695
         ((cl:and n (tuple y x))
           (handler-case
             (let ((z (rev_assoc x l))) (if (aconv y z) l (failwith "safe_inserta")))
             (hol2cl.runtime:ocaml-condition
-              (exception~705)
-              (match exception~705
+              (exception~701)
+              (match exception~701
                 ((Failure "find") (cl:cons n l))
-                (_ (raise exception~705)))))))))
+                (_ (raise exception~701)))))))))
     (fletc
       ((safe_insert
-        (arg~730 l)
-        (match arg~730
+        (arg~726 l)
+        (match arg~726
           ((cl:and n (tuple y x))
             (handler-case
               (let ((z (rev_assoc x l)))
                 (if (= (compare y z) 0) l (failwith "safe_insert")))
               (hol2cl.runtime:ocaml-condition
-                (exception~736)
-                (match exception~736
+                (exception~732)
+                (match exception~732
                   ((Failure "find") (cl:cons n l))
-                  (_ (raise exception~736)))))))))
+                  (_ (raise exception~732)))))))))
       (let
         ((mk_dummy
           (let ((name (fst (dest_var (funcall genvar aty)))))
             (lambdac (ty) (mk_var (tuple name ty))))))
         (labelsc
           ((term_pmatch
-            (lconsts env vtm ctm arg~780)
-            (match arg~780
+            (lconsts env vtm ctm arg~776)
+            (match arg~776
               ((cl:and sofar (tuple insts homs))
                 (match (tuple vtm ctm)
                   ((tuple (Var _ _) _)
                     (handler-case
-                      (let ((|ctm'| (rev_assoc vtm env)))
-                        (if (= (compare |ctm'| ctm) 0) sofar (failwith "term_pmatch")))
+                      (let ((ctm* (rev_assoc vtm env)))
+                        (if (= (compare ctm* ctm) 0) sofar (failwith "term_pmatch")))
                       (hol2cl.runtime:ocaml-condition
-                        (exception~790)
-                        (match exception~790
+                        (exception~786)
+                        (match exception~786
                           ((Failure "find")
                             (if (mem vtm lconsts)
                               (if (= (compare ctm vtm) 0)
                                 sofar
                                 (failwith "term_pmatch: can't instantiate local constant"))
                               (tuple (safe_inserta (tuple ctm vtm) insts) homs)))
-                          (_ (raise exception~790))))))
+                          (_ (raise exception~786))))))
                   ((tuple (Const vname vty) (Const cname cty))
                     (if (= (compare vname cname) 0)
                       (if (= (compare vty cty) 0)
@@ -623,9 +620,9 @@
                             insts)
                           homs))
                       (failwith "term_pmatch")))
-                  ((tuple (|Abs| vv vbod) (|Abs| cv cbod))
+                  ((tuple (Abs vv vbod) (Abs cv cbod))
                     (let
-                      ((|sofar'|
+                      ((sofar*
                         (tuple
                           (safe_insert
                             (tuple
@@ -633,7 +630,7 @@
                               (funcall mk_dummy (snd (dest_var vv))))
                             insts)
                           homs)))
-                      (term_pmatch lconsts (cl:cons (tuple cv vv) env) vbod cbod |sofar'|)))
+                      (term_pmatch lconsts (cl:cons (tuple cv vv) env) vbod cbod sofar*)))
                   (_
                     (let ((vhop (repeat #'rator vtm)))
                       (if
@@ -644,24 +641,24 @@
                             (not (can (rev_assoc vhop) env))))
                         (let ((vty (type_of vtm)) (cty (type_of ctm)))
                           (let
-                            ((|insts'|
+                            ((insts*
                               (if (= (compare vty cty) 0)
                                 insts
                                 (safe_insert
                                   (tuple (funcall mk_dummy cty) (funcall mk_dummy vty))
                                   insts))))
-                            (tuple |insts'| (cl:cons (tuple env ctm vtm) homs))))
+                            (tuple insts* (cl:cons (tuple env ctm vtm) homs))))
                         (match (tuple (dest_comb vtm) (dest_comb ctm))
                           ((tuple (tuple lv rv) (tuple lc rc))
-                            (let ((|sofar'| (term_pmatch lconsts env lv lc sofar)))
-                              (term_pmatch lconsts env rv rc |sofar'|))))))))))))
+                            (let ((sofar* (term_pmatch lconsts env lv lc sofar)))
+                              (term_pmatch lconsts env rv rc sofar*))))))))))))
           (fletc
             ((get_type_insts
               (insts)
               (itlist
-                (lambdac (arg~990)
-                  (match arg~990
-                    ((tuple |t| x) (type_match (snd (dest_var x)) (type_of |t|)))))
+                (lambdac (arg~986)
+                  (match arg~986
+                    ((tuple t* x) (type_match (snd (dest_var x)) (type_of t*)))))
                 insts)))
             (fletc
               ((separate_insts
@@ -673,8 +670,8 @@
                         (if (= patterns nil)
                           nil
                           (itlist
-                            (lambdac (arg~1011 sof)
-                              (match arg~1011
+                            (lambdac (arg~1007 sof)
+                              (match arg~1007
                                 ((tuple _ p)
                                   (match (funcall strip_comb p)
                                     ((tuple hop args)
@@ -683,38 +680,36 @@
                                           (tuple (funcall length args) hop)
                                           sof)
                                         (hol2cl.runtime:ocaml-condition
-                                          (exception~1017)
-                                          (match exception~1017
+                                          (exception~1013)
+                                          (match exception~1013
                                             ((Failure _)
                                               (progn
                                                 (warn
                                                   cl:t
                                                   "Inconsistent patterning in higher order match")
                                                 sof))
-                                            (_ (raise exception~1017))))))))))
+                                            (_ (raise exception~1013))))))))))
                             patterns
                             nil)))
                         (tyins (get_type_insts realinsts nil)))
                       (tuple
                         betacounts
                         (mapfilter
-                          (lambdac (arg~1055)
-                            (match arg~1055
-                              ((tuple |t| x)
+                          (lambdac (arg~1051)
+                            (match arg~1051
+                              ((tuple t* x)
                                 (let
-                                  ((|x'|
+                                  ((x*
                                     (match (dest_var x)
                                       ((tuple xn xty)
                                         (mk_var (tuple xn (type_subst tyins xty)))))))
-                                  (if (= (compare |t| |x'|) 0)
-                                    (fail unit)
-                                    (tuple |t| |x'|))))))
+                                  (if (= (compare t* x*) 0) (fail unit) (tuple t* x*))))))
                           realinsts)
                         tyins))))))
               (labelsc
                 ((term_homatch
-                  (lconsts tyins arg~1108)
-                  (match arg~1108
+                  (lconsts tyins arg~1104)
+                  (match arg~1104
                     ((tuple insts homs)
                       (if (= homs nil)
                         insts
@@ -736,39 +731,35 @@
                               (match (funcall strip_comb vtm)
                                 ((tuple vhop vargs)
                                   (let*
-                                    ((afvs (freesl vargs))
-                                      (inst_fn (funcall |inst| tyins)))
+                                    ((afvs (freesl vargs)) (inst_fn (funcall inst tyins)))
                                     (handler-case
                                       (let*
                                         ((tmins
                                           (map
-                                            (lambdac (a~local~1168)
+                                            (lambdac (a*)
                                               (tuple
                                                 (handler-case
-                                                  (rev_assoc a~local~1168 env)
+                                                  (rev_assoc a* env)
                                                   (hol2cl.runtime:ocaml-condition
-                                                    (exception~1170)
-                                                    (match exception~1170
+                                                    (exception~1165)
+                                                    (match exception~1165
                                                       ((Failure _)
                                                         (handler-case
-                                                          (rev_assoc a~local~1168 insts)
+                                                          (rev_assoc a* insts)
                                                           (hol2cl.runtime:ocaml-condition
-                                                            (exception~1173)
-                                                            (match exception~1173
+                                                            (exception~1168)
+                                                            (match exception~1168
                                                               ((Failure _)
-                                                                (if
-                                                                  (mem
-                                                                    a~local~1168
-                                                                    lconsts)
-                                                                  a~local~1168
+                                                                (if (mem a* lconsts)
+                                                                  a*
                                                                   (fail unit)))
-                                                              (_ (raise exception~1173))))))
-                                                      (_ (raise exception~1170)))))
-                                                (funcall inst_fn a~local~1168)))
+                                                              (_ (raise exception~1168))))))
+                                                      (_ (raise exception~1165)))))
+                                                (funcall inst_fn a*)))
                                             afvs))
                                           (pats0 (map inst_fn vargs))
                                           (pats (map (funcall vsubst tmins) pats0))
-                                          (|vhop'| (funcall inst_fn vhop))
+                                          (vhop* (funcall inst_fn vhop))
                                           (ni
                                             (match (funcall strip_comb ctm)
                                               ((tuple chop cargs)
@@ -786,33 +777,33 @@
                                                               (funcall genvar (type_of p)))
                                                             p))
                                                         pats))
-                                                      (|ctm'| (funcall subst ginsts ctm))
+                                                      (ctm* (funcall subst ginsts ctm))
                                                       (gvs
                                                         (map
                                                           (function-value #'fst 1)
                                                           ginsts)))
                                                     (let*
                                                       ((abstm
-                                                        (list_mk_abs (tuple gvs |ctm'|)))
+                                                        (list_mk_abs (tuple gvs ctm*)))
                                                         (vinsts
                                                           (safe_inserta
                                                             (tuple abstm vhop)
                                                             insts))
                                                         (icpair
                                                           (tuple
-                                                            |ctm'|
+                                                            ctm*
                                                             (list_mk_comb
-                                                              (tuple |vhop'| gvs)))))
+                                                              (tuple vhop* gvs)))))
                                                       (cl:cons icpair vinsts))))))))
                                         (term_homatch lconsts tyins (tuple ni (tl homs))))
                                       (hol2cl.runtime:ocaml-condition
-                                        (exception~1123)
-                                        (match exception~1123
+                                        (exception~1119)
+                                        (match exception~1119
                                           ((Failure _)
                                             (match (tuple (dest_comb ctm) (dest_comb vtm))
                                               ((tuple (tuple lc rc) (tuple lv rv))
                                                 (let*
-                                                  ((|pinsts_homs'|
+                                                  ((pinsts_homs*
                                                     (term_pmatch
                                                       lconsts
                                                       env
@@ -823,15 +814,15 @@
                                                         (cl:cons
                                                           (tuple env lc lv)
                                                           (tl homs)))))
-                                                    (|tyins'|
+                                                    (tyins*
                                                       (get_type_insts
-                                                        (fst |pinsts_homs'|)
+                                                        (fst pinsts_homs*)
                                                         nil)))
                                                   (term_homatch
                                                     lconsts
-                                                    |tyins'|
-                                                    |pinsts_homs'|)))))
-                                          (_ (raise exception~1123))))))))))))))))
+                                                    tyins*
+                                                    pinsts_homs*)))))
+                                          (_ (raise exception~1119))))))))))))))))
                 (lambdac (lconsts vtm ctm)
                   (let*
                     ((pinsts_homs (term_pmatch lconsts nil vtm ctm (tuple nil nil)))
@@ -847,26 +838,26 @@
 (defparameter term_unify
   (fletc
     ((augment1
-      (sofar arg~1398)
-      (match arg~1398
+      (sofar arg~1393)
+      (match arg~1393
         ((tuple s x)
-          (let ((|s'| (funcall subst sofar s)))
-            (if (cl:and (vfree_in x |s'|) (not (= s x)))
+          (let ((s* (funcall subst sofar s)))
+            (if (cl:and (vfree_in x s*) (not (= s x)))
               (failwith "term_unify: augment1")
-              (tuple |s'| x)))))))
+              (tuple s* x)))))))
     (fletc
       ((raw_augment_insts (p insts) (cl:cons p (map (augment1 (cl:cons p nil)) insts))))
       (fletc
         ((augment_insts
-          (arg~1436 insts)
-          (match arg~1436
-            ((tuple |t| v)
-              (let ((|t'| (funcall vsubst insts |t|)))
-                (if (= |t'| v)
+          (arg~1431 insts)
+          (match arg~1431
+            ((tuple t* v)
+              (let ((t** (funcall vsubst insts t*)))
+                (if (= t** v)
                   insts
-                  (if (vfree_in v |t'|)
+                  (if (vfree_in v t**)
                     (failwith "augment_insts")
-                    (raw_augment_insts (tuple |t'| v) insts))))))))
+                    (raw_augment_insts (tuple t** v) insts))))))))
         (labelsc
           ((unify
             (vars tm1 tm2 sofar)
@@ -874,29 +865,29 @@
               sofar
               (if (cl:and (is_var tm1) (mem tm1 vars))
                 (handler-case
-                  (let ((|tm1'| (rev_assoc tm1 sofar))) (unify vars |tm1'| tm2 sofar))
+                  (let ((tm1* (rev_assoc tm1 sofar))) (unify vars tm1* tm2 sofar))
                   (hol2cl.runtime:ocaml-condition
-                    (exception~1543)
-                    (match exception~1543
+                    (exception~1538)
+                    (match exception~1538
                       ((Failure "find") (augment_insts (tuple tm2 tm1) sofar))
-                      (_ (raise exception~1543)))))
+                      (_ (raise exception~1538)))))
                 (if (cl:and (is_var tm2) (mem tm2 vars))
                   (handler-case
-                    (let ((|tm2'| (rev_assoc tm2 sofar))) (unify vars tm1 |tm2'| sofar))
+                    (let ((tm2* (rev_assoc tm2 sofar))) (unify vars tm1 tm2* sofar))
                     (hol2cl.runtime:ocaml-condition
-                      (exception~1517)
-                      (match exception~1517
+                      (exception~1512)
+                      (match exception~1512
                         ((Failure "find") (augment_insts (tuple tm1 tm2) sofar))
-                        (_ (raise exception~1517)))))
+                        (_ (raise exception~1512)))))
                   (if (is_abs tm1)
                     (let
-                      ((|tm1'| (body tm1))
-                        (|tm2'|
+                      ((tm1* (body tm1))
+                        (tm2*
                           (funcall
                             subst
                             (cl:cons (tuple (bndvar tm1) (bndvar tm2)) nil)
                             (body tm2))))
-                      (unify vars |tm1'| |tm2'| sofar))
+                      (unify vars tm1* tm2* sofar))
                     (match (tuple (dest_comb tm1) (dest_comb tm2))
                       ((tuple (tuple l1 r1) (tuple l2 r2))
                         (unify vars l1 l2 (unify vars r1 r2 sofar))))))))))
@@ -910,26 +901,26 @@
 (defparameter type_unify
   (fletc
     ((augment1
-      (sofar arg~1594)
-      (match arg~1594
+      (sofar arg~1589)
+      (match arg~1589
         ((tuple s x)
-          (let ((|s'| (type_subst sofar s)))
-            (if (cl:and (occurs_in x |s'|) (not (= s x)))
+          (let ((s* (type_subst sofar s)))
+            (if (cl:and (occurs_in x s*) (not (= s x)))
               (failwith "type_unify: augment1")
-              (tuple |s'| x)))))))
+              (tuple s* x)))))))
     (fletc
       ((raw_augment_insts (p insts) (cl:cons p (map (augment1 (cl:cons p nil)) insts))))
       (fletc
         ((augment_insts
-          (arg~1632 insts)
-          (match arg~1632
+          (arg~1627 insts)
+          (match arg~1627
             ((tuple ty v)
-              (let ((|ty'| (type_subst insts ty)))
-                (if (= |ty'| v)
+              (let ((ty* (type_subst insts ty)))
+                (if (= ty* v)
                   insts
-                  (if (occurs_in v |ty'|)
+                  (if (occurs_in v ty*)
                     (failwith "type_unify: augment_insts")
-                    (raw_augment_insts (tuple |ty'| v) insts))))))))
+                    (raw_augment_insts (tuple ty* v) insts))))))))
         (labelsc
           ((unify
             (ty1 ty2 sofar)
@@ -937,20 +928,20 @@
               sofar
               (if (funcall is_vartype ty1)
                 (handler-case
-                  (let ((|ty1'| (rev_assoc ty1 sofar))) (unify |ty1'| ty2 sofar))
+                  (let ((ty1* (rev_assoc ty1 sofar))) (unify ty1* ty2 sofar))
                   (hol2cl.runtime:ocaml-condition
-                    (exception~1712)
-                    (match exception~1712
+                    (exception~1707)
+                    (match exception~1707
                       ((Failure "find") (augment_insts (tuple ty2 ty1) sofar))
-                      (_ (raise exception~1712)))))
+                      (_ (raise exception~1707)))))
                 (if (funcall is_vartype ty2)
                   (handler-case
-                    (let ((|ty2'| (rev_assoc ty2 sofar))) (unify ty1 |ty2'| sofar))
+                    (let ((ty2* (rev_assoc ty2 sofar))) (unify ty1 ty2* sofar))
                     (hol2cl.runtime:ocaml-condition
-                      (exception~1691)
-                      (match exception~1691
+                      (exception~1686)
+                      (match exception~1686
                         ((Failure "find") (augment_insts (tuple ty1 ty2) sofar))
-                        (_ (raise exception~1691)))))
+                        (_ (raise exception~1686)))))
                   (match (tuple (dest_type ty1) (dest_type ty2))
                     ((tuple (tuple l1 r1) (tuple l2 r2))
                       (if (= l1 l2) (itlist2 #'unify r1 r2 sofar) (failwith "unify_type")))))))))
@@ -964,100 +955,99 @@
 (defparameter term_type_unify
   (fletc
     ((augment_tyinsts
-      (arg~1746 tyinsts)
-      (match arg~1746
-        ((tuple s |t|)
+      (arg~1741 tyinsts)
+      (match arg~1741
+        ((tuple s t*)
           (let
-            ((sty (type_of (funcall |inst| tyinsts s)))
-              (tty (type_of (funcall |inst| tyinsts |t|))))
-            (let ((|tyinsts'| (funcall type_unify sty tty nil)))
+            ((sty (type_of (funcall inst tyinsts s)))
+              (tty (type_of (funcall inst tyinsts t*))))
+            (let ((tyinsts* (funcall type_unify sty tty nil)))
               (append
-                |tyinsts'|
+                tyinsts*
                 (map
-                  (lambdac (arg~1767)
-                    (match arg~1767 ((tuple ty v) (tuple (type_subst |tyinsts'| ty) v))))
+                  (lambdac (arg~1762)
+                    (match arg~1762 ((tuple ty v) (tuple (type_subst tyinsts* ty) v))))
                   tyinsts))))))))
     (fletc
       ((augment1
-        (sofar arg~1790)
-        (match arg~1790
+        (sofar arg~1785)
+        (match arg~1785
           ((tuple s x)
-            (let ((|s'| (funcall subst sofar s)))
-              (if (cl:and (vfree_in x |s'|) (not (= s x)))
+            (let ((s* (funcall subst sofar s)))
+              (if (cl:and (vfree_in x s*) (not (= s x)))
                 (failwith "term_unify: augment1")
-                (tuple |s'| x)))))))
+                (tuple s* x)))))))
       (fletc
         ((raw_augment_insts
-          (p arg~1818)
-          (match arg~1818
+          (p arg~1813)
+          (match arg~1813
             ((tuple tminsts tyinsts)
               (tuple (cl:cons p (map (augment1 (cl:cons p nil)) tminsts)) tyinsts)))))
         (fletc
           ((augment_insts
-            (arg~1836 arg~1840)
-            (match arg~1836
-              ((tuple |t| v)
-                (match arg~1840
+            (arg~1831 arg~1835)
+            (match arg~1831
+              ((tuple t* v)
+                (match arg~1835
                   ((tuple tminsts tyinsts)
                     (let*
-                      ((|tminsts'|
+                      ((tminsts*
                         (map
-                          (lambdac (arg~1845)
-                            (match arg~1845
-                              ((tuple t~local~1847 v~local~1849)
+                          (lambdac (arg~1840)
+                            (match arg~1840
+                              ((tuple t** v*)
                                 (tuple
-                                  (funcall |inst| tyinsts t~local~1847)
-                                  (funcall |inst| tyinsts v~local~1849)))))
+                                  (funcall inst tyinsts t**)
+                                  (funcall inst tyinsts v*)))))
                           tminsts))
-                        (|t'| (funcall |inst| tyinsts (funcall vsubst |tminsts'| |t|)))
-                        (|v'| (funcall |inst| tyinsts v))
-                        (|sofar'| (tuple |tminsts'| tyinsts)))
-                      (if (= |t'| |v'|)
-                        |sofar'|
-                        (if (vfree_in |v'| |t'|)
+                        (t** (funcall inst tyinsts (funcall vsubst tminsts* t*)))
+                        (v* (funcall inst tyinsts v))
+                        (sofar* (tuple tminsts* tyinsts)))
+                      (if (= t** v*)
+                        sofar*
+                        (if (vfree_in v* t**)
                           (failwith "term_unify: augment_insts")
-                          (raw_augment_insts (tuple |t'| |v'|) |sofar'|))))))))))
+                          (raw_augment_insts (tuple t** v*) sofar*))))))))))
           (labelsc
             ((unify
-              (tm1 tm2 arg~1907)
-              (match arg~1907
+              (tm1 tm2 arg~1900)
+              (match arg~1900
                 ((cl:and sofar (tuple tminsts tyinsts))
                   (if (= tm1 tm2)
                     sofar
                     (if (is_var tm1)
                       (handler-case
-                        (let ((|tm1'| (rev_assoc tm1 tminsts))) (unify |tm1'| tm2 sofar))
+                        (let ((tm1* (rev_assoc tm1 tminsts))) (unify tm1* tm2 sofar))
                         (hol2cl.runtime:ocaml-condition
-                          (exception~2001)
-                          (match exception~2001
+                          (exception~1994)
+                          (match exception~1994
                             ((Failure "find")
                               (augment_insts
                                 (tuple tm2 tm1)
                                 (tuple tminsts (augment_tyinsts (tuple tm1 tm2) tyinsts))))
-                            (_ (raise exception~2001)))))
+                            (_ (raise exception~1994)))))
                       (if (is_var tm2)
                         (handler-case
-                          (let ((|tm2'| (rev_assoc tm2 tminsts)))
-                            (unify tm1 |tm2'| sofar))
+                          (let ((tm2* (rev_assoc tm2 tminsts))) (unify tm1 tm2* sofar))
                           (hol2cl.runtime:ocaml-condition
-                            (exception~1974)
-                            (match exception~1974
+                            (exception~1967)
+                            (match exception~1967
                               ((Failure "find")
                                 (augment_insts
                                   (tuple tm1 tm2)
                                   (tuple
                                     tminsts
                                     (augment_tyinsts (tuple tm1 tm2) tyinsts))))
-                              (_ (raise exception~1974)))))
+                              (_ (raise exception~1967)))))
                         (if (is_abs tm1)
                           (let
-                            ((|tm1'| (body tm1))
-                              (|tm2'|
+                            ((tm1* (body tm1))
+                              (tm2*
                                 (funcall
                                   subst
                                   (cl:cons (tuple (bndvar tm1) (bndvar tm2)) nil)
                                   (body tm2))))
-                            (unify |tm1'| |tm2'| sofar))
+                            (unify tm1* tm2* sofar))
                           (if (is_const tm1)
                             (if (<> (name_of tm1) (name_of tm2))
                               (failwith "term_unify")
@@ -1065,11 +1055,11 @@
                             (match (tuple (dest_comb tm1) (dest_comb tm2))
                               ((tuple (tuple l1 r1) (tuple l2 r2))
                                 (unify l1 l2 (unify r1 r2 sofar)))))))))))))
-            (lambdac (tm1 tm2 arg~2040)
-              (match arg~2040
+            (lambdac (tm1 tm2 arg~2033)
+              (match arg~2033
                 ((tuple it tminsts tyinsts)
                   (match (unify tm1 tm2 (tuple tminsts tyinsts))
-                    ((tuple |tminsts'| |tyinsts'|) (tuple it |tminsts'| |tyinsts'|))))))))))))
+                    ((tuple tminsts* tyinsts*) (tuple it tminsts* tyinsts*))))))))))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Modify bound variable names at depth. (Not very efficient...)             *)
@@ -1083,17 +1073,17 @@
       (handler-case
         (alpha v tm)
         (hol2cl.runtime:ocaml-condition
-          (exception~2076)
-          (match exception~2076
+          (exception~2069)
+          (match exception~2069
             ((Failure _)
               (handler-case
-                (let ((|v'| (variant (frees tm) v))) (alpha |v'| tm))
+                (let ((v* (variant (frees tm) v))) (alpha v* tm))
                 (hol2cl.runtime:ocaml-condition
-                  (exception~2079)
-                  (match exception~2079 ((Failure _) tm) (_ (raise exception~2079))))))
-            (_ (raise exception~2076)))))))
+                  (exception~2072)
+                  (match exception~2072 ((Failure _) tm) (_ (raise exception~2072))))))
+            (_ (raise exception~2069)))))))
     (labelsc
-      ((deep_alpha~local~2097
+      ((deep_alpha*
         (env tm)
         (if (= env nil)
           tm
@@ -1105,35 +1095,30 @@
                     (handler-case
                       (match
                         (remove
-                          (lambdac (arg~2170) (match arg~2170 ((tuple _ x) (= x vn))))
+                          (lambdac (arg~2162) (match arg~2162 ((tuple _ x) (= x vn))))
                           env)
-                        ((tuple (tuple |vn'| _) newenv)
-                          (let*
-                            ((|v'| (mk_var (tuple |vn'| vty))) (|tm'| (tryalpha |v'| tm)))
-                            (match (dest_abs |tm'|)
-                              ((tuple iv ib)
-                                (mk_abs (tuple iv (deep_alpha~local~2097 newenv ib))))))))
+                        ((tuple (tuple vn* _) newenv)
+                          (let* ((v* (mk_var (tuple vn* vty))) (tm* (tryalpha v* tm)))
+                            (match (dest_abs tm*)
+                              ((tuple iv ib) (mk_abs (tuple iv (deep_alpha* newenv ib))))))))
                       (hol2cl.runtime:ocaml-condition
-                        (exception~2129)
-                        (match exception~2129
-                          ((Failure _) (mk_abs (tuple v (deep_alpha~local~2097 env bod))))
-                          (_ (raise exception~2129)))))))))
+                        (exception~2121)
+                        (match exception~2121
+                          ((Failure _) (mk_abs (tuple v (deep_alpha* env bod))))
+                          (_ (raise exception~2121)))))))))
             (hol2cl.runtime:ocaml-condition
-              (exception~2101)
-              (match exception~2101
+              (exception~2093)
+              (match exception~2093
                 ((Failure _)
                   (handler-case
                     (match (dest_comb tm)
                       ((tuple l r)
-                        (|mk_comb|
-                          (tuple
-                            (deep_alpha~local~2097 env l)
-                            (deep_alpha~local~2097 env r)))))
+                        (mk_comb (tuple (deep_alpha* env l) (deep_alpha* env r)))))
                     (hol2cl.runtime:ocaml-condition
-                      (exception~2104)
-                      (match exception~2104 ((Failure _) tm) (_ (raise exception~2104))))))
-                (_ (raise exception~2101))))))))
-      #'deep_alpha~local~2097)))
+                      (exception~2096)
+                      (match exception~2096 ((Failure _) tm) (_ (raise exception~2096))))))
+                (_ (raise exception~2093))))))))
+      #'deep_alpha*)))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Instantiate theorem by matching part of it to a term.                     *)
@@ -1156,19 +1141,19 @@
               (let ((newacc (if (= n1 n2) acc (insert (tuple n1 n2) acc))))
                 (match_bvs b1 b2 newacc)))))
         (hol2cl.runtime:ocaml-condition
-          (exception~2221)
-          (match exception~2221
+          (exception~2211)
+          (match exception~2211
             ((Failure _)
               (handler-case
                 (match (tuple (dest_comb t1) (dest_comb t2))
                   ((tuple (tuple l1 r1) (tuple l2 r2))
                     (match_bvs l1 l2 (match_bvs r1 r2 acc))))
                 (hol2cl.runtime:ocaml-condition
-                  (exception~2224)
-                  (match exception~2224 ((Failure _) acc) (_ (raise exception~2224))))))
-            (_ (raise exception~2221)))))))
+                  (exception~2214)
+                  (match exception~2214 ((Failure _) acc) (_ (raise exception~2214))))))
+            (_ (raise exception~2211)))))))
     (fletc
-      ((PART_MATCH~local~2292
+      ((PART_MATCH*
         (partfn th)
         (let*
           ((sth (SPEC_ALL th))
@@ -1181,20 +1166,20 @@
                 (abod (funcall deep_alpha bvms bod))
                 (ath (EQ_MP (hol2cl.equal:ALPHA bod abod) sth))
                 (insts (funcall term_match lconsts (funcall partfn abod) tm))
-                (fth (funcall |INSTANTIATE| insts ath)))
+                (fth (funcall INSTANTIATE* insts ath)))
               (if (<> (hyp fth) (hyp ath))
                 (failwith "PART_MATCH: instantiated hyps")
-                (let ((|tm'| (funcall partfn (concl fth))))
-                  (if (= (compare |tm'| tm) 0)
+                (let ((tm* (funcall partfn (concl fth))))
+                  (if (= (compare tm* tm) 0)
                     fth
                     (handler-case
-                      (SUBS (cl:cons (hol2cl.equal:ALPHA |tm'| tm) nil) fth)
+                      (SUBS (cl:cons (hol2cl.equal:ALPHA tm* tm) nil) fth)
                       (hol2cl.runtime:ocaml-condition
-                        (exception~2345)
-                        (match exception~2345
+                        (exception~2333)
+                        (match exception~2333
                           ((Failure _) (failwith "PART_MATCH: Sanity check failure"))
-                          (_ (raise exception~2345))))))))))))
-        (GEN_PART_MATCH~local~2294
+                          (_ (raise exception~2333))))))))))))
+        (GEN_PART_MATCH*
           (partfn th)
           (let*
             ((sth (SPEC_ALL th))
@@ -1208,27 +1193,23 @@
                   (abod (funcall deep_alpha bvms bod))
                   (ath (EQ_MP (hol2cl.equal:ALPHA bod abod) sth))
                   (insts (funcall term_match lconsts (funcall partfn abod) tm))
-                  (eth (funcall |INSTANTIATE| insts (funcall GENL fvs ath)))
-                  (fth
-                    (itlist
-                      (lambdac (v th~local~2441) (snd (SPEC_VAR th~local~2441)))
-                      fvs
-                      eth)))
+                  (eth (funcall INSTANTIATE* insts (funcall GENL fvs ath)))
+                  (fth (itlist (lambdac (v th*) (snd (SPEC_VAR th*))) fvs eth)))
                 (if (<> (hyp fth) (hyp ath))
                   (failwith "PART_MATCH: instantiated hyps")
-                  (let ((|tm'| (funcall partfn (concl fth))))
-                    (if (= (compare |tm'| tm) 0)
+                  (let ((tm* (funcall partfn (concl fth))))
+                    (if (= (compare tm* tm) 0)
                       fth
                       (handler-case
-                        (SUBS (cl:cons (hol2cl.equal:ALPHA |tm'| tm) nil) fth)
+                        (SUBS (cl:cons (hol2cl.equal:ALPHA tm* tm) nil) fth)
                         (hol2cl.runtime:ocaml-condition
-                          (exception~2454)
-                          (match exception~2454
+                          (exception~2441)
+                          (match exception~2441
                             ((Failure _) (failwith "PART_MATCH: Sanity check failure"))
-                            (_ (raise exception~2454)))))))))))))
-      (tuple #'PART_MATCH~local~2292 #'GEN_PART_MATCH~local~2294)))
-  ((tuple PART_MATCH~local~2212 GEN_PART_MATCH~local~2210)
-    (setf GEN_PART_MATCH GEN_PART_MATCH~local~2210 PART_MATCH PART_MATCH~local~2212)))
+                            (_ (raise exception~2441)))))))))))))
+      (tuple #'PART_MATCH* #'GEN_PART_MATCH*)))
+  ((tuple PART_MATCH* GEN_PART_MATCH*)
+    (setf GEN_PART_MATCH GEN_PART_MATCH* PART_MATCH PART_MATCH*)))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Matching modus ponens.                                                    *)
@@ -1257,19 +1238,19 @@
                                 (funcall DISCH ant (funcall GENL pvs (UNDISCH th1))))))
                           (funcall MP (funcall DISCH tm th2) ith))))))))))
         (hol2cl.runtime:ocaml-condition
-          (exception~2504)
-          (match exception~2504
+          (exception~2491)
+          (match exception~2491
             ((Failure _) (failwith "MATCH_MP: Not an implication"))
-            (_ (raise exception~2504))))))
+            (_ (raise exception~2491))))))
       (match_fun (funcall PART_MATCH (o (function-value #'fst 1) dest_imp) sth)))
     (lambdac (th)
       (handler-case
         (funcall MP (funcall match_fun (concl th)) th)
         (hol2cl.runtime:ocaml-condition
-          (exception~2574)
-          (match exception~2574
+          (exception~2561)
+          (match exception~2561
             ((Failure _) (failwith "MATCH_MP: No match"))
-            (_ (raise exception~2574))))))))
+            (_ (raise exception~2561))))))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Useful instance of more general higher order matching.                    *)
@@ -1305,15 +1286,15 @@
                               (handler-case
                                 (let ((rconv (free_beta v r))) (COMB2_CONV lconv rconv))
                                 (hol2cl.runtime:ocaml-condition
-                                  (exception~2625)
-                                  (match exception~2625
+                                  (exception~2612)
+                                  (match exception~2612
                                     ((Failure _) (RATOR_CONV lconv))
-                                    (_ (raise exception~2625))))))
+                                    (_ (raise exception~2612))))))
                             (hol2cl.runtime:ocaml-condition
-                              (exception~2614)
-                              (match exception~2614
+                              (exception~2601)
+                              (match exception~2601
                                 ((Failure _) (RAND_CONV (free_beta v r)))
-                                (_ (raise exception~2614))))))))))))))
+                                (_ (raise exception~2601))))))))))))))
           #'free_beta))))
     (fletc
       ((GINST
@@ -1321,7 +1302,7 @@
         (let*
           ((fvs (subtract (frees (concl th)) (freesl (hyp th))))
             (gvs (map (o genvar #'type_of) fvs)))
-          (|INST| (zip gvs fvs) th))))
+          (INST* (zip gvs fvs) th))))
       (lambdac (ths)
         (let*
           ((thl (map (o #'GINST #'SPEC_ALL) ths))
@@ -1339,14 +1320,13 @@
                       empty_net)))
                 (fletc
                   ((look_fn
-                    (|t|)
+                    (t*)
                     (mapfilter
-                      (lambdac (p)
-                        (if (can (funcall term_match nil p) |t|) p (fail unit)))
-                      (funcall lookup |t| mnet))))
+                      (lambdac (p) (if (can (funcall term_match nil p) t*) p (fail unit)))
+                      (funcall lookup t* mnet))))
                   (lambdac (top tm)
                     (fletc
-                      ((pred (|t|) (cl:and (not (= (look_fn |t|) nil)) (free_in |t| tm))))
+                      ((pred (t*) (cl:and (not (= (look_fn t*) nil)) (free_in t* tm))))
                       (let*
                         ((stm
                           (if top
@@ -1356,24 +1336,19 @@
                         (match (funcall term_match nil pat stm)
                           ((tuple _ tmin tyin)
                             (match (assoc pat ass_list)
-                              ((tuple pred~local~2805 (tuple th beta_fn))
+                              ((tuple pred* (tuple th beta_fn))
                                 (let*
                                   ((gv (funcall genvar (type_of stm)))
-                                    (abs~local~2812
+                                    (abs**
                                       (mk_abs
                                         (tuple
                                           gv
                                           (funcall subst (cl:cons (tuple gv stm) nil) tm)))))
-                                  (match
-                                    (funcall
-                                      term_match
-                                      nil
-                                      pred~local~2805
-                                      abs~local~2812)
+                                  (match (funcall term_match nil pred* abs**)
                                     ((tuple _ tmin0 tyin0)
                                       (CONV_RULE
                                         beta_fn
-                                        (|INST| tmin (|INST| tmin0 (INST_TYPE tyin0 th)))))))))))))))))))))))
+                                        (INST* tmin (INST* tmin0 (INST_TYPE tyin0 th)))))))))))))))))))))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Derived principle of definition justifying |- c x1 .. xn = t[x1,..,xn]    *)
@@ -1387,10 +1362,10 @@
         (handler-case
           (dest_eq bod)
           (hol2cl.runtime:ocaml-condition
-            (exception~2962)
-            (match exception~2962
+            (exception~2946)
+            (match exception~2946
               ((Failure _) (failwith "new_definition: Not an equation"))
-              (_ (raise exception~2962)))))
+              (_ (raise exception~2946)))))
         ((tuple l r)
           (match (funcall strip_comb l)
             ((tuple lv largs)
@@ -1399,17 +1374,17 @@
                   (handler-case
                     (list_mk_abs (tuple largs r))
                     (hol2cl.runtime:ocaml-condition
-                      (exception~2896)
-                      (match exception~2896
+                      (exception~2881)
+                      (match exception~2881
                         ((Failure _)
                           (failwith "new_definition: Non-variable in LHS pattern"))
-                        (_ (raise exception~2896))))))
+                        (_ (raise exception~2881))))))
                   (def (funcall mk_eq (tuple lv rtm)))
                   (th1 (new_basic_definition def))
                   (th2
                     (rev_itlist
-                      (lambdac (tm~local~2915 th)
-                        (let ((ith (AP_THM th tm~local~2915)))
+                      (lambdac (tm* th)
+                        (let ((ith (AP_THM th tm*)))
                           (TRANS ith (BETA_CONV (rand (concl ith))))))
                       largs
                       th1))

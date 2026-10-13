@@ -115,6 +115,8 @@ def differential():
 
 def main():
     verify_pins()
+    star = run(["python3", "tests/star-names.py"], log="star-names.log")
+    assert "Star naming checks passed" in star.stdout
     protocol = run(["sbcl", "--noinform", "--disable-debugger", "--script", "tests/defunc-protocol.lisp"], log="defunc-protocol.log")
     protocol_checks = int(re.search(r"Protocol checks passed: (\d+)", protocol.stdout).group(1))
     optional = run(["sbcl", "--noinform", "--disable-debugger", "--script", "tests/optional-entry.lisp"], log="optional-entry.log")
@@ -181,6 +183,9 @@ def main():
         "sbcl_checks": checks,
         "defunc_protocol_checks": protocol_checks,
         "optional_entry_checks": optional_checks,
+        "star_naming_observations": 9,
+        "star_allocator_checks": 19,
+        "escaped_symbol_delimiters_in_core": 0,
         "tuple_list_checks": tuple_checks,
         "differential_observations": observations,
         "serialized_observations": observations - printer_lines,

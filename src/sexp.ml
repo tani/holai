@@ -12,21 +12,16 @@ let rec flat_length = function
   | Origin (_,x) -> flat_length x
   | Comment _ -> 1000000
 let symbol s =
-  let bad = ref (s="" || List.mem (String.lowercase_ascii s) ["t";"nil"] || s.[0]='&') in
-  String.iter (fun c -> if not (match c with
-    | 'a'..'z' | 'A'..'Z' | '0'..'9' | '_' | '-' | '+' | '*' | '/' | '=' | '<' | '>' | '?' | '!' | '~' | '^' | '%' | '@' | '.' -> true
-    | _ -> false) then bad := true) s;
-  (try ignore (float_of_string s); bad := true with Failure _ -> ());
-  if s="." then bad:=true;
-  if not !bad then s else
-  let b=Buffer.create 16 in
-  Buffer.add_char b '|';
-  String.iter (fun c -> if c='|' || c='\\' then Buffer.add_char b '\\'; Buffer.add_char b c) s;
-  Buffer.add_char b '|'; Buffer.contents b
-let exact_symbol s =
-  let b=Buffer.create 16 in Buffer.add_char b '|';
-  String.iter (fun c -> if c='|' || c='\\' then Buffer.add_char b '\\'; Buffer.add_char b c) s;
-  Buffer.add_char b '|'; Buffer.contents b
+  let safe = function
+    | 'a'..'z' | 'A'..'Z' | '0'..'9' | '_' | '-' | '+' | '*' | '/' | '='
+    | '<' | '>' | '?' | '!' | '~' | '^' | '%' | '@' | '.' -> true
+    | _ -> false in
+  let stem=String.concat "" (String.split_on_char '\'' s) in
+  let reserved=List.mem (String.lowercase_ascii stem) ["t";"nil";"pi"] in
+  let printed=String.map (fun c -> if safe c then c else '*') s in
+  let printed=if printed="" then "*" else printed in
+  let numeric=try ignore (float_of_string stem); true with Failure _ -> false in
+  if reserved || numeric || printed="." then printed^"*" else printed
 let string s =
   let b=Buffer.create 16 in Buffer.add_char b '"';
   String.iter (fun c -> if c='"' || c='\\' then Buffer.add_char b '\\'; Buffer.add_char b c) s;

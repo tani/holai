@@ -57,7 +57,7 @@
         REDEPTH_CONV
         REDEPTH_QCONV
         REPEATC
-        REPEATC~local~297
+        REPEATC*
         REPEATQC
         SUBS
         SUBS_CONV
@@ -76,7 +76,7 @@
         lhand
         lhs
         mk_primed_var
-        path_conv~local~868
+        path_conv*
         rhs
         svariant)
       (:export
@@ -171,7 +171,7 @@
     REDEPTH_CONV
     REDEPTH_QCONV
     REPEATC
-    REPEATC~local~297
+    REPEATC*
     REPEATQC
     SUBS
     SUBS_CONV
@@ -190,7 +190,7 @@
     lhand
     lhs
     mk_primed_var
-    path_conv~local~868
+    path_conv*
     rhs
     svariant)
   (:shadowing-import-from :cl not)
@@ -207,7 +207,6 @@
   (:shadowing-import-from :hol2cl.fusion mk_eq aconv)
   (:shadowing-import-from
     :hol2cl.fusion.hol
-    |mk_comb|
     vsubst
     variant
     type_of
@@ -216,10 +215,11 @@
     rator
     rand
     mk_var
-    |MK_COMB|
+    MK_COMB*
+    mk_comb
     is_comb
     is_abs
-    |INST|
+    INST*
     get_const_type
     frees
     EQ_MP
@@ -231,9 +231,9 @@
     concl
     Comb
     BETA
-    |Abs|
     ASSUME
-    |ABS|)
+    ABS*
+    Abs)
   (:shadowing-import-from
     :hol2cl.lib
     zip
@@ -355,8 +355,8 @@
       (match (dest_var v)
         ((tuple s ty)
           (let
-            ((|s'| (svariant (mapfilter (o (function-value #'fst 1) #'dest_var) avoid) s)))
-            (mk_var (tuple |s'| ty))))))))
+            ((s* (svariant (mapfilter (o (function-value #'fst 1) #'dest_var) avoid) s)))
+            (mk_var (tuple s* ty))))))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* General case of beta-conversion.                                          *)
@@ -374,7 +374,7 @@
             (match (dest_comb tm)
               ((tuple f arg)
                 (let ((v (bndvar f)))
-                  (|INST| (cl:cons (tuple arg v) nil) (BETA (|mk_comb| (tuple f v)))))))
+                  (INST* (cl:cons (tuple arg v) nil) (BETA (mk_comb (tuple f v)))))))
             (hol2cl.runtime:ocaml-condition
               (exception~69)
               (match exception~69
@@ -391,7 +391,7 @@
   (let ((rth (REFL tm)))
     (lambdac (th)
       (handler-case
-        (|MK_COMB| (tuple rth th))
+        (MK_COMB* (tuple rth th))
         (hol2cl.runtime:ocaml-condition
           (exception~108)
           (match exception~108
@@ -400,7 +400,7 @@
 
 (defunc AP_THM (th tm)
   (handler-case
-    (|MK_COMB| (tuple th (REFL tm)))
+    (MK_COMB* (tuple th (REFL tm)))
     (hol2cl.runtime:ocaml-condition
       (exception~124)
       (match exception~124 ((Failure _) (failwith "AP_THM")) (_ (raise exception~124))))))
@@ -410,7 +410,7 @@
     (match (dest_eq tm)
       ((tuple l r)
         (let ((lth (REFL l)))
-          (EQ_MP (|MK_COMB| (tuple (AP_TERM (rator (rator tm)) th) lth)) lth))))))
+          (EQ_MP (MK_COMB* (tuple (AP_TERM (rator (rator tm)) th) lth)) lth))))))
 
 (defunc ALPHA (tm1 tm2)
   (handler-case
@@ -424,13 +424,12 @@
 (defunc GEN_ALPHA_CONV (v tm)
   (if (is_abs tm)
     (ALPHA_CONV v tm)
-    (match (dest_comb tm)
-      ((tuple b abs~local~195) (AP_TERM b (ALPHA_CONV v abs~local~195))))))
+    (match (dest_comb tm) ((tuple b abs**) (AP_TERM b (ALPHA_CONV v abs**))))))
 
 (defunc MK_BINOP (op)
   (let ((afn (AP_TERM op)))
-    (lambdac (arg~221)
-      (match arg~221 ((tuple lth rth) (|MK_COMB| (tuple (funcall afn lth) rth)))))))
+    (lambdac (arg~220)
+      (match arg~220 ((tuple lth rth) (MK_COMB* (tuple (funcall afn lth) rth)))))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Terminal conversion combinators.                                          *)
@@ -446,27 +445,24 @@
 ;; (* ------------------------------------------------------------------------- *)
 
 
-(defunc THENC (conv1 conv2 |t|)
-  (let* ((th1 (funcall conv1 |t|)) (th2 (funcall conv2 (rand (concl th1)))))
+(defunc THENC (conv1 conv2 t*)
+  (let* ((th1 (funcall conv1 t*)) (th2 (funcall conv2 (rand (concl th1)))))
     (TRANS th1 th2)))
 
-(defunc ORELSEC (conv1 conv2 |t|)
+(defunc ORELSEC (conv1 conv2 t*)
   (handler-case
-    (funcall conv1 |t|)
+    (funcall conv1 t*)
     (hol2cl.runtime:ocaml-condition
-      (exception~266)
-      (match exception~266 ((Failure _) (funcall conv2 |t|)) (_ (raise exception~266))))))
+      (exception~265)
+      (match exception~265 ((Failure _) (funcall conv2 t*)) (_ (raise exception~265))))))
 
 (defparameter FIRST_CONV (end_itlist (lambdac (c1 c2) (ORELSEC c1 c2))))
 
 (defunc EVERY_CONV (l) (itlist (lambdac (c1 c2) (THENC c1 c2)) l ALL_CONV))
 
 (defparameter REPEATC
-  (labelsc
-    ((REPEATC~local~297
-      (conv |t|)
-      (ORELSEC (THENC conv (REPEATC~local~297 conv)) ALL_CONV |t|)))
-    #'REPEATC~local~297))
+  (labelsc ((REPEATC* (conv t*) (ORELSEC (THENC conv (REPEATC* conv)) ALL_CONV t*)))
+    #'REPEATC*))
 
 (defunc CHANGED_CONV (conv tm)
   (let ((th (funcall conv tm)))
@@ -487,14 +483,14 @@
 
 (defunc RAND_CONV (conv tm)
   (match tm
-    ((Comb l r) (|MK_COMB| (tuple (REFL l) (funcall conv r))))
+    ((Comb l r) (MK_COMB* (tuple (REFL l) (funcall conv r))))
     (_ (failwith "RAND_CONV: Not a combination"))))
 
 (defparameter LAND_CONV (o #'RATOR_CONV #'RAND_CONV))
 
 (defunc COMB2_CONV (lconv rconv tm)
   (match tm
-    ((Comb l r) (|MK_COMB| (tuple (funcall lconv l) (funcall rconv r))))
+    ((Comb l r) (MK_COMB* (tuple (funcall lconv l) (funcall rconv r))))
     (_ (failwith "COMB2_CONV: Not a combination"))))
 
 (defparameter COMB_CONV (W #'COMB2_CONV))
@@ -504,24 +500,24 @@
     ((tuple v bod)
       (let ((th (funcall conv bod)))
         (handler-case
-          (|ABS| v th)
+          (ABS* v th)
           (hol2cl.runtime:ocaml-condition
-            (exception~418)
-            (match exception~418
+            (exception~416)
+            (match exception~416
               ((Failure _)
                 (let*
                   ((gv (funcall genvar (type_of v)))
                     (gbod (funcall vsubst (cl:cons (tuple gv v) nil) bod))
-                    (gth (|ABS| gv (funcall conv gbod)))
+                    (gth (ABS* gv (funcall conv gbod)))
                     (gtm (concl gth)))
                   (match (dest_eq gtm)
                     ((tuple l r)
                       (let*
-                        ((|v'| (variant (frees gtm) v))
-                          (|l'| (hol2cl.basics:alpha |v'| l))
-                          (|r'| (hol2cl.basics:alpha |v'| r)))
-                        (EQ_MP (ALPHA gtm (funcall mk_eq (tuple |l'| |r'|))) gth))))))
-              (_ (raise exception~418)))))))))
+                        ((v* (variant (frees gtm) v))
+                          (l* (hol2cl.basics:alpha v* l))
+                          (r* (hol2cl.basics:alpha v* r)))
+                        (EQ_MP (ALPHA gtm (funcall mk_eq (tuple l* r*))) gth))))))
+              (_ (raise exception~416)))))))))
 
 (defunc BINDER_CONV (conv tm)
   (if (is_abs tm) (ABS_CONV conv tm) (RAND_CONV (ABS_CONV conv) tm)))
@@ -529,21 +525,20 @@
 (defunc SUB_CONV (conv tm)
   (match tm
     ((Comb _ _) (funcall COMB_CONV conv tm))
-    ((|Abs| _ _) (ABS_CONV conv tm))
+    ((Abs _ _) (ABS_CONV conv tm))
     (_ (REFL tm))))
 
 (defunc BINOP_CONV (conv tm)
   (match (dest_comb tm)
     ((tuple lop r)
       (match (dest_comb lop)
-        ((tuple op l) (|MK_COMB| (tuple (AP_TERM op (funcall conv l)) (funcall conv r))))))))
+        ((tuple op l) (MK_COMB* (tuple (AP_TERM op (funcall conv l)) (funcall conv r))))))))
 
 (defunc BINOP2_CONV (conv1 conv2 tm)
   (match (dest_comb tm)
     ((tuple lop r)
       (match (dest_comb lop)
-        ((tuple op l)
-          (|MK_COMB| (tuple (AP_TERM op (funcall conv1 l)) (funcall conv2 r))))))))
+        ((tuple op l) (MK_COMB* (tuple (AP_TERM op (funcall conv1 l)) (funcall conv2 r))))))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Depth conversions; internal use of a failure-propagating `Boultonized'    *)
@@ -570,19 +565,19 @@
           (handler-case
             (let ((th2 (funcall conv2 (rand (concl th1))))) (TRANS th1 th2))
             (hol2cl.runtime:ocaml-condition
-              (exception~625)
-              (match exception~625 ((Failure _) th1) (_ (raise exception~625))))))
+              (exception~618)
+              (match exception~618 ((Failure _) th1) (_ (raise exception~618))))))
         (hol2cl.runtime:ocaml-condition
-          (exception~617)
-          (match exception~617 ((Failure _) (funcall conv2 tm)) (_ (raise exception~617))))))
+          (exception~610)
+          (match exception~610 ((Failure _) (funcall conv2 tm)) (_ (raise exception~610))))))
       (THENCQC
         (conv1 conv2 tm)
         (let ((th1 (funcall conv1 tm)))
           (handler-case
             (let ((th2 (funcall conv2 (rand (concl th1))))) (TRANS th1 th2))
             (hol2cl.runtime:ocaml-condition
-              (exception~647)
-              (match exception~647 ((Failure _) th1) (_ (raise exception~647)))))))
+              (exception~640)
+              (match exception~640 ((Failure _) th1) (_ (raise exception~640)))))))
       (COMB_QCONV
         (conv tm)
         (match tm
@@ -590,23 +585,23 @@
             (handler-case
               (let ((th1 (funcall conv l)))
                 (handler-case
-                  (let ((th2 (funcall conv r))) (|MK_COMB| (tuple th1 th2)))
+                  (let ((th2 (funcall conv r))) (MK_COMB* (tuple th1 th2)))
                   (hol2cl.runtime:ocaml-condition
-                    (exception~679)
-                    (match exception~679
+                    (exception~672)
+                    (match exception~672
                       ((Failure _) (AP_THM th1 r))
-                      (_ (raise exception~679))))))
+                      (_ (raise exception~672))))))
               (hol2cl.runtime:ocaml-condition
-                (exception~669)
-                (match exception~669
+                (exception~662)
+                (match exception~662
                   ((Failure _) (AP_TERM l (funcall conv r)))
-                  (_ (raise exception~669))))))
+                  (_ (raise exception~662))))))
           (_ (failwith "COMB_QCONV: Not a combination")))))
     (labelsc ((REPEATQC (conv tm) (THENCQC conv (REPEATQC conv) tm)))
       (fletc
         ((SUB_QCONV
           (conv tm)
-          (match tm ((|Abs| _ _) (ABS_CONV conv tm)) (_ (COMB_QCONV conv tm)))))
+          (match tm ((Abs _ _) (ABS_CONV conv tm)) (_ (COMB_QCONV conv tm)))))
         (labelsc
           ((ONCE_DEPTH_QCONV
             (conv tm)
@@ -632,28 +627,23 @@
               (conv tm)
               (THENQC (REPEATQC conv) (SUB_QCONV (TOP_SWEEP_QCONV conv)) tm)))
           (tuple
-            (lambdac (c~local~780) (TRY_CONV (ONCE_DEPTH_QCONV c~local~780)))
-            (lambdac (c~local~786) (TRY_CONV (DEPTH_QCONV c~local~786)))
-            (lambdac (c~local~792) (TRY_CONV (REDEPTH_QCONV c~local~792)))
-            (lambdac (c~local~798) (TRY_CONV (TOP_DEPTH_QCONV c~local~798)))
-            (lambdac (c~local~804) (TRY_CONV (TOP_SWEEP_QCONV c~local~804))))))))
-  ((tuple
-    ONCE_DEPTH_CONV~local~592
-    DEPTH_CONV~local~590
-    REDEPTH_CONV~local~594
-    TOP_DEPTH_CONV~local~596
-    TOP_SWEEP_CONV~local~598)
+            (lambdac (c*) (TRY_CONV (ONCE_DEPTH_QCONV c*)))
+            (lambdac (c*) (TRY_CONV (DEPTH_QCONV c*)))
+            (lambdac (c*) (TRY_CONV (REDEPTH_QCONV c*)))
+            (lambdac (c*) (TRY_CONV (TOP_DEPTH_QCONV c*)))
+            (lambdac (c*) (TRY_CONV (TOP_SWEEP_QCONV c*))))))))
+  ((tuple ONCE_DEPTH_CONV* DEPTH_CONV* REDEPTH_CONV* TOP_DEPTH_CONV* TOP_SWEEP_CONV*)
     (setf
       DEPTH_CONV
-      DEPTH_CONV~local~590
+      DEPTH_CONV*
       ONCE_DEPTH_CONV
-      ONCE_DEPTH_CONV~local~592
+      ONCE_DEPTH_CONV*
       REDEPTH_CONV
-      REDEPTH_CONV~local~594
+      REDEPTH_CONV*
       TOP_DEPTH_CONV
-      TOP_DEPTH_CONV~local~596
+      TOP_DEPTH_CONV*
       TOP_SWEEP_CONV
-      TOP_SWEEP_CONV~local~598)))
+      TOP_SWEEP_CONV*)))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Apply at leaves of op-tree; NB any failures at leaves cause failure.      *)
@@ -662,13 +652,11 @@
 
 (defunc DEPTH_BINOP_CONV (op conv tm)
   (match tm
-    ((trivia:guard (Comb (Comb |op'| l) r) (= (compare |op'| op) 0))
+    ((trivia:guard (Comb (Comb op* l) r) (= (compare op* op) 0))
       (match (dest_binop op tm)
-        ((tuple l~local~833 r~local~835)
-          (let
-            ((lth (DEPTH_BINOP_CONV op conv l~local~833))
-              (rth (DEPTH_BINOP_CONV op conv r~local~835)))
-            (|MK_COMB| (tuple (AP_TERM |op'| lth) rth))))))
+        ((tuple l* r*)
+          (let ((lth (DEPTH_BINOP_CONV op conv l*)) (rth (DEPTH_BINOP_CONV op conv r*)))
+            (MK_COMB* (tuple (AP_TERM op* lth) rth))))))
     (_ (funcall conv tm))))
 
 ;; (* ------------------------------------------------------------------------- *)
@@ -678,14 +666,14 @@
 
 (defparameter PATH_CONV
   (labelsc
-    ((path_conv~local~868
+    ((path_conv*
       (s cnv)
       (match s
         (nil cnv)
-        ((cl:cons "l" |t|) (RATOR_CONV (path_conv~local~868 |t| cnv)))
-        ((cl:cons "r" |t|) (RAND_CONV (path_conv~local~868 |t| cnv)))
-        ((cl:cons _ |t|) (ABS_CONV (path_conv~local~868 |t| cnv))))))
-    (lambdac (s cnv) (path_conv~local~868 (explode s) cnv))))
+        ((cl:cons "l" t*) (RATOR_CONV (path_conv* t* cnv)))
+        ((cl:cons "r" t*) (RAND_CONV (path_conv* t* cnv)))
+        ((cl:cons _ t*) (ABS_CONV (path_conv* t* cnv))))))
+    (lambdac (s cnv) (path_conv* (explode s) cnv))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Follow a pattern                                                          *)
@@ -712,11 +700,11 @@
 
 (defunc SYM_CONV (tm)
   (handler-case
-    (let* ((th1 (SYM (ASSUME tm))) (|tm'| (concl th1)) (th2 (SYM (ASSUME |tm'|))))
+    (let* ((th1 (SYM (ASSUME tm))) (tm* (concl th1)) (th2 (SYM (ASSUME tm*))))
       (DEDUCT_ANTISYM_RULE th2 th1))
     (hol2cl.runtime:ocaml-condition
-      (exception~966)
-      (match exception~966 ((Failure _) (failwith "SYM_CONV")) (_ (raise exception~966))))))
+      (exception~951)
+      (match exception~951 ((Failure _) (failwith "SYM_CONV")) (_ (raise exception~951))))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Conversion to a rule.                                                     *)
@@ -738,21 +726,19 @@
         ((lefts (map (o lhand #'concl) ths))
           (gvs (map (o genvar #'type_of) lefts))
           (pat (funcall subst (zip gvs lefts) tm))
-          (abs~local~1025 (list_mk_abs (tuple gvs pat)))
+          (abs** (list_mk_abs (tuple gvs pat)))
           (th
             (rev_itlist
               (lambdac (y x)
                 (CONV_RULE
                   (THENC (RAND_CONV #'BETA_CONV) (funcall LAND_CONV #'BETA_CONV))
-                  (|MK_COMB| (tuple x y))))
+                  (MK_COMB* (tuple x y))))
               ths
-              (REFL abs~local~1025))))
+              (REFL abs**))))
         (if (= (rand (concl th)) tm) (REFL tm) th)))
     (hol2cl.runtime:ocaml-condition
-      (exception~1002)
-      (match exception~1002
-        ((Failure _) (failwith "SUBS_CONV"))
-        (_ (raise exception~1002))))))
+      (exception~987)
+      (match exception~987 ((Failure _) (failwith "SUBS_CONV")) (_ (raise exception~987))))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Get a few rules.                                                          *)
@@ -774,16 +760,16 @@
   (fletc
     ((ALPHA_HACK
       (th)
-      (let ((|tm'| (funcall lhand (concl th))))
-        (lambdac (tm) (if (= |tm'| tm) th (TRANS (ALPHA tm |tm'|) th))))))
+      (let ((tm* (funcall lhand (concl th))))
+        (lambdac (tm) (if (= tm* tm) th (TRANS (ALPHA tm tm*) th))))))
     (lambdac (conv)
       (let ((net (ref empty_net)))
         (lambdac (tm)
           (handler-case
             (tryfind (lambdac (f) (funcall f tm)) (funcall lookup tm (deref net)))
             (hol2cl.runtime:ocaml-condition
-              (exception~1112)
-              (match exception~1112
+              (exception~1096)
+              (match exception~1096
                 ((Failure _)
                   (let ((th (funcall conv tm)))
                     (progn
@@ -791,14 +777,14 @@
                         net
                         (funcall enter nil (tuple tm (ALPHA_HACK th)) (deref net)))
                       th)))
-                (_ (raise exception~1112))))))))))
+                (_ (raise exception~1096))))))))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* A printer.                                                                *)
 ;; (* ------------------------------------------------------------------------- *)
 
 
-(defunc PRINT_TERM_CONV (|t|)
+(defunc PRINT_TERM_CONV (t*)
   (progn (funcall (format-printf "%a
-") pp_print_qterm |t|) (funcall ALL_CONV |t|)))
+") pp_print_qterm t*) (funcall ALL_CONV t*)))
 

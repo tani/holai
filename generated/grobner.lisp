@@ -31,8 +31,8 @@
         PROVE_NZ
         REFUTE
         RING
+        RING*
         RING_AND_IDEAL_CONV
-        RING~local~2961
         Start
         align
         assoceq
@@ -114,8 +114,8 @@
     PROVE_NZ
     REFUTE
     RING
+    RING*
     RING_AND_IDEAL_CONV
-    RING~local~2961
     Start
     align
     assoceq
@@ -173,10 +173,10 @@
   (:shadowing-import-from :cl not max append / - + *)
   (:shadowing-import-from
     :hol2cl.arith
-    |SUB_ELIM_THM'|
+    SUB_ELIM_THM*
     SUB_ELIM_THM
     RIGHT_ADD_DISTRIB
-    |PRE_ELIM_THM'|
+    PRE_ELIM_THM*
     PRE_ELIM_THM
     ODD_EXISTS
     NOT_ODD
@@ -190,7 +190,7 @@
     EVEN_EXISTS
     EQ_ADD_LCANCEL_0
     EQ_ADD_LCANCEL
-    |DIVMOD_ELIM_THM'|
+    DIVMOD_ELIM_THM*
     DIVMOD_ELIM_THM
     ADD_SYM
     ADD_ASSOC
@@ -279,17 +279,17 @@
   (:shadowing-import-from :hol2cl.fusion mk_eq is_eq)
   (:shadowing-import-from
     :hol2cl.fusion.hol
-    |mk_comb|
     type_of
     TRANS
     REFL
     rator
     rand
-    |MK_COMB|
+    MK_COMB*
+    mk_comb
     mk_abs
     is_var
     is_comb
-    |INST|
+    INST*
     frees
     EQ_MP
     dest_eq
@@ -449,30 +449,27 @@
             ((n1 (itlist (function-value #'+ 2) m1 0))
               (n2 (itlist (function-value #'+ 2) m2 0)))
             (cl:or (< n1 n2) (cl:and (= n1 n2) (lexorder m1 m2)))))))
-      (grob_neg
-        (map
-          (lambdac (arg~70)
-            (match arg~70 ((tuple c~local~72 m) (tuple (- c~local~72) m)))))))
+      (grob_neg (map (lambdac (arg~70) (match arg~70 ((tuple c* m) (tuple (- c*) m)))))))
     (labelsc
       ((grob_add
         (l1 l2)
         (match (tuple l1 l2)
-          ((tuple nil l2~local~87) l2~local~87)
-          ((tuple l1~local~93 nil) l1~local~93)
+          ((tuple nil l2*) l2*)
+          ((tuple l1* nil) l1*)
           ((tuple (cl:cons (tuple c1 m1) o1) (cl:cons (tuple c2 m2) o2))
             (if (= m1 m2)
-              (let ((c~local~134 (+ c1 c2)) (rest (grob_add o1 o2)))
-                (if (= c~local~134 num_0) rest (cl:cons (tuple c~local~134 m1) rest)))
+              (let ((c* (+ c1 c2)) (rest (grob_add o1 o2)))
+                (if (= c* num_0) rest (cl:cons (tuple c* m1) rest)))
               (if (funcall morder_lt m2 m1)
                 (cl:cons (tuple c1 m1) (grob_add o1 l2))
                 (cl:cons (tuple c2 m2) (grob_add l1 o2))))))))
       (fletc ((grob_sub (l1 l2) (grob_add l1 (funcall grob_neg l2))))
         (fletc
           ((grob_mmul
-            (arg~170 arg~174)
-            (match arg~170
+            (arg~166 arg~170)
+            (match arg~166
               ((tuple c1 m1)
-                (match arg~174
+                (match arg~170
                   ((tuple c2 m2) (tuple (* c1 c2) (map2 (function-value #'+ 2) m1 m2))))))))
           (labelsc ((grob_cmul (cm pol) (map (grob_mmul cm) pol)))
             (labelsc
@@ -486,22 +483,22 @@
                   (l)
                   (match l
                     ((trivia:guard
-                      (cl:cons (tuple c~local~220 vs) nil)
+                      (cl:cons (tuple c* vs) nil)
                       (forall (lambdac (x) (= x 0)) vs))
-                      (if (= c~local~220 num_0)
+                      (if (= c* num_0)
                         (failwith "grob_inv: division by zero")
-                        (cl:cons (tuple (/ num_1 c~local~220) vs) nil)))
+                        (cl:cons (tuple (/ num_1 c*) vs) nil)))
                     (_ (failwith "grob_inv: non-constant divisor polynomial")))))
                 (fletc
                   ((grob_div
                     (l1 l2)
                     (match l2
                       ((trivia:guard
-                        (cl:cons (tuple c~local~256 l) nil)
+                        (cl:cons (tuple c* l) nil)
                         (forall (lambdac (x) (= x 0)) l))
-                        (if (= c~local~256 num_0)
+                        (if (= c* num_0)
                           (failwith "grob_div: division by zero")
-                          (grob_cmul (tuple (/ num_1 c~local~256) l) l1)))
+                          (grob_cmul (tuple (/ num_1 c*) l) l1)))
                       (_ (failwith "grob_div: non-constant divisor polynomial")))))
                   (labelsc
                     ((grob_pow
@@ -513,10 +510,10 @@
                           (grob_mul l (grob_pow vars l (- n 1)))))))
                     (fletc
                       ((mdiv
-                        (arg~321 arg~325)
-                        (match arg~321
+                        (arg~315 arg~319)
+                        (match arg~315
                           ((tuple c1 m1)
-                            (match arg~325
+                            (match arg~319
                               ((tuple c2 m2)
                                 (tuple
                                   (/ c1 c2)
@@ -527,41 +524,39 @@
                                     m2))))))))
                       (fletc
                         ((mlcm
-                          (arg~355 arg~359)
-                          (match arg~355
+                          (arg~349 arg~353)
+                          (match arg~349
                             ((tuple c1 m1)
-                              (match arg~359
+                              (match arg~353
                                 ((tuple c2 m2)
                                   (tuple num_1 (map2 (function-value #'max 2) m1 m2))))))))
                         (fletc
                           ((reduce1
-                            (cm arg~377)
-                            (match arg~377
+                            (cm arg~371)
+                            (match arg~371
                               ((tuple pol hpol)
                                 (match pol
                                   (nil (failwith "reduce1"))
                                   ((cl:cons cm1 cms)
                                     (handler-case
                                       (match (mdiv cm cm1)
-                                        ((tuple c~local~394 m)
+                                        ((tuple c* m)
                                           (tuple
-                                            (grob_cmul (tuple (- c~local~394) m) cms)
-                                            (make-Mmul (tuple (- c~local~394) m) hpol))))
+                                            (grob_cmul (tuple (- c*) m) cms)
+                                            (make-Mmul (tuple (- c*) m) hpol))))
                                       (hol2cl.runtime:ocaml-condition
-                                        (exception~389)
-                                        (match exception~389
+                                        (exception~383)
+                                        (match exception~383
                                           ((Failure _) (failwith "reduce1"))
-                                          (_ (raise exception~389)))))))))))
+                                          (_ (raise exception~383)))))))))))
                           (fletc
                             ((reduceb
                               (cm basis)
-                              (tryfind
-                                (lambdac (p~local~426) (reduce1 cm p~local~426))
-                                basis)))
+                              (tryfind (lambdac (p*) (reduce1 cm p*)) basis)))
                             (labelsc
                               ((reduce
-                                (basis arg~436)
-                                (match arg~436
+                                (basis arg~428)
+                                (match arg~428
                                   ((tuple pol hist)
                                     (match pol
                                       (nil (tuple pol hist))
@@ -575,13 +570,13 @@
                                                   (grob_add q ptl)
                                                   (make-Add hnew hist)))))
                                           (hol2cl.runtime:ocaml-condition
-                                            (exception~449)
-                                            (match exception~449
+                                            (exception~441)
+                                            (match exception~441
                                               ((Failure _)
                                                 (match (reduce basis (tuple ptl hist))
-                                                  ((tuple q |hist'|)
-                                                    (tuple (cl:cons cm q) |hist'|))))
-                                              (_ (raise exception~449)))))))))))
+                                                  ((tuple q hist*)
+                                                    (tuple (cl:cons cm q) hist*))))
+                                              (_ (raise exception~441)))))))))))
                               (fletc
                                 ((orthogonal
                                   (l p1 p2)
@@ -590,8 +585,8 @@
                                   ((spoly
                                     (cm ph1 ph2)
                                     (match (tuple ph1 ph2)
-                                      ((tuple (tuple nil h) p~local~510) (tuple nil h))
-                                      ((tuple p~local~521 (tuple nil h)) (tuple nil h))
+                                      ((tuple (tuple nil h) p*) (tuple nil h))
+                                      ((tuple p* (tuple nil h)) (tuple nil h))
                                       ((tuple
                                         (tuple (cl:cons cm1 ptl1) his1)
                                         (tuple (cl:cons cm2 ptl2) his2))
@@ -606,39 +601,37 @@
                                               his2)))))))
                                   (fletc
                                     ((monic
-                                      (arg~581)
-                                      (match arg~581
+                                      (arg~571)
+                                      (match arg~571
                                         ((tuple pol hist)
                                           (if (= pol nil)
                                             (tuple pol hist)
                                             (match (hd pol)
-                                              ((tuple |c'| |m'|)
+                                              ((tuple c* m*)
                                                 (tuple
                                                   (map
-                                                    (lambdac (arg~587)
-                                                      (match arg~587
-                                                        ((tuple c~local~589 m)
-                                                          (tuple (/ c~local~589 |c'|) m))))
+                                                    (lambdac (arg~577)
+                                                      (match arg~577
+                                                        ((tuple c** m)
+                                                          (tuple (/ c** c*) m))))
                                                     pol)
                                                   (make-Mmul
-                                                    (tuple
-                                                      (/ num_1 |c'|)
-                                                      (map (K 0) |m'|))
+                                                    (tuple (/ num_1 c*) (map (K 0) m*))
                                                     hist)))))))))
                                     (fletc
                                       ((forder
-                                        (arg~631 arg~635)
-                                        (match arg~631
+                                        (arg~620 arg~624)
+                                        (match arg~620
                                           ((tuple (tuple c1 m1) _)
-                                            (match arg~635
+                                            (match arg~624
                                               ((tuple (tuple c2 m2) _)
                                                 (funcall morder_lt m1 m2)))))))
                                       (labelsc
                                         ((poly_lt
-                                          (p~local~653 q)
-                                          (match (tuple p~local~653 q)
+                                          (p* q)
+                                          (match (tuple p* q)
                                             ((tuple p nil) cl:nil)
-                                            ((tuple nil q~local~661) cl:t)
+                                            ((tuple nil q*) cl:t)
                                             ((tuple
                                               (cl:cons (tuple c1 m1) o1)
                                               (cl:cons (tuple c2 m2) o2))
@@ -651,37 +644,33 @@
                                                     (cl:and (= m1 m2) (poly_lt o1 o2)))))))))
                                         (fletc
                                           ((align
-                                            (arg~708)
-                                            (match arg~708
-                                              ((tuple (tuple p~local~712 hp) (tuple q hq))
-                                                (if (poly_lt p~local~712 q)
-                                                  (tuple
-                                                    (tuple p~local~712 hp)
-                                                    (tuple q hq))
-                                                  (tuple
-                                                    (tuple q hq)
-                                                    (tuple p~local~712 hp)))))))
+                                            (arg~695)
+                                            (match arg~695
+                                              ((tuple (tuple p* hp) (tuple q hq))
+                                                (if (poly_lt p* q)
+                                                  (tuple (tuple p* hp) (tuple q hq))
+                                                  (tuple (tuple q hq) (tuple p* hp)))))))
                                           (fletc
                                             ((poly_eq
                                               (p1 p2)
                                               (forall2
-                                                (lambdac (arg~743 arg~747)
-                                                  (match arg~743
+                                                (lambdac (arg~729 arg~733)
+                                                  (match arg~729
                                                     ((tuple c1 m1)
-                                                      (match arg~747
+                                                      (match arg~733
                                                         ((tuple c2 m2)
                                                           (cl:and (= c1 c2) (= m1 m2)))))))
                                                 p1
                                                 p2)))
                                             (fletc
                                               ((memx
-                                                (arg~769 ppairs)
-                                                (match arg~769
+                                                (arg~755 ppairs)
+                                                (match arg~755
                                                   ((tuple (tuple p1 h1) (tuple p2 h2))
                                                     (not
                                                       (exists
-                                                        (lambdac (arg~776)
-                                                          (match arg~776
+                                                        (lambdac (arg~762)
+                                                          (match arg~762
                                                             ((tuple
                                                               (tuple q1 _)
                                                               (tuple q2 _))
@@ -691,33 +680,27 @@
                                                         ppairs))))))
                                               (fletc
                                                 ((criterion2
-                                                  (basis arg~807 opairs)
-                                                  (match arg~807
+                                                  (basis arg~793 opairs)
+                                                  (match arg~793
                                                     ((tuple
                                                       lcm
                                                       (tuple (tuple p1 h1) (tuple p2 h2)))
                                                       (exists
-                                                        (lambdac (g~local~815)
+                                                        (lambdac (g*)
                                                           (cl:and
-                                                            (not
-                                                              (poly_eq
-                                                                (fst g~local~815)
-                                                                p1))
+                                                            (not (poly_eq (fst g*) p1))
                                                             (cl:and
-                                                              (not
-                                                                (poly_eq
-                                                                  (fst g~local~815)
-                                                                  p2))
+                                                              (not (poly_eq (fst g*) p2))
                                                               (cl:and
                                                                 (can
                                                                   (mdiv lcm)
-                                                                  (hd (fst g~local~815)))
+                                                                  (hd (fst g*)))
                                                                 (cl:and
                                                                   (not
                                                                     (memx
                                                                       (align
                                                                         (tuple
-                                                                          g~local~815
+                                                                          g*
                                                                           (tuple p1 h1)))
                                                                       (map
                                                                         (function-value
@@ -728,7 +711,7 @@
                                                                     (memx
                                                                       (align
                                                                         (tuple
-                                                                          g~local~815
+                                                                          g*
                                                                           (tuple p2 h2)))
                                                                       (map
                                                                         (function-value
@@ -738,12 +721,12 @@
                                                         basis)))))
                                                 (fletc
                                                   ((constant_poly
-                                                    (p~local~872)
+                                                    (p*)
                                                     (cl:and
-                                                      (= (funcall length p~local~872) 1)
+                                                      (= (funcall length p*) 1)
                                                       (forall
                                                         (partial (function-value #'= 2) 0)
-                                                        (snd (hd p~local~872))))))
+                                                        (snd (hd p*))))))
                                                   (labelsc
                                                     ((grobner_basis
                                                       (basis pairs)
@@ -791,35 +774,33 @@
                                                                     (let*
                                                                       ((rawcps
                                                                         (map
-                                                                          (lambdac
-                                                                            (p~local~919)
+                                                                          (lambdac (p*)
                                                                             (tuple
                                                                               (mlcm
                                                                                 (hd
-                                                                                  (fst
-                                                                                    p~local~919))
+                                                                                  (fst p*))
                                                                                 (hd sp))
                                                                               (align
                                                                                 (tuple
-                                                                                  p~local~919
+                                                                                  p*
                                                                                   sph))))
                                                                           basis))
                                                                         (newcps
                                                                           (filter
                                                                             (lambdac
-                                                                              (arg~936)
+                                                                              (arg~919)
                                                                               (match
-                                                                                arg~936
+                                                                                arg~919
                                                                                 ((tuple
-                                                                                  l~local~938
+                                                                                  l*
                                                                                   (tuple
-                                                                                    p~local~940
+                                                                                    p*
                                                                                     q))
                                                                                   (not
                                                                                     (orthogonal
-                                                                                      l~local~938
+                                                                                      l*
                                                                                       (fst
-                                                                                        p~local~940)
+                                                                                        p*)
                                                                                       (fst
                                                                                         q))))))
                                                                             rawcps)))
@@ -841,18 +822,18 @@
                                                             (map
                                                               #'monic
                                                               (funcall rev rpols)))
-                                                          ((cl:cons p~local~1018 ps)
+                                                          ((cl:cons p* ps)
                                                             (let
-                                                              ((|p'|
+                                                              ((p**
                                                                 (reduce
                                                                   (append rpols ps)
-                                                                  p~local~1018)))
-                                                              (if (= (fst |p'|) nil)
+                                                                  p*)))
+                                                              (if (= (fst p**) nil)
                                                                 (grobner_interreduce
                                                                   rpols
                                                                   ps)
                                                                 (grobner_interreduce
-                                                                  (cl:cons |p'| rpols)
+                                                                  (cl:cons p** rpols)
                                                                   ps)))))))
                                                       (fletc
                                                         ((grobner
@@ -860,9 +841,9 @@
                                                           (let*
                                                             ((npols
                                                               (map2
-                                                                (lambdac (p~local~1049 n)
+                                                                (lambdac (p* n)
                                                                   (tuple
-                                                                    p~local~1049
+                                                                    p*
                                                                     (make-Start n)))
                                                                 pols
                                                                 (--
@@ -872,14 +853,10 @@
                                                                     1))))
                                                               (phists
                                                                 (filter
-                                                                  (lambdac (arg~1066)
-                                                                    (match arg~1066
-                                                                      ((tuple
-                                                                        p~local~1068
-                                                                        _)
-                                                                        (<>
-                                                                          p~local~1068
-                                                                          nil))))
+                                                                  (lambdac (arg~1045)
+                                                                    (match arg~1045
+                                                                      ((tuple p* _)
+                                                                        (<> p* nil))))
                                                                   npols))
                                                               (bas
                                                                 (grobner_interreduce
@@ -893,8 +870,8 @@
                                                                   bas))
                                                               (prs1
                                                                 (filter
-                                                                  (lambdac (arg~1096)
-                                                                    (match arg~1096
+                                                                  (lambdac (arg~1074)
+                                                                    (match arg~1074
                                                                       ((tuple
                                                                         (tuple x _)
                                                                         (tuple y _))
@@ -902,35 +879,26 @@
                                                                   prs0))
                                                               (prs2
                                                                 (map
-                                                                  (lambdac (arg~1114)
-                                                                    (match arg~1114
-                                                                      ((tuple
-                                                                        p~local~1116
-                                                                        q)
+                                                                  (lambdac (arg~1092)
+                                                                    (match arg~1092
+                                                                      ((tuple p* q)
                                                                         (tuple
                                                                           (mlcm
-                                                                            (hd
-                                                                              (fst
-                                                                                p~local~1116))
+                                                                            (hd (fst p*))
                                                                             (hd (fst q)))
-                                                                          (tuple
-                                                                            p~local~1116
-                                                                            q)))))
+                                                                          (tuple p* q)))))
                                                                   prs1))
                                                               (prs3
                                                                 (filter
-                                                                  (lambdac (arg~1137)
-                                                                    (match arg~1137
+                                                                  (lambdac (arg~1114)
+                                                                    (match arg~1114
                                                                       ((tuple
                                                                         l
-                                                                        (tuple
-                                                                          p~local~1140
-                                                                          q))
+                                                                        (tuple p* q))
                                                                         (not
                                                                           (orthogonal
                                                                             l
-                                                                            (fst
-                                                                              p~local~1140)
+                                                                            (fst p*)
                                                                             (fst q))))))
                                                                   prs2)))
                                                             (grobner_basis
@@ -942,16 +910,14 @@
                                                             (let ((gb (grobner pols)))
                                                               (snd
                                                                 (find
-                                                                  (lambdac (arg~1175)
-                                                                    (match arg~1175
-                                                                      ((tuple
-                                                                        p~local~1178
-                                                                        h)
+                                                                  (lambdac (arg~1151)
+                                                                    (match arg~1151
+                                                                      ((tuple p* h)
                                                                         (cl:and
                                                                           (=
                                                                             (funcall
                                                                               length
-                                                                              p~local~1178)
+                                                                              p*)
                                                                             1)
                                                                           (forall
                                                                             (partial
@@ -959,9 +925,7 @@
                                                                                 #'=
                                                                                 2)
                                                                               0)
-                                                                            (snd
-                                                                              (hd
-                                                                                p~local~1178)))))))
+                                                                            (snd (hd p*)))))))
                                                                   gb)))))
                                                           (labelsc
                                                             ((resolve_proof
@@ -985,16 +949,14 @@
                                                                         vars
                                                                         lin)))
                                                                     (map
-                                                                      (lambdac (arg~1229)
-                                                                        (match arg~1229
-                                                                          ((tuple
-                                                                            n
-                                                                            p~local~1232)
+                                                                      (lambdac (arg~1204)
+                                                                        (match arg~1204
+                                                                          ((tuple n p*)
                                                                             (tuple
                                                                               n
                                                                               (grob_cmul
                                                                                 pol
-                                                                                p~local~1232)))))
+                                                                                p*)))))
                                                                       lis)))
                                                                 ((Add lin1 lin2)
                                                                   (let
@@ -1007,7 +969,7 @@
                                                                           vars
                                                                           lin2)))
                                                                     (let
-                                                                      ((dom~local~1259
+                                                                      ((dom*
                                                                         (setify
                                                                           (union
                                                                             (map
@@ -1023,42 +985,42 @@
                                                                       (map
                                                                         (lambdac (n)
                                                                           (let
-                                                                            ((a~local~1270
+                                                                            ((a*
                                                                               (handler-case
                                                                                 (assoc
                                                                                   n
                                                                                   lis1)
                                                                                 (hol2cl.runtime:ocaml-condition
-                                                                                  (exception~1274)
+                                                                                  (exception~1245)
                                                                                   (match
-                                                                                    exception~1274
+                                                                                    exception~1245
                                                                                     ((Failure
                                                                                       _)
                                                                                       nil)
                                                                                     (_
                                                                                       (raise
-                                                                                        exception~1274))))))
-                                                                              (b~local~1272
+                                                                                        exception~1245))))))
+                                                                              (b*
                                                                                 (handler-case
                                                                                   (assoc
                                                                                     n
                                                                                     lis2)
                                                                                   (hol2cl.runtime:ocaml-condition
-                                                                                    (exception~1282)
+                                                                                    (exception~1253)
                                                                                     (match
-                                                                                      exception~1282
+                                                                                      exception~1253
                                                                                       ((Failure
                                                                                         _)
                                                                                         nil)
                                                                                       (_
                                                                                         (raise
-                                                                                          exception~1282)))))))
+                                                                                          exception~1253)))))))
                                                                             (tuple
                                                                               n
                                                                               (grob_add
-                                                                                a~local~1270
-                                                                                b~local~1272))))
-                                                                        dom~local~1259)))))))
+                                                                                a*
+                                                                                b*))))
+                                                                        dom*)))))))
                                                             (fletc
                                                               ((grobner_weak
                                                                 (vars pols)
@@ -1087,18 +1049,16 @@
                                                                   (tuple
                                                                     l
                                                                     (map
-                                                                      (lambdac (arg~1324)
-                                                                        (match arg~1324
-                                                                          ((tuple
-                                                                            i~local~1326
-                                                                            p~local~1328)
+                                                                      (lambdac (arg~1295)
+                                                                        (match arg~1295
+                                                                          ((tuple i* p*)
                                                                             (tuple
-                                                                              i~local~1326
+                                                                              i*
                                                                               (map
                                                                                 (lambdac
-                                                                                  (arg~1331)
+                                                                                  (arg~1300)
                                                                                   (match
-                                                                                    arg~1331
+                                                                                    arg~1300
                                                                                     ((tuple
                                                                                       d
                                                                                       m)
@@ -1107,7 +1067,7 @@
                                                                                           l
                                                                                           d)
                                                                                         m))))
-                                                                                p~local~1328)))))
+                                                                                p*)))))
                                                                       cert)))))
                                                               (fletc
                                                                 ((grobner_ideal
@@ -1120,8 +1080,8 @@
                                                                           grob_neg
                                                                           pol)
                                                                         (make-Start (- 1))))
-                                                                    ((tuple |pol'| h)
-                                                                      (if (<> |pol'| nil)
+                                                                    ((tuple pol* h)
+                                                                      (if (<> pol* nil)
                                                                         (failwith
                                                                           "grobner_ideal: not in the ideal")
                                                                         (resolve_proof
@@ -1133,7 +1093,7 @@
                                                                     (if (= pol nil)
                                                                       (tuple 1 num_1 nil)
                                                                       (let*
-                                                                        ((|vars'|
+                                                                        ((vars*
                                                                           (cl:cons
                                                                             (concl TRUTH)
                                                                             vars))
@@ -1157,30 +1117,30 @@
                                                                                   (lambdac
                                                                                     (x)
                                                                                     0)
-                                                                                  |vars'|))
+                                                                                  vars*))
                                                                               nil))
-                                                                          (augment~local~1395
+                                                                          (augment*
                                                                             (map
                                                                               (lambdac
-                                                                                (arg~1417)
+                                                                                (arg~1385)
                                                                                 (match
-                                                                                  arg~1417
+                                                                                  arg~1385
                                                                                   ((tuple
-                                                                                    c~local~1419
+                                                                                    c*
                                                                                     m)
                                                                                     (tuple
-                                                                                      c~local~1419
+                                                                                      c*
                                                                                       (cl:cons
                                                                                         0
                                                                                         m))))))))
                                                                         (let
-                                                                          ((|pols'|
+                                                                          ((pols*
                                                                             (map
-                                                                              augment~local~1395
+                                                                              augment*
                                                                               pols))
-                                                                            (|pol'|
+                                                                            (pol*
                                                                               (funcall
-                                                                                augment~local~1395
+                                                                                augment*
                                                                                 pol)))
                                                                           (let
                                                                             ((allpols
@@ -1188,12 +1148,12 @@
                                                                                 (grob_sub
                                                                                   (grob_mul
                                                                                     grob_z
-                                                                                    |pol'|)
+                                                                                    pol*)
                                                                                   grob_1)
-                                                                                |pols'|)))
+                                                                                pols*)))
                                                                             (match
                                                                               (grobner_weak
-                                                                                |vars'|
+                                                                                vars*
                                                                                 allpols)
                                                                               ((tuple
                                                                                 l
@@ -1219,15 +1179,15 @@
                                                                                       0)))
                                                                                   (fletc
                                                                                     ((transform_monomial
-                                                                                      (arg~1462)
+                                                                                      (arg~1429)
                                                                                       (match
-                                                                                        arg~1462
+                                                                                        arg~1429
                                                                                         ((tuple
-                                                                                          c~local~1464
+                                                                                          c*
                                                                                           m)
                                                                                           (grob_cmul
                                                                                             (tuple
-                                                                                              c~local~1464
+                                                                                              c*
                                                                                               (tl
                                                                                                 m))
                                                                                             (grob_pow
@@ -1247,37 +1207,37 @@
                                                                                           q
                                                                                           nil)))
                                                                                       (let
-                                                                                        ((|cert'|
+                                                                                        ((cert*
                                                                                           (map
                                                                                             (lambdac
-                                                                                              (arg~1491)
+                                                                                              (arg~1457)
                                                                                               (match
-                                                                                                arg~1491
+                                                                                                arg~1457
                                                                                                 ((tuple
-                                                                                                  c~local~1493
+                                                                                                  c*
                                                                                                   q)
                                                                                                   (tuple
                                                                                                     (-
-                                                                                                      c~local~1493
+                                                                                                      c*
                                                                                                       1)
                                                                                                     (transform_polynomial
                                                                                                       q)))))
                                                                                             (filter
                                                                                               (lambdac
-                                                                                                (arg~1506)
+                                                                                                (arg~1471)
                                                                                                 (match
-                                                                                                  arg~1506
+                                                                                                  arg~1471
                                                                                                   ((tuple
-                                                                                                    k~local~1508
+                                                                                                    k*
                                                                                                     _)
                                                                                                     (<>
-                                                                                                      k~local~1508
+                                                                                                      k*
                                                                                                       0))))
                                                                                               cert))))
                                                                                         (tuple
                                                                                           d
                                                                                           l
-                                                                                          |cert'|)))))))))))))
+                                                                                          cert*)))))))))))))
                                                                   (let
                                                                     ((pth_step
                                                                       (prove
@@ -1368,7 +1328,7 @@
                                                                                 "\\/"
                                                                                 _)
                                                                               l)
-                                                                            r~local~1608)
+                                                                            r*)
                                                                             (funcall
                                                                               DISJ_CASES
                                                                               (ASSUME tm)
@@ -1377,13 +1337,13 @@
                                                                                 l)
                                                                               (refute_disj
                                                                                 rfn
-                                                                                r~local~1608)))
+                                                                                r*)))
                                                                           (_
                                                                             (funcall
                                                                               rfn
                                                                               tm)))))
-                                                                      (lambdac (arg~1631)
-                                                                        (match arg~1631
+                                                                      (lambdac (arg~1594)
+                                                                        (match arg~1594
                                                                           ((tuple
                                                                             ring_dest_const
                                                                             ring_mk_const
@@ -1449,34 +1409,34 @@
                                                                                                         nil)))))))))))))
                                                                                 (ring_dest_neg
                                                                                   (lambdac
-                                                                                    (|t|)
+                                                                                    (t*)
                                                                                     (match
                                                                                       (dest_comb
-                                                                                        |t|)
+                                                                                        t*)
                                                                                       ((tuple
                                                                                         l
-                                                                                        r~local~1704)
+                                                                                        r*)
                                                                                         (if
                                                                                           (=
                                                                                             l
                                                                                             ring_neg_tm)
-                                                                                          r~local~1704
+                                                                                          r*
                                                                                           (failwith
                                                                                             "ring_dest_neg"))))))
                                                                                 (ring_dest_inv
                                                                                   (lambdac
-                                                                                    (|t|)
+                                                                                    (t*)
                                                                                     (match
                                                                                       (dest_comb
-                                                                                        |t|)
+                                                                                        t*)
                                                                                       ((tuple
                                                                                         l
-                                                                                        r~local~1722)
+                                                                                        r*)
                                                                                         (if
                                                                                           (=
                                                                                             l
                                                                                             ring_inv_tm)
-                                                                                          r~local~1722
+                                                                                          r*
                                                                                           (failwith
                                                                                             "ring_dest_inv"))))))
                                                                                 (ring_dest_add
@@ -1615,19 +1575,19 @@
                                                                                             num_1
                                                                                             (map
                                                                                               (lambdac
-                                                                                                (i~local~1994)
+                                                                                                (i*)
                                                                                                 (if
                                                                                                   (=
-                                                                                                    i~local~1994
+                                                                                                    i*
                                                                                                     tm)
                                                                                                   1
                                                                                                   0))
                                                                                               vars))
                                                                                           nil))
                                                                                       (hol2cl.runtime:ocaml-condition
-                                                                                        (exception~1848)
+                                                                                        (exception~1809)
                                                                                         (match
-                                                                                          exception~1848
+                                                                                          exception~1809
                                                                                           ((Failure
                                                                                             _)
                                                                                             (handler-case
@@ -1651,9 +1611,9 @@
                                                                                                         vars))
                                                                                                     nil)))
                                                                                               (hol2cl.runtime:ocaml-condition
-                                                                                                (exception~1851)
+                                                                                                (exception~1812)
                                                                                                 (match
-                                                                                                  exception~1851
+                                                                                                  exception~1812
                                                                                                   ((Failure
                                                                                                     _)
                                                                                                     (handler-case
@@ -1665,9 +1625,9 @@
                                                                                                             ring_dest_neg
                                                                                                             tm)))
                                                                                                       (hol2cl.runtime:ocaml-condition
-                                                                                                        (exception~1854)
+                                                                                                        (exception~1815)
                                                                                                         (match
-                                                                                                          exception~1854
+                                                                                                          exception~1815
                                                                                                           ((Failure
                                                                                                             _)
                                                                                                             (handler-case
@@ -1678,9 +1638,9 @@
                                                                                                                     ring_dest_inv
                                                                                                                     tm)))
                                                                                                               (hol2cl.runtime:ocaml-condition
-                                                                                                                (exception~1857)
+                                                                                                                (exception~1818)
                                                                                                                 (match
-                                                                                                                  exception~1857
+                                                                                                                  exception~1818
                                                                                                                   ((Failure
                                                                                                                     _)
                                                                                                                     (handler-case
@@ -1690,18 +1650,18 @@
                                                                                                                           tm)
                                                                                                                         ((tuple
                                                                                                                           l
-                                                                                                                          r~local~1946)
+                                                                                                                          r*)
                                                                                                                           (grob_add
                                                                                                                             (grobify_term
                                                                                                                               vars
                                                                                                                               l)
                                                                                                                             (grobify_term
                                                                                                                               vars
-                                                                                                                              r~local~1946))))
+                                                                                                                              r*))))
                                                                                                                       (hol2cl.runtime:ocaml-condition
-                                                                                                                        (exception~1860)
+                                                                                                                        (exception~1821)
                                                                                                                         (match
-                                                                                                                          exception~1860
+                                                                                                                          exception~1821
                                                                                                                           ((Failure
                                                                                                                             _)
                                                                                                                             (handler-case
@@ -1711,18 +1671,18 @@
                                                                                                                                   tm)
                                                                                                                                 ((tuple
                                                                                                                                   l
-                                                                                                                                  r~local~1929)
+                                                                                                                                  r*)
                                                                                                                                   (grob_sub
                                                                                                                                     (grobify_term
                                                                                                                                       vars
                                                                                                                                       l)
                                                                                                                                     (grobify_term
                                                                                                                                       vars
-                                                                                                                                      r~local~1929))))
+                                                                                                                                      r*))))
                                                                                                                               (hol2cl.runtime:ocaml-condition
-                                                                                                                                (exception~1863)
+                                                                                                                                (exception~1824)
                                                                                                                                 (match
-                                                                                                                                  exception~1863
+                                                                                                                                  exception~1824
                                                                                                                                   ((Failure
                                                                                                                                     _)
                                                                                                                                     (handler-case
@@ -1732,18 +1692,18 @@
                                                                                                                                           tm)
                                                                                                                                         ((tuple
                                                                                                                                           l
-                                                                                                                                          r~local~1912)
+                                                                                                                                          r*)
                                                                                                                                           (grob_mul
                                                                                                                                             (grobify_term
                                                                                                                                               vars
                                                                                                                                               l)
                                                                                                                                             (grobify_term
                                                                                                                                               vars
-                                                                                                                                              r~local~1912))))
+                                                                                                                                              r*))))
                                                                                                                                       (hol2cl.runtime:ocaml-condition
-                                                                                                                                        (exception~1866)
+                                                                                                                                        (exception~1827)
                                                                                                                                         (match
-                                                                                                                                          exception~1866
+                                                                                                                                          exception~1827
                                                                                                                                           ((Failure
                                                                                                                                             _)
                                                                                                                                             (handler-case
@@ -1753,18 +1713,18 @@
                                                                                                                                                   tm)
                                                                                                                                                 ((tuple
                                                                                                                                                   l
-                                                                                                                                                  r~local~1895)
+                                                                                                                                                  r*)
                                                                                                                                                   (grob_div
                                                                                                                                                     (grobify_term
                                                                                                                                                       vars
                                                                                                                                                       l)
                                                                                                                                                     (grobify_term
                                                                                                                                                       vars
-                                                                                                                                                      r~local~1895))))
+                                                                                                                                                      r*))))
                                                                                                                                               (hol2cl.runtime:ocaml-condition
-                                                                                                                                                (exception~1869)
+                                                                                                                                                (exception~1830)
                                                                                                                                                 (match
-                                                                                                                                                  exception~1869
+                                                                                                                                                  exception~1830
                                                                                                                                                   ((Failure
                                                                                                                                                     _)
                                                                                                                                                     (handler-case
@@ -1774,49 +1734,49 @@
                                                                                                                                                           tm)
                                                                                                                                                         ((tuple
                                                                                                                                                           l
-                                                                                                                                                          r~local~1878)
+                                                                                                                                                          r*)
                                                                                                                                                           (grob_pow
                                                                                                                                                             vars
                                                                                                                                                             (grobify_term
                                                                                                                                                               vars
                                                                                                                                                               l)
                                                                                                                                                             (dest_small_numeral
-                                                                                                                                                              r~local~1878))))
+                                                                                                                                                              r*))))
                                                                                                                                                       (hol2cl.runtime:ocaml-condition
-                                                                                                                                                        (exception~1872)
+                                                                                                                                                        (exception~1833)
                                                                                                                                                         (match
-                                                                                                                                                          exception~1872
+                                                                                                                                                          exception~1833
                                                                                                                                                           ((Failure
                                                                                                                                                             _)
                                                                                                                                                             (failwith
                                                                                                                                                               "grobify_term: unknown or invalid term"))
                                                                                                                                                           (_
                                                                                                                                                             (raise
-                                                                                                                                                              exception~1872))))))
+                                                                                                                                                              exception~1833))))))
                                                                                                                                                   (_
                                                                                                                                                     (raise
-                                                                                                                                                      exception~1869))))))
+                                                                                                                                                      exception~1830))))))
                                                                                                                                           (_
                                                                                                                                             (raise
-                                                                                                                                              exception~1866))))))
+                                                                                                                                              exception~1827))))))
                                                                                                                                   (_
                                                                                                                                     (raise
-                                                                                                                                      exception~1863))))))
+                                                                                                                                      exception~1824))))))
                                                                                                                           (_
                                                                                                                             (raise
-                                                                                                                              exception~1860))))))
+                                                                                                                              exception~1821))))))
                                                                                                                   (_
                                                                                                                     (raise
-                                                                                                                      exception~1857))))))
+                                                                                                                      exception~1818))))))
                                                                                                           (_
                                                                                                             (raise
-                                                                                                              exception~1854))))))
+                                                                                                              exception~1815))))))
                                                                                                   (_
                                                                                                     (raise
-                                                                                                      exception~1851))))))
+                                                                                                      exception~1812))))))
                                                                                           (_
                                                                                             (raise
-                                                                                              exception~1848)))))))
+                                                                                              exception~1809)))))))
                                                                                   (fletc
                                                                                     ((grobify_equation
                                                                                       (vars
@@ -1826,14 +1786,14 @@
                                                                                           tm)
                                                                                         ((tuple
                                                                                           l
-                                                                                          r~local~2020)
+                                                                                          r*)
                                                                                           (grob_sub
                                                                                             (grobify_term
                                                                                               vars
                                                                                               l)
                                                                                             (grobify_term
                                                                                               vars
-                                                                                              r~local~2020))))))
+                                                                                              r*))))))
                                                                                     (fletc
                                                                                       ((grobify_equations
                                                                                         (tm)
@@ -1846,7 +1806,7 @@
                                                                                               (itlist
                                                                                                 (lambdac
                                                                                                   (eq
-                                                                                                    a~local~2042)
+                                                                                                    a*)
                                                                                                   (grobvars
                                                                                                     (funcall
                                                                                                       lhand
@@ -1854,7 +1814,7 @@
                                                                                                     (grobvars
                                                                                                       (rand
                                                                                                         eq)
-                                                                                                      a~local~2042)))
+                                                                                                      a*)))
                                                                                                 cjs
                                                                                                 nil))
                                                                                             (vars
@@ -1877,9 +1837,9 @@
                                                                                         ((holify_polynomial
                                                                                           (fletc
                                                                                             ((holify_varpow
-                                                                                              (arg~2076)
+                                                                                              (arg~2029)
                                                                                               (match
-                                                                                                arg~2076
+                                                                                                arg~2029
                                                                                                 ((tuple
                                                                                                   v
                                                                                                   n)
@@ -1896,11 +1856,11 @@
                                                                                             (fletc
                                                                                               ((holify_monomial
                                                                                                 (vars
-                                                                                                  arg~2094)
+                                                                                                  arg~2047)
                                                                                                 (match
-                                                                                                  arg~2094
+                                                                                                  arg~2047
                                                                                                   ((tuple
-                                                                                                    c~local~2096
+                                                                                                    c*
                                                                                                     m)
                                                                                                     (let
                                                                                                       ((xps
@@ -1908,9 +1868,9 @@
                                                                                                           #'holify_varpow
                                                                                                           (filter
                                                                                                             (lambdac
-                                                                                                              (arg~2101)
+                                                                                                              (arg~2053)
                                                                                                               (match
-                                                                                                                arg~2101
+                                                                                                                arg~2053
                                                                                                                 ((tuple
                                                                                                                   _
                                                                                                                   n)
@@ -1925,15 +1885,15 @@
                                                                                                         (cl:cons
                                                                                                           (funcall
                                                                                                             ring_mk_const
-                                                                                                            c~local~2096)
+                                                                                                            c*)
                                                                                                           xps)))))))
                                                                                               (fletc
                                                                                                 ((holify_polynomial
                                                                                                   (vars
-                                                                                                    p~local~2128)
+                                                                                                    p*)
                                                                                                   (if
                                                                                                     (=
-                                                                                                      p~local~2128
+                                                                                                      p*
                                                                                                       nil)
                                                                                                     (funcall
                                                                                                       ring_mk_const
@@ -1943,7 +1903,7 @@
                                                                                                       (map
                                                                                                         (holify_monomial
                                                                                                           vars)
-                                                                                                        p~local~2128)))))
+                                                                                                        p*)))))
                                                                                                 #'holify_polynomial)))))
                                                                                         (match
                                                                                           (CONJ_PAIR
@@ -1991,7 +1951,7 @@
                                                                                                       (lambdac
                                                                                                         (th1
                                                                                                           th2)
-                                                                                                        (|MK_COMB|
+                                                                                                        (MK_COMB*
                                                                                                           (tuple
                                                                                                             (AP_TERM
                                                                                                               ring_add_tm
@@ -2030,10 +1990,10 @@
                                                                                                                         #'I
                                                                                                                         (cl:cons
                                                                                                                           (SYM
-                                                                                                                            (|INST|
+                                                                                                                            (INST*
                                                                                                                               (cl:cons
                                                                                                                                 (tuple
-                                                                                                                                  (|mk_comb|
+                                                                                                                                  (mk_comb
                                                                                                                                     (tuple
                                                                                                                                       ring_neg_tm
                                                                                                                                       z))
@@ -2051,38 +2011,38 @@
                                                                                                                           eths)))
                                                                                                                     (fletc
                                                                                                                       ((ADD_RULE
-                                                                                                                        (th1~local~2219
-                                                                                                                          th2~local~2221)
+                                                                                                                        (th1*
+                                                                                                                          th2*)
                                                                                                                         (CONV_RULE
                                                                                                                           (BINOP_CONV
                                                                                                                             RING_NORMALIZE_CONV)
-                                                                                                                          (|MK_COMB|
+                                                                                                                          (MK_COMB*
                                                                                                                             (tuple
                                                                                                                               (AP_TERM
                                                                                                                                 ring_add_tm
-                                                                                                                                th1~local~2219)
-                                                                                                                              th2~local~2221))))
+                                                                                                                                th1*)
+                                                                                                                              th2*))))
                                                                                                                         (MUL_RULE
-                                                                                                                          (vars~local~2232
+                                                                                                                          (vars*
                                                                                                                             m
                                                                                                                             th)
                                                                                                                           (CONV_RULE
                                                                                                                             (BINOP_CONV
                                                                                                                               RING_NORMALIZE_CONV)
                                                                                                                             (AP_TERM
-                                                                                                                              (|mk_comb|
+                                                                                                                              (mk_comb
                                                                                                                                 (tuple
                                                                                                                                   ring_mul_tm
                                                                                                                                   (funcall
                                                                                                                                     holify_polynomial
-                                                                                                                                    vars~local~2232
+                                                                                                                                    vars*
                                                                                                                                     (cl:cons
                                                                                                                                       m
                                                                                                                                       nil))))
                                                                                                                               th))))
                                                                                                                       (labelsc
                                                                                                                         ((assoceq
-                                                                                                                          (a~local~2250
+                                                                                                                          (a*
                                                                                                                             l)
                                                                                                                           (match
                                                                                                                             l
@@ -2091,17 +2051,17 @@
                                                                                                                                 "assoceq"))
                                                                                                                             ((cl:cons
                                                                                                                               (tuple
-                                                                                                                                x~local~2257
-                                                                                                                                y~local~2259)
-                                                                                                                              |t|)
+                                                                                                                                x*
+                                                                                                                                y*)
+                                                                                                                              t*)
                                                                                                                               (if
                                                                                                                                 (==
-                                                                                                                                  x~local~2257
-                                                                                                                                  a~local~2250)
-                                                                                                                                y~local~2259
+                                                                                                                                  x*
+                                                                                                                                  a*)
+                                                                                                                                y*
                                                                                                                                 (assoceq
-                                                                                                                                  a~local~2250
-                                                                                                                                  |t|))))))
+                                                                                                                                  a*
+                                                                                                                                  t*))))))
                                                                                                                         (let*
                                                                                                                           ((run_proof
                                                                                                                             (if
@@ -2122,35 +2082,35 @@
                                                                                                                                       nil)))
                                                                                                                                   (fletc
                                                                                                                                     ((memoize
-                                                                                                                                      (prf~local~2447
-                                                                                                                                        x~local~2449)
+                                                                                                                                      (prf*
+                                                                                                                                        x*)
                                                                                                                                       (progn
                                                                                                                                         (assign
                                                                                                                                           execache
                                                                                                                                           (cl:cons
                                                                                                                                             (tuple
-                                                                                                                                              prf~local~2447
-                                                                                                                                              x~local~2449)
+                                                                                                                                              prf*
+                                                                                                                                              x*)
                                                                                                                                             (deref
                                                                                                                                               execache)))
-                                                                                                                                        x~local~2449)))
+                                                                                                                                        x*)))
                                                                                                                                     (labelsc
                                                                                                                                       ((run_proof
-                                                                                                                                        (vars~local~2462
-                                                                                                                                          prf~local~2464)
+                                                                                                                                        (vars*
+                                                                                                                                          prf*)
                                                                                                                                         (handler-case
                                                                                                                                           (assoceq
-                                                                                                                                            prf~local~2464
+                                                                                                                                            prf*
                                                                                                                                             (deref
                                                                                                                                               execache))
                                                                                                                                           (hol2cl.runtime:ocaml-condition
-                                                                                                                                            (exception~2466)
+                                                                                                                                            (exception~2396)
                                                                                                                                             (match
-                                                                                                                                              exception~2466
+                                                                                                                                              exception~2396
                                                                                                                                               ((Failure
                                                                                                                                                 _)
                                                                                                                                                 (match
-                                                                                                                                                  prf~local~2464
+                                                                                                                                                  prf*
                                                                                                                                                   ((Start
                                                                                                                                                     m)
                                                                                                                                                     (el
@@ -2160,36 +2120,36 @@
                                                                                                                                                     p1
                                                                                                                                                     p2)
                                                                                                                                                     (memoize
-                                                                                                                                                      prf~local~2464
+                                                                                                                                                      prf*
                                                                                                                                                       (ADD_RULE
                                                                                                                                                         (run_proof
-                                                                                                                                                          vars~local~2462
+                                                                                                                                                          vars*
                                                                                                                                                           p1)
                                                                                                                                                         (run_proof
-                                                                                                                                                          vars~local~2462
+                                                                                                                                                          vars*
                                                                                                                                                           p2))))
                                                                                                                                                   ((Mmul
                                                                                                                                                     m
                                                                                                                                                     p2)
                                                                                                                                                     (memoize
-                                                                                                                                                      prf~local~2464
+                                                                                                                                                      prf*
                                                                                                                                                       (MUL_RULE
-                                                                                                                                                        vars~local~2462
+                                                                                                                                                        vars*
                                                                                                                                                         m
                                                                                                                                                         (run_proof
-                                                                                                                                                          vars~local~2462
+                                                                                                                                                          vars*
                                                                                                                                                           p2))))))
                                                                                                                                               (_
                                                                                                                                                 (raise
-                                                                                                                                                  exception~2466)))))))
+                                                                                                                                                  exception~2396)))))))
                                                                                                                                       (lambdac
-                                                                                                                                        (vars~local~2509
-                                                                                                                                          prf~local~2511)
+                                                                                                                                        (vars*
+                                                                                                                                          prf*)
                                                                                                                                         (let
                                                                                                                                           ((ans
                                                                                                                                             (run_proof
-                                                                                                                                              vars~local~2509
-                                                                                                                                              prf~local~2511)))
+                                                                                                                                              vars*
+                                                                                                                                              prf*)))
                                                                                                                                           (progn
                                                                                                                                             (assign
                                                                                                                                               execache
@@ -2204,7 +2164,7 @@
                                                                                                                                   ((km
                                                                                                                                     (map
                                                                                                                                       (lambdac
-                                                                                                                                        (x~local~2282)
+                                                                                                                                        (x*)
                                                                                                                                         0)
                                                                                                                                       vars))
                                                                                                                                     (execache
@@ -2212,35 +2172,35 @@
                                                                                                                                         nil)))
                                                                                                                                   (fletc
                                                                                                                                     ((memoize
-                                                                                                                                      (prf~local~2292
-                                                                                                                                        x~local~2294)
+                                                                                                                                      (prf*
+                                                                                                                                        x*)
                                                                                                                                       (progn
                                                                                                                                         (assign
                                                                                                                                           execache
                                                                                                                                           (cl:cons
                                                                                                                                             (tuple
-                                                                                                                                              prf~local~2292
-                                                                                                                                              x~local~2294)
+                                                                                                                                              prf*
+                                                                                                                                              x*)
                                                                                                                                             (deref
                                                                                                                                               execache)))
-                                                                                                                                        x~local~2294)))
+                                                                                                                                        x*)))
                                                                                                                                     (labelsc
                                                                                                                                       ((run_scaled_proof
-                                                                                                                                        (vars~local~2307
-                                                                                                                                          prf~local~2309)
+                                                                                                                                        (vars*
+                                                                                                                                          prf*)
                                                                                                                                         (handler-case
                                                                                                                                           (assoceq
-                                                                                                                                            prf~local~2309
+                                                                                                                                            prf*
                                                                                                                                             (deref
                                                                                                                                               execache))
                                                                                                                                           (hol2cl.runtime:ocaml-condition
-                                                                                                                                            (exception~2311)
+                                                                                                                                            (exception~2251)
                                                                                                                                             (match
-                                                                                                                                              exception~2311
+                                                                                                                                              exception~2251
                                                                                                                                               ((Failure
                                                                                                                                                 _)
                                                                                                                                                 (match
-                                                                                                                                                  prf~local~2309
+                                                                                                                                                  prf*
                                                                                                                                                   ((Start
                                                                                                                                                     m)
                                                                                                                                                     (tuple
@@ -2254,85 +2214,85 @@
                                                                                                                                                     (match
                                                                                                                                                       (tuple
                                                                                                                                                         (run_scaled_proof
-                                                                                                                                                          vars~local~2307
+                                                                                                                                                          vars*
                                                                                                                                                           p1)
                                                                                                                                                         (run_scaled_proof
-                                                                                                                                                          vars~local~2307
+                                                                                                                                                          vars*
                                                                                                                                                           p2))
                                                                                                                                                       ((tuple
                                                                                                                                                         (tuple
                                                                                                                                                           d1
-                                                                                                                                                          th1~local~2328)
+                                                                                                                                                          th1*)
                                                                                                                                                         (tuple
                                                                                                                                                           d2
-                                                                                                                                                          th2~local~2331))
+                                                                                                                                                          th2*))
                                                                                                                                                         (let
                                                                                                                                                           ((d
                                                                                                                                                             (lcm_num
                                                                                                                                                               d1
                                                                                                                                                               d2)))
                                                                                                                                                           (memoize
-                                                                                                                                                            prf~local~2309
+                                                                                                                                                            prf*
                                                                                                                                                             (tuple
                                                                                                                                                               d
                                                                                                                                                               (ADD_RULE
                                                                                                                                                                 (MUL_RULE
-                                                                                                                                                                  vars~local~2307
+                                                                                                                                                                  vars*
                                                                                                                                                                   (tuple
                                                                                                                                                                     (/
                                                                                                                                                                       d
                                                                                                                                                                       d1)
                                                                                                                                                                     km)
-                                                                                                                                                                  th1~local~2328)
+                                                                                                                                                                  th1*)
                                                                                                                                                                 (MUL_RULE
-                                                                                                                                                                  vars~local~2307
+                                                                                                                                                                  vars*
                                                                                                                                                                   (tuple
                                                                                                                                                                     (/
                                                                                                                                                                       d
                                                                                                                                                                       d2)
                                                                                                                                                                     km)
-                                                                                                                                                                  th2~local~2331))))))))
+                                                                                                                                                                  th2*))))))))
                                                                                                                                                   ((Mmul
                                                                                                                                                     (tuple
-                                                                                                                                                      c~local~2372
+                                                                                                                                                      c*
                                                                                                                                                       xs)
                                                                                                                                                     p2)
                                                                                                                                                     (let
-                                                                                                                                                      ((e~local~2381
+                                                                                                                                                      ((e*
                                                                                                                                                         (funcall
                                                                                                                                                           denominator
-                                                                                                                                                          c~local~2372)))
+                                                                                                                                                          c*)))
                                                                                                                                                       (match
                                                                                                                                                         (run_scaled_proof
-                                                                                                                                                          vars~local~2307
+                                                                                                                                                          vars*
                                                                                                                                                           p2)
                                                                                                                                                         ((tuple
                                                                                                                                                           d
                                                                                                                                                           th)
                                                                                                                                                           (memoize
-                                                                                                                                                            prf~local~2309
+                                                                                                                                                            prf*
                                                                                                                                                             (tuple
                                                                                                                                                               (*
                                                                                                                                                                 d
-                                                                                                                                                                e~local~2381)
+                                                                                                                                                                e*)
                                                                                                                                                               (MUL_RULE
-                                                                                                                                                                vars~local~2307
+                                                                                                                                                                vars*
                                                                                                                                                                 (tuple
                                                                                                                                                                   (*
-                                                                                                                                                                    c~local~2372
-                                                                                                                                                                    e~local~2381)
+                                                                                                                                                                    c*
+                                                                                                                                                                    e*)
                                                                                                                                                                   xs)
                                                                                                                                                                 th)))))))))
                                                                                                                                               (_
                                                                                                                                                 (raise
-                                                                                                                                                  exception~2311)))))))
+                                                                                                                                                  exception~2251)))))))
                                                                                                                                       (lambdac
-                                                                                                                                        (vars~local~2416
-                                                                                                                                          prf~local~2418)
+                                                                                                                                        (vars*
+                                                                                                                                          prf*)
                                                                                                                                         (match
                                                                                                                                           (run_scaled_proof
-                                                                                                                                            vars~local~2416
-                                                                                                                                            prf~local~2418)
+                                                                                                                                            vars*
+                                                                                                                                            prf*)
                                                                                                                                           ((tuple
                                                                                                                                             _
                                                                                                                                             ans)
@@ -2415,7 +2375,7 @@
                                                                                                                             th2)))
                                                                                                                       ((tuple
                                                                                                                         l
-                                                                                                                        r~local~2915)
+                                                                                                                        r*)
                                                                                                                         (EQ_MP
                                                                                                                           (funcall
                                                                                                                             EQF_INTRO
@@ -2545,95 +2505,95 @@
                                                                                                                             ((cert_pos
                                                                                                                               (map
                                                                                                                                 (lambdac
-                                                                                                                                  (arg~2595)
+                                                                                                                                  (arg~2523)
                                                                                                                                   (match
-                                                                                                                                    arg~2595
+                                                                                                                                    arg~2523
                                                                                                                                     ((tuple
-                                                                                                                                      i~local~2597
-                                                                                                                                      p~local~2599)
+                                                                                                                                      i*
+                                                                                                                                      p*)
                                                                                                                                       (tuple
-                                                                                                                                        i~local~2597
+                                                                                                                                        i*
                                                                                                                                         (filter
                                                                                                                                           (lambdac
-                                                                                                                                            (arg~2602)
+                                                                                                                                            (arg~2528)
                                                                                                                                             (match
-                                                                                                                                              arg~2602
+                                                                                                                                              arg~2528
                                                                                                                                               ((tuple
-                                                                                                                                                c~local~2604
+                                                                                                                                                c*
                                                                                                                                                 m)
                                                                                                                                                 (>
-                                                                                                                                                  c~local~2604
+                                                                                                                                                  c*
                                                                                                                                                   num_0))))
-                                                                                                                                          p~local~2599)))))
+                                                                                                                                          p*)))))
                                                                                                                                 cert))
                                                                                                                               (cert_neg
                                                                                                                                 (map
                                                                                                                                   (lambdac
-                                                                                                                                    (arg~2623)
+                                                                                                                                    (arg~2548)
                                                                                                                                     (match
-                                                                                                                                      arg~2623
+                                                                                                                                      arg~2548
                                                                                                                                       ((tuple
-                                                                                                                                        i~local~2625
-                                                                                                                                        p~local~2627)
+                                                                                                                                        i*
+                                                                                                                                        p*)
                                                                                                                                         (tuple
-                                                                                                                                          i~local~2625
+                                                                                                                                          i*
                                                                                                                                           (map
                                                                                                                                             (lambdac
-                                                                                                                                              (arg~2630)
+                                                                                                                                              (arg~2553)
                                                                                                                                               (match
-                                                                                                                                                arg~2630
+                                                                                                                                                arg~2553
                                                                                                                                                 ((tuple
-                                                                                                                                                  c~local~2632
+                                                                                                                                                  c*
                                                                                                                                                   m)
                                                                                                                                                   (tuple
                                                                                                                                                     (-
-                                                                                                                                                      c~local~2632)
+                                                                                                                                                      c*)
                                                                                                                                                     m))))
                                                                                                                                             (filter
                                                                                                                                               (lambdac
-                                                                                                                                                (arg~2643)
+                                                                                                                                                (arg~2565)
                                                                                                                                                 (match
-                                                                                                                                                  arg~2643
+                                                                                                                                                  arg~2565
                                                                                                                                                   ((tuple
-                                                                                                                                                    c~local~2645
+                                                                                                                                                    c*
                                                                                                                                                     m)
                                                                                                                                                     (<
-                                                                                                                                                      c~local~2645
+                                                                                                                                                      c*
                                                                                                                                                       num_0))))
-                                                                                                                                              p~local~2627))))))
+                                                                                                                                              p*))))))
                                                                                                                                   cert)))
                                                                                                                             (let
                                                                                                                               ((herts_pos
                                                                                                                                 (map
                                                                                                                                   (lambdac
-                                                                                                                                    (arg~2667)
+                                                                                                                                    (arg~2588)
                                                                                                                                     (match
-                                                                                                                                      arg~2667
+                                                                                                                                      arg~2588
                                                                                                                                       ((tuple
-                                                                                                                                        i~local~2669
-                                                                                                                                        p~local~2671)
+                                                                                                                                        i*
+                                                                                                                                        p*)
                                                                                                                                         (tuple
-                                                                                                                                          i~local~2669
+                                                                                                                                          i*
                                                                                                                                           (funcall
                                                                                                                                             holify_polynomial
                                                                                                                                             vars
-                                                                                                                                            p~local~2671)))))
+                                                                                                                                            p*)))))
                                                                                                                                   cert_pos))
                                                                                                                                 (herts_neg
                                                                                                                                   (map
                                                                                                                                     (lambdac
-                                                                                                                                      (arg~2684)
+                                                                                                                                      (arg~2603)
                                                                                                                                       (match
-                                                                                                                                        arg~2684
+                                                                                                                                        arg~2603
                                                                                                                                         ((tuple
-                                                                                                                                          i~local~2686
-                                                                                                                                          p~local~2688)
+                                                                                                                                          i*
+                                                                                                                                          p*)
                                                                                                                                           (tuple
-                                                                                                                                            i~local~2686
+                                                                                                                                            i*
                                                                                                                                             (funcall
                                                                                                                                               holify_polynomial
                                                                                                                                               vars
-                                                                                                                                              p~local~2688)))))
+                                                                                                                                              p*)))))
                                                                                                                                     cert_neg)))
                                                                                                                               (fletc
                                                                                                                                 ((thm_fn
@@ -2650,19 +2610,19 @@
                                                                                                                                       MK_ADD
                                                                                                                                       (map
                                                                                                                                         (lambdac
-                                                                                                                                          (arg~2704)
+                                                                                                                                          (arg~2621)
                                                                                                                                           (match
-                                                                                                                                            arg~2704
+                                                                                                                                            arg~2621
                                                                                                                                             ((tuple
-                                                                                                                                              i~local~2706
-                                                                                                                                              p~local~2708)
+                                                                                                                                              i*
+                                                                                                                                              p*)
                                                                                                                                               (AP_TERM
-                                                                                                                                                (|mk_comb|
+                                                                                                                                                (mk_comb
                                                                                                                                                   (tuple
                                                                                                                                                     ring_mul_tm
-                                                                                                                                                    p~local~2708))
+                                                                                                                                                    p*))
                                                                                                                                                 (el
-                                                                                                                                                  i~local~2706
+                                                                                                                                                  i*
                                                                                                                                                   eths)))))
                                                                                                                                         pols)))))
                                                                                                                                 (let
@@ -2697,14 +2657,14 @@
                                                                                                                                           (concl
                                                                                                                                             th4)))
                                                                                                                                       ((tuple
-                                                                                                                                        l~local~2753
-                                                                                                                                        r~local~2755)
+                                                                                                                                        l*
+                                                                                                                                        r*)
                                                                                                                                         (EQ_MP
                                                                                                                                           (funcall
                                                                                                                                             EQF_INTRO
                                                                                                                                             th4)
                                                                                                                                           (REFL
-                                                                                                                                            l~local~2753))))))))))))))))))))
+                                                                                                                                            l*))))))))))))))))))))
                                                                                                       (let
                                                                                                         ((ring_ty
                                                                                                           (snd
@@ -2714,7 +2674,7 @@
                                                                                                                   (type_of
                                                                                                                     ring_add_tm)))))))
                                                                                                         (fletc
-                                                                                                          ((RING~local~2961
+                                                                                                          ((RING*
                                                                                                             (tm)
                                                                                                             (let*
                                                                                                               ((avs
@@ -2728,7 +2688,7 @@
                                                                                                                     #'type_of)
                                                                                                                   (frees
                                                                                                                     tm)))
-                                                                                                                (|tm'|
+                                                                                                                (tm*
                                                                                                                   (list_mk_forall
                                                                                                                     (tuple
                                                                                                                       avs
@@ -2738,7 +2698,7 @@
                                                                                                                     INITIAL_CONV
                                                                                                                     (funcall
                                                                                                                       mk_neg
-                                                                                                                      |tm'|))))
+                                                                                                                      tm*))))
                                                                                                               (match
                                                                                                                 (funcall
                                                                                                                   strip_exists
@@ -2788,15 +2748,15 @@
                                                                                                                       (match
                                                                                                                         (labelsc
                                                                                                                           ((CHOOSES
-                                                                                                                            (evs~local~3022
-                                                                                                                              arg~3024)
+                                                                                                                            (evs*
+                                                                                                                              arg~2934)
                                                                                                                             (match
-                                                                                                                              arg~3024
+                                                                                                                              arg~2934
                                                                                                                               ((tuple
                                                                                                                                 etm
                                                                                                                                 th)
                                                                                                                                 (match
-                                                                                                                                  evs~local~3022
+                                                                                                                                  evs*
                                                                                                                                   (nil
                                                                                                                                     (tuple
                                                                                                                                       etm
@@ -2811,14 +2771,14 @@
                                                                                                                                           etm
                                                                                                                                           th))
                                                                                                                                       ((tuple
-                                                                                                                                        |etm'|
-                                                                                                                                        |th'|)
+                                                                                                                                        etm*
+                                                                                                                                        th*)
                                                                                                                                         (tuple
                                                                                                                                           (funcall
                                                                                                                                             mk_exists
                                                                                                                                             (tuple
                                                                                                                                               ev
-                                                                                                                                              |etm'|))
+                                                                                                                                              etm*))
                                                                                                                                           (funcall
                                                                                                                                             CHOOSE
                                                                                                                                             (tuple
@@ -2828,8 +2788,8 @@
                                                                                                                                                   mk_exists
                                                                                                                                                   (tuple
                                                                                                                                                     ev
-                                                                                                                                                    |etm'|))))
-                                                                                                                                            |th'|))))))))))
+                                                                                                                                                    etm*))))
+                                                                                                                                            th*))))))))))
                                                                                                                           (CHOOSES
                                                                                                                             evs
                                                                                                                             (tuple
@@ -2888,7 +2848,7 @@
                                                                                                                     (lambdac
                                                                                                                       (n)
                                                                                                                       (let
-                                                                                                                        ((p~local~3129
+                                                                                                                        ((p*
                                                                                                                           (assocd
                                                                                                                             n
                                                                                                                             cert
@@ -2896,7 +2856,7 @@
                                                                                                                         (funcall
                                                                                                                           holify_polynomial
                                                                                                                           vars
-                                                                                                                          p~local~3129)))
+                                                                                                                          p*)))
                                                                                                                     (--
                                                                                                                       0
                                                                                                                       (-
@@ -2905,7 +2865,7 @@
                                                                                                                           pols)
                                                                                                                         1)))))))
                                                                                                           (tuple
-                                                                                                            #'RING~local~2961
+                                                                                                            #'RING*
                                                                                                             #'ideal))))))))))))))))))))))))))))))))))))))))))))))))))))))
 
 ;; (* ----------------------------------------------------------------------- *)
@@ -2946,14 +2906,14 @@
         (contains_quantifier
           (can
             (find_term
-              (lambdac (|t|)
+              (lambdac (t*)
                 (cl:or
-                  (funcall is_forall |t|)
-                  (cl:or (funcall is_exists |t|) (funcall is_uexists |t|)))))))
+                  (funcall is_forall t*)
+                  (cl:or (funcall is_exists t*) (funcall is_uexists t*)))))))
         (BETA2_CONV (THENC (RATOR_CONV #'BETA_CONV) #'BETA_CONV))
-        (|PRE_ELIM_THM''| (CONV_RULE (RAND_CONV NNF_CONV) PRE_ELIM_THM))
-        (|SUB_ELIM_THM''| (CONV_RULE (RAND_CONV NNF_CONV) SUB_ELIM_THM))
-        (|DIVMOD_ELIM_THM''| (CONV_RULE (RAND_CONV NNF_CONV) DIVMOD_ELIM_THM))
+        (PRE_ELIM_THM** (CONV_RULE (RAND_CONV NNF_CONV) PRE_ELIM_THM))
+        (SUB_ELIM_THM** (CONV_RULE (RAND_CONV NNF_CONV) SUB_ELIM_THM))
+        (DIVMOD_ELIM_THM** (CONV_RULE (RAND_CONV NNF_CONV) DIVMOD_ELIM_THM))
         (pth_evenodd
           (prove
             (tuple
@@ -2994,21 +2954,18 @@
                   (RAND_CONV (NUM_MULTIPLY_CONV (not pos)) tm)
                   (handler-case
                     (let*
-                      ((|t|
+                      ((t*
                         (find_term
-                          (lambdac (|t|) (cl:and (funcall is_pre |t|) (free_in |t| tm)))
+                          (lambdac (t*) (cl:and (funcall is_pre t*) (free_in t* tm)))
                           tm))
-                        (ty (type_of |t|))
+                        (ty (type_of t*))
                         (v (funcall genvar ty))
-                        (p~local~3564
-                          (mk_abs
-                            (tuple v (funcall subst (cl:cons (tuple v |t|) nil) tm))))
-                        (th0 (if pos |PRE_ELIM_THM''| |PRE_ELIM_THM'|))
+                        (p*
+                          (mk_abs (tuple v (funcall subst (cl:cons (tuple v t*) nil) tm))))
+                        (th0 (if pos PRE_ELIM_THM** PRE_ELIM_THM*))
                         (th1
-                          (|INST|
-                            (cl:cons
-                              (tuple p~local~3564 p_tm)
-                              (cl:cons (tuple (rand |t|) n_tm) nil))
+                          (INST*
+                            (cl:cons (tuple p* p_tm) (cl:cons (tuple (rand t*) n_tm) nil))
                             th0))
                         (th2
                           (CONV_RULE
@@ -3018,31 +2975,31 @@
                             th1)))
                       (CONV_RULE (RAND_CONV (NUM_MULTIPLY_CONV pos)) th2))
                     (hol2cl.runtime:ocaml-condition
-                      (exception~3355)
-                      (match exception~3355
+                      (exception~3264)
+                      (match exception~3264
                         ((Failure _)
                           (handler-case
                             (let*
-                              ((|t|
+                              ((t*
                                 (find_term
-                                  (lambdac (|t|)
-                                    (cl:and (funcall is_sub |t|) (free_in |t| tm)))
+                                  (lambdac (t*)
+                                    (cl:and (funcall is_sub t*) (free_in t* tm)))
                                   tm))
-                                (ty (type_of |t|))
+                                (ty (type_of t*))
                                 (v (funcall genvar ty))
-                                (p~local~3490
+                                (p*
                                   (mk_abs
                                     (tuple
                                       v
-                                      (funcall subst (cl:cons (tuple v |t|) nil) tm))))
-                                (th0 (if pos |SUB_ELIM_THM''| |SUB_ELIM_THM'|))
+                                      (funcall subst (cl:cons (tuple v t*) nil) tm))))
+                                (th0 (if pos SUB_ELIM_THM** SUB_ELIM_THM*))
                                 (th1
-                                  (|INST|
+                                  (INST*
                                     (cl:cons
-                                      (tuple p~local~3490 p_tm)
+                                      (tuple p* p_tm)
                                       (cl:cons
-                                        (tuple (funcall lhand |t|) a_tm)
-                                        (cl:cons (tuple (rand |t|) b_tm) nil)))
+                                        (tuple (funcall lhand t*) a_tm)
+                                        (cl:cons (tuple (rand t*) b_tm) nil)))
                                     th0))
                                 (th2
                                   (CONV_RULE
@@ -3052,32 +3009,30 @@
                                     th1)))
                               (CONV_RULE (RAND_CONV (NUM_MULTIPLY_CONV pos)) th2))
                             (hol2cl.runtime:ocaml-condition
-                              (exception~3358)
-                              (match exception~3358
+                              (exception~3267)
+                              (match exception~3267
                                 ((Failure _)
                                   (handler-case
                                     (let*
-                                      ((|t|
+                                      ((t*
                                         (find_term
-                                          (lambdac (|t|)
+                                          (lambdac (t*)
                                             (cl:and
-                                              (funcall is_divmod |t|)
-                                              (free_in |t| tm)))
+                                              (funcall is_divmod t*)
+                                              (free_in t* tm)))
                                           tm))
-                                        (x (funcall lhand |t|))
-                                        (y (rand |t|)))
+                                        (x (funcall lhand t*))
+                                        (y (rand t*)))
                                       (let
                                         ((dtm
-                                          (|mk_comb|
-                                            (tuple (|mk_comb| (tuple div_tm x)) y)))
+                                          (mk_comb (tuple (mk_comb (tuple div_tm x)) y)))
                                           (mtm
-                                            (|mk_comb|
-                                              (tuple (|mk_comb| (tuple mod_tm x)) y))))
+                                            (mk_comb (tuple (mk_comb (tuple mod_tm x)) y))))
                                         (let
                                           ((vd (funcall genvar (type_of dtm)))
                                             (vm (funcall genvar (type_of mtm))))
                                           (let*
-                                            ((p~local~3407
+                                            ((p*
                                               (list_mk_abs
                                                 (tuple
                                                   (cl:cons vd (cl:cons vm nil))
@@ -3089,12 +3044,12 @@
                                                     tm))))
                                               (th0
                                                 (if pos
-                                                  |DIVMOD_ELIM_THM''|
-                                                  |DIVMOD_ELIM_THM'|))
+                                                  DIVMOD_ELIM_THM**
+                                                  DIVMOD_ELIM_THM*))
                                               (th1
-                                                (|INST|
+                                                (INST*
                                                   (cl:cons
-                                                    (tuple p~local~3407 q_tm)
+                                                    (tuple p* q_tm)
                                                     (cl:cons
                                                       (tuple x m_tm)
                                                       (cl:cons (tuple y n_tm) nil)))
@@ -3112,12 +3067,12 @@
                                               (RAND_CONV (NUM_MULTIPLY_CONV pos))
                                               th2)))))
                                     (hol2cl.runtime:ocaml-condition
-                                      (exception~3361)
-                                      (match exception~3361
+                                      (exception~3270)
+                                      (match exception~3270
                                         ((Failure _) (REFL tm))
-                                        (_ (raise exception~3361))))))
-                                (_ (raise exception~3358))))))
-                        (_ (raise exception~3355)))))))))))
+                                        (_ (raise exception~3270))))))
+                                (_ (raise exception~3267))))))
+                        (_ (raise exception~3264)))))))))))
         (THENC
           (THENC
             (THENC

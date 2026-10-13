@@ -28,12 +28,12 @@
         o_DEF
         o_THM
         one
+        one_Axiom*
         one_DEF
         one_INDUCT
         one_RECURSION
-        one_tydef
-        |one_Axiom|
-        |one_axiom|)
+        one_axiom
+        one_tydef)
       (:export
         ETA_ONE
         EXISTS_ONE_REP
@@ -46,12 +46,12 @@
         o_DEF
         o_THM
         one
+        one_Axiom*
         one_DEF
         one_INDUCT
         one_RECURSION
-        one_tydef
-        |one_Axiom|
-        |one_axiom|))))
+        one_axiom
+        one_tydef))))
 
 (defpackage :hol2cl.trivia
   (:use :cl)
@@ -67,12 +67,12 @@
     o_DEF
     o_THM
     one
+    one_Axiom*
     one_DEF
     one_INDUCT
     one_RECURSION
-    one_tydef
-    |one_Axiom|
-    |one_axiom|)
+    one_axiom
+    one_tydef)
   (:shadowing-import-from :hol2cl.bool TRUTH SPEC GEN_ALL CONJUNCT2 CONJUNCT1)
   (:shadowing-import-from
     :hol2cl.class
@@ -124,12 +124,12 @@
     o_DEF
     o_THM
     one
+    one_Axiom*
     one_DEF
     one_INDUCT
     one_RECURSION
-    one_tydef
-    |one_Axiom|
-    |one_axiom|))
+    one_axiom
+    one_tydef))
 
 (in-package :hol2cl.trivia)
 
@@ -217,7 +217,7 @@
           (ONCE_REWRITE_TAC (cl:cons (funcall GSYM (funcall CONJUNCT1 one_tydef)) nil)))
         (funcall ASM_REWRITE_TAC nil)))))
 
-(defparameter |one_axiom|
+(defparameter one_axiom
   (prove
     (tuple
       (parse_term "!f g. f = (g:A->1)")
@@ -250,7 +250,7 @@
           BETA_TAC)
         #'REFL_TAC))))
 
-(defparameter |one_Axiom|
+(defparameter one_Axiom*
   (prove
     (tuple
       (parse_term "!e:A. ?!fn. fn one = e")

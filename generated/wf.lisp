@@ -503,7 +503,7 @@
           (W
             (o
               (o
-                (C #'SUBGOAL_THEN (lambdac (|t|) (REWRITE_TAC (cl:cons |t| nil))))
+                (C #'SUBGOAL_THEN (lambdac (t*) (REWRITE_TAC (cl:cons t* nil))))
                 (funpow 2 lhand))
               (function-value #'snd 1))))
         (cl:cons
@@ -1483,14 +1483,14 @@
               (_ (raise exception~1448)))))))
       (lambdac (tm arg~1460)
         (match arg~1460
-          ((cl:and gl (tuple asl w~local~1464))
+          ((cl:and gl (tuple asl w*))
             (let ((fvs (frees tm)) (gv (funcall genvar (type_of tm))))
               (let*
                 ((pat
                   (list_mk_forall
                     (tuple
                       (cl:cons gv fvs)
-                      (funcall mk_imp (tuple (funcall mk_eq (tuple gv tm)) w~local~1464)))))
+                      (funcall mk_imp (tuple (funcall mk_eq (tuple gv tm)) w*)))))
                   (th0 (UNDISCH (funcall PART_MATCH #'rand num_WF pat)))
                   (th1 (funcall MP (SPECL (cl:cons tm fvs) th0) (REFL tm)))
                   (th2 (CONV_RULE (funcall LAND_CONV #'qqconvs) (DISCH_ALL th1))))

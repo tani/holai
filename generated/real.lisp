@@ -288,6 +288,7 @@
         REAL_POW_ZERO
         REAL_RNEG_UNIQ
         REAL_RSQRT_LE
+        REAL_SGN*
         REAL_SGNS_EQ
         REAL_SGNS_EQ_ALT
         REAL_SGN_0
@@ -349,9 +350,8 @@
         SQRT_UNIQUE_GEN
         SQRT_WORKS
         SQRT_WORKS_GEN
-        sqrt
-        |REAL_SGN|
-        |real_sgn|)
+        real_sgn
+        sqrt)
       (:export
         POW_2_SQRT
         POW_2_SQRT_ABS
@@ -623,6 +623,7 @@
         REAL_POW_ZERO
         REAL_RNEG_UNIQ
         REAL_RSQRT_LE
+        REAL_SGN*
         REAL_SGNS_EQ
         REAL_SGNS_EQ_ALT
         REAL_SGN_0
@@ -684,9 +685,8 @@
         SQRT_UNIQUE_GEN
         SQRT_WORKS
         SQRT_WORKS_GEN
-        sqrt
-        |REAL_SGN|
-        |real_sgn|))))
+        real_sgn
+        sqrt))))
 
 (defpackage :hol2cl.real
   (:use :cl)
@@ -961,6 +961,7 @@
     REAL_POW_ZERO
     REAL_RNEG_UNIQ
     REAL_RSQRT_LE
+    REAL_SGN*
     REAL_SGNS_EQ
     REAL_SGNS_EQ_ALT
     REAL_SGN_0
@@ -1022,9 +1023,8 @@
     SQRT_UNIQUE_GEN
     SQRT_WORKS
     SQRT_WORKS_GEN
-    sqrt
-    |REAL_SGN|
-    |real_sgn|)
+    real_sgn
+    sqrt)
   (:shadowing-import-from
     :hol2cl.arith
     NOT_ODD
@@ -1504,6 +1504,7 @@
     REAL_POW_ZERO
     REAL_RNEG_UNIQ
     REAL_RSQRT_LE
+    REAL_SGN*
     REAL_SGNS_EQ
     REAL_SGNS_EQ_ALT
     REAL_SGN_0
@@ -1565,9 +1566,8 @@
     SQRT_UNIQUE_GEN
     SQRT_WORKS
     SQRT_WORKS_GEN
-    sqrt
-    |REAL_SGN|
-    |real_sgn|))
+    real_sgn
+    sqrt))
 
 (in-package :hol2cl.real)
 
@@ -4752,7 +4752,7 @@
 ;; (* ------------------------------------------------------------------------- *)
 
 
-(defparameter |real_sgn|
+(defparameter real_sgn
   (funcall
     new_definition
     (parse_term
@@ -4763,19 +4763,19 @@
   (prove
     (tuple
       (parse_term "real_sgn(&0) = &0")
-      (funcall THEN (REWRITE_TAC (cl:cons |real_sgn| nil)) REAL_ARITH_TAC))))
+      (funcall THEN (REWRITE_TAC (cl:cons real_sgn nil)) REAL_ARITH_TAC))))
 
 (defparameter REAL_SGN_NEG
   (prove
     (tuple
       (parse_term "!x. real_sgn(--x) = --(real_sgn x)")
-      (funcall THEN (REWRITE_TAC (cl:cons |real_sgn| nil)) REAL_ARITH_TAC))))
+      (funcall THEN (REWRITE_TAC (cl:cons real_sgn nil)) REAL_ARITH_TAC))))
 
 (defparameter REAL_SGN_ABS
   (prove
     (tuple
       (parse_term "!x. real_sgn(x) * abs(x) = x")
-      (funcall THEN (REWRITE_TAC (cl:cons |real_sgn| nil)) REAL_ARITH_TAC))))
+      (funcall THEN (REWRITE_TAC (cl:cons real_sgn nil)) REAL_ARITH_TAC))))
 
 (defparameter REAL_SGN_ABS_ALT
   (prove
@@ -4783,7 +4783,7 @@
       (parse_term "!x. real_sgn x * x = abs x")
       (funcall
         THEN
-        (funcall THEN #'GEN_TAC (REWRITE_TAC (cl:cons |real_sgn| nil)))
+        (funcall THEN #'GEN_TAC (REWRITE_TAC (cl:cons real_sgn nil)))
         REAL_ARITH_TAC))))
 
 (defparameter REAL_EQ_SGN_ABS
@@ -4796,9 +4796,9 @@
   (prove
     (tuple
       (parse_term "!x. abs(real_sgn x) = real_sgn(abs x)")
-      (funcall THEN (REWRITE_TAC (cl:cons |real_sgn| nil)) REAL_ARITH_TAC))))
+      (funcall THEN (REWRITE_TAC (cl:cons real_sgn nil)) REAL_ARITH_TAC))))
 
-(defparameter |REAL_SGN|
+(defparameter REAL_SGN*
   (prove
     (tuple
       (parse_term "!x. real_sgn x = x / abs x")
@@ -4834,7 +4834,7 @@
         THEN
         (REWRITE_TAC
           (cl:cons
-            |REAL_SGN|
+            REAL_SGN*
             (cl:cons REAL_ABS_MUL (cl:cons real_div (cl:cons REAL_INV_MUL nil)))))
         REAL_ARITH_TAC))))
 
@@ -4844,7 +4844,7 @@
       (parse_term "!x. real_sgn(inv x) = real_sgn x")
       (REWRITE_TAC
         (cl:cons
-          |real_sgn|
+          real_sgn
           (cl:cons
             REAL_LT_INV_EQ
             (cl:cons
@@ -4859,7 +4859,7 @@
         THEN
         (funcall
           THEN
-          (REWRITE_TAC (cl:cons |REAL_SGN| (cl:cons REAL_ABS_DIV nil)))
+          (REWRITE_TAC (cl:cons REAL_SGN* (cl:cons REAL_ABS_DIV nil)))
           (REWRITE_TAC
             (cl:cons real_div (cl:cons REAL_INV_MUL (cl:cons REAL_INV_INV nil)))))
         REAL_ARITH_TAC))))
@@ -4871,13 +4871,13 @@
         "(!x. real_sgn x = &0 <=> x = &0) /\\
    (!x. real_sgn x = &1 <=> x > &0) /\\
    (!x. real_sgn x = -- &1 <=> x < &0)")
-      (funcall THEN (REWRITE_TAC (cl:cons |real_sgn| nil)) REAL_ARITH_TAC))))
+      (funcall THEN (REWRITE_TAC (cl:cons real_sgn nil)) REAL_ARITH_TAC))))
 
 (defparameter REAL_SGN_CASES
   (prove
     (tuple
       (parse_term "!x. real_sgn x = &0 \\/ real_sgn x = &1 \\/ real_sgn x = -- &1")
-      (funcall THEN (REWRITE_TAC (cl:cons |real_sgn| nil)) (MESON_TAC nil)))))
+      (funcall THEN (REWRITE_TAC (cl:cons real_sgn nil)) (MESON_TAC nil)))))
 
 (defparameter REAL_SGN_INEQS
   (prove
@@ -4893,7 +4893,7 @@
    (!x. real_sgn x >= &0 <=> x >= &0) /\\
    (!x. real_sgn x > &0 <=> x > &0) /\\
    (!x. real_sgn x = &0 <=> x = &0)")
-      (funcall THEN (REWRITE_TAC (cl:cons |real_sgn| nil)) REAL_ARITH_TAC))))
+      (funcall THEN (REWRITE_TAC (cl:cons real_sgn nil)) REAL_ARITH_TAC))))
 
 (defparameter REAL_SGN_POW
   (prove
@@ -4905,7 +4905,7 @@
           THEN
           (funcall THEN #'GEN_TAC INDUCT_TAC)
           (funcall ASM_REWRITE_TAC (cl:cons REAL_SGN_MUL (cl:cons real_pow nil))))
-        (REWRITE_TAC (cl:cons |real_sgn| (cl:cons REAL_LT_01 nil)))))))
+        (REWRITE_TAC (cl:cons real_sgn (cl:cons REAL_LT_01 nil)))))))
 
 (defparameter REAL_SGN_POW_2
   (prove
@@ -4915,7 +4915,7 @@
         THEN
         (funcall
           THEN
-          (REWRITE_TAC (cl:cons |real_sgn| nil))
+          (REWRITE_TAC (cl:cons real_sgn nil))
           (SIMP_TAC
             (cl:cons
               (funcall GSYM REAL_NOT_LE)
@@ -4932,7 +4932,7 @@
   (prove
     (tuple
       (parse_term "!x. real_sgn(real_sgn x) = real_sgn x")
-      (funcall THEN (REWRITE_TAC (cl:cons |real_sgn| nil)) REAL_ARITH_TAC))))
+      (funcall THEN (REWRITE_TAC (cl:cons real_sgn nil)) REAL_ARITH_TAC))))
 
 (defparameter REAL_INV_SGN
   (prove
@@ -4942,7 +4942,7 @@
         THEN
         (funcall
           THEN
-          (funcall THEN #'GEN_TAC (REWRITE_TAC (cl:cons |real_sgn| nil)))
+          (funcall THEN #'GEN_TAC (REWRITE_TAC (cl:cons real_sgn nil)))
           (REPEAT COND_CASES_TAC))
         (REWRITE_TAC (cl:cons REAL_INV_0 (cl:cons REAL_INV_1 (cl:cons REAL_INV_NEG nil))))))))
 
@@ -4952,7 +4952,7 @@
       (parse_term
         "!x y. real_sgn x = real_sgn y <=>
          x = y \\/ abs(x - y) < max (abs x) (abs y)")
-      (funcall THEN (REWRITE_TAC (cl:cons |real_sgn| nil)) REAL_ARITH_TAC))))
+      (funcall THEN (REWRITE_TAC (cl:cons real_sgn nil)) REAL_ARITH_TAC))))
 
 (defparameter REAL_SGNS_EQ
   (prove
@@ -4962,7 +4962,7 @@
          (x = &0 <=> y = &0) /\\
          (x > &0 <=> y > &0) /\\
          (x < &0 <=> y < &0)")
-      (funcall THEN (REWRITE_TAC (cl:cons |real_sgn| nil)) REAL_ARITH_TAC))))
+      (funcall THEN (REWRITE_TAC (cl:cons real_sgn nil)) REAL_ARITH_TAC))))
 
 (defparameter REAL_SGNS_EQ_ALT
   (prove
@@ -4972,7 +4972,7 @@
          (x = &0 ==> y = &0) /\\
          (x > &0 ==> y > &0) /\\
          (x < &0 ==> y < &0)")
-      (funcall THEN (REWRITE_TAC (cl:cons |real_sgn| nil)) REAL_ARITH_TAC))))
+      (funcall THEN (REWRITE_TAC (cl:cons real_sgn nil)) REAL_ARITH_TAC))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Useful "without loss of generality" lemmas.                               *)
@@ -5056,7 +5056,7 @@
                         REAL_ARITH
                         (parse_term "x pow 2 = y pow 2 <=> (x - y) * (x - --y) = &0"))
                       nil)))))
-            (REWRITE_TAC (cl:cons |real_sgn| nil)))
+            (REWRITE_TAC (cl:cons real_sgn nil)))
           (REPEAT (POP_ASSUM #'MP_TAC)))
         REAL_ARITH_TAC))))
 
@@ -5216,7 +5216,7 @@
                             (cl:cons REAL_LT_LMUL_EQ (cl:cons REAL_SUB_LT nil)))))
                       REAL_ARITH_TAC)
                     nil))))))
-          (|lemma'|
+          (lemma*
             (prove
               (tuple
                 (parse_term
@@ -5421,7 +5421,7 @@
                               (cl:cons
                                 (parse_term "s:real")
                                 (cl:cons (parse_term "y:real") nil))
-                              |lemma'|))
+                              lemma*))
                           (funcall ASM_REWRITE_TAC (cl:cons NOT_IMP nil)))
                         #'CONJ_TAC)
                       (cl:cons
@@ -5624,7 +5624,7 @@
                   (funcall
                     ASM_SIMP_TAC
                     (cl:cons
-                      |real_sgn|
+                      real_sgn
                       (cl:cons
                         (funcall REAL_ARITH (parse_term "&0 < abs x <=> ~(x = &0)"))
                         nil))))
@@ -5707,7 +5707,7 @@
               THEN
               (REPEAT #'STRIP_TAC)
               (MP_TAC (funcall SPEC (parse_term "x:real") SQRT_WORKS_GEN)))
-            (REWRITE_TAC (cl:cons |real_sgn| nil)))
+            (REWRITE_TAC (cl:cons real_sgn nil)))
           (REPEAT (POP_ASSUM #'MP_TAC)))
         REAL_ARITH_TAC))))
 

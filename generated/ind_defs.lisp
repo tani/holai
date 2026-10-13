@@ -45,12 +45,12 @@
         modify_rule
         monotonicity_theorems
         new_inductive_definition
-        new_inductive_definition~local~2034
+        new_inductive_definition*
         pare_comb
         proc_fn
         prove_inductive_properties
         prove_inductive_relations_exist
-        prove_inductive_relations_exist~local~2032
+        prove_inductive_relations_exist*
         prove_monotonicity_hyps
         prove_mth
         prove_rule
@@ -104,12 +104,12 @@
     modify_rule
     monotonicity_theorems
     new_inductive_definition
-    new_inductive_definition~local~2034
+    new_inductive_definition*
     pare_comb
     proc_fn
     prove_inductive_properties
     prove_inductive_relations_exist
-    prove_inductive_relations_exist~local~2032
+    prove_inductive_relations_exist*
     prove_monotonicity_hyps
     prove_mth
     prove_rule
@@ -175,7 +175,7 @@
     new_definition
     MK_FORALL
     MATCH_MP
-    |INSTANTIATE|)
+    INSTANTIATE*)
   (:shadowing-import-from
     :hol2cl.equal
     SYM
@@ -191,7 +191,6 @@
   (:shadowing-import-from :hol2cl.fusion mk_fun_ty mk_eq is_eq aconv)
   (:shadowing-import-from
     :hol2cl.fusion.hol
-    |mk_comb|
     vsubst
     type_of
     TRANS
@@ -199,10 +198,11 @@
     rator
     rand
     mk_var
-    |MK_COMB|
+    MK_COMB*
+    mk_comb
     mk_abs
     is_var
-    |INST|
+    INST*
     hyp
     frees
     EQ_MP
@@ -331,7 +331,7 @@
           (if (< n 1)
             (tuple tm acc)
             (match (dest_comb tm)
-              ((tuple l r~local~9) (strip (tuple (- n 1) l (cl:cons r~local~9 acc))))))))))
+              ((tuple l r*) (strip (tuple (- n 1) l (cl:cons r* acc))))))))))
     (lambdac (n tm) (strip (tuple n tm nil)))))
 
 ;; (* ------------------------------------------------------------------------- *)
@@ -340,8 +340,7 @@
 
 
 (defparameter RIGHT_BETAS
-  (rev_itlist
-    (lambdac (a~local~48) (o (CONV_RULE (RAND_CONV #'BETA_CONV)) (C #'AP_THM a~local~48)))))
+  (rev_itlist (lambdac (a*) (o (CONV_RULE (RAND_CONV #'BETA_CONV)) (C #'AP_THM a*)))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (*      A, x = t |- P[x]                                                     *)
@@ -374,11 +373,11 @@
             #'REFL_TAC)))))
     (lambdac (tm th)
       (match (dest_eq tm)
-        ((tuple l r~local~90)
+        ((tuple l r*)
           (let*
-            ((P~local~92 (mk_abs (tuple l (concl th))))
-              (th1 (BETA_CONV (|mk_comb| (tuple P~local~92 l))))
-              (th2 (ISPECL (cl:cons P~local~92 (cl:cons r~local~90 nil)) pth))
+            ((P* (mk_abs (tuple l (concl th))))
+              (th1 (BETA_CONV (mk_comb (tuple P* l))))
+              (th2 (ISPECL (cl:cons P* (cl:cons r* nil)) pth))
               (th3 (EQ_MP (SYM th1) th))
               (th4 (funcall GEN l (funcall DISCH tm th3))))
             (funcall MP th2 th4)))))))
@@ -397,16 +396,16 @@
           (handler-case
             (snd (funcall dest_imp bod))
             (hol2cl.runtime:ocaml-condition
-              (exception~153)
-              (match exception~153 ((Failure _) bod) (_ (raise exception~153))))))))
+              (exception~149)
+              (match exception~149 ((Failure _) bod) (_ (raise exception~149))))))))
       (CONJ_ACI_RULE (AC CONJ_ACI))
       (SIMPLE_DISJ_PAIR
         (lambdac (th)
           (match (funcall dest_disj (hd (hyp th)))
-            ((tuple l r~local~167)
+            ((tuple l r*)
               (tuple
-                (PROVE_HYP (funcall DISJ1 (ASSUME l) r~local~167) th)
-                (PROVE_HYP (funcall DISJ2 l (ASSUME r~local~167)) th))))))
+                (PROVE_HYP (funcall DISJ1 (ASSUME l) r*) th)
+                (PROVE_HYP (funcall DISJ2 l (ASSUME r*)) th))))))
       (HALF_BETA_EXPAND
         (lambdac (args th) (funcall GENL args (funcall RIGHT_BETAS args th)))))
     (fletc
@@ -426,8 +425,8 @@
               (fletc
                 ((proc_fn
                   (th)
-                  (let ((|t| (hd (hyp th))))
-                    (funcall GENL avs (funcall DISCH |t| (UNDISCH th))))))
+                  (let ((t* (hd (hyp th))))
+                    (funcall GENL avs (funcall DISCH t* (UNDISCH th))))))
                 (let ((th4 (itlist (o CONJ #'proc_fn) thts (proc_fn tht))))
                   (funcall IMP_ANTISYM_RULE (DISCH_ALL th2) (DISCH_ALL th4)))))))))
       (let*
@@ -435,15 +434,15 @@
           (calculate_simp_sequence
             (labelsc
               ((getequs
-                (arg~298)
-                (match arg~298
+                (arg~293)
+                (match arg~293
                   ((tuple avs plis)
                     (if (= plis nil)
                       nil
                       (match plis
-                        ((cl:cons h |t|)
-                          (let ((r~local~304 (snd h)))
-                            (if (mem r~local~304 avs)
+                        ((cl:cons h t*)
+                          (let ((r* (snd h)))
+                            (if (mem r* avs)
                               (cl:cons
                                 h
                                 (getequs
@@ -451,10 +450,10 @@
                                     avs
                                     (filter
                                       (o
-                                        (partial (function-value #'<> 2) r~local~304)
+                                        (partial (function-value #'<> 2) r*)
                                         (function-value #'snd 1))
-                                      |t|))))
-                              (getequs (tuple avs |t|)))))))))))
+                                      t*))))
+                              (getequs (tuple avs t*)))))))))))
               (lambdac (avs plis)
                 (let ((oks (getequs (tuple avs plis)))) (tuple oks (subtract plis oks))))))
           (FORALL_IMPS_CONV
@@ -480,10 +479,10 @@
                   (handler-case
                     (funcall dest_imp bimp)
                     (hol2cl.runtime:ocaml-condition
-                      (exception~740)
-                      (match exception~740
+                      (exception~734)
+                      (match exception~734
                         ((Failure _) (tuple t_tm bimp))
-                        (_ (raise exception~740)))))
+                        (_ (raise exception~734)))))
                   ((tuple ant con)
                     (match (funcall strip_comb con)
                       ((tuple rel xargs)
@@ -510,10 +509,10 @@
                                             (let*
                                               ((thl
                                                 (map
-                                                  (lambdac (|t|)
+                                                  (lambdac (t*)
                                                     (find
                                                       (lambdac (th)
-                                                        (= (funcall lhs (concl th)) |t|))
+                                                        (= (funcall lhs (concl th)) t*))
                                                       ths))
                                                   args))
                                                 (th0
@@ -523,11 +522,11 @@
                                                     tth))
                                                 (th1
                                                   (rev_itlist
-                                                    (C (curry #'|MK_COMB|))
+                                                    (C (curry #'MK_COMB*))
                                                     thl
                                                     (REFL rel)))
                                                 (th2 (EQ_MP (SYM th1) th0))
-                                                (th3 (|INST| yes (funcall DISCH atm th2)))
+                                                (th3 (INST* yes (funcall DISCH atm th2)))
                                                 (tm4
                                                   (funpow
                                                     (funcall length yes)
@@ -584,20 +583,20 @@
                                           (ths (funcall CONJUNCTS (ASSUME atm)))
                                           (thl
                                             (map
-                                              (lambdac (|t|)
+                                              (lambdac (t*)
                                                 (find
                                                   (lambdac (th)
-                                                    (= (funcall lhs (concl th)) |t|))
+                                                    (= (funcall lhs (concl th)) t*))
                                                   ths))
                                               args))
                                           (th0 (SPECL avs (ASSUME cls)))
                                           (th1
                                             (rev_itlist
-                                              (C (curry #'|MK_COMB|))
+                                              (C (curry #'MK_COMB*))
                                               thl
                                               (REFL rel)))
                                           (th2 (EQ_MP (SYM th1) th0))
-                                          (th3 (|INST| yes (funcall DISCH atm th2)))
+                                          (th3 (INST* yes (funcall DISCH atm th2)))
                                           (tm4
                                             (funpow
                                               (funcall length yes)
@@ -658,9 +657,7 @@
                   (zargs (zip rels (shareout xargs flargs)))
                   (cargs
                     (map
-                      (lambdac (arg~802)
-                        (match arg~802
-                          ((tuple r~local~806 a~local~804) (assoc r~local~806 zargs))))
+                      (lambdac (arg~796) (match arg~796 ((tuple r* a*) (assoc r* zargs))))
                       uncs))
                   (cthms (map2 #'canonicalize_clause clauses cargs))
                   (pclauses (map (o #'rand #'concl) cthms)))
@@ -668,7 +665,7 @@
                   ((collectclauses
                     (tm)
                     (mapfilter
-                      (lambdac (|t|) (if (= (fst |t|) tm) (snd |t|) (fail unit)))
+                      (lambdac (t*) (if (= (fst t*) tm) (snd t*) (fail unit)))
                       (zip (map (function-value #'fst 1) uncs) pclauses))))
                   (let*
                     ((clausell (map #'collectclauses rels))
@@ -686,18 +683,18 @@
                 (clauses)
                 (let*
                   ((closed (funcall list_mk_conj clauses))
-                    (clauses~local~901 (funcall hol2cl.basics:conjuncts closed)))
-                  (match (unzip (map strip_forall clauses~local~901))
+                    (clauses* (funcall hol2cl.basics:conjuncts closed)))
+                  (match (unzip (map strip_forall clauses*))
                     ((tuple vargs bodies)
                       (match (unzip (map dest_imp bodies))
                         ((tuple ants concs)
                           (let*
                             ((rels (map (hol2cl.lib:repeat #'rator) concs))
                               (avoids (funcall variables closed))
-                              (|rels'| (variants avoids rels))
-                              (crels (zip |rels'| rels))
+                              (rels* (variants avoids rels))
+                              (crels (zip rels* rels))
                               (prime_fn (funcall subst crels))
-                              (|closed'| (funcall prime_fn closed)))
+                              (closed* (funcall prime_fn closed)))
                             (fletc
                               ((mk_def
                                 (arg con)
@@ -710,10 +707,10 @@
                                         arg
                                         (list_mk_forall
                                           (tuple
-                                            |rels'|
+                                            rels*
                                             (funcall
                                               mk_imp
-                                              (tuple |closed'| (funcall prime_fn con)))))))))))
+                                              (tuple closed* (funcall prime_fn con)))))))))))
                               (let*
                                 ((deftms (map2 #'mk_def vargs concs))
                                   (defthms
@@ -724,7 +721,7 @@
                                     (let*
                                       ((th1 (fst (funcall EQ_IMP_RULE (SPEC_ALL th))))
                                         (ant (funcall lhand (concl th1)))
-                                        (th2 (SPECL |rels'| (UNDISCH th1))))
+                                        (th2 (SPECL rels* (UNDISCH th1))))
                                       (funcall
                                         GENL
                                         args
@@ -735,17 +732,17 @@
                                       (indthm
                                         (funcall
                                           GENL
-                                          |rels'|
-                                          (funcall DISCH |closed'| indthmr)))
+                                          rels*
+                                          (funcall DISCH closed* indthmr)))
                                       (mconcs
                                         (map2
-                                          (lambdac (a~local~1004 |t|)
+                                          (lambdac (a* t*)
                                             (list_mk_forall
                                               (tuple
-                                                a~local~1004
+                                                a*
                                                 (funcall
                                                   mk_imp
-                                                  (tuple |t| (funcall prime_fn |t|))))))
+                                                  (tuple t* (funcall prime_fn t*))))))
                                           vargs
                                           ants))
                                       (monotm
@@ -759,20 +756,20 @@
                                           (list_mk_forall
                                             (tuple
                                               rels
-                                              (list_mk_forall (tuple |rels'| monotm))))))
-                                      (closthm (ASSUME |closed'|))
+                                              (list_mk_forall (tuple rels* monotm))))))
+                                      (closthm (ASSUME closed*))
                                       (monothms
                                         (funcall
                                           CONJUNCTS
                                           (funcall
                                             MP
                                             (SPEC_ALL monothm)
-                                            (funcall MP (SPECL |rels'| indthm) closthm))))
+                                            (funcall MP (SPECL rels* indthm) closthm))))
                                       (closthms (funcall CONJUNCTS closthm)))
                                     (fletc
                                       ((prove_rule
-                                        (mth arg~1053)
-                                        (match arg~1053
+                                        (mth arg~1043)
+                                        (match arg~1043
                                           ((tuple cth dth)
                                             (match (funcall strip_forall (concl mth))
                                               ((tuple avs bod)
@@ -785,10 +782,10 @@
                                                     (th2
                                                       (funcall
                                                         GENL
-                                                        |rels'|
+                                                        rels*
                                                         (funcall
                                                           DISCH
-                                                          |closed'|
+                                                          closed*
                                                           (UNDISCH th1))))
                                                     (th3
                                                       (EQ_MP (SYM (SPECL avs dth)) th2)))
@@ -814,9 +811,9 @@
                                             (match (funcall strip_forall tm)
                                               ((tuple avs bod)
                                                 (match (dest_comb bod)
-                                                  ((tuple il r~local~1128)
+                                                  ((tuple il r*)
                                                     (match (dest_comb il)
-                                                      ((tuple i~local~1130 l)
+                                                      ((tuple i* l)
                                                         (let*
                                                           ((bth
                                                             (funcall
@@ -824,22 +821,17 @@
                                                               avs
                                                               (REFL dtm)))
                                                             (munb
-                                                              (AP_THM
-                                                                (AP_TERM i~local~1130 bth)
-                                                                r~local~1128))
+                                                              (AP_THM (AP_TERM i* bth) r*))
                                                             (iunb
                                                               (AP_TERM
-                                                                (|mk_comb|
+                                                                (mk_comb
                                                                   (tuple
-                                                                    i~local~1130
+                                                                    i*
                                                                     (funcall double_fn l)))
                                                                 bth))
                                                             (junb
                                                               (AP_TERM
-                                                                (|mk_comb|
-                                                                  (tuple
-                                                                    i~local~1130
-                                                                    r~local~1128))
+                                                                (mk_comb (tuple i* r*))
                                                                 bth))
                                                             (quantify
                                                               (itlist MK_FORALL avs)))
@@ -849,8 +841,7 @@
                                                               (funcall quantify iunb)
                                                               (funcall quantify junb))))))))))))
                                           (let*
-                                            ((unths
-                                              (map2 #'mk_unbetas clauses~local~901 dtms))
+                                            ((unths (map2 #'mk_unbetas clauses* dtms))
                                               (irthm
                                                 (EQ_MP
                                                   (SYM
@@ -916,7 +907,7 @@
               (let*
                 ((clauses (funcall hol2cl.basics:conjuncts tm))
                   (canonthm (canonicalize_clauses clauses))
-                  (|canonthm'| (SYM canonthm))
+                  (canonthm* (SYM canonthm))
                   (pclosed (rand (concl canonthm)))
                   (pclauses (funcall hol2cl.basics:conjuncts pclosed))
                   (rawthm (derive_canon_inductive_relations pclauses)))
@@ -925,12 +916,12 @@
                     (match (CONJ_PAIR otherthms)
                       ((tuple indthm casethm)
                         (let
-                          ((|rulethm'| (EQ_MP |canonthm'| rulethm))
-                            (|indthm'|
+                          ((rulethm* (EQ_MP canonthm* rulethm))
+                            (indthm*
                               (CONV_RULE
-                                (funcall ONCE_DEPTH_CONV (funcall REWR_CONV |canonthm'|))
+                                (funcall ONCE_DEPTH_CONV (funcall REWR_CONV canonthm*))
                                 indthm)))
-                          (funcall CONJ |rulethm'| (funcall CONJ |indthm'| casethm)))))))))))))))
+                          (funcall CONJ rulethm* (funcall CONJ indthm* casethm)))))))))))))))
 
 ;; (* ========================================================================= *)
 ;; (* Part 2: Tactic-integrated tools for proving monotonicity automatically.   *)
@@ -958,24 +949,23 @@
       ((BACKCHAIN_TAC
         (th)
         (let ((match_fn (funcall PART_MATCH (o (function-value #'snd 1) dest_imp) th)))
-          (lambdac (arg~1424)
-            (match arg~1424
-              ((tuple asl w~local~1427)
-                (let ((th1 (funcall match_fn w~local~1427)))
+          (lambdac (arg~1412)
+            (match arg~1412
+              ((tuple asl w*)
+                (let ((th1 (funcall match_fn w*)))
                   (match (funcall dest_imp (concl th1))
                     ((tuple ant con)
                       (tuple
                         null_meta
                         (cl:cons (tuple asl ant) nil)
-                        (lambdac (i~local~1440 arg~1442)
-                          (match arg~1442
-                            ((cl:cons |t| nil)
-                              (MATCH_MP (funcall |INSTANTIATE| i~local~1440 th1) |t|)))))))))))))
+                        (lambdac (i* arg~1428)
+                          (match arg~1428
+                            ((cl:cons t* nil) (MATCH_MP (funcall INSTANTIATE* i* th1) t*)))))))))))))
         (MONO_ABS_TAC
-          (arg~1468)
-          (match arg~1468
-            ((tuple asl w~local~1471)
-              (match (funcall dest_imp w~local~1471)
+          (arg~1454)
+          (match arg~1454
+            ((tuple asl w*)
+              (match (funcall dest_imp w*)
                 ((tuple ant con)
                   (let*
                     ((vars (snd (funcall strip_comb con)))
@@ -988,38 +978,30 @@
                         (let
                           ((th1 (rev_itlist (C #'AP_THM) args1 (BETA_CONV hd1)))
                             (th2 (rev_itlist (C #'AP_THM) args1 (BETA_CONV hd2))))
-                          (let ((th3 (|MK_COMB| (tuple (AP_TERM imp th1) th2))))
-                            (funcall
-                              CONV_TAC
-                              (funcall REWR_CONV th3)
-                              (tuple asl w~local~1471))))))))))))
+                          (let ((th3 (MK_COMB* (tuple (AP_TERM imp th1) th2))))
+                            (funcall CONV_TAC (funcall REWR_CONV th3) (tuple asl w*))))))))))))
         (APPLY_MONOTAC
-          (tacs arg~1542)
-          (match arg~1542
-            ((tuple asl w~local~1545)
-              (match (funcall dest_imp w~local~1545)
-                ((tuple a~local~1547 c~local~1549)
-                  (if (aconv a~local~1547 c~local~1549)
-                    (funcall
-                      ACCEPT_TAC
-                      (funcall SPEC a~local~1547 IMP_REFL)
-                      (tuple asl w~local~1545))
+          (tacs arg~1527)
+          (match arg~1527
+            ((tuple asl w*)
+              (match (funcall dest_imp w*)
+                ((tuple a* c*)
+                  (if (aconv a* c*)
+                    (funcall ACCEPT_TAC (funcall SPEC a* IMP_REFL) (tuple asl w*))
                     (let
                       ((cn
                         (handler-case
-                          (fst (dest_const (hol2cl.lib:repeat #'rator c~local~1549)))
+                          (fst (dest_const (hol2cl.lib:repeat #'rator c*)))
                           (hol2cl.runtime:ocaml-condition
-                            (exception~1552)
-                            (match exception~1552
+                            (exception~1534)
+                            (match exception~1534
                               ((Failure _) "")
-                              (_ (raise exception~1552)))))))
+                              (_ (raise exception~1534)))))))
                       (tryfind
-                        (lambdac (arg~1562)
-                          (match arg~1562
-                            ((tuple k~local~1564 |t|)
-                              (if (= k~local~1564 cn)
-                                (funcall |t| (tuple asl w~local~1545))
-                                (fail unit)))))
+                        (lambdac (arg~1544)
+                          (match arg~1544
+                            ((tuple k* t*)
+                              (if (= k* cn) (funcall t* (tuple asl w*)) (fail unit)))))
                         tacs)))))))))
       (lambdac (gl)
         (let*
@@ -1028,18 +1010,16 @@
               (lambdac (th l)
                 (let*
                   ((ft (hol2cl.lib:repeat #'rator (funpow 2 #'rand (concl th))))
-                    (c~local~1616
+                    (c*
                       (handler-case
                         (fst (dest_const ft))
                         (hol2cl.runtime:ocaml-condition
-                          (exception~1618)
-                          (match exception~1618
+                          (exception~1598)
+                          (match exception~1598
                             ((Failure _) "")
-                            (_ (raise exception~1618)))))))
+                            (_ (raise exception~1598)))))))
                   (cl:cons
-                    (tuple
-                      c~local~1616
-                      (funcall THEN (BACKCHAIN_TAC th) (REPEAT #'CONJ_TAC)))
+                    (tuple c* (funcall THEN (BACKCHAIN_TAC th) (REPEAT #'CONJ_TAC)))
                     l)))
               (deref monotonicity_theorems)
               (cl:cons (tuple "" #'MONO_ABS_TAC) nil)))
@@ -1064,7 +1044,7 @@
             (DISCH_THEN (REPEAT_TCL CONJUNCTS_THEN ASSUME_TAC)))
           (REPEAT #'CONJ_TAC))
         MONO_TAC)))
-    (fletc ((prove_mth (|t|) (prove (tuple |t| tac))))
+    (fletc ((prove_mth (t*) (prove (tuple t* tac))))
       (lambdac (th)
         (let
           ((mths
@@ -1099,17 +1079,17 @@
           ((generalize_def
             (tm th)
             (match (dest_eq tm)
-              ((tuple l r~local~1749)
+              ((tuple l r*)
                 (match (dest_var l)
                   ((tuple lname lty)
                     (let*
-                      ((|l'|
+                      ((l*
                         (mk_var (tuple lname (itlist (o #'mk_fun_ty #'type_of) vs lty))))
-                        (|r'| (list_mk_abs (tuple vs r~local~1749)))
-                        (|tm'| (funcall mk_eq (tuple |l'| |r'|)))
-                        (th0 (funcall RIGHT_BETAS vs (ASSUME |tm'|)))
+                        (r** (list_mk_abs (tuple vs r*)))
+                        (tm* (funcall mk_eq (tuple l* r**)))
+                        (th0 (funcall RIGHT_BETAS vs (ASSUME tm*)))
                         (th1
-                          (|INST|
+                          (INST*
                             (cl:cons (tuple (funcall lhs (concl th0)) l) nil)
                             (funcall DISCH tm th))))
                       (funcall MP th1 th0))))))))
@@ -1119,13 +1099,13 @@
                 (let ((th1 (itlist #'generalize_def defs th)))
                   (if gflag
                     (let
-                      ((|others'|
+                      ((others*
                         (map
-                          (lambdac (|t|)
-                            (let ((fvs (frees |t|)))
-                              (SPECL fvs (ASSUME (list_mk_forall (tuple fvs |t|))))))
+                          (lambdac (t*)
+                            (let ((fvs (frees t*)))
+                              (SPECL fvs (ASSUME (list_mk_forall (tuple fvs t*))))))
                           others)))
-                      (funcall GENL vs (itlist #'PROVE_HYP |others'| th1)))
+                      (funcall GENL vs (itlist #'PROVE_HYP others* th1)))
                     th1)))))))
         (derive_existence
           (th)
@@ -1136,7 +1116,7 @@
             ((defs (filter #'is_eq (hyp th)))
               (dths (map #'new_definition defs))
               (insts (zip (map (o lhs #'concl) dths) (map lhs defs))))
-            (rev_itlist (C MP) dths (|INST| insts (itlist DISCH defs th)))))
+            (rev_itlist (C MP) dths (INST* insts (itlist DISCH defs th)))))
         (unschematize_clauses
           (clauses)
           (let*
@@ -1150,10 +1130,10 @@
                         (handler-case
                           (snd (funcall dest_imp bod))
                           (hol2cl.runtime:ocaml-condition
-                            (exception~1905)
-                            (match exception~1905
+                            (exception~1882)
+                            (match exception~1882
                               ((Failure _) bod)
-                              (_ (raise exception~1905)))))))))
+                              (_ (raise exception~1882)))))))))
                 clauses))
               (schems (setify schem)))
             (if (is_var (hd schem))
@@ -1177,12 +1157,12 @@
                     (let*
                       ((grels (variants avoids (map #'hack_fn schems)))
                         (crels (zip grels schems))
-                        (|clauses'| (map (funcall subst crels) clauses)))
-                      (tuple |clauses'| (snd (funcall strip_comb (hd schems))))))))))))
+                        (clauses* (map (funcall subst crels) clauses)))
+                      (tuple clauses* (snd (funcall strip_comb (hd schems))))))))))))
       (fletc
         ((find_redefinition
-          (tm arg~1991)
-          (match arg~1991
+          (tm arg~1968)
+          (match arg~1968
             ((cl:and trip (tuple rth ith cth))
               (tuple trip (funcall PART_MATCH #'I rth tm))))))
         (fletc
@@ -1190,35 +1170,33 @@
             (tm)
             (let ((clauses (funcall hol2cl.basics:conjuncts tm)))
               (match (unschematize_clauses clauses)
-                ((tuple |clauses'| fvs)
+                ((tuple clauses* fvs)
                   (let
                     ((th
                       (funcall
                         derive_nonschematic_inductive_relations
-                        (funcall list_mk_conj |clauses'|))))
+                        (funcall list_mk_conj clauses*))))
                     (tuple fvs (funcall prove_monotonicity_hyps th))))))))
           (fletc
-            ((prove_inductive_relations_exist~local~2032
+            ((prove_inductive_relations_exist*
               (tm)
               (match (prove_inductive_properties tm)
                 ((tuple fvs th1)
                   (let ((th2 (generalize_schematic_variables cl:t fvs th1)))
                     (derive_existence th2)))))
-              (new_inductive_definition~local~2034
+              (new_inductive_definition*
                 (tm)
                 (handler-case
-                  (let ((|tm'| (snd (funcall strip_forall tm))))
+                  (let ((tm* (snd (funcall strip_forall tm))))
                     (match
-                      (tryfind
-                        (find_redefinition |tm'|)
-                        (deref the_inductive_definitions))
+                      (tryfind (find_redefinition tm*) (deref the_inductive_definitions))
                       ((tuple th _)
                         (progn
                           (warn cl:t "Benign redefinition of inductive predicate")
                           th))))
                   (hol2cl.runtime:ocaml-condition
-                    (exception~2054)
-                    (match exception~2054
+                    (exception~2029)
+                    (match exception~2029
                       ((Failure _)
                         (match (prove_inductive_properties tm)
                           ((tuple fvs th1)
@@ -1227,15 +1205,15 @@
                                 (th3 (make_definitions th2))
                                 (avs (fst (funcall strip_forall (concl th3)))))
                               (match (CONJ_PAIR (SPECL avs th3))
-                                ((tuple r~local~2073 ic)
+                                ((tuple r* ic)
                                   (match (CONJ_PAIR ic)
-                                    ((tuple i~local~2077 c~local~2075)
+                                    ((tuple i* c*)
                                       (let
                                         ((thtr
                                           (tuple
-                                            (funcall GENL avs r~local~2073)
-                                            (funcall GENL avs i~local~2077)
-                                            (funcall GENL avs c~local~2075))))
+                                            (funcall GENL avs r*)
+                                            (funcall GENL avs i*)
+                                            (funcall GENL avs c*))))
                                         (progn
                                           (assign
                                             the_inductive_definitions
@@ -1243,16 +1221,14 @@
                                               thtr
                                               (deref the_inductive_definitions)))
                                           thtr))))))))))
-                      (_ (raise exception~2054)))))))
-            (tuple
-              #'prove_inductive_relations_exist~local~2032
-              #'new_inductive_definition~local~2034))))))
-  ((tuple prove_inductive_relations_exist~local~1713 new_inductive_definition~local~1711)
+                      (_ (raise exception~2029)))))))
+            (tuple #'prove_inductive_relations_exist* #'new_inductive_definition*))))))
+  ((tuple prove_inductive_relations_exist* new_inductive_definition*)
     (setf
       new_inductive_definition
-      new_inductive_definition~local~1711
+      new_inductive_definition*
       prove_inductive_relations_exist
-      prove_inductive_relations_exist~local~1713)))
+      prove_inductive_relations_exist*)))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Derivation of "strong induction".                                         *)
@@ -1277,11 +1253,11 @@
           (match (funcall strip_forall tm)
             ((tuple avs bod)
               (match (funcall dest_imp bod)
-                ((tuple a~local~2191 c~local~2193)
+                ((tuple a* c*)
                   (let*
-                    ((ths (funcall CONJUNCTS (ASSUME a~local~2191)))
-                      (th (find (o (aconv c~local~2193) #'concl) ths)))
-                    (funcall GENL avs (funcall DISCH a~local~2191 th))))))))))
+                    ((ths (funcall CONJUNCTS (ASSUME a*)))
+                      (th (find (o (aconv c*) #'concl) ths)))
+                    (funcall GENL avs (funcall DISCH a* th))))))))))
       (labelsc
         ((weaken_triv
           (th)
@@ -1292,16 +1268,11 @@
               (weaken_triv (funcall CONJUNCT2 th)))
             (match (funcall strip_forall (concl th))
               ((tuple avs bod)
-                (let*
-                  ((th1 (SPECL avs th))
-                    (a~local~2243 (fst (funcall dest_imp (concl th1)))))
-                  (funcall
-                    GENL
-                    avs
-                    (funcall DISCH a~local~2243 (funcall CONJUNCT2 (UNDISCH th1))))))))))
+                (let* ((th1 (SPECL avs th)) (a* (fst (funcall dest_imp (concl th1)))))
+                  (funcall GENL avs (funcall DISCH a* (funcall CONJUNCT2 (UNDISCH th1))))))))))
         (let ((MATCH_IMPS (MATCH_MP MONO_AND)))
-          (lambdac (arg~2279)
-            (match arg~2279
+          (lambdac (arg~2248)
+            (match arg~2248
               ((tuple rth ith)
                 (match (funcall strip_forall (concl ith))
                   ((tuple ovs ibod)
@@ -1323,14 +1294,14 @@
                                           ((gimps (funcall subst (zip gs rs) icon))
                                             (prs
                                               (map2
-                                                (lambdac (n arg~2314)
-                                                  (match arg~2314
-                                                    ((tuple r~local~2318 p~local~2316)
+                                                (lambdac (n arg~2283)
+                                                  (match arg~2283
+                                                    ((tuple r* p*)
                                                       (match
                                                         (nsplit
                                                           #'dest_fun_ty
                                                           (-- 1 n)
-                                                          (type_of r~local~2318))
+                                                          (type_of r*))
                                                         ((tuple tys ty)
                                                           (let ((gvs (map genvar tys)))
                                                             (list_mk_abs
@@ -1340,13 +1311,9 @@
                                                                   mk_conj
                                                                   (tuple
                                                                     (list_mk_comb
-                                                                      (tuple
-                                                                        r~local~2318
-                                                                        gvs))
+                                                                      (tuple r* gvs))
                                                                     (list_mk_comb
-                                                                      (tuple
-                                                                        p~local~2316
-                                                                        gvs))))))))))))
+                                                                      (tuple p* gvs))))))))))))
                                                 ns
                                                 prrs)))
                                           (fletc
@@ -1356,7 +1323,7 @@
                                                 ((tuple avs bod)
                                                   (if (funcall is_imp bod)
                                                     (match (funcall dest_imp bod)
-                                                      ((tuple a~local~2375 c~local~2377)
+                                                      ((tuple a* c*)
                                                         (let*
                                                           ((mgoal
                                                             (funcall
@@ -1369,8 +1336,8 @@
                                                                     (funcall
                                                                       vsubst
                                                                       (zip gs ps)
-                                                                      a~local~2375)
-                                                                    a~local~2375)))))
+                                                                      a*)
+                                                                    a*)))))
                                                             (mth
                                                               (ASSUME
                                                                 (list_mk_forall
@@ -1395,7 +1362,7 @@
                                                                   (funcall
                                                                     lhand
                                                                     (concl ith_r)))))
-                                                            (|t|
+                                                            (t*
                                                               (funcall
                                                                 lhand
                                                                 (concl jth_r)))
@@ -1406,9 +1373,7 @@
                                                                   avs
                                                                   (funcall
                                                                     mk_imp
-                                                                    (tuple
-                                                                      |t|
-                                                                      c~local~2377)))))
+                                                                    (tuple t* c*)))))
                                                             (lth_r
                                                               (funcall
                                                                 MP
@@ -1425,7 +1390,7 @@
                                                               avs
                                                               (funcall
                                                                 DISCH
-                                                                |t|
+                                                                t*
                                                                 (funcall CONJ lth_r lth_p)))))))
                                                     (funcall
                                                       DISCH
@@ -1445,10 +1410,10 @@
                                                   (funcall hol2cl.basics:conjuncts iant)))
                                                 (th1
                                                   (end_itlist
-                                                    (lambdac (th |th'|)
+                                                    (lambdac (th th*)
                                                       (funcall
                                                         MATCH_IMPS
-                                                        (funcall CONJ th |th'|)))
+                                                        (funcall CONJ th th*)))
                                                     mimps))
                                                 (th2 (funcall BETA_RULE (SPECL prs jth)))
                                                 (th3 (funcall IMP_TRANS th1 th2))

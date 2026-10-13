@@ -17,6 +17,10 @@
     (defpackage :hol2cl.lib
       (:use :cl)
       (:shadow
+        *->
+        *->*
+        *=>
+        *>
         --
         Branch
         C
@@ -40,8 +44,8 @@
         choose
         chop_list
         combine
+        combine*
         combine_list
-        combine~local~2737
         curry
         decreasing
         define_list
@@ -61,11 +65,11 @@
         find_index
         flat
         foldl
+        foldl*
         foldl_list
-        foldl~local~2021
         foldr
+        foldr*
         foldr_list
-        foldr~local~2083
         forall
         forall2
         funpow
@@ -78,6 +82,7 @@
         ind
         index
         insert
+        insert*
         intersect
         is_undefined
         itlist
@@ -95,12 +100,12 @@
         map2
         map_list
         mapf
+        mapf*
         mapfilter
-        mapf~local~114
-        mapf~local~1957
         mapi
         mem
-        mem~local~3155
+        mem*
+        mem**
         merge
         mergepairs
         mergesort
@@ -149,6 +154,7 @@
         striplist
         subset
         subtract
+        subtract*
         suck_lines
         time
         tl
@@ -160,23 +166,19 @@
         undefine_list
         undefined
         union
+        union*
         unions
+        unions*
         uniq
         unzip
         upd
         verbose
         warn
-        zip
-        |\|->|
-        |\|->~local~2641|
-        |\|=>|
-        |\|>|
-        |insert'|
-        |mem'|
-        |subtract'|
-        |union'|
-        |unions'|)
+        zip)
       (:export
+        *->
+        *=>
+        *>
         --
         Branch
         C
@@ -226,6 +228,7 @@
         increasing
         index
         insert
+        insert*
         intersect
         is_undefined
         itlist
@@ -243,6 +246,7 @@
         mapfilter
         mapi
         mem
+        mem*
         merge
         mergesort
         nsplit
@@ -284,6 +288,7 @@
         striplist
         subset
         subtract
+        subtract*
         time
         tl
         tryapplyd
@@ -292,24 +297,22 @@
         undefine
         undefined
         union
+        union*
         unions
+        unions*
         uniq
         unzip
         verbose
         warn
-        zip
-        |\|->|
-        |\|=>|
-        |\|>|
-        |insert'|
-        |mem'|
-        |subtract'|
-        |union'|
-        |unions'|))))
+        zip))))
 
 (defpackage :hol2cl.lib
   (:use :cl)
   (:shadow
+    *->
+    *->*
+    *=>
+    *>
     --
     Branch
     C
@@ -333,8 +336,8 @@
     choose
     chop_list
     combine
+    combine*
     combine_list
-    combine~local~2737
     curry
     decreasing
     define_list
@@ -354,11 +357,11 @@
     find_index
     flat
     foldl
+    foldl*
     foldl_list
-    foldl~local~2021
     foldr
+    foldr*
     foldr_list
-    foldr~local~2083
     forall
     forall2
     funpow
@@ -371,6 +374,7 @@
     ind
     index
     insert
+    insert*
     intersect
     is_undefined
     itlist
@@ -388,12 +392,12 @@
     map2
     map_list
     mapf
+    mapf*
     mapfilter
-    mapf~local~114
-    mapf~local~1957
     mapi
     mem
-    mem~local~3155
+    mem*
+    mem**
     merge
     mergepairs
     mergesort
@@ -442,6 +446,7 @@
     striplist
     subset
     subtract
+    subtract*
     suck_lines
     time
     tl
@@ -453,22 +458,15 @@
     undefine_list
     undefined
     union
+    union*
     unions
+    unions*
     uniq
     unzip
     upd
     verbose
     warn
-    zip
-    |\|->|
-    |\|->~local~2641|
-    |\|=>|
-    |\|>|
-    |insert'|
-    |mem'|
-    |subtract'|
-    |union'|
-    |unions'|)
+    zip)
   (:shadowing-import-from :cl not logxor logand append abs / - + *)
   (:shadowing-import-from
     :hol2cl.runtime
@@ -533,6 +531,9 @@
     <=
     <)
   (:export
+    *->
+    *=>
+    *>
     --
     Branch
     C
@@ -582,6 +583,7 @@
     increasing
     index
     insert
+    insert*
     intersect
     is_undefined
     itlist
@@ -599,6 +601,7 @@
     mapfilter
     mapi
     mem
+    mem*
     merge
     mergesort
     nsplit
@@ -640,6 +643,7 @@
     striplist
     subset
     subtract
+    subtract*
     time
     tl
     tryapplyd
@@ -648,20 +652,14 @@
     undefine
     undefined
     union
+    union*
     unions
+    unions*
     uniq
     unzip
     verbose
     warn
-    zip
-    |\|->|
-    |\|=>|
-    |\|>|
-    |insert'|
-    |mem'|
-    |subtract'|
-    |union'|
-    |unions'|))
+    zip))
 
 (in-package :hol2cl.lib)
 
@@ -698,33 +696,33 @@
 
 (defunc F_F (f g arg~65) (match arg~65 ((tuple x y) (tuple (funcall f x) (funcall g y)))))
 
-(defunc |\|>| (x f) (funcall f x))
+(defunc *> (x f) (funcall f x))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* List basics.                                                              *)
 ;; (* ------------------------------------------------------------------------- *)
 
 
-(defunc hd (l) (match l ((cl:cons h |t|) h) (_ (failwith "hd"))))
+(defunc hd (l) (match l ((cl:cons h t*) h) (_ (failwith "hd"))))
 
-(defunc tl (l) (match l ((cl:cons h |t|) |t|) (_ (failwith "tl"))))
+(defunc tl (l) (match l ((cl:cons h t*) t*) (_ (failwith "tl"))))
 
 (defunc map (f)
   (labelsc
-    ((mapf~local~114
+    ((mapf*
       (l)
       (match l
         (nil nil)
-        ((cl:cons x |t|) (let ((y (funcall f x))) (cl:cons y (mapf~local~114 |t|)))))))
-    #'mapf~local~114))
+        ((cl:cons x t*) (let ((y (funcall f x))) (cl:cons y (mapf* t*)))))))
+    #'mapf*))
 
 (defunc last (l)
-  (match l ((cl:cons x nil) x) ((cl:cons h |t|) (last |t|)) (nil (failwith "last"))))
+  (match l ((cl:cons x nil) x) ((cl:cons h t*) (last t*)) (nil (failwith "last"))))
 
 (defunc butlast (l)
   (match l
     ((cl:cons _ nil) nil)
-    ((cl:cons h |t|) (cl:cons h (butlast |t|)))
+    ((cl:cons h t*) (cl:cons h (butlast t*)))
     (nil (failwith "butlast"))))
 
 (defunc el (n l) (if (= n 0) (hd l) (el (- n 1) (tl l))))
@@ -733,7 +731,7 @@
   (labelsc
     ((rev_append
       (acc l)
-      (match l (nil acc) ((cl:cons h |t|) (rev_append (cl:cons h acc) |t|)))))
+      (match l (nil acc) ((cl:cons h t*) (rev_append (cl:cons h acc) t*)))))
     (lambdac (l) (rev_append nil l))))
 
 (defunc map2 (f l1 l2)
@@ -746,13 +744,10 @@
 (defunc mapi (f xs)
   (labelsc
     ((aux
-      (i~local~261 f~local~263 arg~265)
-      (match arg~265
+      (i* f* arg~262)
+      (match arg~262
         (nil nil)
-        ((cl:cons h tl~local~270)
-          (cl:cons
-            (funcall f~local~263 i~local~261 h)
-            (aux (+ i~local~261 1) f~local~263 tl~local~270))))))
+        ((cl:cons h tl*) (cl:cons (funcall f* i* h) (aux (+ i* 1) f* tl*))))))
     (aux 0 f xs)))
 
 ;; (* ------------------------------------------------------------------------- *)
@@ -764,8 +759,8 @@
   (handler-case
     (progn (funcall f x) cl:t)
     (hol2cl.runtime:ocaml-condition
-      (exception~294)
-      (match exception~294 ((Failure _) cl:nil) (_ (raise exception~294))))))
+      (exception~290)
+      (match exception~290 ((Failure _) cl:nil) (_ (raise exception~290))))))
 
 (defunc check (p x) (if (funcall p x) x (failwith "check")))
 
@@ -780,8 +775,8 @@
   (handler-case
     (let ((y (funcall f x))) (repeat f y))
     (hol2cl.runtime:ocaml-condition
-      (exception~334)
-      (match exception~334 ((Failure _) x) (_ (raise exception~334))))))
+      (exception~330)
+      (match exception~330 ((Failure _) x) (_ (raise exception~330))))))
 
 (define-exception Unchanged)
 
@@ -790,16 +785,16 @@
 ;; (* ------------------------------------------------------------------------- *)
 
 
-(defunc itlist (f l b) (match l (nil b) ((cl:cons h |t|) (funcall f h (itlist f |t| b)))))
+(defunc itlist (f l b) (match l (nil b) ((cl:cons h t*) (funcall f h (itlist f t* b)))))
 
 (defunc rev_itlist (f l b)
-  (match l (nil b) ((cl:cons h |t|) (rev_itlist f |t| (funcall f h b)))))
+  (match l (nil b) ((cl:cons h t*) (rev_itlist f t* (funcall f h b)))))
 
 (defunc end_itlist (f l)
   (match l
     (nil (failwith "end_itlist"))
     ((cl:cons x nil) x)
-    ((cl:cons h |t|) (funcall f h (end_itlist f |t|)))))
+    ((cl:cons h t*) (funcall f h (end_itlist f t*)))))
 
 (defunc itlist2 (f l1 l2 b)
   (match (tuple l1 l2)
@@ -823,8 +818,8 @@
     (match (funcall dest x)
       ((tuple l r) (match (splitlist dest r) ((tuple ls res) (tuple (cl:cons l ls) res)))))
     (hol2cl.runtime:ocaml-condition
-      (exception~488)
-      (match exception~488 ((Failure _) (tuple nil x)) (_ (raise exception~488))))))
+      (exception~484)
+      (match exception~484 ((Failure _) (tuple nil x)) (_ (raise exception~484))))))
 
 (defunc rev_splitlist (dest)
   (labelsc
@@ -833,8 +828,8 @@
       (handler-case
         (match (funcall dest x) ((tuple l r) (rsplist (cl:cons r ls) l)))
         (hol2cl.runtime:ocaml-condition
-          (exception~523)
-          (match exception~523 ((Failure _) (tuple x ls)) (_ (raise exception~523)))))))
+          (exception~519)
+          (match exception~519 ((Failure _) (tuple x ls)) (_ (raise exception~519)))))))
     (lambdac (x) (rsplist nil x))))
 
 (defunc striplist (dest)
@@ -844,8 +839,8 @@
       (handler-case
         (match (funcall dest x) ((tuple l r) (strip l (strip r acc))))
         (hol2cl.runtime:ocaml-condition
-          (exception~555)
-          (match exception~555 ((Failure _) (cl:cons x acc)) (_ (raise exception~555)))))))
+          (exception~551)
+          (match exception~551 ((Failure _) (cl:cons x acc)) (_ (raise exception~551)))))))
     (lambdac (x) (strip x nil))))
 
 ;; (* ------------------------------------------------------------------------- *)
@@ -875,7 +870,7 @@
 
 
 (defunc forall (p l)
-  (match l (nil cl:t) ((cl:cons h |t|) (cl:and (funcall p h) (forall p |t|)))))
+  (match l (nil cl:t) ((cl:cons h t*) (cl:and (funcall p h) (forall p t*)))))
 
 (defunc forall2 (p l1 l2)
   (match (tuple l1 l2)
@@ -884,74 +879,72 @@
     (_ cl:nil)))
 
 (defunc exists (p l)
-  (match l (nil cl:nil) ((cl:cons h |t|) (cl:or (funcall p h) (exists p |t|)))))
+  (match l (nil cl:nil) ((cl:cons h t*) (cl:or (funcall p h) (exists p t*)))))
 
 (defparameter length
-  (labelsc
-    ((len (k~local~724 l) (if (= l nil) k~local~724 (len (+ k~local~724 1) (tl l)))))
-    (lambdac (l) (len 0 l))))
+  (labelsc ((len (k* l) (if (= l nil) k* (len (+ k* 1) (tl l))))) (lambdac (l) (len 0 l))))
 
 (defunc filter (p l)
   (match l
     (nil l)
-    ((cl:cons h |t|)
-      (let ((|t'| (filter p |t|)))
-        (if (funcall p h) (if (== |t'| |t|) l (cl:cons h |t'|)) |t'|)))))
+    ((cl:cons h t*)
+      (let ((t** (filter p t*)))
+        (if (funcall p h) (if (== t** t*) l (cl:cons h t**)) t**)))))
 
 (defunc partition (p l)
   (match l
     (nil (tuple nil l))
-    ((cl:cons h |t|)
-      (match (partition p |t|)
+    ((cl:cons h t*)
+      (match (partition p t*)
         ((tuple yes no)
           (if (funcall p h)
-            (if (== yes |t|) (tuple l nil) (tuple (cl:cons h yes) no))
-            (if (== no |t|) (tuple nil l) (tuple yes (cl:cons h no)))))))))
+            (if (== yes t*) (tuple l nil) (tuple (cl:cons h yes) no))
+            (if (== no t*) (tuple nil l) (tuple yes (cl:cons h no)))))))))
 
 (defunc mapfilter (f l)
   (match l
     (nil nil)
-    ((cl:cons h |t|)
-      (let ((rest (mapfilter f |t|)))
+    ((cl:cons h t*)
+      (let ((rest (mapfilter f t*)))
         (handler-case
           (cl:cons (funcall f h) rest)
           (hol2cl.runtime:ocaml-condition
-            (exception~840)
-            (match exception~840 ((Failure _) rest) (_ (raise exception~840)))))))))
+            (exception~835)
+            (match exception~835 ((Failure _) rest) (_ (raise exception~835)))))))))
 
 (defunc find (p l)
-  (match l (nil (failwith "find")) ((cl:cons h |t|) (if (funcall p h) h (find p |t|)))))
+  (match l (nil (failwith "find")) ((cl:cons h t*) (if (funcall p h) h (find p t*)))))
 
 (defunc tryfind (f l)
   (match l
     (nil (failwith "tryfind"))
-    ((cl:cons h |t|)
+    ((cl:cons h t*)
       (handler-case
         (funcall f h)
         (hol2cl.runtime:ocaml-condition
-          (exception~885)
-          (match exception~885 ((Failure _) (tryfind f |t|)) (_ (raise exception~885))))))))
+          (exception~880)
+          (match exception~880 ((Failure _) (tryfind f t*)) (_ (raise exception~880))))))))
 
 (defunc flat (l) (itlist (function-value #'append 2) l nil))
 
 (defunc remove (p l)
   (match l
     (nil (failwith "remove"))
-    ((cl:cons h |t|)
+    ((cl:cons h t*)
       (if (funcall p h)
-        (tuple h |t|)
-        (match (remove p |t|) ((tuple y n) (tuple y (cl:cons h n))))))))
+        (tuple h t*)
+        (match (remove p t*) ((tuple y n) (tuple y (cl:cons h n))))))))
 
 (defunc chop_list (n l)
   (if (= n 0)
     (tuple nil l)
     (handler-case
-      (match (chop_list (- n 1) (tl l)) ((tuple m |l'|) (tuple (cl:cons (hd l) m) |l'|)))
+      (match (chop_list (- n 1) (tl l)) ((tuple m l*) (tuple (cl:cons (hd l) m) l*)))
       (hol2cl.runtime:ocaml-condition
-        (exception~941)
-        (match exception~941
+        (exception~936)
+        (match exception~936
           ((Failure _) (failwith "chop_list"))
-          (_ (raise exception~941)))))))
+          (_ (raise exception~936)))))))
 
 (defunc find_index (p)
   (labelsc
@@ -959,7 +952,7 @@
       (n l)
       (match l
         (nil (make-None))
-        ((cl:cons h |t|) (if (funcall p h) (make-Some n) (ind (+ n 1) |t|))))))
+        ((cl:cons h t*) (if (funcall p h) (make-Some n) (ind (+ n 1) t*))))))
     (ind 0)))
 
 (defunc index (x l)
@@ -976,7 +969,7 @@
 
 
 (defunc mem (x lis)
-  (match lis (nil cl:nil) ((cl:cons h |t|) (cl:or (= (compare x h) 0) (mem x |t|)))))
+  (match lis (nil cl:nil) ((cl:cons h t*) (cl:or (= (compare x h) 0) (mem x t*)))))
 
 (defunc insert (x l) (if (mem x l) l (cl:cons x l)))
 
@@ -988,7 +981,7 @@
 
 (defunc subtract (l1 l2) (filter (lambdac (x) (not (mem x l2))) l1))
 
-(defunc subset (l1 l2) (forall (lambdac (|t|) (mem |t| l2)) l1))
+(defunc subset (l1 l2) (forall (lambdac (t*) (mem t* l2)) l1))
 
 (defunc set_eq (l1 l2) (cl:and (subset l1 l2) (subset l2 l1)))
 
@@ -999,12 +992,12 @@
 
 (defunc assoc (a l)
   (match l
-    ((cl:cons (tuple x y) |t|) (if (= (compare x a) 0) y (assoc a |t|)))
+    ((cl:cons (tuple x y) t*) (if (= (compare x a) 0) y (assoc a t*)))
     (nil (failwith "find"))))
 
 (defunc rev_assoc (a l)
   (match l
-    ((cl:cons (tuple x y) |t|) (if (= (compare y a) 0) x (rev_assoc a |t|)))
+    ((cl:cons (tuple x y) t*) (if (= (compare y a) 0) x (rev_assoc a t*)))
     (nil (failwith "find"))))
 
 ;; (* ------------------------------------------------------------------------- *)
@@ -1018,8 +1011,8 @@
     ((tuple (cl:cons h1 t1) (cl:cons h2 t2)) (cl:cons (tuple h1 h2) (zip t1 t2)))
     (_ (failwith "zip"))))
 
-(defunc unzip (arg~1202)
-  (match arg~1202
+(defunc unzip (arg~1197)
+  (match arg~1197
     (nil (tuple nil nil))
     ((cl:cons (tuple a b) rest)
       (match (unzip rest)
@@ -1042,7 +1035,7 @@
 
 
 (defunc do_list (f l)
-  (match l (nil unit) ((cl:cons h |t|) (progn (funcall f h) (do_list f |t|)))))
+  (match l (nil unit) ((cl:cons h t*) (progn (funcall f h) (do_list f t*)))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Sorting.                                                                  *)
@@ -1063,9 +1056,9 @@
 
 (defunc uniq (l)
   (match l
-    ((cl:cons x (cl:and |t| (cl:cons y _)))
-      (let ((|t'| (uniq |t|)))
-        (if (= (compare x y) 0) |t'| (if (== |t'| |t|) l (cl:cons x |t'|)))))
+    ((cl:cons x (cl:and t* (cl:cons y _)))
+      (let ((t** (uniq t*)))
+        (if (= (compare x y) 0) t** (if (== t** t*) l (cl:cons x t**)))))
     (_ l)))
 
 ;; (* ------------------------------------------------------------------------- *)
@@ -1094,8 +1087,7 @@
 (defparameter gcd
   (labelsc ((gxd (x y) (if (= y 0) x (gxd y (int-mod x y)))))
     (lambdac (x y)
-      (let ((|x'| (abs x)) (|y'| (abs y)))
-        (if (< |x'| |y'|) (gxd |y'| |x'|) (gxd |x'| |y'|))))))
+      (let ((x* (abs x)) (y* (abs y))) (if (< x* y*) (gxd y* x*) (gxd x* y*))))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Some useful functions on "num" type.                                      *)
@@ -1185,7 +1177,7 @@
 ;; (* ------------------------------------------------------------------------- *)
 
 
-(defunc warn (cond s) (if cond (report (string-concat "Warning: " s)) unit))
+(defunc warn (cond* s) (if cond* (report (string-concat "Warning: " s)) unit))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Flags to switch on verbose mode.                                          *)
@@ -1221,8 +1213,8 @@
                 (string-of-float (- finish_time start_time))))
             result))
         (hol2cl.runtime:ocaml-condition
-          (exception~1642)
-          (match exception~1642
+          (exception~1637)
+          (match exception~1637
             (e
               (let* ((finish_time (cpu-time unit)) (msg (exception-string e)))
                 (progn
@@ -1233,7 +1225,7 @@
                         (string-of-float (- finish_time start_time))
                         (string-concat ": " msg))))
                   (raise e))))
-            (_ (raise exception~1642))))))))
+            (_ (raise exception~1637))))))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Versions of assoc and rev_assoc with default rather than failure.         *)
@@ -1241,14 +1233,12 @@
 
 
 (defunc assocd (a l d)
-  (match l
-    (nil d)
-    ((cl:cons (tuple x y) |t|) (if (= (compare x a) 0) y (assocd a |t| d)))))
+  (match l (nil d) ((cl:cons (tuple x y) t*) (if (= (compare x a) 0) y (assocd a t* d)))))
 
 (defunc rev_assocd (a l d)
   (match l
     (nil d)
-    ((cl:cons (tuple x y) |t|) (if (= (compare y a) 0) x (rev_assocd a |t| d)))))
+    ((cl:cons (tuple x y) t*) (if (= (compare y a) 0) x (rev_assocd a t* d)))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Version of map that avoids rebuilding unchanged subterms.                 *)
@@ -1257,9 +1247,9 @@
 
 (defunc qmap (f l)
   (match l
-    ((cl:cons h |t|)
-      (let ((|h'| (funcall f h)) (|t'| (qmap f |t|)))
-        (if (cl:and (== |h'| h) (== |t'| |t|)) l (cl:cons |h'| |t'|))))
+    ((cl:cons h t*)
+      (let ((h* (funcall f h)) (t** (qmap f t*)))
+        (if (cl:and (== h* h) (== t** t*)) l (cl:cons h* t**))))
     (_ l)))
 
 ;; (* ------------------------------------------------------------------------- *)
@@ -1327,15 +1317,15 @@
       (f l)
       (match l
         (nil nil)
-        ((cl:cons (tuple x y) |t|) (cl:cons (tuple x (funcall f y)) (map_list f |t|))))))
+        ((cl:cons (tuple x y) t*) (cl:cons (tuple x (funcall f y)) (map_list f t*))))))
     (labelsc
-      ((mapf~local~1957
-        (f |t|)
-        (match |t|
+      ((mapf*
+        (f t*)
+        (match t*
           ((Empty) (make-Empty))
           ((Leaf h l) (make-Leaf h (map_list f l)))
-          ((Branch p b l r) (make-Branch p b (mapf~local~1957 f l) (mapf~local~1957 f r))))))
-      #'mapf~local~1957)))
+          ((Branch p b l r) (make-Branch p b (mapf* f l) (mapf* f r))))))
+      #'mapf*)))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Operations analogous to "fold" for lists.                                 *)
@@ -1346,29 +1336,29 @@
   (labelsc
     ((foldl_list
       (f a l)
-      (match l (nil a) ((cl:cons (tuple x y) |t|) (foldl_list f (funcall f a x y) |t|)))))
+      (match l (nil a) ((cl:cons (tuple x y) t*) (foldl_list f (funcall f a x y) t*)))))
     (labelsc
-      ((foldl~local~2021
-        (f a |t|)
-        (match |t|
+      ((foldl*
+        (f a t*)
+        (match t*
           ((Empty) a)
           ((Leaf h l) (foldl_list f a l))
-          ((Branch p b l r) (foldl~local~2021 f (foldl~local~2021 f a l) r)))))
-      #'foldl~local~2021)))
+          ((Branch p b l r) (foldl* f (foldl* f a l) r)))))
+      #'foldl*)))
 
 (defparameter foldr
   (labelsc
     ((foldr_list
       (f l a)
-      (match l (nil a) ((cl:cons (tuple x y) |t|) (funcall f x y (foldr_list f |t| a))))))
+      (match l (nil a) ((cl:cons (tuple x y) t*) (funcall f x y (foldr_list f t* a))))))
     (labelsc
-      ((foldr~local~2083
-        (f |t| a)
-        (match |t|
+      ((foldr*
+        (f t* a)
+        (match t*
           ((Empty) a)
           ((Leaf h l) (foldr_list f l a))
-          ((Branch p b l r) (foldr~local~2083 f l (foldr~local~2083 f r a))))))
-      #'foldr~local~2083)))
+          ((Branch p b l r) (foldr* f l (foldr* f r a))))))
+      #'foldr*)))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Mapping to sorted-list representation of the graph, domain and range.     *)
@@ -1392,23 +1382,19 @@
     ((apply_listd
       (l d x)
       (match l
-        ((cl:cons (tuple a b) |t|)
-          (let ((c~local~2178 (compare x a)))
-            (if (= c~local~2178 0)
-              b
-              (if (> c~local~2178 0) (apply_listd |t| d x) (funcall d x)))))
+        ((cl:cons (tuple a b) t*)
+          (let ((c* (compare x a)))
+            (if (= c* 0) b (if (> c* 0) (apply_listd t* d x) (funcall d x)))))
         (nil (funcall d x)))))
     (lambdac (f d x)
-      (let ((k~local~2207 (structural-hash x)))
+      (let ((k* (structural-hash x)))
         (labelsc
           ((look
-            (|t|)
-            (match |t|
-              ((trivia:guard (Leaf h l) (= h k~local~2207)) (apply_listd l d x))
-              ((trivia:guard
-                (Branch p b l r)
-                (= (logand (logxor k~local~2207 p) (- b 1)) 0))
-                (look (if (= (logand k~local~2207 b) 0) l r)))
+            (t*)
+            (match t*
+              ((trivia:guard (Leaf h l) (= h k*)) (apply_listd l d x))
+              ((trivia:guard (Branch p b l r) (= (logand (logxor k* p) (- b 1)) 0))
+                (look (if (= (logand k* b) 0) l r)))
               (_ (funcall d x)))))
           (look f))))))
 
@@ -1420,8 +1406,8 @@
   (handler-case
     (progn (apply f x) cl:t)
     (hol2cl.runtime:ocaml-condition
-      (exception~2287)
-      (match exception~2287 ((Failure _) cl:nil) (_ (raise exception~2287))))))
+      (exception~2277)
+      (match exception~2277 ((Failure _) cl:nil) (_ (raise exception~2277))))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Undefinition.                                                             *)
@@ -1433,35 +1419,30 @@
     ((undefine_list
       (x l)
       (match l
-        ((cl:cons (cl:and ab (tuple a b)) |t|)
-          (let ((c~local~2313 (compare x a)))
-            (if (= c~local~2313 0)
-              |t|
-              (if (< c~local~2313 0)
+        ((cl:cons (cl:and ab (tuple a b)) t*)
+          (let ((c* (compare x a)))
+            (if (= c* 0)
+              t*
+              (if (< c* 0)
                 l
-                (let ((|t'| (undefine_list x |t|)))
-                  (if (== |t'| |t|) l (cl:cons ab |t'|)))))))
+                (let ((t** (undefine_list x t*))) (if (== t** t*) l (cl:cons ab t**)))))))
         (nil nil))))
     (lambdac (x)
-      (let ((k~local~2347 (structural-hash x)))
+      (let ((k* (structural-hash x)))
         (labelsc
           ((und
-            (|t|)
-            (match |t|
-              ((trivia:guard (Leaf h l) (= h k~local~2347))
-                (let ((|l'| (undefine_list x l)))
-                  (if (== |l'| l) |t| (if (= |l'| nil) (make-Empty) (make-Leaf h |l'|)))))
-              ((trivia:guard (Branch p b l r) (= (logand k~local~2347 (- b 1)) p))
-                (if (= (logand k~local~2347 b) 0)
-                  (let ((|l'| (und l)))
-                    (if (== |l'| l)
-                      |t|
-                      (match |l'| ((Empty) r) (_ (make-Branch p b |l'| r)))))
-                  (let ((|r'| (und r)))
-                    (if (== |r'| r)
-                      |t|
-                      (match |r'| ((Empty) l) (_ (make-Branch p b l |r'|)))))))
-              (_ |t|))))
+            (t*)
+            (match t*
+              ((trivia:guard (Leaf h l) (= h k*))
+                (let ((l* (undefine_list x l)))
+                  (if (== l* l) t* (if (= l* nil) (make-Empty) (make-Leaf h l*)))))
+              ((trivia:guard (Branch p b l r) (= (logand k* (- b 1)) p))
+                (if (= (logand k* b) 0)
+                  (let ((l* (und l)))
+                    (if (== l* l) t* (match l* ((Empty) r) (_ (make-Branch p b l* r)))))
+                  (let ((r* (und r)))
+                    (if (== r* r) t* (match r* ((Empty) l) (_ (make-Branch p b l r*)))))))
+              (_ t*))))
           #'und)))))
 
 ;; (* ------------------------------------------------------------------------- *)
@@ -1471,7 +1452,7 @@
 
 (defparameter combine nil)
 
-(defparameter |\|->| nil)
+(defparameter *-> nil)
 
 (match
   (fletc
@@ -1481,17 +1462,15 @@
         (if (= (logand p1 b) 0) (make-Branch p b t1 t2) (make-Branch p b t2 t1)))))
     (labelsc
       ((define_list
-        (arg~2501 l)
-        (match arg~2501
+        (arg~2487 l)
+        (match arg~2487
           ((cl:and xy (tuple x y))
             (match l
-              ((cl:cons (cl:and ab (tuple a b)) |t|)
-                (let ((c~local~2518 (compare x a)))
-                  (if (= c~local~2518 0)
-                    (cl:cons xy |t|)
-                    (if (< c~local~2518 0)
-                      (cl:cons xy l)
-                      (cl:cons ab (define_list xy |t|))))))
+              ((cl:cons (cl:and ab (tuple a b)) t*)
+                (let ((c* (compare x a)))
+                  (if (= c* 0)
+                    (cl:cons xy t*)
+                    (if (< c* 0) (cl:cons xy l) (cl:cons ab (define_list xy t*))))))
               (nil (cl:cons xy nil))))))
         (combine_list
           (op z l1 l2)
@@ -1501,43 +1480,35 @@
             ((tuple
               (cl:cons (cl:and xy1 (tuple x1 y1)) t1)
               (cl:cons (cl:and xy2 (tuple x2 y2)) t2))
-              (let ((c~local~2589 (compare x1 x2)))
-                (if (< c~local~2589 0)
+              (let ((c* (compare x1 x2)))
+                (if (< c* 0)
                   (cl:cons xy1 (combine_list op z t1 l2))
-                  (if (> c~local~2589 0)
+                  (if (> c* 0)
                     (cl:cons xy2 (combine_list op z l1 t2))
                     (let ((y (funcall op y1 y2)) (l (combine_list op z t1 t2)))
                       (if (funcall z y) l (cl:cons (tuple x1 y) l))))))))))
       (fletc
-        ((|\|->~local~2641|
+        ((*->*
           (x y)
-          (let ((k~local~2645 (structural-hash x)))
+          (let ((k* (structural-hash x)))
             (labelsc
               ((upd
-                (|t|)
-                (match |t|
-                  ((Empty) (make-Leaf k~local~2645 (cl:cons (tuple x y) nil)))
+                (t*)
+                (match t*
+                  ((Empty) (make-Leaf k* (cl:cons (tuple x y) nil)))
                   ((Leaf h l)
-                    (if (= h k~local~2645)
+                    (if (= h k*)
                       (make-Leaf h (define_list (tuple x y) l))
-                      (newbranch
-                        h
-                        |t|
-                        k~local~2645
-                        (make-Leaf k~local~2645 (cl:cons (tuple x y) nil)))))
+                      (newbranch h t* k* (make-Leaf k* (cl:cons (tuple x y) nil)))))
                   ((Branch p b l r)
-                    (if (<> (logand k~local~2645 (- b 1)) p)
-                      (newbranch
-                        p
-                        |t|
-                        k~local~2645
-                        (make-Leaf k~local~2645 (cl:cons (tuple x y) nil)))
-                      (if (= (logand k~local~2645 b) 0)
+                    (if (<> (logand k* (- b 1)) p)
+                      (newbranch p t* k* (make-Leaf k* (cl:cons (tuple x y) nil)))
+                      (if (= (logand k* b) 0)
                         (make-Branch p b (upd l) r)
                         (make-Branch p b l (upd r))))))))
               #'upd))))
         (labelsc
-          ((combine~local~2737
+          ((combine*
             (op z t1 t2)
             (match (tuple t1 t2)
               ((tuple (Empty) _) t2)
@@ -1547,74 +1518,62 @@
                   (let ((l (combine_list op z l1 l2)))
                     (if (= l nil) (make-Empty) (make-Leaf h1 l)))
                   (newbranch h1 t1 h2 t2)))
-              ((tuple (cl:and lf (Leaf k~local~2788 lis)) (cl:and br (Branch p b l r)))
-                (if (= (logand k~local~2788 (- b 1)) p)
-                  (if (= (logand k~local~2788 b) 0)
-                    (match (combine~local~2737 op z lf l)
-                      ((Empty) r)
-                      (|l'| (make-Branch p b |l'| r)))
-                    (match (combine~local~2737 op z lf r)
-                      ((Empty) l)
-                      (|r'| (make-Branch p b l |r'|))))
-                  (newbranch k~local~2788 lf p br)))
-              ((tuple (cl:and br (Branch p b l r)) (cl:and lf (Leaf k~local~2859 lis)))
-                (if (= (logand k~local~2859 (- b 1)) p)
-                  (if (= (logand k~local~2859 b) 0)
-                    (match (combine~local~2737 op z l lf)
-                      ((Empty) r)
-                      (|l'| (make-Branch p b |l'| r)))
-                    (match (combine~local~2737 op z r lf)
-                      ((Empty) l)
-                      (|r'| (make-Branch p b l |r'|))))
-                  (newbranch p br k~local~2859 lf)))
+              ((tuple (cl:and lf (Leaf k* lis)) (cl:and br (Branch p b l r)))
+                (if (= (logand k* (- b 1)) p)
+                  (if (= (logand k* b) 0)
+                    (match (combine* op z lf l) ((Empty) r) (l* (make-Branch p b l* r)))
+                    (match (combine* op z lf r) ((Empty) l) (r* (make-Branch p b l r*))))
+                  (newbranch k* lf p br)))
+              ((tuple (cl:and br (Branch p b l r)) (cl:and lf (Leaf k* lis)))
+                (if (= (logand k* (- b 1)) p)
+                  (if (= (logand k* b) 0)
+                    (match (combine* op z l lf) ((Empty) r) (l* (make-Branch p b l* r)))
+                    (match (combine* op z r lf) ((Empty) l) (r* (make-Branch p b l r*))))
+                  (newbranch p br k* lf)))
               ((tuple (Branch p1 b1 l1 r1) (Branch p2 b2 l2 r2))
                 (if (< b1 b2)
                   (if (<> (logand p2 (- b1 1)) p1)
                     (newbranch p1 t1 p2 t2)
                     (if (= (logand p2 b1) 0)
-                      (match (combine~local~2737 op z l1 t2)
+                      (match (combine* op z l1 t2)
                         ((Empty) r1)
                         (l (make-Branch p1 b1 l r1)))
-                      (match (combine~local~2737 op z r1 t2)
+                      (match (combine* op z r1 t2)
                         ((Empty) l1)
                         (r (make-Branch p1 b1 l1 r)))))
                   (if (< b2 b1)
                     (if (<> (logand p1 (- b2 1)) p2)
                       (newbranch p1 t1 p2 t2)
                       (if (= (logand p1 b2) 0)
-                        (match (combine~local~2737 op z t1 l2)
+                        (match (combine* op z t1 l2)
                           ((Empty) r2)
                           (l (make-Branch p2 b2 l r2)))
-                        (match (combine~local~2737 op z t1 r2)
+                        (match (combine* op z t1 r2)
                           ((Empty) l2)
                           (r (make-Branch p2 b2 l2 r)))))
                     (if (= p1 p2)
-                      (match
-                        (tuple
-                          (combine~local~2737 op z l1 l2)
-                          (combine~local~2737 op z r1 r2))
+                      (match (tuple (combine* op z l1 l2) (combine* op z r1 r2))
                         ((tuple (Empty) r) r)
                         ((tuple l (Empty)) l)
                         ((tuple l r) (make-Branch p1 b1 l r)))
                       (newbranch p1 t1 p2 t2))))))))
-          (tuple #'|\|->~local~2641| #'combine~local~2737)))))
-  ((tuple |\|->~local~2455| combine~local~2453)
-    (setf combine combine~local~2453 |\|->| |\|->~local~2455|)))
+          (tuple #'*->* #'combine*)))))
+  ((tuple *->* combine*) (setf combine combine* *-> *->*)))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Special case of point function.                                           *)
 ;; (* ------------------------------------------------------------------------- *)
 
 
-(defunc |\|=>| (x y) (funcall |\|->| x y undefined))
+(defunc *=> (x y) (funcall *-> x y undefined))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Grab an arbitrary element.                                                *)
 ;; (* ------------------------------------------------------------------------- *)
 
 
-(defunc choose (|t|)
-  (match |t|
+(defunc choose (t*)
+  (match t*
     ((Empty) (failwith "choose: completely undefined function"))
     ((Leaf h l) (hd l))
     ((Branch b p t1 t2) (choose t1))))
@@ -1633,22 +1592,20 @@
 ;; (* ------------------------------------------------------------------------- *)
 
 
-(defunc |mem'| (eq)
+(defunc mem* (eq)
   (labelsc
-    ((mem~local~3155
+    ((mem**
       (x lis)
-      (match lis
-        (nil cl:nil)
-        ((cl:cons h |t|) (cl:or (funcall eq x h) (mem~local~3155 x |t|))))))
-    #'mem~local~3155))
+      (match lis (nil cl:nil) ((cl:cons h t*) (cl:or (funcall eq x h) (mem** x t*))))))
+    #'mem**))
 
-(defunc |insert'| (eq x l) (if (|mem'| eq x l) l (cl:cons x l)))
+(defunc insert* (eq x l) (if (mem* eq x l) l (cl:cons x l)))
 
-(defunc |union'| (eq l1 l2) (itlist (|insert'| eq) l1 l2))
+(defunc union* (eq l1 l2) (itlist (insert* eq) l1 l2))
 
-(defunc |unions'| (eq l) (itlist (|union'| eq) l nil))
+(defunc unions* (eq l) (itlist (union* eq) l nil))
 
-(defunc |subtract'| (eq l1 l2) (filter (lambdac (x) (not (|mem'| eq x l2))) l1))
+(defunc subtract* (eq l1 l2) (filter (lambdac (x) (not (mem* eq x l2))) l1))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Accepts decimal, hex or binary numeral, using C notation 0x... for hex    *)
@@ -1715,7 +1672,7 @@
         (match l
           (nil (failwith "num_of_string: no digits after base indicator"))
           ((cl:cons h nil) (funcall valof b h))
-          ((cl:cons h |t|) (+ (funcall valof b h) (* b (num_of_stringlist b |t|)))))))
+          ((cl:cons h t*) (+ (funcall valof b h) (* b (num_of_stringlist b t*)))))))
       (lambdac (s)
         (match (explode s)
           (nil (failwith "num_of_string: no digits"))
@@ -1736,11 +1693,11 @@
       (handler-case
         (open-in filename)
         (hol2cl.runtime:ocaml-condition
-          (exception~3410)
-          (match exception~3410
+          (exception~3388)
+          (match exception~3388
             ((Sys_error _)
               (failwith (string-concat "strings_of_file: can't open " filename)))
-            (_ (raise exception~3410)))))))
+            (_ (raise exception~3388)))))))
     (labelsc
       ((suck_lines
         (acc)
@@ -1749,8 +1706,8 @@
             (handler-case
               (cl:cons (input-line fd) nil)
               (hol2cl.runtime:ocaml-condition
-                (exception~3423)
-                (match exception~3423 ((End_of_file) nil) (_ (raise exception~3423)))))))
+                (exception~3401)
+                (match exception~3401 ((End_of_file) nil) (_ (raise exception~3401)))))))
           (if (= l nil) (funcall rev acc) (suck_lines (cl:cons (hd l) acc))))))
       (let ((data (suck_lines nil))) (progn (close-channel fd) data)))))
 

@@ -89,6 +89,7 @@
         CARD_UNION_LE
         CARD_UNION_OVERLAP
         CARD_UNION_OVERLAP_EQ
+        CARTESIAN_PRODUCT*
         CARTESIAN_PRODUCT_AS_RESTRICTIONS
         CARTESIAN_PRODUCT_EMPTY
         CARTESIAN_PRODUCT_EQ
@@ -149,6 +150,7 @@
         DISJOINT_INSERT
         DISJOINT_SING
         DISJOINT_SYM
+        DISJOINT_UNION*
         DISJOINT_UNION_EQ
         DISJOINT_UNION_EQ_EMPTY
         ELEMENT_LE_SUP
@@ -293,7 +295,9 @@
         FUNCTION_FACTORS_RIGHT
         FUNCTION_FACTORS_RIGHT_GEN
         FUN_IN_IMAGE
+        GE_C*
         GSPEC
+        HAS_INF*
         HAS_INF_APPROACH
         HAS_INF_INF
         HAS_INF_LBOUND
@@ -321,6 +325,7 @@
         HAS_SIZE_SUC
         HAS_SIZE_UNION
         HAS_SIZE_UNIONS
+        HAS_SUP*
         HAS_SUP_APPROACH
         HAS_SUP_LE
         HAS_SUP_SUP
@@ -358,6 +363,7 @@
         IMAGE_UNIONS
         IMAGE_o
         IN
+        INF**
         INFINITE
         INFINITE_CROSS_EQ
         INFINITE_CROSS_UNIV
@@ -468,6 +474,7 @@
         ITSET
         ITSET_EQ
         LENGTH_LIST_OF_SET
+        LE_C*
         LIST_OF_SET_EMPTY
         LIST_OF_SET_PROPERTIES
         LIST_OF_SET_SING
@@ -590,6 +597,7 @@
         SUBSET_UNIONS
         SUBSET_UNION_ABSORPTION
         SUBSET_UNIV
+        SUP*
         SUP_APPROACH
         SUP_EQ
         SUP_EXISTS
@@ -658,12 +666,19 @@
         UNIV_SUBSET
         WF_FINITE
         WF_PSUBSET
+        cartesian_product
         const_of_var
         dest_setenum
+        disjoint_union
         eq_c
         f
+        ge_c
         gt_c
+        has_inf
+        has_sup
+        inf*
         is_setenum
+        le_c
         list_of_set
         lt_c
         mk_fset
@@ -680,23 +695,8 @@
         rule_head
         set_of_list
         string_INFINITE
-        transf
-        |CARTESIAN_PRODUCT|
-        |DISJOINT_UNION|
-        |GE_C|
-        |HAS_INF|
-        |HAS_SUP|
-        |INF|
-        |LE_C|
-        |SUP|
-        |cartesian_product|
-        |disjoint_union|
-        |ge_c|
-        |has_inf|
-        |has_sup|
-        |inf|
-        |le_c|
-        |sup|)
+        sup
+        transf)
       (:export
         ABSORPTION
         ARB
@@ -768,6 +768,7 @@
         CARD_UNION_LE
         CARD_UNION_OVERLAP
         CARD_UNION_OVERLAP_EQ
+        CARTESIAN_PRODUCT*
         CARTESIAN_PRODUCT_AS_RESTRICTIONS
         CARTESIAN_PRODUCT_EMPTY
         CARTESIAN_PRODUCT_EQ
@@ -828,6 +829,7 @@
         DISJOINT_INSERT
         DISJOINT_SING
         DISJOINT_SYM
+        DISJOINT_UNION*
         DISJOINT_UNION_EQ
         DISJOINT_UNION_EQ_EMPTY
         ELEMENT_LE_SUP
@@ -971,7 +973,9 @@
         FUNCTION_FACTORS_RIGHT
         FUNCTION_FACTORS_RIGHT_GEN
         FUN_IN_IMAGE
+        GE_C*
         GSPEC
+        HAS_INF*
         HAS_INF_APPROACH
         HAS_INF_INF
         HAS_INF_LBOUND
@@ -999,6 +1003,7 @@
         HAS_SIZE_SUC
         HAS_SIZE_UNION
         HAS_SIZE_UNIONS
+        HAS_SUP*
         HAS_SUP_APPROACH
         HAS_SUP_LE
         HAS_SUP_SUP
@@ -1036,6 +1041,7 @@
         IMAGE_UNIONS
         IMAGE_o
         IN
+        INF**
         INFINITE
         INFINITE_CROSS_EQ
         INFINITE_CROSS_UNIV
@@ -1146,6 +1152,7 @@
         ITSET
         ITSET_EQ
         LENGTH_LIST_OF_SET
+        LE_C*
         LIST_OF_SET_EMPTY
         LIST_OF_SET_PROPERTIES
         LIST_OF_SET_SING
@@ -1267,6 +1274,7 @@
         SUBSET_UNIONS
         SUBSET_UNION_ABSORPTION
         SUBSET_UNIV
+        SUP*
         SUP_APPROACH
         SUP_EQ
         SUP_EXISTS
@@ -1335,10 +1343,17 @@
         UNIV_SUBSET
         WF_FINITE
         WF_PSUBSET
+        cartesian_product
         dest_setenum
+        disjoint_union
         eq_c
+        ge_c
         gt_c
+        has_inf
+        has_sup
+        inf*
         is_setenum
+        le_c
         list_of_set
         lt_c
         mk_fset
@@ -1353,22 +1368,7 @@
         real_INFINITE
         set_of_list
         string_INFINITE
-        |CARTESIAN_PRODUCT|
-        |DISJOINT_UNION|
-        |GE_C|
-        |HAS_INF|
-        |HAS_SUP|
-        |INF|
-        |LE_C|
-        |SUP|
-        |cartesian_product|
-        |disjoint_union|
-        |ge_c|
-        |has_inf|
-        |has_sup|
-        |inf|
-        |le_c|
-        |sup|))))
+        sup))))
 
 (defpackage :hol2cl.sets
   (:use :cl)
@@ -1443,6 +1443,7 @@
     CARD_UNION_LE
     CARD_UNION_OVERLAP
     CARD_UNION_OVERLAP_EQ
+    CARTESIAN_PRODUCT*
     CARTESIAN_PRODUCT_AS_RESTRICTIONS
     CARTESIAN_PRODUCT_EMPTY
     CARTESIAN_PRODUCT_EQ
@@ -1503,6 +1504,7 @@
     DISJOINT_INSERT
     DISJOINT_SING
     DISJOINT_SYM
+    DISJOINT_UNION*
     DISJOINT_UNION_EQ
     DISJOINT_UNION_EQ_EMPTY
     ELEMENT_LE_SUP
@@ -1647,7 +1649,9 @@
     FUNCTION_FACTORS_RIGHT
     FUNCTION_FACTORS_RIGHT_GEN
     FUN_IN_IMAGE
+    GE_C*
     GSPEC
+    HAS_INF*
     HAS_INF_APPROACH
     HAS_INF_INF
     HAS_INF_LBOUND
@@ -1675,6 +1679,7 @@
     HAS_SIZE_SUC
     HAS_SIZE_UNION
     HAS_SIZE_UNIONS
+    HAS_SUP*
     HAS_SUP_APPROACH
     HAS_SUP_LE
     HAS_SUP_SUP
@@ -1712,6 +1717,7 @@
     IMAGE_UNIONS
     IMAGE_o
     IN
+    INF**
     INFINITE
     INFINITE_CROSS_EQ
     INFINITE_CROSS_UNIV
@@ -1822,6 +1828,7 @@
     ITSET
     ITSET_EQ
     LENGTH_LIST_OF_SET
+    LE_C*
     LIST_OF_SET_EMPTY
     LIST_OF_SET_PROPERTIES
     LIST_OF_SET_SING
@@ -1944,6 +1951,7 @@
     SUBSET_UNIONS
     SUBSET_UNION_ABSORPTION
     SUBSET_UNIV
+    SUP*
     SUP_APPROACH
     SUP_EQ
     SUP_EXISTS
@@ -2012,12 +2020,19 @@
     UNIV_SUBSET
     WF_FINITE
     WF_PSUBSET
+    cartesian_product
     const_of_var
     dest_setenum
+    disjoint_union
     eq_c
     f
+    ge_c
     gt_c
+    has_inf
+    has_sup
+    inf*
     is_setenum
+    le_c
     list_of_set
     lt_c
     mk_fset
@@ -2034,23 +2049,8 @@
     rule_head
     set_of_list
     string_INFINITE
-    transf
-    |CARTESIAN_PRODUCT|
-    |DISJOINT_UNION|
-    |GE_C|
-    |HAS_INF|
-    |HAS_SUP|
-    |INF|
-    |LE_C|
-    |SUP|
-    |cartesian_product|
-    |disjoint_union|
-    |ge_c|
-    |has_inf|
-    |has_sup|
-    |inf|
-    |le_c|
-    |sup|)
+    sup
+    transf)
   (:shadowing-import-from :cl +)
   (:shadowing-import-from
     :hol2cl.arith
@@ -2161,14 +2161,14 @@
     ALL_CONV)
   (:shadowing-import-from
     :hol2cl.fusion.hol
-    |mk_comb|
-    |inst|
     variant
     type_of
     TRANS
     rand
     mk_var
+    mk_comb
     is_const
+    inst
     dest_const
     concl
     aty
@@ -2440,6 +2440,7 @@
     CARD_UNION_LE
     CARD_UNION_OVERLAP
     CARD_UNION_OVERLAP_EQ
+    CARTESIAN_PRODUCT*
     CARTESIAN_PRODUCT_AS_RESTRICTIONS
     CARTESIAN_PRODUCT_EMPTY
     CARTESIAN_PRODUCT_EQ
@@ -2500,6 +2501,7 @@
     DISJOINT_INSERT
     DISJOINT_SING
     DISJOINT_SYM
+    DISJOINT_UNION*
     DISJOINT_UNION_EQ
     DISJOINT_UNION_EQ_EMPTY
     ELEMENT_LE_SUP
@@ -2643,7 +2645,9 @@
     FUNCTION_FACTORS_RIGHT
     FUNCTION_FACTORS_RIGHT_GEN
     FUN_IN_IMAGE
+    GE_C*
     GSPEC
+    HAS_INF*
     HAS_INF_APPROACH
     HAS_INF_INF
     HAS_INF_LBOUND
@@ -2671,6 +2675,7 @@
     HAS_SIZE_SUC
     HAS_SIZE_UNION
     HAS_SIZE_UNIONS
+    HAS_SUP*
     HAS_SUP_APPROACH
     HAS_SUP_LE
     HAS_SUP_SUP
@@ -2708,6 +2713,7 @@
     IMAGE_UNIONS
     IMAGE_o
     IN
+    INF**
     INFINITE
     INFINITE_CROSS_EQ
     INFINITE_CROSS_UNIV
@@ -2818,6 +2824,7 @@
     ITSET
     ITSET_EQ
     LENGTH_LIST_OF_SET
+    LE_C*
     LIST_OF_SET_EMPTY
     LIST_OF_SET_PROPERTIES
     LIST_OF_SET_SING
@@ -2939,6 +2946,7 @@
     SUBSET_UNIONS
     SUBSET_UNION_ABSORPTION
     SUBSET_UNIV
+    SUP*
     SUP_APPROACH
     SUP_EQ
     SUP_EXISTS
@@ -3007,10 +3015,17 @@
     UNIV_SUBSET
     WF_FINITE
     WF_PSUBSET
+    cartesian_product
     dest_setenum
+    disjoint_union
     eq_c
+    ge_c
     gt_c
+    has_inf
+    has_sup
+    inf*
     is_setenum
+    le_c
     list_of_set
     lt_c
     mk_fset
@@ -3025,22 +3040,7 @@
     real_INFINITE
     set_of_list
     string_INFINITE
-    |CARTESIAN_PRODUCT|
-    |DISJOINT_UNION|
-    |GE_C|
-    |HAS_INF|
-    |HAS_SUP|
-    |INF|
-    |LE_C|
-    |SUP|
-    |cartesian_product|
-    |disjoint_union|
-    |ge_c|
-    |has_inf|
-    |has_sup|
-    |inf|
-    |le_c|
-    |sup|))
+    sup))
 
 (in-package :hol2cl.sets)
 
@@ -3204,14 +3204,14 @@
     (parse_term
       "FINITE (EMPTY:A->bool) /\\
      !(x:A) s. FINITE s ==> FINITE (x INSERT s)"))
-  ((tuple FINITE_RULES~local~246 FINITE_INDUCT~local~244 FINITE_CASES~local~242)
+  ((tuple FINITE_RULES* FINITE_INDUCT* FINITE_CASES*)
     (setf
       FINITE_CASES
-      FINITE_CASES~local~242
+      FINITE_CASES*
       FINITE_INDUCT
-      FINITE_INDUCT~local~244
+      FINITE_INDUCT*
       FINITE_RULES
-      FINITE_RULES~local~246)))
+      FINITE_RULES*)))
 
 (defparameter INFINITE
   (funcall new_definition (parse_term "INFINITE (s:A->bool) <=> ~(FINITE s)")))
@@ -3990,7 +3990,7 @@
       (parse_term "!s:A->bool. (s = EMPTY) <=> (DISJOINT s s)")
       (funcall SET_TAC nil))))
 
-(defparameter |DISJOINT_UNION|
+(defparameter DISJOINT_UNION*
   (prove
     (tuple
       (parse_term
@@ -7914,7 +7914,7 @@
               ALL_CONV
               tm)))
           (let
-            ((HAS_SIZE_CONV~local~6659
+            ((HAS_SIZE_CONV*
               (ORELSEC
                 (GEN_REWRITE_CONV #'I (cl:cons (funcall CONJUNCT1 HAS_SIZE_CLAUSES) nil))
                 (THENC
@@ -7925,19 +7925,19 @@
                       (cl:cons (funcall CONJUNCT2 HAS_SIZE_CLAUSES) nil)))
                   (BINDER_CONV #'EXISTS_HAS_SIZE_AND_CONV)))))
             (lambdac (tm)
-              (let* ((th (funcall HAS_SIZE_CONV~local~6659 tm)) (|tm'| (rand (concl th))))
-                (match (funcall strip_exists |tm'|)
+              (let* ((th (funcall HAS_SIZE_CONV* tm)) (tm* (rand (concl th))))
+                (match (funcall strip_exists tm*)
                   ((tuple evs bod)
                     (if (= evs nil)
                       th
                       (let
-                        ((|th'|
+                        ((th*
                           (funpow
                             (funcall length evs)
                             #'BINDER_CONV
                             #'NOT_IN_INSERT_CONV
-                            |tm'|)))
-                        (TRANS th |th'|)))))))))))))
+                            tm*)))
+                        (TRANS th th*)))))))))))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Various useful lemmas about cardinalities of unions etc.                  *)
@@ -9176,8 +9176,8 @@
                                                                       "p ==> q /\\ r ==> s <=> (q /\\ p) /\\ r ==> s"))
                                                                   nil)))
                                                             (MAP_EVERY
-                                                              (lambdac (|t|)
-                                                                (SPEC_TAC (tuple |t| |t|)))
+                                                              (lambdac (t*)
+                                                                (SPEC_TAC (tuple t* t*)))
                                                               (cl:cons
                                                                 (parse_term "s:A->bool")
                                                                 (cl:cons
@@ -9516,7 +9516,7 @@
                                   (parse_term "!x:A. x IN s ==> FINITE(t x :B->bool)")
                                   (cl:cons (parse_term "FINITE(s:A->bool)") nil))))
                             (MAP_EVERY
-                              (lambdac (|t|) (SPEC_TAC (tuple |t| |t|)))
+                              (lambdac (t*) (SPEC_TAC (tuple t* t*)))
                               (cl:cons
                                 (parse_term "t:A->B->bool")
                                 (cl:cons (parse_term "s:A->bool") nil))))
@@ -9997,12 +9997,8 @@
               EXTENSION
               (cl:cons FORALL_PAIR_THM (cl:cons IN_ELIM_THM (cl:cons IN_CROSS nil))))))
         (funcall SET_TAC nil))))
-  ((tuple CROSS_UNIONS_UNIONS~local~9354 CROSS_UNIONS~local~9352)
-    (setf
-      CROSS_UNIONS
-      CROSS_UNIONS~local~9352
-      CROSS_UNIONS_UNIONS
-      CROSS_UNIONS_UNIONS~local~9354)))
+  ((tuple CROSS_UNIONS_UNIONS* CROSS_UNIONS*)
+    (setf CROSS_UNIONS CROSS_UNIONS* CROSS_UNIONS_UNIONS CROSS_UNIONS_UNIONS*)))
 
 (defparameter CROSS_INTERS nil)
 
@@ -10043,12 +10039,8 @@
                   FORALL_PAIR_THM
                   (cl:cons IN_ELIM_THM (cl:cons IN_CROSS (cl:cons NOT_IN_EMPTY nil))))))))
         (ASM SET_TAC nil))))
-  ((tuple CROSS_INTERS_INTERS~local~9387 CROSS_INTERS~local~9385)
-    (setf
-      CROSS_INTERS
-      CROSS_INTERS~local~9385
-      CROSS_INTERS_INTERS
-      CROSS_INTERS_INTERS~local~9387)))
+  ((tuple CROSS_INTERS_INTERS* CROSS_INTERS*)
+    (setf CROSS_INTERS CROSS_INTERS* CROSS_INTERS_INTERS CROSS_INTERS_INTERS*)))
 
 (defparameter DISJOINT_CROSS
   (prove
@@ -10295,7 +10287,7 @@
 ;; (* ------------------------------------------------------------------------- *)
 
 
-(defparameter |cartesian_product|
+(defparameter cartesian_product
   (funcall
     new_definition
     (parse_term
@@ -10309,9 +10301,9 @@
         "!k s (x:K->A).
         x IN cartesian_product k s <=>
         EXTENSIONAL k x /\\ (!i. i IN k ==> x i IN s i)")
-      (REWRITE_TAC (cl:cons |cartesian_product| (cl:cons IN_ELIM_THM nil))))))
+      (REWRITE_TAC (cl:cons cartesian_product (cl:cons IN_ELIM_THM nil))))))
 
-(defparameter |CARTESIAN_PRODUCT|
+(defparameter CARTESIAN_PRODUCT*
   (prove
     (tuple
       (parse_term
@@ -10323,7 +10315,7 @@
           THEN
           (funcall THEN (REPEAT #'GEN_TAC) (GEN_REWRITE_TAC #'I (cl:cons EXTENSION nil)))
           (REWRITE_TAC
-            (cl:cons |cartesian_product| (cl:cons IN_ELIM_THM (cl:cons EXTENSIONAL nil)))))
+            (cl:cons cartesian_product (cl:cons IN_ELIM_THM (cl:cons EXTENSIONAL nil)))))
         (MESON_TAC (cl:cons IN_SING nil))))))
 
 (defparameter RESTRICTION_IN_CARTESIAN_PRODUCT
@@ -10338,7 +10330,7 @@
         (REWRITE_TAC
           (cl:cons
             RESTRICTION
-            (cl:cons |cartesian_product| (cl:cons EXTENSIONAL (cl:cons IN_ELIM_THM nil)))))
+            (cl:cons cartesian_product (cl:cons EXTENSIONAL (cl:cons IN_ELIM_THM nil)))))
         (funcall SET_TAC nil)))))
 
 (defparameter CARTESIAN_PRODUCT_AS_RESTRICTIONS
@@ -10373,7 +10365,7 @@
                   (funcall X_GEN_TAC (parse_term "x:K->A")))
                 (REWRITE_TAC
                   (cl:cons
-                    |cartesian_product|
+                    cartesian_product
                     (cl:cons IN_ELIM_THM (cl:cons EXTENSIONAL nil)))))
               #'STRIP_TAC)
             (funcall EXISTS_TAC (parse_term "x:K->A")))
@@ -10417,7 +10409,7 @@
                       (REWRITE_TAC
                         (cl:cons
                           SKOLEM_THM
-                          (cl:cons NOT_EXISTS_THM (cl:cons |cartesian_product| nil)))))
+                          (cl:cons NOT_EXISTS_THM (cl:cons cartesian_product nil)))))
                     (REWRITE_TAC (cl:cons IN_ELIM_THM (cl:cons NOT_IN_EMPTY nil))))
                   #'EQ_TAC)
                 DISCH_TAC)
@@ -10438,7 +10430,7 @@
         (funcall
           THEN
           (REWRITE_TAC
-            (cl:cons |CARTESIAN_PRODUCT| (cl:cons NOT_IN_EMPTY (cl:cons EXTENSION nil))))
+            (cl:cons CARTESIAN_PRODUCT* (cl:cons NOT_IN_EMPTY (cl:cons EXTENSION nil))))
           (REWRITE_TAC (cl:cons IN_ELIM_THM (cl:cons IN_SING nil))))
         (REWRITE_TAC (cl:cons FUN_EQ_THM nil))))))
 
@@ -10458,7 +10450,7 @@
             THEN
             (funcall
               THEN
-              (REWRITE_TAC (cl:cons |cartesian_product| (cl:cons IN_ELIM_THM nil)))
+              (REWRITE_TAC (cl:cons cartesian_product (cl:cons IN_ELIM_THM nil)))
               (REPEAT #'STRIP_TAC))
             (MATCH_MP_TAC EXTENSIONAL_EQ))
           (funcall EXISTS_TAC (parse_term "k:K->bool")))
@@ -10530,7 +10522,7 @@
                                           (cl:cons
                                             SUBSET
                                             (cl:cons
-                                              |cartesian_product|
+                                              cartesian_product
                                               (cl:cons IN_ELIM_THM nil)))))
                                       #'EQ_TAC)
                                     (cl:cons #'ALL_TAC (cl:cons (MESON_TAC nil) nil)))
@@ -10586,7 +10578,7 @@
         (cl:cons
           (funcall
             ASM_SIMP_TAC
-            (cl:cons |cartesian_product| (cl:cons EXTENSION (cl:cons IN_ELIM_THM nil))))
+            (cl:cons cartesian_product (cl:cons EXTENSION (cl:cons IN_ELIM_THM nil))))
           (cl:cons
             (funcall
               THEN
@@ -10623,7 +10615,7 @@
         (REWRITE_TAC
           (cl:cons
             EXTENSION
-            (cl:cons |cartesian_product| (cl:cons IN_INTER (cl:cons IN_ELIM_THM nil)))))
+            (cl:cons cartesian_product (cl:cons IN_INTER (cl:cons IN_ELIM_THM nil)))))
         (funcall SET_TAC nil)))))
 
 (defparameter CARTESIAN_PRODUCT_UNIV
@@ -10635,7 +10627,7 @@
         (REWRITE_TAC
           (cl:cons
             EXTENSION
-            (cl:cons IN_UNIV (cl:cons |cartesian_product| (cl:cons IN_ELIM_THM nil)))))
+            (cl:cons IN_UNIV (cl:cons cartesian_product (cl:cons IN_ELIM_THM nil)))))
         (REWRITE_TAC (cl:cons EXTENSIONAL_UNIV nil))))))
 
 (defparameter CARTESIAN_PRODUCT_SINGS
@@ -10648,7 +10640,7 @@
           THEN
           (funcall
             THEN
-            (REWRITE_TAC (cl:cons |cartesian_product| (cl:cons IN_SING nil)))
+            (REWRITE_TAC (cl:cons cartesian_product (cl:cons IN_SING nil)))
             (REWRITE_TAC
               (cl:cons
                 EXTENSION
@@ -10666,7 +10658,7 @@
           THEN
           (funcall
             THEN
-            (REWRITE_TAC (cl:cons |cartesian_product| (cl:cons IN_SING nil)))
+            (REWRITE_TAC (cl:cons cartesian_product (cl:cons IN_SING nil)))
             (REWRITE_TAC
               (cl:cons
                 EXTENSION
@@ -10722,7 +10714,7 @@
                                     (funcall GSYM SUBSET_ANTISYM_EQ)
                                     (cl:cons SUBSET (cl:cons FORALL_IN_IMAGE nil)))))
                               (SIMP_TAC
-                                (cl:cons |CARTESIAN_PRODUCT| (cl:cons IN_ELIM_THM nil))))
+                                (cl:cons CARTESIAN_PRODUCT* (cl:cons IN_ELIM_THM nil))))
                             (funcall X_GEN_TAC (parse_term "x:A")))
                           DISCH_TAC)
                         (FIRST_X_ASSUM
@@ -10788,7 +10780,7 @@
                                     (parse_term "cartesian_product k (s:K->A->bool) = {}")))
                                 (funcall ASM_REWRITE_TAC (cl:cons NOT_IN_EMPTY nil)))
                               (REWRITE_TAC
-                                (cl:cons |cartesian_product| (cl:cons IN_ELIM_THM nil))))
+                                (cl:cons cartesian_product (cl:cons IN_ELIM_THM nil))))
                             #'EQ_TAC)
                           (cl:cons DISCH_TAC (cl:cons (MESON_TAC nil) nil)))
                         (FIRST_ASSUM
@@ -10922,7 +10914,7 @@
 ;; (* ------------------------------------------------------------------------- *)
 
 
-(defparameter |disjoint_union|
+(defparameter disjoint_union
   (funcall
     new_definition
     (parse_term
@@ -10940,7 +10932,7 @@
         (funcall
           THEN
           (REWRITE_TAC
-            (cl:cons SUBSET (cl:cons |disjoint_union| (cl:cons FORALL_IN_GSPEC nil))))
+            (cl:cons SUBSET (cl:cons disjoint_union (cl:cons FORALL_IN_GSPEC nil))))
           (REWRITE_TAC (cl:cons IN_ELIM_PAIR_THM nil)))
         (funcall SET_TAC nil)))))
 
@@ -10985,7 +10977,7 @@
             (REWRITE_TAC (cl:cons SUBSET (cl:cons EXTENSION nil))))
           (REWRITE_TAC
             (cl:cons
-              |disjoint_union|
+              disjoint_union
               (cl:cons FORALL_PAIR_THM (cl:cons IN_ELIM_PAIR_THM nil)))))
         (funcall SET_TAC nil)))))
 
@@ -11004,7 +10996,7 @@
           (REWRITE_TAC
             (cl:cons
               EXTENSION
-              (cl:cons |disjoint_union| (cl:cons IN_INTER (cl:cons IN_ELIM_THM nil))))))
+              (cl:cons disjoint_union (cl:cons IN_INTER (cl:cons IN_ELIM_THM nil))))))
         (MESON_TAC (cl:cons PAIR_EQ nil))))))
 
 (defparameter UNION_DISJOINT_UNION
@@ -11022,7 +11014,7 @@
           (REWRITE_TAC
             (cl:cons
               EXTENSION
-              (cl:cons |disjoint_union| (cl:cons IN_UNION (cl:cons IN_ELIM_THM nil))))))
+              (cl:cons disjoint_union (cl:cons IN_UNION (cl:cons IN_ELIM_THM nil))))))
         (MESON_TAC (cl:cons PAIR_EQ nil))))))
 
 (defparameter DISJOINT_UNION_EQ_EMPTY
@@ -11039,7 +11031,7 @@
             (cl:cons
               FORALL_PAIR_THM
               (cl:cons
-                |disjoint_union|
+                disjoint_union
                 (cl:cons IN_ELIM_PAIR_THM (cl:cons NOT_IN_EMPTY nil))))))
         (funcall SET_TAC nil)))))
 
@@ -12949,12 +12941,12 @@
   (let
     ((insert_atm (parse_term "(INSERT):A->(A->bool)->(A->bool)"))
       (nil_atm (parse_term "(EMPTY):A->bool")))
-    (lambdac (arg~13243)
-      (match arg~13243
+    (lambdac (arg~13235)
+      (match arg~13235
         ((tuple l ty)
           (let
-            ((insert_tm (funcall |inst| (cl:cons (tuple ty aty) nil) insert_atm))
-              (nil_tm (funcall |inst| (cl:cons (tuple ty aty) nil) nil_atm)))
+            ((insert_tm (funcall inst (cl:cons (tuple ty aty) nil) insert_atm))
+              (nil_tm (funcall inst (cl:cons (tuple ty aty) nil) nil_atm)))
             (itlist (mk_binop insert_tm) l nil_tm)))))))
 
 (defunc mk_fset (l) (funcall mk_setenum (tuple l (type_of (hd l)))))
@@ -15036,7 +15028,7 @@
 ;; (* ------------------------------------------------------------------------- *)
 
 
-(defparameter |le_c|
+(defparameter le_c
   (funcall
     new_definition
     (parse_term
@@ -15057,13 +15049,13 @@
    ?f. (!x. x IN s ==> f(x) IN t) /\\
        !y. y IN t ==> ?!x. x IN s /\\ (f x = y)")))
 
-(defparameter |ge_c|
+(defparameter ge_c
   (funcall new_definition (parse_term "(s:A->bool) >=_c (t:B->bool) <=> t <=_c s")))
 
 (defparameter gt_c
   (funcall new_definition (parse_term "(s:A->bool) >_c (t:B->bool) <=> t <_c s")))
 
-(defparameter |LE_C|
+(defparameter LE_C*
   (prove
     (tuple
       (parse_term "!s t. s <=_c t <=> ?g:A->B. !x. x IN s ==> ?y. y IN t /\\ g y = x")
@@ -15071,7 +15063,7 @@
         THEN
         (REWRITE_TAC
           (cl:cons
-            |le_c|
+            le_c
             (cl:cons
               INJECTIVE_ON_LEFT_INVERSE
               (cl:cons
@@ -15081,11 +15073,11 @@
                   (cl:cons SKOLEM_THM (cl:cons RIGHT_AND_EXISTS_THM nil)))))))
         (MESON_TAC nil)))))
 
-(defparameter |GE_C|
+(defparameter GE_C*
   (prove
     (tuple
       (parse_term "!s t. s >=_c t <=> ?f:A->B. !y. y IN t ==> ?x. x IN s /\\ (y = f x)")
-      (funcall THEN (REWRITE_TAC (cl:cons |ge_c| (cl:cons |LE_C| nil))) (MESON_TAC nil)))))
+      (funcall THEN (REWRITE_TAC (cl:cons ge_c (cl:cons LE_C* nil))) (MESON_TAC nil)))))
 
 (defparameter COUNTABLE
   (funcall new_definition (parse_term "COUNTABLE (t:A->bool) <=> (:num) >=_c t")))
@@ -15095,7 +15087,7 @@
 ;; (* ------------------------------------------------------------------------- *)
 
 
-(defparameter |sup|
+(defparameter sup
   (funcall
     new_definition
     (parse_term
@@ -15108,9 +15100,9 @@
       (parse_term
         "!s t. (!b. (!x. x IN s ==> x <= b) <=> (!x. x IN t ==> x <= b))
          ==> sup s = sup t")
-      (SIMP_TAC (cl:cons |sup| nil)))))
+      (SIMP_TAC (cl:cons sup nil)))))
 
-(defparameter |SUP|
+(defparameter SUP*
   (prove
     (tuple
       (parse_term
@@ -15125,7 +15117,7 @@
             THEN
             (funcall
               THEN
-              (REWRITE_TAC (cl:cons |sup| nil))
+              (REWRITE_TAC (cl:cons sup nil))
               (funcall CONV_TAC (funcall ONCE_DEPTH_CONV SELECT_CONV)))
             (REPEAT #'STRIP_TAC))
           (MATCH_MP_TAC REAL_COMPLETE))
@@ -15163,7 +15155,7 @@
           (FIRST_ASSUM (o #'MP_TAC (MATCH_MP SUP_FINITE_LEMMA))))
         (funcall
           ASM_MESON_TAC
-          (cl:cons REAL_LE_ANTISYM (cl:cons REAL_LE_TOTAL (cl:cons |SUP| nil))))))))
+          (cl:cons REAL_LE_ANTISYM (cl:cons REAL_LE_TOTAL (cl:cons SUP* nil))))))))
 
 (defparameter REAL_LE_SUP_FINITE
   (prove
@@ -15202,7 +15194,7 @@
         THEN
         (funcall
           THEN
-          (funcall THEN (REPEAT #'STRIP_TAC) (REWRITE_TAC (cl:cons |sup| nil)))
+          (funcall THEN (REPEAT #'STRIP_TAC) (REWRITE_TAC (cl:cons sup nil)))
           (MATCH_MP_TAC SELECT_UNIQUE))
         (funcall ASM_MESON_TAC (cl:cons REAL_NOT_LE (cl:cons REAL_LE_ANTISYM nil)))))))
 
@@ -15210,7 +15202,7 @@
   (prove
     (tuple
       (parse_term "!b. ~(s = {}) /\\ (!x. x IN s ==> x <= b) ==> sup s <= b")
-      (MESON_TAC (cl:cons |SUP| nil)))))
+      (MESON_TAC (cl:cons SUP* nil)))))
 
 (defparameter REAL_SUP_LE_SUBSET
   (prove
@@ -15223,7 +15215,7 @@
         (funcall
           THEN
           (funcall THEN (REPEAT #'STRIP_TAC) (MATCH_MP_TAC REAL_SUP_LE))
-          (MP_TAC (funcall SPEC (parse_term "t:real->bool") |SUP|)))
+          (MP_TAC (funcall SPEC (parse_term "t:real->bool") SUP*)))
         (ASM SET_TAC nil)))))
 
 (defparameter REAL_SUP_BOUNDS
@@ -15243,7 +15235,7 @@
               (funcall
                 THEN
                 (funcall THEN (REPEAT #'GEN_TAC) #'STRIP_TAC)
-                (MP_TAC (funcall SPEC (parse_term "s:real->bool") |SUP|)))
+                (MP_TAC (funcall SPEC (parse_term "s:real->bool") SUP*)))
               ANTS_TAC)
             (cl:cons (funcall ASM_MESON_TAC nil) (cl:cons #'ALL_TAC nil)))
           (FIRST_X_ASSUM
@@ -15367,7 +15359,7 @@
     (tuple
       (parse_term
         "!s a b y. y IN s /\\ a <= y /\\ (!x. x IN s ==> x <= b) ==> a <= sup s")
-      (MESON_TAC (cl:cons |SUP| (cl:cons MEMBER_NOT_EMPTY (cl:cons REAL_LE_TRANS nil)))))))
+      (MESON_TAC (cl:cons SUP* (cl:cons MEMBER_NOT_EMPTY (cl:cons REAL_LE_TRANS nil)))))))
 
 (defparameter REAL_SUP_LE_EQ
   (prove
@@ -15375,7 +15367,7 @@
       (parse_term
         "!s y. ~(s = {}) /\\ (?b. !x. x IN s ==> x <= b)
          ==> (sup s <= y <=> !x. x IN s ==> x <= y)")
-      (MESON_TAC (cl:cons |SUP| (cl:cons REAL_LE_TRANS nil))))))
+      (MESON_TAC (cl:cons SUP* (cl:cons REAL_LE_TRANS nil))))))
 
 (defparameter SUP_UNIQUE
   (prove
@@ -15405,7 +15397,7 @@
           THEN
           (funcall THEN (REPEAT #'STRIP_TAC) (MATCH_MP_TAC SUP_UNIQUE))
           (REWRITE_TAC (cl:cons FORALL_IN_UNION (cl:cons REAL_MAX_LE nil))))
-        (funcall ASM_MESON_TAC (cl:cons |SUP| (cl:cons REAL_LE_TRANS nil)))))))
+        (funcall ASM_MESON_TAC (cl:cons SUP* (cl:cons REAL_LE_TRANS nil)))))))
 
 (defparameter ELEMENT_LE_SUP
   (prove
@@ -15446,7 +15438,7 @@
                 (REWRITE_TAC (cl:cons REAL_NOT_LT nil)))
               (funcall
                 HYP
-                (o (o #'MP_TAC (MATCH_MP |SUP|)) (end_itlist CONJ))
+                (o (o #'MP_TAC (MATCH_MP SUP*)) (end_itlist CONJ))
                 "npty bound"
                 nil))
             (funcall INTRO_TAC "_ sup"))
@@ -15476,7 +15468,7 @@
           (REWRITE_TAC (cl:cons IN_INSERT (cl:cons NOT_IN_EMPTY nil))))
         (MESON_TAC (cl:cons REAL_LE_TOTAL nil))))))
 
-(defparameter |inf|
+(defparameter inf*
   (funcall
     new_definition
     (parse_term
@@ -15489,9 +15481,9 @@
       (parse_term
         "!s t. (!a. (!x. x IN s ==> a <= x) <=> (!x. x IN t ==> a <= x))
          ==> inf s = inf t")
-      (SIMP_TAC (cl:cons |inf| nil)))))
+      (SIMP_TAC (cl:cons inf* nil)))))
 
-(defparameter |INF|
+(defparameter INF**
   (prove
     (tuple
       (parse_term
@@ -15517,11 +15509,11 @@
                       (funcall
                         THEN
                         (funcall THEN #'GEN_TAC #'STRIP_TAC)
-                        (REWRITE_TAC (cl:cons |inf| nil)))
+                        (REWRITE_TAC (cl:cons inf* nil)))
                       (funcall CONV_TAC (funcall ONCE_DEPTH_CONV SELECT_CONV)))
                     (ONCE_REWRITE_TAC (cl:cons (funcall GSYM REAL_LE_NEG2) nil)))
                   (funcall EXISTS_TAC (parse_term "--(sup (IMAGE (--) s))")))
-                (MP_TAC (funcall SPEC (parse_term "IMAGE (--) (s:real->bool)") |SUP|)))
+                (MP_TAC (funcall SPEC (parse_term "IMAGE (--) (s:real->bool)") SUP*)))
               (REWRITE_TAC (cl:cons REAL_NEG_NEG nil)))
             (ABBREV_TAC (parse_term "a = sup (IMAGE (--) s)")))
           (REWRITE_TAC (cl:cons (funcall GSYM MEMBER_NOT_EMPTY) (cl:cons IN_IMAGE nil))))
@@ -15561,7 +15553,7 @@
           (FIRST_ASSUM (o #'MP_TAC (MATCH_MP INF_FINITE_LEMMA))))
         (funcall
           ASM_MESON_TAC
-          (cl:cons REAL_LE_ANTISYM (cl:cons REAL_LE_TOTAL (cl:cons |INF| nil))))))))
+          (cl:cons REAL_LE_ANTISYM (cl:cons REAL_LE_TOTAL (cl:cons INF** nil))))))))
 
 (defparameter REAL_LE_INF_FINITE
   (prove
@@ -15600,7 +15592,7 @@
         THEN
         (funcall
           THEN
-          (funcall THEN (REPEAT #'STRIP_TAC) (REWRITE_TAC (cl:cons |inf| nil)))
+          (funcall THEN (REPEAT #'STRIP_TAC) (REWRITE_TAC (cl:cons inf* nil)))
           (MATCH_MP_TAC SELECT_UNIQUE))
         (funcall ASM_MESON_TAC (cl:cons REAL_NOT_LE (cl:cons REAL_LE_ANTISYM nil)))))))
 
@@ -15608,7 +15600,7 @@
   (prove
     (tuple
       (parse_term "!b. ~(s = {}) /\\ (!x. x IN s ==> b <= x) ==> b <= inf s")
-      (MESON_TAC (cl:cons |INF| nil)))))
+      (MESON_TAC (cl:cons INF** nil)))))
 
 (defparameter REAL_LE_INF_SUBSET
   (prove
@@ -15621,7 +15613,7 @@
         (funcall
           THEN
           (funcall THEN (REPEAT #'STRIP_TAC) (MATCH_MP_TAC REAL_LE_INF))
-          (MP_TAC (funcall SPEC (parse_term "s:real->bool") |INF|)))
+          (MP_TAC (funcall SPEC (parse_term "s:real->bool") INF**)))
         (ASM SET_TAC nil)))))
 
 (defparameter REAL_INF_BOUNDS
@@ -15641,7 +15633,7 @@
               (funcall
                 THEN
                 (funcall THEN (REPEAT #'GEN_TAC) #'STRIP_TAC)
-                (MP_TAC (funcall SPEC (parse_term "s:real->bool") |INF|)))
+                (MP_TAC (funcall SPEC (parse_term "s:real->bool") INF**)))
               ANTS_TAC)
             (cl:cons (funcall ASM_MESON_TAC nil) (cl:cons #'ALL_TAC nil)))
           (FIRST_X_ASSUM
@@ -15783,7 +15775,7 @@
               (funcall ASM_REWRITE_TAC (cl:cons (funcall GSYM REAL_LE_ANTISYM) nil)))
             (funcall
               ASM_MESON_TAC
-              (cl:cons |SUP| (cl:cons REAL_ABS_BOUNDS (cl:cons |INF| nil)))))
+              (cl:cons SUP* (cl:cons REAL_ABS_BOUNDS (cl:cons INF** nil)))))
           (cl:cons
             (funcall
               THEN
@@ -15800,7 +15792,7 @@
     (tuple
       (parse_term
         "!s a b y. y IN s /\\ y <= b /\\ (!x. x IN s ==> a <= x) ==> inf s <= b")
-      (MESON_TAC (cl:cons |INF| (cl:cons MEMBER_NOT_EMPTY (cl:cons REAL_LE_TRANS nil)))))))
+      (MESON_TAC (cl:cons INF** (cl:cons MEMBER_NOT_EMPTY (cl:cons REAL_LE_TRANS nil)))))))
 
 (defparameter REAL_LE_INF_EQ
   (prove
@@ -15808,7 +15800,7 @@
       (parse_term
         "!s y. ~(s = {}) /\\ (?b. !x. x IN s ==> b <= x)
          ==> (y <= inf s <=> !x. x IN s ==> y <= x)")
-      (MESON_TAC (cl:cons |INF| (cl:cons REAL_LE_TRANS nil))))))
+      (MESON_TAC (cl:cons INF** (cl:cons REAL_LE_TRANS nil))))))
 
 (defparameter INF_UNIQUE
   (prove
@@ -15838,7 +15830,7 @@
           THEN
           (funcall THEN (REPEAT #'STRIP_TAC) (MATCH_MP_TAC INF_UNIQUE))
           (REWRITE_TAC (cl:cons FORALL_IN_UNION (cl:cons REAL_LE_MIN nil))))
-        (funcall ASM_MESON_TAC (cl:cons |INF| (cl:cons REAL_LE_TRANS nil)))))))
+        (funcall ASM_MESON_TAC (cl:cons INF** (cl:cons REAL_LE_TRANS nil)))))))
 
 (defparameter INF_LE_ELEMENT
   (prove
@@ -15879,7 +15871,7 @@
                 (REWRITE_TAC (cl:cons REAL_NOT_LT nil)))
               (funcall
                 HYP
-                (o (o #'MP_TAC (MATCH_MP |INF|)) (end_itlist CONJ))
+                (o (o #'MP_TAC (MATCH_MP INF**)) (end_itlist CONJ))
                 "npty bound"
                 nil))
             (funcall INTRO_TAC "_ inf"))
@@ -15913,12 +15905,12 @@
 
 (funcall parse_as_infix (tuple "has_sup" (tuple 12 "right")))
 
-(defparameter |has_inf|
+(defparameter has_inf
   (funcall
     new_definition
     (parse_term "s has_inf b <=> (!c. (!x:real. x IN s ==> c <= x) <=> c <= b)")))
 
-(defparameter |has_sup|
+(defparameter has_sup
   (funcall
     new_definition
     (parse_term "s has_sup b <=> (!c. (!x:real. x IN s ==> x <= c) <=> b <= c)")))
@@ -15929,7 +15921,7 @@
       (parse_term "!s b x. s has_inf b /\\ x IN s ==> b <= x")
       (funcall
         THEN
-        (funcall THEN (REPEAT #'GEN_TAC) (REWRITE_TAC (cl:cons |has_inf| nil)))
+        (funcall THEN (REPEAT #'GEN_TAC) (REWRITE_TAC (cl:cons has_inf nil)))
         (MESON_TAC (cl:cons REAL_LE_REFL nil))))))
 
 (defparameter HAS_SUP_UBOUND
@@ -15938,7 +15930,7 @@
       (parse_term "!s b x. s has_sup b /\\ x IN s ==> x <= b")
       (funcall
         THEN
-        (funcall THEN (REPEAT #'GEN_TAC) (REWRITE_TAC (cl:cons |has_sup| nil)))
+        (funcall THEN (REPEAT #'GEN_TAC) (REWRITE_TAC (cl:cons has_sup nil)))
         (MESON_TAC (cl:cons REAL_LE_REFL nil))))))
 
 (defparameter HAS_INF_INF
@@ -15958,7 +15950,7 @@
             (funcall
               THEN
               (funcall THEN #'GEN_TAC #'GEN_TAC)
-              (REWRITE_TAC (cl:cons |has_inf| nil)))
+              (REWRITE_TAC (cl:cons has_inf nil)))
             #'EQ_TAC)
           #'STRIP_TAC)
         (cl:cons
@@ -16020,7 +16012,7 @@
                               (funcall
                                 THEN
                                 #'GEN_TAC
-                                (MP_TAC (funcall SPEC (parse_term "s:real->bool") |INF|)))
+                                (MP_TAC (funcall SPEC (parse_term "s:real->bool") INF**)))
                               ANTS_TAC)
                             (cl:cons
                               (funcall
@@ -16054,7 +16046,7 @@
             (funcall
               THEN
               (funcall THEN #'GEN_TAC #'GEN_TAC)
-              (REWRITE_TAC (cl:cons |has_sup| nil)))
+              (REWRITE_TAC (cl:cons has_sup nil)))
             #'EQ_TAC)
           #'STRIP_TAC)
         (cl:cons
@@ -16116,7 +16108,7 @@
                               (funcall
                                 THEN
                                 #'GEN_TAC
-                                (MP_TAC (funcall SPEC (parse_term "s:real->bool") |SUP|)))
+                                (MP_TAC (funcall SPEC (parse_term "s:real->bool") SUP*)))
                               ANTS_TAC)
                             (cl:cons
                               (funcall
@@ -16163,7 +16155,7 @@
         (REWRITE_TAC (cl:cons HAS_SUP_SUP nil))
         (MESON_TAC (cl:cons SUP_APPROACH nil))))))
 
-(defparameter |HAS_INF|
+(defparameter HAS_INF*
   (prove
     (tuple
       (parse_term
@@ -16209,7 +16201,7 @@
                           nil)))
                     (cl:cons #'ALL_TAC nil)))
                 (funcall INTRO_TAC "ne bound approach"))
-              (funcall ASM_REWRITE_TAC (cl:cons |has_inf| nil)))
+              (funcall ASM_REWRITE_TAC (cl:cons has_inf nil)))
             #'GEN_TAC)
           #'EQ_TAC)
         (cl:cons
@@ -16247,7 +16239,7 @@
               (funcall ASM_SIMP_TAC nil))
             nil))))))
 
-(defparameter |HAS_SUP|
+(defparameter HAS_SUP*
   (prove
     (tuple
       (parse_term
@@ -16293,7 +16285,7 @@
                           nil)))
                     (cl:cons #'ALL_TAC nil)))
                 (funcall INTRO_TAC "ne bound approach"))
-              (funcall ASM_REWRITE_TAC (cl:cons |has_sup| nil)))
+              (funcall ASM_REWRITE_TAC (cl:cons has_sup nil)))
             #'GEN_TAC)
           #'EQ_TAC)
         (cl:cons
@@ -16368,11 +16360,11 @@
                                 (funcall
                                   HYP_TAC
                                   "l: s l1 l2"
-                                  (REWRITE_RULE (cl:cons |HAS_INF| nil))))
+                                  (REWRITE_RULE (cl:cons HAS_INF* nil))))
                               (funcall
                                 HYP_TAC
                                 "m: t m1 m2"
-                                (REWRITE_RULE (cl:cons |HAS_INF| nil))))
+                                (REWRITE_RULE (cl:cons HAS_INF* nil))))
                             (funcall
                               REFUTE_THEN
                               (o
@@ -16431,11 +16423,11 @@
                                 (funcall
                                   HYP_TAC
                                   "l: s l1 l2"
-                                  (REWRITE_RULE (cl:cons |HAS_SUP| nil))))
+                                  (REWRITE_RULE (cl:cons HAS_SUP* nil))))
                               (funcall
                                 HYP_TAC
                                 "m: t m1 m2"
-                                (REWRITE_RULE (cl:cons |HAS_SUP| nil))))
+                                (REWRITE_RULE (cl:cons HAS_SUP* nil))))
                             (funcall
                               REFUTE_THEN
                               (o
@@ -16468,8 +16460,8 @@
       ((comb_all
         (labelsc
           ((f
-            (n tm arg~18105)
-            (match arg~18105
+            (n tm arg~18097)
+            (match arg~18097
               (nil tm)
               ((cl:cons ty tys)
                 (let
@@ -16477,7 +16469,7 @@
                     (variant
                       (funcall variables tm)
                       (mk_var (tuple (string-concat "x" (string-of-int n)) ty)))))
-                  (f (+ n 1) (|mk_comb| (tuple tm v)) tys))))))
+                  (f (+ n 1) (mk_comb (tuple tm v)) tys))))))
           (lambdac (tm)
             (let ((tys (hol2cl.runtime:fst (splitlist #'dest_fun_ty (type_of tm)))))
               (f 0 tm tys)))))
@@ -16502,12 +16494,12 @@
               ((rule_head
                 (tm)
                 (let*
-                  ((tm~local~18199 (hol2cl.runtime:snd (funcall strip_forall tm)))
+                  ((tm* (hol2cl.runtime:snd (funcall strip_forall tm)))
                     (tm
                       (hol2cl.runtime:snd
-                        (splitlist (dest_binop (parse_term "(==>)")) tm~local~18199)))
-                    (tm~local~18211 (hol2cl.runtime:snd (dest_binary "IN" tm))))
-                  (hol2cl.runtime:fst (funcall strip_comb tm~local~18211)))))
+                        (splitlist (dest_binop (parse_term "(==>)")) tm*)))
+                    (tm* (hol2cl.runtime:snd (dest_binary "IN" tm))))
+                  (hol2cl.runtime:fst (funcall strip_comb tm*)))))
               (let
                 ((find_pvars
                   (o

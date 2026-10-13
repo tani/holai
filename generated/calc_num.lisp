@@ -35,7 +35,7 @@
         ARITH_SUB
         ARITH_SUC
         ARITH_ZERO
-        BINOP2_CONV~local~3776
+        BINOP2_CONV*
         BIT0_0
         BIT1_0
         DENUMERAL
@@ -52,9 +52,9 @@
         NUM_EQ_CONV
         NUM_EVEN_CONV
         NUM_EXP_CONV
-        NUM_EXP_CONV~local~5799
+        NUM_EXP_CONV*
         NUM_FACT_CONV
-        NUM_FACT_CONV~local~7647
+        NUM_FACT_CONV*
         NUM_GE_CONV
         NUM_GT_CONV
         NUM_LE_CONV
@@ -162,7 +162,7 @@
     ARITH_SUB
     ARITH_SUC
     ARITH_ZERO
-    BINOP2_CONV~local~3776
+    BINOP2_CONV*
     BIT0_0
     BIT1_0
     DENUMERAL
@@ -179,9 +179,9 @@
     NUM_EQ_CONV
     NUM_EVEN_CONV
     NUM_EXP_CONV
-    NUM_EXP_CONV~local~5799
+    NUM_EXP_CONV*
     NUM_FACT_CONV
-    NUM_FACT_CONV~local~7647
+    NUM_FACT_CONV*
     NUM_GE_CONV
     NUM_GT_CONV
     NUM_LE_CONV
@@ -343,7 +343,6 @@
   (:shadowing-import-from :hol2cl.fusion mk_eq)
   (:shadowing-import-from
     :hol2cl.fusion.hol
-    |mk_comb|
     Var
     type_of
     TRANS
@@ -351,8 +350,9 @@
     rator
     rand
     mk_var
-    |MK_COMB|
-    |INST|
+    MK_COMB*
+    mk_comb
+    INST*
     EQ_MP
     dest_const
     dest_comb
@@ -360,7 +360,7 @@
     Const
     concl
     Comb
-    |Abs|)
+    Abs)
   (:shadowing-import-from
     :hol2cl.lib
     unzip
@@ -991,8 +991,7 @@
         mul_tm
         exp_tm
         eq_tm)
-        (let
-          ((num_0~local~666 (num 0)) (num_1~local~668 (num 1)) (num_2~local~670 (num 2)))
+        (let ((num_0* (num 0)) (num_1* (num 1)) (num_2* (num 2)))
           (let
             ((a_tm (mk_var (tuple "a" num_ty)))
               (b_tm (mk_var (tuple "b" num_ty)))
@@ -1050,34 +1049,33 @@
                       (tm)
                       (match tm
                         ((cl:or (Var _ _) (Const _ _)) (rev_assocd tm ilist tm))
-                        ((Comb s |t|) (|mk_comb| (tuple (replace s) (replace |t|))))
-                        ((|Abs| _ _) (failwith "replace")))))
+                        ((Comb s t*) (mk_comb (tuple (replace s) (replace t*))))
+                        ((Abs _ _) (failwith "replace")))))
                     (lambdac (th)
-                      (let ((|tm'| (replace (concl th)))) (EQ_MP (REFL |tm'|) th))))))
+                      (let ((tm* (replace (concl th)))) (EQ_MP (REFL tm*) th))))))
                 (REFL_bit0 (funcall STANDARDIZE (REFL BIT0_tm)))
                 (REFL_bit1 (funcall STANDARDIZE (REFL BIT1_tm))))
               (fletc
-                ((AP_BIT0 (th) (|MK_COMB| (tuple REFL_bit0 th)))
-                  (AP_BIT1 (th) (|MK_COMB| (tuple REFL_bit1 th)))
+                ((AP_BIT0 (th) (MK_COMB* (tuple REFL_bit0 th)))
+                  (AP_BIT1 (th) (MK_COMB* (tuple REFL_bit1 th)))
                   (QUICK_PROVE_HYP (ath bth) (EQ_MP (DEDUCT_ANTISYM_RULE ath bth) ath)))
                 (labelsc
                   ((dest_raw_numeral
                     (tm)
                     (match tm
-                      ((Comb (Const "BIT1" _) |t|)
-                        (+ (* num_2~local~670 (dest_raw_numeral |t|)) num_1~local~668))
-                      ((Comb (Const "BIT0" _) |t|)
-                        (* num_2~local~670 (dest_raw_numeral |t|)))
-                      ((Const "_0" _) num_0~local~666))))
+                      ((Comb (Const "BIT1" _) t*)
+                        (+ (* num_2* (dest_raw_numeral t*)) num_1*))
+                      ((Comb (Const "BIT0" _) t*) (* num_2* (dest_raw_numeral t*)))
+                      ((Const "_0" _) num_0*))))
                   (let
                     ((bitcounts
                       (labelsc
                         ((bctr
-                          (w~local~911 z tm)
+                          (w* z tm)
                           (match tm
-                            ((Const "_0" _) (tuple w~local~911 z))
-                            ((Comb (Const "BIT0" _) |t|) (bctr w~local~911 (+ z 1) |t|))
-                            ((Comb (Const "BIT1" _) |t|) (bctr (+ w~local~911 1) z |t|))
+                            ((Const "_0" _) (tuple w* z))
+                            ((Comb (Const "BIT0" _) t*) (bctr w* (+ z 1) t*))
+                            ((Comb (Const "BIT1" _) t*) (bctr (+ w* 1) z t*))
                             (_ (failwith "malformed numeral")))))
                         (bctr 0 0))))
                     (labelsc
@@ -1085,8 +1083,8 @@
                         (tm)
                         (match tm
                           ((Const "_0" _) cl:t)
-                          ((cl:or (Comb (Const "BIT0" _) |t|) (Comb (Const "BIT1" _) |t|))
-                            (wellformed |t|))
+                          ((cl:or (Comb (Const "BIT0" _) t*) (Comb (Const "BIT1" _) t*))
+                            (wellformed t*))
                           (_ cl:nil))))
                       (labelsc
                         ((orderrelation
@@ -1118,7 +1116,7 @@
                         (fletc
                           ((doublebn
                             (tm)
-                            (if (= tm zero_tm) tm (|mk_comb| (tuple BIT0_tm tm)))))
+                            (if (= tm zero_tm) tm (mk_comb (tuple BIT0_tm tm)))))
                           (labelsc
                             ((subbn
                               (mtm ntm)
@@ -1135,27 +1133,27 @@
                                 ((tuple
                                   (Comb (Const "BIT1" _) mt)
                                   (Comb (Const "BIT0" _) nt))
-                                  (|mk_comb| (tuple BIT1_tm (subbn mt nt))))
+                                  (mk_comb (tuple BIT1_tm (subbn mt nt))))
                                 ((tuple
                                   (Comb (Const "BIT0" _) mt)
                                   (Comb (Const "BIT1" _) nt))
-                                  (|mk_comb| (tuple BIT1_tm (sbcbn mt nt))))
+                                  (mk_comb (tuple BIT1_tm (sbcbn mt nt))))
                                 (_ (failwith "malformed numeral or wrong relation"))))
                               (sbcbn
                                 (mtm ntm)
                                 (match (tuple mtm ntm)
                                   ((tuple (Comb (Const "BIT0" _) mt) (Const "_0" _))
-                                    (|mk_comb| (tuple BIT1_tm (sbcbn mt ntm))))
+                                    (mk_comb (tuple BIT1_tm (sbcbn mt ntm))))
                                   ((tuple (Comb (Const "BIT1" _) mt) (Const "_0" _))
                                     (doublebn mt))
                                   ((tuple
                                     (Comb (Const "BIT0" _) mt)
                                     (Comb (Const "BIT0" _) nt))
-                                    (|mk_comb| (tuple BIT1_tm (sbcbn mt nt))))
+                                    (mk_comb (tuple BIT1_tm (sbcbn mt nt))))
                                   ((tuple
                                     (Comb (Const "BIT1" _) mt)
                                     (Comb (Const "BIT1" _) nt))
-                                    (|mk_comb| (tuple BIT1_tm (sbcbn mt nt))))
+                                    (mk_comb (tuple BIT1_tm (sbcbn mt nt))))
                                   ((tuple
                                     (Comb (Const "BIT1" _) mt)
                                     (Comb (Const "BIT0" _) nt))
@@ -1304,23 +1302,20 @@
                               (match
                                 (labelsc
                                   ((mk_compnumeral
-                                    (k~local~6532 base)
-                                    (if (= k~local~6532 0)
+                                    (k* base)
+                                    (if (= k* 0)
                                       base
-                                      (let
-                                        ((|t|
-                                          (mk_compnumeral (int-div k~local~6532 2) base)))
-                                        (if (= (int-mod k~local~6532 2) 1)
-                                          (|mk_comb| (tuple BIT1_tm |t|))
-                                          (|mk_comb| (tuple BIT0_tm |t|)))))))
+                                      (let ((t* (mk_compnumeral (int-div k* 2) base)))
+                                        (if (= (int-mod k* 2) 1)
+                                          (mk_comb (tuple BIT1_tm t*))
+                                          (mk_comb (tuple BIT0_tm t*)))))))
                                   (fletc
                                     ((bases
                                       (v)
                                       (let*
                                         ((part2
                                           (map
-                                            (lambdac (k~local~6564)
-                                              (mk_compnumeral k~local~6564 v))
+                                            (lambdac (k*) (mk_compnumeral k* v))
                                             (-- 8 15)))
                                           (part1
                                             (map
@@ -1328,22 +1323,21 @@
                                                 subst
                                                 (cl:cons
                                                   (tuple
-                                                    (|mk_comb| (tuple BIT0_tm v))
-                                                    (|mk_comb| (tuple BIT1_tm v)))
+                                                    (mk_comb (tuple BIT0_tm v))
+                                                    (mk_comb (tuple BIT1_tm v)))
                                                   nil))
                                               part2))
                                           (part0
                                             (map
-                                              (lambdac (k~local~6590)
-                                                (mk_compnumeral k~local~6590 zero_tm))
+                                              (lambdac (k*) (mk_compnumeral k* zero_tm))
                                               (-- 0 15))))
                                         (append part0 (append part1 part2)))))
                                     (let*
                                       ((starts
                                         (allpairs
                                           (lambdac (mtm ntm)
-                                            (|mk_comb|
-                                              (tuple (|mk_comb| (tuple add_tm mtm)) ntm)))
+                                            (mk_comb
+                                              (tuple (mk_comb (tuple add_tm mtm)) ntm)))
                                           (bases m_tm)
                                           (bases n_tm)))
                                         (BITS_INJ
@@ -1388,12 +1382,10 @@
                                                 nil)))))
                                       (fletc
                                         ((mkclauses
-                                          (sucflag |t|)
+                                          (sucflag t*)
                                           (let*
                                             ((tm
-                                              (if sucflag
-                                                (|mk_comb| (tuple suc_tm |t|))
-                                                |t|))
+                                              (if sucflag (mk_comb (tuple suc_tm t*)) t*))
                                               (th1
                                                 (PURE_REWRITE_CONV
                                                   (cl:cons
@@ -1440,7 +1432,7 @@
                                               (tuple
                                                 (array-of-list (map STANDARDIZE l1))
                                                 (array-of-list l2))))
-                                          ((tuple add_clauses~local~6763 add_flags)
+                                          ((tuple add_clauses* add_flags)
                                             (match
                                               (match (unzip (map (mkclauses cl:t) starts))
                                                 ((tuple l1 l2)
@@ -1471,19 +1463,19 @@
                                                             ((ind (+ (* 32 m_ind) n_ind))
                                                               (th1
                                                                 (array-get
-                                                                  add_clauses~local~6763
+                                                                  add_clauses*
                                                                   ind))
                                                               (fl
                                                                 (array-get add_flags ind)))
                                                             (match fl
                                                               (0
-                                                                (|INST|
+                                                                (INST*
                                                                   (cl:cons
                                                                     (tuple m_hi m_tm)
                                                                     nil)
                                                                   th1))
                                                               (1
-                                                                (|INST|
+                                                                (INST*
                                                                   (cl:cons
                                                                     (tuple n_hi n_tm)
                                                                     nil)
@@ -1498,7 +1490,7 @@
                                                                     ((Comb _ ptm)
                                                                       (let
                                                                         ((th3
-                                                                          (|INST|
+                                                                          (INST*
                                                                             (cl:cons
                                                                               (tuple
                                                                                 m_hi
@@ -1524,7 +1516,7 @@
                                                                     ((Comb _ ptm)
                                                                       (let
                                                                         ((th3
-                                                                          (|INST|
+                                                                          (INST*
                                                                             (cl:cons
                                                                               (tuple
                                                                                 m_hi
@@ -1571,13 +1563,13 @@
                                                                     ind)))
                                                               (match fl
                                                                 (0
-                                                                  (|INST|
+                                                                  (INST*
                                                                     (cl:cons
                                                                       (tuple m_hi m_tm)
                                                                       nil)
                                                                     th1))
                                                                 (1
-                                                                  (|INST|
+                                                                  (INST*
                                                                     (cl:cons
                                                                       (tuple n_hi n_tm)
                                                                       nil)
@@ -1592,7 +1584,7 @@
                                                                       ((Comb _ ptm)
                                                                         (let
                                                                           ((th3
-                                                                            (|INST|
+                                                                            (INST*
                                                                               (cl:cons
                                                                                 (tuple
                                                                                   m_hi
@@ -1618,7 +1610,7 @@
                                                                       ((Comb _ ptm)
                                                                         (let
                                                                           ((th3
-                                                                            (|INST|
+                                                                            (INST*
                                                                               (cl:cons
                                                                                 (tuple
                                                                                   m_hi
@@ -1986,22 +1978,20 @@
                                                                 nil))))))))))))
                                         (labelsc
                                           ((NUM_SHIFT_CONV
-                                            (k~local~2061 tm)
-                                            (if (<= k~local~2061 0)
-                                              (|INST|
+                                            (k* tm)
+                                            (if (<= k* 0)
+                                              (INST*
                                                 (cl:cons (tuple tm n_tm) nil)
                                                 pth_base)
                                               (match tm
                                                 ((trivia:guard
                                                   (Comb _ (Comb _ (Comb _ (Comb _ _))))
-                                                  (>= k~local~2061 4))
+                                                  (>= k* 4))
                                                   (match (topsplit tm)
-                                                    ((tuple i~local~2076 ntm)
+                                                    ((tuple i* ntm)
                                                       (let
                                                         ((th1
-                                                          (NUM_SHIFT_CONV
-                                                            (- k~local~2061 4)
-                                                            ntm)))
+                                                          (NUM_SHIFT_CONV (- k* 4) ntm)))
                                                         (match (concl th1)
                                                           ((Comb
                                                             _
@@ -2009,12 +1999,9 @@
                                                               (Comb _ (Const "_0" _))
                                                               (Comb (Comb _ ptm) btm)))
                                                             (let*
-                                                              ((th2
-                                                                (array-get
-                                                                  pths_0
-                                                                  i~local~2076))
+                                                              ((th2 (array-get pths_0 i*))
                                                                 (th3
-                                                                  (|INST|
+                                                                  (INST*
                                                                     (cl:cons
                                                                       (tuple ntm n_tm)
                                                                       (cl:cons
@@ -2030,12 +2017,9 @@
                                                               (Comb _ atm)
                                                               (Comb (Comb _ ptm) btm)))
                                                             (let*
-                                                              ((th2
-                                                                (array-get
-                                                                  pths_1
-                                                                  i~local~2076))
+                                                              ((th2 (array-get pths_1 i*))
                                                                 (th3
-                                                                  (|INST|
+                                                                  (INST*
                                                                     (cl:cons
                                                                       (tuple ntm n_tm)
                                                                       (cl:cons
@@ -2051,10 +2035,7 @@
                                                               (EQ_MP th3 th1))))))))
                                                 ((Comb (Const "BIT0" _) ntm)
                                                   (let
-                                                    ((th1
-                                                      (NUM_SHIFT_CONV
-                                                        (- k~local~2061 1)
-                                                        ntm)))
+                                                    ((th1 (NUM_SHIFT_CONV (- k* 1) ntm)))
                                                     (match (concl th1)
                                                       ((Comb
                                                         _
@@ -2062,7 +2043,7 @@
                                                           (Comb _ (Const "_0" _))
                                                           (Comb (Comb _ ptm) btm)))
                                                         (EQ_MP
-                                                          (|INST|
+                                                          (INST*
                                                             (cl:cons
                                                               (tuple ntm n_tm)
                                                               (cl:cons
@@ -2078,7 +2059,7 @@
                                                           (Comb _ atm)
                                                           (Comb (Comb _ ptm) btm)))
                                                         (EQ_MP
-                                                          (|INST|
+                                                          (INST*
                                                             (cl:cons
                                                               (tuple ntm n_tm)
                                                               (cl:cons
@@ -2092,10 +2073,7 @@
                                                           th1)))))
                                                 ((Comb (Const "BIT1" _) ntm)
                                                   (let
-                                                    ((th1
-                                                      (NUM_SHIFT_CONV
-                                                        (- k~local~2061 1)
-                                                        ntm)))
+                                                    ((th1 (NUM_SHIFT_CONV (- k* 1) ntm)))
                                                     (match (concl th1)
                                                       ((Comb
                                                         _
@@ -2103,7 +2081,7 @@
                                                           (Comb _ atm)
                                                           (Comb (Comb _ ptm) btm)))
                                                         (EQ_MP
-                                                          (|INST|
+                                                          (INST*
                                                             (cl:cons
                                                               (tuple ntm n_tm)
                                                               (cl:cons
@@ -2117,10 +2095,7 @@
                                                           th1)))))
                                                 ((Const "_0" _)
                                                   (let
-                                                    ((th1
-                                                      (NUM_SHIFT_CONV
-                                                        (- k~local~2061 1)
-                                                        tm)))
+                                                    ((th1 (NUM_SHIFT_CONV (- k* 1) tm)))
                                                     (match (concl th1)
                                                       ((Comb
                                                         _
@@ -2128,7 +2103,7 @@
                                                           (Comb _ atm)
                                                           (Comb (Comb _ ptm) btm)))
                                                         (EQ_MP
-                                                          (|INST|
+                                                          (INST*
                                                             (cl:cons
                                                               (tuple atm a_tm)
                                                               (cl:cons
@@ -2389,16 +2364,16 @@
                                             ((puths_2
                                               (array-of-list
                                                 (map
-                                                  (lambdac (i~local~2591)
+                                                  (lambdac (i*)
                                                     (let
                                                       ((th1
                                                         (array-get
                                                           puths_1
-                                                          (int-mod i~local~2591 16)))
+                                                          (int-mod i* 16)))
                                                         (th2
                                                           (array-get
                                                             puths_1
-                                                            (int-div i~local~2591 16))))
+                                                            (int-div i* 16))))
                                                       (let
                                                         ((th3
                                                           (GEN_REWRITE_RULE
@@ -2416,7 +2391,7 @@
                                                     (Comb (Comb (Const "*" _) ptm) btm))
                                                     (match (tuple atm ptm btm)
                                                       ((tuple _ _ (Const "_0" _))
-                                                        (|INST|
+                                                        (INST*
                                                           (cl:cons
                                                             (tuple atm a_tm)
                                                             (cl:cons (tuple ptm p_tm) nil))
@@ -2429,7 +2404,7 @@
                                                         _)
                                                         (let
                                                           ((th1
-                                                            (|INST|
+                                                            (INST*
                                                               (cl:cons
                                                                 (tuple atm a_tm)
                                                                 (cl:cons
@@ -2449,9 +2424,7 @@
                                                       ((tuple
                                                         (Comb
                                                           _
-                                                          (Comb
-                                                            _
-                                                            (Comb _ (Comb _ |atm'|))))
+                                                          (Comb _ (Comb _ (Comb _ atm*))))
                                                         (Comb
                                                           _
                                                           (Comb
@@ -2460,11 +2433,11 @@
                                                               _
                                                               (Comb
                                                                 _
-                                                                (cl:and |ptm'| (Comb _ _))))))
+                                                                (cl:and ptm* (Comb _ _))))))
                                                         _)
                                                         (match (topsplit atm)
-                                                          ((tuple i~local~2723 _)
-                                                            (match (tuple |atm'| |ptm'|)
+                                                          ((tuple i* _)
+                                                            (match (tuple atm* ptm*)
                                                               ((tuple
                                                                 (Comb
                                                                   _
@@ -2472,7 +2445,7 @@
                                                                     _
                                                                     (Comb
                                                                       _
-                                                                      (Comb _ |atm''|))))
+                                                                      (Comb _ atm**))))
                                                                 (Comb
                                                                   _
                                                                   (Comb
@@ -2482,37 +2455,37 @@
                                                                       (Comb
                                                                         _
                                                                         (cl:and
-                                                                          |ptm''|
+                                                                          ptm**
                                                                           (Comb _ _)))))))
-                                                                (match (topsplit |atm'|)
+                                                                (match (topsplit atm*)
                                                                   ((tuple j _)
                                                                     (let*
-                                                                      ((|tm'|
-                                                                        (|mk_comb|
+                                                                      ((tm*
+                                                                        (mk_comb
                                                                           (tuple
-                                                                            (|mk_comb|
+                                                                            (mk_comb
                                                                               (tuple
                                                                                 add_tm
-                                                                                |atm''|))
-                                                                            (|mk_comb|
+                                                                                atm**))
+                                                                            (mk_comb
                                                                               (tuple
-                                                                                (|mk_comb|
+                                                                                (mk_comb
                                                                                   (tuple
                                                                                     mul_tm
-                                                                                    |ptm''|))
+                                                                                    ptm**))
                                                                                 btm)))))
                                                                         (th1
                                                                           (NUM_UNSHIFT_CONV
-                                                                            |tm'|))
+                                                                            tm*))
                                                                         (th2
-                                                                          (|INST|
+                                                                          (INST*
                                                                             (cl:cons
                                                                               (tuple
-                                                                                |atm''|
+                                                                                atm**
                                                                                 a_tm)
                                                                               (cl:cons
                                                                                 (tuple
-                                                                                  |ptm''|
+                                                                                  ptm**
                                                                                   p_tm)
                                                                                 (cl:cons
                                                                                   (tuple
@@ -2529,36 +2502,36 @@
                                                                               puths_2
                                                                               (+
                                                                                 (* 16 j)
-                                                                                i~local~2723)))))
+                                                                                i*)))))
                                                                       (EQ_MP th2 th1)))))
                                                               (_
                                                                 (let*
-                                                                  ((|tm'|
-                                                                    (|mk_comb|
+                                                                  ((tm*
+                                                                    (mk_comb
                                                                       (tuple
-                                                                        (|mk_comb|
+                                                                        (mk_comb
                                                                           (tuple
                                                                             add_tm
-                                                                            |atm'|))
-                                                                        (|mk_comb|
+                                                                            atm*))
+                                                                        (mk_comb
                                                                           (tuple
-                                                                            (|mk_comb|
+                                                                            (mk_comb
                                                                               (tuple
                                                                                 mul_tm
-                                                                                |ptm'|))
+                                                                                ptm*))
                                                                             btm)))))
                                                                     (th1
                                                                       (NUM_UNSHIFT_CONV
-                                                                        |tm'|))
+                                                                        tm*))
                                                                     (th2
-                                                                      (|INST|
+                                                                      (INST*
                                                                         (cl:cons
                                                                           (tuple
-                                                                            |atm'|
+                                                                            atm*
                                                                             a_tm)
                                                                           (cl:cons
                                                                             (tuple
-                                                                              |ptm'|
+                                                                              ptm*
                                                                               p_tm)
                                                                             (cl:cons
                                                                               (tuple
@@ -2573,7 +2546,7 @@
                                                                                 nil))))
                                                                         (array-get
                                                                           puths_1
-                                                                          i~local~2723))))
+                                                                          i*))))
                                                                   (EQ_MP th2 th1)))))))
                                                       ((tuple
                                                         (Const "_0" _)
@@ -2581,7 +2554,7 @@
                                                         _)
                                                         (let
                                                           ((th1
-                                                            (|INST|
+                                                            (INST*
                                                               (cl:cons
                                                                 (tuple btm b_tm)
                                                                 (cl:cons
@@ -2599,7 +2572,7 @@
                                                         _)
                                                         (let
                                                           ((th1
-                                                            (|INST|
+                                                            (INST*
                                                               (cl:cons
                                                                 (tuple ctm a_tm)
                                                                 (cl:cons
@@ -2619,7 +2592,7 @@
                                                         _)
                                                         (let
                                                           ((th1
-                                                            (|INST|
+                                                            (INST*
                                                               (cl:cons
                                                                 (tuple ctm a_tm)
                                                                 (cl:cons
@@ -3352,18 +3325,18 @@
                                                                             (REWRITE_TAC
                                                                               (map
                                                                                 (lambdac
-                                                                                  (k~local~3602)
+                                                                                  (k*)
                                                                                   (SYM
                                                                                     (REWRITE_CONV
                                                                                       (cl:cons
                                                                                         ARITH_SUC
                                                                                         nil)
-                                                                                      (|mk_comb|
+                                                                                      (mk_comb
                                                                                         (tuple
                                                                                           suc_tm
                                                                                           (mk_small_numeral
                                                                                             (-
-                                                                                              k~local~3602
+                                                                                              k*
                                                                                               1)))))))
                                                                                 (-- 1 5))))
                                                                           (REWRITE_TAC
@@ -3396,20 +3369,17 @@
                                                                         nil))))
                                                                 (REWRITE_TAC
                                                                   (map
-                                                                    (lambdac
-                                                                      (k~local~3653)
+                                                                    (lambdac (k*)
                                                                       (SYM
                                                                         (REWRITE_CONV
                                                                           (cl:cons
                                                                             ARITH_SUC
                                                                             nil)
-                                                                          (|mk_comb|
+                                                                          (mk_comb
                                                                             (tuple
                                                                               suc_tm
                                                                               (mk_small_numeral
-                                                                                (-
-                                                                                  k~local~3653
-                                                                                  1)))))))
+                                                                                (- k* 1)))))))
                                                                     (-- 1 4))))
                                                               (REWRITE_TAC
                                                                 (cl:cons
@@ -3500,17 +3470,17 @@
                                                     (RAND_CONV NUM_UNSHIFT3_CONV))
                                                   NUM_UNSHIFT_CONV)))
                                             (fletc
-                                              ((BINOP2_CONV~local~3776
+                                              ((BINOP2_CONV*
                                                 (conv1 conv2)
                                                 (COMB2_CONV (RAND_CONV conv1) conv2)))
                                               (let
                                                 ((TOOM3_CONV
-                                                  (BINOP2_CONV~local~3776
+                                                  (BINOP2_CONV*
                                                     (funcall LAND_CONV NUM_UNSHIFT2_CONV)
                                                     NUM_UNSHIFT4_CONV)))
                                                 (labelsc
                                                   ((GEN_NUM_SQUARE_RULE
-                                                    (w~local~3791 z tm)
+                                                    (w* z tm)
                                                     (match tm
                                                       ((Const "_0" _) pth_0)
                                                       ((Comb (Const "BIT0" _) mtm)
@@ -3521,12 +3491,12 @@
                                                             (let*
                                                               ((th1
                                                                 (GEN_NUM_SQUARE_RULE
-                                                                  w~local~3791
+                                                                  w*
                                                                   (- z 3)
                                                                   ptm))
                                                                 (ntm (rand (concl th1))))
                                                               (EQ_MP
-                                                                (|INST|
+                                                                (INST*
                                                                   (cl:cons
                                                                     (tuple ptm m_tm)
                                                                     (cl:cons
@@ -3538,12 +3508,12 @@
                                                             (let*
                                                               ((th1
                                                                 (GEN_NUM_SQUARE_RULE
-                                                                  w~local~3791
+                                                                  w*
                                                                   (- z 1)
                                                                   mtm))
                                                                 (ntm (rand (concl th1))))
                                                               (EQ_MP
-                                                                (|INST|
+                                                                (INST*
                                                                   (cl:cons
                                                                     (tuple mtm m_tm)
                                                                     (cl:cons
@@ -3556,10 +3526,8 @@
                                                           pth_1
                                                           (if
                                                             (cl:and
-                                                              (cl:or
-                                                                (< w~local~3791 100)
-                                                                (< z 20))
-                                                              (< (+ w~local~3791 z) 150))
+                                                              (cl:or (< w* 100) (< z 20))
+                                                              (< (+ w* z) 150))
                                                             (match mtm
                                                               ((Comb
                                                                 (Const "BIT1" _)
@@ -3572,35 +3540,35 @@
                                                                       NUM_ADD_RULE
                                                                       ntm
                                                                       one_tm))
-                                                                    (mtm~local~4258
+                                                                    (mtm*
                                                                       (rand (concl th1)))
                                                                     (th2
                                                                       (NUM_SQUARE_RULE
-                                                                        mtm~local~4258))
+                                                                        mtm*))
                                                                     (ptm
                                                                       (rand (concl th2)))
                                                                     (atm
                                                                       (subbn
-                                                                        (|mk_comb|
+                                                                        (mk_comb
                                                                           (tuple
                                                                             BIT0_tm
-                                                                            (|mk_comb|
+                                                                            (mk_comb
                                                                               (tuple
                                                                                 BIT0_tm
                                                                                 ptm))))
-                                                                        mtm~local~4258))
+                                                                        mtm*))
                                                                     (th3
                                                                       (funcall
                                                                         NUM_ADD_RULE
-                                                                        mtm~local~4258
+                                                                        mtm*
                                                                         atm))
                                                                     (th4
-                                                                      (|INST|
+                                                                      (INST*
                                                                         (cl:cons
                                                                           (tuple atm a_tm)
                                                                           (cl:cons
                                                                             (tuple
-                                                                              mtm~local~4258
+                                                                              mtm*
                                                                               m_tm)
                                                                             (cl:cons
                                                                               (tuple
@@ -3625,14 +3593,14 @@
                                                                 (let*
                                                                   ((th1
                                                                     (GEN_NUM_SQUARE_RULE
-                                                                      (- w~local~3791 1)
+                                                                      (- w* 1)
                                                                       z
                                                                       mtm))
                                                                     (ntm
                                                                       (rand (concl th1)))
                                                                     (th2
                                                                       (EQ_MP
-                                                                        (|INST|
+                                                                        (INST*
                                                                           (cl:cons
                                                                             (tuple
                                                                               mtm
@@ -3664,12 +3632,9 @@
                                                                           th2
                                                                           (AP_BIT1
                                                                             (AP_BIT0 th3)))))))))
-                                                            (if (< (+ w~local~3791 z) 800)
+                                                            (if (< (+ w* z) 800)
                                                               (let*
-                                                                ((k2
-                                                                  (int-div
-                                                                    (+ w~local~3791 z)
-                                                                    2))
+                                                                ((k2 (int-div (+ w* z) 2))
                                                                   (th1
                                                                     (funcall
                                                                       NUM_SHIFT_CONV
@@ -3687,7 +3652,7 @@
                                                                           NUM_ADD_RULE
                                                                           htm
                                                                           ltm))
-                                                                        (mtm~local~4093
+                                                                        (mtm*
                                                                           (rand
                                                                             (concl th2)))
                                                                         (th3
@@ -3698,7 +3663,7 @@
                                                                             ltm))
                                                                         (th5
                                                                           (NUM_SQUARE_RULE
-                                                                            mtm~local~4093)))
+                                                                            mtm*)))
                                                                       (let
                                                                         ((atm
                                                                           (rand
@@ -3728,12 +3693,12 @@
                                                                                 NUM_ADD_RULE
                                                                                 etm
                                                                                 btm))
-                                                                            (dtm~local~4135
+                                                                            (dtm*
                                                                               (rand
                                                                                 (concl
                                                                                   th7)))
                                                                             (th8
-                                                                              (|INST|
+                                                                              (INST*
                                                                                 (cl:cons
                                                                                   (tuple
                                                                                     atm
@@ -3748,7 +3713,7 @@
                                                                                         c_tm)
                                                                                       (cl:cons
                                                                                         (tuple
-                                                                                          dtm~local~4135
+                                                                                          dtm*
                                                                                           d_tm)
                                                                                         (cl:cons
                                                                                           (tuple
@@ -3764,7 +3729,7 @@
                                                                                                 l_tm)
                                                                                               (cl:cons
                                                                                                 (tuple
-                                                                                                  mtm~local~4093
+                                                                                                  mtm*
                                                                                                   m_tm)
                                                                                                 (cl:cons
                                                                                                   (tuple
@@ -3805,10 +3770,7 @@
                                                                                 NUM_UNSHIFT_CONV))
                                                                             th9)))))))
                                                               (let*
-                                                                ((k3
-                                                                  (int-div
-                                                                    (+ w~local~3791 z)
-                                                                    3))
+                                                                ((k3 (int-div (+ w* z) 3))
                                                                   (th0
                                                                     (THENC
                                                                       (funcall
@@ -3826,9 +3788,7 @@
                                                                     (Comb
                                                                       (Comb _ ptm)
                                                                       (Comb
-                                                                        (Comb
-                                                                          _
-                                                                          mtm~local~3893)
+                                                                        (Comb _ mtm*)
                                                                         (Comb
                                                                           (Comb _ _)
                                                                           htm))))
@@ -3852,7 +3812,7 @@
                                                                               ltm))
                                                                             (mnum
                                                                               (dest_raw_numeral
-                                                                                mtm~local~3893))
+                                                                                mtm*))
                                                                             (hnum
                                                                               (dest_raw_numeral
                                                                                 htm)))
@@ -3863,7 +3823,7 @@
                                                                                   mk_numeral
                                                                                   (*
                                                                                     (*
-                                                                                      num_2~local~670
+                                                                                      num_2*
                                                                                       lnum)
                                                                                     mnum))))
                                                                               (ctm
@@ -3876,7 +3836,7 @@
                                                                                         mnum)
                                                                                       (*
                                                                                         (*
-                                                                                          num_2~local~670
+                                                                                          num_2*
                                                                                           lnum)
                                                                                         hnum)))))
                                                                               (dtm
@@ -3885,12 +3845,12 @@
                                                                                     mk_numeral
                                                                                     (*
                                                                                       (*
-                                                                                        num_2~local~670
+                                                                                        num_2*
                                                                                         hnum)
                                                                                       mnum)))))
                                                                             (let*
                                                                               ((th
-                                                                                (|INST|
+                                                                                (INST*
                                                                                   (cl:cons
                                                                                     (tuple
                                                                                       atm
@@ -3917,7 +3877,7 @@
                                                                                                 h_tm)
                                                                                               (cl:cons
                                                                                                 (tuple
-                                                                                                  mtm~local~3893
+                                                                                                  mtm*
                                                                                                   m_tm)
                                                                                                 (cl:cons
                                                                                                   (tuple
@@ -3929,14 +3889,14 @@
                                                                                                       p_tm)
                                                                                                     nil)))))))))
                                                                                   pth_toom3))
-                                                                                (|th'|
+                                                                                (th*
                                                                                   (CONV_RULE
-                                                                                    (BINOP2_CONV~local~3776
+                                                                                    (BINOP2_CONV*
                                                                                       (RAND_CONV
                                                                                         (RAND_CONV
-                                                                                          (BINOP2_CONV~local~3776
+                                                                                          (BINOP2_CONV*
                                                                                             TOOM3_CONV
-                                                                                            (BINOP2_CONV~local~3776
+                                                                                            (BINOP2_CONV*
                                                                                               TOOM3_CONV
                                                                                               TOOM3_CONV))))
                                                                                       TOOM3_CONV)
@@ -3949,7 +3909,7 @@
                                                                                       (funcall
                                                                                         lhand
                                                                                         (concl
-                                                                                          |th'|)))))
+                                                                                          th*)))))
                                                                                 ((cl:cons
                                                                                   tm3
                                                                                   (cl:cons
@@ -3981,7 +3941,7 @@
                                                                                               tm5)))))
                                                                                     (funcall
                                                                                       MP
-                                                                                      |th'|
+                                                                                      th*
                                                                                       (end_itlist
                                                                                         CONJ
                                                                                         (cl:cons
@@ -3998,11 +3958,8 @@
                                                     (NUM_SQUARE_RULE
                                                       (tm)
                                                       (match (funcall bitcounts tm)
-                                                        ((tuple w~local~4397 z)
-                                                          (GEN_NUM_SQUARE_RULE
-                                                            w~local~4397
-                                                            z
-                                                            tm)))))
+                                                        ((tuple w* z)
+                                                          (GEN_NUM_SQUARE_RULE w* z tm)))))
                                                   #'NUM_SQUARE_RULE))))))
                                       (NUM_MUL_RULE
                                         (match
@@ -4103,7 +4060,7 @@
                                                           (cl:cons EQ_ADD_RCANCEL nil)))))
                                                   (REWRITE_TAC (cl:cons ARITH_EQ nil))))))
                                           ((tuple
-                                            QUICK_PROVE_HYP~local~4419
+                                            QUICK_PROVE_HYP*
                                             (tuple pth_0l pth_0r)
                                             (tuple pth_1l pth_1r)
                                             (tuple pth_evenl pth_evenr)
@@ -4212,7 +4169,7 @@
                                                 (pth_oo2
                                                   (PURE_ONCE_REWRITE_RULE
                                                     (cl:cons MULT_SYM nil)
-                                                    (|INST|
+                                                    (INST*
                                                       (cl:cons
                                                         (tuple n_tm m_tm)
                                                         (cl:cons (tuple m_tm n_tm) nil))
@@ -4269,14 +4226,14 @@
                                                               (cl:cons EQ_ADD_RCANCEL nil)))))))))
                                               (labelsc
                                                 ((NUM_MUL_RULE
-                                                  (k~local~4605 l tm |tm'|)
-                                                  (match (tuple tm |tm'|)
+                                                  (k* l tm tm*)
+                                                  (match (tuple tm tm*)
                                                     ((tuple (Const "_0" _) _)
-                                                      (|INST|
-                                                        (cl:cons (tuple |tm'| n_tm) nil)
+                                                      (INST*
+                                                        (cl:cons (tuple tm* n_tm) nil)
                                                         pth_0l))
                                                     ((tuple _ (Const "_0" _))
-                                                      (|INST|
+                                                      (INST*
                                                         (cl:cons (tuple tm m_tm) nil)
                                                         pth_0r))
                                                     ((tuple
@@ -4284,31 +4241,31 @@
                                                         (Const "BIT1" _)
                                                         (Const "_0" _))
                                                       _)
-                                                      (|INST|
-                                                        (cl:cons (tuple |tm'| n_tm) nil)
+                                                      (INST*
+                                                        (cl:cons (tuple tm* n_tm) nil)
                                                         pth_1l))
                                                     ((tuple
                                                       _
                                                       (Comb
                                                         (Const "BIT1" _)
                                                         (Const "_0" _)))
-                                                      (|INST|
+                                                      (INST*
                                                         (cl:cons (tuple tm m_tm) nil)
                                                         pth_1r))
                                                     ((tuple (Comb (Const "BIT0" _) mtm) _)
                                                       (let*
                                                         ((th0
                                                           (NUM_MUL_RULE
-                                                            (- k~local~4605 1)
+                                                            (- k* 1)
                                                             l
                                                             mtm
-                                                            |tm'|))
+                                                            tm*))
                                                           (th1
-                                                            (|INST|
+                                                            (INST*
                                                               (cl:cons
                                                                 (tuple mtm m_tm)
                                                                 (cl:cons
-                                                                  (tuple |tm'| n_tm)
+                                                                  (tuple tm* n_tm)
                                                                   (cl:cons
                                                                     (tuple
                                                                       (rand (concl th0))
@@ -4319,13 +4276,9 @@
                                                     ((tuple _ (Comb (Const "BIT0" _) ntm))
                                                       (let*
                                                         ((th0
-                                                          (NUM_MUL_RULE
-                                                            k~local~4605
-                                                            (- l 1)
-                                                            tm
-                                                            ntm))
+                                                          (NUM_MUL_RULE k* (- l 1) tm ntm))
                                                           (th1
-                                                            (|INST|
+                                                            (INST*
                                                               (cl:cons
                                                                 (tuple tm m_tm)
                                                                 (cl:cons
@@ -4342,18 +4295,16 @@
                                                       (Comb (Const "BIT1" _) ntm))
                                                       (if
                                                         (cl:or
-                                                          (<= k~local~4605 50)
+                                                          (<= k* 50)
                                                           (cl:or
                                                             (<= l 50)
                                                             (cl:or
                                                               (<=
-                                                                (*
-                                                                  (num k~local~4605)
-                                                                  (num k~local~4605))
+                                                                (* (num k*) (num k*))
                                                                 (num l))
                                                               (<=
                                                                 (* (num l) (num l))
-                                                                (num k~local~4605)))))
+                                                                (num k*)))))
                                                         (match (tuple mtm ntm)
                                                           ((tuple
                                                             (Comb
@@ -4369,20 +4320,20 @@
                                                                 (ptm (rand (concl th1)))
                                                                 (th2
                                                                   (NUM_MUL_RULE
-                                                                    k~local~4605
+                                                                    k*
                                                                     l
                                                                     ptm
-                                                                    |tm'|))
+                                                                    tm*))
                                                                 (atm
                                                                   (subbn
                                                                     (rand (concl th2))
-                                                                    |tm'|))
+                                                                    tm*))
                                                                 (th3
-                                                                  (|INST|
+                                                                  (INST*
                                                                     (cl:cons
                                                                       (tuple tm m_tm)
                                                                       (cl:cons
-                                                                        (tuple |tm'| n_tm)
+                                                                        (tuple tm* n_tm)
                                                                         (cl:cons
                                                                           (tuple ptm p_tm)
                                                                           (cl:cons
@@ -4400,7 +4351,7 @@
                                                                     (funcall
                                                                       NUM_ADD_RULE
                                                                       atm
-                                                                      |tm'|))))))
+                                                                      tm*))))))
                                                           ((tuple
                                                             _
                                                             (Comb
@@ -4411,11 +4362,11 @@
                                                                 (funcall
                                                                   NUM_ADC_RULE
                                                                   zero_tm
-                                                                  |tm'|))
+                                                                  tm*))
                                                                 (ptm (rand (concl th1)))
                                                                 (th2
                                                                   (NUM_MUL_RULE
-                                                                    k~local~4605
+                                                                    k*
                                                                     l
                                                                     tm
                                                                     ptm))
@@ -4424,11 +4375,11 @@
                                                                     (rand (concl th2))
                                                                     tm))
                                                                 (th3
-                                                                  (|INST|
+                                                                  (INST*
                                                                     (cl:cons
                                                                       (tuple tm m_tm)
                                                                       (cl:cons
-                                                                        (tuple |tm'| n_tm)
+                                                                        (tuple tm* n_tm)
                                                                         (cl:cons
                                                                           (tuple ptm p_tm)
                                                                           (cl:cons
@@ -4448,23 +4399,23 @@
                                                                       atm
                                                                       tm))))))
                                                           (_
-                                                            (if (<= k~local~4605 l)
+                                                            (if (<= k* l)
                                                               (let*
                                                                 ((th0
                                                                   (NUM_MUL_RULE
-                                                                    (- k~local~4605 1)
+                                                                    (- k* 1)
                                                                     l
                                                                     mtm
-                                                                    |tm'|))
+                                                                    tm*))
                                                                   (ptm (rand (concl th0)))
                                                                   (th1
                                                                     (EQ_MP
-                                                                      (|INST|
+                                                                      (INST*
                                                                         (cl:cons
                                                                           (tuple mtm m_tm)
                                                                           (cl:cons
                                                                             (tuple
-                                                                              |tm'|
+                                                                              tm*
                                                                               n_tm)
                                                                             (cl:cons
                                                                               (tuple
@@ -4482,18 +4433,18 @@
                                                                   (funcall
                                                                     NUM_ADD_RULE
                                                                     tm1
-                                                                    |tm'|)))
+                                                                    tm*)))
                                                               (let*
                                                                 ((th0
                                                                   (NUM_MUL_RULE
-                                                                    k~local~4605
+                                                                    k*
                                                                     (- l 1)
                                                                     tm
                                                                     ntm))
                                                                   (ptm (rand (concl th0)))
                                                                   (th1
                                                                     (EQ_MP
-                                                                      (|INST|
+                                                                      (INST*
                                                                         (cl:cons
                                                                           (tuple tm m_tm)
                                                                           (cl:cons
@@ -4556,7 +4507,7 @@
                                                                       btm
                                                                       dtm))
                                                                   (th1
-                                                                    (|INST|
+                                                                    (INST*
                                                                       (cl:cons
                                                                         (tuple atm a_tm)
                                                                         (cl:cons
@@ -4584,7 +4535,7 @@
                                                                                     nil)))))))
                                                                       pth_oo1)))
                                                                 (funcall
-                                                                  QUICK_PROVE_HYP~local~4419
+                                                                  QUICK_PROVE_HYP*
                                                                   (end_itlist
                                                                     CONJ
                                                                     (cl:cons
@@ -4634,7 +4585,7 @@
                                                                       btm
                                                                       dtm))
                                                                   (th1
-                                                                    (|INST|
+                                                                    (INST*
                                                                       (cl:cons
                                                                         (tuple atm a_tm)
                                                                         (cl:cons
@@ -4662,7 +4613,7 @@
                                                                                     nil)))))))
                                                                       pth_oo2)))
                                                                 (funcall
-                                                                  QUICK_PROVE_HYP~local~4419
+                                                                  QUICK_PROVE_HYP*
                                                                   (end_itlist
                                                                     CONJ
                                                                     (cl:cons
@@ -4679,7 +4630,7 @@
                                                                   th1)))))))
                                                     (_ (failwith "NUM_MUL_RULE")))))
                                                 #'NUM_MUL_RULE)))))
-                                      (|NUM_MULT_CONV'|
+                                      (NUM_MULT_CONV*
                                         (let
                                           ((pth_refl
                                             (o
@@ -4694,7 +4645,7 @@
                                                     ((th1 (funcall NUM_SQUARE_RULE mtm))
                                                       (ptm (rand (concl th1))))
                                                     (EQ_MP
-                                                      (|INST|
+                                                      (INST*
                                                         (cl:cons
                                                           (tuple mtm m_tm)
                                                           (cl:cons (tuple ptm p_tm) nil))
@@ -4712,7 +4663,7 @@
                                                         mtm
                                                         ntm)))))
                                               (_ (failwith "NUM_MULT_CONV'"))))))
-                                      (NUM_SUC_CONV~local~5452
+                                      (NUM_SUC_CONV*
                                         (let
                                           ((pth
                                             (o
@@ -4740,14 +4691,14 @@
                                                     (funcall NUM_ADC_RULE zero_tm mtm))
                                                     (ntm (rand (concl th1))))
                                                   (EQ_MP
-                                                    (|INST|
+                                                    (INST*
                                                       (cl:cons
                                                         (tuple mtm m_tm)
                                                         (cl:cons (tuple ntm n_tm) nil))
                                                       pth)
                                                     th1)))
                                               (_ (failwith "NUM_SUC_CONV"))))))
-                                      (NUM_ADD_CONV~local~5512
+                                      (NUM_ADD_CONV*
                                         (let
                                           ((topthm_add
                                             (o
@@ -4768,7 +4719,7 @@
                                                   ((th1 (funcall NUM_ADD_RULE mtm ntm))
                                                     (ptm (rand (concl th1)))
                                                     (th2
-                                                      (|INST|
+                                                      (INST*
                                                         (cl:cons
                                                           (tuple mtm m_tm)
                                                           (cl:cons
@@ -4777,7 +4728,7 @@
                                                         topthm_add)))
                                                   (EQ_MP th2 th1)))
                                               (_ (failwith "NUM_ADD_CONV"))))))
-                                      (NUM_MULT_CONV~local~5583
+                                      (NUM_MULT_CONV**
                                         (let
                                           ((topthm_mul
                                             (o
@@ -4804,7 +4755,7 @@
                                                     ((th1 (funcall NUM_SQUARE_RULE mtm))
                                                       (ptm (rand (concl th1))))
                                                     (EQ_MP
-                                                      (|INST|
+                                                      (INST*
                                                         (cl:cons
                                                           (tuple mtm m_tm)
                                                           (cl:cons (tuple ptm p_tm) nil))
@@ -4825,7 +4776,7 @@
                                                             ntm))
                                                           (ptm (rand (concl th1)))
                                                           (th2
-                                                            (|INST|
+                                                            (INST*
                                                               (cl:cons
                                                                 (tuple mtm m_tm)
                                                                 (cl:cons
@@ -4836,7 +4787,7 @@
                                                               topthm_mul)))
                                                         (EQ_MP th2 th1))))))
                                               (_ (failwith "NUM_MULT_CONV"))))))
-                                      (NUM_EXP_CONV~local~5709
+                                      (NUM_EXP_CONV*
                                         (let
                                           ((pth0
                                             (o
@@ -4903,35 +4854,30 @@
                                             ((tconv
                                               (GEN_REWRITE_CONV #'I (cl:cons tth nil))))
                                             (labelsc
-                                              ((NUM_EXP_CONV~local~5799
-                                                (l r~local~5802)
-                                                (if (= r~local~5802 zero_tm)
-                                                  (|INST|
-                                                    (cl:cons (tuple l m_tm) nil)
-                                                    pth)
-                                                  (match (dest_comb r~local~5802)
-                                                    ((tuple b~local~5804 |r'|)
-                                                      (if (= b~local~5804 BIT0_tm)
+                                              ((NUM_EXP_CONV*
+                                                (l r*)
+                                                (if (= r* zero_tm)
+                                                  (INST* (cl:cons (tuple l m_tm) nil) pth)
+                                                  (match (dest_comb r*)
+                                                    ((tuple b* r**)
+                                                      (if (= b* BIT0_tm)
                                                         (let*
-                                                          ((th1
-                                                            (NUM_EXP_CONV~local~5799
-                                                              l
-                                                              |r'|))
+                                                          ((th1 (NUM_EXP_CONV* l r**))
                                                             (tm1 (rand (concl th1)))
                                                             (th2
                                                               (funcall
-                                                                |NUM_MULT_CONV'|
+                                                                NUM_MULT_CONV*
                                                                 (mk_binop mul_tm tm1 tm1)))
                                                             (tm2 (rand (concl th2))))
                                                           (funcall
                                                             MP
                                                             (funcall
                                                               MP
-                                                              (|INST|
+                                                              (INST*
                                                                 (cl:cons
                                                                   (tuple l m_tm)
                                                                   (cl:cons
-                                                                    (tuple |r'| n_tm)
+                                                                    (tuple r** n_tm)
                                                                     (cl:cons
                                                                       (tuple tm1 p_tm)
                                                                       (cl:cons
@@ -4941,19 +4887,16 @@
                                                               th1)
                                                             th2))
                                                         (let*
-                                                          ((th1
-                                                            (NUM_EXP_CONV~local~5799
-                                                              l
-                                                              |r'|))
+                                                          ((th1 (NUM_EXP_CONV* l r**))
                                                             (tm1 (rand (concl th1)))
                                                             (th2
                                                               (funcall
-                                                                |NUM_MULT_CONV'|
+                                                                NUM_MULT_CONV*
                                                                 (mk_binop mul_tm tm1 tm1)))
                                                             (tm2 (rand (concl th2)))
                                                             (th3
                                                               (funcall
-                                                                |NUM_MULT_CONV'|
+                                                                NUM_MULT_CONV*
                                                                 (mk_binop mul_tm l tm2)))
                                                             (tm3 (rand (concl th3))))
                                                           (funcall
@@ -4962,11 +4905,11 @@
                                                               MP
                                                               (funcall
                                                                 MP
-                                                                (|INST|
+                                                                (INST*
                                                                   (cl:cons
                                                                     (tuple l m_tm)
                                                                     (cl:cons
-                                                                      (tuple |r'| n_tm)
+                                                                      (tuple r** n_tm)
                                                                       (cl:cons
                                                                         (tuple tm1 p_tm)
                                                                         (cl:cons
@@ -4984,37 +4927,33 @@
                                                 (handler-case
                                                   (let ((th (funcall tconv tm)))
                                                     (match (dest_comb (rand (concl th)))
-                                                      ((tuple lop r~local~5946)
+                                                      ((tuple lop r*)
                                                         (match (dest_comb lop)
                                                           ((tuple _ l)
                                                             (if
                                                               (not
                                                                 (cl:and
                                                                   (wellformed l)
-                                                                  (wellformed
-                                                                    r~local~5946)))
+                                                                  (wellformed r*)))
                                                               (failwith "")
                                                               (let*
-                                                                ((|th'|
-                                                                  (NUM_EXP_CONV~local~5799
-                                                                    l
-                                                                    r~local~5946))
-                                                                  (|tm'|
-                                                                    (rand (concl |th'|))))
+                                                                ((th*
+                                                                  (NUM_EXP_CONV* l r*))
+                                                                  (tm* (rand (concl th*))))
                                                                 (TRANS
-                                                                  (TRANS th |th'|)
-                                                                  (|INST|
+                                                                  (TRANS th th*)
+                                                                  (INST*
                                                                     (cl:cons
-                                                                      (tuple |tm'| m_tm)
+                                                                      (tuple tm* m_tm)
                                                                       nil)
                                                                     fth)))))))))
                                                   (hol2cl.runtime:ocaml-condition
-                                                    (exception~5937)
-                                                    (match exception~5937
+                                                    (exception~5904)
+                                                    (match exception~5904
                                                       ((Failure _)
                                                         (failwith "NUM_EXP_CONV"))
-                                                      (_ (raise exception~5937))))))))))
-                                      (NUM_LT_CONV~local~5999
+                                                      (_ (raise exception~5904))))))))))
+                                      (NUM_LT_CONV*
                                         (let
                                           ((pth
                                             (o
@@ -5069,7 +5008,7 @@
                                                 (Comb (Const "NUMERAL" _) ntm))
                                                 (let ((rel (orderrelation mtm ntm)))
                                                   (if (= rel 0)
-                                                    (|INST|
+                                                    (INST*
                                                       (cl:cons (tuple ntm n_tm) nil)
                                                       rth)
                                                     (if (< rel 0)
@@ -5079,7 +5018,7 @@
                                                             (funcall NUM_ADC_RULE dtm mtm)))
                                                         (QUICK_PROVE_HYP
                                                           th
-                                                          (|INST|
+                                                          (INST*
                                                             (cl:cons
                                                               (tuple dtm m_tm)
                                                               (cl:cons
@@ -5094,7 +5033,7 @@
                                                             (funcall NUM_ADD_RULE dtm ntm)))
                                                         (QUICK_PROVE_HYP
                                                           th
-                                                          (|INST|
+                                                          (INST*
                                                             (cl:cons
                                                               (tuple dtm m_tm)
                                                               (cl:cons
@@ -5104,7 +5043,7 @@
                                                                   nil)))
                                                             qth)))))))
                                               (_ (failwith "NUM_LT_CONV"))))))
-                                      (NUM_LE_CONV~local~6001
+                                      (NUM_LE_CONV*
                                         (let
                                           ((pth
                                             (o
@@ -5159,7 +5098,7 @@
                                                 (Comb (Const "NUMERAL" _) ntm))
                                                 (let ((rel (orderrelation mtm ntm)))
                                                   (if (= rel 0)
-                                                    (|INST|
+                                                    (INST*
                                                       (cl:cons (tuple ntm n_tm) nil)
                                                       rth)
                                                     (if (< rel 0)
@@ -5169,7 +5108,7 @@
                                                             (funcall NUM_ADD_RULE dtm mtm)))
                                                         (QUICK_PROVE_HYP
                                                           th
-                                                          (|INST|
+                                                          (INST*
                                                             (cl:cons
                                                               (tuple dtm m_tm)
                                                               (cl:cons
@@ -5184,7 +5123,7 @@
                                                             (funcall NUM_ADC_RULE dtm ntm)))
                                                         (QUICK_PROVE_HYP
                                                           th
-                                                          (|INST|
+                                                          (INST*
                                                             (cl:cons
                                                               (tuple dtm m_tm)
                                                               (cl:cons
@@ -5194,7 +5133,7 @@
                                                                   nil)))
                                                             qth)))))))
                                               (_ (failwith "NUM_LE_CONV"))))))
-                                      (NUM_EQ_CONV~local~6003
+                                      (NUM_EQ_CONV*
                                         (let
                                           ((pth
                                             (o
@@ -5268,7 +5207,7 @@
                                                 (Comb (Const "NUMERAL" _) ntm))
                                                 (let ((rel (orderrelation mtm ntm)))
                                                   (if (= rel 0)
-                                                    (|INST|
+                                                    (INST*
                                                       (cl:cons (tuple ntm n_tm) nil)
                                                       rth)
                                                     (if (< rel 0)
@@ -5278,7 +5217,7 @@
                                                             (funcall NUM_ADC_RULE dtm mtm)))
                                                         (QUICK_PROVE_HYP
                                                           th
-                                                          (|INST|
+                                                          (INST*
                                                             (cl:cons
                                                               (tuple dtm m_tm)
                                                               (cl:cons
@@ -5293,7 +5232,7 @@
                                                             (funcall NUM_ADC_RULE dtm ntm)))
                                                         (QUICK_PROVE_HYP
                                                           th
-                                                          (|INST|
+                                                          (INST*
                                                             (cl:cons
                                                               (tuple dtm m_tm)
                                                               (cl:cons
@@ -5304,36 +5243,36 @@
                                                             qth)))))))
                                               (_ (failwith "NUM_EQ_CONV")))))))
                                     (tuple
-                                      NUM_SUC_CONV~local~5452
-                                      NUM_ADD_CONV~local~5512
-                                      NUM_MULT_CONV~local~5583
-                                      NUM_EXP_CONV~local~5709
-                                      NUM_LT_CONV~local~5999
-                                      NUM_LE_CONV~local~6001
-                                      NUM_EQ_CONV~local~6003))))))))))))))))))
+                                      NUM_SUC_CONV*
+                                      NUM_ADD_CONV*
+                                      NUM_MULT_CONV**
+                                      NUM_EXP_CONV*
+                                      NUM_LT_CONV*
+                                      NUM_LE_CONV*
+                                      NUM_EQ_CONV*))))))))))))))))))
   ((tuple
-    NUM_SUC_CONV~local~641
-    NUM_ADD_CONV~local~629
-    NUM_MULT_CONV~local~639
-    NUM_EXP_CONV~local~633
-    NUM_LT_CONV~local~637
-    NUM_LE_CONV~local~635
-    NUM_EQ_CONV~local~631)
+    NUM_SUC_CONV*
+    NUM_ADD_CONV*
+    NUM_MULT_CONV*
+    NUM_EXP_CONV*
+    NUM_LT_CONV*
+    NUM_LE_CONV*
+    NUM_EQ_CONV*)
     (setf
       NUM_ADD_CONV
-      NUM_ADD_CONV~local~629
+      NUM_ADD_CONV*
       NUM_EQ_CONV
-      NUM_EQ_CONV~local~631
+      NUM_EQ_CONV*
       NUM_EXP_CONV
-      NUM_EXP_CONV~local~633
+      NUM_EXP_CONV*
       NUM_LE_CONV
-      NUM_LE_CONV~local~635
+      NUM_LE_CONV*
       NUM_LT_CONV
-      NUM_LT_CONV~local~637
+      NUM_LT_CONV*
       NUM_MULT_CONV
-      NUM_MULT_CONV~local~639
+      NUM_MULT_CONV*
       NUM_SUC_CONV
-      NUM_SUC_CONV~local~641)))
+      NUM_SUC_CONV*)))
 
 (defparameter NUM_GT_CONV (THENC (GEN_REWRITE_CONV #'I (cl:cons GT nil)) NUM_LT_CONV))
 
@@ -5352,30 +5291,28 @@
               (REWRITE_TAC (cl:cons PRE nil))))))
       (m (parse_term "m:num"))
       (n (parse_term "n:num")))
-    (let* ((suc (parse_term "SUC")) (pre~local~7211 (parse_term "PRE")))
+    (let* ((suc (parse_term "SUC")) (pre* (parse_term "PRE")))
       (lambdac (tm)
         (handler-case
           (match (dest_comb tm)
-            ((tuple l r~local~7222)
-              (if (not (= l pre~local~7211))
+            ((tuple l r*)
+              (if (not (= l pre*))
                 (fail unit)
-                (let ((x (funcall dest_numeral r~local~7222)))
+                (let ((x (funcall dest_numeral r*)))
                   (if (= x (num 0))
                     tth
                     (let*
-                      ((|tm'| (funcall mk_numeral (- x (num 1))))
-                        (th1 (funcall NUM_SUC_CONV (|mk_comb| (tuple suc |tm'|)))))
+                      ((tm* (funcall mk_numeral (- x (num 1))))
+                        (th1 (funcall NUM_SUC_CONV (mk_comb (tuple suc tm*)))))
                       (funcall
                         MP
-                        (|INST|
-                          (cl:cons (tuple |tm'| m) (cl:cons (tuple r~local~7222 n) nil))
-                          pth)
+                        (INST* (cl:cons (tuple tm* m) (cl:cons (tuple r* n) nil)) pth)
                         th1)))))))
           (hol2cl.runtime:ocaml-condition
-            (exception~7216)
-            (match exception~7216
+            (exception~7174)
+            (match exception~7174
               ((Failure _) (failwith "NUM_PRE_CONV"))
-              (_ (raise exception~7216)))))))))
+              (_ (raise exception~7174)))))))))
 
 (defparameter NUM_SUB_CONV
   (let
@@ -5392,45 +5329,36 @@
               (REWRITE_TAC (cl:cons ADD_SUB nil))))))
       (m (parse_term "m:num"))
       (n (parse_term "n:num"))
-      (p~local~7286 (parse_term "p:num"))
+      (p* (parse_term "p:num"))
       (minus (parse_term "(-)"))
       (plus (parse_term "(+)"))
-      (le~local~7290 (parse_term "(<=)")))
+      (le* (parse_term "(<=)")))
     (lambdac (tm)
       (handler-case
         (match (dest_binop minus tm)
-          ((tuple l r~local~7332)
-            (let ((ln (funcall dest_numeral l)) (rn (funcall dest_numeral r~local~7332)))
+          ((tuple l r*)
+            (let ((ln (funcall dest_numeral l)) (rn (funcall dest_numeral r*)))
               (if (<= ln rn)
                 (let
-                  ((pth
-                    (|INST|
-                      (cl:cons
-                        (tuple l p~local~7286)
-                        (cl:cons (tuple r~local~7332 n) nil))
-                      pth0))
-                    (th0
-                      (EQT_ELIM
-                        (funcall NUM_LE_CONV (mk_binop le~local~7290 l r~local~7332)))))
+                  ((pth (INST* (cl:cons (tuple l p*) (cl:cons (tuple r* n) nil)) pth0))
+                    (th0 (EQT_ELIM (funcall NUM_LE_CONV (mk_binop le* l r*)))))
                   (funcall MP pth th0))
                 (let*
                   ((kn (- ln rn))
-                    (k~local~7344 (funcall mk_numeral kn))
+                    (k* (funcall mk_numeral kn))
                     (pth
-                      (|INST|
+                      (INST*
                         (cl:cons
-                          (tuple k~local~7344 m)
-                          (cl:cons
-                            (tuple l p~local~7286)
-                            (cl:cons (tuple r~local~7332 n) nil)))
+                          (tuple k* m)
+                          (cl:cons (tuple l p*) (cl:cons (tuple r* n) nil)))
                         pth1))
-                    (th0 (funcall NUM_ADD_CONV (mk_binop plus k~local~7344 r~local~7332))))
+                    (th0 (funcall NUM_ADD_CONV (mk_binop plus k* r*))))
                   (funcall MP pth th0))))))
         (hol2cl.runtime:ocaml-condition
-          (exception~7326)
-          (match exception~7326
+          (exception~7281)
+          (match exception~7281
             ((Failure _) (failwith "NUM_SUB_CONV"))
-            (_ (raise exception~7326))))))))
+            (_ (raise exception~7281))))))))
 
 (defparameter NUM_DIV_CONV nil)
 
@@ -5451,7 +5379,7 @@
       (m (parse_term "m:num"))
       (n (parse_term "n:num"))
       (q (parse_term "q:num"))
-      (r~local~7431 (parse_term "r:num"))
+      (r* (parse_term "r:num"))
       (dtm (parse_term "(DIV)"))
       (mtm (parse_term "(MOD)")))
     (fletc
@@ -5459,17 +5387,17 @@
         (x y)
         (if (= y num_0)
           (funcall SPEC (funcall mk_numeral x) pth0)
-          (let ((k~local~7468 (quo-num x y)) (l (mod-num x y)))
+          (let ((k* (quo-num x y)) (l (mod-num x y)))
             (let*
               ((th0
-                (|INST|
+                (INST*
                   (cl:cons
                     (tuple (funcall mk_numeral x) m)
                     (cl:cons
                       (tuple (funcall mk_numeral y) n)
                       (cl:cons
-                        (tuple (funcall mk_numeral k~local~7468) q)
-                        (cl:cons (tuple (funcall mk_numeral l) r~local~7431) nil))))
+                        (tuple (funcall mk_numeral k*) q)
+                        (cl:cons (tuple (funcall mk_numeral l) r*) nil))))
                   pth))
                 (tm0 (funcall lhand (funcall lhand (concl th0))))
                 (th1 (THENC (funcall LAND_CONV NUM_MULT_CONV) NUM_ADD_CONV tm0))
@@ -5485,10 +5413,10 @@
                   CONJUNCT1
                   (NUM_DIVMOD_CONV (funcall dest_numeral xt) (funcall dest_numeral yt)))))
             (hol2cl.runtime:ocaml-condition
-              (exception~7540)
-              (match exception~7540
+              (exception~7489)
+              (match exception~7489
                 ((Failure _) (failwith "NUM_DIV_CONV"))
-                (_ (raise exception~7540))))))
+                (_ (raise exception~7489))))))
         (lambdac (tm)
           (handler-case
             (match (dest_binop mtm tm)
@@ -5497,12 +5425,12 @@
                   CONJUNCT2
                   (NUM_DIVMOD_CONV (funcall dest_numeral xt) (funcall dest_numeral yt)))))
             (hol2cl.runtime:ocaml-condition
-              (exception~7563)
-              (match exception~7563
+              (exception~7512)
+              (match exception~7512
                 ((Failure _) (failwith "NUM_MOD_CONV"))
-                (_ (raise exception~7563)))))))))
-  ((tuple NUM_DIV_CONV~local~7419 NUM_MOD_CONV~local~7421)
-    (setf NUM_DIV_CONV NUM_DIV_CONV~local~7419 NUM_MOD_CONV NUM_MOD_CONV~local~7421)))
+                (_ (raise exception~7512)))))))))
+  ((tuple NUM_DIV_CONV* NUM_MOD_CONV*)
+    (setf NUM_DIV_CONV NUM_DIV_CONV* NUM_MOD_CONV NUM_MOD_CONV*)))
 
 (defparameter NUM_FACT_CONV
   (let ((suc (parse_term "SUC")) (mul (parse_term "(*)")))
@@ -5516,17 +5444,17 @@
                 THEN
                 (REPEAT (DISCH_THEN (o #'SUBST1_TAC #'SYM)))
                 (REWRITE_TAC (cl:cons FACT nil))))))
-        (w~local~7598 (parse_term "w:num"))
+        (w* (parse_term "w:num"))
         (x (parse_term "x:num"))
         (y (parse_term "y:num"))
         (z (parse_term "z:num")))
       (fletc
         ((mksuc
           (n)
-          (let ((|n'| (- n (num 1))))
-            (funcall NUM_SUC_CONV (|mk_comb| (tuple suc (funcall mk_numeral |n'|)))))))
+          (let ((n* (- n (num 1))))
+            (funcall NUM_SUC_CONV (mk_comb (tuple suc (funcall mk_numeral n*)))))))
         (labelsc
-          ((NUM_FACT_CONV~local~7647
+          ((NUM_FACT_CONV*
             (n)
             (if (= n (num 0))
               pth_0
@@ -5534,31 +5462,31 @@
                 ((th0 (mksuc n))
                   (tmx (rand (funcall lhand (concl th0))))
                   (tm0 (rand (concl th0)))
-                  (th1 (NUM_FACT_CONV~local~7647 (- n (num 1))))
+                  (th1 (NUM_FACT_CONV* (- n (num 1))))
                   (tm1 (rand (concl th1)))
                   (th2 (funcall NUM_MULT_CONV (mk_binop mul tm0 tm1)))
                   (tm2 (rand (concl th2)))
                   (pth
-                    (|INST|
+                    (INST*
                       (cl:cons
                         (tuple tmx x)
                         (cl:cons
                           (tuple tm0 y)
-                          (cl:cons (tuple tm1 w~local~7598) (cl:cons (tuple tm2 z) nil))))
+                          (cl:cons (tuple tm1 w*) (cl:cons (tuple tm2 z) nil))))
                       pth_suc)))
                 (funcall MP (funcall MP (funcall MP pth th0) th1) th2)))))
           (lambdac (tm)
             (handler-case
               (match (dest_comb tm)
-                ((tuple l r~local~7730)
+                ((tuple l r*)
                   (if (= (fst (dest_const l)) "FACT")
-                    (NUM_FACT_CONV~local~7647 (funcall dest_numeral r~local~7730))
+                    (NUM_FACT_CONV* (funcall dest_numeral r*))
                     (fail unit))))
               (hol2cl.runtime:ocaml-condition
-                (exception~7724)
-                (match exception~7724
+                (exception~7671)
+                (match exception~7671
                   ((Failure _) (failwith "NUM_FACT_CONV"))
-                  (_ (raise exception~7724)))))))))))
+                  (_ (raise exception~7671)))))))))))
 
 (defparameter NUM_MAX_CONV
   (THENC
@@ -5653,17 +5581,16 @@
   (let
     ((convlist
       (map
-        (lambdac (arg~7934)
-          (match arg~7934
+        (lambdac (arg~7880)
+          (match arg~7880
             ((tuple pat the_conv)
               (match (funcall strip_comb pat)
-                ((tuple c~local~7939 args)
-                  (tuple c~local~7939 (funcall length args) the_conv))))))
+                ((tuple c* args) (tuple c* (funcall length args) the_conv))))))
         num_red_conv_list)))
     (lambdac (compset)
       (itlist
-        (lambdac (newc arg~7960)
-          (match arg~7960 ((cl:type hol2cl.runtime::unit-value) (add_conv newc compset))))
+        (lambdac (newc arg~7905)
+          (match arg~7905 ((cl:type hol2cl.runtime::unit-value) (add_conv newc compset))))
         convlist
         unit))))
 
@@ -5687,8 +5614,8 @@
       (let ((n (- (funcall dest_numeral tm) (num 1))))
         (if (< n (num 0))
           (failwith "num_CONV")
-          (let ((|tm'| (funcall mk_numeral n)))
-            (SYM (funcall NUM_SUC_CONV (|mk_comb| (tuple SUC_tm |tm'|))))))))))
+          (let ((tm* (funcall mk_numeral n)))
+            (SYM (funcall NUM_SUC_CONV (mk_comb (tuple SUC_tm tm*))))))))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Expands "!n. n < numeral-constant ==> P(n)" into all the cases.           *)
@@ -5781,12 +5708,10 @@
             (lambdac (tm)
               (match tm
                 ((trivia:guard
-                  (Comb
-                    (Comb (Const "MOD" _) (Comb (Comb (Const "EXP" _) m) k~local~8152))
-                    n)
+                  (Comb (Comb (Const "MOD" _) (Comb (Comb (Const "EXP" _) m) k*)) n)
                   (cl:and
                     (funcall is_numeral m)
-                    (cl:and (funcall is_numeral k~local~8152) (funcall is_numeral n))))
+                    (cl:and (funcall is_numeral k*) (funcall is_numeral n))))
                   (funcall fullconv tm))
                 (_ (failwith "EXP_MOD_CONV"))))))))))
 

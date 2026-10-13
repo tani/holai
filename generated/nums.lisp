@@ -172,7 +172,6 @@
   (:shadowing-import-from :hol2cl.fusion mk_fun_ty mk_eq aconv)
   (:shadowing-import-from
     :hol2cl.fusion.hol
-    |mk_comb|
     Var
     type_of
     rator
@@ -181,6 +180,7 @@
     new_axiom
     mk_var
     mk_const
+    mk_comb
     frees
     dest_thm
     dest_comb
@@ -385,8 +385,7 @@
 (defparameter IND_SUC_INJ nil)
 
 (match (CONJ_PAIR IND_SUC_SPEC)
-  ((tuple IND_SUC_INJ~local~82 IND_SUC_0~local~80)
-    (setf IND_SUC_0 IND_SUC_0~local~80 IND_SUC_INJ IND_SUC_INJ~local~82)))
+  ((tuple IND_SUC_INJ* IND_SUC_0*) (setf IND_SUC_0 IND_SUC_0* IND_SUC_INJ IND_SUC_INJ*)))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Carve out the natural numbers inductively.                                *)
@@ -404,14 +403,14 @@
     new_inductive_definition
     (parse_term "NUM_REP IND_0 /\\
     (!i. NUM_REP i ==> NUM_REP (IND_SUC i))"))
-  ((tuple NUM_REP_RULES~local~100 NUM_REP_INDUCT~local~98 NUM_REP_CASES~local~96)
+  ((tuple NUM_REP_RULES* NUM_REP_INDUCT* NUM_REP_CASES*)
     (setf
       NUM_REP_CASES
-      NUM_REP_CASES~local~96
+      NUM_REP_CASES*
       NUM_REP_INDUCT
-      NUM_REP_INDUCT~local~98
+      NUM_REP_INDUCT*
       NUM_REP_RULES
-      NUM_REP_RULES~local~100)))
+      NUM_REP_RULES*)))
 
 (defparameter num_tydef
   (new_basic_type_definition
@@ -519,7 +518,7 @@
           (W
             (o
               (o
-                (C #'SUBGOAL_THEN (lambdac (|t|) (REWRITE_TAC (cl:cons |t| nil))))
+                (C #'SUBGOAL_THEN (lambdac (t*) (REWRITE_TAC (cl:cons t* nil))))
                 (funpow 2 lhand))
               (function-value #'snd 1))))
         (cl:cons
@@ -720,7 +719,7 @@
       (n_tm (mk_var (tuple "n" num_ty))))
     (funcall
       new_definition
-      (funcall mk_eq (tuple (|mk_comb| (tuple numeral_tm n_tm)) n_tm)))))
+      (funcall mk_eq (tuple (mk_comb (tuple numeral_tm n_tm)) n_tm)))))
 
 (defparameter NOT_SUC nil)
 
@@ -733,16 +732,8 @@
     (map
       (GEN_REWRITE_RULE DEPTH_CONV (cl:cons th nil))
       (cl:cons NOT_SUC~1 (cl:cons num_INDUCTION~1 (cl:cons num_Axiom~1 nil)))))
-  ((cl:cons
-    NOT_SUC~local~545
-    (cl:cons num_INDUCTION~local~549 (cl:cons num_Axiom~local~547 nil)))
-    (setf
-      NOT_SUC
-      NOT_SUC~local~545
-      num_Axiom
-      num_Axiom~local~547
-      num_INDUCTION
-      num_INDUCTION~local~549)))
+  ((cl:cons NOT_SUC* (cl:cons num_INDUCTION* (cl:cons num_Axiom* nil)))
+    (setf NOT_SUC NOT_SUC* num_Axiom num_Axiom* num_INDUCTION num_INDUCTION*)))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Induction tactic.                                                         *)
@@ -810,7 +801,7 @@
       (bit1_tm (mk_var (tuple "BIT1" funn_ty))))
     (funcall
       new_definition
-      (funcall mk_eq (tuple (|mk_comb| (tuple bit1_tm n_tm)) (parse_term "SUC (BIT0 n)"))))))
+      (funcall mk_eq (tuple (mk_comb (tuple bit1_tm n_tm)) (parse_term "SUC (BIT0 n)"))))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Syntax operations on numerals.                                            *)
@@ -820,16 +811,16 @@
 (defparameter mk_numeral
   (let
     ((pow24 (pow2 24))
-      (num_0~local~713 (num 0))
+      (num_0* (num 0))
       (zero_tm (mk_const (tuple "_0" nil)))
       (BIT0_tm (mk_const (tuple "BIT0" nil)))
       (BIT1_tm (mk_const (tuple "BIT1" nil)))
       (NUMERAL_tm (mk_const (tuple "NUMERAL" nil))))
-    (labelsc ((stripzeros (l) (match l ((cl:cons cl:nil |t|) (stripzeros |t|)) (_ l))))
+    (labelsc ((stripzeros (l) (match l ((cl:cons cl:nil t*) (stripzeros t*)) (_ l))))
       (labelsc
         ((raw_list_of_num
           (l n)
-          (if (= n num_0~local~713)
+          (if (= n num_0*)
             (stripzeros l)
             (let ((h (int-of-num (mod-num n pow24))))
               (raw_list_of_num
@@ -885,22 +876,20 @@
                 (quo-num n pow24))))))
         (labelsc
           ((numeral_of_list
-            (|t| l)
+            (t* l)
             (match l
-              (nil |t|)
-              ((cl:cons b~local~920 r~local~922)
-                (numeral_of_list
-                  (|mk_comb| (tuple (if b~local~920 BIT1_tm BIT0_tm) |t|))
-                  r~local~922)))))
+              (nil t*)
+              ((cl:cons b* r*)
+                (numeral_of_list (mk_comb (tuple (if b* BIT1_tm BIT0_tm) t*)) r*)))))
           (fletc ((mk_raw_numeral (n) (numeral_of_list zero_tm (raw_list_of_num nil n))))
             (lambdac (n)
-              (if (< n num_0~local~713)
+              (if (< n num_0*)
                 (failwith "mk_numeral: negative argument")
-                (|mk_comb| (tuple NUMERAL_tm (mk_raw_numeral n)))))))))))
+                (mk_comb (tuple NUMERAL_tm (mk_raw_numeral n)))))))))))
 
 (defunc mk_small_numeral (n) (funcall mk_numeral (num n)))
 
-(defunc dest_small_numeral (|t|) (int-of-num (funcall dest_numeral |t|)))
+(defunc dest_small_numeral (t*) (int-of-num (funcall dest_numeral t*)))
 
 (defparameter is_numeral (can dest_numeral))
 
@@ -918,7 +907,7 @@
 (defparameter the_specifications (ref nil))
 
 (defparameter new_specification
-  (fletc ((code (c~local~986) (mk_small_numeral (char-code (string-get c~local~986 0)))))
+  (fletc ((code (c*) (mk_small_numeral (char-code (string-get c* 0)))))
     (fletc ((mk_code (name) (end_itlist (curry mk_pair) (map #'code (explode name)))))
       (fletc
         ((check_distinct
@@ -926,13 +915,13 @@
           (handler-case
             (progn
               (itlist
-                (lambdac (|t| res) (if (mem |t| res) (fail unit) (cl:cons |t| res)))
+                (lambdac (t* res) (if (mem t* res) (fail unit) (cl:cons t* res)))
                 l
                 nil)
               cl:t)
             (hol2cl.runtime:ocaml-condition
-              (exception~1004)
-              (match exception~1004 ((Failure _) cl:nil) (_ (raise exception~1004)))))))
+              (exception~992)
+              (match exception~992 ((Failure _) cl:nil) (_ (raise exception~992)))))))
         (fletc
           ((specify
             (name th)
@@ -945,9 +934,9 @@
                     (THENC (RATOR_CONV (funcall REWR_CONV EXISTS_THM)) #'BETA_CONV)
                     th0)))
               (match (dest_comb (concl th1))
-                ((tuple l r~local~1052)
+                ((tuple l r*)
                   (let*
-                    ((rn (|mk_comb| (tuple r~local~1052 ntm)))
+                    ((rn (mk_comb (tuple r* ntm)))
                       (ty (type_of rn))
                       (th2
                         (funcall
@@ -963,22 +952,22 @@
               (match names
                 (nil th)
                 ((cl:cons name onames)
-                  (let ((|th'| (specify name th))) (specifies onames |th'|))))))
+                  (let ((th* (specify name th))) (specifies onames th*))))))
             (lambdac (names th)
               (match (dest_thm th)
-                ((tuple asl c~local~1119)
+                ((tuple asl c*)
                   (if (not (= asl nil))
                     (failwith "new_specification: Assumptions not allowed in theorem")
-                    (if (not (= (frees c~local~1119) nil))
+                    (if (not (= (frees c*) nil))
                       (failwith
                         (string-concat
                           "new_specification: Free variables in predicate: "
                           (string-join
                             ", "
                             (map
-                              (lambdac (arg~1199) (match arg~1199 ((Var name _) name)))
-                              (frees c~local~1119)))))
-                      (let ((avs (fst (funcall strip_exists c~local~1119))))
+                              (lambdac (arg~1185) (match arg~1185 ((Var name _) name)))
+                              (frees c*)))))
+                      (let ((avs (fst (funcall strip_exists c*))))
                         (if
                           (cl:or
                             (= (funcall length names) 0)
@@ -992,17 +981,17 @@
                                 ((sth
                                   (snd
                                     (find
-                                      (lambdac (arg~1146)
-                                        (match arg~1146
-                                          ((tuple (tuple |names'| |th'|) |sth'|)
+                                      (lambdac (arg~1132)
+                                        (match arg~1132
+                                          ((tuple (tuple names* th*) sth*)
                                             (cl:and
-                                              (= |names'| names)
-                                              (aconv (concl |th'|) (concl th))))))
+                                              (= names* names)
+                                              (aconv (concl th*) (concl th))))))
                                       (deref the_specifications)))))
                                 (progn (warn cl:t "Benign respecification") sth))
                               (hol2cl.runtime:ocaml-condition
-                                (exception~1125)
-                                (match exception~1125
+                                (exception~1111)
+                                (match exception~1111
                                   ((Failure _)
                                     (let ((sth (specifies names th)))
                                       (progn
@@ -1012,5 +1001,5 @@
                                             (tuple (tuple names th) sth)
                                             (deref the_specifications)))
                                         sth)))
-                                  (_ (raise exception~1125)))))))))))))))))))
+                                  (_ (raise exception~1111)))))))))))))))))))
 

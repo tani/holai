@@ -38,13 +38,14 @@
         BIT1
         BIT1_THM
         BITS_ELIM_CONV
-        BITS_ELIM_CONV~local~8108
+        BITS_ELIM_CONV*
         DEPENDENT_CHOICE
         DEPENDENT_CHOICE_FIXED
         DIVISION
         DIVISION_0
         DIVISION_SIMP
         DIVMOD_ELIM_THM
+        DIVMOD_ELIM_THM*
         DIVMOD_EXIST
         DIVMOD_EXIST_0
         DIVMOD_UNIQ
@@ -189,6 +190,7 @@
         LT_TRANS
         MAX
         MIN
+        MINIMAL*
         MINIMAL_LBOUND
         MINIMAL_LE
         MINIMAL_MONO
@@ -259,6 +261,7 @@
         ONE
         PRE
         PRE_ELIM_THM
+        PRE_ELIM_THM*
         RDIV_LT_EQ
         RIGHT_ADD_DISTRIB
         RIGHT_SUB_DISTRIB
@@ -268,6 +271,7 @@
         SUB_ADD_LCANCEL
         SUB_ADD_RCANCEL
         SUB_ELIM_THM
+        SUB_ELIM_THM*
         SUB_EQ_0
         SUB_PRESUC
         SUB_REFL
@@ -281,16 +285,12 @@
         WLOG_LE
         WLOG_LE_3
         WLOG_LT
+        minimal
         minter
         num_INDUCTION_DOWN
         num_MAX
         num_WF
-        num_WOP
-        |DIVMOD_ELIM_THM'|
-        |MINIMAL|
-        |PRE_ELIM_THM'|
-        |SUB_ELIM_THM'|
-        |minimal|)
+        num_WOP)
       (:export
         ADD
         ADD1
@@ -316,6 +316,7 @@
         DIVISION_0
         DIVISION_SIMP
         DIVMOD_ELIM_THM
+        DIVMOD_ELIM_THM*
         DIVMOD_EXIST
         DIVMOD_EXIST_0
         DIVMOD_UNIQ
@@ -460,6 +461,7 @@
         LT_TRANS
         MAX
         MIN
+        MINIMAL*
         MINIMAL_LBOUND
         MINIMAL_LE
         MINIMAL_MONO
@@ -530,6 +532,7 @@
         ONE
         PRE
         PRE_ELIM_THM
+        PRE_ELIM_THM*
         RDIV_LT_EQ
         RIGHT_ADD_DISTRIB
         RIGHT_SUB_DISTRIB
@@ -539,6 +542,7 @@
         SUB_ADD_LCANCEL
         SUB_ADD_RCANCEL
         SUB_ELIM_THM
+        SUB_ELIM_THM*
         SUB_EQ_0
         SUB_PRESUC
         SUB_REFL
@@ -552,15 +556,11 @@
         WLOG_LE
         WLOG_LE_3
         WLOG_LT
+        minimal
         num_INDUCTION_DOWN
         num_MAX
         num_WF
-        num_WOP
-        |DIVMOD_ELIM_THM'|
-        |MINIMAL|
-        |PRE_ELIM_THM'|
-        |SUB_ELIM_THM'|
-        |minimal|))))
+        num_WOP))))
 
 (defpackage :hol2cl.arith
   (:use :cl)
@@ -583,13 +583,14 @@
     BIT1
     BIT1_THM
     BITS_ELIM_CONV
-    BITS_ELIM_CONV~local~8108
+    BITS_ELIM_CONV*
     DEPENDENT_CHOICE
     DEPENDENT_CHOICE_FIXED
     DIVISION
     DIVISION_0
     DIVISION_SIMP
     DIVMOD_ELIM_THM
+    DIVMOD_ELIM_THM*
     DIVMOD_EXIST
     DIVMOD_EXIST_0
     DIVMOD_UNIQ
@@ -734,6 +735,7 @@
     LT_TRANS
     MAX
     MIN
+    MINIMAL*
     MINIMAL_LBOUND
     MINIMAL_LE
     MINIMAL_MONO
@@ -804,6 +806,7 @@
     ONE
     PRE
     PRE_ELIM_THM
+    PRE_ELIM_THM*
     RDIV_LT_EQ
     RIGHT_ADD_DISTRIB
     RIGHT_SUB_DISTRIB
@@ -813,6 +816,7 @@
     SUB_ADD_LCANCEL
     SUB_ADD_RCANCEL
     SUB_ELIM_THM
+    SUB_ELIM_THM*
     SUB_EQ_0
     SUB_PRESUC
     SUB_REFL
@@ -826,16 +830,12 @@
     WLOG_LE
     WLOG_LE_3
     WLOG_LT
+    minimal
     minter
     num_INDUCTION_DOWN
     num_MAX
     num_WF
-    num_WOP
-    |DIVMOD_ELIM_THM'|
-    |MINIMAL|
-    |PRE_ELIM_THM'|
-    |SUB_ELIM_THM'|
-    |minimal|)
+    num_WOP)
   (:shadowing-import-from :cl append)
   (:shadowing-import-from :hol2cl.basics list_mk_binop binops)
   (:shadowing-import-from
@@ -889,15 +889,15 @@
     Var
     REFL
     rand
-    |MK_COMB|
-    |INST|
+    MK_COMB*
+    INST*
     frees
     EQ_MP
     dest_eq
     Const
     concl
     Comb
-    |Abs|)
+    Abs)
   (:shadowing-import-from :hol2cl.impconv IMP_REWRITE_TAC)
   (:shadowing-import-from :hol2cl.itab ITAUT)
   (:shadowing-import-from :hol2cl.lib W tl sort o I hd funpow el curry C)
@@ -1046,6 +1046,7 @@
     DIVISION_0
     DIVISION_SIMP
     DIVMOD_ELIM_THM
+    DIVMOD_ELIM_THM*
     DIVMOD_EXIST
     DIVMOD_EXIST_0
     DIVMOD_UNIQ
@@ -1190,6 +1191,7 @@
     LT_TRANS
     MAX
     MIN
+    MINIMAL*
     MINIMAL_LBOUND
     MINIMAL_LE
     MINIMAL_MONO
@@ -1260,6 +1262,7 @@
     ONE
     PRE
     PRE_ELIM_THM
+    PRE_ELIM_THM*
     RDIV_LT_EQ
     RIGHT_ADD_DISTRIB
     RIGHT_SUB_DISTRIB
@@ -1269,6 +1272,7 @@
     SUB_ADD_LCANCEL
     SUB_ADD_RCANCEL
     SUB_ELIM_THM
+    SUB_ELIM_THM*
     SUB_EQ_0
     SUB_PRESUC
     SUB_REFL
@@ -1282,15 +1286,11 @@
     WLOG_LE
     WLOG_LE_3
     WLOG_LT
+    minimal
     num_INDUCTION_DOWN
     num_MAX
     num_WF
-    num_WOP
-    |DIVMOD_ELIM_THM'|
-    |MINIMAL|
-    |PRE_ELIM_THM'|
-    |SUB_ELIM_THM'|
-    |minimal|))
+    num_WOP))
 
 (in-package :hol2cl.arith)
 
@@ -4315,8 +4315,7 @@
         (funcall
           ASM_REWRITE_TAC
           (cl:cons MULT_CLAUSES (cl:cons ADD_CLAUSES (cl:cons LT_NZ nil)))))))
-  ((tuple DIV_0~local~4587 MOD_0~local~4589)
-    (setf DIV_0 DIV_0~local~4587 MOD_0 MOD_0~local~4589)))
+  ((tuple DIV_0* MOD_0*) (setf DIV_0 DIV_0* MOD_0 MOD_0*)))
 
 (defparameter DIV_MULT nil)
 
@@ -4347,8 +4346,7 @@
           (cl:cons
             MULT_CLAUSES
             (cl:cons ADD_CLAUSES (cl:cons MULT_AC (cl:cons LT_NZ nil))))))))
-  ((tuple DIV_MULT~local~4634 MOD_MULT~local~4636)
-    (setf DIV_MULT DIV_MULT~local~4634 MOD_MULT MOD_MULT~local~4636)))
+  ((tuple DIV_MULT* MOD_MULT*) (setf DIV_MULT DIV_MULT* MOD_MULT MOD_MULT*)))
 
 (defparameter MOD_LT
   (prove
@@ -4595,8 +4593,7 @@
             (MATCH_MP_TAC DIVMOD_UNIQ))
           (REWRITE_TAC (cl:cons MULT_CLAUSES (cl:cons ADD_CLAUSES nil))))
         (REWRITE_TAC (cl:cons ONE (cl:cons LT nil))))))
-  ((tuple DIV_1~local~5069 MOD_1~local~5071)
-    (setf DIV_1 DIV_1~local~5069 MOD_1 MOD_1~local~5071)))
+  ((tuple DIV_1* MOD_1*) (setf DIV_1 DIV_1* MOD_1 MOD_1*)))
 
 (defparameter DIV_LT
   (prove
@@ -5387,7 +5384,7 @@
                         (DISCH_THEN
                           (lambdac (th2)
                             (MP_TAC
-                              (|MK_COMB| (tuple (AP_TERM (parse_term "(+)") th2) th1))))))))
+                              (MK_COMB* (tuple (AP_TERM (parse_term "(+)") th2) th1))))))))
                   (DISCH_THEN
                     (lambdac (th) (GEN_REWRITE_TAC (funpow 2 LAND_CONV) (cl:cons th nil)))))
                 (ONCE_REWRITE_TAC
@@ -5904,8 +5901,7 @@
           (REWRITE_TAC
             (cl:cons LT (cl:cons (funcall GSYM NOT_LT) (cl:cons ONE (cl:cons TWO nil))))))
         (funcall ASM_REWRITE_TAC (cl:cons (SYM ONE) (cl:cons (funcall GSYM NOT_LE) nil))))))
-  ((tuple DIV_EXP~local~7176 MOD_EXP~local~7178)
-    (setf DIV_EXP DIV_EXP~local~7176 MOD_EXP MOD_EXP~local~7178)))
+  ((tuple DIV_EXP* MOD_EXP*) (setf DIV_EXP DIV_EXP* MOD_EXP MOD_EXP*)))
 
 (defparameter FORALL_LT_MOD_THM
   (prove
@@ -5952,14 +5948,14 @@
           (REWRITE_TAC (cl:cons NOT_SUC (cl:cons SUC_INJ (cl:cons PRE nil)))))
         (MESON_TAC nil)))))
 
-(defparameter |PRE_ELIM_THM'|
+(defparameter PRE_ELIM_THM*
   (prove
     (tuple
       (parse_term "P(PRE n) <=> ?m. (n = SUC m \\/ m = 0 /\\ n = 0) /\\ P m")
       (funcall
         THEN
         (MP_TAC
-          (|INST|
+          (INST*
             (cl:cons (tuple (parse_term "\\x:num. ~P x") (parse_term "P:num->bool")) nil)
             PRE_ELIM_THM))
         (MESON_TAC nil)))))
@@ -5999,14 +5995,14 @@
                 (cl:cons LE_ADD (cl:cons EQ_ADD_LCANCEL nil))))))
         (MESON_TAC nil)))))
 
-(defparameter |SUB_ELIM_THM'|
+(defparameter SUB_ELIM_THM*
   (prove
     (tuple
       (parse_term "P(a - b) <=> ?d. (a = b + d \\/ a < b /\\ d = 0) /\\ P d")
       (funcall
         THEN
         (MP_TAC
-          (|INST|
+          (INST*
             (cl:cons (tuple (parse_term "\\x:num. ~P x") (parse_term "P:num->bool")) nil)
             SUB_ELIM_THM))
         (MESON_TAC nil)))))
@@ -6029,7 +6025,7 @@
               (MESON_TAC (cl:cons DIVMOD_UNIQ nil)))
             nil))))))
 
-(defparameter |DIVMOD_ELIM_THM'|
+(defparameter DIVMOD_ELIM_THM*
   (prove
     (tuple
       (parse_term
@@ -6038,7 +6034,7 @@
       (funcall
         THEN
         (MP_TAC
-          (|INST|
+          (INST*
             (cl:cons
               (tuple (parse_term "\\x:num y:num. ~P x y") (parse_term "P:num->num->bool"))
               nil)
@@ -6095,20 +6091,20 @@
 (defparameter NUM_CANCEL_CONV
   (labelsc
     ((minter
-      (i~local~7551 |l1'| |l2'| l1 l2)
+      (i* l1* l2* l1 l2)
       (if (= l1 nil)
-        (tuple i~local~7551 |l1'| (append |l2'| l2))
+        (tuple i* l1* (append l2* l2))
         (if (= l2 nil)
-          (tuple i~local~7551 (append l1 |l1'|) |l2'|)
+          (tuple i* (append l1 l1*) l2*)
           (let ((h1 (hd l1)) (h2 (hd l2)))
             (if (= h1 h2)
-              (minter (cl:cons h1 i~local~7551) |l1'| |l2'| (tl l1) (tl l2))
+              (minter (cl:cons h1 i*) l1* l2* (tl l1) (tl l2))
               (if (< h1 h2)
-                (minter i~local~7551 (cl:cons h1 |l1'|) |l2'| (tl l1) l2)
-                (minter i~local~7551 |l1'| (cl:cons h2 |l2'|) l1 (tl l2)))))))))
+                (minter i* (cl:cons h1 l1*) l2* (tl l1) l2)
+                (minter i* l1* (cl:cons h2 l2*) l1 (tl l2)))))))))
     (let ((add_tm (parse_term "(+)")) (eq_tm (parse_term "(=) :num->num->bool")))
       (let*
-        ((|EQ_ADD_LCANCEL_0'|
+        ((EQ_ADD_LCANCEL_0*
           (GEN_REWRITE_RULE
             (o (funpow 2 #'BINDER_CONV) LAND_CONV)
             (cl:cons EQ_SYM_EQ nil)
@@ -6116,28 +6112,24 @@
           (AC_RULE (AC ADD_AC)))
         (lambdac (tm)
           (match (dest_eq tm)
-            ((tuple l r~local~7642)
+            ((tuple l r*)
               (let
                 ((lats (sort (function-value #'<= 2) (binops (parse_term "(+)") l)))
-                  (rats
-                    (sort
-                      (function-value #'<= 2)
-                      (binops (parse_term "(+)") r~local~7642))))
+                  (rats (sort (function-value #'<= 2) (binops (parse_term "(+)") r*))))
                 (match (minter nil nil nil lats rats)
-                  ((tuple i~local~7658 |lats'| |rats'|)
+                  ((tuple i* lats* rats*)
                     (let
-                      ((|l'| (list_mk_binop add_tm (append i~local~7658 |lats'|)))
-                        (|r'| (list_mk_binop add_tm (append i~local~7658 |rats'|))))
+                      ((l* (list_mk_binop add_tm (append i* lats*)))
+                        (r** (list_mk_binop add_tm (append i* rats*))))
                       (let
-                        ((lth (funcall AC_RULE (funcall mk_eq (tuple l |l'|))))
-                          (rth
-                            (funcall AC_RULE (funcall mk_eq (tuple r~local~7642 |r'|)))))
-                        (let ((eth (|MK_COMB| (tuple (AP_TERM eq_tm lth) rth))))
+                        ((lth (funcall AC_RULE (funcall mk_eq (tuple l l*))))
+                          (rth (funcall AC_RULE (funcall mk_eq (tuple r* r**)))))
+                        (let ((eth (MK_COMB* (tuple (AP_TERM eq_tm lth) rth))))
                           (GEN_REWRITE_RULE
                             (o #'RAND_CONV REPEATC)
                             (cl:cons
                               EQ_ADD_LCANCEL
-                              (cl:cons EQ_ADD_LCANCEL_0 (cl:cons |EQ_ADD_LCANCEL_0'| nil)))
+                              (cl:cons EQ_ADD_LCANCEL_0 (cl:cons EQ_ADD_LCANCEL_0* nil)))
                             eth))))))))))))))
 
 ;; (* ------------------------------------------------------------------------- *)
@@ -6151,12 +6143,12 @@
 
 (funcall parse_as_binder "minimal")
 
-(defparameter |minimal|
+(defparameter minimal
   (funcall
     new_definition
     (parse_term "(minimal) (P:num->bool) = @n. P n /\\ !m. m < n ==> ~(P m)")))
 
-(defparameter |MINIMAL|
+(defparameter MINIMAL*
   (prove
     (tuple
       (parse_term "!P. (?n. P n) <=> P((minimal) P) /\\ (!m. m < (minimal) P ==> ~(P m))")
@@ -6164,7 +6156,7 @@
         THEN
         (funcall
           THEN
-          (funcall THEN #'GEN_TAC (REWRITE_TAC (cl:cons |minimal| nil)))
+          (funcall THEN #'GEN_TAC (REWRITE_TAC (cl:cons minimal nil)))
           (funcall CONV_TAC (RAND_CONV SELECT_CONV)))
         (REWRITE_TAC (cl:cons (funcall GSYM num_WOP) nil))))))
 
@@ -6176,7 +6168,7 @@
         THEN
         (funcall
           THEN
-          (funcall THEN (REPEAT #'STRIP_TAC) (REWRITE_TAC (cl:cons |minimal| nil)))
+          (funcall THEN (REPEAT #'STRIP_TAC) (REWRITE_TAC (cl:cons minimal nil)))
           (MATCH_MP_TAC SELECT_UNIQUE))
         (funcall ASM_MESON_TAC (cl:cons LT_CASES nil))))))
 
@@ -6190,7 +6182,7 @@
         (funcall
           THEN
           (REPEAT #'GEN_TAC)
-          (GEN_REWRITE_TAC LAND_CONV (cl:cons |MINIMAL| nil)))
+          (GEN_REWRITE_TAC LAND_CONV (cl:cons MINIMAL* nil)))
         (MESON_TAC (cl:cons NOT_LE (cl:cons LE_TRANS nil)))))))
 
 (defparameter MINIMAL_LE
@@ -6212,7 +6204,7 @@
   (prove
     (tuple
       (parse_term "!P n. P n ==> (minimal) P <= n")
-      (MESON_TAC (cl:cons |MINIMAL| (cl:cons NOT_LT nil))))))
+      (MESON_TAC (cl:cons MINIMAL* (cl:cons NOT_LT nil))))))
 
 (defparameter MINIMAL_LBOUND
   (prove
@@ -6456,7 +6448,7 @@
       (tuple (parse_term "m:num") (parse_term "n:num")))
     ((tuple NUMERAL_pth ZERO_pth (tuple BIT0_pth BIT1_pth) (tuple mvar nvar))
       (labelsc
-        ((BITS_ELIM_CONV~local~8108
+        ((BITS_ELIM_CONV*
           (tm)
           (match tm
             ((Const "_0" _) ZERO_pth)
@@ -6464,33 +6456,33 @@
             ((Comb (Const "NUMERAL" _) mtm)
               (if (funcall is_numeral tm)
                 (REFL tm)
-                (let ((th (BITS_ELIM_CONV~local~8108 mtm)))
+                (let ((th (BITS_ELIM_CONV* mtm)))
                   (EQ_MP
-                    (|INST|
+                    (INST*
                       (cl:cons
                         (tuple mtm mvar)
                         (cl:cons (tuple (rand (concl th)) nvar) nil))
                       NUMERAL_pth)
                     th))))
             ((Comb (Const "BIT0" _) mtm)
-              (let ((th (BITS_ELIM_CONV~local~8108 mtm)))
+              (let ((th (BITS_ELIM_CONV* mtm)))
                 (EQ_MP
-                  (|INST|
+                  (INST*
                     (cl:cons
                       (tuple mtm mvar)
                       (cl:cons (tuple (rand (concl th)) nvar) nil))
                     BIT0_pth)
                   th)))
             ((Comb (Const "BIT1" _) mtm)
-              (let ((th (BITS_ELIM_CONV~local~8108 mtm)))
+              (let ((th (BITS_ELIM_CONV* mtm)))
                 (EQ_MP
-                  (|INST|
+                  (INST*
                     (cl:cons
                       (tuple mtm mvar)
                       (cl:cons (tuple (rand (concl th)) nvar) nil))
                     BIT1_pth)
                   th)))
-            ((Comb _) (funcall COMB_CONV #'BITS_ELIM_CONV~local~8108 tm))
-            ((|Abs| _) (ABS_CONV #'BITS_ELIM_CONV~local~8108 tm)))))
-        #'BITS_ELIM_CONV~local~8108))))
+            ((Comb _) (funcall COMB_CONV #'BITS_ELIM_CONV* tm))
+            ((Abs _) (ABS_CONV #'BITS_ELIM_CONV* tm)))))
+        #'BITS_ELIM_CONV*))))
 

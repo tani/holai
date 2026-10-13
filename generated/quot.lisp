@@ -73,7 +73,6 @@
   (:shadowing-import-from :hol2cl.fusion mk_fun_ty mk_eq is_eq)
   (:shadowing-import-from
     :hol2cl.fusion.hol
-    |mk_comb|
     variant
     type_of
     TRANS
@@ -82,8 +81,9 @@
     rand
     new_basic_type_definition
     mk_var
+    mk_comb
     mk_abs
-    |INST|
+    INST*
     frees
     EQ_MP
     dest_var
@@ -93,7 +93,7 @@
     concl
     bool_ty
     ASSUME
-    |ABS|)
+    ABS*)
   (:shadowing-import-from
     :hol2cl.lib
     zip
@@ -178,16 +178,16 @@
           (s (mk_var (tuple "s" pty)))
           (x (mk_var (tuple "x" ty))))
         (let*
-          ((eqvx (|mk_comb| (tuple eqv x)))
+          ((eqvx (mk_comb (tuple eqv x)))
             (pred
               (mk_abs
                 (tuple s (funcall mk_exists (tuple x (funcall mk_eq (tuple s eqvx)))))))
-            (th0 (BETA_CONV (|mk_comb| (tuple pred eqvx))))
+            (th0 (BETA_CONV (mk_comb (tuple pred eqvx))))
             (th1 (funcall EXISTS (tuple (rand (concl th0)) x) (REFL eqvx)))
             (th2 (EQ_MP (SYM th0) th1)))
           (match (new_basic_type_definition tyname (tuple absname repname) th2)
-            ((tuple abs~local~64 rep)
-              (tuple abs~local~64 (CONV_RULE (funcall LAND_CONV #'BETA_CONV) rep)))))))))
+            ((tuple abs** rep)
+              (tuple abs** (CONV_RULE (funcall LAND_CONV #'BETA_CONV) rep)))))))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Given a welldefinedness theorem for a curried function f, of the form:    *)
@@ -230,8 +230,8 @@
                     (match (dest_comb dmr)
                       ((tuple dest mrt)
                         (let* ((mk (rator mrt)) (ety (type_of mrt)))
-                          (lambdac (arg~134 fname wth)
-                            (match arg~134
+                          (lambdac (arg~133 fname wth)
+                            (match arg~133
                               ((tuple refl_th trans_th)
                                 (let*
                                   ((wtm
@@ -246,10 +246,10 @@
                                         #'I
                                         (funcall dest_imp wtm))
                                       (hol2cl.runtime:ocaml-condition
-                                        (exception~523)
-                                        (match exception~523
+                                        (exception~520)
+                                        (match exception~520
                                           ((Failure _) (tuple nil wtm))
-                                          (_ (raise exception~523)))))
+                                          (_ (raise exception~520)))))
                                     ((tuple hyps con)
                                       (match (partition #'is_eq hyps)
                                         ((tuple eqs rels)
@@ -267,10 +267,8 @@
                                               (mems
                                                 (map2
                                                   (lambdac (rv ev)
-                                                    (|mk_comb|
-                                                      (tuple
-                                                        (|mk_comb| (tuple dest ev))
-                                                        rv)))
+                                                    (mk_comb
+                                                      (tuple (mk_comb (tuple dest ev)) rv)))
                                                   rvs
                                                   evs)))
                                             (match (dest_comb con)
@@ -280,7 +278,7 @@
                                                     (variant
                                                       (append evs wfvs)
                                                       (mk_var (tuple "u" (type_of rcon)))))
-                                                    (ucon (|mk_comb| (tuple lcon u)))
+                                                    (ucon (mk_comb (tuple lcon u)))
                                                     (dbod
                                                       (funcall
                                                         list_mk_conj
@@ -293,22 +291,20 @@
                                                         (list_mk_icomb
                                                           "@"
                                                           (cl:cons datm nil))
-                                                        (|mk_comb| (tuple mk datm))))
+                                                        (mk_comb (tuple mk datm))))
                                                     (newargs
                                                       (map
-                                                        (lambdac (e~local~235)
+                                                        (lambdac (e*)
                                                           (handler-case
-                                                            (funcall lhs e~local~235)
+                                                            (funcall lhs e*)
                                                             (hol2cl.runtime:ocaml-condition
-                                                              (exception~237)
-                                                              (match exception~237
+                                                              (exception~235)
+                                                              (match exception~235
                                                                 ((Failure _)
                                                                   (assoc
-                                                                    (funcall
-                                                                      lhand
-                                                                      e~local~235)
+                                                                    (funcall lhand e*)
                                                                     (zip rvs evs)))
-                                                                (_ (raise exception~237))))))
+                                                                (_ (raise exception~235))))))
                                                         hyps))
                                                     (rdef
                                                       (list_mk_abs (tuple newargs def)))
@@ -329,15 +325,15 @@
                                                     (targs
                                                       (map
                                                         (lambdac (v)
-                                                          (|mk_comb|
+                                                          (mk_comb
                                                             (tuple
                                                               mk
-                                                              (|mk_comb| (tuple eqv v)))))
+                                                              (mk_comb (tuple eqv v)))))
                                                         rvs))
                                                     (dme_th
                                                       (let
                                                         ((th
-                                                          (|INST|
+                                                          (INST*
                                                             (cl:cons (tuple eqvx rtm) nil)
                                                             tybij2)))
                                                         (EQ_MP
@@ -348,12 +344,12 @@
                                                               (funcall lhs (concl th))
                                                               xtm)
                                                             (REFL eqvx)))))
-                                                    (ith (|INST| (zip targs evs) eth))
+                                                    (ith (INST* (zip targs evs) eth))
                                                     (jth
                                                       (SUBS
                                                         (map
                                                           (lambdac (v)
-                                                            (|INST|
+                                                            (INST*
                                                               (cl:cons (tuple v xtm) nil)
                                                               dme_th))
                                                           rvs)
@@ -362,12 +358,11 @@
                                                     ((tuple apop uxtm)
                                                       (let ((extm (body uxtm)))
                                                         (match (funcall strip_exists extm)
-                                                          ((tuple evs~local~340 bod)
+                                                          ((tuple evs* bod)
                                                             (let*
                                                               ((th1 (ASSUME bod))
                                                                 (th2
-                                                                  (if
-                                                                    (= evs~local~340 nil)
+                                                                  (if (= evs* nil)
                                                                     th1
                                                                     (match (CONJ_PAIR th1)
                                                                       ((tuple th2a th2b)
@@ -410,9 +405,9 @@
                                                                                   th2d
                                                                                   th2a)
                                                                                 (hol2cl.runtime:ocaml-condition
-                                                                                  (exception~376)
+                                                                                  (exception~373)
                                                                                   (match
-                                                                                    exception~376
+                                                                                    exception~373
                                                                                     ((Failure
                                                                                       _)
                                                                                       (MATCH_MP
@@ -423,10 +418,10 @@
                                                                                           th2a)))
                                                                                     (_
                                                                                       (raise
-                                                                                        exception~376)))))))
+                                                                                        exception~373)))))))
                                                                           (itlist
                                                                             #'SIMPLE_CHOOSE
-                                                                            evs~local~340
+                                                                            evs*
                                                                             th2e))))))
                                                                 (th3 (ASSUME (concl th2)))
                                                                 (th4
@@ -440,7 +435,7 @@
                                                                 (th5
                                                                   (itlist
                                                                     #'SIMPLE_EXISTS
-                                                                    evs~local~340
+                                                                    evs*
                                                                     (ASSUME bod)))
                                                                 (th6
                                                                   (MATCH_MP
@@ -456,7 +451,7 @@
                                                                     jth
                                                                     (AP_TERM
                                                                       apop
-                                                                      (|ABS| u th7))))
+                                                                      (ABS* u th7))))
                                                                 (fconv
                                                                   (if (is_eq con)
                                                                     (funcall
@@ -557,8 +552,8 @@
                 (FIRST_ASSUM (lambdac (th) (GEN_REWRITE_TAC #'I (cl:cons th nil)))))
               (funcall CONV_TAC SELECT_CONV))
             (funcall ASM_MESON_TAC nil))))))
-    (lambdac (tybij arg~665)
-      (match arg~665
+    (lambdac (tybij arg~662)
+      (match arg~662
         ((tuple refl_th sym_th trans_th)
           (let ((tybij1 (GEN_ALL (fst tybij))) (tybij2 (GEN_ALL (snd tybij))))
             (let*

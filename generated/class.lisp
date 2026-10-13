@@ -256,7 +256,6 @@
   (:shadowing-import-from :hol2cl.fusion bty aconv)
   (:shadowing-import-from
     :hol2cl.fusion.hol
-    |mk_comb|
     vsubst
     vfree_in
     type_of
@@ -268,15 +267,16 @@
     new_basic_type_definition
     new_axiom
     mk_const
+    mk_comb
     is_var
-    |INST|
+    INST*
     dest_const
     dest_comb
     dest_abs
     concl
     bool_ty
     aty
-    |ABS|)
+    ABS*)
   (:shadowing-import-from :hol2cl.ind_defs monotonicity_theorems)
   (:shadowing-import-from :hol2cl.itab ITAUT)
   (:shadowing-import-from :hol2cl.lib warn W sort o I hd fail can C assoc)
@@ -439,7 +439,7 @@
 
 (defparameter ETA_CONV
   (let*
-    ((|t| (parse_term "t:A->B"))
+    ((t* (parse_term "t:A->B"))
       (pth
         (prove
           (tuple (parse_term "(\\x. (t:A->B) x) = t") (funcall MATCH_ACCEPT_TAC ETA_AX)))))
@@ -448,15 +448,15 @@
         (match (dest_abs tm)
           ((tuple bv bod)
             (match (dest_comb bod)
-              ((tuple l r~local~26)
-                (if (cl:and (= r~local~26 bv) (not (vfree_in bv l)))
+              ((tuple l r*)
+                (if (cl:and (= r* bv) (not (vfree_in bv l)))
                   (TRANS
                     (REFL tm)
                     (PINST
                       (cl:cons
                         (tuple (type_of bv) aty)
                         (cl:cons (tuple (type_of bod) bty) nil))
-                      (cl:cons (tuple l |t|) nil)
+                      (cl:cons (tuple l t*) nil)
                       pth))
                   (fail unit))))))
         (hol2cl.runtime:ocaml-condition
@@ -475,7 +475,7 @@
           THEN
           (REPEAT #'GEN_TAC)
           (DISCH_THEN
-            (o (o #'MP_TAC (|ABS| (parse_term "x:A"))) (funcall SPEC (parse_term "x:A")))))
+            (o (o #'MP_TAC (ABS* (parse_term "x:A"))) (funcall SPEC (parse_term "x:A")))))
         (REWRITE_TAC (cl:cons ETA_AX nil))))))
 
 (defparameter FUN_EQ_THM
@@ -543,7 +543,7 @@
 
 (defparameter SELECT_RULE
   (let*
-    ((P~local~193 (parse_term "P:A->bool"))
+    ((P* (parse_term "P:A->bool"))
       (pth
         (prove
           (tuple
@@ -551,25 +551,22 @@
             (SIMP_TAC (cl:cons SELECT_AX (cl:cons ETA_AX nil)))))))
     (lambdac (th)
       (handler-case
-        (let* ((abs~local~214 (rand (concl th))) (ty (type_of (bndvar abs~local~214))))
+        (let* ((abs** (rand (concl th))) (ty (type_of (bndvar abs**))))
           (CONV_RULE
             #'BETA_CONV
             (funcall
               MP
-              (PINST
-                (cl:cons (tuple ty aty) nil)
-                (cl:cons (tuple abs~local~214 P~local~193) nil)
-                pth)
+              (PINST (cl:cons (tuple ty aty) nil) (cl:cons (tuple abs** P*) nil) pth)
               th)))
         (hol2cl.runtime:ocaml-condition
-          (exception~209)
-          (match exception~209
+          (exception~207)
+          (match exception~207
             ((Failure _) (failwith "SELECT_RULE"))
-            (_ (raise exception~209))))))))
+            (_ (raise exception~207))))))))
 
 (defparameter SELECT_CONV
   (let*
-    ((P~local~247 (parse_term "P:A->bool"))
+    ((P* (parse_term "P:A->bool"))
       (pth
         (prove
           (tuple
@@ -582,27 +579,24 @@
       (handler-case
         (fletc
           ((is_epsok
-            (|t|)
+            (t*)
             (cl:and
-              (funcall is_select |t|)
-              (match (funcall dest_select |t|)
+              (funcall is_select t*)
+              (match (funcall dest_select t*)
                 ((tuple bv bod)
-                  (aconv tm (funcall vsubst (cl:cons (tuple |t| bv) nil) bod)))))))
+                  (aconv tm (funcall vsubst (cl:cons (tuple t* bv) nil) bod)))))))
           (let*
             ((pickeps (find_term #'is_epsok tm))
-              (abs~local~296 (rand pickeps))
-              (ty (type_of (bndvar abs~local~296))))
+              (abs** (rand pickeps))
+              (ty (type_of (bndvar abs**))))
             (CONV_RULE
               (funcall LAND_CONV #'BETA_CONV)
-              (PINST
-                (cl:cons (tuple ty aty) nil)
-                (cl:cons (tuple abs~local~296 P~local~247) nil)
-                pth))))
+              (PINST (cl:cons (tuple ty aty) nil) (cl:cons (tuple abs** P*) nil) pth))))
         (hol2cl.runtime:ocaml-condition
-          (exception~265)
-          (match exception~265
+          (exception~261)
+          (match exception~261
             ((Failure _) (failwith "SELECT_CONV"))
-            (_ (raise exception~265))))))))
+            (_ (raise exception~261))))))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Some basic theorems.                                                      *)
@@ -642,18 +636,18 @@
 
 (defparameter the_type_definitions (ref nil))
 
-(defunc new_type_definition (tyname arg~378 th)
-  (match arg~378
+(defunc new_type_definition (tyname arg~373 th)
+  (match arg~373
     ((tuple absname repname)
       (handler-case
         (match (assoc (tuple tyname absname repname) (deref the_type_definitions))
-          ((tuple |th'| |tth'|)
-            (if (<> (concl |th'|) (concl th))
+          ((tuple th* tth*)
+            (if (<> (concl th*) (concl th))
               (failwith "")
-              (progn (warn cl:t "Benign redefinition of type") |tth'|))))
+              (progn (warn cl:t "Benign redefinition of type") tth*))))
         (hol2cl.runtime:ocaml-condition
-          (exception~383)
-          (match exception~383
+          (exception~378)
+          (match exception~378
             ((Failure _)
               (let
                 ((th0
@@ -676,7 +670,7 @@
                             (tuple (tuple tyname absname repname) (tuple th tth))
                             (deref the_type_definitions)))
                         tth))))))
-            (_ (raise exception~383))))))))
+            (_ (raise exception~378))))))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Derive excluded middle. The proof is an optimization due to Mark Adams of *)
@@ -749,10 +743,9 @@
 ;; (* ------------------------------------------------------------------------- *)
 
 
-(defunc BOOL_CASES_TAC (p~local~544)
-  (funcall STRUCT_CASES_TAC (funcall SPEC p~local~544 BOOL_CASES_AX)))
+(defunc BOOL_CASES_TAC (p*) (funcall STRUCT_CASES_TAC (funcall SPEC p* BOOL_CASES_AX)))
 
-(defunc ASM_CASES_TAC (|t|) (DISJ_CASES_TAC (funcall SPEC |t| EXCLUDED_MIDDLE)))
+(defunc ASM_CASES_TAC (t*) (DISJ_CASES_TAC (funcall SPEC t* EXCLUDED_MIDDLE)))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Set up a reasonable tautology checker for classical logic.                *)
@@ -763,15 +756,15 @@
   (let ((PROP_REWRITE_TAC (REWRITE_TAC nil)))
     (fletc
       ((RTAUT_TAC
-        (arg~563)
-        (match arg~563
-          ((tuple asl w~local~566)
+        (arg~557)
+        (match arg~557
+          ((tuple asl w*)
             (fletc
               ((ok
-                (|t|)
+                (t*)
                 (cl:and
-                  (= (type_of |t|) bool_ty)
-                  (cl:and (can (find_term #'is_var) |t|) (free_in |t| w~local~566)))))
+                  (= (type_of t*) bool_ty)
+                  (cl:and (can (find_term #'is_var) t*) (free_in t* w*)))))
               (funcall
                 THEN
                 PROP_REWRITE_TAC
@@ -789,7 +782,7 @@
                         (sort #'free_in))
                       (funcall find_terms #'ok))
                     (function-value #'snd 1)))
-                (tuple asl w~local~566)))))))
+                (tuple asl w*)))))))
       (let
         ((TAUT_TAC
           (funcall THEN (REPEAT (ORELSE #'GEN_TAC #'CONJ_TAC)) (REPEAT #'RTAUT_TAC))))
@@ -823,38 +816,29 @@
 
 (defparameter CCONTR
   (let*
-    ((P~local~659 (parse_term "P:bool"))
-      (pth (funcall TAUT~1 (parse_term "(~P ==> F) ==> P"))))
+    ((P* (parse_term "P:bool")) (pth (funcall TAUT~1 (parse_term "(~P ==> F) ==> P"))))
     (lambdac (tm th)
       (handler-case
-        (let ((|tm'| (funcall mk_neg tm)))
-          (funcall
-            MP
-            (|INST| (cl:cons (tuple tm P~local~659) nil) pth)
-            (funcall DISCH |tm'| th)))
+        (let ((tm* (funcall mk_neg tm)))
+          (funcall MP (INST* (cl:cons (tuple tm P*) nil) pth) (funcall DISCH tm* th)))
         (hol2cl.runtime:ocaml-condition
-          (exception~669)
-          (match exception~669
+          (exception~661)
+          (match exception~661
             ((Failure _) (failwith "CCONTR"))
-            (_ (raise exception~669))))))))
+            (_ (raise exception~661))))))))
 
 (defparameter CONTRAPOS_CONV
-  (let ((a~local~695 (parse_term "a:bool")) (b~local~697 (parse_term "b:bool")))
+  (let ((a* (parse_term "a:bool")) (b* (parse_term "b:bool")))
     (let ((pth (funcall TAUT~1 (parse_term "(a ==> b) <=> (~b ==> ~a)"))))
       (lambdac (tm)
         (handler-case
           (match (funcall dest_imp tm)
-            ((tuple P~local~713 Q)
-              (|INST|
-                (cl:cons
-                  (tuple P~local~713 a~local~695)
-                  (cl:cons (tuple Q b~local~697) nil))
-                pth)))
+            ((tuple P* Q) (INST* (cl:cons (tuple P* a*) (cl:cons (tuple Q b*) nil)) pth)))
           (hol2cl.runtime:ocaml-condition
-            (exception~708)
-            (match exception~708
+            (exception~698)
+            (match exception~698
               ((Failure _) (failwith "CONTRAPOS_CONV"))
-              (_ (raise exception~708)))))))))
+              (_ (raise exception~698)))))))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* A classicalal "refutation" tactic.                                        *)
@@ -865,12 +849,12 @@
   (let
     ((f_tm (parse_term "F"))
       (conv (funcall REWR_CONV (funcall TAUT~1 (parse_term "p <=> ~p ==> F")))))
-    (lambdac (ttac arg~748)
-      (match arg~748
-        ((cl:and gl (tuple asl w~local~752))
-          (if (= w~local~752 f_tm)
+    (lambdac (ttac arg~737)
+      (match arg~737
+        ((cl:and gl (tuple asl w*))
+          (if (= w* f_tm)
             (ALL_TAC gl)
-            (if (is_neg w~local~752)
+            (if (is_neg w*)
               (DISCH_THEN ttac gl)
               (funcall THEN (funcall CONV_TAC conv) (DISCH_THEN ttac) gl))))))))
 
@@ -1076,22 +1060,20 @@
   (handler-case
     (= (fst (dest_const (rator (rator (rator tm))))) "COND")
     (hol2cl.runtime:ocaml-condition
-      (exception~1042)
-      (match exception~1042 ((Failure _) cl:nil) (_ (raise exception~1042))))))
+      (exception~1030)
+      (match exception~1030 ((Failure _) cl:nil) (_ (raise exception~1030))))))
 
-(defunc mk_cond (arg~1057)
-  (match arg~1057
-    ((tuple b~local~1059 x y)
+(defunc mk_cond (arg~1045)
+  (match arg~1045
+    ((tuple b* x y)
       (handler-case
-        (let
-          ((c~local~1068 (mk_const (tuple "COND" (cl:cons (tuple (type_of x) aty) nil)))))
-          (|mk_comb|
-            (tuple (|mk_comb| (tuple (|mk_comb| (tuple c~local~1068 b~local~1059)) x)) y)))
+        (let ((c* (mk_const (tuple "COND" (cl:cons (tuple (type_of x) aty) nil)))))
+          (mk_comb (tuple (mk_comb (tuple (mk_comb (tuple c* b*)) x)) y)))
         (hol2cl.runtime:ocaml-condition
-          (exception~1063)
-          (match exception~1063
+          (exception~1050)
+          (match exception~1050
             ((Failure _) (failwith "mk_cond"))
-            (_ (raise exception~1063))))))))
+            (_ (raise exception~1050))))))))
 
 (defunc dest_cond (tm)
   (handler-case
@@ -1100,15 +1082,13 @@
         (match (dest_comb tm1)
           ((tuple tm2 x)
             (match (dest_comb tm2)
-              ((tuple c~local~1109 b~local~1107)
-                (if (= (fst (dest_const c~local~1109)) "COND")
-                  (tuple b~local~1107 (tuple x y))
-                  (fail unit))))))))
+              ((tuple c* b*)
+                (if (= (fst (dest_const c*)) "COND") (tuple b* (tuple x y)) (fail unit))))))))
     (hol2cl.runtime:ocaml-condition
-      (exception~1098)
-      (match exception~1098
+      (exception~1084)
+      (match exception~1084
         ((Failure _) (failwith "dest_cond"))
-        (_ (raise exception~1098))))))
+        (_ (raise exception~1084))))))
 
 (funcall extend_basic_rewrites (cl:cons COND_CLAUSES nil))
 
@@ -1175,15 +1155,15 @@
   (let ((PROP_REWRITE_TAC (REWRITE_TAC nil)))
     (fletc
       ((RTAUT_TAC
-        (arg~1246)
-        (match arg~1246
-          ((tuple asl w~local~1249)
+        (arg~1230)
+        (match arg~1230
+          ((tuple asl w*)
             (fletc
               ((ok
-                (|t|)
+                (t*)
                 (cl:and
-                  (= (type_of |t|) bool_ty)
-                  (cl:and (can (find_term #'is_var) |t|) (free_in |t| w~local~1249)))))
+                  (= (type_of t*) bool_ty)
+                  (cl:and (can (find_term #'is_var) t*) (free_in t* w*)))))
               (funcall
                 THEN
                 PROP_REWRITE_TAC
@@ -1201,7 +1181,7 @@
                         (sort #'free_in))
                       (funcall find_terms #'ok))
                     (function-value #'snd 1)))
-                (tuple asl w~local~1249)))))))
+                (tuple asl w*)))))))
       (let
         ((TAUT_TAC
           (funcall THEN (REPEAT (ORELSE #'GEN_TAC #'CONJ_TAC)) (REPEAT #'RTAUT_TAC))))
@@ -1209,14 +1189,14 @@
           (handler-case
             (prove (tuple tm TAUT_TAC))
             (hol2cl.runtime:ocaml-condition
-              (exception~1306)
-              (match exception~1306
+              (exception~1289)
+              (match exception~1289
                 ((Failure _)
                   (failwith
                     (string-concat
                       "TAUT `"
                       (string-concat (funcall string_of_term tm) "`: cannot solve"))))
-                (_ (raise exception~1306))))))))))
+                (_ (raise exception~1289))))))))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Throw monotonicity in.                                                    *)
@@ -1264,20 +1244,20 @@
           (DISCH_THEN
             (lambdac (th)
               (handler-case
-                (let ((|th'| (funcall DENEG_RULE th)))
+                (let ((th* (funcall DENEG_RULE th)))
                   (funcall
                     THEN
-                    (funcall ASSUME_TAC |th'|)
-                    (SUBST1_TAC (funcall EQT_INTRO |th'|))))
+                    (funcall ASSUME_TAC th*)
+                    (SUBST1_TAC (funcall EQT_INTRO th*))))
                 (hol2cl.runtime:ocaml-condition
-                  (exception~1389)
-                  (match exception~1389
+                  (exception~1372)
+                  (match exception~1372
                     ((Failure _)
                       (funcall
                         THEN
                         (funcall ASSUME_TAC th)
                         (SUBST1_TAC (funcall EQF_INTRO th))))
-                    (_ (raise exception~1389)))))))
+                    (_ (raise exception~1372)))))))
           nil)))))
 
 ;; (* ------------------------------------------------------------------------- *)

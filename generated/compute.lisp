@@ -168,7 +168,7 @@
         trans_thm
         try_eta
         try_rec
-        try_rec~local~1665
+        try_rec*
         try_rwn
         tyi_dt
         unsuitable
@@ -364,7 +364,7 @@
     trans_thm
     try_eta
     try_rec
-    try_rec~local~1665
+    try_rec*
     try_rwn
     tyi_dt
     unsuitable
@@ -411,16 +411,17 @@
   (:shadowing-import-from :hol2cl.fusion is_eq aconv)
   (:shadowing-import-from
     :hol2cl.fusion.hol
-    |inst|
     variant
     Var
     TRANS
     REFL
     rand
+    MK_COMB*
     is_var
     is_const
     is_comb
     INST_TYPE
+    inst
     frees
     dest_var
     dest_eq
@@ -429,7 +430,7 @@
     dest_abs
     concl
     Comb
-    |Abs|)
+    ABS*)
   (:shadowing-import-from
     :hol2cl.lib
     rev_itlist
@@ -548,48 +549,45 @@
 
 (defunc with_flag (arg~2 f x)
   (match arg~2
-    ((tuple flag b~local~4)
+    ((tuple flag b*)
       (let ((fval (deref flag)))
-        (match (assign flag b~local~4)
+        (match (assign flag b*)
           ((cl:type hol2cl.runtime::unit-value)
             (let
               ((res
                 (handler-case
                   (funcall f x)
                   (hol2cl.runtime:ocaml-condition
-                    (exception~13)
-                    (match exception~13
-                      (e~local~14 (progn (assign flag fval) (raise e~local~14)))
-                      (_ (raise exception~13)))))))
+                    (exception~12)
+                    (match exception~12
+                      (e* (progn (assign flag fval) (raise e*)))
+                      (_ (raise exception~12)))))))
               (progn (assign flag fval) res))))))))
 
 (defunc RIGHT_BETA (th)
   (handler-case
     (TRANS th (BETA_CONV (funcall rhs (concl th))))
     (hol2cl.runtime:ocaml-condition
-      (exception~44)
-      (match exception~44 (_ (failwith "RIGHT_BETA")) (_ (raise exception~44))))))
+      (exception~42)
+      (match exception~42 (_ (failwith "RIGHT_BETA")) (_ (raise exception~42))))))
 
 (defunc RIGHT_ETA (thm)
   (handler-case
     (TRANS thm (funcall ETA_CONV (funcall rhs (concl thm))))
     (hol2cl.runtime:ocaml-condition
-      (exception~58)
-      (match exception~58 (_ (failwith "RIGHT_ETA")) (_ (raise exception~58))))))
+      (exception~56)
+      (match exception~56 (_ (failwith "RIGHT_ETA")) (_ (raise exception~56))))))
 
 (defunc MK_comb (th)
   (match (dest_comb (funcall rhs (concl th)))
-    ((tuple rator~local~74 rand~local~72)
-      (fletc ((mka (th1 th2) (TRANS th (hol2cl.fusion.hol:|MK_COMB| (tuple th1 th2)))))
-        (tuple (REFL rator~local~74) (REFL rand~local~72) #'mka)))))
+    ((tuple rator* rand*)
+      (fletc ((mka (th1 th2) (TRANS th (MK_COMB* (tuple th1 th2)))))
+        (tuple (REFL rator*) (REFL rand*) #'mka)))))
 
 (defunc MK_abs (th)
   (match (dest_abs (funcall rhs (concl th)))
-    ((tuple bvar body~local~103)
-      (tuple
-        bvar
-        (REFL body~local~103)
-        (lambdac (th1) (TRANS th (hol2cl.fusion.hol:|ABS| bvar th1)))))))
+    ((tuple bvar body*)
+      (tuple bvar (REFL body*) (lambdac (th1) (TRANS th (ABS* bvar th1)))))))
 
 (defunc BODY_CONJUNCTS (th)
   (if (funcall is_forall (concl th))
@@ -622,8 +620,8 @@
   (handler-case
     (RIGHT_ETA thm)
     (hol2cl.runtime:ocaml-condition
-      (exception~177)
-      (match exception~177 (_ thm) (_ (raise exception~177))))))
+      (exception~172)
+      (match exception~172 (_ thm) (_ (raise exception~172))))))
 
 ;; (*---------------------------------------------------------------------------
 ;;  * Precondition: f(arg) is a closure corresponding to b.
@@ -633,22 +631,22 @@
 ;;  *---------------------------------------------------------------------------*)
 
 
-(defunc push_in_stk (f arg arg~187)
-  (match arg~187
+(defunc push_in_stk (f arg arg~182)
+  (match arg~182
     ((tuple th stk)
       (match (MK_comb th)
         ((tuple tha thb mka)
           (tuple tha (make-Zrator (tuple mka (tuple thb (funcall f arg))) stk)))))))
 
-(defunc push_skip_stk (f arg arg~218)
-  (match arg~218
+(defunc push_skip_stk (f arg arg~213)
+  (match arg~213
     ((tuple th stk)
       (match (MK_comb th)
         ((tuple tha thb mka)
           (tuple tha (make-Zrand (tuple (C mka) cl:t (tuple thb (funcall f arg))) stk)))))))
 
-(defunc push_lam_in_stk (arg~249)
-  (match arg~249
+(defunc push_lam_in_stk (arg~244)
+  (match arg~244
     ((tuple th stk)
       (match (MK_abs th)
         ((tuple _ thb mkl) (tuple thb (make-Zabs (o #'try_eta mkl) stk)))))))
@@ -668,20 +666,20 @@
     (let ((x (rand (funcall lhs (concl thm)))))
       (CONV_RULE
         (RATOR_CONV (RAND_CONV (CHANGED_CONV (PURE_REWRITE_CONV (cl:cons ETA_AX nil)))))
-        (hol2cl.fusion.hol:|ABS| x thm)))
+        (ABS* x thm)))
     (hol2cl.runtime:ocaml-condition
-      (exception~275)
-      (match exception~275 (_ (failwith "FUNIFY")) (_ (raise exception~275))))))
+      (exception~270)
+      (match exception~270 (_ (failwith "FUNIFY")) (_ (raise exception~270))))))
 
 (defunc UNFUNIFY (thm)
   (handler-case
     (match (dest_eq (concl thm))
-      ((tuple lhs~local~304 rhs~local~306)
-        (let ((x (variant (frees lhs~local~304) (fst (dest_abs rhs~local~306)))))
+      ((tuple lhs* rhs*)
+        (let ((x (variant (frees lhs*) (fst (dest_abs rhs*)))))
           (CONV_RULE (RAND_CONV #'BETA_CONV) (AP_THM thm x)))))
     (hol2cl.runtime:ocaml-condition
-      (exception~300)
-      (match exception~300 (_ (failwith "UNFUNIFY")) (_ (raise exception~300))))))
+      (exception~295)
+      (match exception~295 (_ (failwith "UNFUNIFY")) (_ (raise exception~295))))))
 
 (defunc repeat_on_conj (f thm)
   (labelsc
@@ -690,8 +688,8 @@
       (handler-case
         (iter (funcall f th))
         (hol2cl.runtime:ocaml-condition
-          (exception~336)
-          (match exception~336 (_ th) (_ (raise exception~336)))))))
+          (exception~329)
+          (match exception~329 (_ th) (_ (raise exception~329)))))))
     (end_itlist CONJ (list-map #'iter (BODY_CONJUNCTS thm)))))
 
 (defparameter lazyfy_thm (repeat_on_conj #'FUNIFY))
@@ -711,34 +709,34 @@
 (defunc check_arg_form (trm)
   (labelsc
     ((chk
-      (|t| stk free)
-      (if (is_comb |t|)
-        (match (dest_comb |t|)
-          ((tuple rator~local~440 rand~local~438)
-            (match (chk rand~local~438 nil free)
-              ((tuple |free'| pat1) (chk rator~local~440 (cl:cons pat1 stk) |free'|)))))
-        (if (is_var |t|)
+      (t* stk free)
+      (if (is_comb t*)
+        (match (dest_comb t*)
+          ((tuple rator* rand*)
+            (match (chk rand* nil free)
+              ((tuple free* pat1) (chk rator* (cl:cons pat1 stk) free*)))))
+        (if (is_var t*)
           (if (= stk nil)
             (let ((newi (list-length free)))
               (handler-case
-                (tuple free (make-Pvar (- (- newi (index |t| free)) 1)))
+                (tuple free (make-Pvar (- (- newi (index t* free)) 1)))
                 (hol2cl.runtime:ocaml-condition
-                  (exception~411)
-                  (match exception~411
-                    (_ (tuple (cl:cons |t| free) (make-Pvar newi)))
-                    (_ (raise exception~411))))))
+                  (exception~404)
+                  (match exception~404
+                    (_ (tuple (cl:cons t* free) (make-Pvar newi)))
+                    (_ (raise exception~404))))))
             (failwith
               (string-concat
                 "check_arg_form: "
-                (string-concat (fst (dest_var |t|)) " occurs as a variable on lhs"))))
-          (if (is_const |t|)
-            (tuple free (make-Papp |t| (list-rev stk)))
+                (string-concat (fst (dest_var t*)) " occurs as a variable on lhs"))))
+          (if (is_const t*)
+            (tuple free (make-Papp t* (list-rev stk)))
             (failwith
               (string-concat
                 "check_arg_form: lambda abstraction not allowed on lhs: `"
                 (string-concat (funcall string_of_term trm) "`"))))))))
     (match (chk trm nil nil)
-      ((tuple fv (Papp head args)) (tuple (list-rev fv) head args))
+      ((tuple fv* (Papp head args)) (tuple (list-rev fv*) head args))
       (_ (failwith "check_arg_form: ill-formed lhs")))))
 
 (defrecord cst_rec head args rws skip)
@@ -752,28 +750,28 @@
 ;; (* Invariant: the first arg of App never is an App. *)
 
 
-(defunc appl (arg~505)
-  (match arg~505
-    ((tuple (App a~local~507 l1) arg) (make-App a~local~507 (cl:cons arg l1)))
-    ((tuple |t| arg) (make-App |t| (cl:cons arg nil)))))
+(defunc appl (arg~496)
+  (match arg~496
+    ((tuple (App a* l1) arg) (make-App a* (cl:cons arg l1)))
+    ((tuple t* arg) (make-App t* (cl:cons arg nil)))))
 
 ;; (*---------------------------------------------------------------------------
 ;;  * Type variable instantiation in dterm. Make it tail-recursive ?
 ;;  *---------------------------------------------------------------------------*)
 
 
-(defunc inst_type_dterm (arg~533)
-  (match arg~533
+(defunc inst_type_dterm (arg~523)
+  (match arg~523
     ((tuple nil v) v)
     ((tuple tysub v)
       (labelsc
         ((tyi_dt
-          (arg~546)
-          (match arg~546
-            ((Cst c~local~548 dbsk) (make-Cst (funcall |inst| tysub c~local~548) dbsk))
+          (arg~536)
+          (match arg~536
+            ((Cst c* dbsk) (make-Cst (funcall inst tysub c*) dbsk))
             ((App h l) (make-App (tyi_dt h) (map #'tyi_dt l)))
-            ((Abs v~local~570) (make-Abs (tyi_dt v~local~570)))
-            (v~local~577 v~local~577))))
+            ((Abs v*) (make-Abs (tyi_dt v*)))
+            (v* v*))))
         (tyi_dt v)))))
 
 (defvariant action (Rewrite field0) (Conv field0))
@@ -786,51 +784,37 @@
 
 (defvariant rewrite (Rw field0))
 
-(defunc add_in_db (arg~599)
-  (match arg~599
-    ((tuple n cst~local~602 act (End_db))
+(defunc add_in_db (arg~586)
+  (match arg~586
+    ((tuple n cst* act (End_db))
       (funpow
         n
-        (lambdac (a~local~611) (make-Need_arg a~local~611))
-        (make-Try (make-try_rec :hcst cst~local~602 :rws act :tail (make-End_db)))))
+        (lambdac (a*) (make-Need_arg a*))
+        (make-Try (make-try_rec :hcst cst* :rws act :tail (make-End_db)))))
     ((tuple
       0
-      cst~local~623
+      cst*
       (cl:and act (Rewrite nrws))
-      (Try (try_rec :hcst hcst :rws (cl:and rw~local~627 (Rewrite rws)) :tail tail)))
-      (if (= cst~local~623 hcst)
+      (Try (try_rec :hcst hcst :rws (cl:and rw* (Rewrite rws*)) :tail tail)))
+      (if (= cst* hcst)
         (make-Try
-          (make-try_rec :hcst hcst :rws (make-Rewrite (append nrws rws)) :tail tail))
+          (make-try_rec :hcst hcst :rws (make-Rewrite (append nrws rws*)) :tail tail))
         (make-Try
-          (make-try_rec
-            :hcst
-            hcst
-            :rws
-            rw~local~627
-            :tail
-            (add_in_db (tuple 0 cst~local~623 act tail))))))
-    ((tuple n cst~local~669 act (Try (try_rec :hcst hcst :rws rws :tail tail)))
+          (make-try_rec :hcst hcst :rws rw* :tail (add_in_db (tuple 0 cst* act tail))))))
+    ((tuple n cst* act (Try (try_rec :hcst hcst :rws rws* :tail tail)))
       (make-Try
-        (make-try_rec
-          :hcst
-          hcst
-          :rws
-          rws
-          :tail
-          (add_in_db (tuple n cst~local~669 act tail)))))
-    ((tuple 0 cst~local~695 act db)
-      (make-Try (make-try_rec :hcst cst~local~695 :rws act :tail db)))
-    ((tuple n cst~local~709 act (Need_arg tail))
-      (make-Need_arg (add_in_db (tuple (- n 1) cst~local~709 act tail))))))
+        (make-try_rec :hcst hcst :rws rws* :tail (add_in_db (tuple n cst* act tail)))))
+    ((tuple 0 cst* act db) (make-Try (make-try_rec :hcst cst* :rws act :tail db)))
+    ((tuple n cst* act (Need_arg tail))
+      (make-Need_arg (add_in_db (tuple (- n 1) cst* act tail))))))
 
-(defunc key_of (arg~730)
-  (match arg~730
-    ((Rw (rewrite_rec :cst cst~local~732 :lhs lhs~local~734))
-      (match (dest_const cst~local~732)
-        ((tuple name _) (tuple name (funcall length lhs~local~734) cst~local~732))))))
+(defunc key_of (arg~710)
+  (match arg~710
+    ((Rw (rewrite_rec :cst cst* :lhs lhs*))
+      (match (dest_const cst*) ((tuple name _) (tuple name (funcall length lhs*) cst*))))))
 
-(defunc is_skip (arg~754)
-  (match arg~754
+(defunc is_skip (arg~732)
+  (match arg~732
     ((tuple _ (Const (cst_rec :skip (Some n) :args args))) (<= n (list-length args)))
     (_ cl:nil)))
 
@@ -843,85 +827,72 @@
 
 (defvariant compset (Rws field0))
 
-(defunc empty_rws (arg~804)
-  (match arg~804 ((cl:type hol2cl.runtime::unit-value) (make-Rws (table-create 100)))))
+(defunc empty_rws (arg~782)
+  (match arg~782 ((cl:type hol2cl.runtime::unit-value) (make-Rws (table-create 100)))))
 
-(defunc assoc_clause (arg~812 cst~local~816)
-  (match arg~812
-    ((Rws rws~local~814)
+(defunc assoc_clause (arg~790 cst*)
+  (match arg~790
+    ((Rws rws*)
       (handler-case
-        (table-find rws~local~814 cst~local~816)
+        (table-find rws* cst*)
         (hol2cl.runtime:ocaml-condition
-          (exception~818)
-          (match exception~818
+          (exception~794)
+          (match exception~794
             ((Not_found)
               (let ((mt (ref (tuple (make-End_db) (make-None)))))
-                (progn (table-add rws~local~814 cst~local~816 mt) mt)))
-            (_ (raise exception~818))))))))
+                (progn (table-add rws* cst* mt) mt)))
+            (_ (raise exception~794))))))))
 
-(defunc add_in_db_upd (rws~local~840 arg~842 act)
-  (match arg~842
+(defunc add_in_db_upd (rws* arg~817 act)
+  (match arg~817
     ((tuple name arity hcst)
-      (match (assoc_clause rws~local~840 name)
+      (match (assoc_clause rws* name)
         ((cl:and rl (ref-contents (tuple db sk)))
           (assign rl (tuple (add_in_db (tuple arity hcst act db)) sk)))))))
 
-(defunc set_skip_name (arg~877 p~local~882 sk)
-  (match arg~877
-    ((cl:and rws~local~880 (Rws htbl))
-      (match (assoc_clause rws~local~880 p~local~882)
+(defunc set_skip_name (arg~852 p* sk)
+  (match arg~852
+    ((cl:and rws* (Rws htbl))
+      (match (assoc_clause rws* p*)
         ((cl:and rl (ref-contents (tuple db _))) (assign rl (tuple db sk)))))))
 
-(defunc scrub_const (arg~908 c~local~911)
-  (match arg~908
-    ((Rws htbl)
-      (match (dest_const c~local~911) ((tuple name _) (table-remove htbl name))))))
+(defunc scrub_const (arg~881 c*)
+  (match arg~881
+    ((Rws htbl) (match (dest_const c*) ((tuple name _) (table-remove htbl name))))))
 
-(defunc from_term (arg~927)
-  (match arg~927
-    ((tuple rws~local~930 env |t|)
+(defunc from_term (arg~899)
+  (match arg~899
+    ((tuple rws* env t*)
       (labelsc
         ((down
-          (arg~935)
-          (match arg~935
-            ((tuple env~local~939 t~local~941 c~local~937)
-              (match t~local~941
+          (arg~906)
+          (match arg~906
+            ((tuple env* t** c*)
+              (match t**
                 ((Var _)
                   (up
                     (tuple
                       (handler-case
-                        (make-Bv (index t~local~941 env~local~939))
+                        (make-Bv (index t** env*))
                         (hol2cl.runtime:ocaml-condition
-                          (exception~944)
-                          (match exception~944 (_ (make-Fv)) (_ (raise exception~944)))))
-                      c~local~937)))
+                          (exception~912)
+                          (match exception~912 (_ (make-Fv)) (_ (raise exception~912)))))
+                      c*)))
                 ((hol2cl.fusion.hol:Const name _)
-                  (up
-                    (tuple
-                      (make-Cst t~local~941 (assoc_clause rws~local~930 name))
-                      c~local~937)))
-                ((Comb rator~local~969 rand~local~967)
-                  (down
-                    (tuple
-                      env~local~939
-                      rator~local~969
-                      (make-Zrator (tuple env~local~939 rand~local~967) c~local~937))))
-                ((|Abs| bvar body~local~983)
-                  (down
-                    (tuple
-                      (cl:cons bvar env~local~939)
-                      body~local~983
-                      (make-Zabs unit c~local~937))))))))
+                  (up (tuple (make-Cst t** (assoc_clause rws* name)) c*)))
+                ((Comb rator* rand*)
+                  (down (tuple env* rator* (make-Zrator (tuple env* rand*) c*))))
+                ((hol2cl.fusion.hol:Abs bvar body*)
+                  (down (tuple (cl:cons bvar env*) body* (make-Zabs unit c*))))))))
           (up
-            (arg~1004)
-            (match arg~1004
+            (arg~969)
+            (match arg~969
               ((tuple dt (Ztop)) dt)
-              ((tuple dt (Zrator (tuple env~local~1015 arg) c~local~1012))
-                (down (tuple env~local~1015 arg (make-Zrand dt c~local~1012))))
-              ((tuple dt (Zrand dr c~local~1031))
-                (up (tuple (appl (tuple dr dt)) c~local~1031)))
-              ((tuple dt (Zabs _ c~local~1047)) (up (tuple (make-Abs dt) c~local~1047))))))
-        (down (tuple env |t| (make-Ztop)))))))
+              ((tuple dt (Zrator (tuple env* arg) c*))
+                (down (tuple env* arg (make-Zrand dt c*))))
+              ((tuple dt (Zrand dr c*)) (up (tuple (appl (tuple dr dt)) c*)))
+              ((tuple dt (Zabs _ c*)) (up (tuple (make-Abs dt) c*))))))
+        (down (tuple env t* (make-Ztop)))))))
 
 ;; (*---------------------------------------------------------------------------
 ;;  * Note: if the list of free variables of the lhs was empty, we could
@@ -930,71 +901,57 @@
 ;;  *---------------------------------------------------------------------------*)
 
 
-(defunc mk_rewrite (rws~local~1072 eq_thm)
+(defunc mk_rewrite (rws* eq_thm)
   (match (dest_eq (concl eq_thm))
-    ((tuple lhs~local~1075 rhs~local~1077)
-      (match (check_arg_form lhs~local~1075)
-        ((tuple fv~local~1081 cst~local~1079 pats)
+    ((tuple lhs* rhs*)
+      (match (check_arg_form lhs*)
+        ((tuple fv* cst* pats)
           (let*
-            ((gen_thm (itlist GEN fv~local~1081 eq_thm))
-              (rhsc
-                (from_term
-                  (tuple rws~local~1072 (funcall rev fv~local~1081) rhs~local~1077))))
+            ((gen_thm (itlist GEN fv* eq_thm))
+              (rhsc (from_term (tuple rws* (funcall rev fv*) rhs*))))
             (make-Rw
               (make-rewrite_rec
                 :cst
-                cst~local~1079
+                cst*
                 :lhs
                 pats
                 :rhs
                 rhsc
                 :npv
-                (funcall length fv~local~1081)
+                (funcall length fv*)
                 :thm
                 gen_thm))))))))
 
 (defunc unsuitable (th)
-  (match (dest_eq (concl th))
-    ((tuple l r~local~1124) (can (funcall term_match nil l) r~local~1124))))
+  (match (dest_eq (concl th)) ((tuple l r*) (can (funcall term_match nil l) r*))))
 
-(defunc enter_thm (rws~local~1140 thm0)
+(defunc enter_thm (rws* thm0)
   (let ((thm (eq_intro thm0)))
     (if (unsuitable thm)
       unit
-      (let ((rw~local~1146 (mk_rewrite rws~local~1140 thm)))
-        (add_in_db_upd
-          rws~local~1140
-          (key_of rw~local~1146)
-          (make-Rewrite (cl:cons rw~local~1146 nil)))))))
+      (let ((rw* (mk_rewrite rws* thm)))
+        (add_in_db_upd rws* (key_of rw*) (make-Rewrite (cl:cons rw* nil)))))))
 
-(defunc add_thms (lthm rws~local~1168)
+(defunc add_thms (lthm rws*)
   (list-iter
-    (o
-      (partial (function-value #'list-iter 2) (enter_thm rws~local~1168))
-      #'BODY_CONJUNCTS)
+    (o (partial (function-value #'list-iter 2) (enter_thm rws*)) #'BODY_CONJUNCTS)
     lthm))
 
-(defunc add_extern (arg~1179 rws~local~1185)
-  (match arg~1179
-    ((tuple cst~local~1182 arity fconv)
-      (match (dest_const cst~local~1182)
-        ((tuple name _)
-          (add_in_db_upd
-            rws~local~1185
-            (tuple name arity cst~local~1182)
-            (make-Conv fconv)))))))
+(defunc add_extern (arg~1131 rws*)
+  (match arg~1131
+    ((tuple cst* arity fconv)
+      (match (dest_const cst*)
+        ((tuple name _) (add_in_db_upd rws* (tuple name arity cst*) (make-Conv fconv)))))))
 
-(defunc new_rws (arg~1208)
-  (match arg~1208
+(defunc new_rws (arg~1158)
+  (match arg~1158
     ((cl:type hol2cl.runtime::unit-value)
-      (let ((rws~local~1210 (empty_rws unit)))
-        (progn (add_thms (cl:cons REFL_CLAUSE nil) rws~local~1210) rws~local~1210)))))
+      (let ((rws* (empty_rws unit)))
+        (progn (add_thms (cl:cons REFL_CLAUSE nil) rws*) rws*)))))
 
-(defunc from_list (lthm)
-  (let ((rws~local~1226 (new_rws unit)))
-    (progn (add_thms lthm rws~local~1226) rws~local~1226)))
+(defunc from_list (lthm) (let ((rws* (new_rws unit))) (progn (add_thms lthm rws*) rws*)))
 
-(defunc scrub_thms (lthm rws~local~1239)
+(defunc scrub_thms (lthm rws*)
   (let*
     ((tmlist (map (o (o #'concl #'hd) #'BODY_CONJUNCTS) lthm))
       (clist
@@ -1003,21 +960,21 @@
             (o (o (o (function-value #'fst 1) strip_comb) lhs) (function-value #'snd 1))
             strip_forall)
           tmlist)))
-    (list-iter (scrub_const rws~local~1239) clist)))
+    (list-iter (scrub_const rws*) clist)))
 
 ;; (*---------------------------------------------------------------------------*)
 ;; (* Support for analysis of compsets                                          *)
 ;; (*---------------------------------------------------------------------------*)
 
 
-(defunc rws_of (arg~1269)
-  (match arg~1269
+(defunc rws_of (arg~1216)
+  (match arg~1216
     ((Rws htbl)
       (let
         ((dblist
           (table-fold
-            (lambdac (arg~1273 arg~1275 r~local~1278)
-              (match arg~1275 ((ref-contents (tuple db _)) (cl:cons db r~local~1278))))
+            (lambdac (arg~1220 arg~1222 r*)
+              (match arg~1222 ((ref-contents (tuple db _)) (cl:cons db r*))))
             htbl
             nil)))
         (labelsc
@@ -1025,17 +982,16 @@
             (db)
             (match db
               ((End_db) nil)
-              ((Need_arg |db'|) (get_actions |db'|))
-              ((Try (try_rec :hcst hcst :rws rws~local~1301 :tail tail))
-                (cl:cons (tuple hcst rws~local~1301) (get_actions tail))))))
+              ((Need_arg db*) (get_actions db*))
+              ((Try (try_rec :hcst hcst :rws rws* :tail tail))
+                (cl:cons (tuple hcst rws*) (get_actions tail))))))
           (let ((actionlist (list-concat (list-map #'get_actions dblist))))
-            (fletc ((dest (arg~1323) (match arg~1323 ((Rw (rewrite_rec :thm thm)) thm))))
+            (fletc ((dest (arg~1268) (match arg~1268 ((Rw (rewrite_rec :thm thm)) thm))))
               (fletc
                 ((dest_action
-                  (arg~1331)
-                  (match arg~1331
-                    ((tuple hcst (Rewrite rws~local~1334))
-                      (tuple hcst (map #'dest rws~local~1334)))
+                  (arg~1276)
+                  (match arg~1276
+                    ((tuple hcst (Rewrite rws*)) (tuple hcst (map #'dest rws*)))
                     ((tuple hcst (Conv _)) (tuple hcst nil)))))
                 (let ((rwlist (list-map #'dest_action actionlist))) rwlist)))))))))
 
@@ -1050,15 +1006,14 @@
 ;; (*---------------------------------------------------------------------------*)
 
 
-(defunc deplist (arg~1371)
-  (match arg~1371
+(defunc deplist (arg~1315)
+  (match arg~1315
     ((Rws htbl)
       (let
         ((dblist
           (table-fold
-            (lambdac (s arg~1376 r~local~1379)
-              (match arg~1376
-                ((ref-contents (tuple db _)) (cl:cons (tuple s db) r~local~1379))))
+            (lambdac (s arg~1320 r*)
+              (match arg~1320 ((ref-contents (tuple db _)) (cl:cons (tuple s db) r*))))
             htbl
             nil)))
         (labelsc
@@ -1066,47 +1021,47 @@
             (db)
             (match db
               ((End_db) nil)
-              ((Need_arg |db'|) (get_actions |db'|))
-              ((Try (try_rec :hcst hcst :rws rws~local~1404 :tail tail))
-                (cl:cons rws~local~1404 (get_actions tail))))))
+              ((Need_arg db*) (get_actions db*))
+              ((Try (try_rec :hcst hcst :rws rws* :tail tail))
+                (cl:cons rws* (get_actions tail))))))
           (let
             ((actionlist
               (list-map
-                (lambdac (arg~1419)
-                  (match arg~1419 ((tuple s db) (tuple s (get_actions db)))))
+                (lambdac (arg~1361)
+                  (match arg~1361 ((tuple s db) (tuple s (get_actions db)))))
                 dblist)))
-            (fletc ((dest (arg~1434) (match arg~1434 ((Rw (rewrite_rec :thm thm)) thm))))
+            (fletc ((dest (arg~1376) (match arg~1376 ((Rw (rewrite_rec :thm thm)) thm))))
               (fletc
                 ((dest_action
-                  (arg~1442)
-                  (match arg~1442
-                    ((Rewrite rws~local~1444) (make-Rrules (map #'dest rws~local~1444)))
+                  (arg~1384)
+                  (match arg~1384
+                    ((Rewrite rws*) (make-Rrules (map #'dest rws*)))
                     ((Conv ecnv) (make-Conversion ecnv)))))
                 (let
                   ((rwlist
                     (list-map
-                      (lambdac (arg~1458)
-                        (match arg~1458 ((tuple s act) (tuple s (map #'dest_action act)))))
+                      (lambdac (arg~1399)
+                        (match arg~1399 ((tuple s act) (tuple s (map #'dest_action act)))))
                       actionlist)))
                   rwlist)))))))))
 
 (define-exception No_match)
 
-(defunc match_const (arg~1486 pc c~local~1491)
-  (match arg~1486
+(defunc match_const (arg~1427 pc c*)
+  (match arg~1427
     ((tuple bds tbds)
       (match (dest_const pc)
         ((tuple name ty)
-          (match (dest_const c~local~1491)
-            ((tuple |name'| |ty'|)
-              (if (= name |name'|)
+          (match (dest_const c*)
+            ((tuple name* ty*)
+              (if (= name name*)
                 (handler-case
-                  (tuple bds (type_match ty |ty'| tbds))
+                  (tuple bds (type_match ty ty* tbds))
                   (hol2cl.runtime:ocaml-condition
-                    (exception~1499)
-                    (match exception~1499
+                    (exception~1439)
+                    (match exception~1439
                       (_ (raise (make-No_match)))
-                      (_ (raise exception~1499)))))
+                      (_ (raise exception~1439)))))
                 (raise (make-No_match))))))))))
 
 ;; (*---------------------------------------------------------------------------
@@ -1116,13 +1071,13 @@
 ;;  *---------------------------------------------------------------------------*)
 
 
-(defunc match_var (arg~1531 var~local~1535 arg)
-  (match arg~1531
+(defunc match_var (arg~1471 var* arg)
+  (match arg~1471
     ((tuple bds tbds)
       (match
-        (match (array-get bds var~local~1535)
+        (match (array-get bds var*)
           ((Some (tuple tm _)) (if (aconv tm (fst arg)) unit (raise (make-No_match))))
-          ((None) (array-set bds var~local~1535 (make-Some arg))))
+          ((None) (array-set bds var* (make-Some arg))))
         (_ (tuple bds tbds))))))
 
 ;; (*---------------------------------------------------------------------------
@@ -1136,15 +1091,14 @@
 
 (defunc match_list (bds pats args)
   (match (tuple pats args)
-    ((tuple (cl:cons pat pats~local~1579) (cl:cons arg args~local~1576))
-      (match_list (match_solve bds pat arg) pats~local~1579 args~local~1576))
+    ((tuple (cl:cons pat pats*) (cl:cons arg args*))
+      (match_list (match_solve bds pat arg) pats* args*))
     ((tuple nil nil) bds)
     (_ (raise (make-Dead_code "match_list")))))
 
 (defunc match_solve (bds pat arg)
   (match (tuple pat arg)
-    ((tuple (Pvar var~local~1613) arg~local~1611)
-      (match_var bds var~local~1613 arg~local~1611))
+    ((tuple (Pvar var*) arg*) (match_var bds var* arg*))
     ((tuple (Papp phead pargs) (tuple _ (Const (cst_rec :head head :args args))))
       (if (= (funcall length pargs) (funcall length args))
         (match_list (match_const bds phead head) pargs args)
@@ -1155,34 +1109,28 @@
 
 (defunc try_rwn (ibds lt)
   (labelsc
-    ((try_rec~local~1665
-      (arg~1667)
-      (match arg~1667
+    ((try_rec*
+      (arg~1601)
+      (match arg~1601
         (nil (raise (make-No_match)))
-        ((cl:cons
-          (cl:and rw~local~1675 (Rw (rewrite_rec :lhs lhs~local~1672 :npv npv)))
-          rwn)
+        ((cl:cons (cl:and rw* (Rw (rewrite_rec :lhs lhs* :npv npv))) rwn)
           (let ((env (array-make npv (make-None))))
             (handler-case
-              (make-rule_inst
-                :rule
-                rw~local~1675
-                :inst
-                (match_list (tuple env ibds) lhs~local~1672 lt))
+              (make-rule_inst :rule rw* :inst (match_list (tuple env ibds) lhs* lt))
               (hol2cl.runtime:ocaml-condition
-                (exception~1690)
-                (match exception~1690
-                  ((No_match) (try_rec~local~1665 rwn))
-                  (_ (raise exception~1690))))))))))
-    #'try_rec~local~1665))
+                (exception~1622)
+                (match exception~1622
+                  ((No_match) (try_rec* rwn))
+                  (_ (raise exception~1622))))))))))
+    #'try_rec*))
 
 ;; (*---------------------------------------------------------------------------
 ;;  * Instantiating the rule according to the output of the matching.
 ;;  *---------------------------------------------------------------------------*)
 
 
-(defunc comb_ct (cst~local~1708 arg)
-  (match cst~local~1708
+(defunc comb_ct (cst* arg)
+  (match cst*
     ((cst_rec :head head :args args :rws (Need_arg tail) :skip skip)
       (make-Const (make-cst_rec :head head :args (cl:cons arg args) :rws tail :skip skip)))
     ((cst_rec :head head :args args :rws (End_db) :skip skip)
@@ -1190,44 +1138,38 @@
         (make-cst_rec :head head :args (cl:cons arg args) :rws (make-End_db) :skip skip)))
     ((cst_rec :rws (Try _)) (raise (make-Dead_code "comb_ct: yet rules to try")))))
 
-(defunc mk_clos (arg~1755)
-  (match arg~1755
-    ((tuple env |t|)
-      (match |t|
-        ((Cst hc (ref-contents (tuple db b~local~1759)))
-          (make-Const (make-cst_rec :head hc :args nil :rws db :skip b~local~1759)))
-        ((Bv i~local~1775) (list-nth env i~local~1775))
+(defunc mk_clos (arg~1686)
+  (match arg~1686
+    ((tuple env t*)
+      (match t*
+        ((Cst hc (ref-contents (tuple db b*)))
+          (make-Const (make-cst_rec :head hc :args nil :rws db :skip b*)))
+        ((Bv i*) (list-nth env i*))
         ((Fv) (make-Neutr))
-        (_ (make-Clos (make-clos_rec :env env :term |t|)))))))
+        (_ (make-Clos (make-clos_rec :env env :term t*)))))))
 
 ;; (*---------------------------------------------------------------------------
 ;;  * It is probably this code that can be improved the most
 ;;  *---------------------------------------------------------------------------*)
 
 
-(defunc inst_one_var (arg~1796 arg~1800)
-  (match arg~1796
+(defunc inst_one_var (arg~1725 arg~1729)
+  (match arg~1725
     ((tuple thm lv)
-      (match arg~1800
+      (match arg~1729
         ((Some (tuple tm v)) (tuple (funcall SPEC tm thm) (cl:cons v lv)))
         ((None) (raise (make-Dead_code "inst_rw")))))))
 
-(defunc inst_rw (arg~1824)
-  (match arg~1824
+(defunc inst_rw (arg~1753)
+  (match arg~1753
     ((tuple
       th
-      monitoring~local~1827
-      (rule_inst
-        :rule
-        (Rw (rewrite_rec :thm thm :rhs rhs~local~1829))
-        :inst
-        (tuple bds tysub)))
-      (let*
-        ((tirhs (inst_type_dterm (tuple tysub rhs~local~1829)))
-          (tithm (INST_TYPE tysub thm)))
+      monitoring*
+      (rule_inst :rule (Rw (rewrite_rec :thm thm :rhs rhs*)) :inst (tuple bds tysub)))
+      (let* ((tirhs (inst_type_dterm (tuple tysub rhs*))) (tithm (INST_TYPE tysub thm)))
         (match (array-fold-left #'inst_one_var (tuple tithm nil) bds)
           ((tuple spec_thm venv)
-            (match (if monitoring~local~1827 (funcall print_term (concl spec_thm)) unit)
+            (match (if monitoring* (funcall print_term (concl spec_thm)) unit)
               ((cl:type hol2cl.runtime::unit-value)
                 (tuple (funcall trans_thm th spec_thm) (mk_clos (tuple venv tirhs)))))))))))
 
@@ -1240,8 +1182,8 @@
 ;;  *---------------------------------------------------------------------------*)
 
 
-(defunc reduce_cst (arg~1896)
-  (match arg~1896
+(defunc reduce_cst (arg~1823)
+  (match arg~1823
     ((tuple
       th
       (cst_rec
@@ -1257,33 +1199,32 @@
         (match
           (match (deref stoppers)
             ((None) unit)
-            ((Some p~local~1974)
-              (if (funcall p~local~1974 head) (raise (make-No_match)) unit)))
+            ((Some p*) (if (funcall p* head) (raise (make-No_match)) unit)))
           ((cl:type hol2cl.runtime::unit-value)
             (match
               (handler-case
                 (funcall term_match nil hcst head)
                 (hol2cl.runtime:ocaml-condition
-                  (exception~1961)
-                  (match exception~1961
+                  (exception~1887)
+                  (match exception~1887
                     (_ (raise (make-No_match)))
-                    (_ (raise exception~1961)))))
+                    (_ (raise exception~1887)))))
               ((tuple _ _ tytheta)
                 (let*
-                  ((rule_inst~local~1928 (try_rwn tytheta args rls))
+                  ((rule_inst* (try_rwn tytheta args rls))
                     (mon
                       (match (deref monitoring)
                         ((None) cl:nil)
                         ((Some f) (funcall f head))))
-                    (insted (inst_rw (tuple th mon rule_inst~local~1928))))
+                    (insted (inst_rw (tuple th mon rule_inst*))))
                   (tuple cl:t insted))))))
         (hol2cl.runtime:ocaml-condition
-          (exception~1917)
-          (match exception~1917
+          (exception~1844)
+          (match exception~1844
             ((No_match)
               (reduce_cst
                 (tuple th (make-cst_rec :head head :args args :rws tail :skip skip))))
-            (_ (raise exception~1917))))))
+            (_ (raise exception~1844))))))
     ((tuple
       th
       (cst_rec
@@ -1299,13 +1240,13 @@
         (match (funcall fconv (funcall rhs_concl th))
           ((tuple thm ft) (tuple cl:t (tuple (funcall trans_thm th thm) ft))))
         (hol2cl.runtime:ocaml-condition
-          (exception~2008)
-          (match exception~2008
+          (exception~1933)
+          (match exception~1933
             (_
               (reduce_cst
                 (tuple th (make-cst_rec :head head :args args :rws tail :skip skip))))
-            (_ (raise exception~2008))))))
-    ((tuple th cst~local~2035) (tuple cl:nil (tuple th (make-Const cst~local~2035))))))
+            (_ (raise exception~1933))))))
+    ((tuple th cst*) (tuple cl:nil (tuple th (make-Const cst*))))))
 
 ;; (*** computeLib.sml ***)
 
@@ -1319,8 +1260,8 @@
 
 (defparameter listItems #'deplist)
 
-(defunc stack_out (arg~2059)
-  (match arg~2059
+(defunc stack_out (arg~1983)
+  (match arg~1983
     ((tuple th (Ztop)) th)
     ((tuple th (Zrator (tuple mka (tuple thb _)) ctx))
       (stack_out (tuple (funcall mka th thb) ctx)))
@@ -1328,11 +1269,9 @@
       (stack_out (tuple (funcall mka tha th) ctx)))
     ((tuple th (Zabs mkl ctx)) (stack_out (tuple (funcall mkl th) ctx)))))
 
-(defunc initial_state (rws~local~2120 |t|)
+(defunc initial_state (rws* t*)
   (tuple
-    (tuple
-      (funcall refl_thm |t|)
-      (mk_clos (tuple nil (from_term (tuple rws~local~2120 nil |t|)))))
+    (tuple (funcall refl_thm t*) (mk_clos (tuple nil (from_term (tuple rws* nil t*)))))
     (make-Ztop)))
 
 ;; (*---------------------------------------------------------------------------
@@ -1355,33 +1294,30 @@
 ;;  *---------------------------------------------------------------------------*)
 
 
-(defunc cbv_wk (arg~2140)
-  (match arg~2140
-    ((tuple (tuple th (Clos (clos_rec :env env :term (App a~local~2142 args)))) stk)
+(defunc cbv_wk (arg~2063)
+  (match arg~2063
+    ((tuple (tuple th (Clos (clos_rec :env env :term (App a* args)))) stk)
       (match (rev_itlist (push_in_stk (curry #'mk_clos env)) args (tuple th stk))
-        ((tuple tha stka)
-          (cbv_wk (tuple (tuple tha (mk_clos (tuple env a~local~2142))) stka)))))
+        ((tuple tha stka) (cbv_wk (tuple (tuple tha (mk_clos (tuple env a*))) stka)))))
     ((tuple
-      (tuple th (Clos (clos_rec :env env :term (Abs body~local~2182))))
-      (Zrator (tuple mka (tuple thb cl)) |s'|))
+      (tuple th (Clos (clos_rec :env env :term (Abs body*))))
+      (Zrator (tuple mka (tuple thb cl)) s*))
       (cbv_wk
         (tuple
           (tuple
             (funcall beta_thm (funcall mka th thb))
-            (mk_clos (tuple (cl:cons cl env) body~local~2182)))
-          |s'|)))
+            (mk_clos (tuple (cl:cons cl env) body*)))
+          s*)))
     ((tuple (tuple th (Const cargs)) stk)
       (match (reduce_cst (tuple th cargs))
-        ((tuple reduced clos~local~2228)
-          (if reduced
-            (cbv_wk (tuple clos~local~2228 stk))
-            (cbv_up (tuple clos~local~2228 stk))))))
-    ((tuple clos~local~2249 stk) (cbv_up (tuple clos~local~2249 stk)))))
+        ((tuple reduced clos*)
+          (if reduced (cbv_wk (tuple clos* stk)) (cbv_up (tuple clos* stk))))))
+    ((tuple clos* stk) (cbv_up (tuple clos* stk)))))
 
-(defunc cbv_up (arg~2260)
-  (match arg~2260
-    ((tuple hcl (Zrator (tuple mka clos~local~2262) ctx))
-      (let ((new_state (tuple clos~local~2262 (make-Zrand (tuple mka cl:nil hcl) ctx))))
+(defunc cbv_up (arg~2179)
+  (match arg~2179
+    ((tuple hcl (Zrator (tuple mka clos*) ctx))
+      (let ((new_state (tuple clos* (make-Zrand (tuple mka cl:nil hcl) ctx))))
         (if (is_skip hcl) (cbv_up new_state) (cbv_wk new_state))))
     ((tuple (tuple thb v) (Zrand (tuple mka cl:nil (tuple th (Const cargs))) stk))
       (cbv_wk
@@ -1390,7 +1326,7 @@
           stk)))
     ((tuple (tuple thb (Neutr)) (Zrand (tuple mka cl:nil (tuple th (Neutr))) stk))
       (cbv_up (tuple (tuple (funcall mka th thb) (make-Neutr)) stk)))
-    ((tuple clos~local~2347 stk) (tuple clos~local~2347 stk))))
+    ((tuple clos* stk) (tuple clos* stk))))
 
 ;; (*---------------------------------------------------------------------------
 ;;  * [strong] continues the reduction of a term in head normal form under
@@ -1399,42 +1335,38 @@
 ;;  *---------------------------------------------------------------------------*)
 
 
-(defunc strong (arg~2359)
-  (match arg~2359
-    ((tuple (tuple th (Clos (clos_rec :env env :term (Abs |t|)))) stk)
+(defunc strong (arg~2276)
+  (match arg~2276
+    ((tuple (tuple th (Clos (clos_rec :env env :term (Abs t*)))) stk)
       (match (push_lam_in_stk (tuple th stk))
-        ((tuple thb |stk'|)
+        ((tuple thb stk*)
           (strong
             (cbv_wk
-              (tuple (tuple thb (mk_clos (tuple (cl:cons (make-Neutr) env) |t|))) |stk'|))))))
+              (tuple (tuple thb (mk_clos (tuple (cl:cons (make-Neutr) env) t*))) stk*))))))
     ((tuple (tuple _ (Clos _)) stk) (raise (make-Dead_code "strong")))
     ((tuple (tuple th (Const (cst_rec :skip skip :args args))) stk)
       (match (partition_skip skip args)
         ((tuple argssk argsrd)
           (match
             (rev_itlist (push_skip_stk (function-value #'snd 1)) argssk (tuple th stk))
-            ((tuple |th'| |stk'|)
+            ((tuple th* stk*)
               (match
                 (rev_itlist
                   (push_in_stk (function-value #'snd 1))
                   argsrd
-                  (tuple |th'| |stk'|))
-                ((tuple |th''| |stk''|) (strong_up (tuple |th''| |stk''|)))))))))
+                  (tuple th* stk*))
+                ((tuple th** stk**) (strong_up (tuple th** stk**)))))))))
     ((tuple (tuple th (Neutr)) stk) (strong_up (tuple th stk)))))
 
-(defunc strong_up (arg~2469)
-  (match arg~2469
+(defunc strong_up (arg~2386)
+  (match arg~2386
     ((tuple th (Ztop)) th)
     ((tuple th (Zrand (tuple mka cl:nil (tuple tha (Neutr))) ctx))
       (strong (cbv_wk (tuple (tuple (funcall mka tha th) (make-Neutr)) ctx))))
-    ((tuple th (Zrand (tuple mka cl:nil clos~local~2499) ctx))
-      (raise (make-Dead_code "strong_up")))
-    ((tuple th (Zrator (tuple mka clos~local~2515) ctx))
+    ((tuple th (Zrand (tuple mka cl:nil clos*) ctx)) (raise (make-Dead_code "strong_up")))
+    ((tuple th (Zrator (tuple mka clos*) ctx))
       (strong
-        (cbv_wk
-          (tuple
-            clos~local~2515
-            (make-Zrand (tuple mka cl:t (tuple th (make-Neutr))) ctx)))))
+        (cbv_wk (tuple clos* (make-Zrand (tuple mka cl:t (tuple th (make-Neutr))) ctx)))))
     ((tuple th (Zrand (tuple mka cl:t (tuple tha _)) ctx))
       (strong_up (tuple (funcall mka tha th) ctx)))
     ((tuple th (Zabs mkl ctx)) (strong_up (tuple (funcall mkl th) ctx)))))
@@ -1445,8 +1377,7 @@
 ;;  *---------------------------------------------------------------------------*)
 
 
-(defunc CBV_CONV (rws~local~2574)
-  (o (o (o #'evaluate #'strong) #'cbv_wk) (initial_state rws~local~2574)))
+(defunc CBV_CONV (rws*) (o (o (o #'evaluate #'strong) #'cbv_wk) (initial_state rws*)))
 
 ;; (*---------------------------------------------------------------------------
 ;;  * WEAK_CBV_CONV is the same as CBV_CONV except that it does not reduce
@@ -1455,41 +1386,38 @@
 ;;  *---------------------------------------------------------------------------*)
 
 
-(defunc WEAK_CBV_CONV (rws~local~2586)
+(defunc WEAK_CBV_CONV (rws*)
   (o
     (o
       (o
         #'evaluate
-        (lambdac (arg~2589)
-          (match arg~2589 ((tuple (tuple th _) stk) (stack_out (tuple th stk))))))
+        (lambdac (arg~2502)
+          (match arg~2502 ((tuple (tuple th _) stk) (stack_out (tuple th stk))))))
       #'cbv_wk)
-    (initial_state rws~local~2586)))
+    (initial_state rws*)))
 
 ;; (*---------------------------------------------------------------------------
 ;;  * Adding an arbitrary conv
 ;;  *---------------------------------------------------------------------------*)
 
 
-(defunc extern_of_conv (rws~local~2611 conv~local~2613 tm)
-  (let ((thm (funcall conv~local~2613 tm)))
+(defunc extern_of_conv (rws* conv* tm)
+  (let ((thm (funcall conv* tm)))
     (tuple
       thm
-      (mk_clos
-        (tuple nil (from_term (tuple rws~local~2611 nil (funcall rhs (concl thm)))))))))
+      (mk_clos (tuple nil (from_term (tuple rws* nil (funcall rhs (concl thm)))))))))
 
-(defunc add_conv (arg~2634 rws~local~2641)
-  (match arg~2634
-    ((tuple cst~local~2639 arity conv~local~2637)
-      (add_extern
-        (tuple cst~local~2639 arity (extern_of_conv rws~local~2641 conv~local~2637))
-        rws~local~2641))))
+(defunc add_conv (arg~2545 rws*)
+  (match arg~2545
+    ((tuple cst* arity conv*)
+      (add_extern (tuple cst* arity (extern_of_conv rws* conv*)) rws*))))
 
-(defunc set_skip (compset c~local~2658 opt)
+(defunc set_skip (compset c* opt)
   (handler-case
-    (match (dest_const c~local~2658) ((tuple name _) (set_skip_name compset name opt)))
+    (match (dest_const c*) ((tuple name _) (set_skip_name compset name opt)))
     (hol2cl.runtime:ocaml-condition
-      (exception~2661)
-      (match exception~2661 (_ (failwith "set_skip")) (_ (raise exception~2661))))))
+      (exception~2568)
+      (match exception~2568 (_ (failwith "set_skip")) (_ (raise exception~2568))))))
 
 ;; (*---------------------------------------------------------------------------
 ;;        Support for a global compset.
@@ -1511,15 +1439,15 @@
               AND_CLAUSES
               (cl:cons OR_CLAUSES (cl:cons IMP_CLAUSES (cl:cons EQ_CLAUSES nil))))))))))
 
-(defunc bool_compset (arg~2701)
-  (match arg~2701
+(defunc bool_compset (arg~2608)
+  (match arg~2608
     ((cl:type hol2cl.runtime::unit-value)
       (let ((base (from_list bool_redns)))
         (match (set_skip base (parse_term "COND: bool -> A -> A -> A") (make-None))
           ((cl:type hol2cl.runtime::unit-value) base))))))
 
-(defunc basic_compset (arg~2718)
-  (match arg~2718
+(defunc basic_compset (arg~2625)
+  (match arg~2625
     ((cl:type hol2cl.runtime::unit-value)
       (let*
         ((basic_rws0 (funcall basic_rewrites unit))
@@ -1532,12 +1460,12 @@
           (cs (funcall new_compset (list-map lazyfy_thm basic_rws))))
         (progn
           (list-iter
-            (lambdac (arg~2747)
-              (match arg~2747
+            (lambdac (arg~2654)
+              (match arg~2654
                 ((tuple _ (tuple pat the_conv))
                   (match (funcall strip_comb pat)
-                    ((tuple cst~local~2752 args)
-                      (add_conv (tuple cst~local~2752 (funcall length args) the_conv) cs))))))
+                    ((tuple cst* args)
+                      (add_conv (tuple cst* (funcall length args) the_conv) cs))))))
             (funcall basic_convs unit))
           (add_conv (tuple (parse_term "LET:(A->B)->A->B") 2 let_CONV) cs)
           (set_skip cs (parse_term "COND: bool -> A -> A -> A") (make-None))
@@ -1563,11 +1491,11 @@
 
 (defunc same_const (c1 c2) (= (fst (dest_const c1)) (fst (dest_const c2))))
 
-(defunc OR (arg~2845)
-  (match arg~2845
+(defunc OR (arg~2751)
+  (match arg~2751
     (nil (K cl:nil))
     ((cl:cons x nil) (same_const x))
-    ((cl:cons h |t|) (lambdac (x) (cl:or (same_const h x) (OR |t| x))))))
+    ((cl:cons h t*) (lambdac (x) (cl:or (same_const h x) (OR t* x))))))
 
 (defunc RESTR_EVAL_CONV (clist)
   (with_flag (tuple stoppers (make-Some (OR clist))) EVAL_CONV))
