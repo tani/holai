@@ -22,8 +22,8 @@ advancing to the next clause rather than retrying a structurally matched arm.
   compatibility, 128-wide tuples and 60-deep constructors are checked.
 - Separate compile-file/load works. Loaded matches do not consult descriptors;
   reloading an old dependent FASL after declaration ABI changes rejects.
-- runtime/src/generated contain no Trivia references. Historical sources and
-  licensed vendors remain separate from the production ASDF dependency graph.
+- runtime/src/generated contain no Trivia references. Historical source snapshots remain; licensed Lisp vendors are available
+  in the baseline Git commit rather than the current tree.
 - Final runtime refinement was followed by a fresh full differential validation;
   all 46 default-cache core FASLs were newer than the final macro source.
 

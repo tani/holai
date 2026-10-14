@@ -44,7 +44,7 @@ required += [f"reports/ocamlopt-startup-run{i}.txt" for i in [1,2,3]]
 required += ["docs/STATIC-CALL-PLAN.md"]
 required += ["scripts/compile-core.sh", "scripts/prepare-optional-baseline.py", "scripts/measure-optional.py", "tests/optional-baseline-core.lisp", "tests/optional-entry.lisp", "tests/optional-inspect.lisp", "tests/optional-benchmark.lisp", "reports/OPTIONAL-ENTRY.md", "reports/optional-entry.json", "reports/optional-before.asm", "reports/optional-after.asm", "reports/optional-baseline-micro.txt", "reports/optional-optional-micro.txt", "reports/optional-checks.txt"]
 required += [f"reports/optional-{mode}-startup-run{i}.{suffix}" for mode in ["baseline", "optional"] for i in [1,2] for suffix in ["json", "txt"]]
-required += ["scripts/check-compile-diagnostics.py", "reports/compile-diagnostics.json", "reports/compile-diagnostics.txt", "reports/PERCENT-NAMES.md"]
+required += ["vendor/README.md", "scripts/check-compile-diagnostics.py", "reports/compile-diagnostics.json", "reports/compile-diagnostics.txt", "reports/PERCENT-NAMES.md"]
 required += ["runtime/pattern.lisp", "tests/pattern.lisp", "tests/pattern-inspect.lisp",
              "scripts/measure-pattern.py", "reports/PATTERN-MATCH.md", "reports/pattern-performance.json",
              "reports/pattern-expansion-and-assembly.txt", "reports/pattern-checks.txt"]

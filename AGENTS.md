@@ -224,7 +224,7 @@ readable OCaml-to-Lisp translation, even when argument evaluation order differs.
   1124 differential rows and94 clean regenerated files. Additional46 pattern
   checks cover OR/guard, literals, stale FASL detection and registry-independent
   execution, plus wide/deep patterns. Production runtime/src/generated contain
-  no Trivia references. Historical dependencies remain licensed and vendored.
+  no Trivia references. Historical Lisp dependencies and licenses are available in the baseline Git revision.
 
 - Final structural-backend single-run comparison: compile operations33.857→
   24.181s; cold compile/load peakRSS1822.102→1079.875MiB; fresh startup80.927→
@@ -246,3 +246,13 @@ readable OCaml-to-Lisp translation, even when argument evaluation order differs.
 
 - User explicitly authorizes pushing the structural-match and percent-naming
   implementation together to tani/holai main after successful validation.
+
+- DESIGN32: obsolete vendor/lisp may be deleted; its historical revisions and
+  licenses are available in commit1730c0299f7d677ba25be29d2dfbff0538fea354.
+  Preserve all remaining pinned HOL/OCaml files byte-for-byte. Current scripts
+  must not search removed vendor directories or imply external Lisp dependencies.
+
+- Vendor cleanup validated with vendor/lisp absent: full46-file/1124-row
+  corpus,51 production files with zero diagnostics,94 clean outputs and55
+  unchanged retained input hashes. vendor/README.md explains each retained item.
+  Continue the same repository-maintenance task on the previously requested main.

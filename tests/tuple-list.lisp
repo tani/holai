@@ -1,5 +1,5 @@
 (require :asdf)
-(asdf:initialize-source-registry `(:source-registry (:directory ,(truename ".")) (:tree ,(truename "vendor/lisp/")) :inherit-configuration))
+(asdf:initialize-source-registry `(:source-registry (:directory ,(truename ".")) :inherit-configuration))
 (setf asdf:*asdf-verbose* nil *compile-verbose* nil *load-verbose* nil)
 (asdf:load-system "hol2cl-runtime")
 (defvar *tuple-list-checks* 0)

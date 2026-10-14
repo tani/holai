@@ -8,8 +8,8 @@ are retained to avoid changing the validated implementation during organization.
 - DESIGN.md, AGENTS.md, translator/runtime sources, Makefile and ASDF systems.
 - Generated Lisp: source comparison and debugging are core project goals.
 - Generated inventory/ASDF manifest: readable supported scope and load order.
-- Original pinned HOL Light/OCaml inputs and actual vendored Lisp dependencies,
-  with every license and input digest. They permit reproducible offline builds.
+- Original pinned HOL Light/OCaml inputs, with every applicable license and
+  input digest. They permit reproducible offline builds.
 - Tests and reusable scanning, validation, packaging and measurement scripts.
 - Current verification, exact observation streams and measurement raw data.
 - Older evidence under reports/history/, including vector-tuple experiments.
@@ -38,6 +38,6 @@ It does not rename the CLI/ASDF/package API, rewrite algorithms or add new
 optimization. Packaging verifies mandatory files, pins and observation digests.
 
 The structural-match release adds runtime/pattern.lisp and removes production
-Trivia dependencies. Vendored Lisp libraries and the OPTIONAL runtime snapshot
-are retained only as historical controls. To reproduce the historical OPTIONAL
+Trivia dependencies. The OPTIONAL runtime snapshot is a historical control. Former Lisp libraries
+are available in the baseline Git revision, not the current vendor tree. To reproduce the historical OPTIONAL
 comparison, check out commit1730c0299f7d677ba25be29d2dfbff0538fea354 first.

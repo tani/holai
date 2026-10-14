@@ -16,7 +16,8 @@ extension. See [DESIGN.md](DESIGN.md) for rules and limitations.
 Prerequisites: OCaml 4.14.1, Camlp5 8.02, camlp-streams, Num 1.5, SBCL and
 Python 3.9 or later. Validation used SBCL 2.2.9 on Linux. Matching is compiled
 to standard Common Lisp by runtime/pattern.lisp; no external Lisp library is
-required. Vendored Trivia sources remain only for historical comparisons.
+required. Former Trivia dependencies are available in the historical Git
+revision used by the comparison scripts.
 
 ```sh
 make build                         # bin/hol2cl, built from the OCaml sources
@@ -83,7 +84,7 @@ See [OPTIONAL-ENTRY.md](reports/OPTIONAL-ENTRY.md) and
 | `src/` | OCaml translator and command-line interface |
 | `runtime/` | Curried calling protocol and compatibility boundary |
 | `generated/` | Generated Lisp, inventory and ASDF system, kept for source comparison |
-| `vendor/` | Pinned original inputs, real Lisp dependencies and licenses |
+| `vendor/` | Pinned HOL Light/OCaml inputs and their licenses |
 | `tests/` | Semantic, kernel, differential and boundary tests; benchmark harnesses |
 | `scripts/` | Build verification, scanning, packaging and reproducible measurements |
 | `reports/` | Current validation and benchmark evidence |

@@ -13,10 +13,12 @@ signatures and require rebuilding. OR joins share bodies and guards.
 DESIGN30 describes the implementation; tests/pattern.lisp covers semantics,
 negative expansion cases, wide/deep patterns and separate compilation. Full
 core and timing evidence is recorded in reports/verification.json and
-reports/PATTERN-MATCH.md. The old Trivia sources are retained solely for
-historical reproduction with their original licenses.
+reports/PATTERN-MATCH.md. The old Trivia sources and licenses are available in the historical
+Git revision used for comparisons.
 
 Translator-added suffixes are now percent signs instead of stars. Original
 operator stars remain unchanged. Curried parameters, MATCH input temporaries
 and translated LET/LET* bindings carry IGNORABLE declarations. Scope, bindings
 and source algorithms are preserved. Previous timing results are historical.
+
+Obsolete vendor/lisp dependencies and their ASDF search entries are removed.

@@ -3,7 +3,7 @@
              (uiop:pathname-directory-pathname *load-truename*))))
   (asdf:initialize-source-registry
     `(:source-registry (:directory ,root)
-      (:tree ,(merge-pathnames "vendor/lisp/" root)) :inherit-configuration)))
+      :inherit-configuration)))
 (setf asdf:*asdf-verbose* nil *compile-verbose* nil *load-verbose* nil)
 (asdf:load-system "hol2cl-runtime")
 (hol2cl.runtime:catch-break t)

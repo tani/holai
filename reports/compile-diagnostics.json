@@ -117,7 +117,7 @@
     "generated/impconv.lisp": "a52c70da0335186985a2354f1790a1adc5189d58743facbb11a3d7bd7de3174b",
     "generated/bool.lisp": "2d5e66bd84edfc477e38096a414198d72f9d7b0fabf5c5fbc424ae26fd56564c"
   },
+  "audit_complete": true,
   "exit_code": 0,
-  "scope": "5 runtime files and all 46 production core files; pinned upstream unchanged",
-  "audit_complete": true
+  "scope": "5 runtime files and all 46 production core files; pinned upstream unchanged"
 }

@@ -1,10 +1,5 @@
 {
   "hol_light_commit": "233b83c3202370e03c54de2bd090e4d34f677e91",
-  "trivia_commit": "4383dd894f7c9861673aad78d8f09e5587bc9616",
-  "lisp_namespace_commit": "699fccb6727027343bb5fca69162a3113996edfc",
-  "trivial_cltl2_commit": "2ada8722dc1d7bae1f49832a2ca26b25b90055d3",
-  "alexandria_ubuntu_package": "20211025.gita67c3a6-1",
-  "closer_mop_ubuntu_package": "20220227.giteabdf6a-1",
   "input_sha256": {
     "vendor/hol-light/LICENSE": "fd1a38c49a5b6acbdf1baa9e544006be3e889cd83703745a42b36a68dc084481",
     "vendor/hol-light/bignum_num.ml": "c1a3aac382963a1b9ba7b1e09040e8b1ee925b58ffd9bbe0919a336a693c9543",

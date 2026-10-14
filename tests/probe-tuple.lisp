@@ -1,6 +1,6 @@
 ;;; Historical vector-representation microprobe, independent of current tuple storage.
 (require :asdf)
-(asdf:initialize-source-registry `(:source-registry (:directory ,(truename ".")) (:tree ,(truename "vendor/lisp/")) :inherit-configuration))
+(asdf:initialize-source-registry `(:source-registry (:directory ,(truename ".")) :inherit-configuration))
 (asdf:load-system "hol2cl-runtime")
 (defstruct probe-tuple-value items)
 (declaim (notinline tuple-generic tuple-direct))

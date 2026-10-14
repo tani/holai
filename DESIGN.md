@@ -2399,3 +2399,30 @@ an explicit completion marker; a partial log is never accepted. Source hashes
 are recorded and checked at packaging time. make release runs the fresh audit
 after the normal corpus tests. Existing timing reports are historical; no new
 performance result is asserted for percent naming or IGNORABLE declarations.
+
+## 32. Remove obsolete vendored Lisp dependencies — before changes
+
+The user requests vendor cleanup. Delete vendor/lisp (Trivia and all four
+transitive libraries), since production ASDF matching is standard CL. Remove
+its source-registry search entries from current launchers/tests/probes and
+remove obsolete dependency revision keys from the active SOURCES lock. Retain
+all unchanged HOL Light inputs, parser/oracle support, OCaml Map/Set templates,
+Random provenance, associated licenses and their exact hashes.
+
+Historical comparisons use an independent checkout of commit1730c0299f7d677ba25
+be29d2dfbff0538fea354, which contains the former dependencies and notices. The
+current notices/README/layout must describe only shipped material. Retain
+historical measured reports with clear provenance. Source algorithms/runtime
+representations are unchanged. Run the full release validation with the vendor
+Lisp tree absent, including fresh-cache compilation, before delivering the ZIP.
+
+### 32.1 Completed validation
+
+Removed117 obsolete Lisp-library files (607054 source bytes), leaving59 vendor
+files including the new explanatory README. All55 retained original-input
+hashes are unchanged. Current test/launcher scripts have no vendor/lisp search
+entries. Full46-file loading,1124 differential rows, the existing122 native
+checks and all calling/pattern/naming checks pass without those libraries.
+Fresh-cache compilation completes51 production units with0 errors,0 warnings
+and0 style warnings. All94 clean regenerated outputs match. The cleanup is
+continued on the previously requested tani/holai main destination.
