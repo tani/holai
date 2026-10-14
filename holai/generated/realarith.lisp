@@ -385,7 +385,6 @@
     labelsc
     guard
     function-value
-    funcall
     fst
     fletc
     failwith
@@ -486,15 +485,13 @@
   (prove
     (tuple
       (parse_term "!x y. x < y \\/ y <= x")
-      (holai.runtime:proof (REWRITE_TAC (cl:cons real_lt nil))
-        THEN (funcall CONV_TAC TAUT)))))
+      (holai.runtime:proof (REWRITE_TAC (cl:cons real_lt nil)) THEN (#`CONV_TAC TAUT)))))
 
 (defparameter REAL_LET_TOTAL
   (prove
     (tuple
       (parse_term "!x y. x <= y \\/ y < x")
-      (holai.runtime:proof (REWRITE_TAC (cl:cons real_lt nil))
-        THEN (funcall CONV_TAC TAUT)))))
+      (holai.runtime:proof (REWRITE_TAC (cl:cons real_lt nil)) THEN (#`CONV_TAC TAUT)))))
 
 (defparameter REAL_LT_IMP_LE
   (prove
@@ -536,9 +533,7 @@
     (tuple
       (parse_term "!x y. &0 <= (x - y) <=> y <= x")
       (REWRITE_TAC
-        (cl:cons
-          real_sub
-          (cl:cons (funcall GSYM REAL_LE_LNEG) (cl:cons REAL_LE_NEG2 nil)))))))
+        (cl:cons real_sub (cl:cons (#`GSYM REAL_LE_LNEG) (cl:cons REAL_LE_NEG2 nil)))))))
 
 (defparameter REAL_NEG_SUB
   (prove
@@ -560,7 +555,7 @@
     (tuple
       (parse_term "!x y. &0 < (x - y) <=> y < x")
       (holai.runtime:proof (REWRITE_TAC (cl:cons real_lt nil))
-        THEN (ONCE_REWRITE_TAC (cl:cons (funcall GSYM REAL_NEG_SUB) nil))
+        THEN (ONCE_REWRITE_TAC (cl:cons (#`GSYM REAL_NEG_SUB) nil))
         THEN
           (REWRITE_TAC
             (cl:cons REAL_LE_LNEG (cl:cons REAL_ADD_RID (cl:cons REAL_SUB_LE nil))))))))
@@ -574,11 +569,8 @@
     (tuple
       (parse_term "!x y. (x - y = &0) <=> (x = y)")
       (holai.runtime:proof (REPEAT #'GEN_TAC)
-        THEN (REWRITE_TAC (cl:cons (funcall GSYM REAL_LE_ANTISYM) nil))
-        THEN
-          (GEN_REWRITE_TAC
-            (o LAND_CONV LAND_CONV)
-            (cl:cons (funcall GSYM REAL_NOT_LT) nil))
+        THEN (REWRITE_TAC (cl:cons (#`GSYM REAL_LE_ANTISYM) nil))
+        THEN (GEN_REWRITE_TAC (o LAND_CONV LAND_CONV) (cl:cons (#`GSYM REAL_NOT_LT) nil))
         THEN (REWRITE_TAC (cl:cons REAL_SUB_LE (cl:cons REAL_SUB_LT nil)))
         THEN (REWRITE_TAC (cl:cons REAL_NOT_LT nil))))))
 
@@ -620,10 +612,9 @@
       (holai.runtime:proof (REPEAT #'GEN_TAC)
         THEN #'EQ_TAC
         THEN #'STRIP_TAC
-        THEN
-          (funcall ASM_REWRITE_TAC (cl:cons REAL_MUL_LZERO (cl:cons REAL_MUL_RZERO nil)))
+        THEN (#`ASM_REWRITE_TAC (cl:cons REAL_MUL_LZERO (cl:cons REAL_MUL_RZERO nil)))
         THEN (ASM_CASES_TAC (parse_term "x = &0"))
-        THEN (funcall ASM_REWRITE_TAC nil)
+        THEN (#`ASM_REWRITE_TAC nil)
         THEN (FIRST_ASSUM (o #'MP_TAC (AP_TERM (parse_term "(*) (inv x)"))))
         THEN (REWRITE_TAC (cl:cons REAL_MUL_ASSOC nil))
         THEN
@@ -643,9 +634,8 @@
     (tuple
       (parse_term "!x. &0 <= x * x")
       (holai.runtime:proof #'GEN_TAC
-        THEN (DISJ_CASES_TAC (funcall SPEC (parse_term "x:real") REAL_LE_NEGTOTAL))
-        THEN
-          (POP_ASSUM (lambdac (th) (MP_TAC (MATCH_MP REAL_LE_MUL (funcall CONJ th th)))))
+        THEN (DISJ_CASES_TAC (#`SPEC (parse_term "x:real") REAL_LE_NEGTOTAL))
+        THEN (POP_ASSUM (lambdac (th) (MP_TAC (MATCH_MP REAL_LE_MUL (#`CONJ th th)))))
         THEN
           (REWRITE_TAC
             (cl:cons REAL_MUL_LNEG (cl:cons REAL_MUL_RNEG (cl:cons REAL_NEG_NEG nil))))))))
@@ -662,8 +652,8 @@
       (parse_term "!x. x pow 2 = x * x")
       (holai.runtime:proof (REWRITE_TAC
           (cl:cons
-            (funcall num_CONV (parse_term "2"))
-            (cl:cons (funcall num_CONV (parse_term "1")) nil)))
+            (#`num_CONV (parse_term "2"))
+            (cl:cons (#`num_CONV (parse_term "1")) nil)))
         THEN (REWRITE_TAC (cl:cons real_pow (cl:cons REAL_MUL_RID nil)))))))
 
 (defparameter REAL_POLY_CLAUSES
@@ -707,9 +697,9 @@
       (parse_term "!n. ~(&n = &0) <=> (&0 < &n)")
       (holai.runtime:proof #'GEN_TAC
         THEN (REWRITE_TAC (cl:cons REAL_LT_LE nil))
-        THEN (funcall CONV_TAC (RAND_CONV (funcall ONCE_DEPTH_CONV #'SYM_CONV)))
+        THEN (#`CONV_TAC (RAND_CONV (#`ONCE_DEPTH_CONV #'SYM_CONV)))
         THEN (ASM_CASES_TAC (parse_term "&n = &0"))
-        THEN (funcall ASM_REWRITE_TAC (cl:cons REAL_LE_REFL (cl:cons REAL_POS nil)))))))
+        THEN (#`ASM_REWRITE_TAC (cl:cons REAL_LE_REFL (cl:cons REAL_POS nil)))))))
 
 (defparameter REAL_POS_LT
   (prove
@@ -719,9 +709,9 @@
         THEN
           (REWRITE_TAC
             (cl:cons
-              (funcall SPEC (parse_term "SUC n") (funcall GSYM REAL_LT_NZ))
+              (#`SPEC (parse_term "SUC n") (#`GSYM REAL_LT_NZ))
               (cl:cons REAL_OF_NUM_EQ nil)))
-        THEN (REWRITE_TAC (cl:cons (funcall GSYM LT_NZ) (cl:cons LT_0 nil)))))))
+        THEN (REWRITE_TAC (cl:cons (#`GSYM LT_NZ) (cl:cons LT_0 nil)))))))
 
 (defvariant positivstellensatz
   (Axiom_eq field0)
@@ -767,7 +757,7 @@
                   (cl:cons REAL_SUB_LT (cl:cons REAL_SUB_LE (cl:cons REAL_NEG_SUB nil))))))
             THEN (REWRITE_TAC (cl:cons REAL_SUB_0 (cl:cons real_lt nil)))
             THEN (MESON_TAC (cl:cons REAL_LE_ANTISYM nil))))))
-      (pth_final (funcall TAUT (parse_term "(~p ==> F) ==> p")))
+      (pth_final (#`TAUT (parse_term "(~p ==> F) ==> p")))
       (pth_add
         (prove
           (tuple
@@ -825,11 +815,11 @@
             ((net
               (itlist
                 (lambdac (th%)
-                  (net_of_conv (funcall lhand (concl th%)) (funcall PART_MATCH lhand th%)))
-                (funcall CONJUNCTS th)
+                  (net_of_conv (#`lhand (concl th%)) (#`PART_MATCH lhand th%)))
+                (#`CONJUNCTS th)
                 empty_net)))
             (cl:declare (cl:ignorable net))
-            (lambdac (th%) (funcall MP (REWRITES_CONV net (concl th%)) th%)))))
+            (lambdac (th%) (#`MP (REWRITES_CONV net (concl th%)) th%)))))
       (x_tm (parse_term "x:real"))
       (y_tm (parse_term "y:real"))
       (neg_tm (parse_term "(--):real->real"))
@@ -906,11 +896,11 @@
                           (cl:cons (tuple (rand lop) x_tm) (cl:cons (tuple r% y_tm) nil))
                           pth%)))
                       (cl:declare (cl:ignorable th))
-                      (TRANS th (funcall LAND_CONV POLY_CONV (rand (concl th)))))))))
+                      (TRANS th (#`LAND_CONV POLY_CONV (rand (concl th)))))))))
               (match
                 (tuple
-                  (map #'REAL_INEQ_CONV (funcall CONJUNCTS pth))
-                  (let ((pth% (last (funcall CONJUNCTS pth))))
+                  (map #'REAL_INEQ_CONV (#`CONJUNCTS pth))
+                  (let ((pth% (last (#`CONJUNCTS pth))))
                     (cl:declare (cl:ignorable pth%))
                     (lambdac (tm)
                       (match (dest_eq tm)
@@ -920,15 +910,11 @@
                               (INST%
                                 (cl:cons (tuple l x_tm) (cl:cons (tuple r% y_tm) nil))
                                 pth%))
-                              (th_p
-                                (funcall
-                                  POLY_CONV
-                                  (funcall lhand (funcall lhand (rand (concl th))))))
+                              (th_p (#`POLY_CONV (#`lhand (#`lhand (rand (concl th))))))
                               (th_x (AP_TERM neg_tm th_p))
                               (th_n (CONV_RULE (RAND_CONV POLY_NEG_CONV) th_x))
                               (th%
-                                (funcall
-                                  MK_DISJ
+                                (#`MK_DISJ
                                   (AP_THM (AP_TERM gt_tm th_p) z_tm)
                                   (AP_THM (AP_TERM gt_tm th_n) z_tm))))
                             (cl:declare (cl:ignorable th th_p th_x th_n th%))
@@ -959,35 +945,32 @@
                         (cl:cons
                           (tuple xy_lt REAL_LT_CONV)
                           (cl:cons
-                            (tuple
-                              xy_nlt
-                              (lambdac (t%) (funcall REAL_NOT_LT_CONV (rand t%))))
+                            (tuple xy_nlt (lambdac (t%) (#`REAL_NOT_LT_CONV (rand t%))))
                             (cl:cons
                               (tuple xy_le REAL_LE_CONV)
                               (cl:cons
                                 (tuple
                                   xy_nle
-                                  (lambdac (t%) (funcall REAL_NOT_LE_CONV (rand t%))))
+                                  (lambdac (t%) (#`REAL_NOT_LE_CONV (rand t%))))
                                 (cl:cons
                                   (tuple xy_gt REAL_GT_CONV)
                                   (cl:cons
                                     (tuple
                                       xy_ngt
-                                      (lambdac (t%) (funcall REAL_NOT_GT_CONV (rand t%))))
+                                      (lambdac (t%) (#`REAL_NOT_GT_CONV (rand t%))))
                                     (cl:cons
                                       (tuple xy_ge REAL_GE_CONV)
                                       (cl:cons
                                         (tuple
                                           xy_nge
-                                          (lambdac (t%)
-                                            (funcall REAL_NOT_GE_CONV (rand t%))))
+                                          (lambdac (t%) (#`REAL_NOT_GE_CONV (rand t%))))
                                         (cl:cons
                                           (tuple xy_eq REAL_EQ_CONV)
                                           (cl:cons
                                             (tuple
                                               xy_ne
                                               (lambdac (t%)
-                                                (funcall REAL_NOT_EQ_CONV (rand t%))))
+                                                (#`REAL_NOT_EQ_CONV (rand t%))))
                                             nil))))))))))
                         empty_net))
                       (net_double
@@ -997,37 +980,29 @@
                             (tuple
                               xy_lt
                               (lambdac (t%)
-                                (tuple
-                                  (funcall REAL_LT_CONV t%)
-                                  (funcall REAL_NOT_LT_CONV t%))))
+                                (tuple (#`REAL_LT_CONV t%) (#`REAL_NOT_LT_CONV t%))))
                             (cl:cons
                               (tuple
                                 xy_le
                                 (lambdac (t%)
-                                  (tuple
-                                    (funcall REAL_LE_CONV t%)
-                                    (funcall REAL_NOT_LE_CONV t%))))
+                                  (tuple (#`REAL_LE_CONV t%) (#`REAL_NOT_LE_CONV t%))))
                               (cl:cons
                                 (tuple
                                   xy_gt
                                   (lambdac (t%)
-                                    (tuple
-                                      (funcall REAL_GT_CONV t%)
-                                      (funcall REAL_NOT_GT_CONV t%))))
+                                    (tuple (#`REAL_GT_CONV t%) (#`REAL_NOT_GT_CONV t%))))
                                 (cl:cons
                                   (tuple
                                     xy_ge
                                     (lambdac (t%)
-                                      (tuple
-                                        (funcall REAL_GE_CONV t%)
-                                        (funcall REAL_NOT_GE_CONV t%))))
+                                      (tuple (#`REAL_GE_CONV t%) (#`REAL_NOT_GE_CONV t%))))
                                   (cl:cons
                                     (tuple
                                       xy_eq
                                       (lambdac (t%)
                                         (tuple
-                                          (funcall REAL_EQ_CONV t%)
-                                          (funcall REAL_NOT_EQ_CONV t%))))
+                                          (#`REAL_EQ_CONV t%)
+                                          (#`REAL_NOT_EQ_CONV t%))))
                                     nil)))))
                           empty_net)))
                     (cl:declare (cl:ignorable net_single net_double))
@@ -1037,36 +1012,31 @@
                       (cl:declare (cl:ignorable REAL_INEQ_NORM_CONV REAL_INEQ_NORM_DCONV))
                       (let*
                         ((NNF_NORM_CONV
-                          (funcall
-                            GEN_NNF_CONV
+                          (#`GEN_NNF_CONV
                             cl:nil
                             (tuple REAL_INEQ_NORM_CONV REAL_INEQ_NORM_DCONV)))
                           (MUL_RULE
-                            (let ((rules (funcall MATCH_MP_RULE pth_mul)))
+                            (let ((rules (#`MATCH_MP_RULE pth_mul)))
                               (cl:declare (cl:ignorable rules))
                               (lambdac (th)
-                                (CONV_RULE
-                                  (funcall LAND_CONV POLY_MUL_CONV)
-                                  (funcall rules th)))))
+                                (CONV_RULE (#`LAND_CONV POLY_MUL_CONV) (#`rules th)))))
                           (ADD_RULE
-                            (let ((rules (funcall MATCH_MP_RULE pth_add)))
+                            (let ((rules (#`MATCH_MP_RULE pth_add)))
                               (cl:declare (cl:ignorable rules))
                               (lambdac (th)
-                                (CONV_RULE
-                                  (funcall LAND_CONV POLY_ADD_CONV)
-                                  (funcall rules th)))))
+                                (CONV_RULE (#`LAND_CONV POLY_ADD_CONV) (#`rules th)))))
                           (EMUL_RULE
                             (let ((rule (MATCH_MP pth_emul)))
                               (cl:declare (cl:ignorable rule))
                               (lambdac (tm th)
                                 (CONV_RULE
-                                  (funcall LAND_CONV POLY_MUL_CONV)
-                                  (funcall SPEC tm (funcall rule th))))))
+                                  (#`LAND_CONV POLY_MUL_CONV)
+                                  (#`SPEC tm (#`rule th))))))
                           (SQUARE_RULE
                             (lambdac (t%)
                               (CONV_RULE
-                                (funcall LAND_CONV POLY_MUL_CONV)
-                                (funcall SPEC t% pth_square)))))
+                                (#`LAND_CONV POLY_MUL_CONV)
+                                (#`SPEC t% pth_square)))))
                         (cl:declare
                           (cl:ignorable
                             NNF_NORM_CONV
@@ -1088,46 +1058,36 @@
                                       ((Axiom_lt n) (el n lts))
                                       ((Rational_eq x)
                                         (EQT_ELIM
-                                          (funcall
-                                            NUMERIC_EQ_CONV
+                                          (#`NUMERIC_EQ_CONV
                                             (mk_comb
                                               (tuple
-                                                (mk_comb
-                                                  (tuple eq_tm (funcall mk_numeric x)))
+                                                (mk_comb (tuple eq_tm (#`mk_numeric x)))
                                                 z_tm)))))
                                       ((Rational_le x)
                                         (EQT_ELIM
-                                          (funcall
-                                            NUMERIC_GE_CONV
+                                          (#`NUMERIC_GE_CONV
                                             (mk_comb
                                               (tuple
-                                                (mk_comb
-                                                  (tuple ge_tm (funcall mk_numeric x)))
+                                                (mk_comb (tuple ge_tm (#`mk_numeric x)))
                                                 z_tm)))))
                                       ((Rational_lt x)
                                         (EQT_ELIM
-                                          (funcall
-                                            NUMERIC_GT_CONV
+                                          (#`NUMERIC_GT_CONV
                                             (mk_comb
                                               (tuple
-                                                (mk_comb
-                                                  (tuple gt_tm (funcall mk_numeric x)))
+                                                (mk_comb (tuple gt_tm (#`mk_numeric x)))
                                                 z_tm)))))
-                                      ((Square t%) (funcall SQUARE_RULE t%))
-                                      ((Eqmul t% p%)
-                                        (funcall EMUL_RULE t% (translate p%)))
+                                      ((Square t%) (#`SQUARE_RULE t%))
+                                      ((Eqmul t% p%) (#`EMUL_RULE t% (translate p%)))
                                       ((Sum p1 p2)
-                                        (funcall
-                                          ADD_RULE
-                                          (funcall CONJ (translate p1) (translate p2))))
+                                        (#`ADD_RULE
+                                          (#`CONJ (translate p1) (translate p2))))
                                       ((Product p1 p2)
-                                        (funcall
-                                          MUL_RULE
-                                          (funcall CONJ (translate p1) (translate p2)))))))
+                                        (#`MUL_RULE
+                                          (#`CONJ (translate p1) (translate p2)))))))
                                   (lambdac (prf)
                                     (CONV_RULE
-                                      (funcall
-                                        FIRST_CONV
+                                      (#`FIRST_CONV
                                         (cl:cons
                                           NUMERIC_GE_CONV
                                           (cl:cons
@@ -1143,7 +1103,7 @@
                                       (THENC
                                         (THENC
                                           (THENC
-                                            (funcall TOP_DEPTH_CONV #'BETA_CONV)
+                                            (#`TOP_DEPTH_CONV #'BETA_CONV)
                                             PRESIMP_CONV)
                                           NNF_CONV)
                                         (DEPTH_BINOP_CONV or_tm CONDS_ELIM_CONV))
@@ -1163,63 +1123,60 @@
                                           ((tuple le% nl)
                                             (let ((lt% (filter (o is_gt #'concl) nl)))
                                               (cl:declare (cl:ignorable lt%))
-                                              (funcall
-                                                prover%
+                                              (#`prover%
                                                 #'hol_of_positivstellensatz
                                                 (tuple eq le% lt%))))))))
                                   ((cl:cons th oths)
                                     (let ((tm (concl th)))
                                       (cl:declare (cl:ignorable tm))
-                                      (if (funcall is_conj tm)
+                                      (if (#`is_conj tm)
                                         (match (CONJ_PAIR th)
                                           ((tuple th1 th2)
                                             (overall dun (cl:cons th1 (cl:cons th2 oths)))))
-                                        (if (funcall is_disj tm)
+                                        (if (#`is_disj tm)
                                           (let
                                             ((th1
                                               (overall
                                                 dun
-                                                (cl:cons (ASSUME (funcall lhand tm)) oths)))
+                                                (cl:cons (ASSUME (#`lhand tm)) oths)))
                                               (th2
                                                 (overall
                                                   dun
                                                   (cl:cons (ASSUME (rand tm)) oths))))
                                             (cl:declare (cl:ignorable th1 th2))
-                                            (funcall DISJ_CASES th th1 th2))
+                                            (#`DISJ_CASES th th1 th2))
                                           (overall (cl:cons th dun) oths))))))))
                               (lambdac (tm)
                                 (let
                                   ((NNF_NORM_CONV%
-                                    (funcall
-                                      GEN_NNF_CONV
+                                    (#`GEN_NNF_CONV
                                       cl:nil
                                       (tuple
-                                        (funcall CACHE_CONV REAL_INEQ_NORM_CONV)
+                                        (#`CACHE_CONV REAL_INEQ_NORM_CONV)
                                         (lambdac (t%) (failwith ""))))))
                                   (cl:declare (cl:ignorable NNF_NORM_CONV%))
                                   (labelsc
                                     ((absremover
                                       (t%)
                                       (THENC
-                                        (funcall
-                                          TOP_DEPTH_CONV
+                                        (#`TOP_DEPTH_CONV
                                           (THENC
                                             absconv1
-                                            (BINOP_CONV (funcall LAND_CONV POLY_CONV))))
+                                            (BINOP_CONV (#`LAND_CONV POLY_CONV))))
                                         (TRY_CONV
                                           (THENC
                                             (THENC absconv2 NNF_NORM_CONV%)
                                             (BINOP_CONV #'absremover)))
                                         t%)))
                                     (let*
-                                      ((th0 (funcall init_conv (funcall mk_neg tm)))
+                                      ((th0 (#`init_conv (#`mk_neg tm)))
                                         (tm0 (rand (concl th0)))
                                         (th
                                           (if (= tm0 false_tm)
-                                            (fst (funcall EQ_IMP_RULE th0))
-                                            (match (funcall strip_exists tm0)
+                                            (fst (#`EQ_IMP_RULE th0))
+                                            (match (#`strip_exists tm0)
                                               ((tuple evs bod)
-                                                (match (funcall strip_forall bod)
+                                                (match (#`strip_forall bod)
                                                   ((tuple avs ibod)
                                                     (let*
                                                       ((th1
@@ -1252,11 +1209,10 @@
                                                         (PROVE_HYP
                                                           (EQ_MP
                                                             th0
-                                                            (ASSUME (funcall mk_neg tm)))
+                                                            (ASSUME (#`mk_neg tm)))
                                                           th3))))))))))
                                       (cl:declare (cl:ignorable th0 tm0 th))
-                                      (funcall
-                                        MP
+                                      (#`MP
                                         (INST% (cl:cons (tuple tm p_tm) nil) pth_final)
                                         th))))))))))))))))))))
 
@@ -1268,23 +1224,18 @@
 
 (defparameter REAL_LINEAR_PROVER
   (let
-    ((linear_add (funcall combine (function-value #'+ 2) (lambdac (z) (= z num_0))))
-      (linear_cmul (lambdac (c%) (funcall mapf (lambdac (x) (* c% x)))))
+    ((linear_add (#`combine (function-value #'+ 2) (lambdac (z) (= z num_0))))
+      (linear_cmul (lambdac (c%) (#`mapf (lambdac (x) (* c% x)))))
       (one_tm (parse_term "&1")))
     (cl:declare (cl:ignorable linear_add linear_cmul one_tm))
-    (fletc
-      ((contradictory
-        (p% arg~1477)
+    (holai.runtime:labelsc
+      ((:nonrecursive 0 contradictory (p% arg~1477)
         (match arg~1477
           ((tuple e% _)
             (cl:or
-              (cl:and (is_undefined e%) (not (funcall p% num_0)))
-              (cl:and
-                (= (dom e%) (cl:cons one_tm nil))
-                (not (funcall p% (apply e% one_tm)))))))))
-      (labelsc
-        ((linear_ineqs
-          (vars arg~1504)
+              (cl:and (is_undefined e%) (not (#`p% num_0)))
+              (cl:and (= (dom e%) (cl:cons one_tm nil)) (not (#`p% (apply e% one_tm))))))))
+        (:recursive 1 linear_ineqs (vars arg~1504)
           (match arg~1504
             ((tuple les lts)
               (handler-case
@@ -1307,16 +1258,14 @@
                                     ((blowup
                                       (v)
                                       (*
-                                        (funcall
-                                          length
+                                        (#`length
                                           (filter
                                             (lambdac (arg~1520)
                                               (match arg~1520
                                                 ((tuple e% _)
                                                   (> (tryapplyd e% v num_0) num_0))))
                                             ineqs))
-                                        (funcall
-                                          length
+                                        (#`length
                                           (filter
                                             (lambdac (arg~1536)
                                               (match arg~1536
@@ -1352,13 +1301,9 @@
                                                       acc
                                                       (let
                                                         ((e1%
-                                                          (funcall
-                                                            linear_cmul
-                                                            (abs-num c2)
-                                                            e1))
+                                                          (#`linear_cmul (abs-num c2) e1))
                                                           (e2%
-                                                            (funcall
-                                                              linear_cmul
+                                                            (#`linear_cmul
                                                               (abs-num c1)
                                                               e2))
                                                           (p1%
@@ -1375,7 +1320,7 @@
                                                           (cl:ignorable e1% e2% p1% p2%))
                                                         (cl:cons
                                                           (tuple
-                                                            (funcall linear_add e1% e2%)
+                                                            (#`linear_add e1% e2%)
                                                             (make-Sum p1% p2%))
                                                           acc))))))))))
                                         (match
@@ -1434,212 +1379,182 @@
                                                     (subtract vars (cl:cons v nil))
                                                     (tuple les% lts%)))))))))))))
                             (_ (raise exception~1511))))))
-                    (_ (raise exception~1508)))))))))
-        (labelsc
-          ((linear_eqs
-            (arg~1803)
-            (match arg~1803
-              ((tuple eqs les lts)
-                (handler-case
-                  (find (contradictory (lambdac (x) (= x num_0))) eqs)
-                  (holai.runtime:ocaml-condition
-                    (exception~1808)
-                    (match exception~1808
-                      ((Failure _)
-                        (match eqs
-                          (nil
-                            (let
-                              ((vars
-                                (subtract
-                                  (itlist
-                                    (o (o #'union #'dom) (function-value #'fst 1))
-                                    (append les lts)
-                                    nil)
-                                  (cl:cons one_tm nil))))
-                              (cl:declare (cl:ignorable vars))
-                              (linear_ineqs vars (tuple les lts))))
-                          ((cl:cons (tuple e% p%) es)
-                            (if (is_undefined e%)
-                              (linear_eqs (tuple es les lts))
-                              (match (choose (funcall undefine one_tm e%))
-                                ((tuple x c%)
-                                  (fletc
-                                    ((xform
-                                      (arg~1844)
-                                      (match arg~1844
-                                        ((cl:and inp (tuple t% q))
-                                          (let ((d (tryapplyd t% x num_0)))
-                                            (cl:declare (cl:ignorable d))
-                                            (if (= d num_0)
-                                              inp
-                                              (let*
-                                                ((k% (/ (* (- d) (abs-num c%)) c%))
-                                                  (e%% (funcall linear_cmul k% e%))
-                                                  (t%%
-                                                    (funcall linear_cmul (abs-num c%) t%))
-                                                  (p%%
-                                                    (make-Eqmul
-                                                      (funcall term_of_rat k%)
-                                                      p%))
-                                                  (q%
-                                                    (make-Product
-                                                      (make-Rational_lt (abs-num c%))
-                                                      q)))
-                                                (cl:declare
-                                                  (cl:ignorable k% e%% t%% p%% q%))
-                                                (tuple
-                                                  (funcall linear_add e%% t%%)
-                                                  (make-Sum p%% q%)))))))))
-                                    (linear_eqs
-                                      (tuple
-                                        (map #'xform es)
-                                        (map #'xform les)
-                                        (map #'xform lts))))))))))
-                      (_ (raise exception~1808)))))))))
-          (fletc
-            ((linear_prover
-              (arg~1946)
-              (match arg~1946
+                    (_ (raise exception~1508))))))))
+        (:recursive 2 linear_eqs (arg~1803)
+          (match arg~1803
+            ((tuple eqs les lts)
+              (handler-case
+                (find (contradictory (lambdac (x) (= x num_0))) eqs)
+                (holai.runtime:ocaml-condition
+                  (exception~1808)
+                  (match exception~1808
+                    ((Failure _)
+                      (match eqs
+                        (nil
+                          (let
+                            ((vars
+                              (subtract
+                                (itlist
+                                  (o (o #'union #'dom) (function-value #'fst 1))
+                                  (append les lts)
+                                  nil)
+                                (cl:cons one_tm nil))))
+                            (cl:declare (cl:ignorable vars))
+                            (linear_ineqs vars (tuple les lts))))
+                        ((cl:cons (tuple e% p%) es)
+                          (if (is_undefined e%)
+                            (linear_eqs (tuple es les lts))
+                            (match (choose (#`undefine one_tm e%))
+                              ((tuple x c%)
+                                (fletc
+                                  ((xform
+                                    (arg~1844)
+                                    (match arg~1844
+                                      ((cl:and inp (tuple t% q))
+                                        (let ((d (tryapplyd t% x num_0)))
+                                          (cl:declare (cl:ignorable d))
+                                          (if (= d num_0)
+                                            inp
+                                            (let*
+                                              ((k% (/ (* (- d) (abs-num c%)) c%))
+                                                (e%% (#`linear_cmul k% e%))
+                                                (t%% (#`linear_cmul (abs-num c%) t%))
+                                                (p%% (make-Eqmul (#`term_of_rat k%) p%))
+                                                (q%
+                                                  (make-Product
+                                                    (make-Rational_lt (abs-num c%))
+                                                    q)))
+                                              (cl:declare
+                                                (cl:ignorable k% e%% t%% p%% q%))
+                                              (tuple
+                                                (#`linear_add e%% t%%)
+                                                (make-Sum p%% q%)))))))))
+                                  (linear_eqs
+                                    (tuple
+                                      (map #'xform es)
+                                      (map #'xform les)
+                                      (map #'xform lts))))))))))
+                    (_ (raise exception~1808))))))))
+        (:nonrecursive 3 linear_prover (arg~1946)
+          (match arg~1946
+            ((tuple eq le% lt%)
+              (let
+                ((eqs
+                  (map2
+                    (lambdac (p% n) (tuple p% (make-Axiom_eq n)))
+                    eq
+                    (-- 0 (- (#`length eq) 1))))
+                  (les
+                    (map2
+                      (lambdac (p% n) (tuple p% (make-Axiom_le n)))
+                      le%
+                      (-- 0 (- (#`length le%) 1))))
+                  (lts
+                    (map2
+                      (lambdac (p% n) (tuple p% (make-Axiom_lt n)))
+                      lt%
+                      (-- 0 (- (#`length lt%) 1)))))
+                (cl:declare (cl:ignorable eqs les lts))
+                (linear_eqs (tuple eqs les lts)))))))
+      (let
+        ((lin_of_hol
+          (let
+            ((one_tm% (parse_term "&1"))
+              (zero_tm (parse_term "&0"))
+              (add_tm (parse_term "(+):real->real->real"))
+              (mul_tm (parse_term "(*):real->real->real")))
+            (cl:declare (cl:ignorable one_tm% zero_tm add_tm mul_tm))
+            (labelsc
+              ((lin_of_hol
+                (tm)
+                (if (= tm zero_tm)
+                  undefined
+                  (if (not (is_comb tm))
+                    (%=> tm (num 1))
+                    (if (is_ratconst tm)
+                      (%=> one_tm% (rat_of_term tm))
+                      (match (dest_comb tm)
+                        ((tuple lop r%)
+                          (if (not (is_comb lop))
+                            (%=> tm (num 1))
+                            (match (dest_comb lop)
+                              ((tuple op l)
+                                (if (= op add_tm)
+                                  (#`linear_add (lin_of_hol l) (lin_of_hol r%))
+                                  (if (cl:and (= op mul_tm) (is_ratconst l))
+                                    (%=> r% (rat_of_term l))
+                                    (%=> tm (num 1))))))))))))))
+              #'lin_of_hol))))
+        (cl:declare (cl:ignorable lin_of_hol))
+        (holai.runtime:labelsc
+          ((:nonrecursive 0 is_alien (tm)
+            (match tm
+              ((guard (Comb (Const "real_of_num" _) n) (not (#`is_numeral n))) cl:t)
+              (_ cl:nil)))
+            (:nonrecursive 1 is_suc_alien (tm)
+              (match tm
+                ((Comb (Const "real_of_num" _) (Comb (Const "SUC" _) _)) cl:t)
+                (_ cl:nil)))
+            (:nonrecursive 2 dest_suc_alien (tm)
+              (match tm
+                ((Comb (Const "real_of_num" _) (Comb (Const "SUC" _) n)) n)
+                (_ (failwith "")))))
+          (let*
+            ((n_tm (parse_term "n:num"))
+              (pth (REWRITE_RULE (cl:cons (#`GSYM real_ge) nil) (#`SPEC n_tm REAL_POS)))
+              (pth_suc
+                (REWRITE_RULE (cl:cons (#`GSYM real_gt) nil) (#`SPEC n_tm REAL_POS_LT))))
+            (cl:declare (cl:ignorable n_tm pth pth_suc))
+            (lambdac (translator arg~2167)
+              (match arg~2167
                 ((tuple eq le% lt%)
                   (let
-                    ((eqs
-                      (map2
-                        (lambdac (p% n) (tuple p% (make-Axiom_eq n)))
-                        eq
-                        (-- 0 (- (funcall length eq) 1))))
-                      (les
-                        (map2
-                          (lambdac (p% n) (tuple p% (make-Axiom_le n)))
-                          le%
-                          (-- 0 (- (funcall length le%) 1))))
-                      (lts
-                        (map2
-                          (lambdac (p% n) (tuple p% (make-Axiom_lt n)))
-                          lt%
-                          (-- 0 (- (funcall length lt%) 1)))))
-                    (cl:declare (cl:ignorable eqs les lts))
-                    (linear_eqs (tuple eqs les lts)))))))
-            (let
-              ((lin_of_hol
-                (let
-                  ((one_tm% (parse_term "&1"))
-                    (zero_tm (parse_term "&0"))
-                    (add_tm (parse_term "(+):real->real->real"))
-                    (mul_tm (parse_term "(*):real->real->real")))
-                  (cl:declare (cl:ignorable one_tm% zero_tm add_tm mul_tm))
-                  (labelsc
-                    ((lin_of_hol
-                      (tm)
-                      (if (= tm zero_tm)
-                        undefined
-                        (if (not (is_comb tm))
-                          (%=> tm (num 1))
-                          (if (is_ratconst tm)
-                            (%=> one_tm% (rat_of_term tm))
-                            (match (dest_comb tm)
-                              ((tuple lop r%)
-                                (if (not (is_comb lop))
-                                  (%=> tm (num 1))
-                                  (match (dest_comb lop)
-                                    ((tuple op l)
-                                      (if (= op add_tm)
-                                        (funcall
-                                          linear_add
-                                          (lin_of_hol l)
-                                          (lin_of_hol r%))
-                                        (if (cl:and (= op mul_tm) (is_ratconst l))
-                                          (%=> r% (rat_of_term l))
-                                          (%=> tm (num 1))))))))))))))
-                    #'lin_of_hol))))
-              (cl:declare (cl:ignorable lin_of_hol))
-              (fletc
-                ((is_alien
-                  (tm)
-                  (match tm
-                    ((guard (Comb (Const "real_of_num" _) n) (not (funcall is_numeral n)))
-                      cl:t)
-                    (_ cl:nil))))
-                (fletc
-                  ((is_suc_alien
-                    (tm)
-                    (match tm
-                      ((Comb (Const "real_of_num" _) (Comb (Const "SUC" _) _)) cl:t)
-                      (_ cl:nil))))
-                  (fletc
-                    ((dest_suc_alien
-                      (tm)
-                      (match tm
-                        ((Comb (Const "real_of_num" _) (Comb (Const "SUC" _) n)) n)
-                        (_ (failwith "")))))
-                    (let*
-                      ((n_tm (parse_term "n:num"))
-                        (pth
-                          (REWRITE_RULE
-                            (cl:cons (funcall GSYM real_ge) nil)
-                            (funcall SPEC n_tm REAL_POS)))
-                        (pth_suc
-                          (REWRITE_RULE
-                            (cl:cons (funcall GSYM real_gt) nil)
-                            (funcall SPEC n_tm REAL_POS_LT))))
-                      (cl:declare (cl:ignorable n_tm pth pth_suc))
-                      (lambdac (translator arg~2167)
-                        (match arg~2167
-                          ((tuple eq le% lt%)
-                            (let
-                              ((eq_pols (map (o (o lin_of_hol lhand) #'concl) eq))
-                                (le_pols (map (o (o lin_of_hol lhand) #'concl) le%))
-                                (lt_pols (map (o (o lin_of_hol lhand) #'concl) lt%)))
-                              (cl:declare (cl:ignorable eq_pols le_pols lt_pols))
-                              (let
-                                ((all_aliens
-                                  (filter
-                                    #'is_alien
-                                    (itlist
-                                      (o #'union #'dom)
-                                      (append eq_pols (append le_pols lt_pols))
-                                      nil))))
-                                (cl:declare (cl:ignorable all_aliens))
-                                (match (partition #'is_suc_alien all_aliens)
-                                  ((tuple suc_aliens aliens)
-                                    (let*
-                                      ((le_pols%
-                                        (append
-                                          le_pols
-                                          (map (lambdac (v) (%=> v (num 1))) aliens)))
-                                        (lt_pols%
-                                          (append
-                                            lt_pols
-                                            (map (lambdac (v) (%=> v (num 1))) suc_aliens))))
-                                      (cl:declare (cl:ignorable le_pols% lt_pols%))
-                                      (match
-                                        (linear_prover (tuple eq_pols le_pols% lt_pols%))
-                                        ((tuple _ proof)
-                                          (let*
-                                            ((le%%
-                                              (append
-                                                le%
-                                                (map
-                                                  (lambdac (a%)
-                                                    (INST%
-                                                      (cl:cons (tuple (rand a%) n_tm) nil)
-                                                      pth))
-                                                  aliens)))
-                                              (lt%%
-                                                (append
-                                                  lt%
-                                                  (map
-                                                    (lambdac (a%)
-                                                      (INST%
-                                                        (cl:cons
-                                                          (tuple (dest_suc_alien a%) n_tm)
-                                                          nil)
-                                                        pth_suc))
-                                                    suc_aliens))))
-                                            (cl:declare (cl:ignorable le%% lt%%))
-                                            (funcall
-                                              translator
-                                              (tuple eq le%% lt%%)
-                                              proof)))))))))))))))))))))))
+                    ((eq_pols (map (o (o lin_of_hol lhand) #'concl) eq))
+                      (le_pols (map (o (o lin_of_hol lhand) #'concl) le%))
+                      (lt_pols (map (o (o lin_of_hol lhand) #'concl) lt%)))
+                    (cl:declare (cl:ignorable eq_pols le_pols lt_pols))
+                    (let
+                      ((all_aliens
+                        (filter
+                          #'is_alien
+                          (itlist
+                            (o #'union #'dom)
+                            (append eq_pols (append le_pols lt_pols))
+                            nil))))
+                      (cl:declare (cl:ignorable all_aliens))
+                      (match (partition #'is_suc_alien all_aliens)
+                        ((tuple suc_aliens aliens)
+                          (let*
+                            ((le_pols%
+                              (append le_pols (map (lambdac (v) (%=> v (num 1))) aliens)))
+                              (lt_pols%
+                                (append
+                                  lt_pols
+                                  (map (lambdac (v) (%=> v (num 1))) suc_aliens))))
+                            (cl:declare (cl:ignorable le_pols% lt_pols%))
+                            (match (linear_prover (tuple eq_pols le_pols% lt_pols%))
+                              ((tuple _ proof)
+                                (let*
+                                  ((le%%
+                                    (append
+                                      le%
+                                      (map
+                                        (lambdac (a%)
+                                          (INST% (cl:cons (tuple (rand a%) n_tm) nil) pth))
+                                        aliens)))
+                                    (lt%%
+                                      (append
+                                        lt%
+                                        (map
+                                          (lambdac (a%)
+                                            (INST%
+                                              (cl:cons
+                                                (tuple (dest_suc_alien a%) n_tm)
+                                                nil)
+                                              pth_suc))
+                                          suc_aliens))))
+                                  (cl:declare (cl:ignorable le%% lt%%))
+                                  (#`translator (tuple eq le%% lt%%) proof))))))))))))))))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Bootstrapping REAL_ARITH: trivial abs-elim and only integer constants.    *)
@@ -1648,8 +1563,7 @@
 
 (defparameter REAL_ARITH~1
   (match
-    (funcall
-      SEMIRING_NORMALIZERS_CONV
+    (#`SEMIRING_NORMALIZERS_CONV
       REAL_POLY_CLAUSES
       REAL_POLY_NEG_CLAUSES
       (tuple #'is_realintconst REAL_INT_ADD_CONV REAL_INT_MUL_CONV REAL_INT_POW_CONV)
@@ -1663,8 +1577,7 @@
       REAL_POLY_CONV)
       (let
         ((rule
-          (funcall
-            GEN_REAL_ARITH~1
+          (#`GEN_REAL_ARITH~1
             (tuple
               mk_realintconst
               REAL_INT_EQ_CONV
@@ -1681,9 +1594,9 @@
             (REWRITE_CONV (cl:cons real_abs (cl:cons real_max (cl:cons real_min nil))))))
         (cl:declare (cl:ignorable rule deabs_conv))
         (lambdac (tm)
-          (let ((th1 (funcall deabs_conv tm)))
+          (let ((th1 (#`deabs_conv tm)))
             (cl:declare (cl:ignorable th1))
-            (EQ_MP (SYM th1) (funcall rule (rand (concl th1))))))))))
+            (EQ_MP (SYM th1) (#`rule (rand (concl th1))))))))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Slightly less parametrized GEN_REAL_ARITH with more intelligent           *)
@@ -1794,7 +1707,7 @@
                 (holai.runtime:proof (REWRITE_TAC
                     (cl:cons real_abs (cl:cons real_gt (cl:cons real_ge nil))))
                   THEN COND_CASES_TAC
-                  THEN (funcall ASM_REWRITE_TAC (cl:cons real_lt nil))))))
+                  THEN (#`ASM_REWRITE_TAC (cl:cons real_lt nil))))))
             (pth_max
               (prove
                 (tuple
@@ -1802,7 +1715,7 @@
                   (holai.runtime:proof (REWRITE_TAC
                       (cl:cons real_max (cl:cons real_gt (cl:cons real_ge nil))))
                     THEN COND_CASES_TAC
-                    THEN (funcall ASM_REWRITE_TAC (cl:cons real_lt nil))))))
+                    THEN (#`ASM_REWRITE_TAC (cl:cons real_lt nil))))))
             (pth_min
               (prove
                 (tuple
@@ -1810,7 +1723,7 @@
                   (holai.runtime:proof (REWRITE_TAC
                       (cl:cons real_min (cl:cons real_gt (cl:cons real_ge nil))))
                     THEN COND_CASES_TAC
-                    THEN (funcall ASM_REWRITE_TAC (cl:cons real_lt nil))))))
+                    THEN (#`ASM_REWRITE_TAC (cl:cons real_lt nil))))))
             (abs_tm (parse_term "real_abs"))
             (p_tm (parse_term "P:real->bool"))
             (x_tm (parse_term "x:real"))
@@ -1825,23 +1738,21 @@
               ((eliminate_construct
                 (p% c% tm)
                 (let*
-                  ((t%
-                    (find_term (lambdac (t%) (cl:and (funcall p% t%) (free_in t% tm))) tm))
-                    (v (funcall genvar (type_of t%)))
+                  ((t% (find_term (lambdac (t%) (cl:and (#`p% t%) (free_in t% tm))) tm))
+                    (v (#`genvar (type_of t%)))
                     (th0
                       (SYM
                         (BETA_CONV
                           (mk_comb
                             (tuple
-                              (mk_abs
-                                (tuple v (funcall subst (cl:cons (tuple v t%) nil) tm)))
+                              (mk_abs (tuple v (#`subst (cl:cons (tuple v t%) nil) tm)))
                               t%))))))
                   (cl:declare (cl:ignorable t% v th0))
                   (match (dest_comb (rand (concl th0)))
                     ((tuple p ax)
                       (CONV_RULE
                         (RAND_CONV (BINOP_CONV (RAND_CONV #'BETA_CONV)))
-                        (TRANS th0 (funcall c% p ax))))))))
+                        (TRANS th0 (#`c% p ax))))))))
               (let
                 ((elim_abs
                   (eliminate_construct
@@ -1877,15 +1788,13 @@
                                   (cl:cons (tuple y y_tm) nil)))
                               pth_min)))))))
                 (cl:declare (cl:ignorable elim_abs elim_max elim_min))
-                (funcall
-                  FIRST_CONV
+                (#`FIRST_CONV
                   (cl:cons elim_abs (cl:cons elim_max (cl:cons elim_min nil))))))))))
     (cl:declare (cl:ignorable ABSMAXMIN_ELIM_CONV1 ABSMAXMIN_ELIM_CONV2))
     (lambdac (arg~2621)
       (match arg~2621
         ((tuple mkconst EQ GE% GT% NORM NEG ADD% MUL PROVER%)
-          (funcall
-            GEN_REAL_ARITH~1
+          (#`GEN_REAL_ARITH~1
             (tuple
               mkconst
               EQ
@@ -1906,8 +1815,7 @@
 
 (defparameter REAL_ARITH
   (match
-    (funcall
-      SEMIRING_NORMALIZERS_CONV
+    (#`SEMIRING_NORMALIZERS_CONV
       REAL_POLY_CLAUSES
       REAL_POLY_NEG_CLAUSES
       (tuple #'is_realintconst REAL_INT_ADD_CONV REAL_INT_MUL_CONV REAL_INT_POW_CONV)
@@ -1919,8 +1827,7 @@
       REAL_POLY_MUL_CONV
       REAL_POLY_POW_CONV
       REAL_POLY_CONV)
-      (funcall
-        GEN_REAL_ARITH
+      (#`GEN_REAL_ARITH
         (tuple
           mk_realintconst
           REAL_INT_EQ_CONV

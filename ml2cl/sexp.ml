@@ -1,9 +1,10 @@
 (* Output syntax and deterministic, source-aware formatting. *)
 type origin = { id:int; source:string; first:int; last:int; line:int; rule:string }
-type t = Atom of string | List of t list | Fragment of t list | Origin of origin * t | Comment of string
+type t = Atom of string | List of t list | ReaderPrefix of t | Fragment of t list | Origin of origin * t | Comment of string
 type mapping = { origin:origin; output_first:int; output_last:int }
 let a s = Atom s
 let l xs = List xs
+let reader_prefix x = ReaderPrefix x
 let fragment xs = Fragment xs
 let form h xs = l (a h :: xs)
 let rec unwrap = function Origin (_,x) -> unwrap x | x -> x
@@ -11,6 +12,7 @@ let rec flat_length = function
   | Atom s -> String.length s
   | List xs -> 2 + max 0 (List.length xs-1) + List.fold_left (fun n x -> n + flat_length x) 0 xs
   | Fragment xs -> max 0 (List.length xs-1) + List.fold_left (fun n x -> n + flat_length x) 0 xs
+  | ReaderPrefix x -> 2 + flat_length x
   | Origin (_,x) -> flat_length x
   | Comment _ -> 1000000
 let symbol s =
@@ -46,6 +48,7 @@ let render ?(width=90) ?(prefix="") forms =
     | Origin (o,x) -> let first=Buffer.length b in emit indent x;
       maps:={origin=o;output_first=first;output_last=Buffer.length b}:: !maps
     | Atom s -> put s
+    | ReaderPrefix x -> put "#`"; emit indent x
     | Comment s -> String.split_on_char '\n' s |> List.iter (fun line -> put (";; "^line);newline indent)
     | Fragment _ -> emit_fragment indent (flat_length x + !col > width) x
     | List xs when flat_length x + !col <= width ->
@@ -58,6 +61,7 @@ let render ?(width=90) ?(prefix="") forms =
       put "("; emit indent h;
       let head=match unwrap h with Atom "cl:lambda" -> "lambda" | Atom s -> s | _ -> "" in
       let leading=match head with
+        | ":nonrecursive" | ":recursive" -> 3
         | "defun" | "defunc" -> 2 | "lambda" | "lambdac" | "labelsc" | "fletc" | "let" | "let*" | "labels" | "match" | "if" | "defvariant" | "define-exception" -> 1
         | "defparameter" | "defpackage" | "in-package" -> 1 | _ -> 0 in
       List.iteri (fun i x ->

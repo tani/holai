@@ -98,6 +98,55 @@ let language_containers () =
    bool_string (Language_set.for_all (fun n -> n > 0) union);
    bool_string (Language_map.exists (fun _ v -> v > 100) m);
    string_of_int (Language_set.compare inter diff)];;
+(* Adjacent named-function stages must retain their original lexical scopes. *)
+let language_function_chain () =
+  let add x y = x+y in
+  let increment n = add 1 n in
+  let apply fn n = fn n in
+  int_list_string [increment 41; apply (add 20) 22];;
+let language_function_mixed () =
+  let step n = n+1 in
+  let rec even n = n = 0 || odd (n-1)
+  and odd n = n <> 0 && even (n-1) in
+  let advance n = if even n then step n else n in
+  let rec total n = if n = 0 then 0 else advance n + total (n-1) in
+  let snapshot n = total n in
+  let total n = total n + 1 in
+  let bumped n = total n in
+  let rec total n = if n = 0 then 0 else total (n-1) + step n in
+  int_list_string [snapshot 4; bumped 4; total 3; advance 4; advance 3];;
+let language_function_shadow () =
+  let calculate x y = x+y in
+  let captured () = calculate in
+  let calculate x y = x*y in
+  let middle () = calculate in
+  let calculate x y = x-y in
+  let later () = calculate in
+  let calculate x y = x+2*y in
+  int_list_string [captured () 20 22; middle () 14 3;
+                   later () 46 4; calculate 22 10] ^ ":" ^
+  bool_string (captured () == captured ()) ^ ":" ^
+  bool_string (not (captured () == middle ()));;
+let language_function_parallel () =
+  let combine x y = x+y in
+  let combine x y = combine x y + 100
+  and previous x y = combine x y in
+  let observe n = previous n 22 in
+  int_list_string [combine 20 22; previous 20 22; observe 20];;
+let language_function_import () =
+  let imported x = Language_import.combine x 22 in
+  let combine x y = x-y in
+  let global x = language_capture+x in
+  let language_capture x = x+2 in
+  int_list_string [imported 20; combine 64 22; global 1; language_capture 40];;
+let language_function_barrier () =
+  let calls = ref 0 in
+  let before n = n+1 in
+  let initialized = (incr calls; fun n -> before n + !calls) in
+  let middle n = initialized n in
+  let next n = middle n in
+  let before n = n+100 in
+  int_list_string [next 40; before 1; !calls];;
 let language_observations () =
   let a1 = Language_a.tick () in let a2 = Language_alias.tick () in
   let b1 = Language_b.tick () in
@@ -122,6 +171,12 @@ let language_observations () =
    "language_nested=" ^ string_of_int (Language_nested.make 11 3);
    "language_import=" ^ string_of_int (language_import_collisions ());
    "language_prefix_operator=" ^ string_of_int (language_prefix_operator ());
+   "language_function_chain=" ^ language_function_chain ();
+   "language_function_mixed=" ^ language_function_mixed ();
+   "language_function_shadow=" ^ language_function_shadow ();
+   "language_function_parallel=" ^ language_function_parallel ();
+   "language_function_import=" ^ language_function_import ();
+   "language_function_barrier=" ^ language_function_barrier ();
    "language_loops=" ^ int_list_string [loop_sum;loop_count];
    "language_lazy=" ^ language_lazy ();
    "language_hash=" ^ int_list_string [first;replaced] ^ ":" ^

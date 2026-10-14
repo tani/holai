@@ -265,7 +265,6 @@
     make-None
     invalid-arg
     guard
-    funcall
     defvariant
     defunc
     assert-true
@@ -343,7 +342,6 @@
     make-None
     invalid-arg
     guard
-    funcall
     defvariant
     defunc
     assert-true
@@ -430,7 +428,6 @@
     lambdac
     labelsc
     Invalid_argument
-    funcall
     fst
     fletc
     failwith
@@ -596,19 +593,19 @@
   (match arg~569
     ((Empty%) (make-Empty%))
     ((Node :l l :v v :d d :r r :h h)
-      (let* ((l% (map f l)) (d% (funcall f d)) (r% (map f r)))
+      (let* ((l% (map f l)) (d% (#`f d)) (r% (map f r)))
         (cl:declare (cl:ignorable l% d% r%))
         (make-Node :l l% :v v :d d% :r r% :h h)))))
 
 (defunc fold (f m accu)
   (match m
     ((Empty%) accu)
-    ((Node :l l :v v :d d :r r) (fold f r (funcall f v d (fold f l accu))))))
+    ((Node :l l :v v :d d :r r) (fold f r (#`f v d (fold f l accu))))))
 
 (defunc exists (p arg~635)
   (match arg~635
     ((Empty%) cl:nil)
-    ((Node :l l :v v :d d :r r) (cl:or (funcall p v d) (cl:or (exists p l) (exists p r))))))
+    ((Node :l l :v v :d d :r r) (cl:or (#`p v d) (cl:or (exists p l) (exists p r))))))
 
 ;; (* Beware: those two functions assume that the added k is *strictly*
 ;;        smaller (or bigger) than all the present keys in the tree; it
@@ -675,19 +672,11 @@
     ((guard (tuple (Node :l l1 :v v1 :d d1 :r r1 :h h1) _) (>= h1 (height s2)))
       (match (split v1 s2)
         ((tuple l2 d2 r2)
-          (concat_or_join
-            (merge f l1 l2)
-            v1
-            (funcall f v1 (make-Some d1) d2)
-            (merge f r1 r2)))))
+          (concat_or_join (merge f l1 l2) v1 (#`f v1 (make-Some d1) d2) (merge f r1 r2)))))
     ((tuple _ (Node :l l2 :v v2 :d d2 :r r2))
       (match (split v2 s1)
         ((tuple l1 d1 r1)
-          (concat_or_join
-            (merge f l1 l2)
-            v2
-            (funcall f v2 d1 (make-Some d2))
-            (merge f r1 r2)))))
+          (concat_or_join (merge f l1 l2) v2 (#`f v2 d1 (make-Some d2)) (merge f r1 r2)))))
     (_ (assert-true cl:nil "ocaml-stdlib/map.ml" 400 10))))
 
 (defunc union (f s1 s2)
@@ -701,20 +690,20 @@
               (cl:declare (cl:ignorable l r))
               (match d2%
                 ((None) (join l v1 d1 r))
-                ((Some d2) (concat_or_join l v1 (funcall f v1 d1 d2) r))))))
+                ((Some d2) (concat_or_join l v1 (#`f v1 d1 d2) r))))))
         (match (split v2 s1)
           ((tuple l1% d1% r1%)
             (let ((l (union f l1% l2)) (r (union f r1% r2)))
               (cl:declare (cl:ignorable l r))
               (match d1%
                 ((None) (join l v2 d2 r))
-                ((Some d1) (concat_or_join l v2 (funcall f v2 d1 d2) r))))))))))
+                ((Some d1) (concat_or_join l v2 (#`f v2 d1 d2) r))))))))))
 
 (defunc filter (p arg~1151)
   (match arg~1151
     ((Empty%) (make-Empty%))
     ((cl:and m (Node :l l :v v :d d :r r))
-      (let* ((l% (filter p l)) (pvd (funcall p v d)) (r% (filter p r)))
+      (let* ((l% (filter p l)) (pvd (#`p v d)) (r% (filter p r)))
         (cl:declare (cl:ignorable l% pvd r%))
         (if pvd (if (cl:and (== l l%) (== r r%)) m (join l% v d r%)) (concat l% r%))))))
 
@@ -848,19 +837,19 @@
   (match arg~1780
     ((Empty%) (make-Empty%))
     ((Node :l l :v v :d d :r r :h h)
-      (let* ((l% (map f l)) (d% (funcall f d)) (r% (map f r)))
+      (let* ((l% (map f l)) (d% (#`f d)) (r% (map f r)))
         (cl:declare (cl:ignorable l% d% r%))
         (make-Node :l l% :v v :d d% :r r% :h h)))))
 
 (defunc fold (f m accu)
   (match m
     ((Empty%) accu)
-    ((Node :l l :v v :d d :r r) (fold f r (funcall f v d (fold f l accu))))))
+    ((Node :l l :v v :d d :r r) (fold f r (#`f v d (fold f l accu))))))
 
 (defunc exists (p arg~1846)
   (match arg~1846
     ((Empty%) cl:nil)
-    ((Node :l l :v v :d d :r r) (cl:or (funcall p v d) (cl:or (exists p l) (exists p r))))))
+    ((Node :l l :v v :d d :r r) (cl:or (#`p v d) (cl:or (exists p l) (exists p r))))))
 
 ;; (* Beware: those two functions assume that the added k is *strictly*
 ;;        smaller (or bigger) than all the present keys in the tree; it
@@ -927,19 +916,11 @@
     ((guard (tuple (Node :l l1 :v v1 :d d1 :r r1 :h h1) _) (>= h1 (height s2)))
       (match (split v1 s2)
         ((tuple l2 d2 r2)
-          (concat_or_join
-            (merge f l1 l2)
-            v1
-            (funcall f v1 (make-Some d1) d2)
-            (merge f r1 r2)))))
+          (concat_or_join (merge f l1 l2) v1 (#`f v1 (make-Some d1) d2) (merge f r1 r2)))))
     ((tuple _ (Node :l l2 :v v2 :d d2 :r r2))
       (match (split v2 s1)
         ((tuple l1 d1 r1)
-          (concat_or_join
-            (merge f l1 l2)
-            v2
-            (funcall f v2 d1 (make-Some d2))
-            (merge f r1 r2)))))
+          (concat_or_join (merge f l1 l2) v2 (#`f v2 d1 (make-Some d2)) (merge f r1 r2)))))
     (_ (assert-true cl:nil "ocaml-stdlib/map.ml" 400 10))))
 
 (defunc union (f s1 s2)
@@ -953,20 +934,20 @@
               (cl:declare (cl:ignorable l r))
               (match d2%
                 ((None) (join l v1 d1 r))
-                ((Some d2) (concat_or_join l v1 (funcall f v1 d1 d2) r))))))
+                ((Some d2) (concat_or_join l v1 (#`f v1 d1 d2) r))))))
         (match (split v2 s1)
           ((tuple l1% d1% r1%)
             (let ((l (union f l1% l2)) (r (union f r1% r2)))
               (cl:declare (cl:ignorable l r))
               (match d1%
                 ((None) (join l v2 d2 r))
-                ((Some d1) (concat_or_join l v2 (funcall f v2 d1 d2) r))))))))))
+                ((Some d1) (concat_or_join l v2 (#`f v2 d1 d2) r))))))))))
 
 (defunc filter (p arg~2362)
   (match arg~2362
     ((Empty%) (make-Empty%))
     ((cl:and m (Node :l l :v v :d d :r r))
-      (let* ((l% (filter p l)) (pvd (funcall p v d)) (r% (filter p r)))
+      (let* ((l% (filter p l)) (pvd (#`p v d)) (r% (filter p r)))
         (cl:declare (cl:ignorable l% pvd r%))
         (if pvd (if (cl:and (== l l%) (== r r%)) m (join l% v d r%)) (concat l% r%))))))
 
@@ -1014,34 +995,26 @@
 
 
 (defparameter enter
-  (fletc
-    ((label_to_store
-      (lconsts tm)
-      (match (funcall strip_comb tm)
+  (holai.runtime:labelsc
+    ((:nonrecursive 0 label_to_store (lconsts tm)
+      (match (#`strip_comb tm)
         ((tuple op args)
           (if (is_const op)
-            (tuple (make-Cnet (tuple (fst (dest_const op)) (funcall length args))) args)
+            (tuple (make-Cnet (tuple (fst (dest_const op)) (#`length args))) args)
             (if (is_abs op)
               (match (dest_abs op)
                 ((tuple bv bod)
                   (let
                     ((bod%
                       (if (mem bv lconsts)
-                        (funcall
-                          vsubst
-                          (cl:cons (tuple (funcall genvar (type_of bv)) bv) nil)
-                          bod)
+                        (#`vsubst (cl:cons (tuple (#`genvar (type_of bv)) bv) nil) bod)
                         bod)))
                     (cl:declare (cl:ignorable bod%))
-                    (tuple (make-Lnet (funcall length args)) (cl:cons bod% args)))))
+                    (tuple (make-Lnet (#`length args)) (cl:cons bod% args)))))
               (if (mem op lconsts)
-                (tuple
-                  (make-Lcnet (tuple (fst (dest_var op)) (funcall length args)))
-                  args)
-                (tuple (make-Vnet) nil))))))))
-    (fletc
-      ((canon_eq
-        (x y)
+                (tuple (make-Lcnet (tuple (fst (dest_var op)) (#`length args))) args)
+                (tuple (make-Vnet) nil)))))))
+      (:nonrecursive 1 canon_eq (x y)
         (handler-case
           (= (compare x y) 0)
           (holai.runtime:ocaml-condition
@@ -1049,111 +1022,90 @@
             (match exception~2556
               ((Invalid_argument _) cl:nil)
               (_ (raise exception~2556))))))
-        (canon_lt
-          (x y)
-          (handler-case
-            (< (compare x y) 0)
-            (holai.runtime:ocaml-condition
-              (exception~2568)
-              (match exception~2568
-                ((Invalid_argument _) cl:nil)
-                (_ (raise exception~2568)))))))
-      (labelsc
-        ((sinsert
-          (x l)
-          (if (= l nil)
-            (cl:cons x nil)
-            (let ((h (hd l)))
-              (cl:declare (cl:ignorable h))
-              (if (canon_eq h x)
-                (failwith "sinsert")
-                (if (canon_lt x h) (cl:cons x l) (cl:cons h (sinsert x (tl l)))))))))
-        (fletc
-          ((set_insert
-            (x l)
+      (:nonrecursive 1 canon_lt (x y)
+        (handler-case
+          (< (compare x y) 0)
+          (holai.runtime:ocaml-condition
+            (exception~2568)
+            (match exception~2568
+              ((Invalid_argument _) cl:nil)
+              (_ (raise exception~2568))))))
+      (:recursive 2 sinsert (x l)
+        (if (= l nil)
+          (cl:cons x nil)
+          (let ((h (hd l)))
+            (cl:declare (cl:ignorable h))
+            (if (canon_eq h x)
+              (failwith "sinsert")
+              (if (canon_lt x h) (cl:cons x l) (cl:cons h (sinsert x (tl l))))))))
+      (:nonrecursive 3 set_insert (x l)
+        (handler-case
+          (sinsert x l)
+          (holai.runtime:ocaml-condition
+            (exception~2614)
+            (match exception~2614 ((Failure "sinsert") l) (_ (raise exception~2614))))))
+      (:nonrecursive 4 update_si (k% upd m)
+        (let
+          ((child0
             (handler-case
-              (sinsert x l)
+              (find k% m)
               (holai.runtime:ocaml-condition
-                (exception~2614)
-                (match exception~2614 ((Failure "sinsert") l) (_ (raise exception~2614)))))))
-          (fletc
-            ((update_si
-              (k% upd m)
-              (let
-                ((child0
-                  (handler-case
-                    (find k% m)
-                    (holai.runtime:ocaml-condition
-                      (exception~2627)
-                      (match exception~2627
-                        ((Not_found) empty_net)
-                        (_ (raise exception~2627)))))))
-                (cl:declare (cl:ignorable child0))
-                (add k% (funcall upd child0) m))))
-            (fletc
-              ((update_int
-                (k% upd m)
-                (let
-                  ((child0
-                    (handler-case
-                      (holai.nets.i_map:find k% m)
-                      (holai.runtime:ocaml-condition
-                        (exception~2645)
-                        (match exception~2645
-                          ((Not_found) empty_net)
-                          (_ (raise exception~2645)))))))
-                  (cl:declare (cl:ignorable child0))
-                  (holai.nets.i_map:add k% (funcall upd child0) m))))
-              (labelsc
-                ((net_update
-                  (lconsts elem tms net)
-                  (match net
-                    ((Netnode r)
-                      (match tms
-                        (nil
+                (exception~2627)
+                (match exception~2627 ((Not_found) empty_net) (_ (raise exception~2627)))))))
+          (cl:declare (cl:ignorable child0))
+          (add k% (#`upd child0) m)))
+      (:nonrecursive 5 update_int (k% upd m)
+        (let
+          ((child0
+            (handler-case
+              (holai.nets.i_map:find k% m)
+              (holai.runtime:ocaml-condition
+                (exception~2645)
+                (match exception~2645 ((Not_found) empty_net) (_ (raise exception~2645)))))))
+          (cl:declare (cl:ignorable child0))
+          (holai.nets.i_map:add k% (#`upd child0) m)))
+      (:recursive 6 net_update (lconsts elem tms net)
+        (match net
+          ((Netnode r)
+            (match tms
+              (nil
+                (make-Netnode
+                  (record-update r :tips (set_insert elem (record-field r :tips)))))
+              ((cl:cons tm rtms)
+                (match (label_to_store lconsts tm)
+                  ((tuple label ntms)
+                    (fletc
+                      ((upd (child) (net_update lconsts elem (append ntms rtms) child)))
+                      (match label
+                        ((Vnet)
+                          (let
+                            ((child0
+                              (match (record-field r :vnet)
+                                ((Some c%) c%)
+                                ((None) empty_net))))
+                            (cl:declare (cl:ignorable child0))
+                            (make-Netnode
+                              (record-update r :vnet (make-Some (upd child0))))))
+                        ((Cnet k%)
                           (make-Netnode
                             (record-update
                               r
-                              :tips
-                              (set_insert elem (record-field r :tips)))))
-                        ((cl:cons tm rtms)
-                          (match (label_to_store lconsts tm)
-                            ((tuple label ntms)
-                              (fletc
-                                ((upd
-                                  (child)
-                                  (net_update lconsts elem (append ntms rtms) child)))
-                                (match label
-                                  ((Vnet)
-                                    (let
-                                      ((child0
-                                        (match (record-field r :vnet)
-                                          ((Some c%) c%)
-                                          ((None) empty_net))))
-                                      (cl:declare (cl:ignorable child0))
-                                      (make-Netnode
-                                        (record-update r :vnet (make-Some (upd child0))))))
-                                  ((Cnet k%)
-                                    (make-Netnode
-                                      (record-update
-                                        r
-                                        :cnets
-                                        (update_si k% #'upd (record-field r :cnets)))))
-                                  ((Lcnet k%)
-                                    (make-Netnode
-                                      (record-update
-                                        r
-                                        :lcnets
-                                        (update_si k% #'upd (record-field r :lcnets)))))
-                                  ((Lnet k%)
-                                    (make-Netnode
-                                      (record-update
-                                        r
-                                        :lnets
-                                        (update_int k% #'upd (record-field r :lnets)))))))))))))))
-                (lambdac (lconsts arg~2757 net)
-                  (match arg~2757
-                    ((tuple tm elem) (net_update lconsts elem (cl:cons tm nil) net))))))))))))
+                              :cnets
+                              (update_si k% #'upd (record-field r :cnets)))))
+                        ((Lcnet k%)
+                          (make-Netnode
+                            (record-update
+                              r
+                              :lcnets
+                              (update_si k% #'upd (record-field r :lcnets)))))
+                        ((Lnet k%)
+                          (make-Netnode
+                            (record-update
+                              r
+                              :lnets
+                              (update_int k% #'upd (record-field r :lnets)))))))))))))))
+    (lambdac (lconsts arg~2757 net)
+      (match arg~2757 ((tuple tm elem) (net_update lconsts elem (cl:cons tm nil) net))))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Look up a term in a net and return possible matches.                      *)
@@ -1161,19 +1113,16 @@
 
 
 (defparameter lookup
-  (fletc
-    ((label_for_lookup
-      (tm)
-      (match (funcall strip_comb tm)
+  (holai.runtime:labelsc
+    ((:nonrecursive 0 label_for_lookup (tm)
+      (match (#`strip_comb tm)
         ((tuple op args)
           (if (is_const op)
-            (tuple (make-Cnet (tuple (fst (dest_const op)) (funcall length args))) args)
+            (tuple (make-Cnet (tuple (fst (dest_const op)) (#`length args))) args)
             (if (is_abs op)
-              (tuple (make-Lnet (funcall length args)) (cl:cons (body op) args))
-              (tuple (make-Lcnet (tuple (fst (dest_var op)) (funcall length args))) args)))))))
-    (labelsc
-      ((follow
-        (tms net)
+              (tuple (make-Lnet (#`length args)) (cl:cons (body op) args))
+              (tuple (make-Lcnet (tuple (fst (dest_var op)) (#`length args))) args))))))
+      (:recursive 1 follow (tms net)
         (match net
           ((Netnode r)
             (match tms
@@ -1219,7 +1168,7 @@
                       (match (record-field r :vnet)
                         ((None) collection)
                         ((Some vchild) (append collection (follow rtms vchild)))))))))))))
-      (lambdac (tm net) (follow (cl:cons tm nil) net)))))
+    (lambdac (tm net) (follow (cl:cons tm nil) net))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Function to merge two nets (code from Don Syme's hol-lite).               *)
@@ -1227,26 +1176,22 @@
 
 
 (defparameter merge_nets
-  (fletc
-    ((canon_eq
-      (x y)
+  (holai.runtime:labelsc
+    ((:nonrecursive 0 canon_eq (x y)
       (handler-case
         (= (compare x y) 0)
         (holai.runtime:ocaml-condition
           (exception~2931)
           (match exception~2931 ((Invalid_argument _) cl:nil) (_ (raise exception~2931))))))
-      (canon_lt
-        (x y)
+      (:nonrecursive 0 canon_lt (x y)
         (handler-case
           (< (compare x y) 0)
           (holai.runtime:ocaml-condition
             (exception~2943)
             (match exception~2943
               ((Invalid_argument _) cl:nil)
-              (_ (raise exception~2943)))))))
-    (labelsc
-      ((set_merge
-        (l1 l2)
+              (_ (raise exception~2943))))))
+      (:recursive 1 set_merge (l1 l2)
         (if (= l1 nil)
           l2
           (if (= l2 nil)
@@ -1257,49 +1202,38 @@
                 (cl:cons h1 (set_merge t1 t2))
                 (if (canon_lt h1 h2)
                   (cl:cons h1 (set_merge t1 l2))
-                  (cl:cons h2 (set_merge l1 t2)))))))))
-      (labelsc
-        ((merge_nets%
-          (arg~3003)
-          (match arg~3003
-            ((tuple n1 n2)
-              (match (tuple n1 n2)
-                ((tuple (Netnode r1) (Netnode r2))
-                  (fletc
-                    ((merge_opt
-                      (a b)
-                      (match (tuple a b)
-                        ((tuple (Some x) (Some y)) (make-Some (merge_nets% (tuple x y))))
-                        ((tuple (Some _) (None)) a)
-                        ((tuple (None) _) b))))
-                    (let*
-                      ((merge_si
-                        (union
-                          (lambdac (arg~3038 a b) (make-Some (merge_nets% (tuple a b))))))
-                        (merge_int
-                          (holai.nets.i_map:union
-                            (lambdac (arg~3050 a b) (make-Some (merge_nets% (tuple a b)))))))
-                      (cl:declare (cl:ignorable merge_si merge_int))
-                      (make-Netnode
-                        (make-netnode_data
-                          :vnet
-                          (merge_opt (record-field r1 :vnet) (record-field r2 :vnet))
-                          :cnets
-                          (funcall
-                            merge_si
-                            (record-field r1 :cnets)
-                            (record-field r2 :cnets))
-                          :lcnets
-                          (funcall
-                            merge_si
-                            (record-field r1 :lcnets)
-                            (record-field r2 :lcnets))
-                          :lnets
-                          (funcall
-                            merge_int
-                            (record-field r1 :lnets)
-                            (record-field r2 :lnets))
-                          :tips
-                          (set_merge (record-field r1 :tips) (record-field r2 :tips))))))))))))
-        #'merge_nets%))))
+                  (cl:cons h2 (set_merge l1 t2))))))))
+      (:recursive 2 merge_nets% (arg~3003)
+        (match arg~3003
+          ((tuple n1 n2)
+            (match (tuple n1 n2)
+              ((tuple (Netnode r1) (Netnode r2))
+                (fletc
+                  ((merge_opt
+                    (a b)
+                    (match (tuple a b)
+                      ((tuple (Some x) (Some y)) (make-Some (merge_nets% (tuple x y))))
+                      ((tuple (Some _) (None)) a)
+                      ((tuple (None) _) b))))
+                  (let*
+                    ((merge_si
+                      (union
+                        (lambdac (arg~3038 a b) (make-Some (merge_nets% (tuple a b))))))
+                      (merge_int
+                        (holai.nets.i_map:union
+                          (lambdac (arg~3050 a b) (make-Some (merge_nets% (tuple a b)))))))
+                    (cl:declare (cl:ignorable merge_si merge_int))
+                    (make-Netnode
+                      (make-netnode_data
+                        :vnet
+                        (merge_opt (record-field r1 :vnet) (record-field r2 :vnet))
+                        :cnets
+                        (#`merge_si (record-field r1 :cnets) (record-field r2 :cnets))
+                        :lcnets
+                        (#`merge_si (record-field r1 :lcnets) (record-field r2 :lcnets))
+                        :lnets
+                        (#`merge_int (record-field r1 :lnets) (record-field r2 :lnets))
+                        :tips
+                        (set_merge (record-field r1 :tips) (record-field r2 :tips))))))))))))
+    #'merge_nets%))
 

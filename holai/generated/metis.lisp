@@ -5230,7 +5230,6 @@
     labelsc
     invalid-arg
     function-value
-    funcall
     fletc
     defunc
     ==)
@@ -5239,7 +5238,7 @@
 (defpackage :holai.metis.metis_prover.option
   (:use :cl)
   (:shadow bind is_some value)
-  (:shadowing-import-from :holai.runtime Some None match make-None funcall defunc)
+  (:shadowing-import-from :holai.runtime Some None match make-None defunc)
   (:export bind is_some value))
 
 (defpackage :holai.metis.metis_prover.useful
@@ -5286,7 +5285,6 @@
     labelsc
     int-mod
     int-div
-    funcall
     Failure
     deref
     defunc
@@ -5489,7 +5487,6 @@
     lambdac
     labelsc
     function-value
-    funcall
     fletc
     failwith
     defvariant
@@ -5733,7 +5730,6 @@
     make-None
     list-map
     lambdac
-    funcall
     fletc
     defvariant
     defunc)
@@ -5854,7 +5850,6 @@
     make-None
     invalid-arg
     guard
-    funcall
     defvariant
     defunc
     assert-true
@@ -5928,7 +5923,6 @@
     list-fold-right
     list-fold-left
     lambdac
-    funcall
     fletc
     failwith
     defunc)
@@ -6052,7 +6046,6 @@
     make-None
     invalid-arg
     guard
-    funcall
     defvariant
     defunc
     assert-true
@@ -6126,7 +6119,6 @@
     list-fold-right
     list-fold-left
     lambdac
-    funcall
     fletc
     failwith
     defunc)
@@ -6255,7 +6247,6 @@
     match
     make-Not_found
     invalid-arg
-    funcall
     defvariant
     defunc
     >=
@@ -6336,7 +6327,6 @@
     make-None
     list-fold-right
     lambdac
-    funcall
     fletc
     defunc)
   (:export
@@ -6458,7 +6448,6 @@
     match
     lambdac
     labelsc
-    funcall
     defvariant
     defunc
     define-exception
@@ -6544,7 +6533,6 @@
     make-None
     invalid-arg
     guard
-    funcall
     defvariant
     defunc
     assert-true
@@ -6618,7 +6606,6 @@
     list-fold-right
     list-fold-left
     lambdac
-    funcall
     fletc
     failwith
     defunc)
@@ -6697,7 +6684,6 @@
     match
     make-Not_found
     invalid-arg
-    funcall
     defvariant
     defunc
     >=
@@ -6778,7 +6764,6 @@
     make-None
     list-fold-right
     lambdac
-    funcall
     fletc
     defunc)
   (:export
@@ -6840,7 +6825,6 @@
     list-map
     labelsc
     function-value
-    funcall
     fletc
     defunc
     =)
@@ -6913,7 +6897,6 @@
     make-None
     invalid-arg
     guard
-    funcall
     defvariant
     defunc
     assert-true
@@ -6987,7 +6970,6 @@
     list-fold-right
     list-fold-left
     lambdac
-    funcall
     fletc
     failwith
     defunc)
@@ -7111,7 +7093,6 @@
     match
     make-Not_found
     invalid-arg
-    funcall
     defvariant
     defunc
     >=
@@ -7192,7 +7173,6 @@
     make-None
     list-fold-right
     lambdac
-    funcall
     fletc
     defunc)
   (:export
@@ -7253,7 +7233,6 @@
     compare
     all
     add)
-  (:shadowing-import-from :holai.runtime funcall)
   (:export
     add
     all
@@ -7286,7 +7265,7 @@
   (:use :cl)
   (:shadow arity binary compare equal name nary nullary ternary unary)
   (:shadowing-import-from :holai.metis.metis_prover.useful intCompare)
-  (:shadowing-import-from :holai.runtime tuple match funcall defunc = <>)
+  (:shadowing-import-from :holai.runtime tuple match defunc = <>)
   (:export arity binary compare equal name nary nullary ternary unary))
 
 (defpackage :holai.metis.metis_prover.term.ordered
@@ -7346,7 +7325,6 @@
     make-None
     invalid-arg
     guard
-    funcall
     defvariant
     defunc
     assert-true
@@ -7427,7 +7405,6 @@
     match
     make-Not_found
     invalid-arg
-    funcall
     defvariant
     defunc
     >=
@@ -7553,7 +7530,6 @@
     list-fold-left
     lambdac
     labelsc
-    funcall
     fst
     fletc
     failwith
@@ -7686,7 +7662,6 @@
     list-map
     lambdac
     labelsc
-    funcall
     fletc
     failwith
     defvariant
@@ -7779,7 +7754,6 @@
     make-None
     invalid-arg
     guard
-    funcall
     defvariant
     defunc
     assert-true
@@ -7853,7 +7827,6 @@
     list-fold-right
     list-fold-left
     lambdac
-    funcall
     fletc
     failwith
     defunc)
@@ -7932,7 +7905,6 @@
     match
     make-Not_found
     invalid-arg
-    funcall
     defvariant
     defunc
     >=
@@ -8013,7 +7985,6 @@
     make-None
     list-fold-right
     lambdac
-    funcall
     fletc
     defunc)
   (:export
@@ -8111,7 +8082,6 @@
     list-map
     list-exists
     lambdac
-    funcall
     fst
     fletc
     failwith
@@ -8214,7 +8184,6 @@
     make-None
     invalid-arg
     guard
-    funcall
     defvariant
     defunc
     assert-true
@@ -8288,7 +8257,6 @@
     list-fold-right
     list-fold-left
     lambdac
-    funcall
     fletc
     failwith
     defunc)
@@ -8367,7 +8335,6 @@
     match
     make-Not_found
     invalid-arg
-    funcall
     defvariant
     defunc
     >=
@@ -8448,7 +8415,6 @@
     make-None
     list-fold-right
     lambdac
-    funcall
     fletc
     defunc)
   (:export
@@ -8610,7 +8576,6 @@
     list-map
     lambdac
     labelsc
-    funcall
     fst
     fletc
     failwith
@@ -8771,7 +8736,6 @@
     make-None
     invalid-arg
     guard
-    funcall
     defvariant
     defunc
     assert-true
@@ -8845,7 +8809,6 @@
     list-fold-right
     list-fold-left
     lambdac
-    funcall
     fletc
     failwith
     defunc)
@@ -8924,7 +8887,6 @@
     match
     make-Not_found
     invalid-arg
-    funcall
     defvariant
     defunc
     >=
@@ -9005,7 +8967,6 @@
     make-None
     list-fold-right
     lambdac
-    funcall
     fletc
     defunc)
   (:export
@@ -9090,7 +9051,6 @@
     string-concat
     match
     list-map
-    funcall
     fletc
     defunc
     ==)
@@ -9191,7 +9151,6 @@
     make-None
     invalid-arg
     guard
-    funcall
     defvariant
     defunc
     assert-true
@@ -9265,7 +9224,6 @@
     list-fold-right
     list-fold-left
     lambdac
-    funcall
     fletc
     failwith
     defunc)
@@ -9344,7 +9302,6 @@
     match
     make-Not_found
     invalid-arg
-    funcall
     defvariant
     defunc
     >=
@@ -9425,7 +9382,6 @@
     make-None
     list-fold-right
     lambdac
-    funcall
     fletc
     defunc)
   (:export
@@ -9508,7 +9464,7 @@
   (:shadowing-import-from :holai.metis.metis_prover.atom matchAtoms)
   (:shadowing-import-from :holai.metis.metis_prover.formula make-Not)
   (:shadowing-import-from :holai.metis.metis_prover.useful prodCompare boolCompare)
-  (:shadowing-import-from :holai.runtime tuple match funcall failwith defunc == =)
+  (:shadowing-import-from :holai.runtime tuple match failwith defunc == =)
   (:export
     arguments
     arity
@@ -9633,7 +9589,6 @@
     make-Some
     make-None
     list-iter
-    funcall
     fletc
     failwith
     defvariant
@@ -9779,7 +9734,6 @@
     lambdac
     labelsc
     function-value
-    funcall
     fletc
     defvariant
     defunc
@@ -9969,7 +9923,6 @@
     list-map
     lambdac
     labelsc
-    funcall
     fst
     fletc
     failwith
@@ -10376,7 +10329,6 @@
     int-of-float
     int-mod
     int-div
-    funcall
     fst
     float-of-int
     float-floor
@@ -10709,7 +10661,6 @@
     lambdac
     labelsc
     function-value
-    funcall
     fletc
     failwith
     Failure
@@ -10814,7 +10765,6 @@
     raise
     match
     lambdac
-    funcall
     defunc)
   (:export
     atomToTerm
@@ -10854,7 +10804,6 @@
     string-concat
     match
     lambdac
-    funcall
     defunc
     defrecord)
   (:export
@@ -10952,7 +10901,6 @@
     list-exists
     lambdac
     labelsc
-    funcall
     fletc
     defunc
     defrecord
@@ -11050,7 +10998,6 @@
     make-None
     lambdac
     labelsc
-    funcall
     fletc
     defvariant
     defunc
@@ -11236,7 +11183,6 @@
     lambdac
     labelsc
     guard
-    funcall
     fst
     fletc
     failwith
@@ -11365,7 +11311,6 @@
     make-None
     lambdac
     labelsc
-    funcall
     fletc
     defvariant
     defunc)
@@ -11468,7 +11413,6 @@
     list-exists
     lambdac
     guard
-    funcall
     fletc
     failwith
     deref
@@ -11662,7 +11606,6 @@
     list-map
     lambdac
     labelsc
-    funcall
     fst
     fletc
     defvariant
@@ -11788,7 +11731,6 @@
     list-iter
     lambdac
     function-value
-    funcall
     float-of-int
     fletc
     defvariant
@@ -11923,7 +11865,6 @@
     pp-print-string
     match
     lambdac
-    funcall
     failwith
     Failure
     defunc
@@ -12034,7 +11975,6 @@
     list-map
     int-of-string
     function-value
-    funcall
     defunc)
   (:export
     fol_of_const
@@ -12068,7 +12008,6 @@
     string-concat
     match
     list-nth
-    funcall
     failwith
     defunc
     assert-true
@@ -12097,7 +12036,6 @@
     list-assoc
     int-of-string
     guard
-    funcall
     format-printf
     Failure
     deref
@@ -12125,7 +12063,6 @@
     match
     list-fold-right
     lambdac
-    funcall
     failwith
     Failure
     defunc
@@ -12222,7 +12159,6 @@
     list-concat
     lambdac
     function-value
-    funcall
     format-printf
     failwith
     Failure
@@ -12270,7 +12206,6 @@
     match
     list-mem
     function-value
-    funcall
     failwith
     Failure
     defunc)
@@ -12346,7 +12281,6 @@
     list-concat
     lambdac
     function-value
-    funcall
     fst
     format-printf
     fletc
@@ -12391,7 +12325,7 @@
   (:shadow ASM_METIS_TAC METIS METIS_TAC metisverb)
   (:shadowing-import-from :holai.lib K)
   (:shadowing-import-from :holai.metis.metis GEN_METIS_TAC)
-  (:shadowing-import-from :holai.runtime tuple ref funcall defunc)
+  (:shadowing-import-from :holai.runtime tuple ref defunc)
   (:shadowing-import-from :holai.tactics THEN prove POP_ASSUM_LIST ALL_TAC)
   (:export ASM_METIS_TAC METIS METIS_TAC metisverb))
 
@@ -12430,17 +12364,16 @@
 
 (in-package :holai.metis.metis_prover.mlist)
 
-(defunc foldl (f a% l) (list-fold-left (lambdac (acc x) (funcall f (tuple x acc))) a% l))
+(defunc foldl (f a% l) (list-fold-left (lambdac (acc x) (#`f (tuple x acc))) a% l))
 
-(defunc foldr (f a% l) (list-fold-right (lambdac (x acc) (funcall f (tuple x acc))) l a%))
+(defunc foldr (f a% l) (list-fold-right (lambdac (x acc) (#`f (tuple x acc))) l a%))
 
 (defunc null (arg~128) (match arg~128 (nil cl:t) (_ cl:nil)))
 
 (defunc tabulate (arg~136)
   (match arg~136
     ((tuple n f)
-      (labelsc ((go (i%) (if (== i% n) nil (cl:cons (funcall f i%) (go (+ i% 1))))))
-        (go 0)))))
+      (labelsc ((go (i%) (if (== i% n) nil (cl:cons (#`f i%) (go (+ i% 1)))))) (go 0)))))
 
 (defunc find (p% l)
   (handler-case
@@ -12452,7 +12385,7 @@
 (defunc first (f arg~175)
   (match arg~175
     (nil (make-None))
-    ((cl:cons x xs) (match (funcall f x) ((None) (first f xs)) (s s)))))
+    ((cl:cons x xs) (match (#`f x) ((None) (first f xs)) (s s)))))
 
 (defunc enumerate (l) (mapi (lambdac (x y) (tuple x y)) l))
 
@@ -12483,9 +12416,9 @@
       (fletc
         ((ncmp
           (arg~300 arg~303)
-          (match arg~300 ((tuple m _) (match arg~303 ((tuple n _) (funcall cmp m n)))))))
+          (match arg~300 ((tuple m _) (match arg~303 ((tuple n _) (#`cmp m n)))))))
         (let*
-          ((nxs (list-map (lambdac (x) (tuple (funcall f x) x)) xs))
+          ((nxs (list-map (lambdac (x) (tuple (#`f x) x)) xs))
             (nys (list-sort #'ncmp nxs)))
           (cl:declare (cl:ignorable nxs nys))
           (list-map (function-value #'snd 1) nys))))))
@@ -12496,7 +12429,7 @@
 
 (defunc is_some (arg~336) (match arg~336 ((Some _) cl:t) ((None) cl:nil)))
 
-(defunc bind (opt f) (match opt ((Some x) (funcall f x)) ((None) (make-None))))
+(defunc bind (opt f) (match opt ((Some x) (#`f x)) ((None) (make-None))))
 
 (defunc value (opt default) (match opt ((Some x) x) ((None) default)))
 
@@ -12520,7 +12453,7 @@
 
 (defunc total (f x)
   (handler-case
-    (make-Some (funcall f x))
+    (make-Some (#`f x))
     (holai.runtime:ocaml-condition
       (exception~388)
       (match exception~388 ((Failure _) (make-None)) (_ (raise exception~388))))))
@@ -12532,10 +12465,7 @@
       (match y
         (0 z)
         (_
-          (f
-            (funcall m (tuple x x))
-            (int-div y 2)
-            (if (= (int-mod y 2) 0) z (funcall m (tuple z x))))))))
+          (f (#`m (tuple x x)) (int-div y 2) (if (= (int-mod y 2) 0) z (#`m (tuple z x))))))))
     #'f))
 
 ;; (* ------------------------------------------------------------------------- *)
@@ -12543,16 +12473,16 @@
 ;; (* ------------------------------------------------------------------------- *)
 
 
-(defunc revCompare (cmp x y) (funcall cmp y x))
+(defunc revCompare (cmp x y) (#`cmp y x))
 
 (defunc prodCompare (xCmp yCmp arg~441 arg~445)
   (match arg~441
     ((tuple x1 y1)
       (match arg~445
         ((tuple x2 y2)
-          (let ((c% (funcall xCmp x1 x2)))
+          (let ((c% (#`xCmp x1 x2)))
             (cl:declare (cl:ignorable c%))
-            (if (<> c% 0) c% (funcall yCmp y1 y2))))))))
+            (if (<> c% 0) c% (#`yCmp y1 y2))))))))
 
 (defunc lexCompare (cmp)
   (labelsc
@@ -12563,7 +12493,7 @@
         ((tuple nil (cl:cons _ _)) (- 1))
         ((tuple (cl:cons _ _) nil) 1)
         ((tuple (cl:cons x xs%) (cl:cons y ys%))
-          (let ((c% (funcall cmp x y)))
+          (let ((c% (#`cmp x y)))
             (cl:declare (cl:ignorable c%))
             (if (<> c% 0) c% (lex% xs% ys%)))))))
     #'lex%))
@@ -12586,9 +12516,7 @@
       (pos)
       (if (< pos 0)
         ""
-        (if (funcall pred (string-get s pos))
-          (strip (- pos 1))
-          (string-sub s 0 (+ pos 1))))))
+        (if (#`pred (string-get s pos)) (strip (- pos 1)) (string-sub s 0 (+ pos 1))))))
     (strip (- (string-length s) 1))))
 
 ;; (* ------------------------------------------------------------------------- *)
@@ -12642,7 +12570,7 @@
 ;; (* ------------------------------------------------------------------------- *)
 
 
-(defunc equalKey (compareKey key1 key2) (= (funcall compareKey key1 key2) 0))
+(defunc equalKey (compareKey key1 key2) (= (#`compareKey key1 key2) 0))
 
 (defparameter randomPriority (function-value #'random-bits 1))
 
@@ -12654,8 +12582,7 @@
 
 (defunc lowerPriorityNode (node1 node2)
   (match (tuple node1 node2)
-    ((tuple (node :priority p1) (node :priority p2))
-      (< (funcall comparePriority p1 p2) 0))))
+    ((tuple (node :priority p1) (node :priority p2)) (< (#`comparePriority p1 p2) 0))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Tree debugging functions.                                                 *)
@@ -12811,7 +12738,7 @@
 (defunc nodeSingleton (arg~870)
   (match arg~870
     ((tuple key value)
-      (let ((priority (funcall randomPriority unit)))
+      (let ((priority (#`randomPriority unit)))
         (cl:declare (cl:ignorable priority))
         (mkNodeSingleton priority key value)))))
 
@@ -12868,7 +12795,7 @@
 (defunc nodePeek (compareKey pkey node%)
   (match node%
     ((node :left left :key key :value value :right right)
-      (let ((c% (funcall compareKey pkey key)))
+      (let ((c% (#`compareKey pkey key)))
         (cl:declare (cl:ignorable c%))
         (if (< c% 0)
           (treePeek compareKey pkey left)
@@ -12889,7 +12816,7 @@
 (defunc nodePeekPath (compareKey pkey path node%)
   (match node%
     ((node :left left :key key :right right)
-      (let ((c% (funcall compareKey pkey key)))
+      (let ((c% (#`compareKey pkey key)))
         (cl:declare (cl:ignorable c%))
         (if (< c% 0)
           (treePeekPath compareKey pkey (cl:cons (tuple cl:t node%) path) left)
@@ -12979,7 +12906,7 @@
 (defunc nodePeekKey (compareKey pkey node%)
   (match node%
     ((node :left left :key key :value value :right right)
-      (let ((c% (funcall compareKey pkey key)))
+      (let ((c% (#`compareKey pkey key)))
         (cl:declare (cl:ignorable c%))
         (if (< c% 0)
           (treePeekKey compareKey pkey left)
@@ -13035,7 +12962,7 @@
 (defunc nodeDelete (compareKey dkey node%)
   (match node%
     ((node :size size% :priority priority :left left :key key :value value :right right)
-      (let ((c% (funcall compareKey dkey key)))
+      (let ((c% (#`compareKey dkey key)))
         (cl:declare (cl:ignorable c%))
         (if (< c% 0)
           (let ((size%% (- size% 1)) (left% (treeDelete compareKey dkey left)))
@@ -13093,7 +13020,7 @@
     ((node :priority priority :left left :key key :value value :right right)
       (let
         ((left% (treeMapPartial f left))
-          (vo (funcall f (tuple key value)))
+          (vo (#`f (tuple key value)))
           (right% (treeMapPartial f right)))
         (cl:declare (cl:ignorable left% vo right%))
         (match vo
@@ -13113,7 +13040,7 @@
     ((node :size size% :priority priority :left left :key key :value value :right right)
       (let
         ((left% (treeMap f left))
-          (value% (funcall f (tuple key value)))
+          (value% (#`f (tuple key value)))
           (right% (treeMap f right)))
         (cl:declare (cl:ignorable left% value% right%))
         (make-node
@@ -13156,8 +13083,8 @@
             (let
               ((vo
                 (match kvo
-                  ((None) (funcall f2 (tuple key value)))
-                  ((Some kv) (funcall fb (tuple kv (tuple key value)))))))
+                  ((None) (#`f2 (tuple key value)))
+                  ((Some kv) (#`fb (tuple kv (tuple key value)))))))
               (cl:declare (cl:ignorable vo))
               (match vo
                 ((None) (treeAppend left% right%))
@@ -13192,7 +13119,7 @@
                 ((vo
                   (match kvo
                     ((None) (make-Some value))
-                    ((Some kv) (funcall f (tuple kv (tuple key value)))))))
+                    ((Some kv) (#`f (tuple kv (tuple key value)))))))
                 (cl:declare (cl:ignorable vo))
                 (match vo
                   ((None) (treeAppend left% right%))
@@ -13225,7 +13152,7 @@
               ((vo
                 (match kvo
                   ((None) (make-None))
-                  ((Some kv) (funcall f (tuple kv (tuple key value)))))))
+                  ((Some kv) (#`f (tuple kv (tuple key value)))))))
               (cl:declare (cl:ignorable vo))
               (match vo
                 ((None) (treeAppend left% right%))
@@ -13488,7 +13415,7 @@
     ((Some iter)
       (match (readIterator iter)
         ((tuple key value)
-          (foldIterator f (funcall f (tuple key value acc)) (advanceIterator iter)))))))
+          (foldIterator f (#`f (tuple key value acc)) (advanceIterator iter)))))))
 
 (defunc findIterator (pred io)
   (match io
@@ -13496,7 +13423,7 @@
     ((Some iter)
       (let ((key_value (readIterator iter)))
         (cl:declare (cl:ignorable key_value))
-        (if (funcall pred key_value)
+        (if (#`pred key_value)
           (make-Some key_value)
           (findIterator pred (advanceIterator iter)))))))
 
@@ -13506,9 +13433,7 @@
     ((Some iter)
       (let ((key_value (readIterator iter)))
         (cl:declare (cl:ignorable key_value))
-        (match (funcall f key_value)
-          ((None) (firstIterator f (advanceIterator iter)))
-          (s s))))))
+        (match (#`f key_value) ((None) (firstIterator f (advanceIterator iter))) (s s))))))
 
 (defunc compareIterator (compareKey compareValue io1 io2)
   (match (tuple io1 io2)
@@ -13518,11 +13443,11 @@
     ((tuple (Some i1) (Some i2))
       (match (tuple (readIterator i1) (readIterator i2))
         ((tuple (tuple k1 v1) (tuple k2 v2))
-          (let ((c% (funcall compareKey k1 k2)))
+          (let ((c% (#`compareKey k1 k2)))
             (cl:declare (cl:ignorable c%))
             (if (<> c% 0)
               c%
-              (let ((c%% (funcall compareValue v1 v2)))
+              (let ((c%% (#`compareValue v1 v2)))
                 (cl:declare (cl:ignorable c%%))
                 (if (<> c%% 0)
                   c%%
@@ -13539,9 +13464,9 @@
       (match (tuple (readIterator i1) (readIterator i2))
         ((tuple (tuple k1 v1) (tuple k2 v2))
           (cl:and
-            (funcall equalKey% k1 k2)
+            (#`equalKey% k1 k2)
             (cl:and
-              (funcall equalValue v1 v2)
+              (#`equalValue v1 v2)
               (let ((io1% (advanceIterator i1)) (io2% (advanceIterator i2)))
                 (cl:declare (cl:ignorable io1% io2%))
                 (equalIterator equalKey% equalValue io1% io2%)))))))))
@@ -13727,7 +13652,7 @@
     ((Map% compareKey tree1)
       (match arg~3193
         ((Map% _ tree2)
-          (fletc ((f2 (kv) (funcall f (tuple kv kv))))
+          (fletc ((f2 (kv) (#`f (tuple kv kv))))
             (let ((tree% (treeUnion compareKey f #'f2 tree1 tree2)))
               (cl:declare (cl:ignorable tree%))
               (make-Map% compareKey tree%))))))))
@@ -13802,7 +13727,7 @@
 
 
 (defunc transform (f)
-  (map (lambdac (arg~3305) (match arg~3305 ((tuple _ value) (funcall f value))))))
+  (map (lambdac (arg~3305) (match arg~3305 ((tuple _ value) (#`f value))))))
 
 (defunc filter (pred)
   (fletc
@@ -13810,12 +13735,11 @@
       (arg~3319)
       (match arg~3319
         ((cl:and key_value (tuple _ value))
-          (if (funcall pred key_value) (make-Some value) (make-None))))))
+          (if (#`pred key_value) (make-Some value) (make-None))))))
     (mapPartial #'f)))
 
 (defunc partition (p%)
-  (fletc ((np (x) (not (funcall p% x))))
-    (lambdac (m) (tuple (filter p% m) (filter #'np m)))))
+  (fletc ((np (x) (not (#`p% x)))) (lambdac (m) (tuple (filter p% m) (filter #'np m)))))
 
 (defunc foldl (f b% m) (foldIterator f b% (mkIterator m)))
 
@@ -13825,8 +13749,7 @@
   (foldl
     (lambdac (arg~3379)
       (match arg~3379
-        ((tuple key value (cl:type holai.runtime::unit-value))
-          (funcall f (tuple key value)))))
+        ((tuple key value (cl:type holai.runtime::unit-value)) (#`f (tuple key value)))))
     unit
     m))
 
@@ -13845,14 +13768,13 @@
 
 (defunc exists (p% m) (is_some (findl p% m)))
 
-(defunc all (p%)
-  (fletc ((np (x) (not (funcall p% x)))) (lambdac (m) (not (exists #'np m)))))
+(defunc all (p%) (fletc ((np (x) (not (#`p% x)))) (lambdac (m) (not (exists #'np m)))))
 
 (defunc count (pred)
   (fletc
     ((f
       (arg~3454)
-      (match arg~3454 ((tuple k% v acc) (if (funcall pred (tuple k% v)) (+ acc 1) acc)))))
+      (match arg~3454 ((tuple k% v acc) (if (#`pred (tuple k% v)) (+ acc 1) acc)))))
     (foldl #'f 0)))
 
 ;; (* ------------------------------------------------------------------------- *)
@@ -14021,7 +13943,7 @@
   (fletc
     ((mf
       (arg~3826)
-      (match arg~3826 ((tuple elt (cl:type holai.runtime::unit-value)) (funcall f elt)))))
+      (match arg~3826 ((tuple elt (cl:type holai.runtime::unit-value)) (#`f elt)))))
     (lambdac (arg~3834)
       (match arg~3834 ((Set m) (holai.metis.metis_prover.pmap:mapPartial #'mf m))))))
 
@@ -14029,7 +13951,7 @@
   (fletc
     ((mf
       (arg~3848)
-      (match arg~3848 ((tuple elt (cl:type holai.runtime::unit-value)) (funcall f elt)))))
+      (match arg~3848 ((tuple elt (cl:type holai.runtime::unit-value)) (#`f elt)))))
     (lambdac (arg~3856)
       (match arg~3856 ((Set m) (holai.metis.metis_prover.pmap:map #'mf m))))))
 
@@ -14176,8 +14098,7 @@
   (fletc
     ((mpred
       (arg~4209)
-      (match arg~4209
-        ((tuple elt (cl:type holai.runtime::unit-value)) (funcall pred elt)))))
+      (match arg~4209 ((tuple elt (cl:type holai.runtime::unit-value)) (#`pred elt)))))
     (lambdac (arg~4217)
       (match arg~4217
         ((Set m) (make-Set (holai.metis.metis_prover.pmap:filter #'mpred m)))))))
@@ -14186,8 +14107,7 @@
   (fletc
     ((mpred
       (arg~4232)
-      (match arg~4232
-        ((tuple elt (cl:type holai.runtime::unit-value)) (funcall pred elt)))))
+      (match arg~4232 ((tuple elt (cl:type holai.runtime::unit-value)) (#`pred elt)))))
     (lambdac (arg~4240)
       (match arg~4240
         ((Set m)
@@ -14198,7 +14118,7 @@
   (fletc
     ((mf
       (arg~4265)
-      (match arg~4265 ((tuple elt (cl:type holai.runtime::unit-value)) (funcall f elt)))))
+      (match arg~4265 ((tuple elt (cl:type holai.runtime::unit-value)) (#`f elt)))))
     (lambdac (arg~4273)
       (match arg~4273 ((Set m) (holai.metis.metis_prover.pmap:app #'mf m))))))
 
@@ -14207,7 +14127,7 @@
     ((mf
       (arg~4287)
       (match arg~4287
-        ((tuple elt (cl:type holai.runtime::unit-value) acc) (funcall f (tuple elt acc))))))
+        ((tuple elt (cl:type holai.runtime::unit-value) acc) (#`f (tuple elt acc))))))
     (lambdac (acc arg~4300)
       (match arg~4300 ((Set m) (holai.metis.metis_prover.pmap:foldl #'mf acc m))))))
 
@@ -14216,7 +14136,7 @@
     ((mf
       (arg~4315)
       (match arg~4315
-        ((tuple elt (cl:type holai.runtime::unit-value) acc) (funcall f (tuple elt acc))))))
+        ((tuple elt (cl:type holai.runtime::unit-value) acc) (#`f (tuple elt acc))))))
     (lambdac (acc arg~4328)
       (match arg~4328 ((Set m) (holai.metis.metis_prover.pmap:foldr #'mf acc m))))))
 
@@ -14229,7 +14149,7 @@
   (fletc
     ((mp%
       (arg~4343)
-      (match arg~4343 ((tuple elt (cl:type holai.runtime::unit-value)) (funcall p% elt)))))
+      (match arg~4343 ((tuple elt (cl:type holai.runtime::unit-value)) (#`p% elt)))))
     (lambdac (arg~4351)
       (match arg~4351
         ((Set m)
@@ -14241,7 +14161,7 @@
   (fletc
     ((mp%
       (arg~4375)
-      (match arg~4375 ((tuple elt (cl:type holai.runtime::unit-value)) (funcall p% elt)))))
+      (match arg~4375 ((tuple elt (cl:type holai.runtime::unit-value)) (#`p% elt)))))
     (lambdac (arg~4383)
       (match arg~4383
         ((Set m)
@@ -14253,7 +14173,7 @@
   (fletc
     ((mf
       (arg~4407)
-      (match arg~4407 ((tuple elt (cl:type holai.runtime::unit-value)) (funcall f elt)))))
+      (match arg~4407 ((tuple elt (cl:type holai.runtime::unit-value)) (#`f elt)))))
     (lambdac (arg~4415)
       (match arg~4415 ((Set m) (holai.metis.metis_prover.pmap:firstl #'mf m))))))
 
@@ -14261,7 +14181,7 @@
   (fletc
     ((mf
       (arg~4429)
-      (match arg~4429 ((tuple elt (cl:type holai.runtime::unit-value)) (funcall f elt)))))
+      (match arg~4429 ((tuple elt (cl:type holai.runtime::unit-value)) (#`f elt)))))
     (lambdac (arg~4437)
       (match arg~4437 ((Set m) (holai.metis.metis_prover.pmap:firstr #'mf m))))))
 
@@ -14269,7 +14189,7 @@
   (fletc
     ((mp%
       (arg~4451)
-      (match arg~4451 ((tuple elt (cl:type holai.runtime::unit-value)) (funcall p% elt)))))
+      (match arg~4451 ((tuple elt (cl:type holai.runtime::unit-value)) (#`p% elt)))))
     (lambdac (arg~4459)
       (match arg~4459 ((Set m) (holai.metis.metis_prover.pmap:exists #'mp% m))))))
 
@@ -14277,7 +14197,7 @@
   (fletc
     ((mp%
       (arg~4473)
-      (match arg~4473 ((tuple elt (cl:type holai.runtime::unit-value)) (funcall p% elt)))))
+      (match arg~4473 ((tuple elt (cl:type holai.runtime::unit-value)) (#`p% elt)))))
     (lambdac (arg~4481)
       (match arg~4481 ((Set m) (holai.metis.metis_prover.pmap:all #'mp% m))))))
 
@@ -14285,7 +14205,7 @@
   (fletc
     ((mp%
       (arg~4495)
-      (match arg~4495 ((tuple elt (cl:type holai.runtime::unit-value)) (funcall p% elt)))))
+      (match arg~4495 ((tuple elt (cl:type holai.runtime::unit-value)) (#`p% elt)))))
     (lambdac (arg~4503)
       (match arg~4503 ((Set m) (holai.metis.metis_prover.pmap:count #'mp% m))))))
 
@@ -14327,7 +14247,7 @@
 
 
 (defunc transform (f)
-  (fletc ((inc (arg~4597) (match arg~4597 ((tuple x l) (cl:cons (funcall f x) l)))))
+  (fletc ((inc (arg~4597) (match arg~4597 ((tuple x l) (cl:cons (#`f x) l)))))
     (foldr #'inc nil)))
 
 (defunc toList (arg~4614) (match arg~4614 ((Set m) (keys m))))
@@ -14418,7 +14338,7 @@
   (match arg~4912
     ((Empty%) (make-Node :l (make-Empty%) :v x :d data :r (make-Empty%) :h 1))
     ((cl:and m (Node :l l :v v :d d :r r :h h))
-      (let ((c (funcall compare x v)))
+      (let ((c (#`compare x v)))
         (cl:declare (cl:ignorable c))
         (if (= c 0)
           (if (== d data) m (make-Node :l l :v x :d data :r r :h h))
@@ -14434,7 +14354,7 @@
   (match arg~4994
     ((Empty%) (raise (make-Not_found)))
     ((Node :l l :v v :d d :r r)
-      (let ((c (funcall compare x v)))
+      (let ((c (#`compare x v)))
         (cl:declare (cl:ignorable c))
         (if (= c 0) d (find x (if (< c 0) l r)))))))
 
@@ -14442,7 +14362,7 @@
   (match arg~5029
     ((Empty%) cl:nil)
     ((Node :l l :v v :r r)
-      (let ((c (funcall compare x v)))
+      (let ((c (#`compare x v)))
         (cl:declare (cl:ignorable c))
         (cl:or (= c 0) (mem x (if (< c 0) l r)))))))
 
@@ -14469,7 +14389,7 @@
   (match arg~5143
     ((Empty%) (make-Empty%))
     ((cl:and m (Node :l l :v v :d d :r r))
-      (let ((c (funcall compare x v)))
+      (let ((c (#`compare x v)))
         (cl:declare (cl:ignorable c))
         (if (= c 0)
           (merge~1 l r)
@@ -14485,19 +14405,19 @@
   (match arg~5208
     ((Empty%) (make-Empty%))
     ((Node :l l :v v :d d :r r :h h)
-      (let* ((l% (map f l)) (d% (funcall f d)) (r% (map f r)))
+      (let* ((l% (map f l)) (d% (#`f d)) (r% (map f r)))
         (cl:declare (cl:ignorable l% d% r%))
         (make-Node :l l% :v v :d d% :r r% :h h)))))
 
 (defunc fold (f m accu)
   (match m
     ((Empty%) accu)
-    ((Node :l l :v v :d d :r r) (fold f r (funcall f v d (fold f l accu))))))
+    ((Node :l l :v v :d d :r r) (fold f r (#`f v d (fold f l accu))))))
 
 (defunc exists (p arg~5274)
   (match arg~5274
     ((Empty%) cl:nil)
-    ((Node :l l :v v :d d :r r) (cl:or (funcall p v d) (cl:or (exists p l) (exists p r))))))
+    ((Node :l l :v v :d d :r r) (cl:or (#`p v d) (cl:or (exists p l) (exists p r))))))
 
 ;; (* Beware: those two functions assume that the added k is *strictly*
 ;;        smaller (or bigger) than all the present keys in the tree; it
@@ -14550,7 +14470,7 @@
   (match arg~5492
     ((Empty%) (tuple (make-Empty%) (make-None) (make-Empty%)))
     ((Node :l l :v v :d d :r r)
-      (let ((c (funcall compare x v)))
+      (let ((c (#`compare x v)))
         (cl:declare (cl:ignorable c))
         (if (= c 0)
           (tuple l (make-Some d) r)
@@ -14564,19 +14484,11 @@
     ((guard (tuple (Node :l l1 :v v1 :d d1 :r r1 :h h1) _) (>= h1 (height s2)))
       (match (split v1 s2)
         ((tuple l2 d2 r2)
-          (concat_or_join
-            (merge f l1 l2)
-            v1
-            (funcall f v1 (make-Some d1) d2)
-            (merge f r1 r2)))))
+          (concat_or_join (merge f l1 l2) v1 (#`f v1 (make-Some d1) d2) (merge f r1 r2)))))
     ((tuple _ (Node :l l2 :v v2 :d d2 :r r2))
       (match (split v2 s1)
         ((tuple l1 d1 r1)
-          (concat_or_join
-            (merge f l1 l2)
-            v2
-            (funcall f v2 d1 (make-Some d2))
-            (merge f r1 r2)))))
+          (concat_or_join (merge f l1 l2) v2 (#`f v2 d1 (make-Some d2)) (merge f r1 r2)))))
     (_ (assert-true cl:nil "ocaml-stdlib/map.ml" 400 10))))
 
 (defunc union (f s1 s2)
@@ -14590,20 +14502,20 @@
               (cl:declare (cl:ignorable l r))
               (match d2%
                 ((None) (join l v1 d1 r))
-                ((Some d2) (concat_or_join l v1 (funcall f v1 d1 d2) r))))))
+                ((Some d2) (concat_or_join l v1 (#`f v1 d1 d2) r))))))
         (match (split v2 s1)
           ((tuple l1% d1% r1%)
             (let ((l (union f l1% l2)) (r (union f r1% r2)))
               (cl:declare (cl:ignorable l r))
               (match d1%
                 ((None) (join l v2 d2 r))
-                ((Some d1) (concat_or_join l v2 (funcall f v2 d1 d2) r))))))))))
+                ((Some d1) (concat_or_join l v2 (#`f v2 d1 d2) r))))))))))
 
 (defunc filter (p arg~5790)
   (match arg~5790
     ((Empty%) (make-Empty%))
     ((cl:and m (Node :l l :v v :d d :r r))
-      (let* ((l% (filter p l)) (pvd (funcall p v d)) (r% (filter p r)))
+      (let* ((l% (filter p l)) (pvd (#`p v d)) (r% (filter p r)))
         (cl:declare (cl:ignorable l% pvd r%))
         (if pvd (if (cl:and (== l l%) (== r r%)) m (join l% v d r%)) (concat l% r%))))))
 
@@ -14660,7 +14572,7 @@
 
 (defunc foldl (f b% m)
   (list-fold-left
-    (lambdac (s arg~5980) (match arg~5980 ((tuple v tm) (funcall f (tuple v tm s)))))
+    (lambdac (s arg~5980) (match arg~5980 ((tuple v tm) (#`f (tuple v tm s)))))
     b%
     (bindings m)))
 
@@ -14668,7 +14580,7 @@
 
 (defunc filter (f)
   (holai.metis.metis_prover.intmap.include~4681.ma:filter
-    (lambdac (x y) (funcall f (tuple x y)))))
+    (lambdac (x y) (#`f (tuple x y)))))
 
 (defparameter inDomain #'mem)
 
@@ -14677,7 +14589,7 @@
     ((f%
       (k% arg~6021)
       (match arg~6021
-        ((tuple (Some x) (Some y)) (funcall f (tuple (tuple k% x) (tuple k% y))))
+        ((tuple (Some x) (Some y)) (#`f (tuple (tuple k% x) (tuple k% y))))
         ((tuple (Some x) (None)) (make-Some x))
         ((tuple (None) (Some y)) (make-Some y))
         ((tuple (None) (None)) (make-None)))))
@@ -14687,8 +14599,7 @@
 
 (defunc mapPartial (f m)
   (fold
-    (lambdac (k% x acc)
-      (match (funcall f (tuple k% x)) ((Some y) (add k% y acc)) ((None) acc)))
+    (lambdac (k% x acc) (match (#`f (tuple k% x)) ((Some y) (add k% y acc)) ((None) acc)))
     m
     empty))
 
@@ -14696,7 +14607,7 @@
 
 (defunc exists (f)
   (holai.metis.metis_prover.intmap.include~4681.ma:exists
-    (lambdac (k% m) (funcall f (tuple k% m)))))
+    (lambdac (k% m) (#`f (tuple k% m)))))
 
 (in-package :holai.metis.metis_prover.intmap)
 
@@ -14760,7 +14671,7 @@
   (match arg~6350
     ((Empty%) (make-Node :l (make-Empty%) :v x :d data :r (make-Empty%) :h 1))
     ((cl:and m (Node :l l :v v :d d :r r :h h))
-      (let ((c (funcall compare x v)))
+      (let ((c (#`compare x v)))
         (cl:declare (cl:ignorable c))
         (if (= c 0)
           (if (== d data) m (make-Node :l l :v x :d data :r r :h h))
@@ -14776,7 +14687,7 @@
   (match arg~6432
     ((Empty%) (raise (make-Not_found)))
     ((Node :l l :v v :d d :r r)
-      (let ((c (funcall compare x v)))
+      (let ((c (#`compare x v)))
         (cl:declare (cl:ignorable c))
         (if (= c 0) d (find x (if (< c 0) l r)))))))
 
@@ -14784,7 +14695,7 @@
   (match arg~6467
     ((Empty%) cl:nil)
     ((Node :l l :v v :r r)
-      (let ((c (funcall compare x v)))
+      (let ((c (#`compare x v)))
         (cl:declare (cl:ignorable c))
         (cl:or (= c 0) (mem x (if (< c 0) l r)))))))
 
@@ -14811,7 +14722,7 @@
   (match arg~6581
     ((Empty%) (make-Empty%))
     ((cl:and m (Node :l l :v v :d d :r r))
-      (let ((c (funcall compare x v)))
+      (let ((c (#`compare x v)))
         (cl:declare (cl:ignorable c))
         (if (= c 0)
           (merge~1 l r)
@@ -14827,19 +14738,19 @@
   (match arg~6646
     ((Empty%) (make-Empty%))
     ((Node :l l :v v :d d :r r :h h)
-      (let* ((l% (map f l)) (d% (funcall f d)) (r% (map f r)))
+      (let* ((l% (map f l)) (d% (#`f d)) (r% (map f r)))
         (cl:declare (cl:ignorable l% d% r%))
         (make-Node :l l% :v v :d d% :r r% :h h)))))
 
 (defunc fold (f m accu)
   (match m
     ((Empty%) accu)
-    ((Node :l l :v v :d d :r r) (fold f r (funcall f v d (fold f l accu))))))
+    ((Node :l l :v v :d d :r r) (fold f r (#`f v d (fold f l accu))))))
 
 (defunc exists (p arg~6712)
   (match arg~6712
     ((Empty%) cl:nil)
-    ((Node :l l :v v :d d :r r) (cl:or (funcall p v d) (cl:or (exists p l) (exists p r))))))
+    ((Node :l l :v v :d d :r r) (cl:or (#`p v d) (cl:or (exists p l) (exists p r))))))
 
 ;; (* Beware: those two functions assume that the added k is *strictly*
 ;;        smaller (or bigger) than all the present keys in the tree; it
@@ -14892,7 +14803,7 @@
   (match arg~6930
     ((Empty%) (tuple (make-Empty%) (make-None) (make-Empty%)))
     ((Node :l l :v v :d d :r r)
-      (let ((c (funcall compare x v)))
+      (let ((c (#`compare x v)))
         (cl:declare (cl:ignorable c))
         (if (= c 0)
           (tuple l (make-Some d) r)
@@ -14906,19 +14817,11 @@
     ((guard (tuple (Node :l l1 :v v1 :d d1 :r r1 :h h1) _) (>= h1 (height s2)))
       (match (split v1 s2)
         ((tuple l2 d2 r2)
-          (concat_or_join
-            (merge f l1 l2)
-            v1
-            (funcall f v1 (make-Some d1) d2)
-            (merge f r1 r2)))))
+          (concat_or_join (merge f l1 l2) v1 (#`f v1 (make-Some d1) d2) (merge f r1 r2)))))
     ((tuple _ (Node :l l2 :v v2 :d d2 :r r2))
       (match (split v2 s1)
         ((tuple l1 d1 r1)
-          (concat_or_join
-            (merge f l1 l2)
-            v2
-            (funcall f v2 d1 (make-Some d2))
-            (merge f r1 r2)))))
+          (concat_or_join (merge f l1 l2) v2 (#`f v2 d1 (make-Some d2)) (merge f r1 r2)))))
     (_ (assert-true cl:nil "ocaml-stdlib/map.ml" 400 10))))
 
 (defunc union (f s1 s2)
@@ -14932,20 +14835,20 @@
               (cl:declare (cl:ignorable l r))
               (match d2%
                 ((None) (join l v1 d1 r))
-                ((Some d2) (concat_or_join l v1 (funcall f v1 d1 d2) r))))))
+                ((Some d2) (concat_or_join l v1 (#`f v1 d1 d2) r))))))
         (match (split v2 s1)
           ((tuple l1% d1% r1%)
             (let ((l (union f l1% l2)) (r (union f r1% r2)))
               (cl:declare (cl:ignorable l r))
               (match d1%
                 ((None) (join l v2 d2 r))
-                ((Some d1) (concat_or_join l v2 (funcall f v2 d1 d2) r))))))))))
+                ((Some d1) (concat_or_join l v2 (#`f v2 d1 d2) r))))))))))
 
 (defunc filter (p arg~7228)
   (match arg~7228
     ((Empty%) (make-Empty%))
     ((cl:and m (Node :l l :v v :d d :r r))
-      (let* ((l% (filter p l)) (pvd (funcall p v d)) (r% (filter p r)))
+      (let* ((l% (filter p l)) (pvd (#`p v d)) (r% (filter p r)))
         (cl:declare (cl:ignorable l% pvd r%))
         (if pvd (if (cl:and (== l l%) (== r r%)) m (join l% v d r%)) (concat l% r%))))))
 
@@ -15002,7 +14905,7 @@
 
 (defunc foldl (f b% m)
   (list-fold-left
-    (lambdac (s arg~7418) (match arg~7418 ((tuple v tm) (funcall f (tuple v tm s)))))
+    (lambdac (s arg~7418) (match arg~7418 ((tuple v tm) (#`f (tuple v tm s)))))
     b%
     (bindings m)))
 
@@ -15010,7 +14913,7 @@
 
 (defunc filter (f)
   (holai.metis.metis_prover.stringmap.include~6119.ma:filter
-    (lambdac (x y) (funcall f (tuple x y)))))
+    (lambdac (x y) (#`f (tuple x y)))))
 
 (defparameter inDomain #'mem)
 
@@ -15019,7 +14922,7 @@
     ((f%
       (k% arg~7459)
       (match arg~7459
-        ((tuple (Some x) (Some y)) (funcall f (tuple (tuple k% x) (tuple k% y))))
+        ((tuple (Some x) (Some y)) (#`f (tuple (tuple k% x) (tuple k% y))))
         ((tuple (Some x) (None)) (make-Some x))
         ((tuple (None) (Some y)) (make-Some y))
         ((tuple (None) (None)) (make-None)))))
@@ -15029,8 +14932,7 @@
 
 (defunc mapPartial (f m)
   (fold
-    (lambdac (k% x acc)
-      (match (funcall f (tuple k% x)) ((Some y) (add k% y acc)) ((None) acc)))
+    (lambdac (k% x acc) (match (#`f (tuple k% x)) ((Some y) (add k% y acc)) ((None) acc)))
     m
     empty))
 
@@ -15038,7 +14940,7 @@
 
 (defunc exists (f)
   (holai.metis.metis_prover.stringmap.include~6119.ma:exists
-    (lambdac (k% m) (funcall f (tuple k% m)))))
+    (lambdac (k% m) (#`f (tuple k% m)))))
 
 (in-package :holai.metis.metis_prover.stringmap)
 
@@ -15121,7 +15023,7 @@
   (match arg~7757
     ((Empty%) (make-Node :l (make-Empty%) :v x :r (make-Empty%) :h 1))
     ((cl:and t% (Node :l l :v v :r r))
-      (let ((c (funcall holai.metis.metis_prover.intset.ordered:compare x v)))
+      (let ((c (#`holai.metis.metis_prover.intset.ordered:compare x v)))
         (cl:declare (cl:ignorable c))
         (if (= c 0)
           t%
@@ -15217,7 +15119,7 @@
   (match arg~8035
     ((Empty%) (tuple (make-Empty%) cl:nil (make-Empty%)))
     ((Node :l l :v v :r r)
-      (let ((c (funcall holai.metis.metis_prover.intset.ordered:compare x v)))
+      (let ((c (#`holai.metis.metis_prover.intset.ordered:compare x v)))
         (cl:declare (cl:ignorable c))
         (if (= c 0)
           (tuple l cl:t r)
@@ -15236,7 +15138,7 @@
   (match arg~8116
     ((Empty%) cl:nil)
     ((Node :l l :v v :r r)
-      (let ((c (funcall holai.metis.metis_prover.intset.ordered:compare x v)))
+      (let ((c (#`holai.metis.metis_prover.intset.ordered:compare x v)))
         (cl:declare (cl:ignorable c))
         (cl:or (= c 0) (mem x (if (< c 0) l r)))))))
 
@@ -15244,7 +15146,7 @@
   (match arg~8147
     ((Empty%) (make-Empty%))
     ((cl:and t% (Node :l l :v v :r r))
-      (let ((c (funcall holai.metis.metis_prover.intset.ordered:compare x v)))
+      (let ((c (#`holai.metis.metis_prover.intset.ordered:compare x v)))
         (cl:declare (cl:ignorable c))
         (if (= c 0)
           (merge l r)
@@ -15302,7 +15204,7 @@
     ((tuple (End) _) (- 1))
     ((tuple _ (End)) 1)
     ((tuple (More v1 r1 e1%) (More v2 r2 e2%))
-      (let ((c (funcall holai.metis.metis_prover.intset.ordered:compare v1 v2)))
+      (let ((c (#`holai.metis.metis_prover.intset.ordered:compare v1 v2)))
         (cl:declare (cl:ignorable c))
         (if (<> c 0) c (compare_aux (cons_enum r1 e1%) (cons_enum r2 e2%)))))))
 
@@ -15315,7 +15217,7 @@
     ((tuple (Empty%) _) cl:t)
     ((tuple _ (Empty%)) cl:nil)
     ((tuple (Node :l l1 :v v1 :r r1) (cl:and t2 (Node :l l2 :v v2 :r r2)))
-      (let ((c (funcall holai.metis.metis_prover.intset.ordered:compare v1 v2)))
+      (let ((c (#`holai.metis.metis_prover.intset.ordered:compare v1 v2)))
         (cl:declare (cl:ignorable c))
         (if (= c 0)
           (cl:and (subset l1 l2) (subset r1 r2))
@@ -15328,19 +15230,17 @@
               (subset l1 t2))))))))
 
 (defunc fold (f s accu)
-  (match s
-    ((Empty%) accu)
-    ((Node :l l :v v :r r) (fold f r (funcall f v (fold f l accu))))))
+  (match s ((Empty%) accu) ((Node :l l :v v :r r) (fold f r (#`f v (fold f l accu))))))
 
 (defunc for_all (p arg~8615)
   (match arg~8615
     ((Empty%) cl:t)
-    ((Node :l l :v v :r r) (cl:and (funcall p v) (cl:and (for_all p l) (for_all p r))))))
+    ((Node :l l :v v :r r) (cl:and (#`p v) (cl:and (for_all p l) (for_all p r))))))
 
 (defunc exists (p arg~8639)
   (match arg~8639
     ((Empty%) cl:nil)
-    ((Node :l l :v v :r r) (cl:or (funcall p v) (cl:or (exists p l) (exists p r))))))
+    ((Node :l l :v v :r r) (cl:or (#`p v) (cl:or (exists p l) (exists p r))))))
 
 (defunc cardinal (arg~8662)
   (match arg~8662 ((Empty%) 0) ((Node :l l :r r) (+ (+ (cardinal l) 1) (cardinal r)))))
@@ -15360,7 +15260,7 @@
 
 (defunc add (s x) (holai.metis.metis_prover.intset.include~7557.se:add x s))
 
-(defunc foldr (f a% s) (fold (lambdac (x acc) (funcall f (tuple x acc))) s a%))
+(defunc foldr (f a% s) (fold (lambdac (x acc) (#`f (tuple x acc))) s a%))
 
 (defparameter foldl #'foldr)
 
@@ -15409,19 +15309,18 @@
       (x arg~8810)
       (match arg~8810
         ((cl:and s% (Some _)) s%)
-        ((None) (if (funcall p% x) (make-Some x) (make-None))))))
+        ((None) (if (#`p% x) (make-Some x) (make-None))))))
     (fold #'go s (make-None))))
 
 (defunc firstl (f s)
-  (fletc
-    ((go (x arg~8836) (match arg~8836 ((cl:and s% (Some _)) s%) ((None) (funcall f x)))))
+  (fletc ((go (x arg~8836) (match arg~8836 ((cl:and s% (Some _)) s%) ((None) (#`f x)))))
     (fold #'go s (make-None))))
 
-(defunc transform (f s) (fold (lambdac (x acc) (cl:cons (funcall f x) acc)) s nil))
+(defunc transform (f s) (fold (lambdac (x acc) (cl:cons (#`f x) acc)) s nil))
 
 (defparameter all #'for_all)
 
-(defunc count (p% s) (fold (lambdac (x c%) (if (funcall p% x) (+ c% 1) c%)) s 0))
+(defunc count (p% s) (fold (lambdac (x c%) (if (#`p% x) (+ c% 1) c%)) s 0))
 
 (in-package :holai.metis.metis_prover.intset)
 
@@ -15452,7 +15351,7 @@
         ((tuple h (Em)) h)
         ((tuple (Em) h) h)
         ((tuple (cl:and h1 (Tr _ x a1 b1)) (cl:and h2 (Tr _ y a2 b2)))
-          (if (> (funcall cmp x y) 0)
+          (if (> (#`cmp x y) 0)
             (makeT (tuple y a2 (mrg (tuple h1 b2))))
             (makeT (tuple x a1 (mrg (tuple b1 h2)))))))))
     #'mrg))
@@ -15484,7 +15383,7 @@
         (nil unit)
         ((cl:cons (Em) rest) (ap rest))
         ((cl:cons (Tr _ d a% b%) rest)
-          (progn (funcall f d) (ap (cl:cons a% (cl:cons b% rest))))))))
+          (progn (#`f d) (ap (cl:cons a% (cl:cons b% rest))))))))
     (lambdac (arg~9141) (match arg~9141 ((Heap _ _ a%) (ap (cl:cons a% nil)))))))
 
 (defunc toList (h)
@@ -15521,12 +15420,12 @@
 (defunc newNames (n) (list-map #'numName (newInts n)))
 
 (defunc variantPrime (avoid)
-  (labelsc ((variant% (n) (if (funcall avoid n) (variant% (string-concat n "'")) n)))
+  (labelsc ((variant% (n) (if (#`avoid n) (variant% (string-concat n "'")) n)))
     #'variant%))
 
 (defunc variantNum (avoid n)
   (fletc ((isDigitOrPrime (c%) (cl:or (= c% (cl:code-char 39)) (isDigit c%))))
-    (if (not (funcall avoid n))
+    (if (not (#`avoid n))
       n
       (let ((n% (stripSuffix #'isDigitOrPrime n)))
         (cl:declare (cl:ignorable n%))
@@ -15535,7 +15434,7 @@
             (i%)
             (let ((n_i (string-concat n% (string-of-int i%))))
               (cl:declare (cl:ignorable n_i))
-              (if (funcall avoid n_i) (variant% (+ i% 1)) n_i))))
+              (if (#`avoid n_i) (variant% (+ i% 1)) n_i))))
           (variant% 0))))))
 
 ;; (* ------------------------------------------------------------------------- *)
@@ -15603,7 +15502,7 @@
   (match arg~9522
     ((Empty%) (make-Node :l (make-Empty%) :v x :d data :r (make-Empty%) :h 1))
     ((cl:and m (Node :l l :v v :d d :r r :h h))
-      (let ((c (funcall compare x v)))
+      (let ((c (#`compare x v)))
         (cl:declare (cl:ignorable c))
         (if (= c 0)
           (if (== d data) m (make-Node :l l :v x :d data :r r :h h))
@@ -15619,7 +15518,7 @@
   (match arg~9604
     ((Empty%) (raise (make-Not_found)))
     ((Node :l l :v v :d d :r r)
-      (let ((c (funcall compare x v)))
+      (let ((c (#`compare x v)))
         (cl:declare (cl:ignorable c))
         (if (= c 0) d (find x (if (< c 0) l r)))))))
 
@@ -15627,7 +15526,7 @@
   (match arg~9639
     ((Empty%) cl:nil)
     ((Node :l l :v v :r r)
-      (let ((c (funcall compare x v)))
+      (let ((c (#`compare x v)))
         (cl:declare (cl:ignorable c))
         (cl:or (= c 0) (mem x (if (< c 0) l r)))))))
 
@@ -15654,7 +15553,7 @@
   (match arg~9753
     ((Empty%) (make-Empty%))
     ((cl:and m (Node :l l :v v :d d :r r))
-      (let ((c (funcall compare x v)))
+      (let ((c (#`compare x v)))
         (cl:declare (cl:ignorable c))
         (if (= c 0)
           (merge~1 l r)
@@ -15670,19 +15569,19 @@
   (match arg~9818
     ((Empty%) (make-Empty%))
     ((Node :l l :v v :d d :r r :h h)
-      (let* ((l% (map f l)) (d% (funcall f d)) (r% (map f r)))
+      (let* ((l% (map f l)) (d% (#`f d)) (r% (map f r)))
         (cl:declare (cl:ignorable l% d% r%))
         (make-Node :l l% :v v :d d% :r r% :h h)))))
 
 (defunc fold (f m accu)
   (match m
     ((Empty%) accu)
-    ((Node :l l :v v :d d :r r) (fold f r (funcall f v d (fold f l accu))))))
+    ((Node :l l :v v :d d :r r) (fold f r (#`f v d (fold f l accu))))))
 
 (defunc exists (p arg~9884)
   (match arg~9884
     ((Empty%) cl:nil)
-    ((Node :l l :v v :d d :r r) (cl:or (funcall p v d) (cl:or (exists p l) (exists p r))))))
+    ((Node :l l :v v :d d :r r) (cl:or (#`p v d) (cl:or (exists p l) (exists p r))))))
 
 ;; (* Beware: those two functions assume that the added k is *strictly*
 ;;        smaller (or bigger) than all the present keys in the tree; it
@@ -15735,7 +15634,7 @@
   (match arg~10102
     ((Empty%) (tuple (make-Empty%) (make-None) (make-Empty%)))
     ((Node :l l :v v :d d :r r)
-      (let ((c (funcall compare x v)))
+      (let ((c (#`compare x v)))
         (cl:declare (cl:ignorable c))
         (if (= c 0)
           (tuple l (make-Some d) r)
@@ -15749,19 +15648,11 @@
     ((guard (tuple (Node :l l1 :v v1 :d d1 :r r1 :h h1) _) (>= h1 (height s2)))
       (match (split v1 s2)
         ((tuple l2 d2 r2)
-          (concat_or_join
-            (merge f l1 l2)
-            v1
-            (funcall f v1 (make-Some d1) d2)
-            (merge f r1 r2)))))
+          (concat_or_join (merge f l1 l2) v1 (#`f v1 (make-Some d1) d2) (merge f r1 r2)))))
     ((tuple _ (Node :l l2 :v v2 :d d2 :r r2))
       (match (split v2 s1)
         ((tuple l1 d1 r1)
-          (concat_or_join
-            (merge f l1 l2)
-            v2
-            (funcall f v2 d1 (make-Some d2))
-            (merge f r1 r2)))))
+          (concat_or_join (merge f l1 l2) v2 (#`f v2 d1 (make-Some d2)) (merge f r1 r2)))))
     (_ (assert-true cl:nil "ocaml-stdlib/map.ml" 400 10))))
 
 (defunc union (f s1 s2)
@@ -15775,20 +15666,20 @@
               (cl:declare (cl:ignorable l r))
               (match d2%
                 ((None) (join l v1 d1 r))
-                ((Some d2) (concat_or_join l v1 (funcall f v1 d1 d2) r))))))
+                ((Some d2) (concat_or_join l v1 (#`f v1 d1 d2) r))))))
         (match (split v2 s1)
           ((tuple l1% d1% r1%)
             (let ((l (union f l1% l2)) (r (union f r1% r2)))
               (cl:declare (cl:ignorable l r))
               (match d1%
                 ((None) (join l v2 d2 r))
-                ((Some d1) (concat_or_join l v2 (funcall f v2 d1 d2) r))))))))))
+                ((Some d1) (concat_or_join l v2 (#`f v2 d1 d2) r))))))))))
 
 (defunc filter (p arg~10400)
   (match arg~10400
     ((Empty%) (make-Empty%))
     ((cl:and m (Node :l l :v v :d d :r r))
-      (let* ((l% (filter p l)) (pvd (funcall p v d)) (r% (filter p r)))
+      (let* ((l% (filter p l)) (pvd (#`p v d)) (r% (filter p r)))
         (cl:declare (cl:ignorable l% pvd r%))
         (if pvd (if (cl:and (== l l%) (== r r%)) m (join l% v d r%)) (concat l% r%))))))
 
@@ -15844,14 +15735,14 @@
 
 (defunc foldl (f b% m)
   (list-fold-left
-    (lambdac (s arg~10590) (match arg~10590 ((tuple v tm) (funcall f (tuple v tm s)))))
+    (lambdac (s arg~10590) (match arg~10590 ((tuple v tm) (#`f (tuple v tm s)))))
     b%
     (bindings m)))
 
 (defparameter foldr #'foldl)
 
 (defunc filter (f)
-  (holai.metis.metis_prover.name.map.ma:filter (lambdac (x y) (funcall f (tuple x y)))))
+  (holai.metis.metis_prover.name.map.ma:filter (lambdac (x y) (#`f (tuple x y)))))
 
 (defparameter inDomain #'mem)
 
@@ -15860,7 +15751,7 @@
     ((f%
       (k% arg~10631)
       (match arg~10631
-        ((tuple (Some x) (Some y)) (funcall f (tuple (tuple k% x) (tuple k% y))))
+        ((tuple (Some x) (Some y)) (#`f (tuple (tuple k% x) (tuple k% y))))
         ((tuple (Some x) (None)) (make-Some x))
         ((tuple (None) (Some y)) (make-Some y))
         ((tuple (None) (None)) (make-None)))))
@@ -15870,15 +15761,14 @@
 
 (defunc mapPartial (f m)
   (fold
-    (lambdac (k% x acc)
-      (match (funcall f (tuple k% x)) ((Some y) (add k% y acc)) ((None) acc)))
+    (lambdac (k% x acc) (match (#`f (tuple k% x)) ((Some y) (add k% y acc)) ((None) acc)))
     m
     empty))
 
 (defparameter transform #'map)
 
 (defunc exists (f)
-  (holai.metis.metis_prover.name.map.ma:exists (lambdac (k% m) (funcall f (tuple k% m)))))
+  (holai.metis.metis_prover.name.map.ma:exists (lambdac (k% m) (#`f (tuple k% m)))))
 
 (in-package :holai.metis.metis_prover.name)
 
@@ -15947,7 +15837,7 @@
   (match arg~10925
     ((Empty%) (make-Node :l (make-Empty%) :v x :r (make-Empty%) :h 1))
     ((cl:and t% (Node :l l :v v :r r))
-      (let ((c (funcall holai.metis.metis_prover.name.ordered:compare x v)))
+      (let ((c (#`holai.metis.metis_prover.name.ordered:compare x v)))
         (cl:declare (cl:ignorable c))
         (if (= c 0)
           t%
@@ -16043,7 +15933,7 @@
   (match arg~11203
     ((Empty%) (tuple (make-Empty%) cl:nil (make-Empty%)))
     ((Node :l l :v v :r r)
-      (let ((c (funcall holai.metis.metis_prover.name.ordered:compare x v)))
+      (let ((c (#`holai.metis.metis_prover.name.ordered:compare x v)))
         (cl:declare (cl:ignorable c))
         (if (= c 0)
           (tuple l cl:t r)
@@ -16062,7 +15952,7 @@
   (match arg~11284
     ((Empty%) cl:nil)
     ((Node :l l :v v :r r)
-      (let ((c (funcall holai.metis.metis_prover.name.ordered:compare x v)))
+      (let ((c (#`holai.metis.metis_prover.name.ordered:compare x v)))
         (cl:declare (cl:ignorable c))
         (cl:or (= c 0) (mem x (if (< c 0) l r)))))))
 
@@ -16070,7 +15960,7 @@
   (match arg~11315
     ((Empty%) (make-Empty%))
     ((cl:and t% (Node :l l :v v :r r))
-      (let ((c (funcall holai.metis.metis_prover.name.ordered:compare x v)))
+      (let ((c (#`holai.metis.metis_prover.name.ordered:compare x v)))
         (cl:declare (cl:ignorable c))
         (if (= c 0)
           (merge l r)
@@ -16128,7 +16018,7 @@
     ((tuple (End) _) (- 1))
     ((tuple _ (End)) 1)
     ((tuple (More v1 r1 e1%) (More v2 r2 e2%))
-      (let ((c (funcall holai.metis.metis_prover.name.ordered:compare v1 v2)))
+      (let ((c (#`holai.metis.metis_prover.name.ordered:compare v1 v2)))
         (cl:declare (cl:ignorable c))
         (if (<> c 0) c (compare_aux (cons_enum r1 e1%) (cons_enum r2 e2%)))))))
 
@@ -16141,7 +16031,7 @@
     ((tuple (Empty%) _) cl:t)
     ((tuple _ (Empty%)) cl:nil)
     ((tuple (Node :l l1 :v v1 :r r1) (cl:and t2 (Node :l l2 :v v2 :r r2)))
-      (let ((c (funcall holai.metis.metis_prover.name.ordered:compare v1 v2)))
+      (let ((c (#`holai.metis.metis_prover.name.ordered:compare v1 v2)))
         (cl:declare (cl:ignorable c))
         (if (= c 0)
           (cl:and (subset l1 l2) (subset r1 r2))
@@ -16154,19 +16044,17 @@
               (subset l1 t2))))))))
 
 (defunc fold (f s accu)
-  (match s
-    ((Empty%) accu)
-    ((Node :l l :v v :r r) (fold f r (funcall f v (fold f l accu))))))
+  (match s ((Empty%) accu) ((Node :l l :v v :r r) (fold f r (#`f v (fold f l accu))))))
 
 (defunc for_all (p arg~11783)
   (match arg~11783
     ((Empty%) cl:t)
-    ((Node :l l :v v :r r) (cl:and (funcall p v) (cl:and (for_all p l) (for_all p r))))))
+    ((Node :l l :v v :r r) (cl:and (#`p v) (cl:and (for_all p l) (for_all p r))))))
 
 (defunc exists (p arg~11807)
   (match arg~11807
     ((Empty%) cl:nil)
-    ((Node :l l :v v :r r) (cl:or (funcall p v) (cl:or (exists p l) (exists p r))))))
+    ((Node :l l :v v :r r) (cl:or (#`p v) (cl:or (exists p l) (exists p r))))))
 
 (defunc cardinal (arg~11830)
   (match arg~11830 ((Empty%) 0) ((Node :l l :r r) (+ (+ (cardinal l) 1) (cardinal r)))))
@@ -16186,7 +16074,7 @@
 
 (defunc add (s x) (holai.metis.metis_prover.name.set.se:add x s))
 
-(defunc foldr (f a% s) (fold (lambdac (x acc) (funcall f (tuple x acc))) s a%))
+(defunc foldr (f a% s) (fold (lambdac (x acc) (#`f (tuple x acc))) s a%))
 
 (defparameter foldl #'foldr)
 
@@ -16235,19 +16123,18 @@
       (x arg~11978)
       (match arg~11978
         ((cl:and s% (Some _)) s%)
-        ((None) (if (funcall p% x) (make-Some x) (make-None))))))
+        ((None) (if (#`p% x) (make-Some x) (make-None))))))
     (fold #'go s (make-None))))
 
 (defunc firstl (f s)
-  (fletc
-    ((go (x arg~12004) (match arg~12004 ((cl:and s% (Some _)) s%) ((None) (funcall f x)))))
+  (fletc ((go (x arg~12004) (match arg~12004 ((cl:and s% (Some _)) s%) ((None) (#`f x)))))
     (fold #'go s (make-None))))
 
-(defunc transform (f s) (fold (lambdac (x acc) (cl:cons (funcall f x) acc)) s nil))
+(defunc transform (f s) (fold (lambdac (x acc) (cl:cons (#`f x) acc)) s nil))
 
 (defparameter all #'for_all)
 
-(defunc count (p% s) (fold (lambdac (x c%) (if (funcall p% x) (+ c% 1) c%)) s 0))
+(defunc count (p% s) (fold (lambdac (x c%) (if (#`p% x) (+ c% 1) c%)) s 0))
 
 (in-package :holai.metis.metis_prover.name)
 
@@ -16284,7 +16171,7 @@
     ((tuple n1 i1)
       (match arg~12102
         ((tuple n2 i2)
-          (let ((c% (funcall holai.metis.metis_prover.name:compare n1 n2)))
+          (let ((c% (#`holai.metis.metis_prover.name:compare n1 n2)))
             (cl:declare (cl:ignorable c%))
             (if (<> c% 0) c% (intCompare i1 i2))))))))
 
@@ -16352,7 +16239,7 @@
   (match arg~12383
     ((Empty%) (make-Node :l (make-Empty%) :v x :d data :r (make-Empty%) :h 1))
     ((cl:and m (Node :l l :v v :d d :r r :h h))
-      (let ((c (funcall compare x v)))
+      (let ((c (#`compare x v)))
         (cl:declare (cl:ignorable c))
         (if (= c 0)
           (if (== d data) m (make-Node :l l :v x :d data :r r :h h))
@@ -16368,7 +16255,7 @@
   (match arg~12465
     ((Empty%) (raise (make-Not_found)))
     ((Node :l l :v v :d d :r r)
-      (let ((c (funcall compare x v)))
+      (let ((c (#`compare x v)))
         (cl:declare (cl:ignorable c))
         (if (= c 0) d (find x (if (< c 0) l r)))))))
 
@@ -16376,7 +16263,7 @@
   (match arg~12500
     ((Empty%) cl:nil)
     ((Node :l l :v v :r r)
-      (let ((c (funcall compare x v)))
+      (let ((c (#`compare x v)))
         (cl:declare (cl:ignorable c))
         (cl:or (= c 0) (mem x (if (< c 0) l r)))))))
 
@@ -16403,7 +16290,7 @@
   (match arg~12614
     ((Empty%) (make-Empty%))
     ((cl:and m (Node :l l :v v :d d :r r))
-      (let ((c (funcall compare x v)))
+      (let ((c (#`compare x v)))
         (cl:declare (cl:ignorable c))
         (if (= c 0)
           (merge~1 l r)
@@ -16419,19 +16306,19 @@
   (match arg~12679
     ((Empty%) (make-Empty%))
     ((Node :l l :v v :d d :r r :h h)
-      (let* ((l% (map f l)) (d% (funcall f d)) (r% (map f r)))
+      (let* ((l% (map f l)) (d% (#`f d)) (r% (map f r)))
         (cl:declare (cl:ignorable l% d% r%))
         (make-Node :l l% :v v :d d% :r r% :h h)))))
 
 (defunc fold (f m accu)
   (match m
     ((Empty%) accu)
-    ((Node :l l :v v :d d :r r) (fold f r (funcall f v d (fold f l accu))))))
+    ((Node :l l :v v :d d :r r) (fold f r (#`f v d (fold f l accu))))))
 
 (defunc exists (p arg~12745)
   (match arg~12745
     ((Empty%) cl:nil)
-    ((Node :l l :v v :d d :r r) (cl:or (funcall p v d) (cl:or (exists p l) (exists p r))))))
+    ((Node :l l :v v :d d :r r) (cl:or (#`p v d) (cl:or (exists p l) (exists p r))))))
 
 ;; (* Beware: those two functions assume that the added k is *strictly*
 ;;        smaller (or bigger) than all the present keys in the tree; it
@@ -16484,7 +16371,7 @@
   (match arg~12963
     ((Empty%) (tuple (make-Empty%) (make-None) (make-Empty%)))
     ((Node :l l :v v :d d :r r)
-      (let ((c (funcall compare x v)))
+      (let ((c (#`compare x v)))
         (cl:declare (cl:ignorable c))
         (if (= c 0)
           (tuple l (make-Some d) r)
@@ -16498,19 +16385,11 @@
     ((guard (tuple (Node :l l1 :v v1 :d d1 :r r1 :h h1) _) (>= h1 (height s2)))
       (match (split v1 s2)
         ((tuple l2 d2 r2)
-          (concat_or_join
-            (merge f l1 l2)
-            v1
-            (funcall f v1 (make-Some d1) d2)
-            (merge f r1 r2)))))
+          (concat_or_join (merge f l1 l2) v1 (#`f v1 (make-Some d1) d2) (merge f r1 r2)))))
     ((tuple _ (Node :l l2 :v v2 :d d2 :r r2))
       (match (split v2 s1)
         ((tuple l1 d1 r1)
-          (concat_or_join
-            (merge f l1 l2)
-            v2
-            (funcall f v2 d1 (make-Some d2))
-            (merge f r1 r2)))))
+          (concat_or_join (merge f l1 l2) v2 (#`f v2 d1 (make-Some d2)) (merge f r1 r2)))))
     (_ (assert-true cl:nil "ocaml-stdlib/map.ml" 400 10))))
 
 (defunc union (f s1 s2)
@@ -16524,20 +16403,20 @@
               (cl:declare (cl:ignorable l r))
               (match d2%
                 ((None) (join l v1 d1 r))
-                ((Some d2) (concat_or_join l v1 (funcall f v1 d1 d2) r))))))
+                ((Some d2) (concat_or_join l v1 (#`f v1 d1 d2) r))))))
         (match (split v2 s1)
           ((tuple l1% d1% r1%)
             (let ((l (union f l1% l2)) (r (union f r1% r2)))
               (cl:declare (cl:ignorable l r))
               (match d1%
                 ((None) (join l v2 d2 r))
-                ((Some d1) (concat_or_join l v2 (funcall f v2 d1 d2) r))))))))))
+                ((Some d1) (concat_or_join l v2 (#`f v2 d1 d2) r))))))))))
 
 (defunc filter (p arg~13261)
   (match arg~13261
     ((Empty%) (make-Empty%))
     ((cl:and m (Node :l l :v v :d d :r r))
-      (let* ((l% (filter p l)) (pvd (funcall p v d)) (r% (filter p r)))
+      (let* ((l% (filter p l)) (pvd (#`p v d)) (r% (filter p r)))
         (cl:declare (cl:ignorable l% pvd r%))
         (if pvd (if (cl:and (== l l%) (== r r%)) m (join l% v d r%)) (concat l% r%))))))
 
@@ -16595,7 +16474,7 @@
 
 (defunc foldl (f b% m)
   (list-fold-left
-    (lambdac (s arg~13451) (match arg~13451 ((tuple v tm) (funcall f (tuple v tm s)))))
+    (lambdac (s arg~13451) (match arg~13451 ((tuple v tm) (#`f (tuple v tm s)))))
     b%
     (bindings m)))
 
@@ -16603,7 +16482,7 @@
 
 (defunc filter (f)
   (holai.metis.metis_prover.name_arity.map.include~12152.ma:filter
-    (lambdac (x y) (funcall f (tuple x y)))))
+    (lambdac (x y) (#`f (tuple x y)))))
 
 (defparameter inDomain #'mem)
 
@@ -16612,7 +16491,7 @@
     ((f%
       (k% arg~13492)
       (match arg~13492
-        ((tuple (Some x) (Some y)) (funcall f (tuple (tuple k% x) (tuple k% y))))
+        ((tuple (Some x) (Some y)) (#`f (tuple (tuple k% x) (tuple k% y))))
         ((tuple (Some x) (None)) (make-Some x))
         ((tuple (None) (Some y)) (make-Some y))
         ((tuple (None) (None)) (make-None)))))
@@ -16622,8 +16501,7 @@
 
 (defunc mapPartial (f m)
   (fold
-    (lambdac (k% x acc)
-      (match (funcall f (tuple k% x)) ((Some y) (add k% y acc)) ((None) acc)))
+    (lambdac (k% x acc) (match (#`f (tuple k% x)) ((Some y) (add k% y acc)) ((None) acc)))
     m
     empty))
 
@@ -16631,7 +16509,7 @@
 
 (defunc exists (f)
   (holai.metis.metis_prover.name_arity.map.include~12152.ma:exists
-    (lambdac (k% m) (funcall f (tuple k% m)))))
+    (lambdac (k% m) (#`f (tuple k% m)))))
 
 (in-package :holai.metis.metis_prover.name_arity.map)
 
@@ -16709,7 +16587,7 @@
   (match arg~13810
     ((Empty%) (make-Node :l (make-Empty%) :v x :r (make-Empty%) :h 1))
     ((cl:and t% (Node :l l :v v :r r))
-      (let ((c (funcall holai.metis.metis_prover.name_arity.ordered:compare x v)))
+      (let ((c (#`holai.metis.metis_prover.name_arity.ordered:compare x v)))
         (cl:declare (cl:ignorable c))
         (if (= c 0)
           t%
@@ -16805,7 +16683,7 @@
   (match arg~14088
     ((Empty%) (tuple (make-Empty%) cl:nil (make-Empty%)))
     ((Node :l l :v v :r r)
-      (let ((c (funcall holai.metis.metis_prover.name_arity.ordered:compare x v)))
+      (let ((c (#`holai.metis.metis_prover.name_arity.ordered:compare x v)))
         (cl:declare (cl:ignorable c))
         (if (= c 0)
           (tuple l cl:t r)
@@ -16824,7 +16702,7 @@
   (match arg~14169
     ((Empty%) cl:nil)
     ((Node :l l :v v :r r)
-      (let ((c (funcall holai.metis.metis_prover.name_arity.ordered:compare x v)))
+      (let ((c (#`holai.metis.metis_prover.name_arity.ordered:compare x v)))
         (cl:declare (cl:ignorable c))
         (cl:or (= c 0) (mem x (if (< c 0) l r)))))))
 
@@ -16832,7 +16710,7 @@
   (match arg~14200
     ((Empty%) (make-Empty%))
     ((cl:and t% (Node :l l :v v :r r))
-      (let ((c (funcall holai.metis.metis_prover.name_arity.ordered:compare x v)))
+      (let ((c (#`holai.metis.metis_prover.name_arity.ordered:compare x v)))
         (cl:declare (cl:ignorable c))
         (if (= c 0)
           (merge l r)
@@ -16890,7 +16768,7 @@
     ((tuple (End) _) (- 1))
     ((tuple _ (End)) 1)
     ((tuple (More v1 r1 e1%) (More v2 r2 e2%))
-      (let ((c (funcall holai.metis.metis_prover.name_arity.ordered:compare v1 v2)))
+      (let ((c (#`holai.metis.metis_prover.name_arity.ordered:compare v1 v2)))
         (cl:declare (cl:ignorable c))
         (if (<> c 0) c (compare_aux (cons_enum r1 e1%) (cons_enum r2 e2%)))))))
 
@@ -16903,7 +16781,7 @@
     ((tuple (Empty%) _) cl:t)
     ((tuple _ (Empty%)) cl:nil)
     ((tuple (Node :l l1 :v v1 :r r1) (cl:and t2 (Node :l l2 :v v2 :r r2)))
-      (let ((c (funcall holai.metis.metis_prover.name_arity.ordered:compare v1 v2)))
+      (let ((c (#`holai.metis.metis_prover.name_arity.ordered:compare v1 v2)))
         (cl:declare (cl:ignorable c))
         (if (= c 0)
           (cl:and (subset l1 l2) (subset r1 r2))
@@ -16916,19 +16794,17 @@
               (subset l1 t2))))))))
 
 (defunc fold (f s accu)
-  (match s
-    ((Empty%) accu)
-    ((Node :l l :v v :r r) (fold f r (funcall f v (fold f l accu))))))
+  (match s ((Empty%) accu) ((Node :l l :v v :r r) (fold f r (#`f v (fold f l accu))))))
 
 (defunc for_all (p arg~14668)
   (match arg~14668
     ((Empty%) cl:t)
-    ((Node :l l :v v :r r) (cl:and (funcall p v) (cl:and (for_all p l) (for_all p r))))))
+    ((Node :l l :v v :r r) (cl:and (#`p v) (cl:and (for_all p l) (for_all p r))))))
 
 (defunc exists (p arg~14692)
   (match arg~14692
     ((Empty%) cl:nil)
-    ((Node :l l :v v :r r) (cl:or (funcall p v) (cl:or (exists p l) (exists p r))))))
+    ((Node :l l :v v :r r) (cl:or (#`p v) (cl:or (exists p l) (exists p r))))))
 
 (defunc cardinal (arg~14715)
   (match arg~14715 ((Empty%) 0) ((Node :l l :r r) (+ (+ (cardinal l) 1) (cardinal r)))))
@@ -16948,7 +16824,7 @@
 
 (defunc add (s x) (holai.metis.metis_prover.name_arity.set.include~13610.se:add x s))
 
-(defunc foldr (f a% s) (fold (lambdac (x acc) (funcall f (tuple x acc))) s a%))
+(defunc foldr (f a% s) (fold (lambdac (x acc) (#`f (tuple x acc))) s a%))
 
 (defparameter foldl #'foldr)
 
@@ -16998,23 +16874,22 @@
       (x arg~14863)
       (match arg~14863
         ((cl:and s% (Some _)) s%)
-        ((None) (if (funcall p% x) (make-Some x) (make-None))))))
+        ((None) (if (#`p% x) (make-Some x) (make-None))))))
     (fold #'go s (make-None))))
 
 (defunc firstl (f s)
-  (fletc
-    ((go (x arg~14889) (match arg~14889 ((cl:and s% (Some _)) s%) ((None) (funcall f x)))))
+  (fletc ((go (x arg~14889) (match arg~14889 ((cl:and s% (Some _)) s%) ((None) (#`f x)))))
     (fold #'go s (make-None))))
 
-(defunc transform (f s) (fold (lambdac (x acc) (cl:cons (funcall f x) acc)) s nil))
+(defunc transform (f s) (fold (lambdac (x acc) (cl:cons (#`f x) acc)) s nil))
 
 (defparameter all #'for_all)
 
-(defunc count (p% s) (fold (lambdac (x c%) (if (funcall p% x) (+ c% 1) c%)) s 0))
+(defunc count (p% s) (fold (lambdac (x c%) (if (#`p% x) (+ c% 1) c%)) s 0))
 
 (in-package :holai.metis.metis_prover.name_arity.set)
 
-(defparameter allNullary (funcall all nullary))
+(defparameter allNullary (#`all nullary))
 
 (in-package :holai.metis.metis_prover.name_arity)
 
@@ -17136,13 +17011,13 @@
             (cmp (tuple tms1 tms2))
             (match (tuple tm1% tm2%)
               ((tuple (Var v1) (Var v2))
-                (let ((c% (funcall holai.metis.metis_prover.name:compare v1 v2)))
+                (let ((c% (#`holai.metis.metis_prover.name:compare v1 v2)))
                   (cl:declare (cl:ignorable c%))
                   (if (<> c% 0) c% (cmp (tuple tms1 tms2)))))
               ((tuple (Var _) (Fn _)) (- 1))
               ((tuple (Fn _) (Var _)) 1)
               ((tuple (Fn (tuple f1 a1)) (Fn (tuple f2 a2)))
-                (let ((c% (funcall holai.metis.metis_prover.name:compare f1 f2)))
+                (let ((c% (#`holai.metis.metis_prover.name:compare f1 f2)))
                   (cl:declare (cl:ignorable c%))
                   (if (<> c% 0)
                     c%
@@ -17204,7 +17079,7 @@
       (match arg~15549
         (nil (make-None))
         ((cl:cons (tuple path tm) rest)
-          (if (funcall pred tm)
+          (if (#`pred tm)
             (make-Some (list-rev path))
             (match tm
               ((Var _) (search rest))
@@ -17245,7 +17120,7 @@
         ((cl:cons (Fn (tuple _ args)) tms) (free vs (append args tms))))))
     (free holai.metis.metis_prover.name.set:empty)))
 
-(defunc freeVars (tm) (funcall freeVarsList (cl:cons tm nil)))
+(defunc freeVars (tm) (#`freeVarsList (cl:cons tm nil)))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Fresh variables.                                                          *)
@@ -17257,7 +17132,7 @@
 
 (defunc newVars (n) (list-map (lambdac (x) (make-Var x)) (newNames n)))
 
-(defunc avoid (av n) (funcall member n av))
+(defunc avoid (av n) (#`member n av))
 
 (defunc variantPrime (av) (holai.metis.metis_prover.name:variantPrime (avoid av)))
 
@@ -17447,7 +17322,7 @@
   (match arg~16371
     ((Empty%) (make-Node :l (make-Empty%) :v x :d data :r (make-Empty%) :h 1))
     ((cl:and m (Node :l l :v v :d d :r r :h h))
-      (let ((c (funcall compare x v)))
+      (let ((c (#`compare x v)))
         (cl:declare (cl:ignorable c))
         (if (= c 0)
           (if (== d data) m (make-Node :l l :v x :d data :r r :h h))
@@ -17463,7 +17338,7 @@
   (match arg~16453
     ((Empty%) (raise (make-Not_found)))
     ((Node :l l :v v :d d :r r)
-      (let ((c (funcall compare x v)))
+      (let ((c (#`compare x v)))
         (cl:declare (cl:ignorable c))
         (if (= c 0) d (find x (if (< c 0) l r)))))))
 
@@ -17471,7 +17346,7 @@
   (match arg~16488
     ((Empty%) cl:nil)
     ((Node :l l :v v :r r)
-      (let ((c (funcall compare x v)))
+      (let ((c (#`compare x v)))
         (cl:declare (cl:ignorable c))
         (cl:or (= c 0) (mem x (if (< c 0) l r)))))))
 
@@ -17498,7 +17373,7 @@
   (match arg~16602
     ((Empty%) (make-Empty%))
     ((cl:and m (Node :l l :v v :d d :r r))
-      (let ((c (funcall compare x v)))
+      (let ((c (#`compare x v)))
         (cl:declare (cl:ignorable c))
         (if (= c 0)
           (merge~1 l r)
@@ -17514,19 +17389,19 @@
   (match arg~16667
     ((Empty%) (make-Empty%))
     ((Node :l l :v v :d d :r r :h h)
-      (let* ((l% (map f l)) (d% (funcall f d)) (r% (map f r)))
+      (let* ((l% (map f l)) (d% (#`f d)) (r% (map f r)))
         (cl:declare (cl:ignorable l% d% r%))
         (make-Node :l l% :v v :d d% :r r% :h h)))))
 
 (defunc fold (f m accu)
   (match m
     ((Empty%) accu)
-    ((Node :l l :v v :d d :r r) (fold f r (funcall f v d (fold f l accu))))))
+    ((Node :l l :v v :d d :r r) (fold f r (#`f v d (fold f l accu))))))
 
 (defunc exists (p arg~16733)
   (match arg~16733
     ((Empty%) cl:nil)
-    ((Node :l l :v v :d d :r r) (cl:or (funcall p v d) (cl:or (exists p l) (exists p r))))))
+    ((Node :l l :v v :d d :r r) (cl:or (#`p v d) (cl:or (exists p l) (exists p r))))))
 
 ;; (* Beware: those two functions assume that the added k is *strictly*
 ;;        smaller (or bigger) than all the present keys in the tree; it
@@ -17579,7 +17454,7 @@
   (match arg~16951
     ((Empty%) (tuple (make-Empty%) (make-None) (make-Empty%)))
     ((Node :l l :v v :d d :r r)
-      (let ((c (funcall compare x v)))
+      (let ((c (#`compare x v)))
         (cl:declare (cl:ignorable c))
         (if (= c 0)
           (tuple l (make-Some d) r)
@@ -17593,19 +17468,11 @@
     ((guard (tuple (Node :l l1 :v v1 :d d1 :r r1 :h h1) _) (>= h1 (height s2)))
       (match (split v1 s2)
         ((tuple l2 d2 r2)
-          (concat_or_join
-            (merge f l1 l2)
-            v1
-            (funcall f v1 (make-Some d1) d2)
-            (merge f r1 r2)))))
+          (concat_or_join (merge f l1 l2) v1 (#`f v1 (make-Some d1) d2) (merge f r1 r2)))))
     ((tuple _ (Node :l l2 :v v2 :d d2 :r r2))
       (match (split v2 s1)
         ((tuple l1 d1 r1)
-          (concat_or_join
-            (merge f l1 l2)
-            v2
-            (funcall f v2 d1 (make-Some d2))
-            (merge f r1 r2)))))
+          (concat_or_join (merge f l1 l2) v2 (#`f v2 d1 (make-Some d2)) (merge f r1 r2)))))
     (_ (assert-true cl:nil "ocaml-stdlib/map.ml" 400 10))))
 
 (defunc union (f s1 s2)
@@ -17619,20 +17486,20 @@
               (cl:declare (cl:ignorable l r))
               (match d2%
                 ((None) (join l v1 d1 r))
-                ((Some d2) (concat_or_join l v1 (funcall f v1 d1 d2) r))))))
+                ((Some d2) (concat_or_join l v1 (#`f v1 d1 d2) r))))))
         (match (split v2 s1)
           ((tuple l1% d1% r1%)
             (let ((l (union f l1% l2)) (r (union f r1% r2)))
               (cl:declare (cl:ignorable l r))
               (match d1%
                 ((None) (join l v2 d2 r))
-                ((Some d1) (concat_or_join l v2 (funcall f v2 d1 d2) r))))))))))
+                ((Some d1) (concat_or_join l v2 (#`f v2 d1 d2) r))))))))))
 
 (defunc filter (p arg~17249)
   (match arg~17249
     ((Empty%) (make-Empty%))
     ((cl:and m (Node :l l :v v :d d :r r))
-      (let* ((l% (filter p l)) (pvd (funcall p v d)) (r% (filter p r)))
+      (let* ((l% (filter p l)) (pvd (#`p v d)) (r% (filter p r)))
         (cl:declare (cl:ignorable l% pvd r%))
         (if pvd (if (cl:and (== l l%) (== r r%)) m (join l% v d r%)) (concat l% r%))))))
 
@@ -17714,7 +17581,7 @@
   (match arg~17551
     ((Empty%) (make-Node :l (make-Empty%) :v x :r (make-Empty%) :h 1))
     ((cl:and t% (Node :l l :v v :r r))
-      (let ((c (funcall holai.metis.metis_prover.term.ordered:compare x v)))
+      (let ((c (#`holai.metis.metis_prover.term.ordered:compare x v)))
         (cl:declare (cl:ignorable c))
         (if (= c 0)
           t%
@@ -17810,7 +17677,7 @@
   (match arg~17829
     ((Empty%) (tuple (make-Empty%) cl:nil (make-Empty%)))
     ((Node :l l :v v :r r)
-      (let ((c (funcall holai.metis.metis_prover.term.ordered:compare x v)))
+      (let ((c (#`holai.metis.metis_prover.term.ordered:compare x v)))
         (cl:declare (cl:ignorable c))
         (if (= c 0)
           (tuple l cl:t r)
@@ -17829,7 +17696,7 @@
   (match arg~17910
     ((Empty%) cl:nil)
     ((Node :l l :v v :r r)
-      (let ((c (funcall holai.metis.metis_prover.term.ordered:compare x v)))
+      (let ((c (#`holai.metis.metis_prover.term.ordered:compare x v)))
         (cl:declare (cl:ignorable c))
         (cl:or (= c 0) (mem x (if (< c 0) l r)))))))
 
@@ -17837,7 +17704,7 @@
   (match arg~17941
     ((Empty%) (make-Empty%))
     ((cl:and t% (Node :l l :v v :r r))
-      (let ((c (funcall holai.metis.metis_prover.term.ordered:compare x v)))
+      (let ((c (#`holai.metis.metis_prover.term.ordered:compare x v)))
         (cl:declare (cl:ignorable c))
         (if (= c 0)
           (merge l r)
@@ -17895,7 +17762,7 @@
     ((tuple (End) _) (- 1))
     ((tuple _ (End)) 1)
     ((tuple (More v1 r1 e1%) (More v2 r2 e2%))
-      (let ((c (funcall holai.metis.metis_prover.term.ordered:compare v1 v2)))
+      (let ((c (#`holai.metis.metis_prover.term.ordered:compare v1 v2)))
         (cl:declare (cl:ignorable c))
         (if (<> c 0) c (compare_aux (cons_enum r1 e1%) (cons_enum r2 e2%)))))))
 
@@ -17908,7 +17775,7 @@
     ((tuple (Empty%) _) cl:t)
     ((tuple _ (Empty%)) cl:nil)
     ((tuple (Node :l l1 :v v1 :r r1) (cl:and t2 (Node :l l2 :v v2 :r r2)))
-      (let ((c (funcall holai.metis.metis_prover.term.ordered:compare v1 v2)))
+      (let ((c (#`holai.metis.metis_prover.term.ordered:compare v1 v2)))
         (cl:declare (cl:ignorable c))
         (if (= c 0)
           (cl:and (subset l1 l2) (subset r1 r2))
@@ -17921,19 +17788,17 @@
               (subset l1 t2))))))))
 
 (defunc fold (f s accu)
-  (match s
-    ((Empty%) accu)
-    ((Node :l l :v v :r r) (fold f r (funcall f v (fold f l accu))))))
+  (match s ((Empty%) accu) ((Node :l l :v v :r r) (fold f r (#`f v (fold f l accu))))))
 
 (defunc for_all (p arg~18409)
   (match arg~18409
     ((Empty%) cl:t)
-    ((Node :l l :v v :r r) (cl:and (funcall p v) (cl:and (for_all p l) (for_all p r))))))
+    ((Node :l l :v v :r r) (cl:and (#`p v) (cl:and (for_all p l) (for_all p r))))))
 
 (defunc exists (p arg~18433)
   (match arg~18433
     ((Empty%) cl:nil)
-    ((Node :l l :v v :r r) (cl:or (funcall p v) (cl:or (exists p l) (exists p r))))))
+    ((Node :l l :v v :r r) (cl:or (#`p v) (cl:or (exists p l) (exists p r))))))
 
 (defunc cardinal (arg~18456)
   (match arg~18456 ((Empty%) 0) ((Node :l l :r r) (+ (+ (cardinal l) 1) (cardinal r)))))
@@ -17963,10 +17828,10 @@
 (defparameter empty (make-Subst% (newMap unit)))
 
 (defunc null (arg~18511)
-  (match arg~18511 ((Subst% m) (funcall holai.metis.metis_prover.name.map:null m))))
+  (match arg~18511 ((Subst% m) (#`holai.metis.metis_prover.name.map:null m))))
 
 (defunc size (arg~18520)
-  (match arg~18520 ((Subst% m) (funcall holai.metis.metis_prover.name.map:size m))))
+  (match arg~18520 ((Subst% m) (#`holai.metis.metis_prover.name.map:size m))))
 
 (defunc peek (arg~18529 v)
   (match arg~18529 ((Subst% m) (holai.metis.metis_prover.name.map:peek m v))))
@@ -17978,7 +17843,7 @@
 (defunc singleton (v_tm) (insert empty v_tm))
 
 (defunc toList (arg~18558)
-  (match arg~18558 ((Subst% m) (funcall holai.metis.metis_prover.name.map:toList m))))
+  (match arg~18558 ((Subst% m) (#`holai.metis.metis_prover.name.map:toList m))))
 
 (defunc fromList (l) (make-Subst% (holai.metis.metis_prover.name.map:fromList l)))
 
@@ -17986,7 +17851,7 @@
   (match arg~18575 ((Subst% m) (holai.metis.metis_prover.name.map:foldl f b% m))))
 
 (defunc foldr (f b% arg~18588)
-  (match arg~18588 ((Subst% m) (funcall holai.metis.metis_prover.name.map:foldr f b% m))))
+  (match arg~18588 ((Subst% m) (#`holai.metis.metis_prover.name.map:foldr f b% m))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Normalizing removes identity substitutions.                               *)
@@ -18002,8 +17867,8 @@
           (cl:declare (cl:ignorable m%))
           (if
             (=
-              (funcall holai.metis.metis_prover.name.map:size m)
-              (funcall holai.metis.metis_prover.name.map:size m%))
+              (#`holai.metis.metis_prover.name.map:size m)
+              (#`holai.metis.metis_prover.name.map:size m%))
             sub
             (make-Subst% m%)))))))
 
@@ -18034,15 +17899,13 @@
   (match arg~18695
     ((cl:and sub (Subst% m))
       (fletc
-        ((isRestrictedVar
-          (arg~18701)
-          (match arg~18701 ((tuple v _) (funcall member v varSet)))))
+        ((isRestrictedVar (arg~18701) (match arg~18701 ((tuple v _) (#`member v varSet)))))
         (let ((m% (filter #'isRestrictedVar m)))
           (cl:declare (cl:ignorable m%))
           (if
             (=
-              (funcall holai.metis.metis_prover.name.map:size m)
-              (funcall holai.metis.metis_prover.name.map:size m%))
+              (#`holai.metis.metis_prover.name.map:size m)
+              (#`holai.metis.metis_prover.name.map:size m%))
             sub
             (make-Subst% m%)))))))
 
@@ -18052,13 +17915,13 @@
       (fletc
         ((isRestrictedVar
           (arg~18737)
-          (match arg~18737 ((tuple v _) (not (funcall member v varSet))))))
+          (match arg~18737 ((tuple v _) (not (#`member v varSet))))))
         (let ((m% (filter #'isRestrictedVar m)))
           (cl:declare (cl:ignorable m%))
           (if
             (=
-              (funcall holai.metis.metis_prover.name.map:size m)
-              (funcall holai.metis.metis_prover.name.map:size m%))
+              (#`holai.metis.metis_prover.name.map:size m)
+              (#`holai.metis.metis_prover.name.map:size m%))
             sub
             (make-Subst% m%)))))))
 
@@ -18096,9 +17959,9 @@
                   (if (equal tm1 tm2)
                     (make-Some tm1)
                     (failwith "Substitute.union: incompatible"))))))
-            (if (funcall holai.metis.metis_prover.name.map:null m1)
+            (if (#`holai.metis.metis_prover.name.map:null m1)
               s2
-              (if (funcall holai.metis.metis_prover.name.map:null m2)
+              (if (#`holai.metis.metis_prover.name.map:null m2)
                 s1
                 (make-Subst% (holai.metis.metis_prover.name.map:union #'compatible m1 m2))))))))))
 
@@ -18115,7 +17978,7 @@
           (arg~18861)
           (match arg~18861
             ((tuple v (Var w%) s)
-              (if (funcall inDomain w% s)
+              (if (#`inDomain w% s)
                 (failwith "Substitute.invert: non-injective")
                 (holai.metis.metis_prover.name.map:insert s (tuple w% (make-Var v)))))
             ((tuple _ (Fn _) _) (failwith "Substitute.invert: non-variable")))))
@@ -18131,7 +17994,7 @@
 (defunc freshVars (s)
   (fletc
     ((add (arg~18907) (match arg~18907 ((tuple v m) (insert m (tuple v (newVar unit)))))))
-    (funcall holai.metis.metis_prover.name.set:foldl #'add empty s)))
+    (#`holai.metis.metis_prover.name.set:foldl #'add empty s)))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Free variables.                                                           *)
@@ -18151,8 +18014,7 @@
       (arg~18946)
       (match arg~18946
         ((tuple _ t% s)
-          (funcall
-            holai.metis.metis_prover.name.set:union
+          (#`holai.metis.metis_prover.name.set:union
             s
             (holai.metis.metis_prover.term:freeVars t%))))))
     (foldl #'add holai.metis.metis_prover.name.set:empty)))
@@ -18163,8 +18025,7 @@
       (arg~18965)
       (match arg~18965
         ((tuple v t% s)
-          (funcall
-            holai.metis.metis_prover.name.set:union
+          (#`holai.metis.metis_prover.name.set:union
             (holai.metis.metis_prover.name.set:add s v)
             (holai.metis.metis_prover.term:freeVars t%))))))
     (foldl #'add holai.metis.metis_prover.name.set:empty)))
@@ -18180,8 +18041,7 @@
       (arg~18987)
       (match arg~18987
         ((tuple _ t% s)
-          (funcall
-            holai.metis.metis_prover.name_arity.set.include~13610:union
+          (#`holai.metis.metis_prover.name_arity.set.include~13610:union
             s
             (holai.metis.metis_prover.term:functions t%))))))
     (foldl #'add holai.metis.metis_prover.name_arity.set.include~13610:empty)))
@@ -18212,7 +18072,7 @@
           (if
             (cl:and
               (holai.metis.metis_prover.name:equal f1 f2)
-              (= (funcall length args1) (funcall length args2)))
+              (= (#`length args1) (#`length args2)))
             (matchList sub% (append (zip args1 args2) rest))
             (failwith "Substitute.match: different structure")))
         (_ (failwith "Substitute.match: functions can't match vars")))))
@@ -18249,7 +18109,7 @@
             (if
               (cl:and
                 (holai.metis.metis_prover.name:equal f1 f2)
-                (= (funcall length args1) (funcall length args2)))
+                (= (#`length args1) (#`length args2)))
               (solve sub% (append (zip args1 args2) rest))
               (failwith "Substitute.unify: different structure"))))))
     (solve sub (cl:cons (tuple tm1 tm2) nil))))
@@ -18267,7 +18127,7 @@
 
 (defunc arguments (arg~19246) (match arg~19246 ((tuple _ args) args)))
 
-(defunc arity (atm) (funcall length (arguments atm)))
+(defunc arity (atm) (#`length (arguments atm)))
 
 (defunc relation (atm) (tuple (name atm) (arity atm)))
 
@@ -18276,7 +18136,7 @@
     ((f
       (arg~19270)
       (match arg~19270
-        ((tuple tm acc) (funcall union (holai.metis.metis_prover.term:functions tm) acc)))))
+        ((tuple tm acc) (#`union (holai.metis.metis_prover.term:functions tm) acc)))))
     (lambdac (atm) (foldl #'f empty (arguments atm)))))
 
 (defparameter functionNames
@@ -18285,8 +18145,7 @@
       (arg~19292)
       (match arg~19292
         ((tuple tm acc)
-          (funcall
-            holai.metis.metis_prover.name.set:union
+          (#`holai.metis.metis_prover.name.set:union
             (holai.metis.metis_prover.term:functionNames tm)
             acc)))))
     (lambdac (atm) (foldl #'f holai.metis.metis_prover.name.set:empty (arguments atm)))))
@@ -18329,7 +18188,7 @@
     ((tuple p1 tms1)
       (match arg~19386
         ((tuple p2 tms2)
-          (let ((c% (funcall holai.metis.metis_prover.name:compare p1 p2)))
+          (let ((c% (#`holai.metis.metis_prover.name:compare p1 p2)))
             (cl:declare (cl:ignorable c%))
             (if (<> c% 0)
               c%
@@ -18349,7 +18208,7 @@
       (match arg~19422
         ((tuple _ nil) (raise (make-Bug "Atom.subterm: empty path")))
         ((tuple (tuple _ tms) (cl:cons h t%))
-          (if (>= h (funcall length tms))
+          (if (>= h (#`length tms))
             (failwith "Atom.subterm: bad path")
             (holai.metis.metis_prover.term:subterm (list-nth tms h) t%))))))
     (lambdac (x y) (subterm% (tuple x y)))))
@@ -18376,7 +18235,7 @@
       (match arg~19510
         ((tuple nil _) (raise (make-Bug "Atom.replace: empty path")))
         ((tuple (cl:cons h t%) res)
-          (if (>= h (funcall length tms))
+          (if (>= h (#`length tms))
             (failwith "Atom.replace: bad path")
             (let*
               ((tm (list-nth tms h))
@@ -18409,8 +18268,7 @@
       (arg~19610)
       (match arg~19610
         ((tuple tm acc)
-          (funcall
-            holai.metis.metis_prover.name.set:union
+          (#`holai.metis.metis_prover.name.set:union
             (holai.metis.metis_prover.term:freeVars tm)
             acc)))))
     (lambdac (atm) (foldl #'f holai.metis.metis_prover.name.set:empty (arguments atm)))))
@@ -18445,7 +18303,7 @@
               (cl:or
                 (cl:and
                   (holai.metis.metis_prover.name:equal p1 p2)
-                  (= (funcall length tms1) (funcall length tms2)))
+                  (= (#`length tms1) (#`length tms2)))
                 (failwith "Atom.match"))
               (_ (foldl #'matchArg sub (zip tms1 tms2))))))))))
 
@@ -18469,7 +18327,7 @@
               (cl:or
                 (cl:and
                   (holai.metis.metis_prover.name:equal p1 p2)
-                  (= (funcall length tms1) (funcall length tms2)))
+                  (= (#`length tms1) (#`length tms2)))
                 (failwith "Atom.unify"))
               (_ (foldl #'unifyArg sub (zip tms1 tms2))))))))))
 
@@ -18490,7 +18348,7 @@
 
 (defunc isEq (x) (isBinop eqRelationName x))
 
-(defunc mkRefl (tm) (funcall mkEq (tuple tm tm)))
+(defunc mkRefl (tm) (#`mkEq (tuple tm tm)))
 
 (defunc destRefl (atm)
   (match (destEq atm)
@@ -18507,7 +18365,7 @@
         (cl:or
           (not (holai.metis.metis_prover.term:equal l r%))
           (failwith "Atom.sym: refl"))
-        (_ (funcall mkEq (tuple r% l)))))))
+        (_ (#`mkEq (tuple r% l)))))))
 
 (defunc lhs (atm) (fst (destEq atm)))
 
@@ -18604,7 +18462,7 @@
   (match arg~20165
     ((Empty%) (make-Node :l (make-Empty%) :v x :d data :r (make-Empty%) :h 1))
     ((cl:and m (Node :l l :v v :d d :r r :h h))
-      (let ((c (funcall compare x v)))
+      (let ((c (#`compare x v)))
         (cl:declare (cl:ignorable c))
         (if (= c 0)
           (if (== d data) m (make-Node :l l :v x :d data :r r :h h))
@@ -18620,7 +18478,7 @@
   (match arg~20247
     ((Empty%) (raise (make-Not_found)))
     ((Node :l l :v v :d d :r r)
-      (let ((c (funcall compare x v)))
+      (let ((c (#`compare x v)))
         (cl:declare (cl:ignorable c))
         (if (= c 0) d (find x (if (< c 0) l r)))))))
 
@@ -18628,7 +18486,7 @@
   (match arg~20282
     ((Empty%) cl:nil)
     ((Node :l l :v v :r r)
-      (let ((c (funcall compare x v)))
+      (let ((c (#`compare x v)))
         (cl:declare (cl:ignorable c))
         (cl:or (= c 0) (mem x (if (< c 0) l r)))))))
 
@@ -18655,7 +18513,7 @@
   (match arg~20396
     ((Empty%) (make-Empty%))
     ((cl:and m (Node :l l :v v :d d :r r))
-      (let ((c (funcall compare x v)))
+      (let ((c (#`compare x v)))
         (cl:declare (cl:ignorable c))
         (if (= c 0)
           (merge~1 l r)
@@ -18671,19 +18529,19 @@
   (match arg~20461
     ((Empty%) (make-Empty%))
     ((Node :l l :v v :d d :r r :h h)
-      (let* ((l% (map f l)) (d% (funcall f d)) (r% (map f r)))
+      (let* ((l% (map f l)) (d% (#`f d)) (r% (map f r)))
         (cl:declare (cl:ignorable l% d% r%))
         (make-Node :l l% :v v :d d% :r r% :h h)))))
 
 (defunc fold (f m accu)
   (match m
     ((Empty%) accu)
-    ((Node :l l :v v :d d :r r) (fold f r (funcall f v d (fold f l accu))))))
+    ((Node :l l :v v :d d :r r) (fold f r (#`f v d (fold f l accu))))))
 
 (defunc exists (p arg~20527)
   (match arg~20527
     ((Empty%) cl:nil)
-    ((Node :l l :v v :d d :r r) (cl:or (funcall p v d) (cl:or (exists p l) (exists p r))))))
+    ((Node :l l :v v :d d :r r) (cl:or (#`p v d) (cl:or (exists p l) (exists p r))))))
 
 ;; (* Beware: those two functions assume that the added k is *strictly*
 ;;        smaller (or bigger) than all the present keys in the tree; it
@@ -18736,7 +18594,7 @@
   (match arg~20745
     ((Empty%) (tuple (make-Empty%) (make-None) (make-Empty%)))
     ((Node :l l :v v :d d :r r)
-      (let ((c (funcall compare x v)))
+      (let ((c (#`compare x v)))
         (cl:declare (cl:ignorable c))
         (if (= c 0)
           (tuple l (make-Some d) r)
@@ -18750,19 +18608,11 @@
     ((guard (tuple (Node :l l1 :v v1 :d d1 :r r1 :h h1) _) (>= h1 (height s2)))
       (match (split v1 s2)
         ((tuple l2 d2 r2)
-          (concat_or_join
-            (merge f l1 l2)
-            v1
-            (funcall f v1 (make-Some d1) d2)
-            (merge f r1 r2)))))
+          (concat_or_join (merge f l1 l2) v1 (#`f v1 (make-Some d1) d2) (merge f r1 r2)))))
     ((tuple _ (Node :l l2 :v v2 :d d2 :r r2))
       (match (split v2 s1)
         ((tuple l1 d1 r1)
-          (concat_or_join
-            (merge f l1 l2)
-            v2
-            (funcall f v2 d1 (make-Some d2))
-            (merge f r1 r2)))))
+          (concat_or_join (merge f l1 l2) v2 (#`f v2 d1 (make-Some d2)) (merge f r1 r2)))))
     (_ (assert-true cl:nil "ocaml-stdlib/map.ml" 400 10))))
 
 (defunc union (f s1 s2)
@@ -18776,20 +18626,20 @@
               (cl:declare (cl:ignorable l r))
               (match d2%
                 ((None) (join l v1 d1 r))
-                ((Some d2) (concat_or_join l v1 (funcall f v1 d1 d2) r))))))
+                ((Some d2) (concat_or_join l v1 (#`f v1 d1 d2) r))))))
         (match (split v2 s1)
           ((tuple l1% d1% r1%)
             (let ((l (union f l1% l2)) (r (union f r1% r2)))
               (cl:declare (cl:ignorable l r))
               (match d1%
                 ((None) (join l v2 d2 r))
-                ((Some d1) (concat_or_join l v2 (funcall f v2 d1 d2) r))))))))))
+                ((Some d1) (concat_or_join l v2 (#`f v2 d1 d2) r))))))))))
 
 (defunc filter (p arg~21043)
   (match arg~21043
     ((Empty%) (make-Empty%))
     ((cl:and m (Node :l l :v v :d d :r r))
-      (let* ((l% (filter p l)) (pvd (funcall p v d)) (r% (filter p r)))
+      (let* ((l% (filter p l)) (pvd (#`p v d)) (r% (filter p r)))
         (cl:declare (cl:ignorable l% pvd r%))
         (if pvd (if (cl:and (== l l%) (== r r%)) m (join l% v d r%)) (concat l% r%))))))
 
@@ -18845,14 +18695,14 @@
 
 (defunc foldl (f b% m)
   (list-fold-left
-    (lambdac (s arg~21233) (match arg~21233 ((tuple v tm) (funcall f (tuple v tm s)))))
+    (lambdac (s arg~21233) (match arg~21233 ((tuple v tm) (#`f (tuple v tm s)))))
     b%
     (bindings m)))
 
 (defparameter foldr #'foldl)
 
 (defunc filter (f)
-  (holai.metis.metis_prover.atom.map.ma:filter (lambdac (x y) (funcall f (tuple x y)))))
+  (holai.metis.metis_prover.atom.map.ma:filter (lambdac (x y) (#`f (tuple x y)))))
 
 (defparameter inDomain #'mem)
 
@@ -18861,7 +18711,7 @@
     ((f%
       (k% arg~21274)
       (match arg~21274
-        ((tuple (Some x) (Some y)) (funcall f (tuple (tuple k% x) (tuple k% y))))
+        ((tuple (Some x) (Some y)) (#`f (tuple (tuple k% x) (tuple k% y))))
         ((tuple (Some x) (None)) (make-Some x))
         ((tuple (None) (Some y)) (make-Some y))
         ((tuple (None) (None)) (make-None)))))
@@ -18871,15 +18721,14 @@
 
 (defunc mapPartial (f m)
   (fold
-    (lambdac (k% x acc)
-      (match (funcall f (tuple k% x)) ((Some y) (add k% y acc)) ((None) acc)))
+    (lambdac (k% x acc) (match (#`f (tuple k% x)) ((Some y) (add k% y acc)) ((None) acc)))
     m
     empty))
 
 (defparameter transform #'map)
 
 (defunc exists (f)
-  (holai.metis.metis_prover.atom.map.ma:exists (lambdac (k% m) (funcall f (tuple k% m)))))
+  (holai.metis.metis_prover.atom.map.ma:exists (lambdac (k% m) (#`f (tuple k% m)))))
 
 (in-package :holai.metis.metis_prover.atom)
 
@@ -18948,7 +18797,7 @@
   (match arg~21568
     ((Empty%) (make-Node :l (make-Empty%) :v x :r (make-Empty%) :h 1))
     ((cl:and t% (Node :l l :v v :r r))
-      (let ((c (funcall holai.metis.metis_prover.atom.ordered:compare x v)))
+      (let ((c (#`holai.metis.metis_prover.atom.ordered:compare x v)))
         (cl:declare (cl:ignorable c))
         (if (= c 0)
           t%
@@ -19044,7 +18893,7 @@
   (match arg~21846
     ((Empty%) (tuple (make-Empty%) cl:nil (make-Empty%)))
     ((Node :l l :v v :r r)
-      (let ((c (funcall holai.metis.metis_prover.atom.ordered:compare x v)))
+      (let ((c (#`holai.metis.metis_prover.atom.ordered:compare x v)))
         (cl:declare (cl:ignorable c))
         (if (= c 0)
           (tuple l cl:t r)
@@ -19063,7 +18912,7 @@
   (match arg~21927
     ((Empty%) cl:nil)
     ((Node :l l :v v :r r)
-      (let ((c (funcall holai.metis.metis_prover.atom.ordered:compare x v)))
+      (let ((c (#`holai.metis.metis_prover.atom.ordered:compare x v)))
         (cl:declare (cl:ignorable c))
         (cl:or (= c 0) (mem x (if (< c 0) l r)))))))
 
@@ -19071,7 +18920,7 @@
   (match arg~21958
     ((Empty%) (make-Empty%))
     ((cl:and t% (Node :l l :v v :r r))
-      (let ((c (funcall holai.metis.metis_prover.atom.ordered:compare x v)))
+      (let ((c (#`holai.metis.metis_prover.atom.ordered:compare x v)))
         (cl:declare (cl:ignorable c))
         (if (= c 0)
           (merge l r)
@@ -19129,7 +18978,7 @@
     ((tuple (End) _) (- 1))
     ((tuple _ (End)) 1)
     ((tuple (More v1 r1 e1%) (More v2 r2 e2%))
-      (let ((c (funcall holai.metis.metis_prover.atom.ordered:compare v1 v2)))
+      (let ((c (#`holai.metis.metis_prover.atom.ordered:compare v1 v2)))
         (cl:declare (cl:ignorable c))
         (if (<> c 0) c (compare_aux (cons_enum r1 e1%) (cons_enum r2 e2%)))))))
 
@@ -19142,7 +18991,7 @@
     ((tuple (Empty%) _) cl:t)
     ((tuple _ (Empty%)) cl:nil)
     ((tuple (Node :l l1 :v v1 :r r1) (cl:and t2 (Node :l l2 :v v2 :r r2)))
-      (let ((c (funcall holai.metis.metis_prover.atom.ordered:compare v1 v2)))
+      (let ((c (#`holai.metis.metis_prover.atom.ordered:compare v1 v2)))
         (cl:declare (cl:ignorable c))
         (if (= c 0)
           (cl:and (subset l1 l2) (subset r1 r2))
@@ -19155,19 +19004,17 @@
               (subset l1 t2))))))))
 
 (defunc fold (f s accu)
-  (match s
-    ((Empty%) accu)
-    ((Node :l l :v v :r r) (fold f r (funcall f v (fold f l accu))))))
+  (match s ((Empty%) accu) ((Node :l l :v v :r r) (fold f r (#`f v (fold f l accu))))))
 
 (defunc for_all (p arg~22426)
   (match arg~22426
     ((Empty%) cl:t)
-    ((Node :l l :v v :r r) (cl:and (funcall p v) (cl:and (for_all p l) (for_all p r))))))
+    ((Node :l l :v v :r r) (cl:and (#`p v) (cl:and (for_all p l) (for_all p r))))))
 
 (defunc exists (p arg~22450)
   (match arg~22450
     ((Empty%) cl:nil)
-    ((Node :l l :v v :r r) (cl:or (funcall p v) (cl:or (exists p l) (exists p r))))))
+    ((Node :l l :v v :r r) (cl:or (#`p v) (cl:or (exists p l) (exists p r))))))
 
 (defunc cardinal (arg~22473)
   (match arg~22473 ((Empty%) 0) ((Node :l l :r r) (+ (+ (cardinal l) 1) (cardinal r)))))
@@ -19187,7 +19034,7 @@
 
 (defunc add (s x) (holai.metis.metis_prover.atom.set.se:add x s))
 
-(defunc foldr (f a% s) (fold (lambdac (x acc) (funcall f (tuple x acc))) s a%))
+(defunc foldr (f a% s) (fold (lambdac (x acc) (#`f (tuple x acc))) s a%))
 
 (defparameter foldl #'foldr)
 
@@ -19236,19 +19083,18 @@
       (x arg~22621)
       (match arg~22621
         ((cl:and s% (Some _)) s%)
-        ((None) (if (funcall p% x) (make-Some x) (make-None))))))
+        ((None) (if (#`p% x) (make-Some x) (make-None))))))
     (fold #'go s (make-None))))
 
 (defunc firstl (f s)
-  (fletc
-    ((go (x arg~22647) (match arg~22647 ((cl:and s% (Some _)) s%) ((None) (funcall f x)))))
+  (fletc ((go (x arg~22647) (match arg~22647 ((cl:and s% (Some _)) s%) ((None) (#`f x)))))
     (fold #'go s (make-None))))
 
-(defunc transform (f s) (fold (lambdac (x acc) (cl:cons (funcall f x) acc)) s nil))
+(defunc transform (f s) (fold (lambdac (x acc) (cl:cons (#`f x) acc)) s nil))
 
 (defparameter all #'for_all)
 
-(defunc count (p% s) (fold (lambdac (x c%) (if (funcall p% x) (+ c% 1) c%)) s 0))
+(defunc count (p% s) (fold (lambdac (x c%) (if (#`p% x) (+ c% 1) c%)) s 0))
 
 (in-package :holai.metis.metis_prover.atom)
 
@@ -19299,9 +19145,7 @@
         ((cl:cons (True_) fms) (funcs fs fms))
         ((cl:cons (False_) fms) (funcs fs fms))
         ((cl:cons (Atom atm) fms)
-          (funcs
-            (funcall union (funcall holai.metis.metis_prover.atom:functions atm) fs)
-            fms))
+          (funcs (#`union (#`holai.metis.metis_prover.atom:functions atm) fs) fms))
         ((cl:cons (Not p%) fms) (funcs fs (cl:cons p% fms)))
         ((cl:cons (And p% q) fms) (funcs fs (cl:cons p% (cl:cons q fms))))
         ((cl:cons (Or p% q) fms) (funcs fs (cl:cons p% (cl:cons q fms))))
@@ -19321,9 +19165,8 @@
         ((cl:cons (False_) fms) (funcs fs fms))
         ((cl:cons (Atom atm) fms)
           (funcs
-            (funcall
-              holai.metis.metis_prover.name.set:union
-              (funcall holai.metis.metis_prover.atom:functionNames atm)
+            (#`holai.metis.metis_prover.name.set:union
+              (#`holai.metis.metis_prover.atom:functionNames atm)
               fs)
             fms))
         ((cl:cons (Not p%) fms) (funcs fs (cl:cons p% fms)))
@@ -19619,13 +19462,13 @@
               ((tuple (Iff _) _) (- 1))
               ((tuple _ (Iff _)) 1)
               ((tuple (Forall v1 p1) (Forall v2 p2))
-                (let ((c% (funcall holai.metis.metis_prover.name:compare v1 v2)))
+                (let ((c% (#`holai.metis.metis_prover.name:compare v1 v2)))
                   (cl:declare (cl:ignorable c%))
                   (if (<> c% 0) c% (cmp (cl:cons (tuple p1 p2) fs)))))
               ((tuple (Forall _) (Exists _)) (- 1))
               ((tuple (Exists _) (Forall _)) 1)
               ((tuple (Exists v1 p1) (Exists v2 p2))
-                (let ((c% (funcall holai.metis.metis_prover.name:compare v1 v2)))
+                (let ((c% (#`holai.metis.metis_prover.name:compare v1 v2)))
                   (cl:declare (cl:ignorable c%))
                   (if (<> c% 0) c% (cmp (cl:cons (tuple p1 p2) fs)))))))))))
     (cmp (cl:cons (tuple fm1 fm2) nil))))
@@ -19670,13 +19513,9 @@
             ((cl:cons (tuple _ (False_)) fms) (fv vs% fms))
             ((cl:cons (tuple bv (Atom atm)) fms)
               (fv
-                (funcall
-                  holai.metis.metis_prover.name.set:union
+                (#`holai.metis.metis_prover.name.set:union
                   vs%
-                  (funcall
-                    difference
-                    (funcall holai.metis.metis_prover.atom:freeVars atm)
-                    bv))
+                  (#`difference (#`holai.metis.metis_prover.atom:freeVars atm) bv))
                 fms))
             ((cl:cons (tuple bv (Not p%)) fms) (fv vs% (cl:cons (tuple bv p%) fms)))
             ((cl:cons (tuple bv (And p% q)) fms)
@@ -19701,9 +19540,9 @@
 
 (defunc freeVarsList (fms) (foldl #'add holai.metis.metis_prover.name.set:empty fms))
 
-(defunc specialize (fm) (snd (funcall stripForall fm)))
+(defunc specialize (fm) (snd (#`stripForall fm)))
 
-(defunc generalize (fm) (listMkForall (tuple (funcall toList (freeVars fm)) fm)))
+(defunc generalize (fm) (listMkForall (tuple (#`toList (freeVars fm)) fm)))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Substitutions.                                                            *)
@@ -19770,7 +19609,7 @@
 (defunc substConn (sub fm conn p% q)
   (let ((p%% (substFm sub p%)) (q% (substFm sub q)))
     (cl:declare (cl:ignorable p%% q%))
-    (if (cl:and (== p% p%%) (== q q%)) fm (funcall conn (tuple p%% q%)))))
+    (if (cl:and (== p% p%%) (== q q%)) fm (#`conn (tuple p%% q%)))))
 
 (defunc substQuant (sub fm quant v p%)
   (let*
@@ -19785,15 +19624,13 @@
                 (match (peek sub w%)
                   ((None) (holai.metis.metis_prover.name.set:add s w%))
                   ((Some tm)
-                    (funcall
-                      holai.metis.metis_prover.name.set:union
+                    (#`holai.metis.metis_prover.name.set:union
                       s
                       (holai.metis.metis_prover.term:freeVars tm)))))))))
         (let*
           ((vars (freeVars p%))
             (vars%
-              (funcall
-                holai.metis.metis_prover.name.set:foldl
+              (#`holai.metis.metis_prover.name.set:foldl
                 #'f
                 holai.metis.metis_prover.name.set:empty
                 vars)))
@@ -19801,13 +19638,13 @@
           (variantPrime vars% v))))
       (sub%
         (if (holai.metis.metis_prover.name:equal v v%)
-          (remove sub (funcall singleton v))
+          (remove sub (#`singleton v))
           (insert sub (tuple v (make-Var v%)))))
       (p%% (substCheck sub% p%)))
     (cl:declare (cl:ignorable v% sub% p%%))
     (if (cl:and (holai.metis.metis_prover.name:equal v v%) (== p% p%%))
       fm
-      (funcall quant (tuple v% p%%)))))
+      (#`quant (tuple v% p%%)))))
 
 (defparameter subst #'substCheck)
 
@@ -19816,7 +19653,7 @@
 ;; (* ------------------------------------------------------------------------- *)
 
 
-(defunc mkEq (a_b) (make-Atom (funcall holai.metis.metis_prover.atom:mkEq a_b)))
+(defunc mkEq (a_b) (make-Atom (#`holai.metis.metis_prover.atom:mkEq a_b)))
 
 (defunc destEq (fm) (holai.metis.metis_prover.atom:destEq (destAtom fm)))
 
@@ -19981,7 +19818,7 @@
   (match arg~25698
     ((Empty%) (make-Node :l (make-Empty%) :v x :d data :r (make-Empty%) :h 1))
     ((cl:and m (Node :l l :v v :d d :r r :h h))
-      (let ((c (funcall compare x v)))
+      (let ((c (#`compare x v)))
         (cl:declare (cl:ignorable c))
         (if (= c 0)
           (if (== d data) m (make-Node :l l :v x :d data :r r :h h))
@@ -19997,7 +19834,7 @@
   (match arg~25780
     ((Empty%) (raise (make-Not_found)))
     ((Node :l l :v v :d d :r r)
-      (let ((c (funcall compare x v)))
+      (let ((c (#`compare x v)))
         (cl:declare (cl:ignorable c))
         (if (= c 0) d (find x (if (< c 0) l r)))))))
 
@@ -20005,7 +19842,7 @@
   (match arg~25815
     ((Empty%) cl:nil)
     ((Node :l l :v v :r r)
-      (let ((c (funcall compare x v)))
+      (let ((c (#`compare x v)))
         (cl:declare (cl:ignorable c))
         (cl:or (= c 0) (mem x (if (< c 0) l r)))))))
 
@@ -20032,7 +19869,7 @@
   (match arg~25929
     ((Empty%) (make-Empty%))
     ((cl:and m (Node :l l :v v :d d :r r))
-      (let ((c (funcall compare x v)))
+      (let ((c (#`compare x v)))
         (cl:declare (cl:ignorable c))
         (if (= c 0)
           (merge~1 l r)
@@ -20048,19 +19885,19 @@
   (match arg~25994
     ((Empty%) (make-Empty%))
     ((Node :l l :v v :d d :r r :h h)
-      (let* ((l% (map f l)) (d% (funcall f d)) (r% (map f r)))
+      (let* ((l% (map f l)) (d% (#`f d)) (r% (map f r)))
         (cl:declare (cl:ignorable l% d% r%))
         (make-Node :l l% :v v :d d% :r r% :h h)))))
 
 (defunc fold (f m accu)
   (match m
     ((Empty%) accu)
-    ((Node :l l :v v :d d :r r) (fold f r (funcall f v d (fold f l accu))))))
+    ((Node :l l :v v :d d :r r) (fold f r (#`f v d (fold f l accu))))))
 
 (defunc exists (p arg~26060)
   (match arg~26060
     ((Empty%) cl:nil)
-    ((Node :l l :v v :d d :r r) (cl:or (funcall p v d) (cl:or (exists p l) (exists p r))))))
+    ((Node :l l :v v :d d :r r) (cl:or (#`p v d) (cl:or (exists p l) (exists p r))))))
 
 ;; (* Beware: those two functions assume that the added k is *strictly*
 ;;        smaller (or bigger) than all the present keys in the tree; it
@@ -20113,7 +19950,7 @@
   (match arg~26278
     ((Empty%) (tuple (make-Empty%) (make-None) (make-Empty%)))
     ((Node :l l :v v :d d :r r)
-      (let ((c (funcall compare x v)))
+      (let ((c (#`compare x v)))
         (cl:declare (cl:ignorable c))
         (if (= c 0)
           (tuple l (make-Some d) r)
@@ -20127,19 +19964,11 @@
     ((guard (tuple (Node :l l1 :v v1 :d d1 :r r1 :h h1) _) (>= h1 (height s2)))
       (match (split v1 s2)
         ((tuple l2 d2 r2)
-          (concat_or_join
-            (merge f l1 l2)
-            v1
-            (funcall f v1 (make-Some d1) d2)
-            (merge f r1 r2)))))
+          (concat_or_join (merge f l1 l2) v1 (#`f v1 (make-Some d1) d2) (merge f r1 r2)))))
     ((tuple _ (Node :l l2 :v v2 :d d2 :r r2))
       (match (split v2 s1)
         ((tuple l1 d1 r1)
-          (concat_or_join
-            (merge f l1 l2)
-            v2
-            (funcall f v2 d1 (make-Some d2))
-            (merge f r1 r2)))))
+          (concat_or_join (merge f l1 l2) v2 (#`f v2 d1 (make-Some d2)) (merge f r1 r2)))))
     (_ (assert-true cl:nil "ocaml-stdlib/map.ml" 400 10))))
 
 (defunc union (f s1 s2)
@@ -20153,20 +19982,20 @@
               (cl:declare (cl:ignorable l r))
               (match d2%
                 ((None) (join l v1 d1 r))
-                ((Some d2) (concat_or_join l v1 (funcall f v1 d1 d2) r))))))
+                ((Some d2) (concat_or_join l v1 (#`f v1 d1 d2) r))))))
         (match (split v2 s1)
           ((tuple l1% d1% r1%)
             (let ((l (union f l1% l2)) (r (union f r1% r2)))
               (cl:declare (cl:ignorable l r))
               (match d1%
                 ((None) (join l v2 d2 r))
-                ((Some d1) (concat_or_join l v2 (funcall f v2 d1 d2) r))))))))))
+                ((Some d1) (concat_or_join l v2 (#`f v2 d1 d2) r))))))))))
 
 (defunc filter (p arg~26576)
   (match arg~26576
     ((Empty%) (make-Empty%))
     ((cl:and m (Node :l l :v v :d d :r r))
-      (let* ((l% (filter p l)) (pvd (funcall p v d)) (r% (filter p r)))
+      (let* ((l% (filter p l)) (pvd (#`p v d)) (r% (filter p r)))
         (cl:declare (cl:ignorable l% pvd r%))
         (if pvd (if (cl:and (== l l%) (== r r%)) m (join l% v d r%)) (concat l% r%))))))
 
@@ -20223,14 +20052,14 @@
 
 (defunc foldl (f b% m)
   (list-fold-left
-    (lambdac (s arg~26766) (match arg~26766 ((tuple v tm) (funcall f (tuple v tm s)))))
+    (lambdac (s arg~26766) (match arg~26766 ((tuple v tm) (#`f (tuple v tm s)))))
     b%
     (bindings m)))
 
 (defparameter foldr #'foldl)
 
 (defunc filter (f)
-  (holai.metis.metis_prover.formula.map.ma:filter (lambdac (x y) (funcall f (tuple x y)))))
+  (holai.metis.metis_prover.formula.map.ma:filter (lambdac (x y) (#`f (tuple x y)))))
 
 (defparameter inDomain #'mem)
 
@@ -20239,7 +20068,7 @@
     ((f%
       (k% arg~26807)
       (match arg~26807
-        ((tuple (Some x) (Some y)) (funcall f (tuple (tuple k% x) (tuple k% y))))
+        ((tuple (Some x) (Some y)) (#`f (tuple (tuple k% x) (tuple k% y))))
         ((tuple (Some x) (None)) (make-Some x))
         ((tuple (None) (Some y)) (make-Some y))
         ((tuple (None) (None)) (make-None)))))
@@ -20249,16 +20078,14 @@
 
 (defunc mapPartial (f m)
   (fold
-    (lambdac (k% x acc)
-      (match (funcall f (tuple k% x)) ((Some y) (add k% y acc)) ((None) acc)))
+    (lambdac (k% x acc) (match (#`f (tuple k% x)) ((Some y) (add k% y acc)) ((None) acc)))
     m
     empty))
 
 (defparameter transform #'map)
 
 (defunc exists (f)
-  (holai.metis.metis_prover.formula.map.ma:exists
-    (lambdac (k% m) (funcall f (tuple k% m)))))
+  (holai.metis.metis_prover.formula.map.ma:exists (lambdac (k% m) (#`f (tuple k% m)))))
 
 (in-package :holai.metis.metis_prover.formula)
 
@@ -20327,7 +20154,7 @@
   (match arg~27101
     ((Empty%) (make-Node :l (make-Empty%) :v x :r (make-Empty%) :h 1))
     ((cl:and t% (Node :l l :v v :r r))
-      (let ((c (funcall holai.metis.metis_prover.formula.ordered:compare x v)))
+      (let ((c (#`holai.metis.metis_prover.formula.ordered:compare x v)))
         (cl:declare (cl:ignorable c))
         (if (= c 0)
           t%
@@ -20423,7 +20250,7 @@
   (match arg~27379
     ((Empty%) (tuple (make-Empty%) cl:nil (make-Empty%)))
     ((Node :l l :v v :r r)
-      (let ((c (funcall holai.metis.metis_prover.formula.ordered:compare x v)))
+      (let ((c (#`holai.metis.metis_prover.formula.ordered:compare x v)))
         (cl:declare (cl:ignorable c))
         (if (= c 0)
           (tuple l cl:t r)
@@ -20442,7 +20269,7 @@
   (match arg~27460
     ((Empty%) cl:nil)
     ((Node :l l :v v :r r)
-      (let ((c (funcall holai.metis.metis_prover.formula.ordered:compare x v)))
+      (let ((c (#`holai.metis.metis_prover.formula.ordered:compare x v)))
         (cl:declare (cl:ignorable c))
         (cl:or (= c 0) (mem x (if (< c 0) l r)))))))
 
@@ -20450,7 +20277,7 @@
   (match arg~27491
     ((Empty%) (make-Empty%))
     ((cl:and t% (Node :l l :v v :r r))
-      (let ((c (funcall holai.metis.metis_prover.formula.ordered:compare x v)))
+      (let ((c (#`holai.metis.metis_prover.formula.ordered:compare x v)))
         (cl:declare (cl:ignorable c))
         (if (= c 0)
           (merge l r)
@@ -20508,7 +20335,7 @@
     ((tuple (End) _) (- 1))
     ((tuple _ (End)) 1)
     ((tuple (More v1 r1 e1%) (More v2 r2 e2%))
-      (let ((c (funcall holai.metis.metis_prover.formula.ordered:compare v1 v2)))
+      (let ((c (#`holai.metis.metis_prover.formula.ordered:compare v1 v2)))
         (cl:declare (cl:ignorable c))
         (if (<> c 0) c (compare_aux (cons_enum r1 e1%) (cons_enum r2 e2%)))))))
 
@@ -20521,7 +20348,7 @@
     ((tuple (Empty%) _) cl:t)
     ((tuple _ (Empty%)) cl:nil)
     ((tuple (Node :l l1 :v v1 :r r1) (cl:and t2 (Node :l l2 :v v2 :r r2)))
-      (let ((c (funcall holai.metis.metis_prover.formula.ordered:compare v1 v2)))
+      (let ((c (#`holai.metis.metis_prover.formula.ordered:compare v1 v2)))
         (cl:declare (cl:ignorable c))
         (if (= c 0)
           (cl:and (subset l1 l2) (subset r1 r2))
@@ -20534,19 +20361,17 @@
               (subset l1 t2))))))))
 
 (defunc fold (f s accu)
-  (match s
-    ((Empty%) accu)
-    ((Node :l l :v v :r r) (fold f r (funcall f v (fold f l accu))))))
+  (match s ((Empty%) accu) ((Node :l l :v v :r r) (fold f r (#`f v (fold f l accu))))))
 
 (defunc for_all (p arg~27959)
   (match arg~27959
     ((Empty%) cl:t)
-    ((Node :l l :v v :r r) (cl:and (funcall p v) (cl:and (for_all p l) (for_all p r))))))
+    ((Node :l l :v v :r r) (cl:and (#`p v) (cl:and (for_all p l) (for_all p r))))))
 
 (defunc exists (p arg~27983)
   (match arg~27983
     ((Empty%) cl:nil)
-    ((Node :l l :v v :r r) (cl:or (funcall p v) (cl:or (exists p l) (exists p r))))))
+    ((Node :l l :v v :r r) (cl:or (#`p v) (cl:or (exists p l) (exists p r))))))
 
 (defunc cardinal (arg~28006)
   (match arg~28006 ((Empty%) 0) ((Node :l l :r r) (+ (+ (cardinal l) 1) (cardinal r)))))
@@ -20566,7 +20391,7 @@
 
 (defunc add (s x) (holai.metis.metis_prover.formula.set.se:add x s))
 
-(defunc foldr (f a% s) (fold (lambdac (x acc) (funcall f (tuple x acc))) s a%))
+(defunc foldr (f a% s) (fold (lambdac (x acc) (#`f (tuple x acc))) s a%))
 
 (defparameter foldl #'foldr)
 
@@ -20615,19 +20440,18 @@
       (x arg~28154)
       (match arg~28154
         ((cl:and s% (Some _)) s%)
-        ((None) (if (funcall p% x) (make-Some x) (make-None))))))
+        ((None) (if (#`p% x) (make-Some x) (make-None))))))
     (fold #'go s (make-None))))
 
 (defunc firstl (f s)
-  (fletc
-    ((go (x arg~28180) (match arg~28180 ((cl:and s% (Some _)) s%) ((None) (funcall f x)))))
+  (fletc ((go (x arg~28180) (match arg~28180 ((cl:and s% (Some _)) s%) ((None) (#`f x)))))
     (fold #'go s (make-None))))
 
-(defunc transform (f s) (fold (lambdac (x acc) (cl:cons (funcall f x) acc)) s nil))
+(defunc transform (f s) (fold (lambdac (x acc) (cl:cons (#`f x) acc)) s nil))
 
 (defparameter all #'for_all)
 
-(defunc count (p% s) (fold (lambdac (x c%) (if (funcall p% x) (+ c% 1) c%)) s 0))
+(defunc count (p% s) (fold (lambdac (x c%) (if (#`p% x) (+ c% 1) c%)) s 0))
 
 (in-package :holai.metis.metis_prover.formula)
 
@@ -20658,10 +20482,9 @@
 
 (defunc relation (lit) (holai.metis.metis_prover.atom:relation (atom lit)))
 
-(defunc functions (lit) (funcall holai.metis.metis_prover.atom:functions (atom lit)))
+(defunc functions (lit) (#`holai.metis.metis_prover.atom:functions (atom lit)))
 
-(defunc functionNames (lit)
-  (funcall holai.metis.metis_prover.atom:functionNames (atom lit)))
+(defunc functionNames (lit) (#`holai.metis.metis_prover.atom:functionNames (atom lit)))
 
 ;; (* Binary relations *)
 
@@ -20721,8 +20544,7 @@
 ;; (* ------------------------------------------------------------------------- *)
 
 
-(defunc subterm (lit path)
-  (funcall holai.metis.metis_prover.atom:subterm (atom lit) path))
+(defunc subterm (lit path) (#`holai.metis.metis_prover.atom:subterm (atom lit) path))
 
 (defunc subterms (lit) (holai.metis.metis_prover.atom:subterms (atom lit)))
 
@@ -20740,7 +20562,7 @@
 
 (defunc freeIn (v lit) (holai.metis.metis_prover.atom:freeIn v (atom lit)))
 
-(defunc freeVars (lit) (funcall holai.metis.metis_prover.atom:freeVars (atom lit)))
+(defunc freeVars (lit) (#`holai.metis.metis_prover.atom:freeVars (atom lit)))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Substitutions.                                                            *)
@@ -20785,7 +20607,7 @@
 ;; (* ------------------------------------------------------------------------- *)
 
 
-(defunc mkEq (l_r) (tuple cl:t (funcall holai.metis.metis_prover.atom:mkEq l_r)))
+(defunc mkEq (l_r) (tuple cl:t (#`holai.metis.metis_prover.atom:mkEq l_r)))
 
 (defunc destEq (arg~28578)
   (match arg~28578
@@ -20794,7 +20616,7 @@
 
 (defparameter isEq (can #'destEq))
 
-(defunc mkNeq (l_r) (tuple cl:nil (funcall holai.metis.metis_prover.atom:mkEq l_r)))
+(defunc mkNeq (l_r) (tuple cl:nil (#`holai.metis.metis_prover.atom:mkEq l_r)))
 
 (defunc destNeq (arg~28605)
   (match arg~28605
@@ -20906,7 +20728,7 @@
   (match arg~28968
     ((Empty%) (make-Node :l (make-Empty%) :v x :d data :r (make-Empty%) :h 1))
     ((cl:and m (Node :l l :v v :d d :r r :h h))
-      (let ((c (funcall compare x v)))
+      (let ((c (#`compare x v)))
         (cl:declare (cl:ignorable c))
         (if (= c 0)
           (if (== d data) m (make-Node :l l :v x :d data :r r :h h))
@@ -20922,7 +20744,7 @@
   (match arg~29050
     ((Empty%) (raise (make-Not_found)))
     ((Node :l l :v v :d d :r r)
-      (let ((c (funcall compare x v)))
+      (let ((c (#`compare x v)))
         (cl:declare (cl:ignorable c))
         (if (= c 0) d (find x (if (< c 0) l r)))))))
 
@@ -20930,7 +20752,7 @@
   (match arg~29085
     ((Empty%) cl:nil)
     ((Node :l l :v v :r r)
-      (let ((c (funcall compare x v)))
+      (let ((c (#`compare x v)))
         (cl:declare (cl:ignorable c))
         (cl:or (= c 0) (mem x (if (< c 0) l r)))))))
 
@@ -20957,7 +20779,7 @@
   (match arg~29199
     ((Empty%) (make-Empty%))
     ((cl:and m (Node :l l :v v :d d :r r))
-      (let ((c (funcall compare x v)))
+      (let ((c (#`compare x v)))
         (cl:declare (cl:ignorable c))
         (if (= c 0)
           (merge~1 l r)
@@ -20973,19 +20795,19 @@
   (match arg~29264
     ((Empty%) (make-Empty%))
     ((Node :l l :v v :d d :r r :h h)
-      (let* ((l% (map f l)) (d% (funcall f d)) (r% (map f r)))
+      (let* ((l% (map f l)) (d% (#`f d)) (r% (map f r)))
         (cl:declare (cl:ignorable l% d% r%))
         (make-Node :l l% :v v :d d% :r r% :h h)))))
 
 (defunc fold (f m accu)
   (match m
     ((Empty%) accu)
-    ((Node :l l :v v :d d :r r) (fold f r (funcall f v d (fold f l accu))))))
+    ((Node :l l :v v :d d :r r) (fold f r (#`f v d (fold f l accu))))))
 
 (defunc exists (p arg~29330)
   (match arg~29330
     ((Empty%) cl:nil)
-    ((Node :l l :v v :d d :r r) (cl:or (funcall p v d) (cl:or (exists p l) (exists p r))))))
+    ((Node :l l :v v :d d :r r) (cl:or (#`p v d) (cl:or (exists p l) (exists p r))))))
 
 ;; (* Beware: those two functions assume that the added k is *strictly*
 ;;        smaller (or bigger) than all the present keys in the tree; it
@@ -21038,7 +20860,7 @@
   (match arg~29548
     ((Empty%) (tuple (make-Empty%) (make-None) (make-Empty%)))
     ((Node :l l :v v :d d :r r)
-      (let ((c (funcall compare x v)))
+      (let ((c (#`compare x v)))
         (cl:declare (cl:ignorable c))
         (if (= c 0)
           (tuple l (make-Some d) r)
@@ -21052,19 +20874,11 @@
     ((guard (tuple (Node :l l1 :v v1 :d d1 :r r1 :h h1) _) (>= h1 (height s2)))
       (match (split v1 s2)
         ((tuple l2 d2 r2)
-          (concat_or_join
-            (merge f l1 l2)
-            v1
-            (funcall f v1 (make-Some d1) d2)
-            (merge f r1 r2)))))
+          (concat_or_join (merge f l1 l2) v1 (#`f v1 (make-Some d1) d2) (merge f r1 r2)))))
     ((tuple _ (Node :l l2 :v v2 :d d2 :r r2))
       (match (split v2 s1)
         ((tuple l1 d1 r1)
-          (concat_or_join
-            (merge f l1 l2)
-            v2
-            (funcall f v2 d1 (make-Some d2))
-            (merge f r1 r2)))))
+          (concat_or_join (merge f l1 l2) v2 (#`f v2 d1 (make-Some d2)) (merge f r1 r2)))))
     (_ (assert-true cl:nil "ocaml-stdlib/map.ml" 400 10))))
 
 (defunc union (f s1 s2)
@@ -21078,20 +20892,20 @@
               (cl:declare (cl:ignorable l r))
               (match d2%
                 ((None) (join l v1 d1 r))
-                ((Some d2) (concat_or_join l v1 (funcall f v1 d1 d2) r))))))
+                ((Some d2) (concat_or_join l v1 (#`f v1 d1 d2) r))))))
         (match (split v2 s1)
           ((tuple l1% d1% r1%)
             (let ((l (union f l1% l2)) (r (union f r1% r2)))
               (cl:declare (cl:ignorable l r))
               (match d1%
                 ((None) (join l v2 d2 r))
-                ((Some d1) (concat_or_join l v2 (funcall f v2 d1 d2) r))))))))))
+                ((Some d1) (concat_or_join l v2 (#`f v2 d1 d2) r))))))))))
 
 (defunc filter (p arg~29846)
   (match arg~29846
     ((Empty%) (make-Empty%))
     ((cl:and m (Node :l l :v v :d d :r r))
-      (let* ((l% (filter p l)) (pvd (funcall p v d)) (r% (filter p r)))
+      (let* ((l% (filter p l)) (pvd (#`p v d)) (r% (filter p r)))
         (cl:declare (cl:ignorable l% pvd r%))
         (if pvd (if (cl:and (== l l%) (== r r%)) m (join l% v d r%)) (concat l% r%))))))
 
@@ -21148,14 +20962,14 @@
 
 (defunc foldl (f b% m)
   (list-fold-left
-    (lambdac (s arg~30036) (match arg~30036 ((tuple v tm) (funcall f (tuple v tm s)))))
+    (lambdac (s arg~30036) (match arg~30036 ((tuple v tm) (#`f (tuple v tm s)))))
     b%
     (bindings m)))
 
 (defparameter foldr #'foldl)
 
 (defunc filter (f)
-  (holai.metis.metis_prover.literal.map.ma:filter (lambdac (x y) (funcall f (tuple x y)))))
+  (holai.metis.metis_prover.literal.map.ma:filter (lambdac (x y) (#`f (tuple x y)))))
 
 (defparameter inDomain #'mem)
 
@@ -21164,7 +20978,7 @@
     ((f%
       (k% arg~30077)
       (match arg~30077
-        ((tuple (Some x) (Some y)) (funcall f (tuple (tuple k% x) (tuple k% y))))
+        ((tuple (Some x) (Some y)) (#`f (tuple (tuple k% x) (tuple k% y))))
         ((tuple (Some x) (None)) (make-Some x))
         ((tuple (None) (Some y)) (make-Some y))
         ((tuple (None) (None)) (make-None)))))
@@ -21174,16 +20988,14 @@
 
 (defunc mapPartial (f m)
   (fold
-    (lambdac (k% x acc)
-      (match (funcall f (tuple k% x)) ((Some y) (add k% y acc)) ((None) acc)))
+    (lambdac (k% x acc) (match (#`f (tuple k% x)) ((Some y) (add k% y acc)) ((None) acc)))
     m
     empty))
 
 (defparameter transform #'map)
 
 (defunc exists (f)
-  (holai.metis.metis_prover.literal.map.ma:exists
-    (lambdac (k% m) (funcall f (tuple k% m)))))
+  (holai.metis.metis_prover.literal.map.ma:exists (lambdac (k% m) (#`f (tuple k% m)))))
 
 (in-package :holai.metis.metis_prover.literal)
 
@@ -21254,7 +21066,7 @@
   (match arg~30372
     ((Empty%) (make-Node :l (make-Empty%) :v x :r (make-Empty%) :h 1))
     ((cl:and t% (Node :l l :v v :r r))
-      (let ((c (funcall holai.metis.metis_prover.literal.ordered:compare x v)))
+      (let ((c (#`holai.metis.metis_prover.literal.ordered:compare x v)))
         (cl:declare (cl:ignorable c))
         (if (= c 0)
           t%
@@ -21350,7 +21162,7 @@
   (match arg~30650
     ((Empty%) (tuple (make-Empty%) cl:nil (make-Empty%)))
     ((Node :l l :v v :r r)
-      (let ((c (funcall holai.metis.metis_prover.literal.ordered:compare x v)))
+      (let ((c (#`holai.metis.metis_prover.literal.ordered:compare x v)))
         (cl:declare (cl:ignorable c))
         (if (= c 0)
           (tuple l cl:t r)
@@ -21369,7 +21181,7 @@
   (match arg~30731
     ((Empty%) cl:nil)
     ((Node :l l :v v :r r)
-      (let ((c (funcall holai.metis.metis_prover.literal.ordered:compare x v)))
+      (let ((c (#`holai.metis.metis_prover.literal.ordered:compare x v)))
         (cl:declare (cl:ignorable c))
         (cl:or (= c 0) (mem x (if (< c 0) l r)))))))
 
@@ -21377,7 +21189,7 @@
   (match arg~30762
     ((Empty%) (make-Empty%))
     ((cl:and t% (Node :l l :v v :r r))
-      (let ((c (funcall holai.metis.metis_prover.literal.ordered:compare x v)))
+      (let ((c (#`holai.metis.metis_prover.literal.ordered:compare x v)))
         (cl:declare (cl:ignorable c))
         (if (= c 0)
           (merge l r)
@@ -21435,7 +21247,7 @@
     ((tuple (End) _) (- 1))
     ((tuple _ (End)) 1)
     ((tuple (More v1 r1 e1%) (More v2 r2 e2%))
-      (let ((c (funcall holai.metis.metis_prover.literal.ordered:compare v1 v2)))
+      (let ((c (#`holai.metis.metis_prover.literal.ordered:compare v1 v2)))
         (cl:declare (cl:ignorable c))
         (if (<> c 0) c (compare_aux (cons_enum r1 e1%) (cons_enum r2 e2%)))))))
 
@@ -21448,7 +21260,7 @@
     ((tuple (Empty%) _) cl:t)
     ((tuple _ (Empty%)) cl:nil)
     ((tuple (Node :l l1 :v v1 :r r1) (cl:and t2 (Node :l l2 :v v2 :r r2)))
-      (let ((c (funcall holai.metis.metis_prover.literal.ordered:compare v1 v2)))
+      (let ((c (#`holai.metis.metis_prover.literal.ordered:compare v1 v2)))
         (cl:declare (cl:ignorable c))
         (if (= c 0)
           (cl:and (subset l1 l2) (subset r1 r2))
@@ -21461,19 +21273,17 @@
               (subset l1 t2))))))))
 
 (defunc fold (f s accu)
-  (match s
-    ((Empty%) accu)
-    ((Node :l l :v v :r r) (fold f r (funcall f v (fold f l accu))))))
+  (match s ((Empty%) accu) ((Node :l l :v v :r r) (fold f r (#`f v (fold f l accu))))))
 
 (defunc for_all (p arg~31230)
   (match arg~31230
     ((Empty%) cl:t)
-    ((Node :l l :v v :r r) (cl:and (funcall p v) (cl:and (for_all p l) (for_all p r))))))
+    ((Node :l l :v v :r r) (cl:and (#`p v) (cl:and (for_all p l) (for_all p r))))))
 
 (defunc exists (p arg~31254)
   (match arg~31254
     ((Empty%) cl:nil)
-    ((Node :l l :v v :r r) (cl:or (funcall p v) (cl:or (exists p l) (exists p r))))))
+    ((Node :l l :v v :r r) (cl:or (#`p v) (cl:or (exists p l) (exists p r))))))
 
 (defunc cardinal (arg~31277)
   (match arg~31277 ((Empty%) 0) ((Node :l l :r r) (+ (+ (cardinal l) 1) (cardinal r)))))
@@ -21493,7 +21303,7 @@
 
 (defunc add (s x) (holai.metis.metis_prover.literal.set.include~30172.se:add x s))
 
-(defunc foldr (f a% s) (fold (lambdac (x acc) (funcall f (tuple x acc))) s a%))
+(defunc foldr (f a% s) (fold (lambdac (x acc) (#`f (tuple x acc))) s a%))
 
 (defparameter foldl #'foldr)
 
@@ -21542,24 +21352,23 @@
       (x arg~31425)
       (match arg~31425
         ((cl:and s% (Some _)) s%)
-        ((None) (if (funcall p% x) (make-Some x) (make-None))))))
+        ((None) (if (#`p% x) (make-Some x) (make-None))))))
     (fold #'go s (make-None))))
 
 (defunc firstl (f s)
-  (fletc
-    ((go (x arg~31451) (match arg~31451 ((cl:and s% (Some _)) s%) ((None) (funcall f x)))))
+  (fletc ((go (x arg~31451) (match arg~31451 ((cl:and s% (Some _)) s%) ((None) (#`f x)))))
     (fold #'go s (make-None))))
 
-(defunc transform (f s) (fold (lambdac (x acc) (cl:cons (funcall f x) acc)) s nil))
+(defunc transform (f s) (fold (lambdac (x acc) (cl:cons (#`f x) acc)) s nil))
 
 (defparameter all #'for_all)
 
-(defunc count (p% s) (fold (lambdac (x c%) (if (funcall p% x) (+ c% 1) c%)) s 0))
+(defunc count (p% s) (fold (lambdac (x c%) (if (#`p% x) (+ c% 1) c%)) s 0))
 
 (in-package :holai.metis.metis_prover.literal.set)
 
 (defunc negateMember (lit set)
-  (funcall member (holai.metis.metis_prover.literal:negate lit) set))
+  (#`member (holai.metis.metis_prover.literal:negate lit) set))
 
 (defparameter negate
   (fletc
@@ -21567,7 +21376,7 @@
       (arg~31512)
       (match arg~31512
         ((tuple lit set) (add set (holai.metis.metis_prover.literal:negate lit))))))
-    (funcall foldl #'f empty)))
+    (#`foldl #'f empty)))
 
 (defparameter relations
   (fletc
@@ -21576,7 +21385,7 @@
       (match arg~31530
         ((tuple lit set)
           (holai.metis.metis_prover.name_arity.set.include~13610:add set (relation lit))))))
-    (funcall foldl #'f holai.metis.metis_prover.name_arity.set.include~13610:empty)))
+    (#`foldl #'f holai.metis.metis_prover.name_arity.set.include~13610:empty)))
 
 (defparameter functions
   (fletc
@@ -21584,13 +21393,12 @@
       (arg~31548)
       (match arg~31548
         ((tuple lit set)
-          (funcall
-            holai.metis.metis_prover.name_arity.set.include~13610:union
+          (#`holai.metis.metis_prover.name_arity.set.include~13610:union
             set
             (holai.metis.metis_prover.literal:functions lit))))))
-    (funcall foldl #'f holai.metis.metis_prover.name_arity.set.include~13610:empty)))
+    (#`foldl #'f holai.metis.metis_prover.name_arity.set.include~13610:empty)))
 
-(defunc freeIn (v) (funcall exists (holai.metis.metis_prover.literal:freeIn v)))
+(defunc freeIn (v) (#`exists (holai.metis.metis_prover.literal:freeIn v)))
 
 (defparameter freeVars
   (fletc
@@ -21598,11 +21406,10 @@
       (arg~31572)
       (match arg~31572
         ((tuple lit set)
-          (funcall
-            holai.metis.metis_prover.name.set:union
+          (#`holai.metis.metis_prover.name.set:union
             set
             (holai.metis.metis_prover.literal:freeVars lit))))))
-    (funcall foldl #'f holai.metis.metis_prover.name.set:empty)))
+    (#`foldl #'f holai.metis.metis_prover.name.set:empty)))
 
 (defparameter freeVarsList
   (fletc
@@ -21610,7 +21417,7 @@
       (arg~31590)
       (match arg~31590
         ((tuple lits set)
-          (funcall holai.metis.metis_prover.name.set:union set (funcall freeVars lits))))))
+          (#`holai.metis.metis_prover.name.set:union set (#`freeVars lits))))))
     (holai.metis.metis_prover.mlist:foldl #'f holai.metis.metis_prover.name.set:empty)))
 
 (defparameter symbols
@@ -21619,7 +21426,7 @@
       (arg~31608)
       (match arg~31608
         ((tuple lit z) (+ (holai.metis.metis_prover.literal:symbols lit) z)))))
-    (funcall foldl #'f 0)))
+    (#`foldl #'f 0)))
 
 (defparameter typedSymbols
   (fletc
@@ -21627,7 +21434,7 @@
       (arg~31626)
       (match arg~31626
         ((tuple lit z) (+ (holai.metis.metis_prover.literal:typedSymbols lit) z)))))
-    (funcall foldl #'f 0)))
+    (#`foldl #'f 0)))
 
 (defunc subst (sub lits)
   (fletc
@@ -21640,12 +21447,12 @@
               (eq% (cl:and eq (== lit lit%))))
             (cl:declare (cl:ignorable lit% eq%))
             (tuple eq% (add lits% lit%)))))))
-    (match (funcall foldl #'substLit (tuple cl:t empty) lits)
+    (match (#`foldl #'substLit (tuple cl:t empty) lits)
       ((tuple eq lits%) (if eq lits lits%)))))
 
-(defunc conjoin (set) (listMkConj (list-map #'toFormula (funcall toList set))))
+(defunc conjoin (set) (listMkConj (list-map #'toFormula (#`toList set))))
 
-(defunc disjoin (set) (listMkDisj (list-map #'toFormula (funcall toList set))))
+(defunc disjoin (set) (listMkDisj (list-map #'toFormula (#`toList set))))
 
 (defunc toString (cl)
   (string-concat
@@ -21653,7 +21460,7 @@
     (string-concat
       (string-join
         ", "
-        (list-map #'holai.metis.metis_prover.literal:toString (funcall toList cl)))
+        (list-map #'holai.metis.metis_prover.literal:toString (#`toList cl)))
       "}")))
 
 (in-package :holai.metis.metis_prover.literal)
@@ -21714,7 +21521,7 @@
   (match arg~31953
     ((Empty%) (make-Node :l (make-Empty%) :v x :d data :r (make-Empty%) :h 1))
     ((cl:and m (Node :l l :v v :d d :r r :h h))
-      (let ((c (funcall compare x v)))
+      (let ((c (#`compare x v)))
         (cl:declare (cl:ignorable c))
         (if (= c 0)
           (if (== d data) m (make-Node :l l :v x :d data :r r :h h))
@@ -21730,7 +21537,7 @@
   (match arg~32035
     ((Empty%) (raise (make-Not_found)))
     ((Node :l l :v v :d d :r r)
-      (let ((c (funcall compare x v)))
+      (let ((c (#`compare x v)))
         (cl:declare (cl:ignorable c))
         (if (= c 0) d (find x (if (< c 0) l r)))))))
 
@@ -21738,7 +21545,7 @@
   (match arg~32070
     ((Empty%) cl:nil)
     ((Node :l l :v v :r r)
-      (let ((c (funcall compare x v)))
+      (let ((c (#`compare x v)))
         (cl:declare (cl:ignorable c))
         (cl:or (= c 0) (mem x (if (< c 0) l r)))))))
 
@@ -21765,7 +21572,7 @@
   (match arg~32184
     ((Empty%) (make-Empty%))
     ((cl:and m (Node :l l :v v :d d :r r))
-      (let ((c (funcall compare x v)))
+      (let ((c (#`compare x v)))
         (cl:declare (cl:ignorable c))
         (if (= c 0)
           (merge~1 l r)
@@ -21781,19 +21588,19 @@
   (match arg~32249
     ((Empty%) (make-Empty%))
     ((Node :l l :v v :d d :r r :h h)
-      (let* ((l% (map f l)) (d% (funcall f d)) (r% (map f r)))
+      (let* ((l% (map f l)) (d% (#`f d)) (r% (map f r)))
         (cl:declare (cl:ignorable l% d% r%))
         (make-Node :l l% :v v :d d% :r r% :h h)))))
 
 (defunc fold (f m accu)
   (match m
     ((Empty%) accu)
-    ((Node :l l :v v :d d :r r) (fold f r (funcall f v d (fold f l accu))))))
+    ((Node :l l :v v :d d :r r) (fold f r (#`f v d (fold f l accu))))))
 
 (defunc exists (p arg~32315)
   (match arg~32315
     ((Empty%) cl:nil)
-    ((Node :l l :v v :d d :r r) (cl:or (funcall p v d) (cl:or (exists p l) (exists p r))))))
+    ((Node :l l :v v :d d :r r) (cl:or (#`p v d) (cl:or (exists p l) (exists p r))))))
 
 ;; (* Beware: those two functions assume that the added k is *strictly*
 ;;        smaller (or bigger) than all the present keys in the tree; it
@@ -21846,7 +21653,7 @@
   (match arg~32533
     ((Empty%) (tuple (make-Empty%) (make-None) (make-Empty%)))
     ((Node :l l :v v :d d :r r)
-      (let ((c (funcall compare x v)))
+      (let ((c (#`compare x v)))
         (cl:declare (cl:ignorable c))
         (if (= c 0)
           (tuple l (make-Some d) r)
@@ -21860,19 +21667,11 @@
     ((guard (tuple (Node :l l1 :v v1 :d d1 :r r1 :h h1) _) (>= h1 (height s2)))
       (match (split v1 s2)
         ((tuple l2 d2 r2)
-          (concat_or_join
-            (merge f l1 l2)
-            v1
-            (funcall f v1 (make-Some d1) d2)
-            (merge f r1 r2)))))
+          (concat_or_join (merge f l1 l2) v1 (#`f v1 (make-Some d1) d2) (merge f r1 r2)))))
     ((tuple _ (Node :l l2 :v v2 :d d2 :r r2))
       (match (split v2 s1)
         ((tuple l1 d1 r1)
-          (concat_or_join
-            (merge f l1 l2)
-            v2
-            (funcall f v2 d1 (make-Some d2))
-            (merge f r1 r2)))))
+          (concat_or_join (merge f l1 l2) v2 (#`f v2 d1 (make-Some d2)) (merge f r1 r2)))))
     (_ (assert-true cl:nil "ocaml-stdlib/map.ml" 400 10))))
 
 (defunc union (f s1 s2)
@@ -21886,20 +21685,20 @@
               (cl:declare (cl:ignorable l r))
               (match d2%
                 ((None) (join l v1 d1 r))
-                ((Some d2) (concat_or_join l v1 (funcall f v1 d1 d2) r))))))
+                ((Some d2) (concat_or_join l v1 (#`f v1 d1 d2) r))))))
         (match (split v2 s1)
           ((tuple l1% d1% r1%)
             (let ((l (union f l1% l2)) (r (union f r1% r2)))
               (cl:declare (cl:ignorable l r))
               (match d1%
                 ((None) (join l v2 d2 r))
-                ((Some d1) (concat_or_join l v2 (funcall f v2 d1 d2) r))))))))))
+                ((Some d1) (concat_or_join l v2 (#`f v2 d1 d2) r))))))))))
 
 (defunc filter (p arg~32831)
   (match arg~32831
     ((Empty%) (make-Empty%))
     ((cl:and m (Node :l l :v v :d d :r r))
-      (let* ((l% (filter p l)) (pvd (funcall p v d)) (r% (filter p r)))
+      (let* ((l% (filter p l)) (pvd (#`p v d)) (r% (filter p r)))
         (cl:declare (cl:ignorable l% pvd r%))
         (if pvd (if (cl:and (== l l%) (== r r%)) m (join l% v d r%)) (concat l% r%))))))
 
@@ -21956,15 +21755,14 @@
 
 (defunc foldl (f b% m)
   (list-fold-left
-    (lambdac (s arg~33021) (match arg~33021 ((tuple v tm) (funcall f (tuple v tm s)))))
+    (lambdac (s arg~33021) (match arg~33021 ((tuple v tm) (#`f (tuple v tm s)))))
     b%
     (bindings m)))
 
 (defparameter foldr #'foldl)
 
 (defunc filter (f)
-  (holai.metis.metis_prover.literal.set_map.ma:filter
-    (lambdac (x y) (funcall f (tuple x y)))))
+  (holai.metis.metis_prover.literal.set_map.ma:filter (lambdac (x y) (#`f (tuple x y)))))
 
 (defparameter inDomain #'mem)
 
@@ -21973,7 +21771,7 @@
     ((f%
       (k% arg~33062)
       (match arg~33062
-        ((tuple (Some x) (Some y)) (funcall f (tuple (tuple k% x) (tuple k% y))))
+        ((tuple (Some x) (Some y)) (#`f (tuple (tuple k% x) (tuple k% y))))
         ((tuple (Some x) (None)) (make-Some x))
         ((tuple (None) (Some y)) (make-Some y))
         ((tuple (None) (None)) (make-None)))))
@@ -21983,16 +21781,14 @@
 
 (defunc mapPartial (f m)
   (fold
-    (lambdac (k% x acc)
-      (match (funcall f (tuple k% x)) ((Some y) (add k% y acc)) ((None) acc)))
+    (lambdac (k% x acc) (match (#`f (tuple k% x)) ((Some y) (add k% y acc)) ((None) acc)))
     m
     empty))
 
 (defparameter transform #'map)
 
 (defunc exists (f)
-  (holai.metis.metis_prover.literal.set_map.ma:exists
-    (lambdac (k% m) (funcall f (tuple k% m)))))
+  (holai.metis.metis_prover.literal.set_map.ma:exists (lambdac (k% m) (#`f (tuple k% m)))))
 
 (in-package :holai.metis.metis_prover.literal)
 
@@ -22061,7 +21857,7 @@
   (match arg~33356
     ((Empty%) (make-Node :l (make-Empty%) :v x :r (make-Empty%) :h 1))
     ((cl:and t% (Node :l l :v v :r r))
-      (let ((c (funcall holai.metis.metis_prover.literal.set_ordered:compare x v)))
+      (let ((c (#`holai.metis.metis_prover.literal.set_ordered:compare x v)))
         (cl:declare (cl:ignorable c))
         (if (= c 0)
           t%
@@ -22157,7 +21953,7 @@
   (match arg~33634
     ((Empty%) (tuple (make-Empty%) cl:nil (make-Empty%)))
     ((Node :l l :v v :r r)
-      (let ((c (funcall holai.metis.metis_prover.literal.set_ordered:compare x v)))
+      (let ((c (#`holai.metis.metis_prover.literal.set_ordered:compare x v)))
         (cl:declare (cl:ignorable c))
         (if (= c 0)
           (tuple l cl:t r)
@@ -22176,7 +21972,7 @@
   (match arg~33715
     ((Empty%) cl:nil)
     ((Node :l l :v v :r r)
-      (let ((c (funcall holai.metis.metis_prover.literal.set_ordered:compare x v)))
+      (let ((c (#`holai.metis.metis_prover.literal.set_ordered:compare x v)))
         (cl:declare (cl:ignorable c))
         (cl:or (= c 0) (mem x (if (< c 0) l r)))))))
 
@@ -22184,7 +21980,7 @@
   (match arg~33746
     ((Empty%) (make-Empty%))
     ((cl:and t% (Node :l l :v v :r r))
-      (let ((c (funcall holai.metis.metis_prover.literal.set_ordered:compare x v)))
+      (let ((c (#`holai.metis.metis_prover.literal.set_ordered:compare x v)))
         (cl:declare (cl:ignorable c))
         (if (= c 0)
           (merge l r)
@@ -22242,7 +22038,7 @@
     ((tuple (End) _) (- 1))
     ((tuple _ (End)) 1)
     ((tuple (More v1 r1 e1%) (More v2 r2 e2%))
-      (let ((c (funcall holai.metis.metis_prover.literal.set_ordered:compare v1 v2)))
+      (let ((c (#`holai.metis.metis_prover.literal.set_ordered:compare v1 v2)))
         (cl:declare (cl:ignorable c))
         (if (<> c 0) c (compare_aux (cons_enum r1 e1%) (cons_enum r2 e2%)))))))
 
@@ -22255,7 +22051,7 @@
     ((tuple (Empty%) _) cl:t)
     ((tuple _ (Empty%)) cl:nil)
     ((tuple (Node :l l1 :v v1 :r r1) (cl:and t2 (Node :l l2 :v v2 :r r2)))
-      (let ((c (funcall holai.metis.metis_prover.literal.set_ordered:compare v1 v2)))
+      (let ((c (#`holai.metis.metis_prover.literal.set_ordered:compare v1 v2)))
         (cl:declare (cl:ignorable c))
         (if (= c 0)
           (cl:and (subset l1 l2) (subset r1 r2))
@@ -22268,19 +22064,17 @@
               (subset l1 t2))))))))
 
 (defunc fold (f s accu)
-  (match s
-    ((Empty%) accu)
-    ((Node :l l :v v :r r) (fold f r (funcall f v (fold f l accu))))))
+  (match s ((Empty%) accu) ((Node :l l :v v :r r) (fold f r (#`f v (fold f l accu))))))
 
 (defunc for_all (p arg~34214)
   (match arg~34214
     ((Empty%) cl:t)
-    ((Node :l l :v v :r r) (cl:and (funcall p v) (cl:and (for_all p l) (for_all p r))))))
+    ((Node :l l :v v :r r) (cl:and (#`p v) (cl:and (for_all p l) (for_all p r))))))
 
 (defunc exists (p arg~34238)
   (match arg~34238
     ((Empty%) cl:nil)
-    ((Node :l l :v v :r r) (cl:or (funcall p v) (cl:or (exists p l) (exists p r))))))
+    ((Node :l l :v v :r r) (cl:or (#`p v) (cl:or (exists p l) (exists p r))))))
 
 (defunc cardinal (arg~34261)
   (match arg~34261 ((Empty%) 0) ((Node :l l :r r) (+ (+ (cardinal l) 1) (cardinal r)))))
@@ -22300,7 +22094,7 @@
 
 (defunc add (s x) (holai.metis.metis_prover.literal.set_set.se:add x s))
 
-(defunc foldr (f a% s) (fold (lambdac (x acc) (funcall f (tuple x acc))) s a%))
+(defunc foldr (f a% s) (fold (lambdac (x acc) (#`f (tuple x acc))) s a%))
 
 (defparameter foldl #'foldr)
 
@@ -22349,19 +22143,18 @@
       (x arg~34409)
       (match arg~34409
         ((cl:and s% (Some _)) s%)
-        ((None) (if (funcall p% x) (make-Some x) (make-None))))))
+        ((None) (if (#`p% x) (make-Some x) (make-None))))))
     (fold #'go s (make-None))))
 
 (defunc firstl (f s)
-  (fletc
-    ((go (x arg~34435) (match arg~34435 ((cl:and s% (Some _)) s%) ((None) (funcall f x)))))
+  (fletc ((go (x arg~34435) (match arg~34435 ((cl:and s% (Some _)) s%) ((None) (#`f x)))))
     (fold #'go s (make-None))))
 
-(defunc transform (f s) (fold (lambdac (x acc) (cl:cons (funcall f x) acc)) s nil))
+(defunc transform (f s) (fold (lambdac (x acc) (cl:cons (#`f x) acc)) s nil))
 
 (defparameter all #'for_all)
 
-(defunc count (p% s) (fold (lambdac (x c%) (if (funcall p% x) (+ c% 1) c%)) s 0))
+(defunc count (p% s) (fold (lambdac (x c%) (if (#`p% x) (+ c% 1) c%)) s 0))
 
 (in-package :holai.metis.metis_prover.literal)
 
@@ -22402,24 +22195,22 @@
           (if
             (cl:or
               (cl:and pol (isRefl atm))
-              (funcall holai.metis.metis_prover.atom.set:member atm set))
+              (#`holai.metis.metis_prover.atom.set:member atm set))
             (make-None)
             (make-Some (add set atm)))))))
-    (match (funcall foldl #'chk (make-Some empty) (clause th))
-      ((Some _) cl:nil)
-      ((None) cl:t))))
+    (match (#`foldl #'chk (make-Some empty) (clause th)) ((Some _) cl:nil) ((None) cl:t))))
 
 ;; (* Contradictions *)
 
 
-(defunc isContradiction (th) (funcall null (clause th)))
+(defunc isContradiction (th) (#`null (clause th)))
 
 ;; (* Unit theorems *)
 
 
 (defunc destUnit (arg~34567)
   (match arg~34567
-    ((Thm cl _) (if (= (funcall size cl) 1) (funcall pick cl) (failwith "Thm.destUnit")))))
+    ((Thm cl _) (if (= (#`size cl) 1) (#`pick cl) (failwith "Thm.destUnit")))))
 
 (defparameter isUnit (can #'destUnit))
 
@@ -22435,8 +22226,7 @@
 
 (defunc member (lit arg~34599)
   (match arg~34599
-    ((Thm cl _)
-      (funcall holai.metis.metis_prover.literal.set.include~30172:member lit cl))))
+    ((Thm cl _) (#`holai.metis.metis_prover.literal.set.include~30172:member lit cl))))
 
 (defunc negateMember (lit arg~34611)
   (match arg~34611
@@ -22448,16 +22238,10 @@
 
 
 (defunc compare (th1 th2)
-  (funcall
-    holai.metis.metis_prover.literal.set.include~30172:compare
-    (clause th1)
-    (clause th2)))
+  (#`holai.metis.metis_prover.literal.set.include~30172:compare (clause th1) (clause th2)))
 
 (defunc equal (th1 th2)
-  (funcall
-    holai.metis.metis_prover.literal.set.include~30172:equal
-    (clause th1)
-    (clause th2)))
+  (#`holai.metis.metis_prover.literal.set.include~30172:equal (clause th1) (clause th2)))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Free variables.                                                           *)
@@ -22468,8 +22252,7 @@
   (match arg~34641 ((Thm cl _) (holai.metis.metis_prover.literal.set:freeIn v cl))))
 
 (defunc freeVars (arg~34652)
-  (match arg~34652
-    ((Thm cl _) (funcall holai.metis.metis_prover.literal.set:freeVars cl))))
+  (match arg~34652 ((Thm cl _) (#`holai.metis.metis_prover.literal.set:freeVars cl))))
 
 (defunc inferenceTypeToString (arg~34662)
   (match arg~34662
@@ -22569,7 +22352,7 @@
           (let ((cl1% (delete cl1 lit)) (cl2% (delete cl2 (negate lit))))
             (cl:declare (cl:ignorable cl1% cl2%))
             (make-Thm
-              (funcall union cl1% cl2%)
+              (#`union cl1% cl2%)
               (tuple (make-Resolve%) (cl:cons th1 (cl:cons th2 nil))))))))))
 
 ;; (*MetisDebug
@@ -22589,7 +22372,7 @@
 
 
 (defunc refl (tm)
-  (make-Thm (funcall singleton (tuple cl:t (mkRefl tm))) (tuple (make-Refl%) nil)))
+  (make-Thm (#`singleton (tuple cl:t (mkRefl tm))) (tuple (make-Refl%) nil)))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (*                                                                           *)
@@ -22652,7 +22435,7 @@
       (match arg~35003
         (nil (raise (make-Bug "can't reconstruct Subst rule")))
         ((cl:cons (tuple nil sub) others)
-          (if (funcall equal (holai.metis.metis_prover.literal.set:subst sub cl) cl%)
+          (if (#`equal (holai.metis.metis_prover.literal.set:subst sub cl) cl%)
             sub
             (recon others)))
         ((cl:cons (tuple (cl:cons lit lits) sub) others)
@@ -22664,8 +22447,8 @@
                   (match (total (matchLiterals sub lit) lit%)
                     ((None) acc)
                     ((Some sub%) (cl:cons (tuple lits sub%) acc)))))))
-            (recon (funcall foldl #'checkLit others cl%)))))))
-    (normalize (recon (cl:cons (tuple (funcall toList cl) empty) nil)))))
+            (recon (#`foldl #'checkLit others cl%)))))))
+    (normalize (recon (cl:cons (tuple (#`toList cl) empty) nil)))))
 
 ;; (*MetisDebug
 ;;       handle Failure err ->
@@ -22674,18 +22457,18 @@
 
 
 (defunc reconstructResolvant (cl1 cl2 cl)
-  (if (not (funcall subset cl1 cl))
-    (funcall pick (funcall difference cl1 cl))
-    (if (not (funcall subset cl2 cl))
-      (holai.metis.metis_prover.literal:negate (funcall pick (funcall difference cl2 cl)))
-      (let ((cl1% (funcall negate cl1)) (cl2% (funcall negate cl2)))
+  (if (not (#`subset cl1 cl))
+    (#`pick (#`difference cl1 cl))
+    (if (not (#`subset cl2 cl))
+      (holai.metis.metis_prover.literal:negate (#`pick (#`difference cl2 cl)))
+      (let ((cl1% (#`negate cl1)) (cl2% (#`negate cl2)))
         (cl:declare (cl:ignorable cl1% cl2%))
         (let
           ((lits
             (intersectList (cl:cons cl1 (cl:cons cl1% (cl:cons cl2 (cl:cons cl2% nil)))))))
           (cl:declare (cl:ignorable lits))
-          (if (not (funcall null lits))
-            (funcall pick lits)
+          (if (not (#`null lits))
+            (#`pick lits)
             (raise (make-Bug "can't reconstruct Resolve rule"))))))))
 
 ;; (*MetisDebug
@@ -22695,9 +22478,8 @@
 
 
 (defunc reconstructEquality (cl)
-  (labelsc
-    ((sync
-      (s t% path arg~35134 arg~35138)
+  (holai.runtime:labelsc
+    ((:recursive 0 sync (s t% path arg~35134 arg~35138)
       (match arg~35134
         ((tuple f a%)
           (match arg~35138
@@ -22706,7 +22488,7 @@
                 (not
                   (cl:and
                     (holai.metis.metis_prover.name:equal f f%)
-                    (= (funcall length a%) (funcall length a%%))))
+                    (= (#`length a%) (#`length a%%))))
                 (make-None)
                 (let ((itms (enumerate (zip a% a%%))))
                   (cl:declare (cl:ignorable itms))
@@ -22726,10 +22508,8 @@
                           (match (tuple tm tm%)
                             ((tuple (Fn f_a) (Fn f_a%)) (sync s t% path% f_a f_a%))
                             (_ (make-None))))))
-                    (_ (make-None)))))))))))
-    (fletc
-      ((recon
-        (arg~35224)
+                    (_ (make-None))))))))))
+      (:nonrecursive 1 recon (arg~35224)
         (match arg~35224
           ((tuple neq (tuple pol atm) (tuple pol% atm%))
             (if (= pol pol%)
@@ -22747,24 +22527,24 @@
                     (match path
                       ((Some path%) (make-Some (tuple (tuple pol% atm) path% t%)))
                       ((None) (make-None)))))))))))
-      (let
-        ((candidates
-          (match (list-partition isNeq (funcall toList cl))
-            ((tuple (cl:cons l1 nil) (cl:cons l2 (cl:cons l3 nil)))
-              (cl:cons (tuple l1 l2 l3) (cl:cons (tuple l1 l3 l2) nil)))
-            ((tuple (cl:cons l1 (cl:cons l2 nil)) (cl:cons l3 nil))
+    (let
+      ((candidates
+        (match (list-partition isNeq (#`toList cl))
+          ((tuple (cl:cons l1 nil) (cl:cons l2 (cl:cons l3 nil)))
+            (cl:cons (tuple l1 l2 l3) (cl:cons (tuple l1 l3 l2) nil)))
+          ((tuple (cl:cons l1 (cl:cons l2 nil)) (cl:cons l3 nil))
+            (cl:cons
+              (tuple l1 l2 l3)
               (cl:cons
-                (tuple l1 l2 l3)
-                (cl:cons
-                  (tuple l1 l3 l2)
-                  (cl:cons (tuple l2 l1 l3) (cl:cons (tuple l2 l3 l1) nil)))))
-            ((tuple (cl:cons l1 nil) (cl:cons l2 nil))
-              (cl:cons (tuple l1 l1 l2) (cl:cons (tuple l1 l2 l1) nil)))
-            (_ (raise (make-Bug "reconstructEquality: malformed"))))))
-        (cl:declare (cl:ignorable candidates))
-        (match (first #'recon candidates)
-          ((Some info) info)
-          ((None) (raise (make-Bug "can't reconstruct Equality rule"))))))))
+                (tuple l1 l3 l2)
+                (cl:cons (tuple l2 l1 l3) (cl:cons (tuple l2 l3 l1) nil)))))
+          ((tuple (cl:cons l1 nil) (cl:cons l2 nil))
+            (cl:cons (tuple l1 l1 l2) (cl:cons (tuple l1 l2 l1) nil)))
+          (_ (raise (make-Bug "reconstructEquality: malformed"))))))
+      (cl:declare (cl:ignorable candidates))
+      (match (first #'recon candidates)
+        ((Some info) info)
+        ((None) (raise (make-Bug "can't reconstruct Equality rule")))))))
 
 ;; (*MetisDebug
 ;;       handle Failure err ->
@@ -22806,53 +22586,47 @@
 (defunc proof (th)
   (let ((emptyThms (newMap unit)))
     (cl:declare (cl:ignorable emptyThms))
-    (labelsc
-      ((addThms
-        (arg~35529)
+    (holai.runtime:labelsc
+      ((:recursive 0 addThms (arg~35529)
         (match arg~35529
           ((tuple th% ths)
             (let ((cl (clause th%)))
               (cl:declare (cl:ignorable cl))
-              (if (funcall inDomain cl ths)
+              (if (#`inDomain cl ths)
                 ths
                 (match (inference th%)
                   ((tuple _ pars)
                     (let
                       ((ths% (holai.metis.metis_prover.mlist:foldl #'addThms ths pars)))
                       (cl:declare (cl:ignorable ths%))
-                      (if (funcall inDomain cl ths%) ths% (insert ths% (tuple cl th%))))))))))))
-      (fletc ((mkThms (th%) (addThms (tuple th% emptyThms))))
-        (labelsc
-          ((addProof
-            (arg~35575)
-            (match arg~35575
-              ((tuple th% (tuple ths acc))
-                (let ((cl (clause th%)))
-                  (cl:declare (cl:ignorable cl))
-                  (match (peek ths cl)
-                    ((None) (tuple ths acc))
-                    ((Some th)
-                      (match (inference th)
-                        ((tuple _ pars)
-                          (match
-                            (holai.metis.metis_prover.mlist:foldl
-                              #'addProof
-                              (tuple ths acc)
-                              pars)
-                            ((tuple ths% acc%)
-                              (let*
-                                ((ths (delete ths% cl))
-                                  (acc (cl:cons (tuple th (thmToInference th)) acc%)))
-                                (cl:declare (cl:ignorable ths acc))
-                                (tuple ths acc)))))))))))))
-          (fletc
-            ((mkProof
-              (ths th%)
-              (match (addProof (tuple th% (tuple ths nil)))
-                ((tuple ths% acc) (list-rev acc)))))
-            (let* ((ths (mkThms th)) (infs (mkProof ths th)))
-              (cl:declare (cl:ignorable ths infs))
-              infs)))))))
+                      (if (#`inDomain cl ths%) ths% (insert ths% (tuple cl th%)))))))))))
+        (:nonrecursive 1 mkThms (th%) (addThms (tuple th% emptyThms)))
+        (:recursive 2 addProof (arg~35575)
+          (match arg~35575
+            ((tuple th% (tuple ths acc))
+              (let ((cl (clause th%)))
+                (cl:declare (cl:ignorable cl))
+                (match (peek ths cl)
+                  ((None) (tuple ths acc))
+                  ((Some th)
+                    (match (inference th)
+                      ((tuple _ pars)
+                        (match
+                          (holai.metis.metis_prover.mlist:foldl
+                            #'addProof
+                            (tuple ths acc)
+                            pars)
+                          ((tuple ths% acc%)
+                            (let*
+                              ((ths (delete ths% cl))
+                                (acc (cl:cons (tuple th (thmToInference th)) acc%)))
+                              (cl:declare (cl:ignorable ths acc))
+                              (tuple ths acc))))))))))))
+        (:nonrecursive 3 mkProof (ths th%)
+          (match (addProof (tuple th% (tuple ths nil))) ((tuple ths% acc) (list-rev acc)))))
+      (let* ((ths (mkThms th)) (infs (mkProof ths th)))
+        (cl:declare (cl:ignorable ths infs))
+        infs))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Free variables.                                                           *)
@@ -22881,20 +22655,17 @@
       (arg~35730)
       (match arg~35730
         ((tuple th_inf set)
-          (funcall
-            union
+          (#`union
             set
             (match th_inf
               ((tuple _ (Axiom lits))
-                (funcall holai.metis.metis_prover.literal.set:freeVars lits))
-              ((tuple _ (Assume atm))
-                (funcall holai.metis.metis_prover.atom:freeVars atm))
+                (#`holai.metis.metis_prover.literal.set:freeVars lits))
+              ((tuple _ (Assume atm)) (#`holai.metis.metis_prover.atom:freeVars atm))
               ((tuple th (Subst _)) (holai.metis.metis_prover.thm:freeVars th))
               ((tuple _ (Resolve _)) holai.metis.metis_prover.name.set:empty)
               ((tuple _ (Refl tm)) (holai.metis.metis_prover.term:freeVars tm))
               ((tuple _ (Equality lit _ tm))
-                (funcall
-                  union
+                (#`union
                   (holai.metis.metis_prover.literal:freeVars lit)
                   (holai.metis.metis_prover.term:freeVars tm)))))))))
     (holai.metis.metis_prover.mlist:foldl #'inc holai.metis.metis_prover.name.set:empty)))
@@ -22991,7 +22762,7 @@
     ((tuple t_u th)
       (let ((lit (mkEq t_u)))
         (cl:declare (cl:ignorable lit))
-        (if (funcall member lit (clause th)) (make-Some lit) (make-None))))))
+        (if (#`member lit (clause th)) (make-Some lit) (make-None))))))
 
 (defunc reflEqn (t%) (tuple (tuple t% t%) (refl t%)))
 
@@ -23066,33 +22837,33 @@
             (match (transEqn eqn1 eqn2) ((tuple _ th) (tuple tm%% th)))))))))
 
 (defunc thenConv (conv1 conv2 tm)
-  (match (funcall conv1 tm)
+  (match (#`conv1 tm)
     ((cl:and res1 (tuple tm% _))
-      (let ((res2 (funcall conv2 tm%)))
+      (let ((res2 (#`conv2 tm%)))
         (cl:declare (cl:ignorable res2))
         (thenConvTrans tm res1 res2)))))
 
 (defunc orelseConv (conv1 conv2 tm)
   (handler-case
-    (funcall conv1 tm)
+    (#`conv1 tm)
     (holai.runtime:ocaml-condition
       (exception~36181)
-      (match exception~36181 ((Failure _) (funcall conv2 tm)) (_ (raise exception~36181))))))
+      (match exception~36181 ((Failure _) (#`conv2 tm)) (_ (raise exception~36181))))))
 
 (defunc tryConv (conv) (orelseConv conv #'allConv))
 
 (defunc changedConv (conv tm)
-  (match (funcall conv tm)
+  (match (#`conv tm)
     ((cl:and res (tuple tm% _)) (if (= tm tm%) (failwith "changedConv") res))))
 
 (defunc repeatConv (conv tm) (tryConv (thenConv conv (repeatConv conv)) tm))
 
-(defunc flip (f x y) (funcall f y x))
+(defunc flip (f x y) (#`f y x))
 
 (defunc firstConv~1 (tm arg~36237)
   (match arg~36237
     (nil (failwith "firstConv"))
-    ((cl:cons conv nil) (funcall conv tm))
+    ((cl:cons conv nil) (#`conv tm))
     ((cl:cons conv convs) (orelseConv conv (flip #'firstConv~1 convs) tm))))
 
 (defunc firstConv (convs tm) (firstConv~1 tm convs))
@@ -23100,7 +22871,7 @@
 (defunc everyConv~1 (tm arg~36269)
   (match arg~36269
     (nil (allConv tm))
-    ((cl:cons conv nil) (funcall conv tm))
+    ((cl:cons conv nil) (#`conv tm))
     ((cl:cons conv convs) (thenConv conv (flip #'everyConv~1 convs) tm))))
 
 (defunc everyConv (convs tm) (everyConv~1 tm convs))
@@ -23140,7 +22911,7 @@
 (defunc pathConv (conv path tm)
   (let ((x (subterm tm path)))
     (cl:declare (cl:ignorable x))
-    (match (funcall conv x) ((tuple y th) (rewrConv (tuple (tuple x y) th) path tm)))))
+    (match (#`conv x) ((tuple y th) (rewrConv (tuple (tuple x y) th) path tm)))))
 
 (defunc subtermConv (conv i%) (pathConv conv (cl:cons i% nil)))
 
@@ -23148,7 +22919,7 @@
   (match arg~36411
     ((cl:and tm (Var _)) (allConv tm))
     ((cl:and tm (Fn (tuple _ a%)))
-      (everyConv (list-map (subtermConv conv) (interval 0 (funcall length a%))) tm))))
+      (everyConv (list-map (subtermConv conv) (interval 0 (#`length a%))) tm))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Applying a conversion to every subterm, with some traversal strategy.     *)
@@ -23173,9 +22944,9 @@
 (defunc noLiterule (arg~36494) (failwith "noLiterule"))
 
 (defunc thenLiterule (literule1 literule2 lit)
-  (match (funcall literule1 lit)
+  (match (#`literule1 lit)
     ((cl:and res1 (tuple lit% th1))
-      (match (funcall literule2 lit%)
+      (match (#`literule2 lit%)
         ((cl:and res2 (tuple lit%% th2))
           (if (holai.metis.metis_prover.literal:equal lit lit%)
             res2
@@ -23191,17 +22962,15 @@
 
 (defunc orelseLiterule (literule1 literule2 lit)
   (handler-case
-    (funcall literule1 lit)
+    (#`literule1 lit)
     (holai.runtime:ocaml-condition
       (exception~36564)
-      (match exception~36564
-        ((Failure _) (funcall literule2 lit))
-        (_ (raise exception~36564))))))
+      (match exception~36564 ((Failure _) (#`literule2 lit)) (_ (raise exception~36564))))))
 
 (defunc tryLiterule (literule) (orelseLiterule literule #'allLiterule))
 
 (defunc changedLiterule (literule lit)
-  (match (funcall literule lit)
+  (match (#`literule lit)
     ((cl:and res (tuple lit% _)) (if (= lit lit%) (failwith "changedLiterule") res))))
 
 (defunc repeatLiterule (literule lit)
@@ -23210,7 +22979,7 @@
 (defunc firstLiterule~1 (lit arg~36612)
   (match arg~36612
     (nil (failwith "firstLiterule"))
-    ((cl:cons literule nil) (funcall literule lit))
+    ((cl:cons literule nil) (#`literule lit))
     ((cl:cons literule literules)
       (orelseLiterule literule (flip #'firstLiterule~1 literules) lit))))
 
@@ -23219,7 +22988,7 @@
 (defunc everyLiterule~1 (lit arg~36644)
   (match arg~36644
     (nil (allLiterule lit))
-    ((cl:cons literule nil) (funcall literule lit))
+    ((cl:cons literule nil) (#`literule lit))
     ((cl:cons literule literules)
       (thenLiterule literule (flip #'everyLiterule~1 literules) lit))))
 
@@ -23251,8 +23020,7 @@
 (defunc pathLiterule (conv path lit)
   (let ((tm (holai.metis.metis_prover.literal:subterm lit path)))
     (cl:declare (cl:ignorable tm))
-    (match (funcall conv tm)
-      ((tuple tm% th) (rewrLiterule (tuple (tuple tm tm%) th) path lit)))))
+    (match (#`conv tm) ((tuple tm% th) (rewrLiterule (tuple (tuple tm tm%) th) path lit)))))
 
 (defunc argumentLiterule (conv i%) (pathLiterule conv (cl:cons i% nil)))
 
@@ -23263,24 +23031,23 @@
 
 (defunc noRule (arg~36780) (failwith "noRule"))
 
-(defunc thenRule (rule1 rule2 th) (funcall rule1 (funcall rule2 th)))
+(defunc thenRule (rule1 rule2 th) (#`rule1 (#`rule2 th)))
 
 (defunc orelseRule (rule1 rule2 th)
   (handler-case
-    (funcall rule1 th)
+    (#`rule1 th)
     (holai.runtime:ocaml-condition
       (exception~36797)
-      (match exception~36797 ((Failure _) (funcall rule2 th)) (_ (raise exception~36797))))))
+      (match exception~36797 ((Failure _) (#`rule2 th)) (_ (raise exception~36797))))))
 
 (defunc tryRule (rule) (orelseRule rule #'allRule))
 
 (defunc changedRule (rule th)
-  (let ((th% (funcall rule th)))
+  (let ((th% (#`rule th)))
     (cl:declare (cl:ignorable th%))
     (if
       (not
-        (funcall
-          holai.metis.metis_prover.literal.set.include~30172:equal
+        (#`holai.metis.metis_prover.literal.set.include~30172:equal
           (clause th)
           (clause th%)))
       th%
@@ -23291,7 +23058,7 @@
 (defunc firstRule~1 (th arg~36842)
   (match arg~36842
     (nil (failwith "firstRule"))
-    ((cl:cons rule nil) (funcall rule th))
+    ((cl:cons rule nil) (#`rule th))
     ((cl:cons rule rules) (orelseRule rule (flip #'firstRule~1 rules) th))))
 
 (defunc firstRule (rules th) (firstRule~1 th rules))
@@ -23299,13 +23066,13 @@
 (defunc everyRule~1 (th arg~36874)
   (match arg~36874
     (nil (allRule th))
-    ((cl:cons rule nil) (funcall rule th))
+    ((cl:cons rule nil) (#`rule th))
     ((cl:cons rule rules) (thenRule rule (flip #'everyRule~1 rules) th))))
 
 (defunc everyRule (rules th) (everyRule~1 th rules))
 
 (defunc literalRule (literule lit th)
-  (match (funcall literule lit)
+  (match (#`literule lit)
     ((tuple lit% litTh)
       (if (holai.metis.metis_prover.literal:equal lit lit%)
         th
@@ -23333,7 +23100,7 @@
           (if (holai.metis.metis_prover.thm:member lit th)
             (literalRule literule lit th)
             th)))))
-    (lambdac (lits th) (funcall foldl #'f th lits))))
+    (lambdac (lits th) (#`foldl #'f th lits))))
 
 (defunc allLiteralsRule (literule th) (literalsRule literule (clause th) th))
 
@@ -23448,7 +23215,7 @@
           (match (total #'destRefl atm)
             ((Some x) (resolve lit th% (refl x)))
             ((None) th%))))))
-    (funcall foldl #'irrefl th (clause th))))
+    (#`foldl #'irrefl th (clause th))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (*   x = y \/ y = x \/ C                                                     *)
@@ -23468,10 +23235,10 @@
           (match (total #'holai.metis.metis_prover.atom:sym atm)
             ((None) (tuple eqs th%))
             ((Some atm%)
-              (if (funcall member lit eqs)
+              (if (#`member lit eqs)
                 (tuple eqs (if pol (symEq lit th%) (symNeq lit th%)))
                 (tuple (add eqs (tuple pol atm%)) th%))))))))
-    (snd (funcall foldl #'rem (tuple empty th) (clause th)))))
+    (snd (#`foldl #'rem (tuple empty th) (clause th)))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (*   ~(v = t) \/ C                                                           *)
@@ -23630,8 +23397,8 @@
             ((None) (tuple apart% sub_edges%))
             ((Some lit%)
               (let*
-                ((apart%% (funcall addReflEdge lit apart%))
-                  (sub_edges (funcall addIrreflEdge lit sub_edges%))
+                ((apart%% (#`addReflEdge lit apart%))
+                  (sub_edges (#`addIrreflEdge lit sub_edges%))
                   (sub_edges%
                     (holai.metis.metis_prover.mlist:foldl
                       (addFactorEdge lit%)
@@ -23660,7 +23427,7 @@
         (fact acc others%)))))
 
 (defunc factor% (cl)
-  (let* ((edges (mk_edges nil nil (funcall toList cl))) (result (fact nil edges)))
+  (let* ((edges (mk_edges nil nil (#`toList cl))) (result (fact nil edges)))
     (cl:declare (cl:ignorable edges result))
     result))
 
@@ -23755,16 +23522,16 @@
 (defparameter emptyRelations (newMap unit))
 
 (defunc fixed0 (f sz elts)
-  (match elts (nil (funcall f sz)) (_ (raise (make-Bug "Model.fixed0: wrong arity")))))
+  (match elts (nil (#`f sz)) (_ (raise (make-Bug "Model.fixed0: wrong arity")))))
 
 (defunc fixed1 (f sz elts)
   (match elts
-    ((cl:cons x nil) (funcall f sz x))
+    ((cl:cons x nil) (#`f sz x))
     (_ (raise (make-Bug "Model.fixed1: wrong arity")))))
 
 (defunc fixed2 (f sz elts)
   (match elts
-    ((cl:cons x (cl:cons y nil)) (funcall f sz x y))
+    ((cl:cons x (cl:cons y nil)) (#`f sz x y))
     (_ (raise (make-Bug "Model.fixed2: wrong arity")))))
 
 (defparameter emptyFixed
@@ -23879,17 +23646,17 @@
 (defunc projectionFn (i% arg~38483 elts) (make-Some (list-nth elts (- i% 1))))
 
 (defunc arityProjectionFixed (arity)
-  (fletc ((mkProj (i%) (tuple (tuple (projectionName i%) arity) (projectionFn i%))))
-    (labelsc
-      ((addProj
-        (i% acc)
+  (holai.runtime:labelsc
+    ((:nonrecursive 0 mkProj (i%)
+      (tuple (tuple (projectionName i%) arity) (projectionFn i%)))
+      (:recursive 1 addProj (i% acc)
         (if (> i% arity) acc (addProj (+ i% 1) (insert acc (mkProj i%))))))
-      (let* ((fns (addProj projectionMin emptyFunctions)) (rels emptyRelations))
-        (cl:declare (cl:ignorable fns rels))
-        (make-fixed :functions fns :relations rels)))))
+    (let* ((fns (addProj projectionMin emptyFunctions)) (rels emptyRelations))
+      (cl:declare (cl:ignorable fns rels))
+      (make-fixed :functions fns :relations rels))))
 
 (defparameter projectionFixed
-  (funcall unionListFixed (list-map #'arityProjectionFixed projectionList)))
+  (#`unionListFixed (list-map #'arityProjectionFixed projectionList)))
 
 ;; (* Arithmetic *)
 
@@ -24002,7 +23769,7 @@
 ;; (* Relations *)
 
 
-(defunc dividesRel~1 (arg~38851 x y) (make-Some (funcall divides x y)))
+(defunc dividesRel~1 (arg~38851 x y) (make-Some (#`divides x y)))
 
 (defunc evenRel~1 (arg~38861 x) (make-Some (= (int-mod x 2) 0)))
 
@@ -24113,7 +23880,7 @@
         (make-Some cl:t)
         (if (= x 0)
           (make-Some cl:nil)
-          (if (= y (- n 1)) (make-None) (make-Some (funcall divides x y))))))))
+          (if (= y (- n 1)) (make-None) (make-Some (#`divides x y))))))))
 
 (defunc evenRel (arg~39303 x)
   (match arg~39303
@@ -24354,7 +24121,7 @@
     ((fix% (unionFixed projectionFixed overflowFixed))
       (sucFn% (getFunctionFixed fix% (tuple sucName 1))))
     (cl:declare (cl:ignorable fix% sucFn%))
-    (fletc ((suc2Fn (sz arg~40094 x) (funcall sucFn% sz (cl:cons x nil))))
+    (fletc ((suc2Fn (sz arg~40094 x) (#`sucFn% sz (cl:cons x nil))))
       (insertFunctionFixed fix% (tuple (tuple sucName 2) (fixed2 #'suc2Fn))))))
 
 (defparameter fixMap
@@ -24390,7 +24157,7 @@
 (defunc constantValuation (i%)
   (fletc
     ((add (arg~40197) (match arg~40197 ((tuple v v%) (insertValuation v% (tuple v i%))))))
-    (funcall holai.metis.metis_prover.name.set:foldl #'add emptyValuation)))
+    (#`holai.metis.metis_prover.name.set:foldl #'add emptyValuation)))
 
 (defparameter zeroValuation (constantValuation zeroElement))
 
@@ -24406,7 +24173,7 @@
         ((f
           (arg~40239)
           (match arg~40239 ((tuple v v%) (insertValuation v% (tuple v (random-int n)))))))
-        (funcall holai.metis.metis_prover.name.set:foldl #'f emptyValuation vs)))))
+        (#`holai.metis.metis_prover.name.set:foldl #'f emptyValuation vs)))))
 
 (defunc incrementValuation (n vars)
   (labelsc
@@ -24423,7 +24190,7 @@
               (let ((v%% (insertValuation v% (tuple v i%))))
                 (cl:declare (cl:ignorable v%%))
                 (if carry (inc vs% v%%) (make-Some v%%)))))))))
-    (inc (funcall toList vars))))
+    (inc (#`toList vars))))
 
 (defunc foldValuation (n vars f)
   (let ((inc (incrementValuation n vars)))
@@ -24431,12 +24198,10 @@
     (labelsc
       ((fold
         (v% acc)
-        (let ((acc% (funcall f (tuple v% acc))))
+        (let ((acc% (#`f (tuple v% acc))))
           (cl:declare (cl:ignorable acc%))
-          (match (funcall inc v%) ((None) acc%) ((Some v%%) (fold v%% acc%))))))
-      (let ((zero (funcall zeroValuation vars)))
-        (cl:declare (cl:ignorable zero))
-        (fold zero)))))
+          (match (#`inc v%) ((None) acc%) ((Some v%%) (fold v%% acc%))))))
+      (let ((zero (#`zeroValuation vars))) (cl:declare (cl:ignorable zero)) (fold zero)))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* A type of random finite mapping Z^n -> Z.                                 *)
@@ -24500,7 +24265,7 @@
     ((tuple n elts)
       (match tables%
         ((tables :domainSize vN :rangeSize vR)
-          (let* ((a% (funcall length elts)) (table (getTables tables% (tuple n a%))))
+          (let* ((a% (#`length elts)) (table (getTables tables% (tuple n a%))))
             (cl:declare (cl:ignorable a% table))
             (lookupTable vN vR table elts)))))))
 
@@ -24509,7 +24274,7 @@
     ((tuple (tuple n elts) r%)
       (match tables%
         ((tables :domainSize vN)
-          (let* ((a% (funcall length elts)) (table (getTables tables% (tuple n a%))))
+          (let* ((a% (#`length elts)) (table (getTables tables% (tuple n a%))))
             (cl:declare (cl:ignorable a% table))
             (updateTable vN table (tuple elts r%))))))))
 
@@ -24523,10 +24288,8 @@
       (match fixed%
         ((fixed :functions fns :relations rels)
           (let
-            ((fixFns
-              (funcall transform (lambdac (f) (funcall f (make-size :size vN))) fns))
-              (fixRels
-                (funcall transform (lambdac (r%) (funcall r% (make-size :size vN))) rels)))
+            ((fixFns (#`transform (lambdac (f) (#`f (make-size :size vN))) fns))
+              (fixRels (#`transform (lambdac (r%) (#`r% (make-size :size vN))) rels)))
             (cl:declare (cl:ignorable fixFns fixRels))
             (let ((rndFns (newTables vN vN)) (rndRels (newTables vN 2)))
               (cl:declare (cl:ignorable rndFns rndRels))
@@ -24551,9 +24314,9 @@
     ((tuple n elts)
       (match vM
         ((model :fixedFunctions fixFns)
-          (match (peek fixFns (tuple n (funcall length elts)))
+          (match (peek fixFns (tuple n (#`length elts)))
             ((None) (make-None))
-            ((Some fixFn) (funcall fixFn elts))))))))
+            ((Some fixFn) (#`fixFn elts))))))))
 
 (defunc isFixedFunction (vM n_elts) (is_some (peekFixedFunction vM n_elts)))
 
@@ -24562,9 +24325,9 @@
     ((tuple n elts)
       (match vM
         ((model :fixedRelations fixRels)
-          (match (peek fixRels (tuple n (funcall length elts)))
+          (match (peek fixRels (tuple n (#`length elts)))
             ((None) (make-None))
-            ((Some fixRel) (funcall fixRel elts))))))))
+            ((Some fixRel) (#`fixRel elts))))))))
 
 (defunc isFixedRelation (vM n_elts) (is_some (peekFixedRelation vM n_elts)))
 
@@ -24574,8 +24337,7 @@
 (defparameter defaultSize 8)
 
 (defparameter defaultFixed
-  (funcall
-    unionListFixed
+  (#`unionListFixed
     (cl:cons
       basicFixed
       (cl:cons
@@ -24663,8 +24425,7 @@
         (if pol b% (cl:not b%))))))
 
 (defunc interpretClause (vM vV cl)
-  (funcall
-    holai.metis.metis_prover.literal.set.include~30172:exists
+  (#`holai.metis.metis_prover.literal.set.include~30172:exists
     (interpretLiteral vM vV)
     cl))
 
@@ -24677,29 +24438,28 @@
 (defunc check (interpret maxChecks vM fv x)
   (let ((vN (msize vM)))
     (cl:declare (cl:ignorable vN))
-    (fletc
-      ((score
-        (arg~41061)
+    (holai.runtime:labelsc
+      ((:nonrecursive 0 score (arg~41061)
         (match arg~41061
           ((tuple vV (tuple vT vF))
-            (if (funcall interpret vM vV x) (tuple (+ vT 1) vF) (tuple vT (+ vF 1)))))))
-      (fletc
-        ((randomCheck (acc) (score (tuple (randomValuation (make-size :size vN) fv) acc))))
-        (let
-          ((maxChecks%
-            (match maxChecks
-              ((None) maxChecks)
-              ((Some m)
-                (match (expInt vN (funcall holai.metis.metis_prover.name.set:size fv))
-                  ((Some n) (if (<= n m) (make-None) maxChecks))
-                  ((None) maxChecks))))))
-          (cl:declare (cl:ignorable maxChecks%))
-          (match maxChecks%
-            ((Some m) (funpow m #'randomCheck (tuple 0 0)))
-            ((None) (foldValuation (make-size :size vN) fv #'score (tuple 0 0)))))))))
+            (if (#`interpret vM vV x) (tuple (+ vT 1) vF) (tuple vT (+ vF 1))))))
+        (:nonrecursive 1 randomCheck (acc)
+          (score (tuple (randomValuation (make-size :size vN) fv) acc))))
+      (let
+        ((maxChecks%
+          (match maxChecks
+            ((None) maxChecks)
+            ((Some m)
+              (match (expInt vN (#`holai.metis.metis_prover.name.set:size fv))
+                ((Some n) (if (<= n m) (make-None) maxChecks))
+                ((None) maxChecks))))))
+        (cl:declare (cl:ignorable maxChecks%))
+        (match maxChecks%
+          ((Some m) (funpow m #'randomCheck (tuple 0 0)))
+          ((None) (foldValuation (make-size :size vN) fv #'score (tuple 0 0))))))))
 
 (defunc checkAtom (maxChecks vM atm)
-  (check #'interpretAtom maxChecks vM (funcall freeVars atm) atm))
+  (check #'interpretAtom maxChecks vM (#`freeVars atm) atm))
 
 (defunc checkFormula (maxChecks vM fm)
   (check
@@ -24722,7 +24482,7 @@
     #'interpretClause
     maxChecks
     vM
-    (funcall holai.metis.metis_prover.literal.set:freeVars cl)
+    (#`holai.metis.metis_prover.literal.set:freeVars cl)
     cl))
 
 ;; (* ------------------------------------------------------------------------- *)
@@ -24796,36 +24556,32 @@
 (defunc pertTerms (vM onTarget)
   (let ((vN (msize vM)))
     (cl:declare (cl:ignorable vN))
-    (fletc
-      ((filterElements
-        (pred)
+    (holai.runtime:labelsc
+      ((:nonrecursive 0 filterElements (pred)
         (labelsc
           ((filt
             (i% acc)
             (match i%
               (0 acc)
               (_
-                (let*
-                  ((i%% (- i% 1)) (acc% (if (funcall pred i%%) (cl:cons i%% acc) acc)))
+                (let* ((i%% (- i% 1)) (acc% (if (#`pred i%%) (cl:cons i%% acc) acc)))
                   (cl:declare (cl:ignorable i%% acc%))
                   (filt i%% acc%))))))
-          (filt vN nil))))
-      (labelsc
-        ((pert
-          (arg~41424)
+          (filt vN nil)))
+        (:recursive 1 pert (arg~41424)
           (match arg~41424
             ((tuple _ nil nil acc) acc)
             ((tuple ys (cl:cons tm tms) (cl:cons x xs) acc)
               (fletc
                 ((pred
                   (y)
-                  (cl:and (<> y x) (funcall onTarget (list-rev-append ys (cl:cons y xs))))))
+                  (cl:and (<> y x) (#`onTarget (list-rev-append ys (cl:cons y xs))))))
                 (let*
                   ((target (filterElements #'pred)) (acc% (pertTerm vM target tm acc)))
                   (cl:declare (cl:ignorable target acc%))
                   (pert (tuple (cl:cons x ys) tms xs acc%)))))
             ((tuple _ _ _ _) (raise (make-Bug "Model.pertTerms.pert"))))))
-        (lambdac (x y z) (pert (tuple nil x y z)))))))
+      (lambdac (x y z) (pert (tuple nil x y z))))))
 
 (defunc pertAtom (vM vV target arg~41506 acc)
   (match arg~41506
@@ -24846,14 +24602,10 @@
   (match arg~41563 ((tuple (tuple pol atm) acc) (pertAtom vM vV pol atm acc))))
 
 (defunc pertClause (vM vV cl acc)
-  (funcall
-    holai.metis.metis_prover.literal.set.include~30172:foldl
-    (pertLiteral vM vV)
-    acc
-    cl))
+  (#`holai.metis.metis_prover.literal.set.include~30172:foldl (pertLiteral vM vV) acc cl))
 
 (defunc pickPerturb (vM perts)
-  (if (null perts) unit (perturb vM (list-nth perts (random-int (funcall length perts))))))
+  (if (null perts) unit (perturb vM (list-nth perts (random-int (#`length perts))))))
 
 (defunc perturbTerm (vM vV arg~41610)
   (match arg~41610
@@ -24915,7 +24667,7 @@
   (match arg~41811
     ((holai.metis.metis_prover.term:Var _) (make-Var))
     ((holai.metis.metis_prover.term:Fn (tuple f l))
-      (make-Fn (tuple f (funcall length l)) (list-map #'termToQterm l)))))
+      (make-Fn (tuple f (#`length l)) (list-map #'termToQterm l)))))
 
 (defunc qm~1 (arg~41832)
   (match arg~41832
@@ -24937,7 +24689,7 @@
       rest)
       (cl:and
         (holai.metis.metis_prover.name:equal f g%)
-        (cl:and (= n (funcall length b%)) (qm (append (zip a% b%) rest)))))))
+        (cl:and (= n (#`length b%)) (qm (append (zip a% b%) rest)))))))
 
 (defunc matchQtermTerm (qtm tm) (qm (cl:cons (tuple qtm tm) nil)))
 
@@ -24952,7 +24704,7 @@
     ((cl:cons
       (tuple (holai.metis.metis_prover.term:Fn (tuple f a%)) (Fn (tuple g% n) b%))
       rest)
-      (if (cl:and (holai.metis.metis_prover.name:equal f g%) (= (funcall length a%) n))
+      (if (cl:and (holai.metis.metis_prover.name:equal f g%) (= (#`length a%) n))
         (qn qsub (append (zip a% b%) rest))
         (make-None)))))
 
@@ -24977,7 +24729,7 @@
     ((cl:cons
       (tuple (Fn (tuple f n) a%) (holai.metis.metis_prover.term:Fn (tuple g% b%)))
       rest)
-      (if (cl:and (holai.metis.metis_prover.name:equal f g%) (= n (funcall length b%)))
+      (if (cl:and (holai.metis.metis_prover.name:equal f g%) (= n (#`length b%)))
         (qu qsub (append (zip a% b%) rest))
         (failwith "Term_net.qu")))))
 
@@ -25006,7 +24758,7 @@
 
 (defunc computeSize (arg~42224)
   (match arg~42224
-    ((Result l) (funcall length l))
+    ((Result l) (#`length l))
     ((Single _ n) (computeSize n))
     ((Multiple vs fs)
       (foldl
@@ -25088,7 +24840,7 @@
         ((Result l)
           (match
             (list-filter
-              (lambdac (arg~42572) (match arg~42572 ((tuple _ a%) (funcall pred a%))))
+              (lambdac (arg~42572) (match arg~42572 ((tuple _ a%) (#`pred a%))))
               l)
             (nil (make-None))
             (l% (make-Some (make-Result l%)))))
@@ -25107,7 +24859,7 @@
             (if
               (cl:and
                 (not (is_some vs%))
-                (funcall holai.metis.metis_prover.name_arity.map.include~12152:null fs%))
+                (#`holai.metis.metis_prover.name_arity.map.include~12152:null fs%))
               (make-None)
               (make-Some (make-Multiple vs% fs%))))))))
     (handler-case
@@ -25164,12 +24916,9 @@
   (match arg~42818
     (nil acc)
     ((cl:cons (tuple 0 stack net%) rest)
-      (fold~1 inc% (funcall inc% (tuple (stackValue stack) net% acc)) rest))
+      (fold~1 inc% (#`inc% (tuple (stackValue stack) net% acc)) rest))
     ((cl:cons (tuple n stack (Single qtm net%)) rest)
-      (fold~1
-        inc%
-        acc
-        (cl:cons (tuple (- n 1) (funcall stackAddQterm qtm stack) net%) rest)))
+      (fold~1 inc% acc (cl:cons (tuple (- n 1) (#`stackAddQterm qtm stack) net%) rest)))
     ((cl:cons (tuple n stack (Multiple v fns)) rest)
       (let*
         ((n% (- n 1))
@@ -25177,19 +24926,18 @@
             (match v
               ((None) rest)
               ((Some net%)
-                (cl:cons (tuple n% (funcall stackAddQterm (make-Var) stack) net%) rest)))))
+                (cl:cons (tuple n% (#`stackAddQterm (make-Var) stack) net%) rest)))))
         (cl:declare (cl:ignorable n% rest%))
         (fletc
           ((getFns
             (arg~42900)
             (match arg~42900
               ((tuple (cl:and f (tuple _ k%)) net% x)
-                (cl:cons (tuple (+ k% n%) (funcall stackAddFn f stack) net%) x)))))
+                (cl:cons (tuple (+ k% n%) (#`stackAddFn f stack) net%) x)))))
           (fold~1
             inc%
             acc
-            (funcall
-              holai.metis.metis_prover.name_arity.map.include~12152:foldr
+            (#`holai.metis.metis_prover.name_arity.map.include~12152:foldr
               #'getFns
               rest%
               fns)))))
@@ -25203,7 +24951,7 @@
     ((fold%
       (arg~42958)
       (match arg~42958
-        ((tuple nil net%) (funcall inc% (tuple pat net% acc)))
+        ((tuple nil net%) (#`inc% (tuple pat net% acc)))
         ((tuple (cl:cons pat% pats) (Single qtm net%))
           (if (equalQterm pat% qtm) (fold% (tuple pats net%)) acc))
         ((tuple (cl:cons (Var) pats) (Multiple v _))
@@ -25219,34 +24967,30 @@
   (match arg~43054
     (nil acc)
     ((cl:cons (tuple nil stack net%) rest)
-      (fold inc% (funcall inc% (tuple (stackValue stack) net% acc)) rest))
+      (fold inc% (#`inc% (tuple (stackValue stack) net% acc)) rest))
     ((cl:cons (tuple (cl:cons (Var) pats) stack net%) rest)
       (fletc
         ((harvest
           (arg~43089)
           (match arg~43089
-            ((tuple qtm n l) (cl:cons (tuple pats (funcall stackAddQterm qtm stack) n) l)))))
+            ((tuple qtm n l) (cl:cons (tuple pats (#`stackAddQterm qtm stack) n) l)))))
         (fold inc% acc (foldTerms #'harvest rest net%))))
     ((cl:cons (tuple (cl:cons pat pats) stack (Single qtm net%)) rest)
       (match (unifyQtermQterm pat qtm)
         ((None) (fold inc% acc rest))
         ((Some qtm%)
-          (fold
-            inc%
-            acc
-            (cl:cons (tuple pats (funcall stackAddQterm qtm% stack) net%) rest)))))
+          (fold inc% acc (cl:cons (tuple pats (#`stackAddQterm qtm% stack) net%) rest)))))
     ((cl:cons (tuple (cl:cons (cl:and pat (Fn f a%)) pats) stack (Multiple v fns)) rest)
       (let*
         ((rest%
           (match v
             ((None) rest)
-            ((Some net%)
-              (cl:cons (tuple pats (funcall stackAddQterm pat stack) net%) rest))))
+            ((Some net%) (cl:cons (tuple pats (#`stackAddQterm pat stack) net%) rest))))
           (rest
             (match (holai.metis.metis_prover.name_arity.map.include~12152:peek fns f)
               ((None) rest%)
               ((Some net%)
-                (cl:cons (tuple (append a% pats) (funcall stackAddFn f stack) net%) rest%)))))
+                (cl:cons (tuple (append a% pats) (#`stackAddFn f stack) net%) rest%)))))
         (cl:declare (cl:ignorable rest% rest))
         (fold inc% acc rest)))
     (_ (raise (make-Bug "Term_net.foldUnifiableTerms.fold")))))
@@ -25286,7 +25030,7 @@
                 (match
                   (holai.metis.metis_prover.name_arity.map.include~12152:peek
                     fs
-                    (tuple f (funcall length l)))
+                    (tuple f (#`length l)))
                   ((None) rest%)
                   ((Some n) (cl:cons (tuple n (append l tms)) rest%)))))))
         (cl:declare (cl:ignorable rest% rest))
@@ -25343,7 +25087,7 @@
           (match
             (holai.metis.metis_prover.name_arity.map.include~12152:peek
               fns
-              (tuple f (funcall length a%)))
+              (tuple f (#`length a%)))
             ((None) rest)
             ((Some net%) (cl:cons (tuple qsub net% (append a% tms)) rest)))))
         (cl:declare (cl:ignorable rest%))
@@ -25408,7 +25152,7 @@
             (match
               (holai.metis.metis_prover.name_arity.map.include~12152:peek
                 fns
-                (tuple f (funcall length a%)))
+                (tuple f (#`length a%)))
               ((None) rest%)
               ((Some net%) (cl:cons (tuple qsub net% (append a% tms)) rest%)))))
         (cl:declare (cl:ignorable rest% rest))
@@ -25467,13 +25211,13 @@
 (defunc fromList (parm l)
   (foldl
     (lambdac (arg~43937) (match arg~43937 ((tuple atm_a n) (insert n atm_a))))
-    (funcall newNet parm)
+    (#`newNet parm)
     l))
 
 (defparameter filter #'holai.metis.metis_prover.term_net:filter)
 
 (defunc toString (net)
-  (string-concat "Atom_net[" (string-concat (string-of-int (funcall size net)) "]")))
+  (string-concat "Atom_net[" (string-concat (string-of-int (#`size net)) "]")))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Matching and unification queries.                                         *)
@@ -25505,19 +25249,17 @@
 (defunc newNet (parm)
   (make-literalNet
     :positive
-    (funcall holai.metis.metis_prover.atom_net:newNet parm)
+    (#`holai.metis.metis_prover.atom_net:newNet parm)
     :negative
-    (funcall holai.metis.metis_prover.atom_net:newNet parm)))
+    (#`holai.metis.metis_prover.atom_net:newNet parm)))
 
 (defunc pos (arg~44001)
   (match arg~44001
-    ((literalNet :positive positive)
-      (funcall holai.metis.metis_prover.atom_net:size positive))))
+    ((literalNet :positive positive) (#`holai.metis.metis_prover.atom_net:size positive))))
 
 (defunc neg (arg~44010)
   (match arg~44010
-    ((literalNet :negative negative)
-      (funcall holai.metis.metis_prover.atom_net:size negative))))
+    ((literalNet :negative negative) (#`holai.metis.metis_prover.atom_net:size negative))))
 
 (defunc size (net) (+ (pos net) (neg net)))
 
@@ -25552,9 +25294,9 @@
     ((literalNet :positive positive :negative negative)
       (make-literalNet
         :positive
-        (funcall holai.metis.metis_prover.atom_net:filter pred positive)
+        (#`holai.metis.metis_prover.atom_net:filter pred positive)
         :negative
-        (funcall holai.metis.metis_prover.atom_net:filter pred negative)))))
+        (#`holai.metis.metis_prover.atom_net:filter pred negative)))))
 
 (defunc toString (net)
   (string-concat "Literal_net[" (string-concat (string-of-int (size net)) "]")))
@@ -25604,7 +25346,7 @@
       (match arg~44190
         (nil (make-None))
         ((cl:cons x xs)
-          (if (funcall pred x)
+          (if (#`pred x)
             (make-Some (tuple x (list-rev-append ys xs)))
             (f (cl:cons x ys) xs))))))
     (f nil)))
@@ -25617,7 +25359,7 @@
 (defunc clauseSym (lits) (foldl #'addSym lits lits))
 
 (defunc sortClause (cl)
-  (let ((lits (funcall toList cl)))
+  (let ((lits (#`toList cl)))
     (cl:declare (cl:ignorable lits))
     (sortMap #'typedSymbols (revCompare #'intCompare) lits)))
 
@@ -25672,8 +25414,8 @@
   (match arg~44375
     ((subsume :empty empty% :unitn unitn :nonunit (nonunit_t :clauses clauses))
       (+
-        (+ (funcall length empty%) (holai.metis.metis_prover.literal_net:size unitn))
-        (funcall holai.metis.metis_prover.intmap.include~4681:size clauses)))))
+        (+ (#`length empty%) (holai.metis.metis_prover.literal_net:size unitn))
+        (#`holai.metis.metis_prover.intmap.include~4681:size clauses)))))
 
 (defunc insert (arg~44395 arg~44400)
   (match arg~44395
@@ -25708,9 +25450,7 @@
                     ((id_length
                       (tuple
                         nextId
-                        (funcall
-                          holai.metis.metis_prover.literal.set.include~30172:size
-                          cl%)))
+                        (#`holai.metis.metis_prover.literal.set.include~30172:size cl%)))
                       (fstLits%
                         (holai.metis.metis_prover.literal_net:insert
                           fstLits
@@ -25750,7 +25490,7 @@
 (defunc filter (pred arg~44544)
   (match arg~44544
     ((subsume :empty empty% :unitn unitn :nonunit nonunit)
-      (fletc ((pred3 (arg~44550) (match arg~44550 ((tuple _ _ x) (funcall pred x)))))
+      (fletc ((pred3 (arg~44550) (match arg~44550 ((tuple _ _ x) (#`pred x)))))
         (let*
           ((empty%% (list-filter #'pred3 empty%))
             (unitn% (holai.metis.metis_prover.literal_net:filter #'pred3 unitn))
@@ -25773,17 +25513,13 @@
                     (cl:declare (cl:ignorable clauses%))
                     (if
                       (=
-                        (funcall
-                          holai.metis.metis_prover.intmap.include~4681:size
-                          clauses)
-                        (funcall
-                          holai.metis.metis_prover.intmap.include~4681:size
-                          clauses%))
+                        (#`holai.metis.metis_prover.intmap.include~4681:size clauses)
+                        (#`holai.metis.metis_prover.intmap.include~4681:size clauses%))
                       nonunit
                       (fletc
                         ((predId
                           (arg~44581)
-                          (match arg~44581 ((tuple id _) (funcall inDomain id clauses%)))))
+                          (match arg~44581 ((tuple id _) (#`inDomain id clauses%)))))
                         (let
                           ((fstLits%
                             (holai.metis.metis_prover.literal_net:filter #'predId fstLits))
@@ -25820,9 +25556,8 @@
         ((None) acc)))))
 
 (defunc genClauseSubsumes (pred cl% lits% cl a%)
-  (labelsc
-    ((mkSubsl
-      (acc sub arg~44676)
+  (holai.runtime:labelsc
+    ((:recursive 0 mkSubsl (acc sub arg~44676)
       (match arg~44676
         (nil (make-Some (tuple sub (sortMap length #'intCompare acc))))
         ((cl:cons lit% lits%%)
@@ -25832,16 +25567,14 @@
               (match (total (union sub) sub%)
                 ((None) (make-None))
                 ((Some sub%%) (mkSubsl acc sub%% lits%%))))
-            (subs% (mkSubsl (cl:cons subs% acc) sub lits%%)))))))
-    (labelsc
-      ((search
-        (arg~44726)
+            (subs% (mkSubsl (cl:cons subs% acc) sub lits%%))))))
+      (:recursive 1 search (arg~44726)
         (match arg~44726
           (nil (make-None))
           ((cl:cons (tuple sub nil) others)
             (let ((x (tuple cl% sub a%)))
               (cl:declare (cl:ignorable x))
-              (if (funcall pred x) (make-Some x) (search others))))
+              (if (#`pred x) (make-Some x) (search others))))
           ((cl:cons (tuple _ (cl:cons nil _)) others) (search others))
           ((cl:cons (tuple sub (cl:cons (cl:cons sub% subs%) subsl)) others)
             (let ((others% (cl:cons (tuple sub (cl:cons subs% subsl)) others)))
@@ -25849,9 +25582,9 @@
               (match (total (union sub) sub%)
                 ((None) (search others%))
                 ((Some sub%%) (search (cl:cons (tuple sub%% subsl) others%)))))))))
-      (match (mkSubsl nil empty lits%)
-        ((None) (make-None))
-        ((Some sub_subsl) (search (cl:cons sub_subsl nil)))))))
+    (match (mkSubsl nil empty lits%)
+      ((None) (make-None))
+      ((Some sub_subsl) (search (cl:cons sub_subsl nil))))))
 
 (defunc emptySubsumes (pred empty%) (find pred empty%))
 
@@ -25869,7 +25602,7 @@
                 ((Some sub)
                   (let ((x (tuple cl% sub a%)))
                     (cl:declare (cl:ignorable x))
-                    (if (funcall pred x) (make-Some x) (make-None)))))))))
+                    (if (#`pred x) (make-Some x) (make-None)))))))))
         (first #'subUnit (matchNet unitn lit)))))
     (first #'subLit)))
 
@@ -25904,7 +25637,7 @@
         ((None)
           (if (= max% (make-Some 0))
             (make-None)
-            (let ((cl% (clauseSym (funcall toList cl))))
+            (let ((cl% (clauseSym (#`toList cl))))
               (cl:declare (cl:ignorable cl%))
               (match (unitSubsumes pred unitn cl%)
                 ((cl:and s (Some _)) s)
@@ -25919,7 +25652,7 @@
   (genSubsumes
     pred
     subsume%
-    (make-Some (funcall holai.metis.metis_prover.literal.set.include~30172:size cl))
+    (make-Some (#`holai.metis.metis_prover.literal.set.include~30172:size cl))
     cl))
 
 ;; (*MetisTrace4
@@ -25967,7 +25700,7 @@
 
 
 (defunc clauseSubsumes (cl% cl)
-  (let ((lits% (sortClause cl%)) (lits (clauseSym (funcall toList cl))))
+  (let ((lits% (sortClause cl%)) (lits (clauseSym (#`toList cl))))
     (cl:declare (cl:ignorable lits% lits))
     (match (genClauseSubsumes (K cl:t) cl% lits% lits unit)
       ((Some (tuple _ sub (cl:type holai.runtime::unit-value))) (make-Some sub))
@@ -25976,8 +25709,8 @@
 (defunc clauseStrictlySubsumes (cl% cl)
   (if
     (>
-      (funcall holai.metis.metis_prover.literal.set.include~30172:size cl%)
-      (funcall holai.metis.metis_prover.literal.set.include~30172:size cl))
+      (#`holai.metis.metis_prover.literal.set.include~30172:size cl%)
+      (#`holai.metis.metis_prover.literal.set.include~30172:size cl))
     (make-None)
     (clauseSubsumes cl% cl)))
 
@@ -25994,7 +25727,7 @@
 
 (defunc firstNotEqualTerm (f l)
   (match (find #'notEqualTerm l)
-    ((Some (tuple x y)) (funcall f x y))
+    ((Some (tuple x y)) (#`f x y))
     ((None) (raise (make-Bug "firstNotEqualTerm")))))
 
 (defrecord kbo weight precedence)
@@ -26014,7 +25747,7 @@
         ((tuple f2 n2)
           (let ((c% (intCompare n1 n2)))
             (cl:declare (cl:ignorable c%))
-            (if (<> c% 0) c% (funcall holai.metis.metis_prover.name:compare f1 f2))))))))
+            (if (<> c% 0) c% (#`holai.metis.metis_prover.name:compare f1 f2))))))))
 
 ;; (* The default order *)
 
@@ -26028,11 +25761,11 @@
 (defparameter weightZero (make-Weight weightEmpty 0))
 
 (defunc weightIsZero (arg~45193)
-  (match arg~45193 ((Weight m c%) (cl:and (= c% 0) (funcall null m)))))
+  (match arg~45193 ((Weight m c%) (cl:and (= c% 0) (#`null m)))))
 
 (defunc weightNeg (arg~45208)
   (match arg~45208
-    ((Weight m c%) (make-Weight (funcall transform (lambdac (x) (- x)) m) (- c%)))))
+    ((Weight m c%) (make-Weight (#`transform (lambdac (x) (- x)) m) (- c%)))))
 
 (defunc add (arg~45226)
   (match arg~45226
@@ -26059,7 +25792,7 @@
             (cl:declare (cl:ignorable n))
             (wt (insert m (tuple v (+ n 1))) (+ c% 1) tms)))
         ((cl:cons (Fn (tuple f a%)) tms)
-          (wt m (+ c% (funcall weight% (tuple f (funcall length a%)))) (append a% tms))))))
+          (wt m (+ c% (#`weight% (tuple f (#`length a%)))) (append a% tms))))))
     (lambdac (tm) (wt weightEmpty (- 1) (cl:cons tm nil)))))
 
 (defunc weightLowerBound (arg~45351)
@@ -26104,69 +25837,53 @@
 (defunc compare (arg~45376)
   (match arg~45376
     ((kbo :weight weight% :precedence precedence)
-      (fletc
-        ((weightDifference
-          (tm1 tm2)
+      (holai.runtime:labelsc
+        ((:nonrecursive 0 weightDifference (tm1 tm2)
           (let ((w1 (weightTerm weight% tm1)) (w2 (weightTerm weight% tm2)))
             (cl:declare (cl:ignorable w1 w2))
-            (weightSubtract w2 w1))))
-        (labelsc
-          ((weightLess
-            (tm1 tm2)
+            (weightSubtract w2 w1)))
+          (:recursive 1 weightLess (tm1 tm2)
             (let ((w% (weightDifference tm1 tm2)))
               (cl:declare (cl:ignorable w%))
               (if (weightIsZero w%) (precedenceLess tm1 tm2) (weightDiffLess w% tm1 tm2))))
-            (weightDiffLess
-              (w% tm1 tm2)
-              (match (weightLowerBound w%)
-                ((None) cl:nil)
-                ((Some 0) (precedenceLess tm1 tm2))
-                ((Some n) (> n 0))))
-            (precedenceLess
-              (x y)
-              (match (tuple x y)
-                ((tuple (Fn (tuple f1 a1)) (Fn (tuple f2 a2)))
-                  (let
-                    ((c%
-                      (funcall
-                        precedence
-                        (tuple f1 (funcall length a1))
-                        (tuple f2 (funcall length a2)))))
-                    (cl:declare (cl:ignorable c%))
-                    (if (< c% 0)
-                      cl:t
-                      (if (= c% 0) (firstNotEqualTerm #'weightLess (zip a1 a2)) cl:nil))))
-                (_ cl:nil))))
-          (fletc
-            ((weightDiffGreater (w% tm1 tm2) (weightDiffLess (weightNeg w%) tm2 tm1)))
-            (labelsc
-              ((weightCmp
-                (tm1 tm2)
-                (let ((w% (weightDifference tm1 tm2)))
-                  (cl:declare (cl:ignorable w%))
-                  (if (weightIsZero w%)
-                    (precedenceCmp tm1 tm2)
-                    (if (weightDiffLess w% tm1 tm2)
-                      (make-Some (- 1))
-                      (if (weightDiffGreater w% tm1 tm2) (make-Some 1) (make-None))))))
-                (precedenceCmp
-                  (x y)
-                  (match (tuple x y)
-                    ((tuple (Fn (tuple f1 a1)) (Fn (tuple f2 a2)))
-                      (let
-                        ((c%
-                          (funcall
-                            precedence
-                            (tuple f1 (funcall length a1))
-                            (tuple f2 (funcall length a2)))))
-                        (cl:declare (cl:ignorable c%))
-                        (if (< c% 0)
-                          (make-Some (- 1))
-                          (if (= c% 0)
-                            (firstNotEqualTerm #'weightCmp (zip a1 a2))
-                            (make-Some 1)))))
-                    (_ (raise (make-Bug "kboOrder.precendenceCmp"))))))
-              (lambdac (tm1 tm2) (if (equal tm1 tm2) (make-Some 0) (weightCmp tm1 tm2))))))))))
+          (:recursive 1 weightDiffLess (w% tm1 tm2)
+            (match (weightLowerBound w%)
+              ((None) cl:nil)
+              ((Some 0) (precedenceLess tm1 tm2))
+              ((Some n) (> n 0))))
+          (:recursive 1 precedenceLess (x y)
+            (match (tuple x y)
+              ((tuple (Fn (tuple f1 a1)) (Fn (tuple f2 a2)))
+                (let
+                  ((c% (#`precedence (tuple f1 (#`length a1)) (tuple f2 (#`length a2)))))
+                  (cl:declare (cl:ignorable c%))
+                  (if (< c% 0)
+                    cl:t
+                    (if (= c% 0) (firstNotEqualTerm #'weightLess (zip a1 a2)) cl:nil))))
+              (_ cl:nil)))
+          (:nonrecursive 2 weightDiffGreater (w% tm1 tm2)
+            (weightDiffLess (weightNeg w%) tm2 tm1))
+          (:recursive 3 weightCmp (tm1 tm2)
+            (let ((w% (weightDifference tm1 tm2)))
+              (cl:declare (cl:ignorable w%))
+              (if (weightIsZero w%)
+                (precedenceCmp tm1 tm2)
+                (if (weightDiffLess w% tm1 tm2)
+                  (make-Some (- 1))
+                  (if (weightDiffGreater w% tm1 tm2) (make-Some 1) (make-None))))))
+          (:recursive 3 precedenceCmp (x y)
+            (match (tuple x y)
+              ((tuple (Fn (tuple f1 a1)) (Fn (tuple f2 a2)))
+                (let
+                  ((c% (#`precedence (tuple f1 (#`length a1)) (tuple f2 (#`length a2)))))
+                  (cl:declare (cl:ignorable c%))
+                  (if (< c% 0)
+                    (make-Some (- 1))
+                    (if (= c% 0)
+                      (firstNotEqualTerm #'weightCmp (zip a1 a2))
+                      (make-Some 1)))))
+              (_ (raise (make-Bug "kboOrder.precendenceCmp"))))))
+        (lambdac (tm1 tm2) (if (equal tm1 tm2) (make-Some 0) (weightCmp tm1 tm2)))))))
 
 (in-package :holai.metis.metis_prover)
 
@@ -26237,13 +25954,12 @@
 (defunc size (arg~45690)
   (match arg~45690
     ((Rewrite% (rewrite_t :known known))
-      (funcall holai.metis.metis_prover.intmap.include~4681:size known))))
+      (#`holai.metis.metis_prover.intmap.include~4681:size known))))
 
 (defunc equations (arg~45700)
   (match arg~45700
     ((Rewrite% (rewrite_t :known known))
-      (funcall
-        foldr
+      (#`foldr
         (lambdac (arg~45703)
           (match arg~45703 ((tuple _ (tuple eqn _) eqns) (cl:cons eqn eqns))))
         nil
@@ -26310,17 +26026,14 @@
 
 
 (defunc termReducible (order% known id)
-  (fletc
-    ((eqnRed
-      (arg~45729 tm)
+  (holai.runtime:labelsc
+    ((:nonrecursive 0 eqnRed (arg~45729 tm)
       (match arg~45729
         ((tuple (tuple l r%) _)
           (match (total (matchTerms holai.metis.metis_prover.substitute:empty l) tm)
             ((None) cl:nil)
-            ((Some sub) (= (funcall order% tm (subst (normalize sub) r%)) (make-Some 1))))))))
-    (fletc
-      ((knownRed
-        (tm arg~45761)
+            ((Some sub) (= (#`order% tm (subst (normalize sub) r%)) (make-Some 1)))))))
+      (:nonrecursive 1 knownRed (tm arg~45761)
         (match arg~45761
           ((tuple eqnId (tuple eqn ort))
             (cl:and
@@ -26329,22 +26042,19 @@
                 (cl:and (<> ort (make-Some (make-Right_to_left))) (eqnRed eqn tm))
                 (cl:and
                   (<> ort (make-Some (make-Left_to_right)))
-                  (eqnRed (symEqn eqn) tm))))))))
-      (labelsc
-        ((termRed (tm) (cl:or (exists (knownRed tm) known) (subtermRed tm)))
-          (subtermRed
-            (arg~45803)
-            (match arg~45803
-              ((Var _) cl:nil)
-              ((Fn (tuple _ tms)) (list-exists #'termRed tms)))))
-        #'termRed))))
+                  (eqnRed (symEqn eqn) tm)))))))
+      (:recursive 2 termRed (tm) (cl:or (exists (knownRed tm) known) (subtermRed tm)))
+      (:recursive 2 subtermRed (arg~45803)
+        (match arg~45803
+          ((Var _) cl:nil)
+          ((Fn (tuple _ tms)) (list-exists #'termRed tms)))))
+    #'termRed))
 
 (defunc literalReducible (order% known id lit)
   (list-exists (termReducible order% known id) (arguments lit)))
 
 (defunc literalsReducible (order% known id lits)
-  (funcall
-    holai.metis.metis_prover.literal.set.include~30172:exists
+  (#`holai.metis.metis_prover.literal.set.include~30172:exists
     (literalReducible order% known id)
     lits))
 
@@ -26377,7 +26087,7 @@
     ((cl:and rw (Rewrite% (rewrite_t :known known)))
       (match arg~45940
         ((tuple id eqn)
-          (if (funcall inDomain id known)
+          (if (#`inDomain id known)
             rw
             (match rw
               ((Rewrite%
@@ -26391,8 +26101,7 @@
                   :waiting
                   waiting))
                 (let*
-                  ((ort
-                    (match (fst eqn) ((tuple l r%) (orderToOrient (funcall order% l r%)))))
+                  ((ort (match (fst eqn) ((tuple l r%) (orderToOrient (#`order% l r%)))))
                     (known%
                       (holai.metis.metis_prover.intmap.include~4681:insert
                         known
@@ -26472,7 +26181,7 @@
                               (cl:or
                                 (is_some ort)
                                 (cl:or
-                                  (= (funcall order% tm tm%) (make-Some 1))
+                                  (= (#`order% tm tm%) (make-Some 1))
                                   (failwith "order")))
                               (_
                                 (match (orientedEquation lr eqn)
@@ -26485,14 +26194,12 @@
       ((Some res) res))))
 
 (defunc rewriteIdConv% (order% known redexes id)
-  (if (funcall null known)
-    #'allConv
-    (repeatTopDownConv (rewrIdConv% order% known redexes id))))
+  (if (#`null known) #'allConv (repeatTopDownConv (rewrIdConv% order% known redexes id))))
 
 (defunc mkNeqConv (order% lit)
   (match (destNeq lit)
     ((tuple l r%)
-      (match (funcall order% l r%)
+      (match (#`order% l r%)
         ((None) (failwith "incomparable"))
         ((guard (Some c%) (< c% 0))
           (let ((th (symmetryRule l r%)))
@@ -26510,7 +26217,7 @@
   (make-Neq_convs (holai.metis.metis_prover.literal.map:newMap unit)))
 
 (defunc neqConvsNull (arg~46312)
-  (match arg~46312 ((Neq_convs m) (funcall holai.metis.metis_prover.literal.map:null m))))
+  (match arg~46312 ((Neq_convs m) (#`holai.metis.metis_prover.literal.map:null m))))
 
 (defunc neqConvsAdd (order% arg~46322 lit)
   (match arg~46322
@@ -26534,8 +26241,7 @@
               (tuple
                 neq
                 (holai.metis.metis_prover.literal.set.include~30172:add lits lit))))))))
-    (funcall
-      holai.metis.metis_prover.literal.set.include~30172:foldl
+    (#`holai.metis.metis_prover.literal.set.include~30172:foldl
       #'add%
       (tuple neqConvsEmpty holai.metis.metis_prover.literal.set.include~30172:empty))))
 
@@ -26547,8 +26253,7 @@
   (match arg~46396
     ((Neq_convs m)
       (firstConv
-        (funcall
-          holai.metis.metis_prover.literal.map:foldr
+        (#`holai.metis.metis_prover.literal.map:foldr
           (lambdac (arg~46399) (match arg~46399 ((tuple _ c% l) (cl:cons c% l))))
           nil
           m)))))
@@ -26557,12 +26262,12 @@
   (match arg~46421
     ((Neq_convs m)
       (holai.metis.metis_prover.literal.map:foldl
-        (lambdac (arg~46424) (match arg~46424 ((tuple l _ z) (funcall f (tuple l z)))))
+        (lambdac (arg~46424) (match arg~46424 ((tuple l _ z) (#`f (tuple l z)))))
         b%
         m))))
 
 (defunc neqConvsRewrIdLiterule (order% known redexes id neq)
-  (if (cl:and (funcall null known) (neqConvsNull neq))
+  (if (cl:and (#`null known) (neqConvsNull neq))
     #'allLiterule
     (let*
       ((neq_conv (neqConvsToConv neq))
@@ -26584,7 +26289,7 @@
                 ((None) (tuple cl:t (mkEq l_r)))
                 ((Some lit) (tuple cl:nil lit)))
               ((tuple strongEqn lit)
-                (match (funcall literule lit)
+                (match (#`literule lit)
                   ((tuple lit% litTh)
                     (if (holai.metis.metis_prover.literal:equal lit lit%)
                       eqn
@@ -26602,14 +26307,13 @@
 (defunc rewriteIdLiteralsRule% (order% known redexes id lits th)
   (let ((mk_literule (neqConvsRewrIdLiterule order% known redexes id)))
     (cl:declare (cl:ignorable mk_literule))
-    (fletc
-      ((rewr_neq_lit
-        (arg~46575)
+    (holai.runtime:labelsc
+      ((:nonrecursive 0 rewr_neq_lit (arg~46575)
         (match arg~46575
           ((tuple lit (cl:and acc (tuple changed neq lits% th%)))
             (let ((neq% (neqConvsDelete neq lit)))
               (cl:declare (cl:ignorable neq%))
-              (match (funcall mk_literule neq% lit)
+              (match (#`mk_literule neq% lit)
                 ((tuple lit% litTh)
                   (if (holai.metis.metis_prover.literal:equal lit lit%)
                     acc
@@ -26624,30 +26328,27 @@
                             (holai.metis.metis_prover.literal.set.include~30172:add
                               lits%
                               lit%)
-                            th))))))))))))
-      (labelsc
-        ((rewr_neq_lits
-          (neq lits% th%)
+                            th)))))))))))
+        (:recursive 1 rewr_neq_lits (neq lits% th%)
           (match (neqConvsFoldl #'rewr_neq_lit (tuple cl:nil neq lits% th%) neq)
             ((tuple changed neq% lits th)
               (if changed (rewr_neq_lits neq% lits th) (tuple neq% lits th))))))
-        (match (mkNeqConvs order% lits)
-          ((tuple neq lits%)
-            (match (rewr_neq_lits neq lits% th)
-              ((tuple neq% lits th%)
-                (let ((rewr_literule (funcall mk_literule neq%)))
-                  (cl:declare (cl:ignorable rewr_literule))
-                  (fletc
-                    ((rewr_lit
-                      (arg~46684)
-                      (match arg~46684
-                        ((tuple lit th)
-                          (if (member lit th) (literalRule rewr_literule lit th) th)))))
-                    (funcall
-                      holai.metis.metis_prover.literal.set.include~30172:foldl
-                      #'rewr_lit
-                      th%
-                      lits)))))))))))
+      (match (mkNeqConvs order% lits)
+        ((tuple neq lits%)
+          (match (rewr_neq_lits neq lits% th)
+            ((tuple neq% lits th%)
+              (let ((rewr_literule (#`mk_literule neq%)))
+                (cl:declare (cl:ignorable rewr_literule))
+                (fletc
+                  ((rewr_lit
+                    (arg~46684)
+                    (match arg~46684
+                      ((tuple lit th)
+                        (if (member lit th) (literalRule rewr_literule lit th) th)))))
+                  (#`holai.metis.metis_prover.literal.set.include~30172:foldl
+                    #'rewr_lit
+                    th%
+                    lits))))))))))
 
 (defunc rewriteIdRule% (order% known redexes id th)
   (rewriteIdLiteralsRule% order% known redexes id (clause th) th))
@@ -26739,9 +26440,8 @@
         ((Some (Right_to_left)) (cl:cons (tuple r% l cl:t) nil))))))
 
 (defunc findReducibles (order% known subterms id)
-  (fletc
-    ((checkValidRewr
-      (arg~46977 id% left path)
+  (holai.runtime:labelsc
+    ((:nonrecursive 0 checkValidRewr (arg~46977 id% left path)
       (match arg~46977
         ((tuple l r% ord)
           (match (get known id%)
@@ -26754,28 +26454,23 @@
                   unit
                   (let ((tm% (subst (normalize sub) r%)))
                     (cl:declare (cl:ignorable tm%))
-                    (if (= (funcall order% tm tm%) (make-Some 1)) unit (failwith "order")))))))))))
-    (fletc
-      ((addRed
-        (lr arg~47037)
+                    (if (= (#`order% tm tm%) (make-Some 1)) unit (failwith "order"))))))))))
+      (:nonrecursive 1 addRed (lr arg~47037)
         (match arg~47037
           ((tuple (tuple id% left path) todo)
             (if
               (cl:and
                 (<> id id%)
                 (cl:and
-                  (not
-                    (funcall holai.metis.metis_prover.intset.include~7557:member id% todo))
+                  (not (#`holai.metis.metis_prover.intset.include~7557:member id% todo))
                   (can (checkValidRewr lr id% left) path)))
               (holai.metis.metis_prover.intset.include~7557:add todo id%)
-              todo)))))
-      (fletc
-        ((findRed
-          (arg~47070)
-          (match arg~47070
-            ((tuple (cl:and lr (tuple l _ _)) todo)
-              (foldl (addRed lr) todo (matched subterms l))))))
-        (foldl #'findRed)))))
+              todo))))
+      (:nonrecursive 2 findRed (arg~47070)
+        (match arg~47070
+          ((tuple (cl:and lr (tuple l _ _)) todo)
+            (foldl (addRed lr) todo (matched subterms l))))))
+    (foldl #'findRed)))
 
 (defunc reduce1 (newx id arg~47099 arg~47103)
   (match arg~47099
@@ -26823,8 +26518,7 @@
                             (if same_redexes
                               (make-Some ort0)
                               (match eq
-                                ((tuple l r%)
-                                  (total #'orderToOrient (funcall order% l r%)))))))
+                                ((tuple l r%) (total #'orderToOrient (#`order% l r%)))))))
                         (cl:declare
                           (cl:ignorable identical same_redexes rpl% spl% changed% ort))
                         (match ort
@@ -26893,75 +26587,61 @@
                               (tuple rpl% spl% todo% rw% changed%))))))))))))))))
 
 (defunc pick (known set)
-  (fletc
-    ((oriented
-      (id)
+  (holai.runtime:labelsc
+    ((:nonrecursive 0 oriented (id)
       (match (holai.metis.metis_prover.intmap.include~4681:peek known id)
         ((Some (cl:and x (tuple _ (Some _)))) (make-Some (tuple id x)))
-        (_ (make-None)))))
-    (fletc
-      ((any
-        (id)
+        (_ (make-None))))
+      (:nonrecursive 1 any (id)
         (match (holai.metis.metis_prover.intmap.include~4681:peek known id)
           ((Some x) (make-Some (tuple id x)))
           (_ (make-None)))))
-      (match (firstl #'oriented set) ((cl:and x (Some _)) x) ((None) (firstl #'any set))))))
+    (match (firstl #'oriented set) ((cl:and x (Some _)) x) ((None) (firstl #'any set)))))
 
 (defunc cleanRedexes (known redexes rpl)
-  (if (funcall holai.metis.metis_prover.intset.include~7557:null rpl)
+  (if (#`holai.metis.metis_prover.intset.include~7557:null rpl)
     redexes
-    (fletc
-      ((filt
-        (arg~47384)
+    (holai.runtime:labelsc
+      ((:nonrecursive 0 filt (arg~47384)
         (match arg~47384
           ((tuple id _)
-            (not (funcall holai.metis.metis_prover.intset.include~7557:member id rpl))))))
-      (fletc
-        ((addReds
-          (arg~47395)
+            (not (#`holai.metis.metis_prover.intset.include~7557:member id rpl)))))
+        (:nonrecursive 1 addReds (arg~47395)
           (match arg~47395
             ((tuple id reds)
               (match (holai.metis.metis_prover.intmap.include~4681:peek known id)
                 ((None) reds)
                 ((Some eqn_ort) (addRedexes id eqn_ort reds)))))))
-        (let*
-          ((redexes% (filter #'filt redexes))
-            (redexes
-              (funcall
-                holai.metis.metis_prover.intset.include~7557:foldl
-                #'addReds
-                redexes%
-                rpl)))
-          (cl:declare (cl:ignorable redexes% redexes))
-          redexes)))))
+      (let*
+        ((redexes% (filter #'filt redexes))
+          (redexes
+            (#`holai.metis.metis_prover.intset.include~7557:foldl #'addReds redexes% rpl)))
+        (cl:declare (cl:ignorable redexes% redexes))
+        redexes))))
 
 (defunc cleanSubterms (known subterms spl)
-  (if (funcall holai.metis.metis_prover.intset.include~7557:null spl)
+  (if (#`holai.metis.metis_prover.intset.include~7557:null spl)
     subterms
-    (fletc
-      ((filt
-        (arg~47439)
+    (holai.runtime:labelsc
+      ((:nonrecursive 0 filt (arg~47439)
         (match arg~47439
           ((tuple id _ _)
-            (not (funcall holai.metis.metis_prover.intset.include~7557:member id spl))))))
-      (fletc
-        ((addSubtms
-          (arg~47451)
+            (not (#`holai.metis.metis_prover.intset.include~7557:member id spl)))))
+        (:nonrecursive 1 addSubtms (arg~47451)
           (match arg~47451
             ((tuple id subtms)
               (match (holai.metis.metis_prover.intmap.include~4681:peek known id)
                 ((None) subtms)
                 ((Some (tuple eqn _)) (addSubterms id eqn subtms)))))))
-        (let*
-          ((subterms% (filter #'filt subterms))
-            (subterms
-              (funcall
-                holai.metis.metis_prover.intset.include~7557:foldl
-                #'addSubtms
-                subterms%
-                spl)))
-          (cl:declare (cl:ignorable subterms% subterms))
-          subterms)))))
+      (let*
+        ((subterms% (filter #'filt subterms))
+          (subterms
+            (#`holai.metis.metis_prover.intset.include~7557:foldl
+              #'addSubtms
+              subterms%
+              spl)))
+        (cl:declare (cl:ignorable subterms% subterms))
+        subterms))))
 
 (defunc rebuild (rpl spl rw)
   (match rw
@@ -27013,12 +26693,12 @@
               (let ((rw% (deleteWaiting rw id)))
                 (cl:declare (cl:ignorable rw%))
                 (reduceAcc (reduce1 cl:t id eqn_ort (tuple rpl spl todo rw% changed)))))
-            ((None) (tuple (rebuild rpl spl rw) (funcall toList changed)))))))))
+            ((None) (tuple (rebuild rpl spl rw) (#`toList changed)))))))))
 
 (defunc isReduced (arg~47614)
   (match arg~47614
     ((Rewrite% (rewrite_t :waiting waiting))
-      (funcall holai.metis.metis_prover.intset.include~7557:null waiting))))
+      (#`holai.metis.metis_prover.intset.include~7557:null waiting))))
 
 (defunc reduce% (rw)
   (if (isReduced rw) (tuple rw nil) (reduceAcc (tuple empty empty empty rw empty))))
@@ -27094,7 +26774,7 @@
               ((None) (make-Units net%%))
               ((Some (cl:and lit% (tuple pol _)))
                 (let*
-                  ((th% (funcall (if pol #'symEq #'symNeq) lit th))
+                  ((th% (#`(if pol #'symEq #'symNeq) lit th))
                     (net% (insert net%% (tuple lit% (tuple lit% th%)))))
                   (cl:declare (cl:ignorable th% net%))
                   (make-Units net%))))))))))
@@ -27127,9 +26807,8 @@
 
 
 (defunc reduce (units%)
-  (fletc
-    ((red1
-      (arg~47826)
+  (holai.runtime:labelsc
+    ((:nonrecursive 0 red1 (arg~47826)
       (match arg~47826
         ((tuple lit news_th)
           (match (total #'destIrrefl lit)
@@ -27151,23 +26830,20 @@
                           ((rth% (subst sub rth))
                             (th% (resolve lit th rth%))
                             (newLits (delete (clause rth%) lit%))
-                            (news% (funcall union newLits news)))
+                            (news% (#`union newLits news)))
                           (cl:declare (cl:ignorable rth% th% newLits news%))
-                          (tuple news% th%)))))))))))))
-    (labelsc
-      ((red
-        (arg~47909)
+                          (tuple news% th%))))))))))))
+      (:recursive 1 red (arg~47909)
         (match arg~47909
           ((tuple news th)
-            (if (funcall null news)
+            (if (#`null news)
               th
               (red
-                (funcall
-                  holai.metis.metis_prover.literal.set.include~30172:foldl
+                (#`holai.metis.metis_prover.literal.set.include~30172:foldl
                   #'red1
                   (tuple holai.metis.metis_prover.literal.set.include~30172:empty th)
                   news)))))))
-      (lambdac (th) (removeSym (red (tuple (clause th) th)))))))
+    (lambdac (th) (removeSym (red (tuple (clause th) th))))))
 
 (in-package :holai.metis.metis_prover)
 
@@ -27237,8 +26913,7 @@
 (defunc equalThms (cl cl%) (equal (thm cl) (thm cl%)))
 
 (defunc newClause (parameters% thm%)
-  (make-Clause
-    (make-clauseInfo :parameters parameters% :id (funcall newId unit) :thm thm%)))
+  (make-Clause (make-clauseInfo :parameters parameters% :id (#`newId unit) :thm thm%)))
 
 (defunc literals (cl) (holai.metis.metis_prover.thm:clause (thm cl)))
 
@@ -27285,7 +26960,7 @@
             ((addLit%
               (arg~48174)
               (match arg~48174 ((tuple (tuple _ atm) acc) (append (atomToTerms atm) acc)))))
-            (let ((tms (funcall foldl #'addLit% nil lits)))
+            (let ((tms (#`foldl #'addLit% nil lits)))
               (cl:declare (cl:ignorable tms))
               (lambdac (arg~48192)
                 (match arg~48192
@@ -27301,7 +26976,7 @@
                   (match arg~48217
                     ((tuple (tuple p% atm) acc)
                       (if (= p% pol) (append (atomToTerms atm) acc) acc)))))
-                (let ((tms (funcall foldl #'addLit% nil lits)))
+                (let ((tms (#`foldl #'addLit% nil lits)))
                   (cl:declare (cl:ignorable tms))
                   (lambdac (arg~48241)
                     (match arg~48241
@@ -27320,7 +26995,7 @@
         (fletc
           ((addLit%
             (arg~48286)
-            (match arg~48286 ((tuple lit s) (if (funcall isLarger lit) (add s lit) s)))))
+            (match arg~48286 ((tuple lit s) (if (#`isLarger lit) (add s lit) s)))))
           (foldr #'addLit% empty litSet))))))
 
 ;; (*MetisTrace6
@@ -27339,15 +27014,12 @@
 (defunc largestEquations (arg~48313)
   (match arg~48313
     ((cl:and cl (Clause (clauseInfo :parameters parameters%)))
-      (fletc
-        ((addEq
-          (lit ort arg~48320 acc)
+      (holai.runtime:labelsc
+        ((:nonrecursive 0 addEq (lit ort arg~48320 acc)
           (match arg~48320
             ((cl:and l_r (tuple l _))
-              (if (isLargerTerm parameters% l_r) (cl:cons (tuple lit ort l) acc) acc)))))
-        (fletc
-          ((addLit%
-            (arg~48342)
+              (if (isLargerTerm parameters% l_r) (cl:cons (tuple lit ort l) acc) acc))))
+          (:nonrecursive 1 addLit% (arg~48342)
             (match arg~48342
               ((tuple lit acc)
                 (match (total #'holai.metis.metis_prover.literal:destEq lit)
@@ -27358,7 +27030,7 @@
                         (acc (addEq lit (make-Left_to_right) (tuple l r%) acc%)))
                       (cl:declare (cl:ignorable acc% acc))
                       acc)))))))
-          (foldr #'addLit% nil (largestLiterals cl)))))))
+        (foldr #'addLit% nil (largestLiterals cl))))))
 
 (defunc addLit (arg~48394)
   (match arg~48394
@@ -27370,9 +27042,9 @@
             ((tuple (tuple path tm) acc%) (cl:cons (tuple lit path tm) acc%)))))
         (holai.metis.metis_prover.mlist:foldl #'addTm acc (nonVarTypedSubterms lit))))))
 
-(defunc largestSubterms (cl) (funcall foldl #'addLit nil (largestLiterals cl)))
+(defunc largestSubterms (cl) (#`foldl #'addLit nil (largestLiterals cl)))
 
-(defunc allSubterms (cl) (funcall foldl #'addLit nil (literals cl)))
+(defunc allSubterms (cl) (#`foldl #'addLit nil (literals cl)))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Subsumption.                                                              *)
@@ -27510,7 +27182,7 @@
                                   :parameters
                                   parameters%
                                   :id
-                                  (funcall newId unit)
+                                  (#`newId unit)
                                   :thm
                                   th))))
                           (cl:declare (cl:ignorable th cl))
@@ -27574,7 +27246,7 @@
                                         :parameters
                                         parameters%
                                         :id
-                                        (funcall newId unit)
+                                        (#`newId unit)
                                         :thm
                                         th))))))))))))))))))))
 
@@ -27699,13 +27371,13 @@
 (defunc size (arg~48918)
   (match arg~48918
     ((Active (active_t :clauses clauses%))
-      (funcall holai.metis.metis_prover.intmap.include~4681:size clauses%))))
+      (#`holai.metis.metis_prover.intmap.include~4681:size clauses%))))
 
 (defunc clauses (arg~48928)
   (match arg~48928
     ((Active (active_t :clauses cls))
       (fletc ((add% (arg~48932) (match arg~48932 ((tuple _ cl acc) (cl:cons cl acc)))))
-        (funcall foldr #'add% nil cls)))))
+        (#`foldr #'add% nil cls)))))
 
 (defunc saturation (active%)
   (fletc
@@ -27840,8 +27512,7 @@
             (holai.metis.metis_prover.literal_net:insert
               literals%
               (tuple lit (tuple cl lit))))))))
-    (funcall
-      holai.metis.metis_prover.literal.set.include~30172:foldl
+    (#`holai.metis.metis_prover.literal.set.include~30172:foldl
       #'add%
       literals
       (largestLiterals cl))))
@@ -28040,8 +27711,7 @@
           (subtms (if (null equations) nil (largestSubterms cl)))
           (acc nil)
           (acc%
-            (funcall
-              holai.metis.metis_prover.literal.set.include~30172:foldl
+            (#`holai.metis.metis_prover.literal.set.include~30172:foldl
               (deduceResolution literals cl)
               acc
               lits))
@@ -28069,7 +27739,7 @@
                 (if (equalThms cl cl%)
                   ids
                   (holai.metis.metis_prover.intset.include~7557:add ids id%)))))))
-        (funcall foldr #'rewr holai.metis.metis_prover.intset.include~7557:empty clauses%)))))
+        (#`foldr #'rewr holai.metis.metis_prover.intset.include~7557:empty clauses%)))))
 
 (defunc orderedRedexResidues (arg~49675)
   (match arg~49675
@@ -28104,22 +27774,18 @@
           (holai.metis.metis_prover.clause:parameters :ordering ordering))
           (let ((order (compare ordering)))
             (cl:declare (cl:ignorable order))
-            (fletc
-              ((addRewr
-                (arg~49751)
+            (holai.runtime:labelsc
+              ((:nonrecursive 0 addRewr (arg~49751)
                 (match arg~49751
                   ((tuple id% acc)
-                    (if (funcall inDomain id% clauses%)
+                    (if (#`inDomain id% clauses%)
                       (holai.metis.metis_prover.intset.include~7557:add acc id%)
-                      acc)))))
-              (fletc
-                ((addReduce
-                  (arg~49767)
+                      acc))))
+                (:nonrecursive 1 addReduce (arg~49767)
                   (match arg~49767
                     ((tuple (tuple l r% ord) acc)
-                      (fletc
-                        ((isValidRewr
-                          (tm)
+                      (holai.runtime:labelsc
+                        ((:nonrecursive 0 isValidRewr (tm)
                           (match
                             (total
                               (matchTerms holai.metis.metis_prover.substitute:empty l)
@@ -28130,42 +27796,37 @@
                                 ord
                                 (let ((tm% (subst (normalize sub) r%)))
                                   (cl:declare (cl:ignorable tm%))
-                                  (= (funcall order tm tm%) (make-Some 1))))))))
-                        (fletc
-                          ((addRed
-                            (arg~49801)
+                                  (= (#`order tm tm%) (make-Some 1)))))))
+                          (:nonrecursive 1 addRed (arg~49801)
                             (match arg~49801
                               ((tuple (tuple cl tm) acc%)
                                 (let ((id% (id cl)))
                                   (cl:declare (cl:ignorable id%))
-                                  (if (funcall member id% acc%)
+                                  (if (#`member id% acc%)
                                     acc%
                                     (if (not (isValidRewr tm))
                                       acc%
                                       (holai.metis.metis_prover.intset.include~7557:add
                                         acc%
                                         id%))))))))
-                          (foldl #'addRed acc (matched allSubterms l))))))))
-                (fletc
-                  ((addEquation
-                    (redexResidues arg~49844)
-                    (match arg~49844
-                      ((tuple id% acc)
-                        (match (peek rewrite id%)
-                          ((None) acc)
-                          ((Some eqn_ort)
-                            (foldl #'addReduce acc (funcall redexResidues eqn_ort))))))))
-                  (let*
-                    ((addOrdered (addEquation #'orderedRedexResidues))
-                      (addUnordered (addEquation #'unorderedRedexResidues))
-                      (ids holai.metis.metis_prover.intset.include~7557:empty)
-                      (ids% (foldl #'addRewr ids rewr_ids))
-                      (ids (foldl addOrdered ids% rewr_ids))
-                      (ids% (foldl addUnordered ids rewr_ids)))
-                    (cl:declare (cl:ignorable addOrdered addUnordered ids ids% ids ids%))
-                    ids%))))))))))
+                        (foldl #'addRed acc (matched allSubterms l))))))
+                (:nonrecursive 2 addEquation (redexResidues arg~49844)
+                  (match arg~49844
+                    ((tuple id% acc)
+                      (match (peek rewrite id%)
+                        ((None) acc)
+                        ((Some eqn_ort) (foldl #'addReduce acc (#`redexResidues eqn_ort))))))))
+              (let*
+                ((addOrdered (addEquation #'orderedRedexResidues))
+                  (addUnordered (addEquation #'unorderedRedexResidues))
+                  (ids holai.metis.metis_prover.intset.include~7557:empty)
+                  (ids% (foldl #'addRewr ids rewr_ids))
+                  (ids (foldl addOrdered ids% rewr_ids))
+                  (ids% (foldl addUnordered ids rewr_ids)))
+                (cl:declare (cl:ignorable addOrdered addUnordered ids ids% ids ids%))
+                ids%))))))))
 
-(defunc choose_clause_rewritables (active% ids) (<= (size active%) (funcall length ids)))
+(defunc choose_clause_rewritables (active% ids) (<= (size active%) (#`length ids)))
 
 (defunc rewritables (active% ids)
   (if (choose_clause_rewritables active% ids)
@@ -28200,74 +27861,73 @@
 
 
 (defunc delete (active% ids)
-  (if (funcall holai.metis.metis_prover.intset.include~7557:null ids)
+  (if (#`holai.metis.metis_prover.intset.include~7557:null ids)
     active%
-    (fletc ((idPred (id%) (not (funcall member id% ids))))
-      (fletc ((clausePred (cl) (idPred (id cl))))
-        (match active%
-          ((Active
-            (active_t
-              :parameters
-              parameters%
-              :clauses
-              clauses%
-              :units
-              units
-              :rewrite
-              rewrite
-              :subsume
-              subsume
-              :literals
-              literals
-              :equations
-              equations
-              :subterms
-              subterms
-              :allSubterms
-              allSubterms))
-            (fletc ((cP1 (arg~49959) (match arg~49959 ((tuple x _) (clausePred x)))))
-              (fletc
-                ((cP1_4 (arg~49968) (match arg~49968 ((tuple x _ _ _) (clausePred x)))))
-                (let
-                  ((clauses%% (filter (lambdac (x) (idPred (fst x))) clauses%))
-                    (subsume%
-                      (holai.metis.metis_prover.subsume:filter #'clausePred subsume))
-                    (literals%
-                      (holai.metis.metis_prover.literal_net:filter #'cP1 literals))
-                    (equations%
-                      (holai.metis.metis_prover.term_net:filter #'cP1_4 equations))
-                    (subterms%
-                      (holai.metis.metis_prover.term_net:filter #'cP1_4 subterms))
-                    (allSubterms%
-                      (holai.metis.metis_prover.term_net:filter #'cP1 allSubterms)))
-                  (cl:declare
-                    (cl:ignorable
-                      clauses%%
-                      subsume%
-                      literals%
-                      equations%
-                      subterms%
-                      allSubterms%))
-                  (make-Active
-                    (make-active_t
-                      :parameters
-                      parameters%
-                      :clauses
-                      clauses%%
-                      :units
-                      units
-                      :rewrite
-                      rewrite
-                      :subsume
-                      subsume%
-                      :literals
-                      literals%
-                      :equations
-                      equations%
-                      :subterms
-                      subterms%
-                      :allSubterms
-                      allSubterms%)))))))))))
+    (holai.runtime:labelsc
+      ((:nonrecursive 0 idPred (id%) (not (#`member id% ids)))
+        (:nonrecursive 1 clausePred (cl) (idPred (id cl))))
+      (match active%
+        ((Active
+          (active_t
+            :parameters
+            parameters%
+            :clauses
+            clauses%
+            :units
+            units
+            :rewrite
+            rewrite
+            :subsume
+            subsume
+            :literals
+            literals
+            :equations
+            equations
+            :subterms
+            subterms
+            :allSubterms
+            allSubterms))
+          (holai.runtime:labelsc
+            ((:nonrecursive 0 cP1 (arg~49959)
+              (match arg~49959 ((tuple x _) (clausePred x))))
+              (:nonrecursive 1 cP1_4 (arg~49968)
+                (match arg~49968 ((tuple x _ _ _) (clausePred x)))))
+            (let
+              ((clauses%% (filter (lambdac (x) (idPred (fst x))) clauses%))
+                (subsume% (holai.metis.metis_prover.subsume:filter #'clausePred subsume))
+                (literals% (holai.metis.metis_prover.literal_net:filter #'cP1 literals))
+                (equations% (holai.metis.metis_prover.term_net:filter #'cP1_4 equations))
+                (subterms% (holai.metis.metis_prover.term_net:filter #'cP1_4 subterms))
+                (allSubterms%
+                  (holai.metis.metis_prover.term_net:filter #'cP1 allSubterms)))
+              (cl:declare
+                (cl:ignorable
+                  clauses%%
+                  subsume%
+                  literals%
+                  equations%
+                  subterms%
+                  allSubterms%))
+              (make-Active
+                (make-active_t
+                  :parameters
+                  parameters%
+                  :clauses
+                  clauses%%
+                  :units
+                  units
+                  :rewrite
+                  rewrite
+                  :subsume
+                  subsume%
+                  :literals
+                  literals%
+                  :equations
+                  equations%
+                  :subterms
+                  subterms%
+                  :allSubterms
+                  allSubterms%)))))))))
 
 (defunc extract_rewritables (arg~50041)
   (match arg~50041
@@ -28305,11 +27965,10 @@
     ((utility
       (cl)
       (match
-        (funcall
-          holai.metis.metis_prover.literal.set.include~30172:size
+        (#`holai.metis.metis_prover.literal.set.include~30172:size
           (holai.metis.metis_prover.clause:literals cl))
         (0 (- 1))
-        (1 (if (funcall isUnitEq (thm cl)) 0 1))
+        (1 (if (#`isUnitEq (thm cl)) 0 1))
         (n n))))
     (sortMap #'utility #'intCompare)))
 
@@ -28333,9 +27992,7 @@
     ((tuple cl active_subsume_acc)
       (let
         ((cls
-          (funcall
-            sort_utilitywise
-            (cl:cons cl (holai.metis.metis_prover.clause:factor cl)))))
+          (#`sort_utilitywise (cl:cons cl (holai.metis.metis_prover.clause:factor cl)))))
         (cl:declare (cl:ignorable cls))
         (foldl #'post_factor active_subsume_acc cls)))))
 
@@ -28350,7 +28007,7 @@
   (match arg~50266
     (nil (tuple active% (list-rev acc)))
     (cls
-      (let* ((cls% (funcall sort_utilitywise cls)) (subsume (getSubsume active%)))
+      (let* ((cls% (#`sort_utilitywise cls)) (subsume (getSubsume active%)))
         (cl:declare (cl:ignorable cls% subsume))
         (match (foldl #'pre_factor (tuple active% subsume acc) cls%)
           ((tuple active%% _ acc%)
@@ -28385,7 +28042,7 @@
 
 
 (defunc mk_clause (params th)
-  (mk (make-clauseInfo :parameters params :id (funcall newId unit) :thm th)))
+  (mk (make-clauseInfo :parameters params :id (#`newId unit) :thm th)))
 
 (defunc newActive (parameters% arg~50330)
   (match arg~50330
@@ -28473,7 +28130,7 @@
   (string-concat "Waiting{" (string-concat (string-of-int (size w%)) "}")))
 
 (defunc mkModelClause (cl)
-  (let* ((lits (literals cl)) (fvs (funcall freeVars lits)))
+  (let* ((lits (literals cl)) (fvs (#`freeVars lits)))
     (cl:declare (cl:ignorable lits fvs))
     (tuple fvs lits)))
 
@@ -28484,22 +28141,19 @@
     (K unit)
     (let ((vN (holai.metis.metis_prover.model:make-size :size (msize vM))))
       (cl:declare (cl:ignorable vN))
-      (fletc
-        ((perturbClause
-          (arg~50510)
+      (holai.runtime:labelsc
+        ((:nonrecursive 0 perturbClause (arg~50510)
           (match arg~50510
             ((tuple fv cl)
               (let ((vV (randomValuation vN fv)))
                 (cl:declare (cl:ignorable vV))
                 (if (interpretClause vM vV cl)
                   unit
-                  (holai.metis.metis_prover.model:perturbClause vM vV cl)))))))
-        (fletc
-          ((perturbClauses
-            (arg~50533)
+                  (holai.metis.metis_prover.model:perturbClause vM vV cl))))))
+          (:nonrecursive 1 perturbClauses (arg~50533)
             (match arg~50533
               ((cl:type holai.runtime::unit-value) (list-iter #'perturbClause cls)))))
-          (lambdac (n) (funpow n #'perturbClauses unit)))))))
+        (lambdac (n) (funpow n #'perturbClauses unit))))))
 
 (defunc initialModel (axioms% conjecture parm)
   (match parm
@@ -28548,14 +28202,13 @@
 ;; (* ------------------------------------------------------------------------- *)
 
 
-(defunc clauseSymbols (cl) (float-of-int (funcall typedSymbols cl)))
+(defunc clauseSymbols (cl) (float-of-int (#`typedSymbols cl)))
 
 (defunc clauseVariables (cl)
-  (float-of-int
-    (+ (funcall holai.metis.metis_prover.name.set:size (funcall freeVars cl)) 1)))
+  (float-of-int (+ (#`holai.metis.metis_prover.name.set:size (#`freeVars cl)) 1)))
 
 (defunc clauseLiterals (cl)
-  (float-of-int (funcall holai.metis.metis_prover.literal.set.include~30172:size cl)))
+  (float-of-int (#`holai.metis.metis_prover.literal.set.include~30172:size cl)))
 
 (defunc clausePriority (cl) (* 1d-12 (float-of-int (id cl))))
 
@@ -28592,7 +28245,7 @@
     ((Waiting (waiting_t :parameters parameters% :clauses clauses :models models))
       (match parameters%
         ((parameters :modelsP modelParameters%)
-          (let ((dist% (+ dist (log (float-of-int (funcall length cls))))))
+          (let ((dist% (+ dist (log (float-of-int (#`length cls))))))
             (cl:declare (cl:ignorable dist%))
             (fletc
               ((addCl
@@ -28622,7 +28275,7 @@
     ((tuple dist cls)
       (if (null cls)
         waiting%
-        (let ((waiting%% (add% waiting% dist (funcall mkModelClauses cls) cls)))
+        (let ((waiting%% (add% waiting% dist (#`mkModelClauses cls) cls)))
           (cl:declare (cl:ignorable waiting%%))
           waiting%%)))))
 
@@ -28643,8 +28296,8 @@
   (match arg~50911
     ((ax_cj_cl :axioms_cl axioms_cl :conjecture_cl conjecture_cl)
       (let
-        ((mAxioms (funcall mkModelClauses axioms_cl))
-          (mConjecture (funcall mkModelClauses conjecture_cl)))
+        ((mAxioms (#`mkModelClauses axioms_cl))
+          (mConjecture (#`mkModelClauses conjecture_cl)))
         (cl:declare (cl:ignorable mAxioms mConjecture))
         (let ((waiting% (empty parameters% mAxioms mConjecture)))
           (cl:declare (cl:ignorable waiting%))
@@ -28804,7 +28457,7 @@
 
 
 (defunc print_varandtype (fmt tm)
-  (match (funcall strip_comb tm)
+  (match (#`strip_comb tm)
     ((tuple hop args)
       (let ((s (name_of hop)) (ty (type_of hop)))
         (cl:declare (cl:ignorable s ty))
@@ -28813,7 +28466,7 @@
             (pp-print-string fmt "(")
             (pp-print-string fmt s)
             (pp-print-string fmt ":")
-            (funcall pp_print_type fmt ty)
+            (#`pp_print_type fmt ty)
             (pp-print-string fmt ")"))
           (fail unit))))))
 
@@ -28826,12 +28479,12 @@
     (lambdac (arg~51230)
       (match arg~51230
         ((cl:type holai.runtime::unit-value)
-          (funcall install_user_printer (tuple "Show Types" #'print_varandtype)))))
+          (#`install_user_printer (tuple "Show Types" #'print_varandtype)))))
     (lambdac (arg~51238)
       (match arg~51238
         ((cl:type holai.runtime::unit-value)
           (handler-case
-            (funcall delete_user_printer "Show Types")
+            (#`delete_user_printer "Show Types")
             (holai.runtime:ocaml-condition
               (exception~51240)
               (match exception~51240
@@ -28940,13 +28593,12 @@
   (match arg~51507
     ((Var x) (make-Varp (prefix x) dpty))
     ((Fn (tuple f args))
-      (let*
-        ((pf (funcall preterm_of_const f)) (pargs (list-map #'preterm_of_fol_term args)))
+      (let* ((pf (#`preterm_of_const f)) (pargs (list-map #'preterm_of_fol_term args)))
         (cl:declare (cl:ignorable pf pargs))
         (list_mk_combp (tuple pf pargs))))))
 
 (defunc preterm_of_predicate (arg~51537)
-  (match arg~51537 ("=" (make-Constp "=" dpty)) (p% (funcall preterm_of_const p%))))
+  (match arg~51537 ("=" (make-Constp "=" dpty)) (p% (#`preterm_of_const p%))))
 
 (defunc preterm_of_atom (arg~51549)
   (match arg~51549
@@ -28966,8 +28618,7 @@
   (match arg~51592
     ((tuple s t%) (mk_eqp (tuple (preterm_of_fol_term s) (preterm_of_fol_term t%))))))
 
-(defunc typecheck (env)
-  (o (o term_of_preterm (funcall retypecheck env)) #'unconst_preterm))
+(defunc typecheck (env) (o (o term_of_preterm (#`retypecheck env)) #'unconst_preterm))
 
 (defunc typecheckl (env arg~51617)
   (match arg~51617 (nil nil) (xs (%> (%> (list_mk_disjp xs) (typecheck env)) disjuncts))))
@@ -29005,7 +28656,7 @@
   (match (tuple tm path)
     ((tuple tm% nil) (tuple tm% ""))
     ((tuple (Fn (tuple f args)) (cl:cons i% is))
-      (let ((arity (funcall length args)))
+      (let ((arity (#`length args)))
         (cl:declare (cl:ignorable arity))
         (progn
           (assert-true (< i% arity) "metis.ml" 9629 6)
@@ -29038,11 +28689,10 @@
 (defunc unify_fo_ho_term (vars fat tm m)
   (progn
     (if (deref verb)
-      (funcall
-        (format-printf "unify_fo_ho_term: fat = %s, tm = %s
+      (#`(format-printf "unify_fo_ho_term: fat = %s, tm = %s
 %!")
         (toString fat)
-        (funcall string_of_term tm))
+        (#`string_of_term tm))
       unit)
     (match fat
       ((guard (Var v) (list-mem-assoc v m))
@@ -29068,7 +28718,7 @@
 %!") unit)
           (match
             (handler-case
-              (funcall strip_comb tm)
+              (#`strip_comb tm)
               (holai.runtime:ocaml-condition
                 (exception~51909)
                 (match exception~51909
@@ -29078,15 +28728,13 @@
               (progn
                 (if (deref verb)
                   (progn
-                    (funcall (format-printf "hf = %s
-%!") (funcall string_of_term hf))
-                    (funcall
-                      (format-printf "is_var: %s
-%!")
-                      (if (is_var hf) "true" "false")))
+                    (#`(format-printf "hf = %s
+%!") (#`string_of_term hf))
+                    (#`(format-printf "is_var: %s
+%!") (if (is_var hf) "true" "false")))
                   unit)
                 (assert-true (cl:or (is_const hf) (is_var hf)) "metis.ml" 9670 6)
-                (if (= hf (funcall hol_of_const (int-of-string f)))
+                (if (= hf (#`hol_of_const (int-of-string f)))
                   (itlist2 (unify_fo_ho_term vars) args hargs m)
                   (raise (make-Unify)))))))))))
 
@@ -29133,14 +28781,14 @@
 (defunc FRONT (lit thm)
   (let*
     ((conc (concl thm))
-      (disj% (funcall disjuncts (concl thm)))
+      (disj% (#`disjuncts (concl thm)))
       (rest
         (match (partition (lambdac (l) (= l lit)) disj%)
           ((tuple nil _) (failwith "FRONT: literal not in disjunction"))
           ((tuple _ r%) r%)))
       (disj%% (cl:cons lit rest))
-      (conc% (funcall list_mk_disj disj%%))
-      (eq (funcall DISJ_ACI_RULE (funcall mk_eq (tuple conc conc%)))))
+      (conc% (#`list_mk_disj disj%%))
+      (eq (#`DISJ_ACI_RULE (#`mk_eq (tuple conc conc%)))))
     (cl:declare (cl:ignorable conc disj% rest disj%% conc% eq))
     (tuple (PURE_ONCE_REWRITE_RULE (cl:cons eq nil) thm) rest)))
 
@@ -29150,23 +28798,23 @@
 
 (defparameter RESOLVE_N
   (let
-    ((RESOLVE_1 (funcall TAUT (parse_term "!a. a ==> ~a ==> F")))
-      (RESOLVE_2L (funcall TAUT (parse_term "!a b. a \\/ b ==> ~a ==> b")))
-      (RESOLVE_2R (funcall TAUT (parse_term "!a c. a ==> ~a \\/ c ==> c")))
-      (RESOLVE_3 (funcall TAUT (parse_term "!a b c. a \\/ b ==> ~a \\/ c ==> b \\/ c"))))
+    ((RESOLVE_1 (#`TAUT (parse_term "!a. a ==> ~a ==> F")))
+      (RESOLVE_2L (#`TAUT (parse_term "!a b. a \\/ b ==> ~a ==> b")))
+      (RESOLVE_2R (#`TAUT (parse_term "!a c. a ==> ~a \\/ c ==> c")))
+      (RESOLVE_3 (#`TAUT (parse_term "!a b c. a \\/ b ==> ~a \\/ c ==> b \\/ c"))))
     (cl:declare (cl:ignorable RESOLVE_1 RESOLVE_2L RESOLVE_2R RESOLVE_3))
     (lambdac (atom% arg~52075)
       (match arg~52075
-        ((tuple nil nil) (funcall SPEC atom% RESOLVE_1))
+        ((tuple nil nil) (#`SPEC atom% RESOLVE_1))
         ((tuple r1 nil)
-          (SPECL (cl:cons atom% (cl:cons (funcall list_mk_disj r1) nil)) RESOLVE_2L))
+          (SPECL (cl:cons atom% (cl:cons (#`list_mk_disj r1) nil)) RESOLVE_2L))
         ((tuple nil r2)
-          (SPECL (cl:cons atom% (cl:cons (funcall list_mk_disj r2) nil)) RESOLVE_2R))
+          (SPECL (cl:cons atom% (cl:cons (#`list_mk_disj r2) nil)) RESOLVE_2R))
         ((tuple r1 r2)
           (SPECL
             (cl:cons
               atom%
-              (cl:cons (funcall list_mk_disj r1) (cl:cons (funcall list_mk_disj r2) nil)))
+              (cl:cons (#`list_mk_disj r1) (cl:cons (#`list_mk_disj r2) nil)))
             RESOLVE_3))))))
 
 ;; (* resolve two clauses th1 and th2, where atom appears somewhere
@@ -29175,11 +28823,11 @@
 
 (defunc RESOLVE (atom% th1 th2)
   (handler-case
-    (match (tuple (FRONT atom% th1) (FRONT (funcall mk_neg atom%) th2))
+    (match (tuple (FRONT atom% th1) (FRONT (#`mk_neg atom%) th2))
       ((tuple (tuple th1% r1) (tuple th2% r2))
-        (let ((res (funcall RESOLVE_N atom% (tuple r1 r2))))
+        (let ((res (#`RESOLVE_N atom% (tuple r1 r2))))
           (cl:declare (cl:ignorable res))
-          (funcall MP (funcall MP res th1%) th2%))))
+          (#`MP (#`MP res th1%) th2%))))
     (holai.runtime:ocaml-condition
       (exception~52130)
       (match exception~52130
@@ -29192,13 +28840,13 @@
 
 (defparameter DISCH_DISJ
   (let
-    ((IMPL_NOT_L (funcall TAUT (parse_term "!a b. ~a ==> b <=>  a \\/ b")))
-      (IMPL_NOT_R (funcall TAUT (parse_term "!a b.  a ==> b <=> ~a \\/ b"))))
+    ((IMPL_NOT_L (#`TAUT (parse_term "!a b. ~a ==> b <=>  a \\/ b")))
+      (IMPL_NOT_R (#`TAUT (parse_term "!a b.  a ==> b <=> ~a \\/ b"))))
     (cl:declare (cl:ignorable IMPL_NOT_L IMPL_NOT_R))
     (lambdac (tm th)
       (match
         (tuple
-          (funcall DISCH tm th)
+          (#`DISCH tm th)
           (handler-case
             (tuple (dest_neg tm) IMPL_NOT_L)
             (holai.runtime:ocaml-condition
@@ -29222,24 +28870,21 @@
 
 (defunc term_eq_mod_type (t1 t2 tyinsts)
   (handler-case
-    (match (funcall term_type_unify t1 t2 (tuple nil nil tyinsts))
+    (match (#`term_type_unify t1 t2 (tuple nil nil tyinsts))
       ((tuple _ tminsts tyinsts%)
         (progn
           (if (deref metisverb)
             (progn
-              (funcall
-                (format-printf "unified with |tminsts| = %d!
-%!")
-                (list-length tminsts))
+              (#`(format-printf "unified with |tminsts| = %d!
+%!") (list-length tminsts))
               (list-iter
                 (lambdac (arg~52241)
                   (match arg~52241
                     ((tuple t1% t2%)
-                      (funcall
-                        (format-printf "%s <- %s
+                      (#`(format-printf "%s <- %s
 %!")
-                        (funcall string_of_term t1%)
-                        (funcall string_of_term t2%)))))
+                        (#`string_of_term t1%)
+                        (#`string_of_term t2%)))))
                 tminsts))
             unit)
           (if (= tminsts nil) (make-Some tyinsts%) (make-None)))))
@@ -29255,7 +28900,7 @@
       (%>
         (list-map
           (lambdac (y)
-            (match (funcall f x y m)
+            (match (#`f x y m)
               ((Some m%)
                 (match_elems
                   f
@@ -29283,8 +28928,8 @@
         (match arg~52354
           ((tuple tm v)
             (string-concat
-              (funcall string_of_term tm)
-              (string-concat " <- " (funcall string_of_term v)))))))))
+              (#`string_of_term tm)
+              (string-concat " <- " (#`string_of_term v)))))))))
 
 (defparameter string_of_tyinst
   (o
@@ -29294,8 +28939,8 @@
         (match arg~52375
           ((tuple ty v)
             (string-concat
-              (funcall string_of_type ty)
-              (string-concat " <- " (funcall string_of_type v)))))))))
+              (#`string_of_type ty)
+              (string-concat " <- " (#`string_of_type v)))))))))
 
 (defunc string_of_instantiation (arg~52394)
   (match arg~52394
@@ -29303,8 +28948,8 @@
       (string-concat
         "(["
         (string-concat
-          (funcall string_of_tminst tminst)
-          (string-concat "], [" (string-concat (funcall string_of_tyinst tyinst) "])")))))))
+          (#`string_of_tminst tminst)
+          (string-concat "], [" (string-concat (#`string_of_tyinst tyinst) "])")))))))
 
 (defunc reorient_tysubst (vars sub)
   (let
@@ -29313,9 +28958,7 @@
         (lambdac (arg~52419)
           (match arg~52419
             ((tuple ty v)
-              (if (cl:and (list-mem v vars) (funcall is_vartype ty))
-                (tuple v ty)
-                (tuple ty v)))))
+              (if (cl:and (list-mem v vars) (#`is_vartype ty)) (tuple v ty) (tuple ty v)))))
         sub)))
     (cl:declare (cl:ignorable sub%))
     (map
@@ -29324,17 +28967,15 @@
 
 (defunc hol_of_thm (axioms% fth)
   (progn
-    (if (deref metisverb)
-      (funcall (format-printf "hol_of_thm: %s
-%!") (toString fth))
-      unit)
+    (if (deref metisverb) (#`(format-printf "hol_of_thm: %s
+%!") (toString fth)) unit)
     (let*
-      ((env (funcall env_of_ths axioms%))
+      ((env (#`env_of_ths axioms%))
         (hth
           (match (thmToInference fth)
             ((Axiom clause)
               (let*
-                ((clausel (funcall toList clause))
+                ((clausel (#`toList clause))
                   (maxs
                     (concat_map
                       (lambdac (ax)
@@ -29359,7 +29000,7 @@
                     (cl:declare (cl:ignorable tminst))
                     (progn
                       (if (deref metisverb)
-                        (funcall (format-printf "length maxs = %d
+                        (#`(format-printf "length maxs = %d
 %!") (list-length maxs))
                         unit)
                       (if (deref metisverb)
@@ -29367,23 +29008,20 @@
                           (lambdac (arg~52543)
                             (match arg~52543
                               ((tuple m ax)
-                                (funcall
-                                  (format-printf "max: %s with m = %s
+                                (#`(format-printf "max: %s with m = %s
 %!")
-                                  (funcall string_of_thm ax)
-                                  (funcall string_of_tminst (funcall tminst m))))))
+                                  (#`string_of_thm ax)
+                                  (#`string_of_tminst (#`tminst m))))))
                           maxs)
                         unit)
-                      (match (list-hd maxs) ((tuple m ax) (INST% (funcall tminst m) ax))))))))
+                      (match (list-hd maxs) ((tuple m ax) (INST% (#`tminst m) ax))))))))
             ((Subst fsub fth1)
               (let ((th1 (hol_of_thm axioms% fth1)))
                 (cl:declare (cl:ignorable th1))
                 (progn
                   (if (deref metisverb)
-                    (funcall
-                      (format-printf "subst with th1 = %s
-%!")
-                      (funcall string_of_thm th1))
+                    (#`(format-printf "subst with th1 = %s
+%!") (#`string_of_thm th1))
                     unit)
                   (let ((fsubl (holai.metis.metis_prover.substitute:toList fsub)))
                     (cl:declare (cl:ignorable fsubl))
@@ -29403,10 +29041,8 @@
                         (cl:declare (cl:ignorable hsub))
                         (progn
                           (if (deref metisverb)
-                            (funcall
-                              (format-printf "subst: %s
-%!")
-                              (funcall string_of_tminst hsub))
+                            (#`(format-printf "subst: %s
+%!") (#`string_of_tminst hsub))
                             unit)
                           (let*
                             ((tyinst
@@ -29420,7 +29056,7 @@
                                             (lambdac (v%) (= (name_of v%) (name_of v)))
                                             (frees (concl th1)))))
                                         (cl:declare (cl:ignorable v%))
-                                        (funcall type_unify (type_of v) (type_of v%) m)))))
+                                        (#`type_unify (type_of v) (type_of v%) m)))))
                                 hsub
                                 nil))
                               (tminst
@@ -29428,27 +29064,22 @@
                                   (lambdac (arg~52665)
                                     (match arg~52665
                                       ((tuple t% v)
-                                        (tuple
-                                          (funcall inst tyinst t%)
-                                          (funcall inst tyinst v)))))
+                                        (tuple (#`inst tyinst t%) (#`inst tyinst v)))))
                                   hsub)))
                             (cl:declare (cl:ignorable tyinst tminst))
                             (progn
                               (if (deref metisverb)
-                                (funcall
-                                  (format-printf
-                                    "before instantiate of th1 = %s with %s
+                                (#`(format-printf
+                                  "before instantiate of th1 = %s with %s
 %!")
-                                  (funcall string_of_thm th1)
+                                  (#`string_of_thm th1)
                                   (string_of_instantiation (tuple nil tminst tyinst)))
                                 unit)
-                              (funcall INSTANTIATE% (tuple nil tminst tyinst) th1))))))))))
+                              (#`INSTANTIATE% (tuple nil tminst tyinst) th1))))))))))
             ((Resolve atom% fth1 fth2)
               (let ((th1 (hol_of_thm axioms% fth1)) (th2 (hol_of_thm axioms% fth2)))
                 (cl:declare (cl:ignorable th1 th2))
-                (let
-                  ((env%
-                    (append (funcall env_of_ths (cl:cons th1 (cl:cons th2 nil))) env)))
+                (let ((env% (append (#`env_of_ths (cl:cons th1 (cl:cons th2 nil))) env)))
                   (cl:declare (cl:ignorable env%))
                   (progn
                     (if (deref metisverb)
@@ -29456,22 +29087,21 @@
                         (lambdac (arg~52735)
                           (match arg~52735
                             ((tuple s pty)
-                              (funcall
-                                (format-printf "%s <- %s
+                              (#`(format-printf "%s <- %s
 %!")
                                 s
-                                (funcall string_of_type (funcall type_of_pretype pty))))))
+                                (#`string_of_type (#`type_of_pretype pty))))))
                         env%)
                       unit)
                     (if (deref metisverb) (format-printf "before resolving
 %!") unit)
                     (if (deref metisverb)
-                      (funcall (format-printf "th1 = %s
-%!") (funcall string_of_thm th1))
+                      (#`(format-printf "th1 = %s
+%!") (#`string_of_thm th1))
                       unit)
                     (if (deref metisverb)
-                      (funcall (format-printf "th2 = %s
-%!") (funcall string_of_thm th2))
+                      (#`(format-printf "th2 = %s
+%!") (#`string_of_thm th2))
                       unit)
                     (let
                       ((tm1
@@ -29500,10 +29130,8 @@
                           (cl:declare (cl:ignorable hatom))
                           (progn
                             (if (deref metisverb)
-                              (funcall
-                                (format-printf "hatom: %s
-%!")
-                                (funcall string_of_term hatom))
+                              (#`(format-printf "hatom: %s
+%!") (#`string_of_term hatom))
                               unit)
                             (let
                               ((cands
@@ -29519,8 +29147,7 @@
                               (cl:declare (cl:ignorable cands))
                               (progn
                                 (if (deref metisverb)
-                                  (funcall
-                                    (format-printf "%d candidates available
+                                  (#`(format-printf "%d candidates available
 %!")
                                     (list-length cands))
                                   unit)
@@ -29559,48 +29186,40 @@
 %!")
                                           unit)
                                         (holai.metis.metis_rules:RESOLVE
-                                          (funcall inst tyinsts% hatom)
+                                          (#`inst tyinsts% hatom)
                                           (INST_TYPE tyinsts% th1)
                                           (INST_TYPE tyinsts% th2))))))))))))))))
             ((Refl term) (holai.fusion.hol:REFL (hol_of_term env term)))
-            ((Assume atom%) (funcall SPEC (hol_of_atom env atom%) EXCLUDED_MIDDLE))
+            ((Assume atom%) (#`SPEC (hol_of_atom env atom%) EXCLUDED_MIDDLE))
             ((Equality flit fpath ft)
               (let ((hlit (hol_of_literal env flit)))
                 (cl:declare (cl:ignorable hlit))
                 (match (hol_of_literal_path flit fpath)
                   ((tuple fs hpath)
                     (let*
-                      ((hs (funcall follow_path hpath hlit))
+                      ((hs (#`follow_path hpath hlit))
                         (ht (hol_of_term env ft))
-                        (m (funcall type_unify (type_of ht) (type_of hs) nil)))
+                        (m (#`type_unify (type_of ht) (type_of hs) nil)))
                       (cl:declare (cl:ignorable hs ht m))
-                      (match
-                        (tuple
-                          (funcall inst m hlit)
-                          (funcall inst m hs)
-                          (funcall inst m ht))
+                      (match (tuple (#`inst m hlit) (#`inst m hs) (#`inst m ht))
                         ((tuple hlit% hs% ht%)
                           (progn
                             (if (deref metisverb)
                               (progn
-                                (funcall
-                                  (format-printf
-                                    "Trying to replace %s : %s with %s : %s
+                                (#`(format-printf
+                                  "Trying to replace %s : %s with %s : %s
 %!")
-                                  (funcall string_of_term hs%)
-                                  (funcall string_of_type (type_of hs%))
-                                  (funcall string_of_term ht%)
-                                  (funcall string_of_type (type_of ht%)))
-                                (funcall
-                                  (format-printf "In %s
-%!")
-                                  (funcall string_of_term hlit%)))
+                                  (#`string_of_term hs%)
+                                  (#`string_of_type (type_of hs%))
+                                  (#`string_of_term ht%)
+                                  (#`string_of_type (type_of ht%)))
+                                (#`(format-printf "In %s
+%!") (#`string_of_term hlit%)))
                               unit)
                             (let*
-                              ((heq (funcall mk_eq (tuple hs% ht%)))
+                              ((heq (#`mk_eq (tuple hs% ht%)))
                                 (conv
-                                  (funcall
-                                    PATH_CONV
+                                  (#`PATH_CONV
                                     hpath
                                     (PURE_ONCE_REWRITE_CONV
                                       (cl:cons (holai.fusion.hol:ASSUME heq) nil))))
@@ -29608,11 +29227,10 @@
                               (cl:declare (cl:ignorable heq conv hlit%%))
                               (progn
                                 (if (deref metisverb)
-                                  (funcall
-                                    (format-printf "hlit = %s, hlit' = %s
+                                  (#`(format-printf "hlit = %s, hlit' = %s
 %!")
-                                    (funcall string_of_term hlit%)
-                                    (funcall string_of_thm hlit%%))
+                                    (#`string_of_term hlit%)
+                                    (#`string_of_thm hlit%%))
                                   unit)
                                 (if (<> hs% ht%)
                                   (assert-true
@@ -29641,14 +29259,13 @@
                   (%> (holai.metis.metis_prover.thm:clause fth) toList)
                   (hol_of_clause env))))
               (cl:declare (cl:ignorable hth%%))
-              (funcall
-                (format-printf "hol_of_thm returned:
+              (#`(format-printf "hol_of_thm returned:
 %s
  for
 %s
 %!")
-                (funcall string_of_term (concl hth%))
-                (funcall string_of_term hth%%))))
+                (#`string_of_term (concl hth%))
+                (#`string_of_term hth%%))))
           unit)
         hth%))))
 
@@ -29660,15 +29277,14 @@
 
 (defunc metis_of_term (env consts tm)
   (if (cl:and (is_var tm) (not (list-mem tm consts)))
-    (make-Var (funcall metis_name (funcall fol_of_var tm)))
-    (match (funcall strip_comb tm)
+    (make-Var (#`metis_name (#`fol_of_var tm)))
+    (match (#`strip_comb tm)
       ((tuple f args)
         (if (list-mem f env)
           (failwith "metis_of_term: higher order")
-          (let ((ff (funcall fol_of_const f)))
+          (let ((ff (#`fol_of_const f)))
             (cl:declare (cl:ignorable ff))
-            (make-Fn
-              (tuple (funcall metis_name ff) (map (metis_of_term env consts) args)))))))))
+            (make-Fn (tuple (#`metis_name ff) (map (metis_of_term env consts) args)))))))))
 
 (defunc metis_of_atom (env consts tm)
   (handler-case
@@ -29676,18 +29292,18 @@
       ((tuple l r%)
         (let ((l% (metis_of_term env consts l)) (r%% (metis_of_term env consts r%)))
           (cl:declare (cl:ignorable l% r%%))
-          (funcall mkEq (tuple l% r%%)))))
+          (#`mkEq (tuple l% r%%)))))
     (holai.runtime:ocaml-condition
       (exception~53165)
       (match exception~53165
         ((Failure _)
-          (match (funcall strip_comb tm)
+          (match (#`strip_comb tm)
             ((tuple f args)
               (if (list-mem f env)
                 (failwith "metis_of_atom: higher order")
-                (let ((ff (funcall fol_of_const f)))
+                (let ((ff (#`fol_of_const f)))
                   (cl:declare (cl:ignorable ff))
-                  (tuple (funcall metis_name ff) (map (metis_of_term env consts) args)))))))
+                  (tuple (#`metis_name ff) (map (metis_of_term env consts) args)))))))
         (_ (raise exception~53165))))))
 
 (defunc metis_of_literal (env consts tm)
@@ -29703,7 +29319,7 @@
   (let*
     ((lconsts (freesl (hyp th)))
       (tm (concl th))
-      (hlits (funcall disjuncts tm))
+      (hlits (#`disjuncts tm))
       (flits (map (metis_of_literal nil lconsts) hlits))
       (set (fromList flits)))
     (cl:declare (cl:ignorable lconsts tm hlits flits set))
@@ -29731,7 +29347,7 @@
 ;; (* Debugging tactic. *)
 
 
-(defunc PRINT_TAC (g%) (progn (funcall print_goal g%) (ALL_TAC g%)))
+(defunc PRINT_TAC (g%) (progn (#`print_goal g%) (ALL_TAC g%)))
 
 (defunc PRINT_ID_TAC (s g%) (progn (print-endline s) (PRINT_TAC g%)))
 
@@ -29739,8 +29355,8 @@
 
 
 (defunc FOL_PREPARE_TAC (ths)
-  (holai.runtime:proof (funcall REFUTE_THEN ASSUME_TAC)
-    THEN (funcall POLY_ASSUME_TAC (map #'GEN_ALL ths))
+  (holai.runtime:proof (#`REFUTE_THEN ASSUME_TAC)
+    THEN (#`POLY_ASSUME_TAC (map #'GEN_ALL ths))
     THEN
       (W
         (o
@@ -29753,17 +29369,14 @@
           (match arg~53322
             ((tuple asl w%) (MAP_EVERY (lambdac (v) (SPEC_TAC (tuple v v))) (frees w%))))))
     THEN
-      (funcall
-        CONV_TAC
+      (#`CONV_TAC
         (THENC
           (THENC
-            (THENC
-              (THENC PRESIMP_CONV (funcall TOP_DEPTH_CONV #'BETA_CONV))
-              LAMBDA_ELIM_CONV)
+            (THENC (THENC PRESIMP_CONV (#`TOP_DEPTH_CONV #'BETA_CONV)) LAMBDA_ELIM_CONV)
             CONDS_CELIM_CONV)
           QUANT_BOOL_CONV))
     THEN (REPEAT (holai.runtime:proof #'GEN_TAC #'ORELSE DISCH_TAC))
-    THEN (funcall REFUTE_THEN ASSUME_TAC)
+    THEN (#`REFUTE_THEN ASSUME_TAC)
     THEN (RULE_ASSUM_TAC (CONV_RULE (THENC NNF_CONV SKOLEM_CONV)))
     THEN (REPEAT (FIRST_X_ASSUM #'CHOOSE_TAC))
     THEN ASM_FOL_TAC
@@ -29772,11 +29385,7 @@
     THEN
       (RULE_ASSUM_TAC
         (holai.lib:repeat
-          (lambdac (th)
-            (funcall
-              SPEC
-              (funcall genvar (type_of (fst (funcall dest_forall (concl th)))))
-              th))))
+          (lambdac (th) (#`SPEC (#`genvar (type_of (fst (#`dest_forall (concl th))))) th))))
     THEN (REPEAT (FIRST_X_ASSUM (CONJUNCTS_THEN% ASSUME_TAC)))
     THEN (RULE_ASSUM_TAC (CONV_RULE (ASSOC_CONV DISJ_ASSOC)))))
 
@@ -29796,9 +29405,7 @@
       (progn
         (assign type_invention_warning cl:nil)
         (handler-case
-          (let ((y (funcall f unit)))
-            (cl:declare (cl:ignorable y))
-            (progn (reset unit) y))
+          (let ((y (#`f unit))) (cl:declare (cl:ignorable y)) (progn (reset unit) y))
           (holai.runtime:ocaml-condition
             (exception~53422)
             (match exception~53422
@@ -29807,9 +29414,9 @@
 
 (defunc SIMPLE_METIS_REFUTE (ths)
   (progn
-    (funcall clear_contrapos_cache unit)
+    (#`clear_contrapos_cache unit)
     (random-init 0)
-    (let ((rules (funcall metis_of_clauses ths)))
+    (let ((rules (#`metis_of_clauses ths)))
       (cl:declare (cl:ignorable rules))
       (progn
         (if (deref metisverb)
@@ -29837,12 +29444,12 @@
                     (format-printf "ths:
 %!")
                     (list-iter
-                      (lambdac (t%) (progn (funcall print_thm t%) (format-printf "
+                      (lambdac (t%) (progn (#`print_thm t%) (format-printf "
 %!")))
                       ths%)
                     (format-printf "Metis theorem:
 %!")
-                    (funcall print_thm proof)
+                    (#`print_thm proof)
                     (format-printf "Metis end.
 %!"))
                   unit)
@@ -29859,8 +29466,8 @@
 
 (defunc PURE_METIS_TAC (g%)
   (progn
-    (funcall reset_vars unit)
-    (funcall reset_consts unit)
+    (#`reset_vars unit)
+    (#`reset_consts unit)
     (ORELSE
       (FIRST_ASSUM CONTR_TAC)
       (W
@@ -29882,7 +29489,7 @@
 (defparameter ASM_METIS_TAC #'GEN_METIS_TAC)
 
 (defunc METIS_TAC (ths)
-  (holai.runtime:proof (POP_ASSUM_LIST (K #'ALL_TAC)) THEN (funcall ASM_METIS_TAC ths)))
+  (holai.runtime:proof (POP_ASSUM_LIST (K #'ALL_TAC)) THEN (#`ASM_METIS_TAC ths)))
 
 (defunc METIS (ths tm) (prove (tuple tm (METIS_TAC ths))))
 

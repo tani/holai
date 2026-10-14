@@ -4,6 +4,45 @@ open Sexp
 let let_form head bindings bodies =
  let names=List.map (function List (name::_) -> name | _ -> assert false) bindings in
  form head (l bindings :: form "cl:declare" [form "cl:ignorable" names] :: bodies)
+let local_function_mode = function
+ | "fletc" | "holai.runtime:fletc" -> Some ":nonrecursive"
+ | "labelsc" | "holai.runtime:labelsc" -> Some ":recursive"
+ | _ -> None
+let staged_function_groups definitions =
+ let rec collect groups = function
+ | [] -> Some (List.rev groups)
+ | List (Atom (":nonrecursive"|":recursive" as mode)::Atom stage::definition)::rest ->
+   (match groups with
+   | (old_mode,old_stage,functions)::groups when old_mode=mode && old_stage=stage ->
+     collect ((mode,stage,l definition::functions)::groups) rest
+   | _ -> collect ((mode,stage,[l definition])::groups) rest)
+ | _ -> None in
+ Option.map (List.map (fun (mode,_,functions) -> mode,List.rev functions)) (collect [] definitions)
+let rec local_function_groups = function
+ | Origin (origin,node) when origin.rule="let" ->
+   Option.map (fun (groups,body,origins) -> groups,body,origin::origins) (local_function_groups node)
+ | List [Atom head;List definitions;body] ->
+   (match local_function_mode head with
+   | None -> None
+   | Some mode ->
+     let groups=match definitions with
+     | List (Atom (":nonrecursive"|":recursive")::_)::_ -> staged_function_groups definitions
+     | _ -> Some [mode,definitions] in
+     Option.map (fun groups -> groups,body,[]) groups)
+ | _ -> None
+let combine_local_functions head functions body =
+ match local_function_groups body with
+ | None -> form head [l functions;body]
+ | Some (inner,body,origins) ->
+   let groups=(Option.get (local_function_mode head),functions)::inner in
+   let definitions=List.mapi (fun stage (mode,functions) ->
+     List.map (function List definition -> l (a mode::a (string_of_int stage)::definition)
+       | _ -> assert false) functions) groups |> List.concat in
+   (* Stages preserve the original lexical macro expansions, including reused
+      target symbols and FLETC's private curried function cells. Only the
+      surface is flattened; every source let Origin still maps to that form. *)
+   let combined=form "holai.runtime:labelsc" [l definitions;body] in
+   List.fold_right (fun origin form -> Origin (origin,form)) origins combined
 let rec expression_spine = function
  | ExApp (_,f,x) -> let h,xs=expression_spine f in h,xs@[x]
  | e -> e,[]
@@ -47,15 +86,15 @@ let function_ref c b n =
  if native_function b then
   form (runtime c "function-value") [a ("#'"^reference c b); a (string_of_int n)]
  else a ("#'"^reference c b)
-let call_value c fn args = form (runtime c "funcall") (fn::args)
+let call_value fn args = l (reader_prefix fn::args)
 let rec callable c b args = match b.kind with
  | Function n ->
    if not (native_function b) then form (reference c b) args
    else if List.length args=n then form (reference c b) args
    else if List.length args<n then form (runtime c "partial") (function_ref c b n::args)
    else let first=List.filteri (fun i _ -> i<n) args and rest=List.filteri (fun i _ -> i>=n) args in
-     call_value c (form (reference c b) first) rest
- | Value -> call_value c (a (reference c b)) args
+     call_value (form (reference c b) first) rest
+ | Value -> call_value (a (reference c b)) args
  | Constructor _ -> assert false
 let constructor_args loc k args get_tuple make_tuple =
  let args=match args with [x] when k.fields>1 -> (match get_tuple x with Some xs -> xs | None -> args) | _ -> args in
@@ -374,7 +413,7 @@ and emit_application c env loc h args =
            if !missing then error loc "Non-prefix partial labelled call is unsupported";Some x) b.labels
      ) else args in
      callable c b (List.map (emit c env) args))
- | None,_ -> call_value c (emit c env h) (List.map (emit c env) args)
+ | None,_ -> call_value (emit c env h) (List.map (emit c env) args)
 and emit_cases c env cs =
  let record_hint=case_record_hint env cs in
  let families=case_constructor_hints c env cs in
@@ -420,7 +459,7 @@ and emit_let c env loc recursive bindings body =
    let body_env=List.fold_left (fun env (s,_,b) -> add env s b) env named in
    let rhs_env=if recursive then body_env else env in
    let functions=List.map (fun (_,e,b) -> let ps,body=split_function e in let args,body=compile_function c rhs_env ps body in l [a b.printed;l args;body]) named in
-   form (runtime c (if recursive then "labelsc" else "fletc")) [l functions;emit c body_env body]
+   combine_local_functions (runtime c (if recursive then "labelsc" else "fletc")) functions (emit c body_env body)
  ) else (
    let body_env=List.fold_left (fun env (p,_,_) -> bind_pattern c env p) env bindings in
    let simple=List.for_all (fun (p,_,_) -> match strip_pattern p with PaLid _ -> true | _ -> false) bindings in

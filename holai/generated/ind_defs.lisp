@@ -261,7 +261,6 @@
     lambdac
     labelsc
     function-value
-    funcall
     fst
     fletc
     failwith
@@ -359,7 +358,7 @@
             THEN BETA_TAC
             THEN (REPEAT #'STRIP_TAC)
             THEN (FIRST_ASSUM #'MATCH_MP_TAC)
-            THEN (funcall EXISTS_TAC (parse_term "t:A"))
+            THEN (#`EXISTS_TAC (parse_term "t:A"))
             THEN (FIRST_ASSUM #'MATCH_MP_TAC)
             THEN #'REFL_TAC)))))
     (cl:declare (cl:ignorable pth))
@@ -371,9 +370,9 @@
               (th1 (BETA_CONV (mk_comb (tuple P% l))))
               (th2 (ISPECL (cl:cons P% (cl:cons r% nil)) pth))
               (th3 (EQ_MP (SYM th1) th))
-              (th4 (funcall GEN l (funcall DISCH tm th3))))
+              (th4 (#`GEN l (#`DISCH tm th3))))
             (cl:declare (cl:ignorable P% th1 th2 th3 th4))
-            (funcall MP th2 th4)))))))
+            (#`MP th2 th4)))))))
 
 ;; (* ========================================================================= *)
 ;; (* Part 1: The main part of the inductive definitions package.               *)
@@ -388,33 +387,32 @@
         (let ((bod (holai.lib:repeat (o (function-value #'snd 1) dest_forall) tm)))
           (cl:declare (cl:ignorable bod))
           (handler-case
-            (snd (funcall dest_imp bod))
+            (snd (#`dest_imp bod))
             (holai.runtime:ocaml-condition
               (exception~149)
               (match exception~149 ((Failure _) bod) (_ (raise exception~149))))))))
       (CONJ_ACI_RULE (AC CONJ_ACI))
       (SIMPLE_DISJ_PAIR
         (lambdac (th)
-          (match (funcall dest_disj (hd (hyp th)))
+          (match (#`dest_disj (hd (hyp th)))
             ((tuple l r%)
               (tuple
-                (PROVE_HYP (funcall DISJ1 (ASSUME l) r%) th)
-                (PROVE_HYP (funcall DISJ2 l (ASSUME r%)) th))))))
-      (HALF_BETA_EXPAND
-        (lambdac (args th) (funcall GENL args (funcall RIGHT_BETAS args th)))))
+                (PROVE_HYP (#`DISJ1 (ASSUME l) r%) th)
+                (PROVE_HYP (#`DISJ2 l (ASSUME r%)) th))))))
+      (HALF_BETA_EXPAND (lambdac (args th) (#`GENL args (#`RIGHT_BETAS args th)))))
     (cl:declare (cl:ignorable getconcl CONJ_ACI_RULE SIMPLE_DISJ_PAIR HALF_BETA_EXPAND))
     (fletc
       ((AND_IMPS_CONV
         (tm)
         (let*
-          ((ths (funcall CONJUNCTS (ASSUME tm)))
-            (avs (fst (funcall strip_forall (concl (hd ths)))))
-            (thl (map (o (o (funcall DISCH tm) #'UNDISCH) #'SPEC_ALL) ths))
+          ((ths (#`CONJUNCTS (ASSUME tm)))
+            (avs (fst (#`strip_forall (concl (hd ths)))))
+            (thl (map (o (o (#`DISCH tm) #'UNDISCH) #'SPEC_ALL) ths))
             (th1 (end_itlist #'SIMPLE_DISJ_CASES thl))
             (tm1 (hd (hyp th1)))
-            (th2 (funcall GENL avs (funcall DISCH tm1 (UNDISCH th1))))
+            (th2 (#`GENL avs (#`DISCH tm1 (UNDISCH th1))))
             (tm2 (concl th2))
-            (th3 (funcall DISCH tm2 (UNDISCH (SPEC_ALL (ASSUME tm2))))))
+            (th3 (#`DISCH tm2 (UNDISCH (SPEC_ALL (ASSUME tm2))))))
           (cl:declare (cl:ignorable ths avs thl th1 tm1 th2 tm2 th3))
           (match (nsplit SIMPLE_DISJ_PAIR (tl ths) th3)
             ((tuple thts tht)
@@ -423,10 +421,10 @@
                   (th)
                   (let ((t% (hd (hyp th))))
                     (cl:declare (cl:ignorable t%))
-                    (funcall GENL avs (funcall DISCH t% (UNDISCH th))))))
+                    (#`GENL avs (#`DISCH t% (UNDISCH th))))))
                 (let ((th4 (itlist (o CONJ #'proc_fn) thts (proc_fn tht))))
                   (cl:declare (cl:ignorable th4))
-                  (funcall IMP_ANTISYM_RULE (DISCH_ALL th2) (DISCH_ALL th4)))))))))
+                  (#`IMP_ANTISYM_RULE (DISCH_ALL th2) (DISCH_ALL th4)))))))))
       (let*
         ((t_tm (parse_term "T"))
           (calculate_simp_sequence
@@ -459,39 +457,38 @@
                   (tuple oks (subtract plis oks))))))
           (FORALL_IMPS_CONV
             (lambdac (tm)
-              (match (funcall strip_forall tm)
+              (match (#`strip_forall tm)
                 ((tuple avs bod)
                   (let*
-                    ((th1 (funcall DISCH tm (UNDISCH (SPEC_ALL (ASSUME tm)))))
+                    ((th1 (#`DISCH tm (UNDISCH (SPEC_ALL (ASSUME tm)))))
                       (th2 (itlist #'SIMPLE_CHOOSE avs th1))
                       (tm2 (hd (hyp th2)))
-                      (th3 (funcall DISCH tm2 (UNDISCH th2)))
+                      (th3 (#`DISCH tm2 (UNDISCH th2)))
                       (th4 (ASSUME (concl th3)))
-                      (ant (funcall lhand bod))
+                      (ant (#`lhand bod))
                       (th5 (itlist #'SIMPLE_EXISTS avs (ASSUME ant)))
-                      (th6 (funcall GENL avs (funcall DISCH ant (funcall MP th4 th5)))))
+                      (th6 (#`GENL avs (#`DISCH ant (#`MP th4 th5)))))
                     (cl:declare (cl:ignorable th1 th2 tm2 th3 th4 ant th5 th6))
-                    (funcall IMP_ANTISYM_RULE (DISCH_ALL th3) (DISCH_ALL th6))))))))
+                    (#`IMP_ANTISYM_RULE (DISCH_ALL th3) (DISCH_ALL th6))))))))
         (cl:declare (cl:ignorable t_tm calculate_simp_sequence FORALL_IMPS_CONV))
-        (fletc
-          ((canonicalize_clause
-            (cls args)
-            (match (funcall strip_forall cls)
+        (holai.runtime:labelsc
+          ((:nonrecursive 0 canonicalize_clause (cls args)
+            (match (#`strip_forall cls)
               ((tuple avs bimp)
                 (match
                   (handler-case
-                    (funcall dest_imp bimp)
+                    (#`dest_imp bimp)
                     (holai.runtime:ocaml-condition
                       (exception~734)
                       (match exception~734
                         ((Failure _) (tuple t_tm bimp))
                         (_ (raise exception~734)))))
                   ((tuple ant con)
-                    (match (funcall strip_comb con)
+                    (match (#`strip_comb con)
                       ((tuple rel xargs)
                         (let ((plis (zip args xargs)))
                           (cl:declare (cl:ignorable plis))
-                          (match (funcall calculate_simp_sequence avs plis)
+                          (match (#`calculate_simp_sequence avs plis)
                             ((tuple yes no)
                               (let*
                                 ((nvs
@@ -501,7 +498,7 @@
                                       (C #'mem (map (function-value #'snd 1) yes)))
                                     avs))
                                   (eth
-                                    (if (funcall is_imp bimp)
+                                    (if (#`is_imp bimp)
                                       (let
                                         ((atm
                                           (itlist
@@ -517,26 +514,22 @@
                                                   (lambdac (t%)
                                                     (find
                                                       (lambdac (th)
-                                                        (= (funcall lhs (concl th)) t%))
+                                                        (= (#`lhs (concl th)) t%))
                                                       ths))
                                                   args))
-                                                (th0
-                                                  (funcall
-                                                    MP
-                                                    (SPECL avs (ASSUME cls))
-                                                    tth))
+                                                (th0 (#`MP (SPECL avs (ASSUME cls)) tth))
                                                 (th1
                                                   (rev_itlist
                                                     (C (curry #'MK_COMB%))
                                                     thl
                                                     (REFL rel)))
                                                 (th2 (EQ_MP (SYM th1) th0))
-                                                (th3 (INST% yes (funcall DISCH atm th2)))
+                                                (th3 (INST% yes (#`DISCH atm th2)))
                                                 (tm4
                                                   (funpow
-                                                    (funcall length yes)
+                                                    (#`length yes)
                                                     #'rand
-                                                    (funcall lhand (concl th3))))
+                                                    (#`lhand (concl th3))))
                                                 (th4
                                                   (itlist
                                                     (o
@@ -545,16 +538,11 @@
                                                     yes
                                                     (ASSUME tm4)))
                                                 (th5
-                                                  (funcall
-                                                    GENL
+                                                  (#`GENL
                                                     args
-                                                    (funcall
-                                                      GENL
+                                                    (#`GENL
                                                       nvs
-                                                      (funcall
-                                                        DISCH
-                                                        tm4
-                                                        (funcall MP th3 th4)))))
+                                                      (#`DISCH tm4 (#`MP th3 th4)))))
                                                 (th6
                                                   (SPECL
                                                     nvs
@@ -569,13 +557,9 @@
                                                     no
                                                     (ASSUME ant)))
                                                 (th8
-                                                  (funcall
-                                                    GENL
+                                                  (#`GENL
                                                     avs
-                                                    (funcall
-                                                      DISCH
-                                                      ant
-                                                      (funcall MP th6 th7)))))
+                                                    (#`DISCH ant (#`MP th6 th7)))))
                                               (cl:declare
                                                 (cl:ignorable
                                                   thl
@@ -589,22 +573,18 @@
                                                   th6
                                                   th7
                                                   th8))
-                                              (funcall
-                                                IMP_ANTISYM_RULE
+                                              (#`IMP_ANTISYM_RULE
                                                 (DISCH_ALL th5)
                                                 (DISCH_ALL th8))))))
                                       (let*
                                         ((atm
-                                          (funcall
-                                            list_mk_conj
-                                            (map mk_eq (append yes no))))
-                                          (ths (funcall CONJUNCTS (ASSUME atm)))
+                                          (#`list_mk_conj (map mk_eq (append yes no))))
+                                          (ths (#`CONJUNCTS (ASSUME atm)))
                                           (thl
                                             (map
                                               (lambdac (t%)
                                                 (find
-                                                  (lambdac (th)
-                                                    (= (funcall lhs (concl th)) t%))
+                                                  (lambdac (th) (= (#`lhs (concl th)) t%))
                                                   ths))
                                               args))
                                           (th0 (SPECL avs (ASSUME cls)))
@@ -614,25 +594,21 @@
                                               thl
                                               (REFL rel)))
                                           (th2 (EQ_MP (SYM th1) th0))
-                                          (th3 (INST% yes (funcall DISCH atm th2)))
+                                          (th3 (INST% yes (#`DISCH atm th2)))
                                           (tm4
                                             (funpow
-                                              (funcall length yes)
+                                              (#`length yes)
                                               #'rand
-                                              (funcall lhand (concl th3))))
+                                              (#`lhand (concl th3))))
                                           (th4
                                             (itlist
                                               (o (o CONJ #'REFL) (function-value #'fst 1))
                                               yes
                                               (ASSUME tm4)))
                                           (th5
-                                            (funcall
-                                              GENL
+                                            (#`GENL
                                               args
-                                              (funcall
-                                                GENL
-                                                nvs
-                                                (funcall DISCH tm4 (funcall MP th3 th4)))))
+                                              (#`GENL nvs (#`DISCH tm4 (#`MP th3 th4)))))
                                           (th6
                                             (SPECL
                                               nvs
@@ -643,7 +619,7 @@
                                             (end_itlist
                                               CONJ
                                               (map (o #'REFL (function-value #'snd 1)) no)))
-                                          (th8 (funcall GENL avs (funcall MP th6 th7))))
+                                          (th8 (#`GENL avs (#`MP th6 th7))))
                                         (cl:declare
                                           (cl:ignorable
                                             atm
@@ -659,32 +635,28 @@
                                             th6
                                             th7
                                             th8))
-                                        (funcall
-                                          IMP_ANTISYM_RULE
+                                        (#`IMP_ANTISYM_RULE
                                           (DISCH_ALL th5)
                                           (DISCH_ALL th8)))))
                                   (ftm
                                     (funpow
-                                      (funcall length args)
+                                      (#`length args)
                                       (o #'body #'rand)
                                       (rand (concl eth)))))
                                 (cl:declare (cl:ignorable nvs eth ftm))
                                 (TRANS
                                   eth
-                                  (itlist MK_FORALL args (funcall FORALL_IMPS_CONV ftm)))))))))))))))
-          (fletc
-            ((canonicalize_clauses
-              (clauses)
+                                  (itlist MK_FORALL args (#`FORALL_IMPS_CONV ftm))))))))))))))
+            (:nonrecursive 1 canonicalize_clauses (clauses)
               (let*
                 ((concls (map getconcl clauses))
                   (uncs (map strip_comb concls))
                   (rels (itlist (o #'insert (function-value #'fst 1)) uncs nil))
                   (xargs (map (C #'assoc uncs) rels))
-                  (closed (funcall list_mk_conj clauses))
-                  (avoids (funcall variables closed))
+                  (closed (#`list_mk_conj clauses))
+                  (avoids (#`variables closed))
                   (flargs
-                    (funcall
-                      make_args
+                    (#`make_args
                       "a"
                       avoids
                       (map #'type_of (end_itlist (function-value #'append 2) xargs))))
@@ -717,299 +689,252 @@
                   (let*
                     ((clausell (map #'collectclauses rels))
                       (cclausel (map list_mk_conj clausell))
-                      (cclauses (funcall list_mk_conj cclausel))
-                      (oclauses (funcall list_mk_conj pclauses)))
+                      (cclauses (#`list_mk_conj cclausel))
+                      (oclauses (#`list_mk_conj pclauses)))
                     (cl:declare (cl:ignorable clausell cclausel cclauses oclauses))
                     (let*
-                      ((eth
-                        (funcall CONJ_ACI_RULE (funcall mk_eq (tuple oclauses cclauses))))
+                      ((eth (#`CONJ_ACI_RULE (#`mk_eq (tuple oclauses cclauses))))
                         (pth (TRANS (end_itlist holai.drule:MK_CONJ cthms) eth)))
                       (cl:declare (cl:ignorable eth pth))
                       (TRANS
                         pth
                         (end_itlist holai.drule:MK_CONJ (map #'AND_IMPS_CONV cclausel))))))))
-              (derive_canon_inductive_relations
-                (clauses)
-                (let*
-                  ((closed (funcall list_mk_conj clauses))
-                    (clauses% (funcall holai.basics:conjuncts closed)))
-                  (cl:declare (cl:ignorable closed clauses%))
-                  (match (unzip (map strip_forall clauses%))
-                    ((tuple vargs bodies)
-                      (match (unzip (map dest_imp bodies))
-                        ((tuple ants concs)
-                          (let*
-                            ((rels (map (holai.lib:repeat #'rator) concs))
-                              (avoids (funcall variables closed))
-                              (rels% (variants avoids rels))
-                              (crels (zip rels% rels))
-                              (prime_fn (funcall subst crels))
-                              (closed% (funcall prime_fn closed)))
-                            (cl:declare
-                              (cl:ignorable rels avoids rels% crels prime_fn closed%))
-                            (fletc
-                              ((mk_def
-                                (arg con)
-                                (funcall
-                                  mk_eq
-                                  (tuple
-                                    (holai.lib:repeat #'rator con)
-                                    (list_mk_abs
-                                      (tuple
-                                        arg
-                                        (list_mk_forall
-                                          (tuple
-                                            rels%
-                                            (funcall
-                                              mk_imp
-                                              (tuple closed% (funcall prime_fn con)))))))))))
-                              (let*
-                                ((deftms (map2 #'mk_def vargs concs))
-                                  (defthms
-                                    (map2 HALF_BETA_EXPAND vargs (map #'ASSUME deftms))))
-                                (cl:declare (cl:ignorable deftms defthms))
-                                (fletc
-                                  ((mk_ind
-                                    (args th)
-                                    (let*
-                                      ((th1 (fst (funcall EQ_IMP_RULE (SPEC_ALL th))))
-                                        (ant (funcall lhand (concl th1)))
-                                        (th2 (SPECL rels% (UNDISCH th1))))
-                                      (cl:declare (cl:ignorable th1 ant th2))
-                                      (funcall
-                                        GENL
-                                        args
-                                        (funcall DISCH ant (UNDISCH th2))))))
-                                  (let*
-                                    ((indthms (map2 #'mk_ind vargs defthms))
-                                      (indthmr (end_itlist CONJ indthms))
-                                      (indthm
-                                        (funcall
-                                          GENL
+            (:nonrecursive 1 derive_canon_inductive_relations (clauses)
+              (let*
+                ((closed (#`list_mk_conj clauses))
+                  (clauses% (#`holai.basics:conjuncts closed)))
+                (cl:declare (cl:ignorable closed clauses%))
+                (match (unzip (map strip_forall clauses%))
+                  ((tuple vargs bodies)
+                    (match (unzip (map dest_imp bodies))
+                      ((tuple ants concs)
+                        (let*
+                          ((rels (map (holai.lib:repeat #'rator) concs))
+                            (avoids (#`variables closed))
+                            (rels% (variants avoids rels))
+                            (crels (zip rels% rels))
+                            (prime_fn (#`subst crels))
+                            (closed% (#`prime_fn closed)))
+                          (cl:declare
+                            (cl:ignorable rels avoids rels% crels prime_fn closed%))
+                          (fletc
+                            ((mk_def
+                              (arg con)
+                              (#`mk_eq
+                                (tuple
+                                  (holai.lib:repeat #'rator con)
+                                  (list_mk_abs
+                                    (tuple
+                                      arg
+                                      (list_mk_forall
+                                        (tuple
                                           rels%
-                                          (funcall DISCH closed% indthmr)))
-                                      (mconcs
-                                        (map2
-                                          (lambdac (a% t%)
-                                            (list_mk_forall
-                                              (tuple
-                                                a%
-                                                (funcall
-                                                  mk_imp
-                                                  (tuple t% (funcall prime_fn t%))))))
-                                          vargs
-                                          ants))
-                                      (monotm
-                                        (funcall
-                                          mk_imp
-                                          (tuple
-                                            (concl indthmr)
-                                            (funcall list_mk_conj mconcs))))
-                                      (monothm
-                                        (ASSUME
+                                          (#`mk_imp (tuple closed% (#`prime_fn con)))))))))))
+                            (let*
+                              ((deftms (map2 #'mk_def vargs concs))
+                                (defthms
+                                  (map2 HALF_BETA_EXPAND vargs (map #'ASSUME deftms))))
+                              (cl:declare (cl:ignorable deftms defthms))
+                              (fletc
+                                ((mk_ind
+                                  (args th)
+                                  (let*
+                                    ((th1 (fst (#`EQ_IMP_RULE (SPEC_ALL th))))
+                                      (ant (#`lhand (concl th1)))
+                                      (th2 (SPECL rels% (UNDISCH th1))))
+                                    (cl:declare (cl:ignorable th1 ant th2))
+                                    (#`GENL args (#`DISCH ant (UNDISCH th2))))))
+                                (let*
+                                  ((indthms (map2 #'mk_ind vargs defthms))
+                                    (indthmr (end_itlist CONJ indthms))
+                                    (indthm (#`GENL rels% (#`DISCH closed% indthmr)))
+                                    (mconcs
+                                      (map2
+                                        (lambdac (a% t%)
                                           (list_mk_forall
                                             (tuple
-                                              rels
-                                              (list_mk_forall (tuple rels% monotm))))))
-                                      (closthm (ASSUME closed%))
-                                      (monothms
-                                        (funcall
-                                          CONJUNCTS
-                                          (funcall
-                                            MP
-                                            (SPEC_ALL monothm)
-                                            (funcall MP (SPECL rels% indthm) closthm))))
-                                      (closthms (funcall CONJUNCTS closthm)))
-                                    (cl:declare
-                                      (cl:ignorable
-                                        indthms
-                                        indthmr
-                                        indthm
-                                        mconcs
-                                        monotm
-                                        monothm
-                                        closthm
-                                        monothms
-                                        closthms))
-                                    (fletc
-                                      ((prove_rule
-                                        (mth arg~1043)
-                                        (match arg~1043
-                                          ((tuple cth dth)
-                                            (match (funcall strip_forall (concl mth))
-                                              ((tuple avs bod)
-                                                (let*
-                                                  ((th1
-                                                    (funcall
-                                                      IMP_TRANS
-                                                      (SPECL avs mth)
-                                                      (SPECL avs cth)))
-                                                    (th2
-                                                      (funcall
-                                                        GENL
-                                                        rels%
-                                                        (funcall
-                                                          DISCH
-                                                          closed%
-                                                          (UNDISCH th1))))
-                                                    (th3
-                                                      (EQ_MP (SYM (SPECL avs dth)) th2)))
-                                                  (cl:declare (cl:ignorable th1 th2 th3))
-                                                  (funcall
-                                                    GENL
-                                                    avs
-                                                    (funcall
-                                                      DISCH
-                                                      (funcall lhand bod)
-                                                      th3)))))))))
-                                      (let*
-                                        ((rulethms
-                                          (map2
-                                            #'prove_rule
-                                            monothms
-                                            (zip closthms defthms)))
-                                          (rulethm (end_itlist CONJ rulethms))
-                                          (dtms (map2 (curry #'list_mk_abs) vargs ants))
-                                          (double_fn (funcall subst (zip dtms rels))))
-                                        (cl:declare
-                                          (cl:ignorable rulethms rulethm dtms double_fn))
-                                        (fletc
-                                          ((mk_unbetas
-                                            (tm dtm)
-                                            (match (funcall strip_forall tm)
-                                              ((tuple avs bod)
-                                                (match (dest_comb bod)
-                                                  ((tuple il r%)
-                                                    (match (dest_comb il)
-                                                      ((tuple i% l)
-                                                        (let*
-                                                          ((bth
-                                                            (funcall
-                                                              RIGHT_BETAS
-                                                              avs
-                                                              (REFL dtm)))
-                                                            (munb
-                                                              (AP_THM (AP_TERM i% bth) r%))
-                                                            (iunb
-                                                              (AP_TERM
-                                                                (mk_comb
-                                                                  (tuple
-                                                                    i%
-                                                                    (funcall double_fn l)))
-                                                                bth))
-                                                            (junb
-                                                              (AP_TERM
-                                                                (mk_comb (tuple i% r%))
-                                                                bth))
-                                                            (quantify
-                                                              (itlist MK_FORALL avs)))
-                                                          (cl:declare
-                                                            (cl:ignorable
-                                                              bth
-                                                              munb
-                                                              iunb
-                                                              junb
-                                                              quantify))
+                                              a%
+                                              (#`mk_imp (tuple t% (#`prime_fn t%))))))
+                                        vargs
+                                        ants))
+                                    (monotm
+                                      (#`mk_imp
+                                        (tuple (concl indthmr) (#`list_mk_conj mconcs))))
+                                    (monothm
+                                      (ASSUME
+                                        (list_mk_forall
+                                          (tuple
+                                            rels
+                                            (list_mk_forall (tuple rels% monotm))))))
+                                    (closthm (ASSUME closed%))
+                                    (monothms
+                                      (#`CONJUNCTS
+                                        (#`MP
+                                          (SPEC_ALL monothm)
+                                          (#`MP (SPECL rels% indthm) closthm))))
+                                    (closthms (#`CONJUNCTS closthm)))
+                                  (cl:declare
+                                    (cl:ignorable
+                                      indthms
+                                      indthmr
+                                      indthm
+                                      mconcs
+                                      monotm
+                                      monothm
+                                      closthm
+                                      monothms
+                                      closthms))
+                                  (fletc
+                                    ((prove_rule
+                                      (mth arg~1043)
+                                      (match arg~1043
+                                        ((tuple cth dth)
+                                          (match (#`strip_forall (concl mth))
+                                            ((tuple avs bod)
+                                              (let*
+                                                ((th1
+                                                  (#`IMP_TRANS
+                                                    (SPECL avs mth)
+                                                    (SPECL avs cth)))
+                                                  (th2
+                                                    (#`GENL
+                                                      rels%
+                                                      (#`DISCH closed% (UNDISCH th1))))
+                                                  (th3 (EQ_MP (SYM (SPECL avs dth)) th2)))
+                                                (cl:declare (cl:ignorable th1 th2 th3))
+                                                (#`GENL avs (#`DISCH (#`lhand bod) th3)))))))))
+                                    (let*
+                                      ((rulethms
+                                        (map2
+                                          #'prove_rule
+                                          monothms
+                                          (zip closthms defthms)))
+                                        (rulethm (end_itlist CONJ rulethms))
+                                        (dtms (map2 (curry #'list_mk_abs) vargs ants))
+                                        (double_fn (#`subst (zip dtms rels))))
+                                      (cl:declare
+                                        (cl:ignorable rulethms rulethm dtms double_fn))
+                                      (fletc
+                                        ((mk_unbetas
+                                          (tm dtm)
+                                          (match (#`strip_forall tm)
+                                            ((tuple avs bod)
+                                              (match (dest_comb bod)
+                                                ((tuple il r%)
+                                                  (match (dest_comb il)
+                                                    ((tuple i% l)
+                                                      (let*
+                                                        ((bth
+                                                          (#`RIGHT_BETAS avs (REFL dtm)))
+                                                          (munb
+                                                            (AP_THM (AP_TERM i% bth) r%))
+                                                          (iunb
+                                                            (AP_TERM
+                                                              (mk_comb
+                                                                (tuple i% (#`double_fn l)))
+                                                              bth))
+                                                          (junb
+                                                            (AP_TERM
+                                                              (mk_comb (tuple i% r%))
+                                                              bth))
+                                                          (quantify
+                                                            (itlist MK_FORALL avs)))
+                                                        (cl:declare
+                                                          (cl:ignorable
+                                                            bth
+                                                            munb
+                                                            iunb
+                                                            junb
+                                                            quantify))
+                                                        (tuple
+                                                          (#`quantify munb)
                                                           (tuple
-                                                            (funcall quantify munb)
-                                                            (tuple
-                                                              (funcall quantify iunb)
-                                                              (funcall quantify junb))))))))))))
-                                          (let*
-                                            ((unths (map2 #'mk_unbetas clauses% dtms))
-                                              (irthm
-                                                (EQ_MP
-                                                  (SYM
-                                                    (end_itlist
-                                                      holai.drule:MK_CONJ
-                                                      (map (function-value #'fst 1) unths)))
-                                                  rulethm))
-                                              (mrthm
-                                                (funcall
-                                                  MP
-                                                  (SPECL rels (SPECL dtms monothm))
-                                                  irthm))
-                                              (imrth
-                                                (EQ_MP
-                                                  (SYM
-                                                    (end_itlist
-                                                      holai.drule:MK_CONJ
-                                                      (map
-                                                        (o
-                                                          (function-value #'fst 1)
-                                                          (function-value #'snd 1))
-                                                        unths)))
-                                                  mrthm))
-                                              (ifthm
-                                                (funcall MP (SPECL dtms indthm) imrth))
-                                              (fthm
-                                                (EQ_MP
+                                                            (#`quantify iunb)
+                                                            (#`quantify junb))))))))))))
+                                        (let*
+                                          ((unths (map2 #'mk_unbetas clauses% dtms))
+                                            (irthm
+                                              (EQ_MP
+                                                (SYM
+                                                  (end_itlist
+                                                    holai.drule:MK_CONJ
+                                                    (map (function-value #'fst 1) unths)))
+                                                rulethm))
+                                            (mrthm
+                                              (#`MP
+                                                (SPECL rels (SPECL dtms monothm))
+                                                irthm))
+                                            (imrth
+                                              (EQ_MP
+                                                (SYM
                                                   (end_itlist
                                                     holai.drule:MK_CONJ
                                                     (map
                                                       (o
-                                                        (function-value #'snd 1)
+                                                        (function-value #'fst 1)
                                                         (function-value #'snd 1))
-                                                      unths))
-                                                  ifthm)))
-                                            (cl:declare
-                                              (cl:ignorable
-                                                unths
-                                                irthm
-                                                mrthm
-                                                imrth
-                                                ifthm
-                                                fthm))
-                                            (fletc
-                                              ((mk_case
-                                                (th1 th2)
-                                                (let
-                                                  ((avs
-                                                    (fst
-                                                      (funcall strip_forall (concl th1)))))
-                                                  (cl:declare (cl:ignorable avs))
-                                                  (funcall
-                                                    GENL
-                                                    avs
-                                                    (funcall
-                                                      IMP_ANTISYM_RULE
-                                                      (SPEC_ALL th1)
-                                                      (SPEC_ALL th2))))))
+                                                      unths)))
+                                                mrthm))
+                                            (ifthm (#`MP (SPECL dtms indthm) imrth))
+                                            (fthm
+                                              (EQ_MP
+                                                (end_itlist
+                                                  holai.drule:MK_CONJ
+                                                  (map
+                                                    (o
+                                                      (function-value #'snd 1)
+                                                      (function-value #'snd 1))
+                                                    unths))
+                                                ifthm)))
+                                          (cl:declare
+                                            (cl:ignorable
+                                              unths
+                                              irthm
+                                              mrthm
+                                              imrth
+                                              ifthm
+                                              fthm))
+                                          (fletc
+                                            ((mk_case
+                                              (th1 th2)
                                               (let
-                                                ((casethm
-                                                  (end_itlist
-                                                    CONJ
-                                                    (map2
-                                                      #'mk_case
-                                                      (funcall CONJUNCTS fthm)
-                                                      (funcall CONJUNCTS rulethm)))))
-                                                (cl:declare (cl:ignorable casethm))
-                                                (funcall
+                                                ((avs (fst (#`strip_forall (concl th1)))))
+                                                (cl:declare (cl:ignorable avs))
+                                                (#`GENL
+                                                  avs
+                                                  (#`IMP_ANTISYM_RULE
+                                                    (SPEC_ALL th1)
+                                                    (SPEC_ALL th2))))))
+                                            (let
+                                              ((casethm
+                                                (end_itlist
                                                   CONJ
-                                                  rulethm
-                                                  (funcall CONJ indthm casethm))))))))))))))))))))
-            (lambdac (tm)
-              (let*
-                ((clauses (funcall holai.basics:conjuncts tm))
-                  (canonthm (canonicalize_clauses clauses))
-                  (canonthm% (SYM canonthm))
-                  (pclosed (rand (concl canonthm)))
-                  (pclauses (funcall holai.basics:conjuncts pclosed))
-                  (rawthm (derive_canon_inductive_relations pclauses)))
-                (cl:declare
-                  (cl:ignorable clauses canonthm canonthm% pclosed pclauses rawthm))
-                (match (CONJ_PAIR rawthm)
-                  ((tuple rulethm otherthms)
-                    (match (CONJ_PAIR otherthms)
-                      ((tuple indthm casethm)
-                        (let
-                          ((rulethm% (EQ_MP canonthm% rulethm))
-                            (indthm%
-                              (CONV_RULE
-                                (funcall ONCE_DEPTH_CONV (funcall REWR_CONV canonthm%))
-                                indthm)))
-                          (cl:declare (cl:ignorable rulethm% indthm%))
-                          (funcall CONJ rulethm% (funcall CONJ indthm% casethm)))))))))))))))
+                                                  (map2
+                                                    #'mk_case
+                                                    (#`CONJUNCTS fthm)
+                                                    (#`CONJUNCTS rulethm)))))
+                                              (cl:declare (cl:ignorable casethm))
+                                              (#`CONJ rulethm (#`CONJ indthm casethm))))))))))))))))))))
+          (lambdac (tm)
+            (let*
+              ((clauses (#`holai.basics:conjuncts tm))
+                (canonthm (canonicalize_clauses clauses))
+                (canonthm% (SYM canonthm))
+                (pclosed (rand (concl canonthm)))
+                (pclauses (#`holai.basics:conjuncts pclosed))
+                (rawthm (derive_canon_inductive_relations pclauses)))
+              (cl:declare
+                (cl:ignorable clauses canonthm canonthm% pclosed pclauses rawthm))
+              (match (CONJ_PAIR rawthm)
+                ((tuple rulethm otherthms)
+                  (match (CONJ_PAIR otherthms)
+                    ((tuple indthm casethm)
+                      (let
+                        ((rulethm% (EQ_MP canonthm% rulethm))
+                          (indthm%
+                            (CONV_RULE (#`ONCE_DEPTH_CONV (#`REWR_CONV canonthm%)) indthm)))
+                        (cl:declare (cl:ignorable rulethm% indthm%))
+                        (#`CONJ rulethm% (#`CONJ indthm% casethm))))))))))))))
 
 ;; (* ========================================================================= *)
 ;; (* Part 2: Tactic-integrated tools for proving monotonicity automatically.   *)
@@ -1037,35 +962,30 @@
     (fletc
       ((BACKCHAIN_TAC
         (th)
-        (let ((match_fn (funcall PART_MATCH (o (function-value #'snd 1) dest_imp) th)))
+        (let ((match_fn (#`PART_MATCH (o (function-value #'snd 1) dest_imp) th)))
           (cl:declare (cl:ignorable match_fn))
           (lambdac (arg~1412)
             (match arg~1412
               ((tuple asl w%)
-                (let ((th1 (funcall match_fn w%)))
+                (let ((th1 (#`match_fn w%)))
                   (cl:declare (cl:ignorable th1))
-                  (match (funcall dest_imp (concl th1))
+                  (match (#`dest_imp (concl th1))
                     ((tuple ant con)
                       (tuple
                         null_meta
                         (cl:cons (tuple asl ant) nil)
                         (lambdac (i% arg~1428)
                           (match arg~1428
-                            ((cl:cons t% nil) (MATCH_MP (funcall INSTANTIATE% i% th1) t%)))))))))))))
+                            ((cl:cons t% nil) (MATCH_MP (#`INSTANTIATE% i% th1) t%)))))))))))))
         (MONO_ABS_TAC
           (arg~1454)
           (match arg~1454
             ((tuple asl w%)
-              (match (funcall dest_imp w%)
+              (match (#`dest_imp w%)
                 ((tuple ant con)
-                  (let*
-                    ((vars (snd (funcall strip_comb con)))
-                      (rnum (- (funcall length vars) 1)))
+                  (let* ((vars (snd (#`strip_comb con))) (rnum (- (#`length vars) 1)))
                     (cl:declare (cl:ignorable vars rnum))
-                    (match
-                      (tuple
-                        (funcall strip_ncomb rnum ant)
-                        (funcall strip_ncomb rnum con))
+                    (match (tuple (#`strip_ncomb rnum ant) (#`strip_ncomb rnum con))
                       ((tuple (tuple hd1 args1) (tuple hd2 args2))
                         (let
                           ((th1 (rev_itlist (C #'AP_THM) args1 (BETA_CONV hd1)))
@@ -1073,15 +993,15 @@
                           (cl:declare (cl:ignorable th1 th2))
                           (let ((th3 (MK_COMB% (tuple (AP_TERM imp th1) th2))))
                             (cl:declare (cl:ignorable th3))
-                            (funcall CONV_TAC (funcall REWR_CONV th3) (tuple asl w%))))))))))))
+                            (#`CONV_TAC (#`REWR_CONV th3) (tuple asl w%))))))))))))
         (APPLY_MONOTAC
           (tacs arg~1527)
           (match arg~1527
             ((tuple asl w%)
-              (match (funcall dest_imp w%)
+              (match (#`dest_imp w%)
                 ((tuple a% c%)
                   (if (aconv a% c%)
-                    (funcall ACCEPT_TAC (funcall SPEC a% IMP_REFL) (tuple asl w%))
+                    (#`ACCEPT_TAC (#`SPEC a% IMP_REFL) (tuple asl w%))
                     (let
                       ((cn
                         (handler-case
@@ -1096,7 +1016,7 @@
                         (lambdac (arg~1544)
                           (match arg~1544
                             ((tuple k% t%)
-                              (if (= k% cn) (funcall t% (tuple asl w%)) (fail unit)))))
+                              (if (= k% cn) (#`t% (tuple asl w%)) (fail unit)))))
                         tacs)))))))))
       (lambdac (gl)
         (let*
@@ -1124,7 +1044,7 @@
             (MONO_STEP_TAC
               (holai.runtime:proof (REPEAT #'GEN_TAC) THEN (APPLY_MONOTAC tacs))))
           (cl:declare (cl:ignorable tacs MONO_STEP_TAC))
-          (funcall THEN (REPEAT MONO_STEP_TAC) (funcall ASM_REWRITE_TAC nil) gl))))))
+          (#`THEN (REPEAT MONO_STEP_TAC) (#`ASM_REWRITE_TAC nil) gl))))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Attempt to dispose of the non-equational assumption(s) of a theorem.      *)
@@ -1159,18 +1079,15 @@
 (defparameter prove_inductive_relations_exist nil)
 
 (match
-  (labelsc
-    ((pare_comb
-      (qvs tm)
+  (holai.runtime:labelsc
+    ((:recursive 0 pare_comb (qvs tm)
       (if
         (cl:and
           (= (intersect (frees tm) qvs) nil)
-          (forall #'is_var (snd (funcall strip_comb tm))))
+          (forall #'is_var (snd (#`strip_comb tm))))
         tm
-        (pare_comb qvs (rator tm)))))
-    (fletc
-      ((generalize_schematic_variables
-        (gflag vs)
+        (pare_comb qvs (rator tm))))
+      (:nonrecursive 1 generalize_schematic_variables (gflag vs)
         (fletc
           ((generalize_def
             (tm th)
@@ -1182,14 +1099,14 @@
                       ((l%
                         (mk_var (tuple lname (itlist (o #'mk_fun_ty #'type_of) vs lty))))
                         (r%% (list_mk_abs (tuple vs r%)))
-                        (tm% (funcall mk_eq (tuple l% r%%)))
-                        (th0 (funcall RIGHT_BETAS vs (ASSUME tm%)))
+                        (tm% (#`mk_eq (tuple l% r%%)))
+                        (th0 (#`RIGHT_BETAS vs (ASSUME tm%)))
                         (th1
                           (INST%
-                            (cl:cons (tuple (funcall lhs (concl th0)) l) nil)
-                            (funcall DISCH tm th))))
+                            (cl:cons (tuple (#`lhs (concl th0)) l) nil)
+                            (#`DISCH tm th))))
                       (cl:declare (cl:ignorable l% r%% tm% th0 th1))
-                      (funcall MP th1 th0))))))))
+                      (#`MP th1 th0))))))))
           (lambdac (th)
             (match (partition #'is_eq (hyp th))
               ((tuple defs others)
@@ -1205,136 +1122,111 @@
                               (SPECL fvs (ASSUME (list_mk_forall (tuple fvs t%))))))
                           others)))
                       (cl:declare (cl:ignorable others%))
-                      (funcall GENL vs (itlist #'PROVE_HYP others% th1)))
+                      (#`GENL vs (itlist #'PROVE_HYP others% th1)))
                     th1)))))))
-        (derive_existence
-          (th)
-          (let ((defs (filter #'is_eq (hyp th))))
-            (cl:declare (cl:ignorable defs))
-            (itlist EXISTS_EQUATION defs th)))
-        (make_definitions
-          (th)
-          (let*
-            ((defs (filter #'is_eq (hyp th)))
-              (dths (map #'new_definition defs))
-              (insts (zip (map (o lhs #'concl) dths) (map lhs defs))))
-            (cl:declare (cl:ignorable defs dths insts))
-            (rev_itlist (C MP) dths (INST% insts (itlist DISCH defs th)))))
-        (unschematize_clauses
-          (clauses)
-          (let*
-            ((schem
-              (map
-                (lambdac (cls)
-                  (match (funcall strip_forall cls)
-                    ((tuple avs bod)
-                      (pare_comb
-                        avs
-                        (handler-case
-                          (snd (funcall dest_imp bod))
-                          (holai.runtime:ocaml-condition
-                            (exception~1882)
-                            (match exception~1882
-                              ((Failure _) bod)
-                              (_ (raise exception~1882)))))))))
-                clauses))
-              (schems (setify schem)))
-            (cl:declare (cl:ignorable schem schems))
-            (if (is_var (hd schem))
-              (tuple clauses nil)
-              (if
-                (not
-                  (=
-                    (funcall
-                      length
-                      (setify (map (o (function-value #'snd 1) strip_comb) schems)))
-                    1))
-                (failwith "Schematic variables not used consistently")
-                (let ((avoids (funcall variables (funcall list_mk_conj clauses))))
-                  (cl:declare (cl:ignorable avoids))
-                  (fletc
-                    ((hack_fn
-                      (tm)
-                      (mk_var
-                        (tuple
-                          (fst (dest_var (holai.lib:repeat #'rator tm)))
-                          (type_of tm)))))
+      (:nonrecursive 1 derive_existence (th)
+        (let ((defs (filter #'is_eq (hyp th))))
+          (cl:declare (cl:ignorable defs))
+          (itlist EXISTS_EQUATION defs th)))
+      (:nonrecursive 1 make_definitions (th)
+        (let*
+          ((defs (filter #'is_eq (hyp th)))
+            (dths (map #'new_definition defs))
+            (insts (zip (map (o lhs #'concl) dths) (map lhs defs))))
+          (cl:declare (cl:ignorable defs dths insts))
+          (rev_itlist (C MP) dths (INST% insts (itlist DISCH defs th)))))
+      (:nonrecursive 1 unschematize_clauses (clauses)
+        (let*
+          ((schem
+            (map
+              (lambdac (cls)
+                (match (#`strip_forall cls)
+                  ((tuple avs bod)
+                    (pare_comb
+                      avs
+                      (handler-case
+                        (snd (#`dest_imp bod))
+                        (holai.runtime:ocaml-condition
+                          (exception~1882)
+                          (match exception~1882
+                            ((Failure _) bod)
+                            (_ (raise exception~1882)))))))))
+              clauses))
+            (schems (setify schem)))
+          (cl:declare (cl:ignorable schem schems))
+          (if (is_var (hd schem))
+            (tuple clauses nil)
+            (if
+              (not
+                (=
+                  (#`length (setify (map (o (function-value #'snd 1) strip_comb) schems)))
+                  1))
+              (failwith "Schematic variables not used consistently")
+              (let ((avoids (#`variables (#`list_mk_conj clauses))))
+                (cl:declare (cl:ignorable avoids))
+                (fletc
+                  ((hack_fn
+                    (tm)
+                    (mk_var
+                      (tuple (fst (dest_var (holai.lib:repeat #'rator tm))) (type_of tm)))))
+                  (let*
+                    ((grels (variants avoids (map #'hack_fn schems)))
+                      (crels (zip grels schems))
+                      (clauses% (map (#`subst crels) clauses)))
+                    (cl:declare (cl:ignorable grels crels clauses%))
+                    (tuple clauses% (snd (#`strip_comb (hd schems)))))))))))
+      (:nonrecursive 2 find_redefinition (tm arg~1968)
+        (match arg~1968
+          ((cl:and trip (tuple rth ith cth)) (tuple trip (#`PART_MATCH #'I rth tm)))))
+      (:nonrecursive 3 prove_inductive_properties (tm)
+        (let ((clauses (#`holai.basics:conjuncts tm)))
+          (cl:declare (cl:ignorable clauses))
+          (match (unschematize_clauses clauses)
+            ((tuple clauses% fvs)
+              (let
+                ((th
+                  (#`derive_nonschematic_inductive_relations (#`list_mk_conj clauses%))))
+                (cl:declare (cl:ignorable th))
+                (tuple fvs (#`prove_monotonicity_hyps th)))))))
+      (:nonrecursive 4 prove_inductive_relations_exist% (tm)
+        (match (prove_inductive_properties tm)
+          ((tuple fvs th1)
+            (let ((th2 (generalize_schematic_variables cl:t fvs th1)))
+              (cl:declare (cl:ignorable th2))
+              (derive_existence th2)))))
+      (:nonrecursive 4 new_inductive_definition% (tm)
+        (handler-case
+          (let ((tm% (snd (#`strip_forall tm))))
+            (cl:declare (cl:ignorable tm%))
+            (match (tryfind (find_redefinition tm%) (deref the_inductive_definitions))
+              ((tuple th _)
+                (progn (warn cl:t "Benign redefinition of inductive predicate") th))))
+          (holai.runtime:ocaml-condition
+            (exception~2029)
+            (match exception~2029
+              ((Failure _)
+                (match (prove_inductive_properties tm)
+                  ((tuple fvs th1)
                     (let*
-                      ((grels (variants avoids (map #'hack_fn schems)))
-                        (crels (zip grels schems))
-                        (clauses% (map (funcall subst crels) clauses)))
-                      (cl:declare (cl:ignorable grels crels clauses%))
-                      (tuple clauses% (snd (funcall strip_comb (hd schems))))))))))))
-      (fletc
-        ((find_redefinition
-          (tm arg~1968)
-          (match arg~1968
-            ((cl:and trip (tuple rth ith cth))
-              (tuple trip (funcall PART_MATCH #'I rth tm))))))
-        (fletc
-          ((prove_inductive_properties
-            (tm)
-            (let ((clauses (funcall holai.basics:conjuncts tm)))
-              (cl:declare (cl:ignorable clauses))
-              (match (unschematize_clauses clauses)
-                ((tuple clauses% fvs)
-                  (let
-                    ((th
-                      (funcall
-                        derive_nonschematic_inductive_relations
-                        (funcall list_mk_conj clauses%))))
-                    (cl:declare (cl:ignorable th))
-                    (tuple fvs (funcall prove_monotonicity_hyps th))))))))
-          (fletc
-            ((prove_inductive_relations_exist%
-              (tm)
-              (match (prove_inductive_properties tm)
-                ((tuple fvs th1)
-                  (let ((th2 (generalize_schematic_variables cl:t fvs th1)))
-                    (cl:declare (cl:ignorable th2))
-                    (derive_existence th2)))))
-              (new_inductive_definition%
-                (tm)
-                (handler-case
-                  (let ((tm% (snd (funcall strip_forall tm))))
-                    (cl:declare (cl:ignorable tm%))
-                    (match
-                      (tryfind (find_redefinition tm%) (deref the_inductive_definitions))
-                      ((tuple th _)
-                        (progn
-                          (warn cl:t "Benign redefinition of inductive predicate")
-                          th))))
-                  (holai.runtime:ocaml-condition
-                    (exception~2029)
-                    (match exception~2029
-                      ((Failure _)
-                        (match (prove_inductive_properties tm)
-                          ((tuple fvs th1)
-                            (let*
-                              ((th2 (generalize_schematic_variables cl:t fvs th1))
-                                (th3 (make_definitions th2))
-                                (avs (fst (funcall strip_forall (concl th3)))))
-                              (cl:declare (cl:ignorable th2 th3 avs))
-                              (match (CONJ_PAIR (SPECL avs th3))
-                                ((tuple r% ic)
-                                  (match (CONJ_PAIR ic)
-                                    ((tuple i% c%)
-                                      (let
-                                        ((thtr
-                                          (tuple
-                                            (funcall GENL avs r%)
-                                            (funcall GENL avs i%)
-                                            (funcall GENL avs c%))))
-                                        (cl:declare (cl:ignorable thtr))
-                                        (progn
-                                          (assign
-                                            the_inductive_definitions
-                                            (cl:cons
-                                              thtr
-                                              (deref the_inductive_definitions)))
-                                          thtr))))))))))
-                      (_ (raise exception~2029)))))))
-            (tuple #'prove_inductive_relations_exist% #'new_inductive_definition%))))))
+                      ((th2 (generalize_schematic_variables cl:t fvs th1))
+                        (th3 (make_definitions th2))
+                        (avs (fst (#`strip_forall (concl th3)))))
+                      (cl:declare (cl:ignorable th2 th3 avs))
+                      (match (CONJ_PAIR (SPECL avs th3))
+                        ((tuple r% ic)
+                          (match (CONJ_PAIR ic)
+                            ((tuple i% c%)
+                              (let
+                                ((thtr
+                                  (tuple (#`GENL avs r%) (#`GENL avs i%) (#`GENL avs c%))))
+                                (cl:declare (cl:ignorable thtr))
+                                (progn
+                                  (assign
+                                    the_inductive_definitions
+                                    (cl:cons thtr (deref the_inductive_definitions)))
+                                  thtr))))))))))
+              (_ (raise exception~2029)))))))
+    (tuple #'prove_inductive_relations_exist% #'new_inductive_definition%))
   ((tuple prove_inductive_relations_exist% new_inductive_definition%)
     (setf
       new_inductive_definition
@@ -1348,220 +1240,171 @@
 
 
 (defparameter derive_strong_induction
-  (fletc
-    ((dest_ibod
-      (tm)
-      (match (funcall strip_forall tm)
+  (holai.runtime:labelsc
+    ((:nonrecursive 0 dest_ibod (tm)
+      (match (#`strip_forall tm)
         ((tuple avs ibod)
-          (let* ((n (funcall length avs)) (prator (funpow n #'rator)))
+          (let* ((n (#`length avs)) (prator (funpow n #'rator)))
             (cl:declare (cl:ignorable n prator))
-            (match (funcall dest_imp ibod)
-              ((tuple ant con)
-                (tuple n (tuple (funcall prator ant) (funcall prator con))))))))))
-    (labelsc
-      ((prove_triv
-        (tm)
-        (if (funcall is_conj tm)
-          (funcall CONJ (prove_triv (funcall lhand tm)) (prove_triv (rand tm)))
-          (match (funcall strip_forall tm)
+            (match (#`dest_imp ibod)
+              ((tuple ant con) (tuple n (tuple (#`prator ant) (#`prator con)))))))))
+      (:recursive 1 prove_triv (tm)
+        (if (#`is_conj tm)
+          (#`CONJ (prove_triv (#`lhand tm)) (prove_triv (rand tm)))
+          (match (#`strip_forall tm)
             ((tuple avs bod)
-              (match (funcall dest_imp bod)
+              (match (#`dest_imp bod)
                 ((tuple a% c%)
                   (let*
-                    ((ths (funcall CONJUNCTS (ASSUME a%)))
+                    ((ths (#`CONJUNCTS (ASSUME a%)))
                       (th (find (o (aconv c%) #'concl) ths)))
                     (cl:declare (cl:ignorable ths th))
-                    (funcall GENL avs (funcall DISCH a% th))))))))))
-      (labelsc
-        ((weaken_triv
-          (th)
-          (if (funcall is_conj (concl th))
-            (funcall
-              CONJ
-              (weaken_triv (funcall CONJUNCT1 th))
-              (weaken_triv (funcall CONJUNCT2 th)))
-            (match (funcall strip_forall (concl th))
-              ((tuple avs bod)
-                (let* ((th1 (SPECL avs th)) (a% (fst (funcall dest_imp (concl th1)))))
-                  (cl:declare (cl:ignorable th1 a%))
-                  (funcall GENL avs (funcall DISCH a% (funcall CONJUNCT2 (UNDISCH th1))))))))))
-        (let ((MATCH_IMPS (MATCH_MP MONO_AND)))
-          (cl:declare (cl:ignorable MATCH_IMPS))
-          (lambdac (arg~2248)
-            (match arg~2248
-              ((tuple rth ith)
-                (match (funcall strip_forall (concl ith))
-                  ((tuple ovs ibod)
-                    (match (funcall dest_imp ibod)
-                      ((tuple iant icon)
-                        (match
-                          (unzip (map #'dest_ibod (funcall holai.basics:conjuncts icon)))
-                          ((tuple ns prrs)
-                            (match (unzip prrs)
-                              ((tuple rs ps)
-                                (let ((gs (variants (funcall variables ibod) ps)))
-                                  (cl:declare (cl:ignorable gs))
-                                  (match
-                                    (chop_list
-                                      (- (funcall length ovs) (funcall length ns))
-                                      ovs)
-                                    ((tuple svs tvs)
-                                      (let ((sth (SPECL svs rth)) (jth (SPECL svs ith)))
-                                        (cl:declare (cl:ignorable sth jth))
-                                        (let*
-                                          ((gimps (funcall subst (zip gs rs) icon))
-                                            (prs
-                                              (map2
-                                                (lambdac (n arg~2283)
-                                                  (match arg~2283
-                                                    ((tuple r% p%)
-                                                      (match
-                                                        (nsplit
-                                                          #'dest_fun_ty
-                                                          (-- 1 n)
-                                                          (type_of r%))
-                                                        ((tuple tys ty)
-                                                          (let ((gvs (map genvar tys)))
-                                                            (cl:declare
-                                                              (cl:ignorable gvs))
-                                                            (list_mk_abs
+                    (#`GENL avs (#`DISCH a% th)))))))))
+      (:recursive 2 weaken_triv (th)
+        (if (#`is_conj (concl th))
+          (#`CONJ (weaken_triv (#`CONJUNCT1 th)) (weaken_triv (#`CONJUNCT2 th)))
+          (match (#`strip_forall (concl th))
+            ((tuple avs bod)
+              (let* ((th1 (SPECL avs th)) (a% (fst (#`dest_imp (concl th1)))))
+                (cl:declare (cl:ignorable th1 a%))
+                (#`GENL avs (#`DISCH a% (#`CONJUNCT2 (UNDISCH th1))))))))))
+    (let ((MATCH_IMPS (MATCH_MP MONO_AND)))
+      (cl:declare (cl:ignorable MATCH_IMPS))
+      (lambdac (arg~2248)
+        (match arg~2248
+          ((tuple rth ith)
+            (match (#`strip_forall (concl ith))
+              ((tuple ovs ibod)
+                (match (#`dest_imp ibod)
+                  ((tuple iant icon)
+                    (match (unzip (map #'dest_ibod (#`holai.basics:conjuncts icon)))
+                      ((tuple ns prrs)
+                        (match (unzip prrs)
+                          ((tuple rs ps)
+                            (let ((gs (variants (#`variables ibod) ps)))
+                              (cl:declare (cl:ignorable gs))
+                              (match (chop_list (- (#`length ovs) (#`length ns)) ovs)
+                                ((tuple svs tvs)
+                                  (let ((sth (SPECL svs rth)) (jth (SPECL svs ith)))
+                                    (cl:declare (cl:ignorable sth jth))
+                                    (let*
+                                      ((gimps (#`subst (zip gs rs) icon))
+                                        (prs
+                                          (map2
+                                            (lambdac (n arg~2283)
+                                              (match arg~2283
+                                                ((tuple r% p%)
+                                                  (match
+                                                    (nsplit
+                                                      #'dest_fun_ty
+                                                      (-- 1 n)
+                                                      (type_of r%))
+                                                    ((tuple tys ty)
+                                                      (let ((gvs (map genvar tys)))
+                                                        (cl:declare (cl:ignorable gvs))
+                                                        (list_mk_abs
+                                                          (tuple
+                                                            gvs
+                                                            (#`mk_conj
                                                               (tuple
-                                                                gvs
-                                                                (funcall
-                                                                  mk_conj
-                                                                  (tuple
-                                                                    (list_mk_comb
-                                                                      (tuple r% gvs))
-                                                                    (list_mk_comb
-                                                                      (tuple p% gvs))))))))))))
-                                                ns
-                                                prrs)))
-                                          (cl:declare (cl:ignorable gimps prs))
-                                          (fletc
-                                            ((modify_rule
-                                              (rcl itm)
-                                              (match (funcall strip_forall itm)
-                                                ((tuple avs bod)
-                                                  (if (funcall is_imp bod)
-                                                    (match (funcall dest_imp bod)
-                                                      ((tuple a% c%)
-                                                        (let*
-                                                          ((mgoal
-                                                            (funcall
-                                                              mk_imp
+                                                                (list_mk_comb
+                                                                  (tuple r% gvs))
+                                                                (list_mk_comb
+                                                                  (tuple p% gvs))))))))))))
+                                            ns
+                                            prrs)))
+                                      (cl:declare (cl:ignorable gimps prs))
+                                      (fletc
+                                        ((modify_rule
+                                          (rcl itm)
+                                          (match (#`strip_forall itm)
+                                            ((tuple avs bod)
+                                              (if (#`is_imp bod)
+                                                (match (#`dest_imp bod)
+                                                  ((tuple a% c%)
+                                                    (let*
+                                                      ((mgoal
+                                                        (#`mk_imp
+                                                          (tuple
+                                                            gimps
+                                                            (#`mk_imp
                                                               (tuple
-                                                                gimps
-                                                                (funcall
-                                                                  mk_imp
-                                                                  (tuple
-                                                                    (funcall
-                                                                      vsubst
-                                                                      (zip gs ps)
-                                                                      a%)
-                                                                    a%)))))
-                                                            (mth
-                                                              (ASSUME
-                                                                (list_mk_forall
-                                                                  (tuple
-                                                                    (append
-                                                                      gs
-                                                                      (append ps avs))
-                                                                    mgoal))))
-                                                            (ith_r
-                                                              (funcall
-                                                                BETA_RULE
-                                                                (SPECL
-                                                                  (append
-                                                                    prs
-                                                                    (append rs avs))
-                                                                  mth)))
-                                                            (jth_r
-                                                              (funcall
-                                                                MP
-                                                                ith_r
-                                                                (prove_triv
-                                                                  (funcall
-                                                                    lhand
-                                                                    (concl ith_r)))))
-                                                            (t%
-                                                              (funcall
-                                                                lhand
-                                                                (concl jth_r)))
-                                                            (kth_r (UNDISCH jth_r))
-                                                            (ntm
-                                                              (list_mk_forall
-                                                                (tuple
-                                                                  avs
-                                                                  (funcall
-                                                                    mk_imp
-                                                                    (tuple t% c%)))))
-                                                            (lth_r
-                                                              (funcall
-                                                                MP
-                                                                (SPECL avs rcl)
-                                                                kth_r))
-                                                            (lth_p
-                                                              (UNDISCH
-                                                                (SPECL avs (ASSUME ntm)))))
-                                                          (cl:declare
-                                                            (cl:ignorable
-                                                              mgoal
-                                                              mth
-                                                              ith_r
-                                                              jth_r
-                                                              t%
-                                                              kth_r
-                                                              ntm
-                                                              lth_r
-                                                              lth_p))
-                                                          (funcall
-                                                            DISCH
-                                                            ntm
-                                                            (funcall
-                                                              GENL
+                                                                (#`vsubst (zip gs ps) a%)
+                                                                a%)))))
+                                                        (mth
+                                                          (ASSUME
+                                                            (list_mk_forall
+                                                              (tuple
+                                                                (append
+                                                                  gs
+                                                                  (append ps avs))
+                                                                mgoal))))
+                                                        (ith_r
+                                                          (#`BETA_RULE
+                                                            (SPECL
+                                                              (append prs (append rs avs))
+                                                              mth)))
+                                                        (jth_r
+                                                          (#`MP
+                                                            ith_r
+                                                            (prove_triv
+                                                              (#`lhand (concl ith_r)))))
+                                                        (t% (#`lhand (concl jth_r)))
+                                                        (kth_r (UNDISCH jth_r))
+                                                        (ntm
+                                                          (list_mk_forall
+                                                            (tuple
                                                               avs
-                                                              (funcall
-                                                                DISCH
-                                                                t%
-                                                                (funcall CONJ lth_r lth_p)))))))
-                                                    (funcall
-                                                      DISCH
-                                                      itm
-                                                      (funcall
-                                                        GENL
-                                                        avs
-                                                        (funcall
-                                                          CONJ
-                                                          (SPECL avs rcl)
-                                                          (SPECL avs (ASSUME itm))))))))))
-                                            (let*
-                                              ((mimps
-                                                (map2
-                                                  #'modify_rule
-                                                  (funcall CONJUNCTS sth)
-                                                  (funcall holai.basics:conjuncts iant)))
-                                                (th1
-                                                  (end_itlist
-                                                    (lambdac (th th%)
-                                                      (funcall
-                                                        MATCH_IMPS
-                                                        (funcall CONJ th th%)))
-                                                    mimps))
-                                                (th2 (funcall BETA_RULE (SPECL prs jth)))
-                                                (th3 (funcall IMP_TRANS th1 th2))
-                                                (nasm (funcall lhand (concl th3)))
-                                                (th4
-                                                  (funcall
-                                                    GENL
-                                                    ps
-                                                    (funcall
-                                                      DISCH
-                                                      nasm
-                                                      (weaken_triv (UNDISCH th3))))))
-                                              (cl:declare
-                                                (cl:ignorable mimps th1 th2 th3 nasm th4))
-                                              (funcall
-                                                GENL
-                                                svs
-                                                (funcall prove_monotonicity_hyps th4)))))))))))))))))))))))))
+                                                              (#`mk_imp (tuple t% c%)))))
+                                                        (lth_r
+                                                          (#`MP (SPECL avs rcl) kth_r))
+                                                        (lth_p
+                                                          (UNDISCH
+                                                            (SPECL avs (ASSUME ntm)))))
+                                                      (cl:declare
+                                                        (cl:ignorable
+                                                          mgoal
+                                                          mth
+                                                          ith_r
+                                                          jth_r
+                                                          t%
+                                                          kth_r
+                                                          ntm
+                                                          lth_r
+                                                          lth_p))
+                                                      (#`DISCH
+                                                        ntm
+                                                        (#`GENL
+                                                          avs
+                                                          (#`DISCH
+                                                            t%
+                                                            (#`CONJ lth_r lth_p)))))))
+                                                (#`DISCH
+                                                  itm
+                                                  (#`GENL
+                                                    avs
+                                                    (#`CONJ
+                                                      (SPECL avs rcl)
+                                                      (SPECL avs (ASSUME itm))))))))))
+                                        (let*
+                                          ((mimps
+                                            (map2
+                                              #'modify_rule
+                                              (#`CONJUNCTS sth)
+                                              (#`holai.basics:conjuncts iant)))
+                                            (th1
+                                              (end_itlist
+                                                (lambdac (th th%)
+                                                  (#`MATCH_IMPS (#`CONJ th th%)))
+                                                mimps))
+                                            (th2 (#`BETA_RULE (SPECL prs jth)))
+                                            (th3 (#`IMP_TRANS th1 th2))
+                                            (nasm (#`lhand (concl th3)))
+                                            (th4
+                                              (#`GENL
+                                                ps
+                                                (#`DISCH nasm (weaken_triv (UNDISCH th3))))))
+                                          (cl:declare
+                                            (cl:ignorable mimps th1 th2 th3 nasm th4))
+                                          (#`GENL svs (#`prove_monotonicity_hyps th4)))))))))))))))))))))))
 

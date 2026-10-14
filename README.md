@@ -112,12 +112,27 @@ parameter. Each invocation evaluates the function expression anew and uses
 `CL:APPLY` to forward all arguments and multiple values; it does not capture
 the function value at wrapper construction. Its lambda is valid as a PROOF
 operand, not directly as an operator: bind it to a lexical value symbol for
-that role. PROOF's operator grammar and translator output are unchanged.
+that role. PROOF's operator grammar remains unchanged.
 
 Installation affects the active `*readtable*` during runtime compile/load/execute.
 Load the runtime before reading a file using sharp-backquote; readtable copies
 inherit it, fresh standard readtables made from NIL do not. Neither standard
 `#'` dispatch nor `readtable-case` nor source identifier spelling is changed.
+
+Generated value calls use this reader in the head position:
+``(#`f arg1 arg2)`` or ``(#`(if condition left right) argument)``. This reduces
+indentation without changing source algorithms. Arguments are evaluated left
+to right **before** the lambda acquires the function expression, once per
+call; argument-time rebinding therefore affects that same call. Partial
+curried application and multiple returned values are forwarded normally.
+Ordinary function values passed as arguments or captured in bindings remain
+eager plain references, not wrappers. Direct named calls, `#'` references and
+foreign partial adapters retain their existing paths; applying excess
+arguments to a foreign result uses a reader-headed value call. Runtime-internal
+`funcall` expansions and `holai.runtime:funcall` remain unchanged.
+The translator represents #` with a dedicated structural reader-prefix node,
+not output-string rewriting, preserving source-map origins. Fragment remains
+PROOF-only. See DESIGN §34.
 
 Keep `holai.runtime:proof` fully qualified unless deliberately importing it.
 Likewise qualify generated names with their defining package, or explicitly
@@ -132,19 +147,57 @@ their existing calling conventions. See DESIGN §33 for the exact contract.
 
 The native `holai/tests/proof-dsl.lisp` matrix is compiled/loaded after observation
 capture and std_formatter stream restoration, with an isolated measured
-`proof_dsl_checks` counter. The completed reader-inclusive release passed all
+`proof_dsl_checks` counter. The preceding reader-inclusive PROOF release passed
 61 PROOF checks and eight new OCaml/SBCL fixture observations; a separate fresh
 sharp-backquote handwritten smoke proved the actual closed identity theorem.
 Release packaging includes the new unit,
 translator, design, generated Lisp/maps, reports and matching streams.
-No PROOF timing or publication result is claimed; the version remains
-1.0.0-percent-names.
+No PROOF timing result is claimed; the version remains 1.0.0-percent-names.
 The reader's runtime-only compile/load smoke passed (per-call evaluation,
 dynamic rebinding, argument/multiple-value forwarding, hygiene and unchanged
-`#'`). The measured 61 PROOF checks include thirteen permanent reader checks
-with actual computations, including zero-argument sum, positional decimal
+`#'`). The current measured 69 PROOF checks include thirteen permanent reader
+checks with actual computations, including zero-argument sum, positional decimal
 calculation, NIL classification, floor quotient/remainder and lexical-argument
-hygiene.
+hygiene, plus eight direct reader-headed consumer checks.
+One new tactical observation adds computed-head/evaluation-count coverage
+beside existing partial/excess paths. Six new language observations cover
+staged function groups. All seven new rows match OCaml/SBCL exactly.
+The existing 11 fixture components and 51 production units are unchanged.
+
+### Shallow generated calls and local functions
+
+Generated function-value calls use ``(#`f argument)`` (including computed
+heads) instead of an extra `holai.runtime:funcall` layer. The reader acquires
+the head once after argument evaluation; this intentional late-head timing is
+distinct from the local-definition display change below. Direct named calls,
+`#'` references, foreign partial adapters and source binding identities remain
+unchanged. Load the runtime before reading generated consumers.
+
+Adjacent local named-function groups now share one shallow `labelsc` list:
+
+```lisp
+(labelsc
+  ((:nonrecursive 0 f (x) (+ x 1))
+   (:nonrecursive 1 g (x) (f x))
+   (:recursive 2 walk (x) (if (zerop x) (g x) (walk (1- x)))))
+  (walk 2))
+```
+
+This replaces nested FLETC/FLETC/LABELSC forms, not their lexical stages:
+g sees the preceding f, and walk retains its own recursive scope.
+Macroexpansion restores the original nesting; the printed list is not one
+mutually recursive group. Ordinary untagged `fletc`/`labelsc` are unchanged.
+Scalar LET bindings, modules, match, lambda and annotations stop grouping.
+Stage flattening changes neither source evaluation order nor algorithms;
+coincident source-map spans retain the removed nesting's provenance.
+See DESIGN §§34–35 for the exact boundaries and capture reasoning.
+The combined variant passed the full release and separate actual closed-identity,
+six language-group and direct staged-macro smokes. All scope Origins survive
+merged groups as coincident spans in the 194,839 core map entries.
+Generated core Lisp totals 6,174,070 bytes; this is a readability/inventory
+result, not a performance claim or a promise of lower indentation in every file.
+Staged headers keep tag, stage, name and parameters together when they fit
+90 columns, then place the body on a new line.
 
 ## Current implementation and validation
 
@@ -157,16 +210,16 @@ IR at macro expansion time and standard Common Lisp control/binding forms.
 Constructor/record descriptors are resolved before execution; guards and OR
 binding joins preserve clause order. See [PATTERN-MATCH.md](misc/reports/PATTERN-MATCH.md).
 
-Current reader-inclusive validation ran `nix develop path:. --command make release` on
-aarch64-linux with OCaml 4.14.2, Camlp5 8.02.01 and SBCL 2.3.9.nixos:
-122 existing native checks, 61 independent PROOF checks, 27 calling-protocol,
+The current combined DESIGN §§34–35 variant passed `nix develop path:. --command make release`
+in 217.72 seconds on aarch64-linux with OCaml 4.14.2, Camlp5 8.02.01 and SBCL 2.3.9.nixos:
+122 existing native checks, 69 independent PROOF checks, 27 calling-protocol,
 84 OPTIONAL-entry, 16 tuple and 46 structural-pattern checks passed.
-All 1,132 OCaml/SBCL output rows matched (1,125 serialized observations and
+All 1,139 OCaml/SBCL output rows matched (1,132 serialized observations and
 seven actual side-effect rows). All 46 inputs initialized with 22 types,
 303 constants, 263 definitions and exactly the three original source axioms.
 The 5,519 OCaml/5,517 SBCL initialization rows retain the documented exact
 two OCaml-only messages; raw initialization transcripts are not identical.
-All 194,839 core/205,472 fixture-inclusive map entries passed audit, and ten
+All 194,839 core/205,818 fixture-inclusive map entries passed audit, and ten
 rejection checks kept output unchanged. Fresh-cache compilation of 51
 production units had zero errors, warnings or style warnings; all 94 clean
 outputs were identical and all 55 retained input hashes unchanged.

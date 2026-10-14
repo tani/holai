@@ -609,7 +609,6 @@
     int-div
     guard
     function-value
-    funcall
     fletc
     failwith
     Failure
@@ -829,7 +828,7 @@
         (tuple
           (parse_term
             "!P:(A)list->bool. P [] /\\ (!h t. P t ==> P (CONS h t)) ==> !l. P l")
-          (funcall MATCH_ACCEPT_TAC list_INDUCT)))))
+          (#`MATCH_ACCEPT_TAC list_INDUCT)))))
     (cl:declare (cl:ignorable list_INDUCT%))
     (holai.runtime:proof (MATCH_MP_TAC list_INDUCT%)
       THEN #'CONJ_TAC
@@ -844,103 +843,90 @@
 
 
 (defparameter HD
-  (funcall new_recursive_definition list_RECURSION (parse_term "HD(CONS (h:A) t) = h")))
+  (#`new_recursive_definition list_RECURSION (parse_term "HD(CONS (h:A) t) = h")))
 
 (defparameter TL
-  (funcall new_recursive_definition list_RECURSION (parse_term "TL(CONS (h:A) t) = t")))
+  (#`new_recursive_definition list_RECURSION (parse_term "TL(CONS (h:A) t) = t")))
 
 (defparameter APPEND
-  (funcall
-    new_recursive_definition
+  (#`new_recursive_definition
     list_RECURSION
     (parse_term
       "(!l:(A)list. APPEND [] l = l) /\\
    (!h t l. APPEND (CONS h t) l = CONS h (APPEND t l))")))
 
 (defparameter REVERSE
-  (funcall
-    new_recursive_definition
+  (#`new_recursive_definition
     list_RECURSION
     (parse_term
       "(REVERSE [] = []) /\\
    (REVERSE (CONS (x:A) l) = APPEND (REVERSE l) [x])")))
 
 (defparameter LENGTH
-  (funcall
-    new_recursive_definition
+  (#`new_recursive_definition
     list_RECURSION
     (parse_term "(LENGTH [] = 0) /\\
    (!h:A. !t. LENGTH (CONS h t) = SUC (LENGTH t))")))
 
 (defparameter MAP
-  (funcall
-    new_recursive_definition
+  (#`new_recursive_definition
     list_RECURSION
     (parse_term
       "(!f:A->B. MAP f NIL = NIL) /\\
    (!f h t. MAP f (CONS h t) = CONS (f h) (MAP f t))")))
 
 (defparameter LAST
-  (funcall
-    new_recursive_definition
+  (#`new_recursive_definition
     list_RECURSION
     (parse_term "LAST (CONS (h:A) t) = if t = [] then h else LAST t")))
 
 (defparameter BUTLAST
-  (funcall
-    new_recursive_definition
+  (#`new_recursive_definition
     list_RECURSION
     (parse_term
       "(BUTLAST [] = []) /\\
   (BUTLAST (CONS (h:A) t) = if t = [] then [] else CONS h (BUTLAST t))")))
 
 (defparameter REPLICATE
-  (funcall
-    new_recursive_definition
+  (#`new_recursive_definition
     num_RECURSION
     (parse_term
       "(REPLICATE 0 (x:A) = []) /\\
    (REPLICATE (SUC n) x = CONS x (REPLICATE n x))")))
 
 (defparameter NULL
-  (funcall
-    new_recursive_definition
+  (#`new_recursive_definition
     list_RECURSION
     (parse_term "(NULL [] = T) /\\
    (NULL (CONS (h:A) t) = F)")))
 
 (defparameter ALL
-  (funcall
-    new_recursive_definition
+  (#`new_recursive_definition
     list_RECURSION
     (parse_term "(ALL P [] = T) /\\
    (ALL P (CONS (h:A) t) <=> P h /\\ ALL P t)")))
 
 (defparameter EX
-  (funcall
-    new_recursive_definition
+  (#`new_recursive_definition
     list_RECURSION
     (parse_term "(EX P [] = F) /\\
    (EX P (CONS (h:A) t) <=> P h \\/ EX P t)")))
 
 (defparameter ITLIST
-  (funcall
-    new_recursive_definition
+  (#`new_recursive_definition
     list_RECURSION
     (parse_term
       "(ITLIST (f:A->B->B) [] b = b) /\\
    (ITLIST f (CONS h t) b = f h (ITLIST f t b))")))
 
 (defparameter MEM
-  (funcall
-    new_recursive_definition
+  (#`new_recursive_definition
     list_RECURSION
     (parse_term "(MEM (x:A) [] <=> F) /\\
    (MEM x (CONS h t) <=> (x = h) \\/ MEM x t)")))
 
 (defparameter ALL2_DEF
-  (funcall
-    new_recursive_definition
+  (#`new_recursive_definition
     list_RECURSION
     (parse_term
       "(ALL2 (P:A->B->bool) [] l2 <=> (l2 = [])) /\\
@@ -960,8 +946,7 @@
         (cl:cons (distinctness "list") (cl:cons ALL2_DEF (cl:cons HD (cl:cons TL nil))))))))
 
 (defparameter MAP2_DEF
-  (funcall
-    new_recursive_definition
+  (#`new_recursive_definition
     list_RECURSION
     (parse_term
       "(MAP2 (f:A->B->C) [] l = []) /\\
@@ -976,29 +961,25 @@
       (REWRITE_TAC (cl:cons MAP2_DEF (cl:cons HD (cl:cons TL nil)))))))
 
 (defparameter EL
-  (funcall
-    new_recursive_definition
+  (#`new_recursive_definition
     num_RECURSION
     (parse_term "(EL 0 l :A = HD l) /\\
    (EL (SUC n) l = EL n (TL l))")))
 
 (defparameter FILTER
-  (funcall
-    new_recursive_definition
+  (#`new_recursive_definition
     list_RECURSION
     (parse_term
       "(FILTER (P:A->bool) [] = []) /\\
    (FILTER P (CONS h t) = if P h then CONS h (FILTER P t) else FILTER P t)")))
 
 (defparameter ASSOC
-  (funcall
-    new_recursive_definition
+  (#`new_recursive_definition
     list_RECURSION
     (parse_term "ASSOC a (CONS (h:A#B) t) = if FST h = a then SND h else ASSOC a t")))
 
 (defparameter ITLIST2_DEF
-  (funcall
-    new_recursive_definition
+  (#`new_recursive_definition
     list_RECURSION
     (parse_term
       "(ITLIST2 (f:A->B->C->C) [] l2 b = b) /\\
@@ -1013,8 +994,7 @@
       (REWRITE_TAC (cl:cons ITLIST2_DEF (cl:cons HD (cl:cons TL nil)))))))
 
 (defparameter ZIP_DEF
-  (funcall
-    new_recursive_definition
+  (#`new_recursive_definition
     list_RECURSION
     (parse_term
       "(ZIP [] l2 :(A#B)list = []) /\\
@@ -1029,24 +1009,21 @@
       (REWRITE_TAC (cl:cons ZIP_DEF (cl:cons HD (cl:cons TL nil)))))))
 
 (defparameter ALLPAIRS
-  (funcall
-    new_recursive_definition
+  (#`new_recursive_definition
     list_RECURSION
     (parse_term
       "(ALLPAIRS (f:A->B->bool) [] l <=> T) /\\
    (ALLPAIRS f (CONS h t) l <=> ALL (f h) l /\\ ALLPAIRS f t l)")))
 
 (defparameter PAIRWISE
-  (funcall
-    new_recursive_definition
+  (#`new_recursive_definition
     list_RECURSION
     (parse_term
       "(PAIRWISE (r:A->A->bool) [] <=> T) /\\
    (PAIRWISE (r:A->A->bool) (CONS h t) <=> ALL (r h) t /\\ PAIRWISE r t)")))
 
 (defparameter list_of_seq
-  (funcall
-    new_recursive_definition
+  (#`new_recursive_definition
     num_RECURSION
     (parse_term
       "list_of_seq (s:num->A) 0 = [] /\\
@@ -1074,15 +1051,13 @@
   (prove
     (tuple
       (parse_term "!l:A list. APPEND l [] = l")
-      (holai.runtime:proof LIST_INDUCT_TAC
-        THEN (funcall ASM_REWRITE_TAC (cl:cons APPEND nil))))))
+      (holai.runtime:proof LIST_INDUCT_TAC THEN (#`ASM_REWRITE_TAC (cl:cons APPEND nil))))))
 
 (defparameter APPEND_ASSOC
   (prove
     (tuple
       (parse_term "!(l:A list) m n. APPEND l (APPEND m n) = APPEND (APPEND l m) n")
-      (holai.runtime:proof LIST_INDUCT_TAC
-        THEN (funcall ASM_REWRITE_TAC (cl:cons APPEND nil))))))
+      (holai.runtime:proof LIST_INDUCT_TAC THEN (#`ASM_REWRITE_TAC (cl:cons APPEND nil))))))
 
 (defparameter REVERSE_APPEND
   (prove
@@ -1090,8 +1065,7 @@
       (parse_term "!(l:A list) m. REVERSE (APPEND l m) = APPEND (REVERSE m) (REVERSE l)")
       (holai.runtime:proof LIST_INDUCT_TAC
         THEN
-          (funcall
-            ASM_REWRITE_TAC
+          (#`ASM_REWRITE_TAC
             (cl:cons
               APPEND
               (cl:cons REVERSE (cl:cons APPEND_NIL (cl:cons APPEND_ASSOC nil)))))))))
@@ -1102,8 +1076,7 @@
       (parse_term "!l:A list. REVERSE(REVERSE l) = l")
       (holai.runtime:proof LIST_INDUCT_TAC
         THEN
-          (funcall
-            ASM_REWRITE_TAC
+          (#`ASM_REWRITE_TAC
             (cl:cons REVERSE (cl:cons REVERSE_APPEND (cl:cons APPEND nil))))))))
 
 (defparameter REVERSE_EQ_EMPTY
@@ -1141,8 +1114,8 @@
               NOT_CONS_NIL
               (cl:cons
                 CONS_11
-                (cl:cons LENGTH (cl:cons (funcall CONJUNCT1 LT) (cl:cons NOT_SUC nil))))))
-        THEN (funcall ASM_REWRITE_TAC (cl:cons SUC_INJ nil))
+                (cl:cons LENGTH (cl:cons (#`CONJUNCT1 LT) (cl:cons NOT_SUC nil))))))
+        THEN (#`ASM_REWRITE_TAC (cl:cons SUC_INJ nil))
         THEN
           (GEN_REWRITE_TAC
             (o #'RAND_CONV #'RAND_CONV)
@@ -1165,9 +1138,7 @@
       (parse_term "!(l:A list) m. LENGTH(APPEND l m) = LENGTH l + LENGTH m")
       (holai.runtime:proof LIST_INDUCT_TAC
         THEN
-          (funcall
-            ASM_REWRITE_TAC
-            (cl:cons APPEND (cl:cons LENGTH (cl:cons ADD_CLAUSES nil))))))))
+          (#`ASM_REWRITE_TAC (cl:cons APPEND (cl:cons LENGTH (cl:cons ADD_CLAUSES nil))))))))
 
 (defparameter MAP_APPEND
   (prove
@@ -1175,14 +1146,14 @@
       (parse_term "!f:A->B. !l1 l2. MAP f (APPEND l1 l2) = APPEND (MAP f l1) (MAP f l2)")
       (holai.runtime:proof #'GEN_TAC
         THEN LIST_INDUCT_TAC
-        THEN (funcall ASM_REWRITE_TAC (cl:cons MAP (cl:cons APPEND nil)))))))
+        THEN (#`ASM_REWRITE_TAC (cl:cons MAP (cl:cons APPEND nil)))))))
 
 (defparameter LENGTH_MAP
   (prove
     (tuple
       (parse_term "!l. !f:A->B. LENGTH (MAP f l) = LENGTH l")
       (holai.runtime:proof LIST_INDUCT_TAC
-        THEN (funcall ASM_REWRITE_TAC (cl:cons MAP (cl:cons LENGTH nil)))))))
+        THEN (#`ASM_REWRITE_TAC (cl:cons MAP (cl:cons LENGTH nil)))))))
 
 (defparameter LENGTH_EQ_NIL
   (prove
@@ -1198,7 +1169,7 @@
         "!(l:A list) n. LENGTH l = SUC n <=> ?h t. (l = CONS h t) /\\ (LENGTH t = n)")
       (holai.runtime:proof LIST_INDUCT_TAC
         THEN (REWRITE_TAC (cl:cons LENGTH (cl:cons NOT_SUC (cl:cons NOT_CONS_NIL nil))))
-        THEN (funcall ASM_REWRITE_TAC (cl:cons SUC_INJ (cl:cons CONS_11 nil)))
+        THEN (#`ASM_REWRITE_TAC (cl:cons SUC_INJ (cl:cons CONS_11 nil)))
         THEN (MESON_TAC nil)))))
 
 (defparameter LENGTH_REVERSE
@@ -1207,8 +1178,7 @@
       (parse_term "!l:A list. LENGTH(REVERSE l) = LENGTH l")
       (holai.runtime:proof LIST_INDUCT_TAC
         THEN
-          (funcall
-            ASM_REWRITE_TAC
+          (#`ASM_REWRITE_TAC
             (cl:cons REVERSE (cl:cons LENGTH_APPEND (cl:cons LENGTH nil))))
         THEN (REWRITE_TAC (cl:cons ADD_CLAUSES (cl:cons MULT_CLAUSES nil)))))))
 
@@ -1219,7 +1189,7 @@
       (holai.runtime:proof #'GEN_TAC
         THEN #'GEN_TAC
         THEN LIST_INDUCT_TAC
-        THEN (funcall ASM_REWRITE_TAC (cl:cons MAP (cl:cons o_THM nil)))))))
+        THEN (#`ASM_REWRITE_TAC (cl:cons MAP (cl:cons o_THM nil)))))))
 
 (defparameter MAP_EQ
   (prove
@@ -1229,7 +1199,7 @@
         THEN #'GEN_TAC
         THEN LIST_INDUCT_TAC
         THEN (REWRITE_TAC (cl:cons MAP (cl:cons ALL nil)))
-        THEN (funcall ASM_MESON_TAC nil)))))
+        THEN (#`ASM_MESON_TAC nil)))))
 
 (defparameter ALL_IMP
   (prove
@@ -1239,7 +1209,7 @@
         THEN #'GEN_TAC
         THEN LIST_INDUCT_TAC
         THEN (REWRITE_TAC (cl:cons MEM (cl:cons ALL nil)))
-        THEN (funcall ASM_MESON_TAC nil)))))
+        THEN (#`ASM_MESON_TAC nil)))))
 
 (defparameter NOT_EX
   (prove
@@ -1247,8 +1217,7 @@
       (parse_term "!P l:A list. ~(EX P l) <=> ALL (\\x. ~(P x)) l")
       (holai.runtime:proof #'GEN_TAC
         THEN LIST_INDUCT_TAC
-        THEN
-          (funcall ASM_REWRITE_TAC (cl:cons EX (cl:cons ALL (cl:cons DE_MORGAN_THM nil))))))))
+        THEN (#`ASM_REWRITE_TAC (cl:cons EX (cl:cons ALL (cl:cons DE_MORGAN_THM nil))))))))
 
 (defparameter NOT_ALL
   (prove
@@ -1256,8 +1225,7 @@
       (parse_term "!P l:A list. ~(ALL P l) <=> EX (\\x. ~(P x)) l")
       (holai.runtime:proof #'GEN_TAC
         THEN LIST_INDUCT_TAC
-        THEN
-          (funcall ASM_REWRITE_TAC (cl:cons EX (cl:cons ALL (cl:cons DE_MORGAN_THM nil))))))))
+        THEN (#`ASM_REWRITE_TAC (cl:cons EX (cl:cons ALL (cl:cons DE_MORGAN_THM nil))))))))
 
 (defparameter ALL_MAP
   (prove
@@ -1266,7 +1234,7 @@
       (holai.runtime:proof #'GEN_TAC
         THEN #'GEN_TAC
         THEN LIST_INDUCT_TAC
-        THEN (funcall ASM_REWRITE_TAC (cl:cons ALL (cl:cons MAP (cl:cons o_THM nil))))))))
+        THEN (#`ASM_REWRITE_TAC (cl:cons ALL (cl:cons MAP (cl:cons o_THM nil))))))))
 
 (defparameter ALL_EQ
   (prove
@@ -1279,14 +1247,13 @@
         THEN #'STRIP_TAC
         THEN BINOP_TAC
         THEN (FIRST_ASSUM #'MATCH_MP_TAC)
-        THEN (funcall ASM_REWRITE_TAC nil)))))
+        THEN (#`ASM_REWRITE_TAC nil)))))
 
 (defparameter ALL_T
   (prove
     (tuple
       (parse_term "!l:A list. ALL (\\x. T) l")
-      (holai.runtime:proof LIST_INDUCT_TAC
-        THEN (funcall ASM_REWRITE_TAC (cl:cons ALL nil))))))
+      (holai.runtime:proof LIST_INDUCT_TAC THEN (#`ASM_REWRITE_TAC (cl:cons ALL nil))))))
 
 (defparameter MAP_EQ_ALL2
   (prove
@@ -1294,8 +1261,8 @@
       (parse_term "!(f:A->B) l m. ALL2 (\\x y. f x = f y) l m ==> MAP f l = MAP f m")
       (holai.runtime:proof #'GEN_TAC
         THEN (REPEAT LIST_INDUCT_TAC)
-        THEN (funcall ASM_REWRITE_TAC (cl:cons MAP (cl:cons ALL2 (cl:cons CONS_11 nil))))
-        THEN (funcall ASM_MESON_TAC nil)))))
+        THEN (#`ASM_REWRITE_TAC (cl:cons MAP (cl:cons ALL2 (cl:cons CONS_11 nil))))
+        THEN (#`ASM_MESON_TAC nil)))))
 
 (defparameter ALL2_MAP
   (prove
@@ -1304,7 +1271,7 @@
       (holai.runtime:proof #'GEN_TAC
         THEN #'GEN_TAC
         THEN LIST_INDUCT_TAC
-        THEN (funcall ASM_REWRITE_TAC (cl:cons ALL2 (cl:cons MAP (cl:cons ALL nil))))))))
+        THEN (#`ASM_REWRITE_TAC (cl:cons ALL2 (cl:cons MAP (cl:cons ALL nil))))))))
 
 (defparameter MAP_EQ_DEGEN
   (prove
@@ -1313,9 +1280,9 @@
       (holai.runtime:proof LIST_INDUCT_TAC
         THEN (REWRITE_TAC (cl:cons ALL (cl:cons MAP (cl:cons CONS_11 nil))))
         THEN (REPEAT #'STRIP_TAC)
-        THEN (funcall ASM_REWRITE_TAC nil)
+        THEN (#`ASM_REWRITE_TAC nil)
         THEN (FIRST_ASSUM #'MATCH_MP_TAC)
-        THEN (funcall ASM_REWRITE_TAC nil)))))
+        THEN (#`ASM_REWRITE_TAC nil)))))
 
 (defparameter ALL2_AND_RIGHT
   (prove
@@ -1323,9 +1290,9 @@
       (parse_term
         "!l m P Q. ALL2 (\\(x:A) (y:B). P x /\\ Q x y) l m <=> ALL P l /\\ ALL2 Q l m")
       (holai.runtime:proof LIST_INDUCT_TAC
-        THEN (funcall ASM_REWRITE_TAC (cl:cons ALL (cl:cons ALL2 nil)))
+        THEN (#`ASM_REWRITE_TAC (cl:cons ALL (cl:cons ALL2 nil)))
         THEN LIST_INDUCT_TAC
-        THEN (funcall ASM_REWRITE_TAC (cl:cons ALL (cl:cons ALL2 nil)))
+        THEN (#`ASM_REWRITE_TAC (cl:cons ALL (cl:cons ALL2 nil)))
         THEN (REWRITE_TAC (cl:cons CONJ_ACI nil))))))
 
 (defparameter ITLIST_APPEND
@@ -1337,7 +1304,7 @@
       (holai.runtime:proof #'GEN_TAC
         THEN #'GEN_TAC
         THEN LIST_INDUCT_TAC
-        THEN (funcall ASM_REWRITE_TAC (cl:cons ITLIST (cl:cons APPEND nil)))))))
+        THEN (#`ASM_REWRITE_TAC (cl:cons ITLIST (cl:cons APPEND nil)))))))
 
 (defparameter ITLIST_EXTRA
   (prove
@@ -1353,15 +1320,15 @@
         THEN #'GEN_TAC
         THEN LIST_INDUCT_TAC
         THEN (REWRITE_TAC (cl:cons ALL nil))
-        THEN (funcall ASM_MESON_TAC nil)))))
+        THEN (#`ASM_MESON_TAC nil)))))
 
 (defparameter AND_ALL
   (prove
     (tuple
       (parse_term "!l:A list. ALL P l /\\ ALL Q l <=> ALL (\\x. P x /\\ Q x) l")
-      (holai.runtime:proof (funcall CONV_TAC (funcall ONCE_DEPTH_CONV #'SYM_CONV))
+      (holai.runtime:proof (#`CONV_TAC (#`ONCE_DEPTH_CONV #'SYM_CONV))
         THEN LIST_INDUCT_TAC
-        THEN (funcall ASM_REWRITE_TAC (cl:cons ALL (cl:cons CONJ_ACI nil)))))))
+        THEN (#`ASM_REWRITE_TAC (cl:cons ALL (cl:cons CONJ_ACI nil)))))))
 
 (defparameter EX_IMP
   (prove
@@ -1371,7 +1338,7 @@
         THEN #'GEN_TAC
         THEN LIST_INDUCT_TAC
         THEN (REWRITE_TAC (cl:cons MEM (cl:cons EX nil)))
-        THEN (funcall ASM_MESON_TAC nil)))))
+        THEN (#`ASM_MESON_TAC nil)))))
 
 (defparameter ALL_MEM
   (prove
@@ -1380,24 +1347,21 @@
       (holai.runtime:proof #'GEN_TAC
         THEN LIST_INDUCT_TAC
         THEN (REWRITE_TAC (cl:cons ALL (cl:cons MEM nil)))
-        THEN (funcall ASM_MESON_TAC nil)))))
+        THEN (#`ASM_MESON_TAC nil)))))
 
 (defparameter LENGTH_REPLICATE
   (prove
     (tuple
       (parse_term "!n x:A. LENGTH(REPLICATE n x) = n")
       (holai.runtime:proof INDUCT_TAC
-        THEN (funcall ASM_REWRITE_TAC (cl:cons LENGTH (cl:cons REPLICATE nil)))))))
+        THEN (#`ASM_REWRITE_TAC (cl:cons LENGTH (cl:cons REPLICATE nil)))))))
 
 (defparameter MEM_REPLICATE
   (prove
     (tuple
       (parse_term "!n x y:A. MEM x (REPLICATE n y) <=> x = y /\\ ~(n = 0)")
       (holai.runtime:proof INDUCT_TAC
-        THEN
-          (funcall
-            ASM_REWRITE_TAC
-            (cl:cons MEM (cl:cons REPLICATE (cl:cons NOT_SUC nil))))
+        THEN (#`ASM_REWRITE_TAC (cl:cons MEM (cl:cons REPLICATE (cl:cons NOT_SUC nil))))
         THEN (MESON_TAC nil)))))
 
 (defparameter EX_MAP
@@ -1407,7 +1371,7 @@
       (holai.runtime:proof #'GEN_TAC
         THEN #'GEN_TAC
         THEN LIST_INDUCT_TAC
-        THEN (funcall ASM_REWRITE_TAC (cl:cons MAP (cl:cons EX (cl:cons o_THM nil))))))))
+        THEN (#`ASM_REWRITE_TAC (cl:cons MAP (cl:cons EX (cl:cons o_THM nil))))))))
 
 (defparameter EXISTS_EX
   (prove
@@ -1415,8 +1379,8 @@
       (parse_term "!(P:A->B->bool) l. (?x. EX (P x) l) <=> EX (\\s. ?x. P x s) l")
       (holai.runtime:proof #'GEN_TAC
         THEN LIST_INDUCT_TAC
-        THEN (funcall ASM_REWRITE_TAC (cl:cons EX nil))
-        THEN (funcall ASM_MESON_TAC nil)))))
+        THEN (#`ASM_REWRITE_TAC (cl:cons EX nil))
+        THEN (#`ASM_MESON_TAC nil)))))
 
 (defparameter FORALL_ALL
   (prove
@@ -1424,8 +1388,8 @@
       (parse_term "!(P:A->B->bool) l. (!x. ALL (P x) l) <=> ALL (\\s. !x. P x s) l")
       (holai.runtime:proof #'GEN_TAC
         THEN LIST_INDUCT_TAC
-        THEN (funcall ASM_REWRITE_TAC (cl:cons ALL nil))
-        THEN (funcall ASM_MESON_TAC nil)))))
+        THEN (#`ASM_REWRITE_TAC (cl:cons ALL nil))
+        THEN (#`ASM_MESON_TAC nil)))))
 
 (defparameter MEM_APPEND
   (prove
@@ -1433,8 +1397,7 @@
       (parse_term "!(x:A) l1 l2. MEM x (APPEND l1 l2) <=> MEM x l1 \\/ MEM x l2")
       (holai.runtime:proof #'GEN_TAC
         THEN LIST_INDUCT_TAC
-        THEN
-          (funcall ASM_REWRITE_TAC (cl:cons MEM (cl:cons APPEND (cl:cons DISJ_ACI nil))))))))
+        THEN (#`ASM_REWRITE_TAC (cl:cons MEM (cl:cons APPEND (cl:cons DISJ_ACI nil))))))))
 
 (defparameter MEM_MAP
   (prove
@@ -1443,7 +1406,7 @@
       (holai.runtime:proof #'GEN_TAC
         THEN #'GEN_TAC
         THEN LIST_INDUCT_TAC
-        THEN (funcall ASM_REWRITE_TAC (cl:cons MEM (cl:cons MAP nil)))
+        THEN (#`ASM_REWRITE_TAC (cl:cons MEM (cl:cons MAP nil)))
         THEN (MESON_TAC nil)))))
 
 (defparameter FILTER_APPEND
@@ -1454,10 +1417,10 @@
         FILTER P (APPEND l1 l2) = APPEND (FILTER P l1) (FILTER P l2)")
       (holai.runtime:proof #'GEN_TAC
         THEN LIST_INDUCT_TAC
-        THEN (funcall ASM_REWRITE_TAC (cl:cons FILTER (cl:cons APPEND nil)))
+        THEN (#`ASM_REWRITE_TAC (cl:cons FILTER (cl:cons APPEND nil)))
         THEN #'GEN_TAC
         THEN COND_CASES_TAC
-        THEN (funcall ASM_REWRITE_TAC (cl:cons APPEND nil))))))
+        THEN (#`ASM_REWRITE_TAC (cl:cons APPEND nil))))))
 
 (defparameter FILTER_MAP
   (prove
@@ -1466,7 +1429,7 @@
       (holai.runtime:proof #'GEN_TAC
         THEN #'GEN_TAC
         THEN LIST_INDUCT_TAC
-        THEN (funcall ASM_REWRITE_TAC (cl:cons MAP (cl:cons FILTER (cl:cons o_THM nil))))
+        THEN (#`ASM_REWRITE_TAC (cl:cons MAP (cl:cons FILTER (cl:cons o_THM nil))))
         THEN COND_CASES_TAC
         THEN (REWRITE_TAC (cl:cons MAP nil))))))
 
@@ -1476,11 +1439,11 @@
       (parse_term "!P l (x:A). MEM x (FILTER P l) <=> P x /\\ MEM x l")
       (holai.runtime:proof #'GEN_TAC
         THEN LIST_INDUCT_TAC
-        THEN (funcall ASM_REWRITE_TAC (cl:cons MEM (cl:cons FILTER nil)))
+        THEN (#`ASM_REWRITE_TAC (cl:cons MEM (cl:cons FILTER nil)))
         THEN #'GEN_TAC
         THEN COND_CASES_TAC
-        THEN (funcall ASM_REWRITE_TAC (cl:cons MEM nil))
-        THEN (funcall ASM_MESON_TAC nil)))))
+        THEN (#`ASM_REWRITE_TAC (cl:cons MEM nil))
+        THEN (#`ASM_MESON_TAC nil)))))
 
 (defparameter LENGTH_FILTER
   (prove
@@ -1488,10 +1451,10 @@
       (parse_term "!P l:A list. LENGTH(FILTER P l) <= LENGTH l")
       (holai.runtime:proof #'GEN_TAC
         THEN LIST_INDUCT_TAC
-        THEN (funcall ASM_REWRITE_TAC (cl:cons FILTER (cl:cons LE_REFL nil)))
+        THEN (#`ASM_REWRITE_TAC (cl:cons FILTER (cl:cons LE_REFL nil)))
         THEN COND_CASES_TAC
-        THEN (funcall ASM_REWRITE_TAC (cl:cons LENGTH (cl:cons LE_SUC nil)))
-        THEN (funcall ASM_MESON_TAC (cl:cons LE_TRANS (cl:cons LE nil)))))))
+        THEN (#`ASM_REWRITE_TAC (cl:cons LENGTH (cl:cons LE_SUC nil)))
+        THEN (#`ASM_MESON_TAC (cl:cons LE_TRANS (cl:cons LE nil)))))))
 
 (defparameter EX_MEM
   (prove
@@ -1499,8 +1462,8 @@
       (parse_term "!P (l:A list). (?x. P x /\\ MEM x l) <=> EX P l")
       (holai.runtime:proof #'GEN_TAC
         THEN LIST_INDUCT_TAC
-        THEN (funcall ASM_REWRITE_TAC (cl:cons EX (cl:cons MEM nil)))
-        THEN (funcall ASM_MESON_TAC nil)))))
+        THEN (#`ASM_REWRITE_TAC (cl:cons EX (cl:cons MEM nil)))
+        THEN (#`ASM_MESON_TAC nil)))))
 
 (defparameter MAP_FST_ZIP
   (prove
@@ -1511,8 +1474,7 @@
       (holai.runtime:proof LIST_INDUCT_TAC
         THEN LIST_INDUCT_TAC
         THEN
-          (funcall
-            ASM_SIMP_TAC
+          (#`ASM_SIMP_TAC
             (cl:cons
               LENGTH
               (cl:cons
@@ -1528,8 +1490,7 @@
       (holai.runtime:proof LIST_INDUCT_TAC
         THEN LIST_INDUCT_TAC
         THEN
-          (funcall
-            ASM_SIMP_TAC
+          (#`ASM_SIMP_TAC
             (cl:cons
               LENGTH
               (cl:cons
@@ -1545,8 +1506,7 @@
       (holai.runtime:proof (REPEAT
           (holai.runtime:proof LIST_INDUCT_TAC #'ORELSE #'GEN_TAC))
         THEN
-          (funcall
-            ASM_SIMP_TAC
+          (#`ASM_SIMP_TAC
             (cl:cons LENGTH (cl:cons NOT_SUC (cl:cons ZIP (cl:cons SUC_INJ nil)))))))))
 
 (defparameter MEM_ASSOC
@@ -1554,11 +1514,11 @@
     (tuple
       (parse_term "!(l:(A#B)list) x. MEM (x,ASSOC x l) l <=> MEM x (MAP FST l)")
       (holai.runtime:proof LIST_INDUCT_TAC
-        THEN (funcall ASM_REWRITE_TAC (cl:cons MEM (cl:cons MAP (cl:cons ASSOC nil))))
+        THEN (#`ASM_REWRITE_TAC (cl:cons MEM (cl:cons MAP (cl:cons ASSOC nil))))
         THEN #'GEN_TAC
         THEN COND_CASES_TAC
-        THEN (funcall ASM_REWRITE_TAC nil)
-        THEN (funcall ASM_MESON_TAC (cl:cons PAIR (cl:cons FST nil)))))))
+        THEN (#`ASM_REWRITE_TAC nil)
+        THEN (#`ASM_MESON_TAC (cl:cons PAIR (cl:cons FST nil)))))))
 
 (defparameter ALL_APPEND
   (prove
@@ -1567,23 +1527,17 @@
       (holai.runtime:proof #'GEN_TAC
         THEN LIST_INDUCT_TAC
         THEN
-          (funcall
-            ASM_REWRITE_TAC
-            (cl:cons ALL (cl:cons APPEND (cl:cons (funcall GSYM CONJ_ASSOC) nil))))))))
+          (#`ASM_REWRITE_TAC
+            (cl:cons ALL (cl:cons APPEND (cl:cons (#`GSYM CONJ_ASSOC) nil))))))))
 
 (defparameter MEM_EL
   (prove
     (tuple
       (parse_term "!(l:A list) n. n < LENGTH l ==> MEM (EL n l) l")
       (holai.runtime:proof LIST_INDUCT_TAC
-        THEN
-          (REWRITE_TAC
-            (cl:cons MEM (cl:cons (funcall CONJUNCT1 LT) (cl:cons LENGTH nil))))
+        THEN (REWRITE_TAC (cl:cons MEM (cl:cons (#`CONJUNCT1 LT) (cl:cons LENGTH nil))))
         THEN INDUCT_TAC
-        THEN
-          (funcall
-            ASM_SIMP_TAC
-            (cl:cons EL (cl:cons HD (cl:cons LT_SUC (cl:cons TL nil)))))))))
+        THEN (#`ASM_SIMP_TAC (cl:cons EL (cl:cons HD (cl:cons LT_SUC (cl:cons TL nil)))))))))
 
 (defparameter MEM_EXISTS_EL
   (prove
@@ -1591,11 +1545,8 @@
       (parse_term "!(l:A list) x. MEM x l <=> ?i. i < LENGTH l /\\ x = EL i l")
       (holai.runtime:proof LIST_INDUCT_TAC
         THEN
-          (funcall
-            ASM_REWRITE_TAC
-            (cl:cons
-              LENGTH
-              (cl:cons EL (cl:cons MEM (cl:cons (funcall CONJUNCT1 LT) nil)))))
+          (#`ASM_REWRITE_TAC
+            (cl:cons LENGTH (cl:cons EL (cl:cons MEM (cl:cons (#`CONJUNCT1 LT) nil)))))
         THEN #'GEN_TAC
         THEN
           (GEN_REWRITE_TAC
@@ -1614,7 +1565,7 @@
     (tuple
       (parse_term "!P (l:A list). (!i. i < LENGTH l ==> P (EL i l)) <=> ALL P l")
       (holai.runtime:proof (REWRITE_TAC
-          (cl:cons (funcall GSYM ALL_MEM) (cl:cons MEM_EXISTS_EL nil)))
+          (cl:cons (#`GSYM ALL_MEM) (cl:cons MEM_EXISTS_EL nil)))
         THEN (MESON_TAC nil)))))
 
 (defparameter ALL2_MAP2
@@ -1627,7 +1578,7 @@
         THEN #'GEN_TAC
         THEN LIST_INDUCT_TAC
         THEN LIST_INDUCT_TAC
-        THEN (funcall ASM_REWRITE_TAC (cl:cons ALL2 (cl:cons MAP nil)))))))
+        THEN (#`ASM_REWRITE_TAC (cl:cons ALL2 (cl:cons MAP nil)))))))
 
 (defparameter AND_ALL2
   (prove
@@ -1637,10 +1588,10 @@
         ALL2 P l m /\\ ALL2 Q l m <=> ALL2 (\\x y. P x y /\\ Q x y) l m")
       (holai.runtime:proof #'GEN_TAC
         THEN #'GEN_TAC
-        THEN (funcall CONV_TAC (funcall ONCE_DEPTH_CONV #'SYM_CONV))
+        THEN (#`CONV_TAC (#`ONCE_DEPTH_CONV #'SYM_CONV))
         THEN LIST_INDUCT_TAC
         THEN LIST_INDUCT_TAC
-        THEN (funcall ASM_REWRITE_TAC (cl:cons ALL2 nil))
+        THEN (#`ASM_REWRITE_TAC (cl:cons ALL2 nil))
         THEN (REWRITE_TAC (cl:cons CONJ_ACI nil))))))
 
 (defparameter ALLPAIRS_SYM
@@ -1651,8 +1602,8 @@
         THEN LIST_INDUCT_TAC
         THEN (REWRITE_TAC (cl:cons ALLPAIRS nil))
         THEN LIST_INDUCT_TAC
-        THEN (funcall ASM_REWRITE_TAC (cl:cons ALLPAIRS (cl:cons ALL nil)))
-        THEN (funcall ASM_MESON_TAC nil)))))
+        THEN (#`ASM_REWRITE_TAC (cl:cons ALLPAIRS (cl:cons ALL nil)))
+        THEN (#`ASM_MESON_TAC nil)))))
 
 (defparameter ALLPAIRS_MEM
   (prove
@@ -1662,10 +1613,8 @@
         (!x y. MEM x l /\\ MEM y m ==> P x y) <=> ALLPAIRS P l m")
       (holai.runtime:proof #'GEN_TAC
         THEN LIST_INDUCT_TAC
-        THEN
-          (REWRITE_TAC
-            (cl:cons ALLPAIRS (cl:cons (funcall GSYM ALL_MEM) (cl:cons MEM nil))))
-        THEN (funcall ASM_MESON_TAC nil)))))
+        THEN (REWRITE_TAC (cl:cons ALLPAIRS (cl:cons (#`GSYM ALL_MEM) (cl:cons MEM nil))))
+        THEN (#`ASM_MESON_TAC nil)))))
 
 (defparameter ALLPAIRS_MAP
   (prove
@@ -1675,7 +1624,7 @@
         ALLPAIRS P (MAP f l) (MAP g m) <=>
         ALLPAIRS (\\x y. P (f x) (g y)) l m")
       (holai.runtime:proof (REWRITE_TAC
-          (cl:cons (funcall GSYM ALLPAIRS_MEM) (cl:cons MEM_MAP nil)))
+          (cl:cons (#`GSYM ALLPAIRS_MEM) (cl:cons MEM_MAP nil)))
         THEN (MESON_TAC nil)))))
 
 (defparameter ALLPAIRS_EQ
@@ -1686,7 +1635,7 @@
                (!p q. P p /\\ Q q ==> (R p q <=> R' p q))
                ==> (ALLPAIRS R l m <=> ALLPAIRS R' l m)")
       (holai.runtime:proof (REWRITE_TAC
-          (cl:cons (funcall GSYM ALLPAIRS_MEM) (cl:cons (funcall GSYM ALL_MEM) nil)))
+          (cl:cons (#`GSYM ALLPAIRS_MEM) (cl:cons (#`GSYM ALL_MEM) nil)))
         THEN (MESON_TAC nil)))))
 
 (defparameter ALL2_ALL
@@ -1695,23 +1644,21 @@
       (parse_term "!P (l:A list). ALL2 P l l <=> ALL (\\x. P x x) l")
       (holai.runtime:proof #'GEN_TAC
         THEN LIST_INDUCT_TAC
-        THEN (funcall ASM_REWRITE_TAC (cl:cons ALL2 (cl:cons ALL nil)))))))
+        THEN (#`ASM_REWRITE_TAC (cl:cons ALL2 (cl:cons ALL nil)))))))
 
 (defparameter APPEND_EQ_NIL
   (prove
     (tuple
       (parse_term "!l m:A list. (APPEND l m = []) <=> (l = []) /\\ (m = [])")
       (REWRITE_TAC
-        (cl:cons
-          (funcall GSYM LENGTH_EQ_NIL)
-          (cl:cons LENGTH_APPEND (cl:cons ADD_EQ_0 nil)))))))
+        (cl:cons (#`GSYM LENGTH_EQ_NIL) (cl:cons LENGTH_APPEND (cl:cons ADD_EQ_0 nil)))))))
 
 (defparameter APPEND_LCANCEL
   (prove
     (tuple
       (parse_term "!l1 l2 l3:A list. APPEND l1 l2 = APPEND l1 l3 <=> l2 = l3")
       (holai.runtime:proof LIST_INDUCT_TAC
-        THEN (funcall ASM_REWRITE_TAC (cl:cons APPEND (cl:cons CONS_11 nil)))))))
+        THEN (#`ASM_REWRITE_TAC (cl:cons APPEND (cl:cons CONS_11 nil)))))))
 
 (defparameter APPEND_RCANCEL
   (prove
@@ -1734,8 +1681,7 @@
         THEN LIST_INDUCT_TAC
         THEN LIST_INDUCT_TAC
         THEN
-          (funcall
-            ASM_SIMP_TAC
+          (#`ASM_SIMP_TAC
             (cl:cons
               LENGTH
               (cl:cons
@@ -1752,11 +1698,10 @@
       (holai.runtime:proof #'GEN_TAC
         THEN LIST_INDUCT_TAC
         THEN LIST_INDUCT_TAC
-        THEN (funcall ASM_SIMP_TAC (cl:cons LENGTH (cl:cons (funcall CONJUNCT1 LT) nil)))
+        THEN (#`ASM_SIMP_TAC (cl:cons LENGTH (cl:cons (#`CONJUNCT1 LT) nil)))
         THEN INDUCT_TAC
         THEN
-          (funcall
-            ASM_SIMP_TAC
+          (#`ASM_SIMP_TAC
             (cl:cons
               LENGTH
               (cl:cons MAP2 (cl:cons EL (cl:cons HD (cl:cons TL (cl:cons LT_SUC nil)))))))))))
@@ -1790,14 +1735,13 @@
                     #'MP_TAC
                     (SPECL
                       (cl:cons (parse_term "[x:A]") (cl:cons (parse_term "[y:A]") nil)))))
-              THEN (funcall ASM_REWRITE_TAC (cl:cons MAP (cl:cons CONS_11 nil))))
+              THEN (#`ASM_REWRITE_TAC (cl:cons MAP (cl:cons CONS_11 nil))))
             (cl:cons
               (holai.runtime:proof (REPEAT LIST_INDUCT_TAC)
                 THEN
-                  (funcall
-                    ASM_SIMP_TAC
+                  (#`ASM_SIMP_TAC
                     (cl:cons MAP (cl:cons NOT_CONS_NIL (cl:cons CONS_11 nil))))
-                THEN (funcall ASM_MESON_TAC nil))
+                THEN (#`ASM_MESON_TAC nil))
               nil))))))
 
 (defparameter SURJECTIVE_MAP
@@ -1809,8 +1753,8 @@
         THEN DISCH_TAC
         THENL
           (cl:cons
-            (holai.runtime:proof (funcall X_GEN_TAC (parse_term "y:B"))
-              THEN (FIRST_X_ASSUM (o #'MP_TAC (funcall SPEC (parse_term "[y:B]"))))
+            (holai.runtime:proof (#`X_GEN_TAC (parse_term "y:B"))
+              THEN (FIRST_X_ASSUM (o #'MP_TAC (#`SPEC (parse_term "[y:B]"))))
               THEN (REWRITE_TAC (cl:cons LEFT_IMP_EXISTS_THM nil))
               THEN LIST_INDUCT_TAC
               THEN
@@ -1819,14 +1763,13 @@
                     MAP
                     (cl:cons CONS_11 (cl:cons NOT_CONS_NIL (cl:cons MAP_EQ_NIL nil))))))
             (cl:cons (MATCH_MP_TAC list_INDUCT) nil))
-        THEN (funcall ASM_MESON_TAC (cl:cons MAP nil))))))
+        THEN (#`ASM_MESON_TAC (cl:cons MAP nil))))))
 
 (defparameter MAP_ID
   (prove
     (tuple
       (parse_term "!l. MAP (\\x:A. x) l = l")
-      (holai.runtime:proof LIST_INDUCT_TAC
-        THEN (funcall ASM_REWRITE_TAC (cl:cons MAP nil))))))
+      (holai.runtime:proof LIST_INDUCT_TAC THEN (#`ASM_REWRITE_TAC (cl:cons MAP nil))))))
 
 (defparameter MAP_I
   (prove
@@ -1857,9 +1800,7 @@
               (cl:cons (MESON nil (parse_term "(if p then T else q) <=> ~p ==> q")) nil))))
         THEN LIST_INDUCT_TAC
         THEN
-          (funcall
-            ASM_SIMP_TAC
-            (cl:cons APPEND (cl:cons BUTLAST (cl:cons APPEND_EQ_NIL nil))))))))
+          (#`ASM_SIMP_TAC (cl:cons APPEND (cl:cons BUTLAST (cl:cons APPEND_EQ_NIL nil))))))))
 
 (defparameter APPEND_BUTLAST_LAST
   (prove
@@ -1868,7 +1809,7 @@
       (holai.runtime:proof LIST_INDUCT_TAC
         THEN (REWRITE_TAC (cl:cons LAST (cl:cons BUTLAST (cl:cons NOT_CONS_NIL nil))))
         THEN COND_CASES_TAC
-        THEN (funcall ASM_SIMP_TAC (cl:cons APPEND nil))))))
+        THEN (#`ASM_SIMP_TAC (cl:cons APPEND nil))))))
 
 (defparameter LAST_APPEND
   (prove
@@ -1876,9 +1817,7 @@
       (parse_term "!p q:A list. LAST(APPEND p q) = if q = [] then LAST p else LAST q")
       (holai.runtime:proof LIST_INDUCT_TAC
         THEN
-          (funcall
-            ASM_REWRITE_TAC
-            (cl:cons APPEND (cl:cons LAST (cl:cons APPEND_EQ_NIL nil))))
+          (#`ASM_REWRITE_TAC (cl:cons APPEND (cl:cons LAST (cl:cons APPEND_EQ_NIL nil))))
         THEN (MESON_TAC nil)))))
 
 (defparameter LENGTH_TL
@@ -1930,14 +1869,14 @@
                   LENGTH
                   (cl:cons
                     SUB_0
-                    (cl:cons EL (cl:cons LT_0 (cl:cons (funcall CONJUNCT1 LT) nil))))))))
-        THEN (funcall ASM_REWRITE_TAC (cl:cons TL (cl:cons LT_SUC (cl:cons SUB_SUC nil))))))))
+                    (cl:cons EL (cl:cons LT_0 (cl:cons (#`CONJUNCT1 LT) nil))))))))
+        THEN (#`ASM_REWRITE_TAC (cl:cons TL (cl:cons LT_SUC (cl:cons SUB_SUC nil))))))))
 
 (defparameter EL_TL
   (prove
     (tuple
       (parse_term "!n. EL n (TL l):A = EL (n + 1) l")
-      (REWRITE_TAC (cl:cons (funcall GSYM ADD1) (cl:cons EL nil))))))
+      (REWRITE_TAC (cl:cons (#`GSYM ADD1) (cl:cons EL nil))))))
 
 (defparameter EL_CONS
   (prove
@@ -1959,8 +1898,7 @@
         THEN DISCH_TAC
         THEN COND_CASES_TAC
         THEN
-          (funcall
-            ASM_SIMP_TAC
+          (#`ASM_SIMP_TAC
             (cl:cons
               LENGTH
               (cl:cons EL (cl:cons HD (cl:cons EL_CONS (cl:cons LENGTH_EQ_NIL nil))))))))))
@@ -1987,12 +1925,11 @@
         THEN INDUCT_TAC
         THEN LIST_INDUCT_TAC
         THEN
-          (funcall
-            ASM_REWRITE_TAC
+          (#`ASM_REWRITE_TAC
             (cl:cons
               LENGTH
               (cl:cons
-                (funcall CONJUNCT1 LT)
+                (#`CONJUNCT1 LT)
                 (cl:cons
                   LT_0
                   (cl:cons
@@ -2005,10 +1942,7 @@
       (parse_term "!(f:A->B) l. REVERSE(MAP f l) = MAP f (REVERSE l)")
       (holai.runtime:proof #'GEN_TAC
         THEN LIST_INDUCT_TAC
-        THEN
-          (funcall
-            ASM_REWRITE_TAC
-            (cl:cons MAP (cl:cons REVERSE (cl:cons MAP_APPEND nil))))))))
+        THEN (#`ASM_REWRITE_TAC (cl:cons MAP (cl:cons REVERSE (cl:cons MAP_APPEND nil))))))))
 
 (defparameter ALL_FILTER
   (prove
@@ -2019,7 +1953,7 @@
         THEN LIST_INDUCT_TAC
         THEN (REWRITE_TAC (cl:cons ALL (cl:cons FILTER nil)))
         THEN COND_CASES_TAC
-        THEN (funcall ASM_REWRITE_TAC (cl:cons ALL nil))))))
+        THEN (#`ASM_REWRITE_TAC (cl:cons ALL nil))))))
 
 (defparameter APPEND_SING
   (prove
@@ -2032,12 +1966,10 @@
     (tuple
       (parse_term "!x:A l. MEM x l <=> ?l1 l2. ~(MEM x l1) /\\ l = APPEND l1 (CONS x l2)")
       (holai.runtime:proof (REWRITE_TAC
-          (cl:cons
-            (funcall TAUT (parse_term "(p <=> q) <=> (p ==> q) /\\ (q ==> p)"))
-            nil))
+          (cl:cons (#`TAUT (parse_term "(p <=> q) <=> (p ==> q) /\\ (q ==> p)")) nil))
         THEN
           (SIMP_TAC (cl:cons LEFT_IMP_EXISTS_THM (cl:cons MEM_APPEND (cl:cons MEM nil))))
-        THEN (funcall X_GEN_TAC (parse_term "x:A"))
+        THEN (#`X_GEN_TAC (parse_term "x:A"))
         THEN (MATCH_MP_TAC list_INDUCT)
         THEN (REWRITE_TAC (cl:cons MEM nil))
         THEN
@@ -2045,16 +1977,14 @@
             X_GEN_TAC
             (cl:cons (parse_term "y:A") (cl:cons (parse_term "l:A list") nil)))
         THEN (ASM_CASES_TAC (parse_term "x:A = y"))
-        THEN (funcall ASM_MESON_TAC (cl:cons MEM (cl:cons APPEND nil)))))))
+        THEN (#`ASM_MESON_TAC (cl:cons MEM (cl:cons APPEND nil)))))))
 
 (defparameter MEM_APPEND_DECOMPOSE
   (prove
     (tuple
       (parse_term "!x:A l. MEM x l <=> ?l1 l2. l = APPEND l1 (CONS x l2)")
       (holai.runtime:proof (REWRITE_TAC
-          (cl:cons
-            (funcall TAUT (parse_term "(p <=> q) <=> (p ==> q) /\\ (q ==> p)"))
-            nil))
+          (cl:cons (#`TAUT (parse_term "(p <=> q) <=> (p ==> q) /\\ (q ==> p)")) nil))
         THEN
           (SIMP_TAC (cl:cons LEFT_IMP_EXISTS_THM (cl:cons MEM_APPEND (cl:cons MEM nil))))
         THEN (ONCE_REWRITE_TAC (cl:cons MEM_APPEND_DECOMPOSE_LEFT nil))
@@ -2075,7 +2005,7 @@
               APPEND
               (cl:cons
                 PAIRWISE
-                (cl:cons MEM (cl:cons ALL_APPEND (cl:cons (funcall GSYM ALL_MEM) nil))))))
+                (cl:cons MEM (cl:cons ALL_APPEND (cl:cons (#`GSYM ALL_MEM) nil))))))
         THEN (MESON_TAC nil)))))
 
 (defparameter PAIRWISE_MAP
@@ -2088,8 +2018,7 @@
         THEN #'GEN_TAC
         THEN LIST_INDUCT_TAC
         THEN
-          (funcall
-            ASM_REWRITE_TAC
+          (#`ASM_REWRITE_TAC
             (cl:cons PAIRWISE (cl:cons MAP (cl:cons ALL_MAP (cl:cons o_DEF nil)))))))))
 
 (defparameter PAIRWISE_IMPLIES
@@ -2102,9 +2031,7 @@
       (holai.runtime:proof #'GEN_TAC
         THEN #'GEN_TAC
         THEN (MATCH_MP_TAC list_INDUCT)
-        THEN
-          (REWRITE_TAC
-            (cl:cons PAIRWISE (cl:cons (funcall GSYM ALL_MEM) (cl:cons MEM nil))))
+        THEN (REWRITE_TAC (cl:cons PAIRWISE (cl:cons (#`GSYM ALL_MEM) (cl:cons MEM nil))))
         THEN (MESON_TAC nil)))))
 
 (defparameter PAIRWISE_TRANSITIVE
@@ -2122,17 +2049,16 @@
               (cl:cons
                 ALL
                 (cl:cons
-                  (funcall GSYM CONJ_ASSOC)
+                  (#`GSYM CONJ_ASSOC)
                   (cl:cons
-                    (funcall
-                      TAUT
+                    (#`TAUT
                       (parse_term
                         "(p /\\ q /\\ r /\\ s <=> p /\\ r /\\ s) <=>
                     p /\\ s ==> r ==> q"))
                     nil)))))
         THEN #'STRIP_TAC
         THEN (MATCH_MP_TAC (REWRITE_RULE (cl:cons IMP_CONJ nil) ALL_IMP))
-        THEN (funcall ASM_MESON_TAC nil)))))
+        THEN (#`ASM_MESON_TAC nil)))))
 
 (defparameter LENGTH_LIST_OF_SEQ
   (prove
@@ -2141,8 +2067,7 @@
       (holai.runtime:proof #'GEN_TAC
         THEN INDUCT_TAC
         THEN
-          (funcall
-            ASM_REWRITE_TAC
+          (#`ASM_REWRITE_TAC
             (cl:cons
               list_of_seq
               (cl:cons LENGTH (cl:cons LENGTH_APPEND (cl:cons ADD_CLAUSES nil)))))))))
@@ -2161,8 +2086,7 @@
               (cl:cons LT (cl:cons EL_APPEND (cl:cons LENGTH_LIST_OF_SEQ nil)))))
         THEN (REPEAT #'STRIP_TAC)
         THEN
-          (funcall
-            ASM_SIMP_TAC
+          (#`ASM_SIMP_TAC
             (cl:cons SUB_REFL (cl:cons EL (cl:cons HD (cl:cons LT_REFL nil)))))))))
 
 (defparameter LIST_OF_SEQ_EQ_NIL
@@ -2170,9 +2094,7 @@
     (tuple
       (parse_term "!s:num->A n. list_of_seq s n = [] <=> n = 0")
       (REWRITE_TAC
-        (cl:cons
-          (funcall GSYM LENGTH_EQ_NIL)
-          (cl:cons LENGTH_LIST_OF_SEQ (cl:cons LENGTH nil)))))))
+        (cl:cons (#`GSYM LENGTH_EQ_NIL) (cl:cons LENGTH_LIST_OF_SEQ (cl:cons LENGTH nil)))))))
 
 (defparameter LIST_OF_SEQ_EQ_SELF
   (prove
@@ -2195,8 +2117,7 @@
         THEN #'GEN_TAC
         THEN INDUCT_TAC
         THEN
-          (funcall
-            ASM_REWRITE_TAC
+          (#`ASM_REWRITE_TAC
             (cl:cons MAP (cl:cons list_of_seq (cl:cons MAP_APPEND (cl:cons o_THM nil)))))))))
 
 (defparameter LIST_OF_SEQ%
@@ -2206,7 +2127,7 @@
         "(!(f:num->A). list_of_seq f 0 = []) /\\
    (!(f:num->A) n.
         list_of_seq f (SUC n) = CONS (f 0) (list_of_seq (f o SUC) n))")
-      (holai.runtime:proof (REWRITE_TAC (cl:cons (funcall CONJUNCT1 list_of_seq) nil))
+      (holai.runtime:proof (REWRITE_TAC (cl:cons (#`CONJUNCT1 list_of_seq) nil))
         THEN (REPEAT #'GEN_TAC)
         THEN
           (REWRITE_TAC
@@ -2214,10 +2135,9 @@
               LIST_EQ
               (cl:cons LENGTH_LIST_OF_SEQ (cl:cons LENGTH (cl:cons EL_CONS nil)))))
         THEN INDUCT_TAC
-        THEN (funcall ASM_SIMP_TAC (cl:cons NOT_SUC (cl:cons EL_LIST_OF_SEQ nil)))
+        THEN (#`ASM_SIMP_TAC (cl:cons NOT_SUC (cl:cons EL_LIST_OF_SEQ nil)))
         THEN
-          (funcall
-            ASM_SIMP_TAC
+          (#`ASM_SIMP_TAC
             (cl:cons
               LT_SUC
               (cl:cons SUC_SUB1 (cl:cons EL_LIST_OF_SEQ (cl:cons o_THM nil)))))))))
@@ -2274,8 +2194,8 @@
       (holai.runtime:proof DISCH_TAC
         THEN (SPEC_TAC (tuple (parse_term "l:A list") (parse_term "l:A list")))
         THEN LIST_INDUCT_TAC
-        THEN (funcall ASM_REWRITE_TAC (cl:cons ALL nil))
-        THEN (funcall ASM_MESON_TAC nil)))))
+        THEN (#`ASM_REWRITE_TAC (cl:cons ALL nil))
+        THEN (#`ASM_MESON_TAC nil)))))
 
 (defparameter MONO_ALL2
   (prove
@@ -2289,7 +2209,7 @@
         THEN #'GEN_TAC
         THEN COND_CASES_TAC
         THEN (REWRITE_TAC nil)
-        THEN (funcall ASM_MESON_TAC nil)))))
+        THEN (#`ASM_MESON_TAC nil)))))
 
 (assign
   monotonicity_theorems
@@ -2301,7 +2221,7 @@
 
 
 (defunc LIST_CONV (conv tm)
-  (if (funcall is_cons tm)
+  (if (#`is_cons tm)
     (COMB2_CONV (RAND_CONV conv) (LIST_CONV conv) tm)
     (if (= (holai.runtime:fst (dest_const tm)) "NIL") (REFL tm) (failwith "LIST_CONV"))))
 
@@ -2321,19 +2241,19 @@
      LENGTH([]:A list) + n = n /\\
      LENGTH(CONS (h:A) t) + n = LENGTH t + SUC n")
           (REWRITE_TAC (cl:cons LENGTH (cl:cons ADD_CLAUSES nil))))))
-      (pths (funcall CONJUNCTS pthc))
+      (pths (#`CONJUNCTS pthc))
       (avars (sort (function-value #'< 2) (frees (concl pthc)))))
     (cl:declare (cl:ignorable pthc pths avars))
     (lambdac (tm)
       (match tm
-        ((guard (Comb (Const "LENGTH" _) ltm) (funcall is_list ltm))
+        ((guard (Comb (Const "LENGTH" _) ltm) (#`is_list ltm))
           (let
             ((tyin
               (cl:cons (tuple (holai.lib:hd (snd (dest_type (type_of ltm)))) aty) nil)))
             (cl:declare (cl:ignorable tyin))
             (match
               (tuple
-                (holai.lib:map (funcall inst tyin) avars)
+                (holai.lib:map (#`inst tyin) avars)
                 (holai.lib:map (INST_TYPE tyin) pths))
               ((tuple
                 (cl:cons h_tm (cl:cons n_tm (cl:cons t_tm nil)))
@@ -2345,8 +2265,8 @@
                       ((tuple altm ntm)
                         (let ((ltm% (rand (rand altm))))
                           (cl:declare (cl:ignorable ltm%))
-                          (if (funcall is_cons ltm%)
-                            (match (funcall dest_cons ltm%)
+                          (if (#`is_cons ltm%)
+                            (match (#`dest_cons ltm%)
                               ((tuple htm ttm)
                                 (let
                                   ((th1
@@ -2362,9 +2282,7 @@
                                     ((tuple ftm stm)
                                       (let
                                         ((th2
-                                          (TRANS
-                                            th1
-                                            (AP_TERM ftm (funcall NUM_SUC_CONV stm)))))
+                                          (TRANS th1 (AP_TERM ftm (#`NUM_SUC_CONV stm)))))
                                         (cl:declare (cl:ignorable th2))
                                         (conv (TRANS th th2))))))))
                             (TRANS th (INST% (cl:cons (tuple ntm n_tm) nil) pth_base))))))))
@@ -2386,19 +2304,19 @@
             "EL 0 (CONS (h:A) t) = h /\\
       (n = SUC m ==> EL n (CONS h t) = EL m t)")
           (SIMP_TAC (cl:cons EL (cl:cons HD (cl:cons TL nil)))))))
-      (pths (holai.lib:map #'UNDISCH_ALL (funcall CONJUNCTS pthc)))
+      (pths (holai.lib:map #'UNDISCH_ALL (#`CONJUNCTS pthc)))
       (avars (sort (function-value #'< 2) (frees (concl pthc)))))
     (cl:declare (cl:ignorable pthc pths avars))
     (lambdac (tm)
       (match tm
-        ((guard (Comb (Comb (Const "EL" _) ntm) ltm) (funcall is_list ltm))
+        ((guard (Comb (Comb (Const "EL" _) ntm) ltm) (#`is_list ltm))
           (let
             ((tyin
               (cl:cons (tuple (holai.lib:hd (snd (dest_type (type_of ltm)))) aty) nil)))
             (cl:declare (cl:ignorable tyin))
             (match
               (tuple
-                (holai.lib:map (funcall inst tyin) avars)
+                (holai.lib:map (#`inst tyin) avars)
                 (holai.lib:map (INST_TYPE tyin) pths))
               ((tuple
                 (cl:cons h_tm (cl:cons m_tm (cl:cons n_tm (cl:cons t_tm nil))))
@@ -2408,11 +2326,11 @@
                     (th)
                     (match (dest_comb (rand (concl th)))
                       ((tuple entm ltm%)
-                        (match (funcall dest_cons ltm%)
+                        (match (#`dest_cons ltm%)
                           ((tuple htm ttm)
                             (match (dest_comb entm)
                               ((tuple etm ntm%)
-                                (let ((n (funcall dest_numeral ntm%)))
+                                (let ((n (#`dest_numeral ntm%)))
                                   (cl:declare (cl:ignorable n))
                                   (if (= n num_0)
                                     (TRANS
@@ -2423,7 +2341,7 @@
                                           (cl:cons (tuple ttm t_tm) nil))
                                         pth_base))
                                     (let*
-                                      ((th1 (funcall num_CONV ntm%))
+                                      ((th1 (#`num_CONV ntm%))
                                         (th2
                                           (INST%
                                             (cl:cons
@@ -2458,10 +2376,8 @@
           (SIMP_TAC
             (cl:cons
               APPEND
-              (cl:cons
-                APPEND_NIL
-                (cl:cons REVERSE (cl:cons (funcall GSYM APPEND_ASSOC) nil))))))))
-      (pths (holai.lib:map #'UNDISCH_ALL (funcall CONJUNCTS pthc)))
+              (cl:cons APPEND_NIL (cl:cons REVERSE (cl:cons (#`GSYM APPEND_ASSOC) nil))))))))
+      (pths (holai.lib:map #'UNDISCH_ALL (#`CONJUNCTS pthc)))
       (avars (sort (function-value #'< 2) (frees (concl pthc)))))
     (cl:declare (cl:ignorable pthc pths avars))
     (lambdac (tm)
@@ -2473,7 +2389,7 @@
             (cl:declare (cl:ignorable tyin))
             (match
               (tuple
-                (holai.lib:map (funcall inst tyin) avars)
+                (holai.lib:map (#`inst tyin) avars)
                 (holai.lib:map (INST_TYPE tyin) pths))
               ((tuple
                 (cl:cons h_tm (cl:cons l_tm (cl:cons t_tm nil)))
@@ -2485,8 +2401,8 @@
                       ((tuple ahtm ltm%)
                         (let ((httm (rand (rand ahtm))))
                           (cl:declare (cl:ignorable httm))
-                          (if (funcall is_cons httm)
-                            (match (funcall dest_cons httm)
+                          (if (#`is_cons httm)
+                            (match (#`dest_cons httm)
                               ((tuple htm ttm)
                                 (let
                                   ((th1
@@ -2525,8 +2441,8 @@
               APPEND
               (cl:cons
                 APPEND_NIL
-                (cl:cons list_of_seq (cl:cons (funcall GSYM APPEND_ASSOC) nil))))))))
-      (pths (holai.lib:map #'UNDISCH_ALL (funcall CONJUNCTS pthc)))
+                (cl:cons list_of_seq (cl:cons (#`GSYM APPEND_ASSOC) nil))))))))
+      (pths (holai.lib:map #'UNDISCH_ALL (#`CONJUNCTS pthc)))
       (avars (sort (function-value #'< 2) (frees (concl pthc)))))
     (cl:declare (cl:ignorable pthc pths avars))
     (lambdac (tm)
@@ -2536,7 +2452,7 @@
             (cl:declare (cl:ignorable tyin))
             (match
               (tuple
-                (holai.lib:map (funcall inst tyin) avars)
+                (holai.lib:map (#`inst tyin) avars)
                 (holai.lib:map (INST_TYPE tyin) pths)
                 (is_abs ftm))
               ((tuple
@@ -2550,7 +2466,7 @@
                       ((tuple nftm ltm)
                         (match (dest_comb (rand nftm))
                           ((tuple lftm ntm%)
-                            (let* ((ftm% (rand lftm)) (n (funcall dest_numeral ntm%)))
+                            (let* ((ftm% (rand lftm)) (n (#`dest_numeral ntm%)))
                               (cl:declare (cl:ignorable ftm% n))
                               (if (= n num_0)
                                 (TRANS
@@ -2561,7 +2477,7 @@
                                       (cl:cons (tuple ltm l_tm) nil))
                                     pth_base))
                                 (let*
-                                  ((th1 (funcall num_CONV ntm%))
+                                  ((th1 (#`num_CONV ntm%))
                                     (th2
                                       (INST%
                                         (cl:cons
@@ -2614,7 +2530,7 @@
   ((tuple char_INDUCT% char_RECURSION%)
     (setf char_INDUCT char_INDUCT% char_RECURSION char_RECURSION%)))
 
-(funcall new_type_abbrev (tuple "string" (parse_type "char list")))
+(#`new_type_abbrev (tuple "string" (parse_type "char list")))
 
 (defparameter CHAR_EQ_CONV nil)
 
@@ -2629,140 +2545,131 @@
 (defparameter mk_string nil)
 
 (match
-  (fletc
-    ((bool_of_term
-      (t%)
-      (match t% ((Const "T" _) cl:t) ((Const "F" _) cl:nil) (_ (failwith "bool_of_term")))))
-    (fletc
-      ((code_of_term
-        (t%)
-        (match (funcall strip_comb t%)
+  (holai.runtime:labelsc
+    ((:nonrecursive 0 bool_of_term (t%)
+      (match t% ((Const "T" _) cl:t) ((Const "F" _) cl:nil) (_ (failwith "bool_of_term"))))
+      (:nonrecursive 1 code_of_term (t%)
+        (match (#`strip_comb t%)
           ((tuple f tms)
             (if
               (cl:or
                 (not (cl:and (is_const f) (= (holai.runtime:fst (dest_const f)) "ASCII")))
-                (not (= (funcall holai.lib:length tms) 8)))
+                (not (= (#`holai.lib:length tms) 8)))
               (failwith "code_of_term")
               (holai.lib:itlist
                 (lambdac (b% f%) (if b% (+ 1 (* 2 f%)) (* 2 f%)))
-                (holai.lib:map #'bool_of_term (funcall rev tms))
+                (holai.lib:map #'bool_of_term (#`rev tms))
                 0))))))
-      (let ((char_of_term (o (function-value #'char-chr 1) #'code_of_term)))
-        (cl:declare (cl:ignorable char_of_term))
-        (fletc
-          ((dest_string%
-            (tm)
-            (handler-case
-              (let ((tms (dest_list tm)))
-                (cl:declare (cl:ignorable tms))
-                (if
-                  (<>
-                    (holai.runtime:fst
-                      (dest_type (holai.lib:hd (snd (dest_type (type_of tm))))))
-                    "char")
-                  (fail unit)
-                  (let
-                    ((ccs
-                      (holai.lib:map
-                        (o (partial (function-value #'string-make 2) 1) char_of_term)
-                        tms)))
-                    (cl:declare (cl:ignorable ccs))
-                    (string-escaped (implode ccs)))))
-              (holai.runtime:ocaml-condition
-                (exception~3495)
-                (match exception~3495
-                  ((Failure _) (failwith "dest_string"))
-                  (_ (raise exception~3495)))))))
-          (fletc
-            ((mk_bool
-              (b%)
-              (match (tuple (parse_term "T") (parse_term "F"))
-                ((tuple true_tm false_tm) (if b% true_tm false_tm)))))
-            (let*
-              ((mk_code
-                (let ((ascii_tm (parse_term "ASCII")))
-                  (cl:declare (cl:ignorable ascii_tm))
-                  (fletc
-                    ((mk_code
-                      (c%)
-                      (let
-                        ((lis
-                          (holai.lib:map
-                            (lambdac (i%)
-                              (mk_bool (= (int-mod (int-div c% (int-lsl 1 i%)) 2) 1)))
-                            (-- 0 7))))
-                        (cl:declare (cl:ignorable lis))
-                        (holai.lib:itlist
-                          (lambdac (x y) (mk_comb (tuple y x)))
-                          lis
-                          ascii_tm))))
-                    (let ((codes (array-map #'mk_code (array-of-list (-- 0 255)))))
-                      (cl:declare (cl:ignorable codes))
-                      (lambdac (c%) (array-get codes c%))))))
-                (mk_char% (o mk_code (function-value #'char-code 1))))
-              (cl:declare (cl:ignorable mk_code mk_char%))
+    (let ((char_of_term (o (function-value #'char-chr 1) #'code_of_term)))
+      (cl:declare (cl:ignorable char_of_term))
+      (holai.runtime:labelsc
+        ((:nonrecursive 0 dest_string% (tm)
+          (handler-case
+            (let ((tms (dest_list tm)))
+              (cl:declare (cl:ignorable tms))
+              (if
+                (<>
+                  (holai.runtime:fst
+                    (dest_type (holai.lib:hd (snd (dest_type (type_of tm))))))
+                  "char")
+                (fail unit)
+                (let
+                  ((ccs
+                    (holai.lib:map
+                      (o (partial (function-value #'string-make 2) 1) char_of_term)
+                      tms)))
+                  (cl:declare (cl:ignorable ccs))
+                  (string-escaped (implode ccs)))))
+            (holai.runtime:ocaml-condition
+              (exception~3495)
+              (match exception~3495
+                ((Failure _) (failwith "dest_string"))
+                (_ (raise exception~3495))))))
+          (:nonrecursive 1 mk_bool (b%)
+            (match (tuple (parse_term "T") (parse_term "F"))
+              ((tuple true_tm false_tm) (if b% true_tm false_tm)))))
+        (let*
+          ((mk_code
+            (let ((ascii_tm (parse_term "ASCII")))
+              (cl:declare (cl:ignorable ascii_tm))
               (fletc
-                ((mk_string%
-                  (s)
+                ((mk_code
+                  (c%)
                   (let
-                    ((ns
+                    ((lis
                       (holai.lib:map
-                        (lambdac (i%) (char-code (string-get s i%)))
-                        (-- 0 (- (string-length s) 1)))))
-                    (cl:declare (cl:ignorable ns))
-                    (mk_list (tuple (holai.lib:map mk_code ns) (parse_type "char"))))))
-                (let*
-                  ((CHAR_DISTINCTNESS
-                    (match
-                      (tuple
+                        (lambdac (i%)
+                          (mk_bool (= (int-mod (int-div c% (int-lsl 1 i%)) 2) 1)))
+                        (-- 0 7))))
+                    (cl:declare (cl:ignorable lis))
+                    (holai.lib:itlist (lambdac (x y) (mk_comb (tuple y x))) lis ascii_tm))))
+                (let ((codes (array-map #'mk_code (array-of-list (-- 0 255)))))
+                  (cl:declare (cl:ignorable codes))
+                  (lambdac (c%) (array-get codes c%))))))
+            (mk_char% (o mk_code (function-value #'char-code 1))))
+          (cl:declare (cl:ignorable mk_code mk_char%))
+          (fletc
+            ((mk_string%
+              (s)
+              (let
+                ((ns
+                  (holai.lib:map
+                    (lambdac (i%) (char-code (string-get s i%)))
+                    (-- 0 (- (string-length s) 1)))))
+                (cl:declare (cl:ignorable ns))
+                (mk_list (tuple (holai.lib:map mk_code ns) (parse_type "char"))))))
+            (let*
+              ((CHAR_DISTINCTNESS
+                (match
+                  (tuple
+                    (cl:cons
+                      (parse_term "a0:bool")
+                      (cl:cons
+                        (parse_term "a1:bool")
                         (cl:cons
-                          (parse_term "a0:bool")
+                          (parse_term "a2:bool")
                           (cl:cons
-                            (parse_term "a1:bool")
+                            (parse_term "a3:bool")
                             (cl:cons
-                              (parse_term "a2:bool")
+                              (parse_term "a4:bool")
                               (cl:cons
-                                (parse_term "a3:bool")
-                                (cl:cons
-                                  (parse_term "a4:bool")
-                                  (cl:cons
-                                    (parse_term "a5:bool")
-                                    (cl:cons (parse_term "a6:bool") nil)))))))
+                                (parse_term "a5:bool")
+                                (cl:cons (parse_term "a6:bool") nil)))))))
+                    (cl:cons
+                      (parse_term "b1:bool")
+                      (cl:cons
+                        (parse_term "b2:bool")
                         (cl:cons
-                          (parse_term "b1:bool")
+                          (parse_term "b3:bool")
                           (cl:cons
-                            (parse_term "b2:bool")
+                            (parse_term "b4:bool")
                             (cl:cons
-                              (parse_term "b3:bool")
+                              (parse_term "b5:bool")
                               (cl:cons
-                                (parse_term "b4:bool")
-                                (cl:cons
-                                  (parse_term "b5:bool")
-                                  (cl:cons
-                                    (parse_term "b6:bool")
-                                    (cl:cons (parse_term "b7:bool") nil)))))))
+                                (parse_term "b6:bool")
+                                (cl:cons (parse_term "b7:bool") nil)))))))
+                    (cl:cons
+                      (parse_term "c1:bool")
+                      (cl:cons
+                        (parse_term "c2:bool")
                         (cl:cons
-                          (parse_term "c1:bool")
+                          (parse_term "c3:bool")
                           (cl:cons
-                            (parse_term "c2:bool")
+                            (parse_term "c4:bool")
                             (cl:cons
-                              (parse_term "c3:bool")
+                              (parse_term "c5:bool")
                               (cl:cons
-                                (parse_term "c4:bool")
-                                (cl:cons
-                                  (parse_term "c5:bool")
-                                  (cl:cons
-                                    (parse_term "c6:bool")
-                                    (cl:cons (parse_term "c7:bool") nil))))))))
-                      ((tuple avars bvars cvars)
-                        (let*
-                          ((ASCII_NEQS_FT
-                            (o
-                              (o (holai.lib:map EQF_INTRO) CONJUNCTS)
-                              #'prove
-                              (tuple
-                                (parse_term
-                                  "~(ASCII F b1 b2 b3 b4 b5 b6 b7 = ASCII T c1 c2 c3 c4 c5 c6 c7) /\\
+                                (parse_term "c6:bool")
+                                (cl:cons (parse_term "c7:bool") nil))))))))
+                  ((tuple avars bvars cvars)
+                    (let*
+                      ((ASCII_NEQS_FT
+                        (o
+                          (o (holai.lib:map EQF_INTRO) CONJUNCTS)
+                          #'prove
+                          (tuple
+                            (parse_term
+                              "~(ASCII F b1 b2 b3 b4 b5 b6 b7 = ASCII T c1 c2 c3 c4 c5 c6 c7) /\\
        ~(ASCII a0 F b2 b3 b4 b5 b6 b7 = ASCII a0 T c2 c3 c4 c5 c6 c7) /\\
        ~(ASCII a0 a1 F b3 b4 b5 b6 b7 = ASCII a0 a1 T c3 c4 c5 c6 c7) /\\
        ~(ASCII a0 a1 a2 F b4 b5 b6 b7 = ASCII a0 a1 a2 T c4 c5 c6 c7) /\\
@@ -2770,166 +2677,154 @@
        ~(ASCII a0 a1 a2 a3 a4 F b6 b7 = ASCII a0 a1 a2 a3 a4 T c6 c7) /\\
        ~(ASCII a0 a1 a2 a3 a4 a5 F b7 = ASCII a0 a1 a2 a3 a4 a5 T c7) /\\
        ~(ASCII a0 a1 a2 a3 a4 a5 a6 F = ASCII a0 a1 a2 a3 a4 a5 a6 T)")
-                                (REWRITE_TAC (cl:cons (injectivity "char") nil)))))
-                            (ASCII_NEQS_TF
-                              (let*
-                                ((ilist
-                                  (cl:append
-                                    (holai.lib:zip bvars cvars)
-                                    (holai.lib:zip cvars bvars)))
-                                  (f (o (o (o EQF_INTRO (INST% ilist)) GSYM) EQF_ELIM)))
-                                (cl:declare (cl:ignorable ilist f))
-                                (holai.lib:map f ASCII_NEQS_FT))))
-                          (cl:declare (cl:ignorable ASCII_NEQS_FT ASCII_NEQS_TF))
-                          (labelsc
-                            ((prefix
-                              (n l)
-                              (if (= n 0)
-                                nil
-                                (match l
-                                  ((cl:cons h t%) (cl:cons h (prefix (- n 1) t%)))
-                                  (_ l)))))
-                            (labelsc
-                              ((findneq
-                                (n prefix% a% b%)
-                                (match (tuple a% b%)
-                                  ((tuple (cl:cons b1 a) (cl:cons b2 b))
-                                    (if (<> b1 b2)
-                                      (tuple
-                                        n
-                                        (funcall rev prefix%)
-                                        (bool_of_term b2)
-                                        a
-                                        b)
-                                      (findneq (+ n 1) (cl:cons b1 prefix%) a b)))
-                                  ((tuple _ _) (fail unit)))))
-                              (lambdac (c1 c2)
-                                (match
-                                  (tuple (funcall strip_comb c1) (funcall strip_comb c2))
-                                  ((tuple (tuple _ a%) (tuple _ b%))
-                                    (match (findneq 0 nil a% b%)
-                                      ((tuple n p% b s1 s2)
-                                        (let
-                                          ((ss1 (funpow n #'holai.lib:tl bvars))
-                                            (ss2 (funpow n #'holai.lib:tl cvars)))
-                                          (cl:declare (cl:ignorable ss1 ss2))
-                                          (let*
-                                            ((pp (prefix n avars))
-                                              (pth (if b ASCII_NEQS_FT ASCII_NEQS_TF)))
-                                            (cl:declare (cl:ignorable pp pth))
-                                            (INST%
-                                              (cl:append
-                                                (holai.lib:zip p% pp)
-                                                (cl:append
-                                                  (holai.lib:zip s1 ss1)
-                                                  (holai.lib:zip s2 ss2)))
-                                              (holai.lib:el n pth)))))))))))))))
-                    (STRING_DISTINCTNESS
+                            (REWRITE_TAC (cl:cons (injectivity "char") nil)))))
+                        (ASCII_NEQS_TF
+                          (let*
+                            ((ilist
+                              (cl:append
+                                (holai.lib:zip bvars cvars)
+                                (holai.lib:zip cvars bvars)))
+                              (f (o (o (o EQF_INTRO (INST% ilist)) GSYM) EQF_ELIM)))
+                            (cl:declare (cl:ignorable ilist f))
+                            (holai.lib:map f ASCII_NEQS_FT))))
+                      (cl:declare (cl:ignorable ASCII_NEQS_FT ASCII_NEQS_TF))
+                      (holai.runtime:labelsc
+                        ((:recursive 0 prefix (n l)
+                          (if (= n 0)
+                            nil
+                            (match l
+                              ((cl:cons h t%) (cl:cons h (prefix (- n 1) t%)))
+                              (_ l))))
+                          (:recursive 1 findneq (n prefix% a% b%)
+                            (match (tuple a% b%)
+                              ((tuple (cl:cons b1 a) (cl:cons b2 b))
+                                (if (<> b1 b2)
+                                  (tuple n (#`rev prefix%) (bool_of_term b2) a b)
+                                  (findneq (+ n 1) (cl:cons b1 prefix%) a b)))
+                              ((tuple _ _) (fail unit)))))
+                        (lambdac (c1 c2)
+                          (match (tuple (#`strip_comb c1) (#`strip_comb c2))
+                            ((tuple (tuple _ a%) (tuple _ b%))
+                              (match (findneq 0 nil a% b%)
+                                ((tuple n p% b s1 s2)
+                                  (let
+                                    ((ss1 (funpow n #'holai.lib:tl bvars))
+                                      (ss2 (funpow n #'holai.lib:tl cvars)))
+                                    (cl:declare (cl:ignorable ss1 ss2))
+                                    (let*
+                                      ((pp (prefix n avars))
+                                        (pth (if b ASCII_NEQS_FT ASCII_NEQS_TF)))
+                                      (cl:declare (cl:ignorable pp pth))
+                                      (INST%
+                                        (cl:append
+                                          (holai.lib:zip p% pp)
+                                          (cl:append
+                                            (holai.lib:zip s1 ss1)
+                                            (holai.lib:zip s2 ss2)))
+                                        (holai.lib:el n pth))))))))))))))
+                (STRING_DISTINCTNESS
+                  (match
+                    (tuple
+                      (tuple (parse_term "x:char") (parse_term "xs:string"))
+                      (tuple (parse_term "y:char") (parse_term "ys:string"))
+                      (parse_term "[]:string"))
+                    ((tuple (tuple xtm xstm) (tuple ytm ystm) niltm)
                       (match
                         (tuple
-                          (tuple (parse_term "x:char") (parse_term "xs:string"))
-                          (tuple (parse_term "y:char") (parse_term "ys:string"))
-                          (parse_term "[]:string"))
-                        ((tuple (tuple xtm xstm) (tuple ytm ystm) niltm)
-                          (match
+                          (#`EQT_INTRO (REFL niltm))
+                          (o
+                            #'CONJ_PAIR
+                            #'prove
                             (tuple
-                              (funcall EQT_INTRO (REFL niltm))
-                              (o
-                                #'CONJ_PAIR
-                                #'prove
-                                (tuple
-                                  (parse_term
-                                    "(CONS x xs:string = CONS x ys <=> xs = ys) /\\
+                              (parse_term
+                                "(CONS x xs:string = CONS x ys <=> xs = ys) /\\
        ((x = y <=> F) ==> (CONS x xs:string = CONS y ys <=> F))")
-                                  (holai.runtime:proof (REWRITE_TAC (cl:cons CONS_11 nil))
-                                    THEN (MESON_TAC nil))))
-                              (o
-                                #'CONJ_PAIR
-                                #'prove
-                                (tuple
-                                  (parse_term
-                                    "(NIL:string = CONS x xs <=> F) /\\
+                              (holai.runtime:proof (REWRITE_TAC (cl:cons CONS_11 nil))
+                                THEN (MESON_TAC nil))))
+                          (o
+                            #'CONJ_PAIR
+                            #'prove
+                            (tuple
+                              (parse_term
+                                "(NIL:string = CONS x xs <=> F) /\\
        (CONS x xs:string = NIL <=> F)")
-                                  (REWRITE_TAC (cl:cons NOT_CONS_NIL nil)))))
-                            ((tuple
-                              NIL_EQ_THM
-                              (tuple CONS_EQ_THM CONS_NEQ_THM)
-                              (tuple NIL_NEQ_CONS CONS_NEQ_NIL))
-                              (labelsc
-                                ((STRING_DISTINCTNESS
-                                  (s1 s2)
-                                  (if (= s1 niltm)
+                              (REWRITE_TAC (cl:cons NOT_CONS_NIL nil)))))
+                        ((tuple
+                          NIL_EQ_THM
+                          (tuple CONS_EQ_THM CONS_NEQ_THM)
+                          (tuple NIL_NEQ_CONS CONS_NEQ_NIL))
+                          (labelsc
+                            ((STRING_DISTINCTNESS
+                              (s1 s2)
+                              (if (= s1 niltm)
+                                (if (= s2 niltm)
+                                  NIL_EQ_THM
+                                  (match (tuple (rand (rator s2)) (rand s2))
+                                    ((tuple c2 s2%)
+                                      (INST%
+                                        (cl:cons
+                                          (tuple c2 xtm)
+                                          (cl:cons (tuple s2% xstm) nil))
+                                        NIL_NEQ_CONS))))
+                                (match (tuple (rand (rator s1)) (rand s1))
+                                  ((tuple c1 s1%)
                                     (if (= s2 niltm)
-                                      NIL_EQ_THM
+                                      (INST%
+                                        (cl:cons
+                                          (tuple c1 xtm)
+                                          (cl:cons (tuple s1% xstm) nil))
+                                        CONS_NEQ_NIL)
                                       (match (tuple (rand (rator s2)) (rand s2))
                                         ((tuple c2 s2%)
-                                          (INST%
-                                            (cl:cons
-                                              (tuple c2 xtm)
-                                              (cl:cons (tuple s2% xstm) nil))
-                                            NIL_NEQ_CONS))))
-                                    (match (tuple (rand (rator s1)) (rand s1))
-                                      ((tuple c1 s1%)
-                                        (if (= s2 niltm)
-                                          (INST%
-                                            (cl:cons
-                                              (tuple c1 xtm)
-                                              (cl:cons (tuple s1% xstm) nil))
-                                            CONS_NEQ_NIL)
-                                          (match (tuple (rand (rator s2)) (rand s2))
-                                            ((tuple c2 s2%)
-                                              (if (= c1 c2)
-                                                (let
-                                                  ((th1
-                                                    (INST%
-                                                      (cl:cons
-                                                        (tuple c1 xtm)
-                                                        (cl:cons
-                                                          (tuple s1% xstm)
-                                                          (cl:cons (tuple s2% ystm) nil)))
-                                                      CONS_EQ_THM))
-                                                    (th2 (STRING_DISTINCTNESS s1% s2%)))
-                                                  (cl:declare (cl:ignorable th1 th2))
-                                                  (TRANS th1 th2))
-                                                (let*
-                                                  ((ilist
+                                          (if (= c1 c2)
+                                            (let
+                                              ((th1
+                                                (INST%
+                                                  (cl:cons
+                                                    (tuple c1 xtm)
                                                     (cl:cons
-                                                      (tuple c1 xtm)
-                                                      (cl:cons
-                                                        (tuple c2 ytm)
-                                                        (cl:cons
-                                                          (tuple s1% xstm)
-                                                          (cl:cons (tuple s2% ystm) nil)))))
-                                                    (itm (INST% ilist CONS_NEQ_THM)))
-                                                  (cl:declare (cl:ignorable ilist itm))
-                                                  (funcall
-                                                    MP
-                                                    itm
-                                                    (funcall CHAR_DISTINCTNESS c1 c2))))))))))))
-                                #'STRING_DISTINCTNESS)))))))
-                  (cl:declare (cl:ignorable CHAR_DISTINCTNESS STRING_DISTINCTNESS))
-                  (fletc
-                    ((CHAR_EQ_CONV%
-                      (tm)
-                      (match (dest_eq tm)
-                        ((tuple c1 c2)
-                          (if (= (compare c1 c2) 0)
-                            (funcall EQT_INTRO (REFL c1))
-                            (funcall CHAR_DISTINCTNESS c1 c2)))))
-                      (STRING_EQ_CONV%
-                        (tm)
-                        (match (dest_eq tm)
-                          ((tuple ltm rtm)
-                            (if (= (compare ltm rtm) 0)
-                              (funcall EQT_INTRO (REFL ltm))
-                              (funcall STRING_DISTINCTNESS ltm rtm))))))
-                    (tuple
-                      char_of_term
-                      mk_char%
-                      #'dest_string%
-                      #'mk_string%
-                      #'CHAR_EQ_CONV%
-                      #'STRING_EQ_CONV%))))))))))
+                                                      (tuple s1% xstm)
+                                                      (cl:cons (tuple s2% ystm) nil)))
+                                                  CONS_EQ_THM))
+                                                (th2 (STRING_DISTINCTNESS s1% s2%)))
+                                              (cl:declare (cl:ignorable th1 th2))
+                                              (TRANS th1 th2))
+                                            (let*
+                                              ((ilist
+                                                (cl:cons
+                                                  (tuple c1 xtm)
+                                                  (cl:cons
+                                                    (tuple c2 ytm)
+                                                    (cl:cons
+                                                      (tuple s1% xstm)
+                                                      (cl:cons (tuple s2% ystm) nil)))))
+                                                (itm (INST% ilist CONS_NEQ_THM)))
+                                              (cl:declare (cl:ignorable ilist itm))
+                                              (#`MP itm (#`CHAR_DISTINCTNESS c1 c2))))))))))))
+                            #'STRING_DISTINCTNESS)))))))
+              (cl:declare (cl:ignorable CHAR_DISTINCTNESS STRING_DISTINCTNESS))
+              (fletc
+                ((CHAR_EQ_CONV%
+                  (tm)
+                  (match (dest_eq tm)
+                    ((tuple c1 c2)
+                      (if (= (compare c1 c2) 0)
+                        (#`EQT_INTRO (REFL c1))
+                        (#`CHAR_DISTINCTNESS c1 c2)))))
+                  (STRING_EQ_CONV%
+                    (tm)
+                    (match (dest_eq tm)
+                      ((tuple ltm rtm)
+                        (if (= (compare ltm rtm) 0)
+                          (#`EQT_INTRO (REFL ltm))
+                          (#`STRING_DISTINCTNESS ltm rtm))))))
+                (tuple
+                  char_of_term
+                  mk_char%
+                  #'dest_string%
+                  #'mk_string%
+                  #'CHAR_EQ_CONV%
+                  #'STRING_EQ_CONV%))))))))
   ((tuple dest_char% mk_char% dest_string% mk_string% CHAR_EQ_CONV% STRING_EQ_CONV%)
     (setf
       CHAR_EQ_CONV

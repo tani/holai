@@ -241,14 +241,29 @@ COMPILED_UNIT quot
 
 ; file: /home/tani/ghq/github.com/tani/holai/holai/generated/impconv.lisp
 ; in:
-;      MATCH (FLETC ((I% (X) X))
-;          (FLETC ((UNDISCH_TERM (TH)
-;                   (LET #
-;                     #
-;                     #)))
-;            (LABELSC ((UNDISCH_TERMS # #))
-;              (FLETC (#)
-;                (LET #
+;      MATCH (LABELSC ((:NONRECURSIVE 0 I% (X) X)
+;                  (:NONRECURSIVE 1 UNDISCH_TERM (TH)
+;                   (LET (#)
+;                     (DECLARE #)
+;                     (TUPLE P% #)))
+;                  (:RECURSIVE 2 UNDISCH_TERMS (TH)
+;                   (HANDLER-CASE
+;                    (MATCH #
+;                      #)
+;                    (HOLAI.RUNTIME:OCAML-CONDITION # #)))
+;                  (:NONRECURSIVE 3 MAP_CONCLUSION (F TH)
+;                   (MATCH (UNDISCH_TERM TH)
+;                     (# #))))
+;          (LET ((STRIP_CONJ (BINOPS #)))
+;            (DECLARE (IGNORABLE STRIP_CONJ))
+;            (LABELSC ((:RECURSIVE 0 TRYFIND_FUN # #)
+;                      (:NONRECURSIVE 1 MAPFILTERI # #)
+;                      (:NONRECURSIVE 2 LIST_OF_OPTION # #)
+;                      (:NONRECURSIVE 3 TRY_LIST # #)
+;                      (:NONRECURSIVE 4 FAIL_IF_UNCHANGED # #))
+;              (LET (# # # #)
+;                (DECLARE #)
+;                (LET* #
 ;                  #
 ;                  #)))))
 ;     (HOLAI.RUNTIME:FLETC ((HOLAI.IMPCONV::TSET.FLAT_MAP (HOLAI.IMPCONV::F)
@@ -270,17 +285,17 @@ COMPILED_UNIT quot
 ; --> FLET 
 ; ==>
 ;   (HOLAI.IMPCONV::TSET.FLAT_MAP
-;    (&OPTIONAL (HOLAI.IMPCONV::F NIL #:SUPPLIED373) &REST #:EXCESS371)
+;    (&OPTIONAL (HOLAI.IMPCONV::F NIL #:SUPPLIED389) &REST #:EXCESS387)
 ;    (DECLARE (IGNORABLE HOLAI.IMPCONV::F))
-;    (IF #:SUPPLIED373
-;        (LET ((#:RESULT372 #))
-;          (IF #:EXCESS371
+;    (IF #:SUPPLIED389
+;        (LET ((#:RESULT388 #))
+;          (IF #:EXCESS387
 ;              (IF #
 ;                  #
 ;                  #)
-;              #:RESULT372))
+;              #:RESULT388))
 ;        (COND
-;         ((NOT #:SUPPLIED373) (HOLAI.RUNTIME:PARTIAL #:LOCAL-FUNCTION370)))))
+;         ((NOT #:SUPPLIED389) (HOLAI.RUNTIME:PARTIAL #:LOCAL-FUNCTION386)))))
 ; 
 ; note: deleting unused function
 ;   (FLET TSET.FLAT_MAP :IN "/home/tani/ghq/github.com/tani/holai/holai/generated/impconv.lisp")
@@ -304,19 +319,19 @@ COMPILED_UNIT quot
 ; --> FLET 
 ; ==>
 ;   (HOLAI.IMPCONV::IMPCONV.MKIMP_IMP
-;    (&OPTIONAL (HOLAI.IMPCONV::TH1 NIL #:SUPPLIED686)
-;     (HOLAI.IMPCONV::TH2 NIL #:SUPPLIED687) &REST #:EXCESS684)
+;    (&OPTIONAL (HOLAI.IMPCONV::TH1 NIL #:SUPPLIED706)
+;     (HOLAI.IMPCONV::TH2 NIL #:SUPPLIED707) &REST #:EXCESS704)
 ;    (DECLARE (IGNORABLE HOLAI.IMPCONV::TH1 HOLAI.IMPCONV::TH2))
-;    (IF #:SUPPLIED687
-;        (LET ((#:RESULT685 #))
-;          (IF #:EXCESS684
+;    (IF #:SUPPLIED707
+;        (LET ((#:RESULT705 #))
+;          (IF #:EXCESS704
 ;              (IF #
 ;                  #
 ;                  #)
-;              #:RESULT685))
-;        (COND ((NOT #:SUPPLIED686) (HOLAI.RUNTIME:PARTIAL #:LOCAL-FUNCTION683))
-;              ((NOT #:SUPPLIED687)
-;               (HOLAI.RUNTIME:PARTIAL #:LOCAL-FUNCTION683 HOLAI.IMPCONV::TH1)))))
+;              #:RESULT705))
+;        (COND ((NOT #:SUPPLIED706) (HOLAI.RUNTIME:PARTIAL #:LOCAL-FUNCTION703))
+;              ((NOT #:SUPPLIED707)
+;               (HOLAI.RUNTIME:PARTIAL #:LOCAL-FUNCTION703 HOLAI.IMPCONV::TH1)))))
 ; 
 ; note: deleting unused function
 ;   (FLET IMPCONV.MKIMP_IMP :IN "/home/tani/ghq/github.com/tani/holai/holai/generated/impconv.lisp")
@@ -336,19 +351,19 @@ COMPILED_UNIT quot
 ; --> FLET 
 ; ==>
 ;   (HOLAI.IMPCONV::IMPCONV.NO_IMPCONV
-;    (&OPTIONAL (HOLAI.IMPCONV::ARG~4834 NIL #:SUPPLIED756)
-;     (HOLAI.IMPCONV::ARG~4836 NIL #:SUPPLIED757) &REST #:EXCESS754)
+;    (&OPTIONAL (HOLAI.IMPCONV::ARG~4834 NIL #:SUPPLIED776)
+;     (HOLAI.IMPCONV::ARG~4836 NIL #:SUPPLIED777) &REST #:EXCESS774)
 ;    (DECLARE (IGNORABLE HOLAI.IMPCONV::ARG~4834 HOLAI.IMPCONV::ARG~4836))
-;    (IF #:SUPPLIED757
-;        (LET ((#:RESULT755 #))
-;          (IF #:EXCESS754
+;    (IF #:SUPPLIED777
+;        (LET ((#:RESULT775 #))
+;          (IF #:EXCESS774
 ;              (IF #
 ;                  #
 ;                  #)
-;              #:RESULT755))
-;        (COND ((NOT #:SUPPLIED756) (HOLAI.RUNTIME:PARTIAL #:LOCAL-FUNCTION753))
-;              ((NOT #:SUPPLIED757)
-;               (HOLAI.RUNTIME:PARTIAL #:LOCAL-FUNCTION753
+;              #:RESULT775))
+;        (COND ((NOT #:SUPPLIED776) (HOLAI.RUNTIME:PARTIAL #:LOCAL-FUNCTION773))
+;              ((NOT #:SUPPLIED777)
+;               (HOLAI.RUNTIME:PARTIAL #:LOCAL-FUNCTION773
 ;                                      HOLAI.IMPCONV::ARG~4834)))))
 ; 
 ; note: deleting unused function
@@ -371,19 +386,19 @@ COMPILED_UNIT quot
 ; --> FLET 
 ; ==>
 ;   (HOLAI.IMPCONV::IMPCONV.MATCH_MP_IMPCONV
-;    (&OPTIONAL (HOLAI.IMPCONV::TH NIL #:SUPPLIED786)
-;     (HOLAI.IMPCONV::ARG~4785 NIL #:SUPPLIED787) &REST #:EXCESS784)
+;    (&OPTIONAL (HOLAI.IMPCONV::TH NIL #:SUPPLIED806)
+;     (HOLAI.IMPCONV::ARG~4785 NIL #:SUPPLIED807) &REST #:EXCESS804)
 ;    (DECLARE (IGNORABLE HOLAI.IMPCONV::TH HOLAI.IMPCONV::ARG~4785))
-;    (IF #:SUPPLIED787
-;        (LET ((#:RESULT785 #))
-;          (IF #:EXCESS784
+;    (IF #:SUPPLIED807
+;        (LET ((#:RESULT805 #))
+;          (IF #:EXCESS804
 ;              (IF #
 ;                  #
 ;                  #)
-;              #:RESULT785))
-;        (COND ((NOT #:SUPPLIED786) (HOLAI.RUNTIME:PARTIAL #:LOCAL-FUNCTION783))
-;              ((NOT #:SUPPLIED787)
-;               (HOLAI.RUNTIME:PARTIAL #:LOCAL-FUNCTION783 HOLAI.IMPCONV::TH)))))
+;              #:RESULT805))
+;        (COND ((NOT #:SUPPLIED806) (HOLAI.RUNTIME:PARTIAL #:LOCAL-FUNCTION803))
+;              ((NOT #:SUPPLIED807)
+;               (HOLAI.RUNTIME:PARTIAL #:LOCAL-FUNCTION803 HOLAI.IMPCONV::TH)))))
 ; 
 ; note: deleting unused function
 ;   (FLET IMPCONV.MATCH_MP_IMPCONV :IN "/home/tani/ghq/github.com/tani/holai/holai/generated/impconv.lisp")
@@ -404,19 +419,19 @@ COMPILED_UNIT quot
 ; --> FLET 
 ; ==>
 ;   (HOLAI.IMPCONV::IMPCONV.IMPCONV_RULE
-;    (&OPTIONAL (HOLAI.IMPCONV::C% NIL #:SUPPLIED795)
-;     (HOLAI.IMPCONV::TH NIL #:SUPPLIED796) &REST #:EXCESS793)
+;    (&OPTIONAL (HOLAI.IMPCONV::C% NIL #:SUPPLIED815)
+;     (HOLAI.IMPCONV::TH NIL #:SUPPLIED816) &REST #:EXCESS813)
 ;    (DECLARE (IGNORABLE HOLAI.IMPCONV::C% HOLAI.IMPCONV::TH))
-;    (IF #:SUPPLIED796
-;        (LET ((#:RESULT794 #))
-;          (IF #:EXCESS793
+;    (IF #:SUPPLIED816
+;        (LET ((#:RESULT814 #))
+;          (IF #:EXCESS813
 ;              (IF #
 ;                  #
 ;                  #)
-;              #:RESULT794))
-;        (COND ((NOT #:SUPPLIED795) (HOLAI.RUNTIME:PARTIAL #:LOCAL-FUNCTION792))
-;              ((NOT #:SUPPLIED796)
-;               (HOLAI.RUNTIME:PARTIAL #:LOCAL-FUNCTION792 HOLAI.IMPCONV::C%)))))
+;              #:RESULT814))
+;        (COND ((NOT #:SUPPLIED815) (HOLAI.RUNTIME:PARTIAL #:LOCAL-FUNCTION812))
+;              ((NOT #:SUPPLIED816)
+;               (HOLAI.RUNTIME:PARTIAL #:LOCAL-FUNCTION812 HOLAI.IMPCONV::C%)))))
 ; 
 ; note: deleting unused function
 ;   (FLET IMPCONV.IMPCONV_RULE :IN "/home/tani/ghq/github.com/tani/holai/holai/generated/impconv.lisp")
@@ -437,29 +452,27 @@ COMPILED_UNIT quot
 ; --> FLET 
 ; ==>
 ;   (HOLAI.IMPCONV::IMPCONV.CTXIMPCONV_RULE
-;    (&OPTIONAL (HOLAI.IMPCONV::C% NIL #:SUPPLIED1434)
-;     (HOLAI.IMPCONV::TH NIL #:SUPPLIED1435) &REST #:EXCESS1432)
+;    (&OPTIONAL (HOLAI.IMPCONV::C% NIL #:SUPPLIED1600)
+;     (HOLAI.IMPCONV::TH NIL #:SUPPLIED1601) &REST #:EXCESS1598)
 ;    (DECLARE (IGNORABLE HOLAI.IMPCONV::C% HOLAI.IMPCONV::TH))
-;    (IF #:SUPPLIED1435
-;        (LET ((#:RESULT1433 #))
-;          (IF #:EXCESS1432
+;    (IF #:SUPPLIED1601
+;        (LET ((#:RESULT1599 #))
+;          (IF #:EXCESS1598
 ;              (IF #
 ;                  #
 ;                  #)
-;              #:RESULT1433))
+;              #:RESULT1599))
 ;        (COND
-;         ((NOT #:SUPPLIED1434) (HOLAI.RUNTIME:PARTIAL #:LOCAL-FUNCTION1431))
-;         ((NOT #:SUPPLIED1435)
-;          (HOLAI.RUNTIME:PARTIAL #:LOCAL-FUNCTION1431 HOLAI.IMPCONV::C%)))))
+;         ((NOT #:SUPPLIED1600) (HOLAI.RUNTIME:PARTIAL #:LOCAL-FUNCTION1597))
+;         ((NOT #:SUPPLIED1601)
+;          (HOLAI.RUNTIME:PARTIAL #:LOCAL-FUNCTION1597 HOLAI.IMPCONV::C%)))))
 ; 
 ; note: deleting unused function
 ;   (FLET IMPCONV.CTXIMPCONV_RULE :IN "/home/tani/ghq/github.com/tani/holai/holai/generated/impconv.lisp")
 
 ;     (HOLAI.RUNTIME:FLETC ((HOLAI.IMPCONV::IMPCONV.ORDER_ANNOTCONV
 ;                            (HOLAI.IMPCONV::CNV HOLAI.IMPCONV::T%)
-;                            (HOLAI.RUNTIME:MATCH (HOLAI.RUNTIME:FUNCALL
-;                                                  HOLAI.IMPCONV::CNV
-;                                                  HOLAI.IMPCONV::T%)
+;                            (HOLAI.RUNTIME:MATCH (# HOLAI.IMPCONV::T%)
 ;                              (# #))))
 ;       (HOLAI.RUNTIME:FLETC ((HOLAI.IMPCONV::IMPCONV.PAT_CNV_OF_THM
 ;                              (HOLAI.IMPCONV::TH)
@@ -474,20 +487,20 @@ COMPILED_UNIT quot
 ; --> FLET 
 ; ==>
 ;   (HOLAI.IMPCONV::IMPCONV.ORDER_ANNOTCONV
-;    (&OPTIONAL (HOLAI.IMPCONV::CNV NIL #:SUPPLIED1487)
-;     (HOLAI.IMPCONV::T% NIL #:SUPPLIED1488) &REST #:EXCESS1485)
+;    (&OPTIONAL (HOLAI.IMPCONV::CNV NIL #:SUPPLIED1653)
+;     (HOLAI.IMPCONV::T% NIL #:SUPPLIED1654) &REST #:EXCESS1651)
 ;    (DECLARE (IGNORABLE HOLAI.IMPCONV::CNV HOLAI.IMPCONV::T%))
-;    (IF #:SUPPLIED1488
-;        (LET ((#:RESULT1486 #))
-;          (IF #:EXCESS1485
+;    (IF #:SUPPLIED1654
+;        (LET ((#:RESULT1652 #))
+;          (IF #:EXCESS1651
 ;              (IF #
 ;                  #
 ;                  #)
-;              #:RESULT1486))
+;              #:RESULT1652))
 ;        (COND
-;         ((NOT #:SUPPLIED1487) (HOLAI.RUNTIME:PARTIAL #:LOCAL-FUNCTION1484))
-;         ((NOT #:SUPPLIED1488)
-;          (HOLAI.RUNTIME:PARTIAL #:LOCAL-FUNCTION1484 HOLAI.IMPCONV::CNV)))))
+;         ((NOT #:SUPPLIED1653) (HOLAI.RUNTIME:PARTIAL #:LOCAL-FUNCTION1650))
+;         ((NOT #:SUPPLIED1654)
+;          (HOLAI.RUNTIME:PARTIAL #:LOCAL-FUNCTION1650 HOLAI.IMPCONV::CNV)))))
 ; 
 ; note: deleting unused function
 ;   (FLET IMPCONV.ORDER_ANNOTCONV :IN "/home/tani/ghq/github.com/tani/holai/holai/generated/impconv.lisp")
@@ -1219,7 +1232,7 @@ COMPILED_UNIT realarith
 0..0..1..2..5..18..35..solved at 63
 0..0..1..2..solved at 6
 0..0..2..4..10..18..34..76..138..336..872..2366..solved at 5076
-CPU time (user): 0.2066580000000009d0
+CPU time (user): 0.20952099999999874d0
 COMPILED_UNIT real
 0..0..1..2..7..14..37..72..174..325..solved at 392
 0..0..2..solved at 5
@@ -3746,7 +3759,7 @@ Warning: inventing type variables
 0..0..solved at 2
 0..0..1..2..9..19..31..63..105..solved at 121
 0..0..solved at 2
-CPU time (user): 0.006491000000004021d0
+CPU time (user): 0.006579000000002111d0
 0..0..1..3..8..14..33..66..99..154..219..284..365..450..535..843..1220..1621..2226..2892..3660..5020..6510..8326..10667..13397..16922..20942..25267..30727..solved at 35152
 0..0..solved at 2
 0..0..solved at 2

@@ -267,7 +267,6 @@
     lambdac
     labelsc
     function-value
-    funcall
     fst
     fletc
     failwith
@@ -308,9 +307,9 @@
 (defunc mk_thm (arg~2)
   (match arg~2
     ((tuple asl c%)
-      (let ((ax (new_axiom (itlist (curry mk_imp) (funcall rev asl) c%))))
+      (let ((ax (new_axiom (itlist (curry mk_imp) (#`rev asl) c%))))
         (cl:declare (cl:ignorable ax))
-        (rev_itlist (lambdac (t% th) (funcall MP th (ASSUME t%))) (funcall rev asl) ax)))))
+        (rev_itlist (lambdac (t% th) (#`MP th (ASSUME t%))) (#`rev asl) ax)))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Derived congruence rules; very useful things!                             *)
@@ -331,13 +330,13 @@
   (let ((atm (mk_const (tuple "!" nil))))
     (cl:declare (cl:ignorable atm))
     (lambdac (v th)
-      (AP_TERM (funcall inst (cl:cons (tuple (type_of v) aty) nil) atm) (ABS% v th)))))
+      (AP_TERM (#`inst (cl:cons (tuple (type_of v) aty) nil) atm) (ABS% v th)))))
 
 (defparameter MK_EXISTS
   (let ((atm (mk_const (tuple "?" nil))))
     (cl:declare (cl:ignorable atm))
     (lambdac (v th)
-      (AP_TERM (funcall inst (cl:cons (tuple (type_of v) aty) nil) atm) (ABS% v th)))))
+      (AP_TERM (#`inst (cl:cons (tuple (type_of v) aty) nil) atm) (ABS% v th)))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Eliminate the antecedent of a theorem using a conversion/proof rule.      *)
@@ -345,17 +344,15 @@
 
 
 (defunc MP_CONV (cnv th)
-  (match (funcall dest_imp (concl th))
+  (match (#`dest_imp (concl th))
     ((tuple l r)
-      (let ((ath (funcall cnv l)))
+      (let ((ath (#`cnv l)))
         (cl:declare (cl:ignorable ath))
         (handler-case
-          (funcall MP th (EQT_ELIM ath))
+          (#`MP th (EQT_ELIM ath))
           (holai.runtime:ocaml-condition
             (exception~114)
-            (match exception~114
-              ((Failure _) (funcall MP th ath))
-              (_ (raise exception~114)))))))))
+            (match exception~114 ((Failure _) (#`MP th ath)) (_ (raise exception~114)))))))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Multiple beta-reduction (we use a slight variant below).                  *)
@@ -374,9 +371,8 @@
 
 
 (defparameter instantiate
-  (fletc
-    ((betas
-      (n tm)
+  (holai.runtime:labelsc
+    ((:nonrecursive 0 betas (n tm)
       (match
         (funpow
           n
@@ -386,13 +382,10 @@
         ((tuple args lam)
           (rev_itlist
             (lambdac (a% l)
-              (match (dest_abs l)
-                ((tuple v b) (funcall vsubst (cl:cons (tuple a% v) nil) b))))
+              (match (dest_abs l) ((tuple v b) (#`vsubst (cl:cons (tuple a% v) nil) b))))
             args
-            lam)))))
-    (labelsc
-      ((ho_betas
-        (bcs pat tm)
+            lam))))
+      (:recursive 1 ho_betas (bcs pat tm)
         (if (cl:or (is_var pat) (is_const pat))
           (fail unit)
           (handler-case
@@ -402,12 +395,12 @@
               (exception~214)
               (match exception~214
                 ((Failure _)
-                  (match (funcall strip_comb pat)
+                  (match (#`strip_comb pat)
                     ((tuple hop args)
                       (handler-case
                         (let ((n (rev_assoc hop bcs)))
                           (cl:declare (cl:ignorable n))
-                          (if (= (funcall length args) n) (betas n tm) (fail unit)))
+                          (if (= (#`length args) n) (betas n tm) (fail unit)))
                         (holai.runtime:ocaml-condition
                           (exception~219)
                           (match exception~219
@@ -438,33 +431,30 @@
                                             (_ (raise exception~226))))))))))
                             (_ (raise exception~219))))))))
                 (_ (raise exception~214))))))))
-      (lambdac (arg~323 tm)
-        (match arg~323
-          ((tuple bcs tmin tyin)
-            (let ((itm (if (= tyin nil) tm (funcall inst tyin tm))))
-              (cl:declare (cl:ignorable itm))
-              (if (= tmin nil)
-                itm
-                (let ((ttm (funcall vsubst tmin itm)))
-                  (cl:declare (cl:ignorable ttm))
-                  (if (= bcs nil)
-                    ttm
-                    (handler-case
-                      (ho_betas bcs itm ttm)
-                      (holai.runtime:ocaml-condition
-                        (exception~342)
-                        (match exception~342 ((Failure _) ttm) (_ (raise exception~342)))))))))))))))
+    (lambdac (arg~323 tm)
+      (match arg~323
+        ((tuple bcs tmin tyin)
+          (let ((itm (if (= tyin nil) tm (#`inst tyin tm))))
+            (cl:declare (cl:ignorable itm))
+            (if (= tmin nil)
+              itm
+              (let ((ttm (#`vsubst tmin itm)))
+                (cl:declare (cl:ignorable ttm))
+                (if (= bcs nil)
+                  ttm
+                  (handler-case
+                    (ho_betas bcs itm ttm)
+                    (holai.runtime:ocaml-condition
+                      (exception~342)
+                      (match exception~342 ((Failure _) ttm) (_ (raise exception~342))))))))))))))
 
 (defparameter INSTANTIATE%
-  (labelsc
-    ((BETAS_CONV%
-      (n tm)
+  (holai.runtime:labelsc
+    ((:recursive 0 BETAS_CONV% (n tm)
       (if (= n 1)
         (TRY_CONV #'BETA_CONV tm)
-        (THENC (RATOR_CONV (BETAS_CONV% (- n 1))) (TRY_CONV #'BETA_CONV) tm))))
-    (labelsc
-      ((HO_BETAS
-        (bcs pat tm)
+        (THENC (RATOR_CONV (BETAS_CONV% (- n 1))) (TRY_CONV #'BETA_CONV) tm)))
+      (:recursive 1 HO_BETAS (bcs pat tm)
         (if (cl:or (is_var pat) (is_const pat))
           (fail unit)
           (handler-case
@@ -473,12 +463,12 @@
               (exception~395)
               (match exception~395
                 ((Failure _)
-                  (match (funcall strip_comb pat)
+                  (match (#`strip_comb pat)
                     ((tuple hop args)
                       (handler-case
                         (let ((n (rev_assoc hop bcs)))
                           (cl:declare (cl:ignorable n))
-                          (if (= (funcall length args) n) (BETAS_CONV% n tm) (fail unit)))
+                          (if (= (#`length args) n) (BETAS_CONV% n tm) (fail unit)))
                         (holai.runtime:ocaml-condition
                           (exception~400)
                           (match exception~400
@@ -509,28 +499,26 @@
                                             (_ (raise exception~407))))))))))
                             (_ (raise exception~400))))))))
                 (_ (raise exception~395))))))))
-      (lambdac (arg~501 th)
-        (match arg~501
-          ((tuple bcs tmin tyin)
-            (let ((ith (if (= tyin nil) th (INST_TYPE tyin th))))
-              (cl:declare (cl:ignorable ith))
-              (if (= tmin nil)
-                ith
-                (let ((tth (INST% tmin ith)))
-                  (cl:declare (cl:ignorable tth))
-                  (if (= (hyp tth) (hyp th))
-                    (if (= bcs nil)
-                      tth
-                      (handler-case
-                        (let ((eth (HO_BETAS bcs (concl ith) (concl tth))))
-                          (cl:declare (cl:ignorable eth))
-                          (EQ_MP eth tth))
-                        (holai.runtime:ocaml-condition
-                          (exception~522)
-                          (match exception~522
-                            ((Failure _) tth)
-                            (_ (raise exception~522))))))
-                    (failwith "INSTANTIATE: term or type var free in assumptions")))))))))))
+    (lambdac (arg~501 th)
+      (match arg~501
+        ((tuple bcs tmin tyin)
+          (let ((ith (if (= tyin nil) th (INST_TYPE tyin th))))
+            (cl:declare (cl:ignorable ith))
+            (if (= tmin nil)
+              ith
+              (let ((tth (INST% tmin ith)))
+                (cl:declare (cl:ignorable tth))
+                (if (= (hyp tth) (hyp th))
+                  (if (= bcs nil)
+                    tth
+                    (handler-case
+                      (let ((eth (HO_BETAS bcs (concl ith) (concl tth))))
+                        (cl:declare (cl:ignorable eth))
+                        (EQ_MP eth tth))
+                      (holai.runtime:ocaml-condition
+                        (exception~522)
+                        (match exception~522 ((Failure _) tth) (_ (raise exception~522))))))
+                  (failwith "INSTANTIATE: term or type var free in assumptions"))))))))))
 
 (defunc INSTANTIATE_ALL (arg~565 th)
   (match arg~565
@@ -540,7 +528,7 @@
         (let ((hyps (hyp th)))
           (cl:declare (cl:ignorable hyps))
           (if (= hyps nil)
-            (funcall INSTANTIATE% i% th)
+            (#`INSTANTIATE% i% th)
             (match
               (if (= tyin nil)
                 (tuple nil hyps)
@@ -572,9 +560,9 @@
                     (let*
                       ((rhyps (union tyrel tmrel))
                         (th1 (rev_itlist DISCH rhyps th))
-                        (th2 (funcall INSTANTIATE% i% th1)))
+                        (th2 (#`INSTANTIATE% i% th1)))
                       (cl:declare (cl:ignorable rhyps th1 th2))
-                      (funpow (funcall length rhyps) #'UNDISCH th2))))))))))))
+                      (funpow (#`length rhyps) #'UNDISCH th2))))))))))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Higher order matching of terms.                                           *)
@@ -587,9 +575,8 @@
 
 
 (defparameter term_match
-  (fletc
-    ((safe_inserta
-      (arg~695 l)
+  (holai.runtime:labelsc
+    ((:nonrecursive 0 safe_inserta (arg~695 l)
       (match arg~695
         ((cl:and n (tuple y x))
           (handler-case
@@ -600,10 +587,8 @@
               (exception~701)
               (match exception~701
                 ((Failure "find") (cl:cons n l))
-                (_ (raise exception~701)))))))))
-    (fletc
-      ((safe_insert
-        (arg~726 l)
+                (_ (raise exception~701))))))))
+      (:nonrecursive 1 safe_insert (arg~726 l)
         (match arg~726
           ((cl:and n (tuple y x))
             (handler-case
@@ -615,270 +600,240 @@
                 (match exception~732
                   ((Failure "find") (cl:cons n l))
                   (_ (raise exception~732)))))))))
-      (let
-        ((mk_dummy
-          (let ((name (fst (dest_var (funcall genvar aty)))))
-            (cl:declare (cl:ignorable name))
-            (lambdac (ty) (mk_var (tuple name ty))))))
-        (cl:declare (cl:ignorable mk_dummy))
-        (labelsc
-          ((term_pmatch
-            (lconsts env vtm ctm arg~776)
-            (match arg~776
-              ((cl:and sofar (tuple insts homs))
-                (match (tuple vtm ctm)
-                  ((tuple (Var _ _) _)
-                    (handler-case
-                      (let ((ctm% (rev_assoc vtm env)))
-                        (cl:declare (cl:ignorable ctm%))
-                        (if (= (compare ctm% ctm) 0) sofar (failwith "term_pmatch")))
-                      (holai.runtime:ocaml-condition
-                        (exception~786)
-                        (match exception~786
-                          ((Failure "find")
-                            (if (mem vtm lconsts)
-                              (if (= (compare ctm vtm) 0)
-                                sofar
-                                (failwith "term_pmatch: can't instantiate local constant"))
-                              (tuple (safe_inserta (tuple ctm vtm) insts) homs)))
-                          (_ (raise exception~786))))))
-                  ((tuple (Const vname vty) (Const cname cty))
-                    (if (= (compare vname cname) 0)
-                      (if (= (compare vty cty) 0)
-                        sofar
-                        (tuple
-                          (safe_insert
-                            (tuple (funcall mk_dummy cty) (funcall mk_dummy vty))
-                            insts)
-                          homs))
-                      (failwith "term_pmatch")))
-                  ((tuple (Abs vv vbod) (Abs cv cbod))
-                    (let
-                      ((sofar%
-                        (tuple
-                          (safe_insert
-                            (tuple
-                              (funcall mk_dummy (snd (dest_var cv)))
-                              (funcall mk_dummy (snd (dest_var vv))))
-                            insts)
-                          homs)))
-                      (cl:declare (cl:ignorable sofar%))
-                      (term_pmatch lconsts (cl:cons (tuple cv vv) env) vbod cbod sofar%)))
-                  (_
-                    (let ((vhop (repeat #'rator vtm)))
-                      (cl:declare (cl:ignorable vhop))
-                      (if
-                        (cl:and
-                          (is_var vhop)
-                          (cl:and
-                            (not (mem vhop lconsts))
-                            (not (can (rev_assoc vhop) env))))
-                        (let ((vty (type_of vtm)) (cty (type_of ctm)))
-                          (cl:declare (cl:ignorable vty cty))
-                          (let
-                            ((insts%
-                              (if (= (compare vty cty) 0)
-                                insts
-                                (safe_insert
-                                  (tuple (funcall mk_dummy cty) (funcall mk_dummy vty))
-                                  insts))))
-                            (cl:declare (cl:ignorable insts%))
-                            (tuple insts% (cl:cons (tuple env ctm vtm) homs))))
-                        (match (tuple (dest_comb vtm) (dest_comb ctm))
-                          ((tuple (tuple lv rv) (tuple lc rc))
-                            (let ((sofar% (term_pmatch lconsts env lv lc sofar)))
-                              (cl:declare (cl:ignorable sofar%))
-                              (term_pmatch lconsts env rv rc sofar%))))))))))))
-          (fletc
-            ((get_type_insts
-              (insts)
-              (itlist
-                (lambdac (arg~986)
-                  (match arg~986
-                    ((tuple t% x) (type_match (snd (dest_var x)) (type_of t%)))))
-                insts)))
-            (fletc
-              ((separate_insts
-                (insts)
-                (match (partition (o #'is_var (function-value #'snd 1)) insts)
-                  ((tuple realinsts patterns)
-                    (let*
-                      ((betacounts
-                        (if (= patterns nil)
-                          nil
-                          (itlist
-                            (lambdac (arg~1007 sof)
-                              (match arg~1007
-                                ((tuple _ p)
-                                  (match (funcall strip_comb p)
-                                    ((tuple hop args)
-                                      (handler-case
-                                        (safe_insert
-                                          (tuple (funcall length args) hop)
-                                          sof)
-                                        (holai.runtime:ocaml-condition
-                                          (exception~1013)
-                                          (match exception~1013
-                                            ((Failure _)
-                                              (progn
-                                                (warn
-                                                  cl:t
-                                                  "Inconsistent patterning in higher order match")
-                                                sof))
-                                            (_ (raise exception~1013))))))))))
-                            patterns
-                            nil)))
-                        (tyins (get_type_insts realinsts nil)))
-                      (cl:declare (cl:ignorable betacounts tyins))
+    (let
+      ((mk_dummy
+        (let ((name (fst (dest_var (#`genvar aty)))))
+          (cl:declare (cl:ignorable name))
+          (lambdac (ty) (mk_var (tuple name ty))))))
+      (cl:declare (cl:ignorable mk_dummy))
+      (holai.runtime:labelsc
+        ((:recursive 0 term_pmatch (lconsts env vtm ctm arg~776)
+          (match arg~776
+            ((cl:and sofar (tuple insts homs))
+              (match (tuple vtm ctm)
+                ((tuple (Var _ _) _)
+                  (handler-case
+                    (let ((ctm% (rev_assoc vtm env)))
+                      (cl:declare (cl:ignorable ctm%))
+                      (if (= (compare ctm% ctm) 0) sofar (failwith "term_pmatch")))
+                    (holai.runtime:ocaml-condition
+                      (exception~786)
+                      (match exception~786
+                        ((Failure "find")
+                          (if (mem vtm lconsts)
+                            (if (= (compare ctm vtm) 0)
+                              sofar
+                              (failwith "term_pmatch: can't instantiate local constant"))
+                            (tuple (safe_inserta (tuple ctm vtm) insts) homs)))
+                        (_ (raise exception~786))))))
+                ((tuple (Const vname vty) (Const cname cty))
+                  (if (= (compare vname cname) 0)
+                    (if (= (compare vty cty) 0)
+                      sofar
                       (tuple
-                        betacounts
-                        (mapfilter
-                          (lambdac (arg~1051)
-                            (match arg~1051
-                              ((tuple t% x)
-                                (let
-                                  ((x%
-                                    (match (dest_var x)
-                                      ((tuple xn xty)
-                                        (mk_var (tuple xn (type_subst tyins xty)))))))
-                                  (cl:declare (cl:ignorable x%))
-                                  (if (= (compare t% x%) 0) (fail unit) (tuple t% x%))))))
-                          realinsts)
-                        tyins))))))
-              (labelsc
-                ((term_homatch
-                  (lconsts tyins arg~1104)
-                  (match arg~1104
-                    ((tuple insts homs)
-                      (if (= homs nil)
-                        insts
-                        (match (hd homs)
-                          ((tuple env ctm vtm)
-                            (if (is_var vtm)
-                              (if (= (compare ctm vtm) 0)
-                                (term_homatch lconsts tyins (tuple insts (tl homs)))
-                                (let
-                                  ((newtyins
-                                    (safe_insert
-                                      (tuple (type_of ctm) (snd (dest_var vtm)))
-                                      tyins))
-                                    (newinsts (cl:cons (tuple ctm vtm) insts)))
-                                  (cl:declare (cl:ignorable newtyins newinsts))
-                                  (term_homatch
-                                    lconsts
-                                    newtyins
-                                    (tuple newinsts (tl homs)))))
-                              (match (funcall strip_comb vtm)
-                                ((tuple vhop vargs)
-                                  (let*
-                                    ((afvs (freesl vargs)) (inst_fn (funcall inst tyins)))
-                                    (cl:declare (cl:ignorable afvs inst_fn))
-                                    (handler-case
-                                      (let*
-                                        ((tmins
-                                          (map
-                                            (lambdac (a%)
-                                              (tuple
-                                                (handler-case
-                                                  (rev_assoc a% env)
-                                                  (holai.runtime:ocaml-condition
-                                                    (exception~1165)
-                                                    (match exception~1165
-                                                      ((Failure _)
-                                                        (handler-case
-                                                          (rev_assoc a% insts)
-                                                          (holai.runtime:ocaml-condition
-                                                            (exception~1168)
-                                                            (match exception~1168
-                                                              ((Failure _)
-                                                                (if (mem a% lconsts)
-                                                                  a%
-                                                                  (fail unit)))
-                                                              (_ (raise exception~1168))))))
-                                                      (_ (raise exception~1165)))))
-                                                (funcall inst_fn a%)))
-                                            afvs))
-                                          (pats0 (map inst_fn vargs))
-                                          (pats (map (funcall vsubst tmins) pats0))
-                                          (vhop% (funcall inst_fn vhop))
-                                          (ni
-                                            (match (funcall strip_comb ctm)
-                                              ((tuple chop cargs)
-                                                (if (= (compare cargs pats) 0)
-                                                  (if (= (compare chop vhop) 0)
-                                                    insts
-                                                    (safe_inserta (tuple chop vhop) insts))
-                                                  (let*
-                                                    ((ginsts
-                                                      (map
-                                                        (lambdac (p)
-                                                          (tuple
-                                                            (if (is_var p)
-                                                              p
-                                                              (funcall genvar (type_of p)))
-                                                            p))
-                                                        pats))
-                                                      (ctm% (funcall subst ginsts ctm))
-                                                      (gvs
-                                                        (map
-                                                          (function-value #'fst 1)
-                                                          ginsts)))
-                                                    (cl:declare
-                                                      (cl:ignorable ginsts ctm% gvs))
-                                                    (let*
-                                                      ((abstm
-                                                        (list_mk_abs (tuple gvs ctm%)))
-                                                        (vinsts
-                                                          (safe_inserta
-                                                            (tuple abstm vhop)
-                                                            insts))
-                                                        (icpair
-                                                          (tuple
-                                                            ctm%
-                                                            (list_mk_comb
-                                                              (tuple vhop% gvs)))))
-                                                      (cl:declare
-                                                        (cl:ignorable abstm vinsts icpair))
-                                                      (cl:cons icpair vinsts))))))))
-                                        (cl:declare
-                                          (cl:ignorable tmins pats0 pats vhop% ni))
-                                        (term_homatch lconsts tyins (tuple ni (tl homs))))
-                                      (holai.runtime:ocaml-condition
-                                        (exception~1119)
-                                        (match exception~1119
-                                          ((Failure _)
-                                            (match (tuple (dest_comb ctm) (dest_comb vtm))
-                                              ((tuple (tuple lc rc) (tuple lv rv))
-                                                (let*
-                                                  ((pinsts_homs%
-                                                    (term_pmatch
-                                                      lconsts
-                                                      env
-                                                      rv
-                                                      rc
-                                                      (tuple
-                                                        insts
-                                                        (cl:cons
-                                                          (tuple env lc lv)
-                                                          (tl homs)))))
-                                                    (tyins%
-                                                      (get_type_insts
-                                                        (fst pinsts_homs%)
-                                                        nil)))
-                                                  (cl:declare
-                                                    (cl:ignorable pinsts_homs% tyins%))
-                                                  (term_homatch
-                                                    lconsts
-                                                    tyins%
-                                                    pinsts_homs%)))))
-                                          (_ (raise exception~1119))))))))))))))))
-                (lambdac (lconsts vtm ctm)
-                  (let*
-                    ((pinsts_homs (term_pmatch lconsts nil vtm ctm (tuple nil nil)))
-                      (tyins (get_type_insts (fst pinsts_homs) nil))
-                      (insts (term_homatch lconsts tyins pinsts_homs)))
-                    (cl:declare (cl:ignorable pinsts_homs tyins insts))
-                    (separate_insts insts)))))))))))
+                        (safe_insert (tuple (#`mk_dummy cty) (#`mk_dummy vty)) insts)
+                        homs))
+                    (failwith "term_pmatch")))
+                ((tuple (Abs vv vbod) (Abs cv cbod))
+                  (let
+                    ((sofar%
+                      (tuple
+                        (safe_insert
+                          (tuple
+                            (#`mk_dummy (snd (dest_var cv)))
+                            (#`mk_dummy (snd (dest_var vv))))
+                          insts)
+                        homs)))
+                    (cl:declare (cl:ignorable sofar%))
+                    (term_pmatch lconsts (cl:cons (tuple cv vv) env) vbod cbod sofar%)))
+                (_
+                  (let ((vhop (repeat #'rator vtm)))
+                    (cl:declare (cl:ignorable vhop))
+                    (if
+                      (cl:and
+                        (is_var vhop)
+                        (cl:and (not (mem vhop lconsts)) (not (can (rev_assoc vhop) env))))
+                      (let ((vty (type_of vtm)) (cty (type_of ctm)))
+                        (cl:declare (cl:ignorable vty cty))
+                        (let
+                          ((insts%
+                            (if (= (compare vty cty) 0)
+                              insts
+                              (safe_insert
+                                (tuple (#`mk_dummy cty) (#`mk_dummy vty))
+                                insts))))
+                          (cl:declare (cl:ignorable insts%))
+                          (tuple insts% (cl:cons (tuple env ctm vtm) homs))))
+                      (match (tuple (dest_comb vtm) (dest_comb ctm))
+                        ((tuple (tuple lv rv) (tuple lc rc))
+                          (let ((sofar% (term_pmatch lconsts env lv lc sofar)))
+                            (cl:declare (cl:ignorable sofar%))
+                            (term_pmatch lconsts env rv rc sofar%)))))))))))
+          (:nonrecursive 1 get_type_insts (insts)
+            (itlist
+              (lambdac (arg~986)
+                (match arg~986
+                  ((tuple t% x) (type_match (snd (dest_var x)) (type_of t%)))))
+              insts))
+          (:nonrecursive 2 separate_insts (insts)
+            (match (partition (o #'is_var (function-value #'snd 1)) insts)
+              ((tuple realinsts patterns)
+                (let*
+                  ((betacounts
+                    (if (= patterns nil)
+                      nil
+                      (itlist
+                        (lambdac (arg~1007 sof)
+                          (match arg~1007
+                            ((tuple _ p)
+                              (match (#`strip_comb p)
+                                ((tuple hop args)
+                                  (handler-case
+                                    (safe_insert (tuple (#`length args) hop) sof)
+                                    (holai.runtime:ocaml-condition
+                                      (exception~1013)
+                                      (match exception~1013
+                                        ((Failure _)
+                                          (progn
+                                            (warn
+                                              cl:t
+                                              "Inconsistent patterning in higher order match")
+                                            sof))
+                                        (_ (raise exception~1013))))))))))
+                        patterns
+                        nil)))
+                    (tyins (get_type_insts realinsts nil)))
+                  (cl:declare (cl:ignorable betacounts tyins))
+                  (tuple
+                    betacounts
+                    (mapfilter
+                      (lambdac (arg~1051)
+                        (match arg~1051
+                          ((tuple t% x)
+                            (let
+                              ((x%
+                                (match (dest_var x)
+                                  ((tuple xn xty)
+                                    (mk_var (tuple xn (type_subst tyins xty)))))))
+                              (cl:declare (cl:ignorable x%))
+                              (if (= (compare t% x%) 0) (fail unit) (tuple t% x%))))))
+                      realinsts)
+                    tyins)))))
+          (:recursive 3 term_homatch (lconsts tyins arg~1104)
+            (match arg~1104
+              ((tuple insts homs)
+                (if (= homs nil)
+                  insts
+                  (match (hd homs)
+                    ((tuple env ctm vtm)
+                      (if (is_var vtm)
+                        (if (= (compare ctm vtm) 0)
+                          (term_homatch lconsts tyins (tuple insts (tl homs)))
+                          (let
+                            ((newtyins
+                              (safe_insert
+                                (tuple (type_of ctm) (snd (dest_var vtm)))
+                                tyins))
+                              (newinsts (cl:cons (tuple ctm vtm) insts)))
+                            (cl:declare (cl:ignorable newtyins newinsts))
+                            (term_homatch lconsts newtyins (tuple newinsts (tl homs)))))
+                        (match (#`strip_comb vtm)
+                          ((tuple vhop vargs)
+                            (let* ((afvs (freesl vargs)) (inst_fn (#`inst tyins)))
+                              (cl:declare (cl:ignorable afvs inst_fn))
+                              (handler-case
+                                (let*
+                                  ((tmins
+                                    (map
+                                      (lambdac (a%)
+                                        (tuple
+                                          (handler-case
+                                            (rev_assoc a% env)
+                                            (holai.runtime:ocaml-condition
+                                              (exception~1165)
+                                              (match exception~1165
+                                                ((Failure _)
+                                                  (handler-case
+                                                    (rev_assoc a% insts)
+                                                    (holai.runtime:ocaml-condition
+                                                      (exception~1168)
+                                                      (match exception~1168
+                                                        ((Failure _)
+                                                          (if (mem a% lconsts)
+                                                            a%
+                                                            (fail unit)))
+                                                        (_ (raise exception~1168))))))
+                                                (_ (raise exception~1165)))))
+                                          (#`inst_fn a%)))
+                                      afvs))
+                                    (pats0 (map inst_fn vargs))
+                                    (pats (map (#`vsubst tmins) pats0))
+                                    (vhop% (#`inst_fn vhop))
+                                    (ni
+                                      (match (#`strip_comb ctm)
+                                        ((tuple chop cargs)
+                                          (if (= (compare cargs pats) 0)
+                                            (if (= (compare chop vhop) 0)
+                                              insts
+                                              (safe_inserta (tuple chop vhop) insts))
+                                            (let*
+                                              ((ginsts
+                                                (map
+                                                  (lambdac (p)
+                                                    (tuple
+                                                      (if (is_var p)
+                                                        p
+                                                        (#`genvar (type_of p)))
+                                                      p))
+                                                  pats))
+                                                (ctm% (#`subst ginsts ctm))
+                                                (gvs
+                                                  (map (function-value #'fst 1) ginsts)))
+                                              (cl:declare (cl:ignorable ginsts ctm% gvs))
+                                              (let*
+                                                ((abstm (list_mk_abs (tuple gvs ctm%)))
+                                                  (vinsts
+                                                    (safe_inserta
+                                                      (tuple abstm vhop)
+                                                      insts))
+                                                  (icpair
+                                                    (tuple
+                                                      ctm%
+                                                      (list_mk_comb (tuple vhop% gvs)))))
+                                                (cl:declare
+                                                  (cl:ignorable abstm vinsts icpair))
+                                                (cl:cons icpair vinsts))))))))
+                                  (cl:declare (cl:ignorable tmins pats0 pats vhop% ni))
+                                  (term_homatch lconsts tyins (tuple ni (tl homs))))
+                                (holai.runtime:ocaml-condition
+                                  (exception~1119)
+                                  (match exception~1119
+                                    ((Failure _)
+                                      (match (tuple (dest_comb ctm) (dest_comb vtm))
+                                        ((tuple (tuple lc rc) (tuple lv rv))
+                                          (let*
+                                            ((pinsts_homs%
+                                              (term_pmatch
+                                                lconsts
+                                                env
+                                                rv
+                                                rc
+                                                (tuple
+                                                  insts
+                                                  (cl:cons (tuple env lc lv) (tl homs)))))
+                                              (tyins%
+                                                (get_type_insts (fst pinsts_homs%) nil)))
+                                            (cl:declare
+                                              (cl:ignorable pinsts_homs% tyins%))
+                                            (term_homatch lconsts tyins% pinsts_homs%)))))
+                                    (_ (raise exception~1119))))))))))))))))
+        (lambdac (lconsts vtm ctm)
+          (let*
+            ((pinsts_homs (term_pmatch lconsts nil vtm ctm (tuple nil nil)))
+              (tyins (get_type_insts (fst pinsts_homs) nil))
+              (insts (term_homatch lconsts tyins pinsts_homs)))
+            (cl:declare (cl:ignorable pinsts_homs tyins insts))
+            (separate_insts insts)))))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* First order unification of terms of the same type.                        *)
@@ -886,69 +841,61 @@
 
 
 (defparameter term_unify
-  (fletc
-    ((augment1
-      (sofar arg~1393)
+  (holai.runtime:labelsc
+    ((:nonrecursive 0 augment1 (sofar arg~1393)
       (match arg~1393
         ((tuple s x)
-          (let ((s% (funcall subst sofar s)))
+          (let ((s% (#`subst sofar s)))
             (cl:declare (cl:ignorable s%))
             (if (cl:and (vfree_in x s%) (not (= s x)))
               (failwith "term_unify: augment1")
-              (tuple s% x)))))))
-    (fletc
-      ((raw_augment_insts (p insts) (cl:cons p (map (augment1 (cl:cons p nil)) insts))))
-      (fletc
-        ((augment_insts
-          (arg~1431 insts)
-          (match arg~1431
-            ((tuple t% v)
-              (let ((t%% (funcall vsubst insts t%)))
-                (cl:declare (cl:ignorable t%%))
-                (if (= t%% v)
-                  insts
-                  (if (vfree_in v t%%)
-                    (failwith "augment_insts")
-                    (raw_augment_insts (tuple t%% v) insts))))))))
-        (labelsc
-          ((unify
-            (vars tm1 tm2 sofar)
-            (if (= tm1 tm2)
-              sofar
-              (if (cl:and (is_var tm1) (mem tm1 vars))
-                (handler-case
-                  (let ((tm1% (rev_assoc tm1 sofar)))
-                    (cl:declare (cl:ignorable tm1%))
-                    (unify vars tm1% tm2 sofar))
-                  (holai.runtime:ocaml-condition
-                    (exception~1538)
-                    (match exception~1538
-                      ((Failure "find") (augment_insts (tuple tm2 tm1) sofar))
-                      (_ (raise exception~1538)))))
-                (if (cl:and (is_var tm2) (mem tm2 vars))
-                  (handler-case
-                    (let ((tm2% (rev_assoc tm2 sofar)))
-                      (cl:declare (cl:ignorable tm2%))
-                      (unify vars tm1 tm2% sofar))
-                    (holai.runtime:ocaml-condition
-                      (exception~1512)
-                      (match exception~1512
-                        ((Failure "find") (augment_insts (tuple tm1 tm2) sofar))
-                        (_ (raise exception~1512)))))
-                  (if (is_abs tm1)
-                    (let
-                      ((tm1% (body tm1))
-                        (tm2%
-                          (funcall
-                            subst
-                            (cl:cons (tuple (bndvar tm1) (bndvar tm2)) nil)
-                            (body tm2))))
-                      (cl:declare (cl:ignorable tm1% tm2%))
-                      (unify vars tm1% tm2% sofar))
-                    (match (tuple (dest_comb tm1) (dest_comb tm2))
-                      ((tuple (tuple l1 r1) (tuple l2 r2))
-                        (unify vars l1 l2 (unify vars r1 r2 sofar))))))))))
-          (lambdac (vars tm1 tm2) (tuple nil (unify vars tm1 tm2 nil) nil)))))))
+              (tuple s% x))))))
+      (:nonrecursive 1 raw_augment_insts (p insts)
+        (cl:cons p (map (augment1 (cl:cons p nil)) insts)))
+      (:nonrecursive 2 augment_insts (arg~1431 insts)
+        (match arg~1431
+          ((tuple t% v)
+            (let ((t%% (#`vsubst insts t%)))
+              (cl:declare (cl:ignorable t%%))
+              (if (= t%% v)
+                insts
+                (if (vfree_in v t%%)
+                  (failwith "augment_insts")
+                  (raw_augment_insts (tuple t%% v) insts)))))))
+      (:recursive 3 unify (vars tm1 tm2 sofar)
+        (if (= tm1 tm2)
+          sofar
+          (if (cl:and (is_var tm1) (mem tm1 vars))
+            (handler-case
+              (let ((tm1% (rev_assoc tm1 sofar)))
+                (cl:declare (cl:ignorable tm1%))
+                (unify vars tm1% tm2 sofar))
+              (holai.runtime:ocaml-condition
+                (exception~1538)
+                (match exception~1538
+                  ((Failure "find") (augment_insts (tuple tm2 tm1) sofar))
+                  (_ (raise exception~1538)))))
+            (if (cl:and (is_var tm2) (mem tm2 vars))
+              (handler-case
+                (let ((tm2% (rev_assoc tm2 sofar)))
+                  (cl:declare (cl:ignorable tm2%))
+                  (unify vars tm1 tm2% sofar))
+                (holai.runtime:ocaml-condition
+                  (exception~1512)
+                  (match exception~1512
+                    ((Failure "find") (augment_insts (tuple tm1 tm2) sofar))
+                    (_ (raise exception~1512)))))
+              (if (is_abs tm1)
+                (let
+                  ((tm1% (body tm1))
+                    (tm2%
+                      (#`subst (cl:cons (tuple (bndvar tm1) (bndvar tm2)) nil) (body tm2))))
+                  (cl:declare (cl:ignorable tm1% tm2%))
+                  (unify vars tm1% tm2% sofar))
+                (match (tuple (dest_comb tm1) (dest_comb tm2))
+                  ((tuple (tuple l1 r1) (tuple l2 r2))
+                    (unify vars l1 l2 (unify vars r1 r2 sofar))))))))))
+    (lambdac (vars tm1 tm2) (tuple nil (unify vars tm1 tm2 nil) nil))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Unification of types.                                                     *)
@@ -956,59 +903,54 @@
 
 
 (defparameter type_unify
-  (fletc
-    ((augment1
-      (sofar arg~1589)
+  (holai.runtime:labelsc
+    ((:nonrecursive 0 augment1 (sofar arg~1589)
       (match arg~1589
         ((tuple s x)
           (let ((s% (type_subst sofar s)))
             (cl:declare (cl:ignorable s%))
             (if (cl:and (occurs_in x s%) (not (= s x)))
               (failwith "type_unify: augment1")
-              (tuple s% x)))))))
-    (fletc
-      ((raw_augment_insts (p insts) (cl:cons p (map (augment1 (cl:cons p nil)) insts))))
-      (fletc
-        ((augment_insts
-          (arg~1627 insts)
-          (match arg~1627
-            ((tuple ty v)
-              (let ((ty% (type_subst insts ty)))
-                (cl:declare (cl:ignorable ty%))
-                (if (= ty% v)
-                  insts
-                  (if (occurs_in v ty%)
-                    (failwith "type_unify: augment_insts")
-                    (raw_augment_insts (tuple ty% v) insts))))))))
-        (labelsc
-          ((unify
-            (ty1 ty2 sofar)
-            (if (= ty1 ty2)
-              sofar
-              (if (funcall is_vartype ty1)
-                (handler-case
-                  (let ((ty1% (rev_assoc ty1 sofar)))
-                    (cl:declare (cl:ignorable ty1%))
-                    (unify ty1% ty2 sofar))
-                  (holai.runtime:ocaml-condition
-                    (exception~1707)
-                    (match exception~1707
-                      ((Failure "find") (augment_insts (tuple ty2 ty1) sofar))
-                      (_ (raise exception~1707)))))
-                (if (funcall is_vartype ty2)
-                  (handler-case
-                    (let ((ty2% (rev_assoc ty2 sofar)))
-                      (cl:declare (cl:ignorable ty2%))
-                      (unify ty1 ty2% sofar))
-                    (holai.runtime:ocaml-condition
-                      (exception~1686)
-                      (match exception~1686
-                        ((Failure "find") (augment_insts (tuple ty1 ty2) sofar))
-                        (_ (raise exception~1686)))))
-                  (match (tuple (dest_type ty1) (dest_type ty2))
-                    ((tuple (tuple l1 r1) (tuple l2 r2))
-                      (if (= l1 l2) (itlist2 #'unify r1 r2 sofar) (failwith "unify_type")))))))))
-          #'unify)))))
+              (tuple s% x))))))
+      (:nonrecursive 1 raw_augment_insts (p insts)
+        (cl:cons p (map (augment1 (cl:cons p nil)) insts)))
+      (:nonrecursive 2 augment_insts (arg~1627 insts)
+        (match arg~1627
+          ((tuple ty v)
+            (let ((ty% (type_subst insts ty)))
+              (cl:declare (cl:ignorable ty%))
+              (if (= ty% v)
+                insts
+                (if (occurs_in v ty%)
+                  (failwith "type_unify: augment_insts")
+                  (raw_augment_insts (tuple ty% v) insts)))))))
+      (:recursive 3 unify (ty1 ty2 sofar)
+        (if (= ty1 ty2)
+          sofar
+          (if (#`is_vartype ty1)
+            (handler-case
+              (let ((ty1% (rev_assoc ty1 sofar)))
+                (cl:declare (cl:ignorable ty1%))
+                (unify ty1% ty2 sofar))
+              (holai.runtime:ocaml-condition
+                (exception~1707)
+                (match exception~1707
+                  ((Failure "find") (augment_insts (tuple ty2 ty1) sofar))
+                  (_ (raise exception~1707)))))
+            (if (#`is_vartype ty2)
+              (handler-case
+                (let ((ty2% (rev_assoc ty2 sofar)))
+                  (cl:declare (cl:ignorable ty2%))
+                  (unify ty1 ty2% sofar))
+                (holai.runtime:ocaml-condition
+                  (exception~1686)
+                  (match exception~1686
+                    ((Failure "find") (augment_insts (tuple ty1 ty2) sofar))
+                    (_ (raise exception~1686)))))
+              (match (tuple (dest_type ty1) (dest_type ty2))
+                ((tuple (tuple l1 r1) (tuple l2 r2))
+                  (if (= l1 l2) (itlist2 #'unify r1 r2 sofar) (failwith "unify_type")))))))))
+    #'unify))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Unification of terms and their types together.                            *)
@@ -1016,122 +958,106 @@
 
 
 (defparameter term_type_unify
-  (fletc
-    ((augment_tyinsts
-      (arg~1741 tyinsts)
+  (holai.runtime:labelsc
+    ((:nonrecursive 0 augment_tyinsts (arg~1741 tyinsts)
       (match arg~1741
         ((tuple s t%)
-          (let
-            ((sty (type_of (funcall inst tyinsts s)))
-              (tty (type_of (funcall inst tyinsts t%))))
+          (let ((sty (type_of (#`inst tyinsts s))) (tty (type_of (#`inst tyinsts t%))))
             (cl:declare (cl:ignorable sty tty))
-            (let ((tyinsts% (funcall type_unify sty tty nil)))
+            (let ((tyinsts% (#`type_unify sty tty nil)))
               (cl:declare (cl:ignorable tyinsts%))
               (append
                 tyinsts%
                 (map
                   (lambdac (arg~1762)
                     (match arg~1762 ((tuple ty v) (tuple (type_subst tyinsts% ty) v))))
-                  tyinsts))))))))
-    (fletc
-      ((augment1
-        (sofar arg~1785)
+                  tyinsts)))))))
+      (:nonrecursive 1 augment1 (sofar arg~1785)
         (match arg~1785
           ((tuple s x)
-            (let ((s% (funcall subst sofar s)))
+            (let ((s% (#`subst sofar s)))
               (cl:declare (cl:ignorable s%))
               (if (cl:and (vfree_in x s%) (not (= s x)))
                 (failwith "term_unify: augment1")
-                (tuple s% x)))))))
-      (fletc
-        ((raw_augment_insts
-          (p arg~1813)
-          (match arg~1813
-            ((tuple tminsts tyinsts)
-              (tuple (cl:cons p (map (augment1 (cl:cons p nil)) tminsts)) tyinsts)))))
-        (fletc
-          ((augment_insts
-            (arg~1831 arg~1835)
-            (match arg~1831
-              ((tuple t% v)
-                (match arg~1835
-                  ((tuple tminsts tyinsts)
-                    (let*
-                      ((tminsts%
-                        (map
-                          (lambdac (arg~1840)
-                            (match arg~1840
-                              ((tuple t%% v%)
-                                (tuple
-                                  (funcall inst tyinsts t%%)
-                                  (funcall inst tyinsts v%)))))
-                          tminsts))
-                        (t%% (funcall inst tyinsts (funcall vsubst tminsts% t%)))
-                        (v% (funcall inst tyinsts v))
-                        (sofar% (tuple tminsts% tyinsts)))
-                      (cl:declare (cl:ignorable tminsts% t%% v% sofar%))
-                      (if (= t%% v%)
-                        sofar%
-                        (if (vfree_in v% t%%)
-                          (failwith "term_unify: augment_insts")
-                          (raw_augment_insts (tuple t%% v%) sofar%))))))))))
-          (labelsc
-            ((unify
-              (tm1 tm2 arg~1900)
-              (match arg~1900
-                ((cl:and sofar (tuple tminsts tyinsts))
-                  (if (= tm1 tm2)
-                    sofar
-                    (if (is_var tm1)
-                      (handler-case
-                        (let ((tm1% (rev_assoc tm1 tminsts)))
-                          (cl:declare (cl:ignorable tm1%))
-                          (unify tm1% tm2 sofar))
-                        (holai.runtime:ocaml-condition
-                          (exception~1994)
-                          (match exception~1994
-                            ((Failure "find")
-                              (augment_insts
-                                (tuple tm2 tm1)
-                                (tuple tminsts (augment_tyinsts (tuple tm1 tm2) tyinsts))))
-                            (_ (raise exception~1994)))))
-                      (if (is_var tm2)
-                        (handler-case
-                          (let ((tm2% (rev_assoc tm2 tminsts)))
-                            (cl:declare (cl:ignorable tm2%))
-                            (unify tm1 tm2% sofar))
-                          (holai.runtime:ocaml-condition
-                            (exception~1967)
-                            (match exception~1967
-                              ((Failure "find")
-                                (augment_insts
-                                  (tuple tm1 tm2)
-                                  (tuple
-                                    tminsts
-                                    (augment_tyinsts (tuple tm1 tm2) tyinsts))))
-                              (_ (raise exception~1967)))))
-                        (if (is_abs tm1)
-                          (let
-                            ((tm1% (body tm1))
-                              (tm2%
-                                (funcall
-                                  subst
-                                  (cl:cons (tuple (bndvar tm1) (bndvar tm2)) nil)
-                                  (body tm2))))
-                            (cl:declare (cl:ignorable tm1% tm2%))
-                            (unify tm1% tm2% sofar))
-                          (if (is_const tm1)
-                            (if (<> (name_of tm1) (name_of tm2))
-                              (failwith "term_unify")
-                              (tuple tminsts (augment_tyinsts (tuple tm1 tm2) tyinsts)))
-                            (match (tuple (dest_comb tm1) (dest_comb tm2))
-                              ((tuple (tuple l1 r1) (tuple l2 r2))
-                                (unify l1 l2 (unify r1 r2 sofar)))))))))))))
-            (lambdac (tm1 tm2 arg~2033)
-              (match arg~2033
-                ((tuple it tminsts tyinsts)
-                  (match (unify tm1 tm2 (tuple tminsts tyinsts))
-                    ((tuple tminsts% tyinsts%) (tuple it tminsts% tyinsts%))))))))))))
+                (tuple s% x))))))
+      (:nonrecursive 2 raw_augment_insts (p arg~1813)
+        (match arg~1813
+          ((tuple tminsts tyinsts)
+            (tuple (cl:cons p (map (augment1 (cl:cons p nil)) tminsts)) tyinsts))))
+      (:nonrecursive 3 augment_insts (arg~1831 arg~1835)
+        (match arg~1831
+          ((tuple t% v)
+            (match arg~1835
+              ((tuple tminsts tyinsts)
+                (let*
+                  ((tminsts%
+                    (map
+                      (lambdac (arg~1840)
+                        (match arg~1840
+                          ((tuple t%% v%)
+                            (tuple (#`inst tyinsts t%%) (#`inst tyinsts v%)))))
+                      tminsts))
+                    (t%% (#`inst tyinsts (#`vsubst tminsts% t%)))
+                    (v% (#`inst tyinsts v))
+                    (sofar% (tuple tminsts% tyinsts)))
+                  (cl:declare (cl:ignorable tminsts% t%% v% sofar%))
+                  (if (= t%% v%)
+                    sofar%
+                    (if (vfree_in v% t%%)
+                      (failwith "term_unify: augment_insts")
+                      (raw_augment_insts (tuple t%% v%) sofar%)))))))))
+      (:recursive 4 unify (tm1 tm2 arg~1900)
+        (match arg~1900
+          ((cl:and sofar (tuple tminsts tyinsts))
+            (if (= tm1 tm2)
+              sofar
+              (if (is_var tm1)
+                (handler-case
+                  (let ((tm1% (rev_assoc tm1 tminsts)))
+                    (cl:declare (cl:ignorable tm1%))
+                    (unify tm1% tm2 sofar))
+                  (holai.runtime:ocaml-condition
+                    (exception~1994)
+                    (match exception~1994
+                      ((Failure "find")
+                        (augment_insts
+                          (tuple tm2 tm1)
+                          (tuple tminsts (augment_tyinsts (tuple tm1 tm2) tyinsts))))
+                      (_ (raise exception~1994)))))
+                (if (is_var tm2)
+                  (handler-case
+                    (let ((tm2% (rev_assoc tm2 tminsts)))
+                      (cl:declare (cl:ignorable tm2%))
+                      (unify tm1 tm2% sofar))
+                    (holai.runtime:ocaml-condition
+                      (exception~1967)
+                      (match exception~1967
+                        ((Failure "find")
+                          (augment_insts
+                            (tuple tm1 tm2)
+                            (tuple tminsts (augment_tyinsts (tuple tm1 tm2) tyinsts))))
+                        (_ (raise exception~1967)))))
+                  (if (is_abs tm1)
+                    (let
+                      ((tm1% (body tm1))
+                        (tm2%
+                          (#`subst
+                            (cl:cons (tuple (bndvar tm1) (bndvar tm2)) nil)
+                            (body tm2))))
+                      (cl:declare (cl:ignorable tm1% tm2%))
+                      (unify tm1% tm2% sofar))
+                    (if (is_const tm1)
+                      (if (<> (name_of tm1) (name_of tm2))
+                        (failwith "term_unify")
+                        (tuple tminsts (augment_tyinsts (tuple tm1 tm2) tyinsts)))
+                      (match (tuple (dest_comb tm1) (dest_comb tm2))
+                        ((tuple (tuple l1 r1) (tuple l2 r2))
+                          (unify l1 l2 (unify r1 r2 sofar)))))))))))))
+    (lambdac (tm1 tm2 arg~2033)
+      (match arg~2033
+        ((tuple it tminsts tyinsts)
+          (match (unify tm1 tm2 (tuple tminsts tyinsts))
+            ((tuple tminsts% tyinsts%) (tuple it tminsts% tyinsts%))))))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Modify bound variable names at depth. (Not very efficient...)             *)
@@ -1139,9 +1065,8 @@
 
 
 (defparameter deep_alpha
-  (fletc
-    ((tryalpha
-      (v tm)
+  (holai.runtime:labelsc
+    ((:nonrecursive 0 tryalpha (v tm)
       (handler-case
         (alpha v tm)
         (holai.runtime:ocaml-condition
@@ -1155,10 +1080,8 @@
                 (holai.runtime:ocaml-condition
                   (exception~2072)
                   (match exception~2072 ((Failure _) tm) (_ (raise exception~2072))))))
-            (_ (raise exception~2069)))))))
-    (labelsc
-      ((deep_alpha%
-        (env tm)
+            (_ (raise exception~2069))))))
+      (:recursive 1 deep_alpha% (env tm)
         (if (= env nil)
           tm
           (handler-case
@@ -1193,7 +1116,7 @@
                       (exception~2096)
                       (match exception~2096 ((Failure _) tm) (_ (raise exception~2096))))))
                 (_ (raise exception~2093))))))))
-      #'deep_alpha%)))
+    #'deep_alpha%))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Instantiate theorem by matching part of it to a term.                     *)
@@ -1206,9 +1129,8 @@
 (defparameter PART_MATCH nil)
 
 (match
-  (labelsc
-    ((match_bvs
-      (t1 t2 acc)
+  (holai.runtime:labelsc
+    ((:recursive 0 match_bvs (t1 t2 acc)
       (handler-case
         (match (tuple (dest_abs t1) (dest_abs t2))
           ((tuple (tuple v1 b1) (tuple v2 b2))
@@ -1228,27 +1150,25 @@
                 (holai.runtime:ocaml-condition
                   (exception~2214)
                   (match exception~2214 ((Failure _) acc) (_ (raise exception~2214))))))
-            (_ (raise exception~2211)))))))
-    (fletc
-      ((PART_MATCH%
-        (partfn th)
+            (_ (raise exception~2211))))))
+      (:nonrecursive 1 PART_MATCH% (partfn th)
         (let*
           ((sth (SPEC_ALL th))
             (bod (concl sth))
-            (pbod (funcall partfn bod))
+            (pbod (#`partfn bod))
             (lconsts (intersect (frees (concl th)) (freesl (hyp th)))))
           (cl:declare (cl:ignorable sth bod pbod lconsts))
           (lambdac (tm)
             (let*
               ((bvms (match_bvs tm pbod nil))
-                (abod (funcall deep_alpha bvms bod))
+                (abod (#`deep_alpha bvms bod))
                 (ath (EQ_MP (holai.equal:ALPHA bod abod) sth))
-                (insts (funcall term_match lconsts (funcall partfn abod) tm))
-                (fth (funcall INSTANTIATE% insts ath)))
+                (insts (#`term_match lconsts (#`partfn abod) tm))
+                (fth (#`INSTANTIATE% insts ath)))
               (cl:declare (cl:ignorable bvms abod ath insts fth))
               (if (<> (hyp fth) (hyp ath))
                 (failwith "PART_MATCH: instantiated hyps")
-                (let ((tm% (funcall partfn (concl fth))))
+                (let ((tm% (#`partfn (concl fth))))
                   (cl:declare (cl:ignorable tm%))
                   (if (= (compare tm% tm) 0)
                     fth
@@ -1259,38 +1179,37 @@
                         (match exception~2333
                           ((Failure _) (failwith "PART_MATCH: Sanity check failure"))
                           (_ (raise exception~2333))))))))))))
-        (GEN_PART_MATCH%
-          (partfn th)
-          (let*
-            ((sth (SPEC_ALL th))
-              (bod (concl sth))
-              (pbod (funcall partfn bod))
-              (lconsts (intersect (frees (concl th)) (freesl (hyp th))))
-              (fvs (subtract (subtract (frees bod) (frees pbod)) lconsts)))
-            (cl:declare (cl:ignorable sth bod pbod lconsts fvs))
-            (lambdac (tm)
-              (let*
-                ((bvms (match_bvs tm pbod nil))
-                  (abod (funcall deep_alpha bvms bod))
-                  (ath (EQ_MP (holai.equal:ALPHA bod abod) sth))
-                  (insts (funcall term_match lconsts (funcall partfn abod) tm))
-                  (eth (funcall INSTANTIATE% insts (funcall GENL fvs ath)))
-                  (fth (itlist (lambdac (v th%) (snd (SPEC_VAR th%))) fvs eth)))
-                (cl:declare (cl:ignorable bvms abod ath insts eth fth))
-                (if (<> (hyp fth) (hyp ath))
-                  (failwith "PART_MATCH: instantiated hyps")
-                  (let ((tm% (funcall partfn (concl fth))))
-                    (cl:declare (cl:ignorable tm%))
-                    (if (= (compare tm% tm) 0)
-                      fth
-                      (handler-case
-                        (SUBS (cl:cons (holai.equal:ALPHA tm% tm) nil) fth)
-                        (holai.runtime:ocaml-condition
-                          (exception~2441)
-                          (match exception~2441
-                            ((Failure _) (failwith "PART_MATCH: Sanity check failure"))
-                            (_ (raise exception~2441)))))))))))))
-      (tuple #'PART_MATCH% #'GEN_PART_MATCH%)))
+      (:nonrecursive 1 GEN_PART_MATCH% (partfn th)
+        (let*
+          ((sth (SPEC_ALL th))
+            (bod (concl sth))
+            (pbod (#`partfn bod))
+            (lconsts (intersect (frees (concl th)) (freesl (hyp th))))
+            (fvs (subtract (subtract (frees bod) (frees pbod)) lconsts)))
+          (cl:declare (cl:ignorable sth bod pbod lconsts fvs))
+          (lambdac (tm)
+            (let*
+              ((bvms (match_bvs tm pbod nil))
+                (abod (#`deep_alpha bvms bod))
+                (ath (EQ_MP (holai.equal:ALPHA bod abod) sth))
+                (insts (#`term_match lconsts (#`partfn abod) tm))
+                (eth (#`INSTANTIATE% insts (#`GENL fvs ath)))
+                (fth (itlist (lambdac (v th%) (snd (SPEC_VAR th%))) fvs eth)))
+              (cl:declare (cl:ignorable bvms abod ath insts eth fth))
+              (if (<> (hyp fth) (hyp ath))
+                (failwith "PART_MATCH: instantiated hyps")
+                (let ((tm% (#`partfn (concl fth))))
+                  (cl:declare (cl:ignorable tm%))
+                  (if (= (compare tm% tm) 0)
+                    fth
+                    (handler-case
+                      (SUBS (cl:cons (holai.equal:ALPHA tm% tm) nil) fth)
+                      (holai.runtime:ocaml-condition
+                        (exception~2441)
+                        (match exception~2441
+                          ((Failure _) (failwith "PART_MATCH: Sanity check failure"))
+                          (_ (raise exception~2441)))))))))))))
+    (tuple #'PART_MATCH% #'GEN_PART_MATCH%))
   ((tuple PART_MATCH% GEN_PART_MATCH%)
     (setf GEN_PART_MATCH GEN_PART_MATCH% PART_MATCH PART_MATCH%)))
 
@@ -1305,9 +1224,9 @@
       (handler-case
         (let ((tm (concl ith)))
           (cl:declare (cl:ignorable tm))
-          (match (funcall strip_forall tm)
+          (match (#`strip_forall tm)
             ((tuple avs bod)
-              (match (funcall dest_imp bod)
+              (match (#`dest_imp bod)
                 ((tuple ant con)
                   (match (partition (C #'vfree_in ant) avs)
                     ((tuple svs pvs)
@@ -1315,23 +1234,19 @@
                         ith
                         (let*
                           ((th1 (SPECL avs (ASSUME tm)))
-                            (th2
-                              (funcall
-                                GENL
-                                svs
-                                (funcall DISCH ant (funcall GENL pvs (UNDISCH th1))))))
+                            (th2 (#`GENL svs (#`DISCH ant (#`GENL pvs (UNDISCH th1))))))
                           (cl:declare (cl:ignorable th1 th2))
-                          (funcall MP (funcall DISCH tm th2) ith))))))))))
+                          (#`MP (#`DISCH tm th2) ith))))))))))
         (holai.runtime:ocaml-condition
           (exception~2491)
           (match exception~2491
             ((Failure _) (failwith "MATCH_MP: Not an implication"))
             (_ (raise exception~2491))))))
-      (match_fun (funcall PART_MATCH (o (function-value #'fst 1) dest_imp) sth)))
+      (match_fun (#`PART_MATCH (o (function-value #'fst 1) dest_imp) sth)))
     (cl:declare (cl:ignorable sth match_fun))
     (lambdac (th)
       (handler-case
-        (funcall MP (funcall match_fun (concl th)) th)
+        (#`MP (#`match_fun (concl th)) th)
         (holai.runtime:ocaml-condition
           (exception~2561)
           (match exception~2561
@@ -1346,25 +1261,22 @@
 (defparameter HIGHER_REWRITE_CONV
   (let
     ((BETA_VAR
-      (labelsc
-        ((BETA_CONVS
-          (n)
+      (holai.runtime:labelsc
+        ((:recursive 0 BETA_CONVS (n)
           (if (= n 1)
             (TRY_CONV #'BETA_CONV)
-            (THENC (RATOR_CONV (BETA_CONVS (- n 1))) (TRY_CONV #'BETA_CONV)))))
-        (labelsc
-          ((free_beta
-            (v tm)
+            (THENC (RATOR_CONV (BETA_CONVS (- n 1))) (TRY_CONV #'BETA_CONV))))
+          (:recursive 1 free_beta (v tm)
             (if (is_abs tm)
               (match (dest_abs tm)
                 ((tuple bv bod)
                   (if (= v bv) (failwith "unchanged") (ABS_CONV (free_beta v bod)))))
-              (match (funcall strip_comb tm)
+              (match (#`strip_comb tm)
                 ((tuple op args)
                   (if (= args nil)
                     (failwith "unchanged")
                     (if (= op v)
-                      (BETA_CONVS (funcall length args))
+                      (BETA_CONVS (#`length args))
                       (match (dest_comb tm)
                         ((tuple l r)
                           (handler-case
@@ -1384,7 +1296,7 @@
                               (match exception~2601
                                 ((Failure _) (RAND_CONV (free_beta v r)))
                                 (_ (raise exception~2601))))))))))))))
-          #'free_beta))))
+        #'free_beta)))
     (cl:declare (cl:ignorable BETA_VAR))
     (fletc
       ((GINST
@@ -1406,17 +1318,14 @@
                 ((beta_fns (map2 BETA_VAR preds concs))
                   (ass_list (zip pats (zip preds (zip thl beta_fns))))
                   (mnet
-                    (itlist
-                      (lambdac (p n) (funcall enter nil (tuple p p) n))
-                      pats
-                      empty_net)))
+                    (itlist (lambdac (p n) (#`enter nil (tuple p p) n)) pats empty_net)))
                 (cl:declare (cl:ignorable beta_fns ass_list mnet))
                 (fletc
                   ((look_fn
                     (t%)
                     (mapfilter
-                      (lambdac (p) (if (can (funcall term_match nil p) t%) p (fail unit)))
-                      (funcall lookup t% mnet))))
+                      (lambdac (p) (if (can (#`term_match nil p) t%) p (fail unit)))
+                      (#`lookup t% mnet))))
                   (lambdac (top tm)
                     (fletc
                       ((pred (t%) (cl:and (not (= (look_fn t%) nil)) (free_in t% tm))))
@@ -1424,22 +1333,22 @@
                         ((stm
                           (if top
                             (find_term #'pred tm)
-                            (hd (sort #'free_in (funcall find_terms #'pred tm)))))
+                            (hd (sort #'free_in (#`find_terms #'pred tm)))))
                           (pat (hd (look_fn stm))))
                         (cl:declare (cl:ignorable stm pat))
-                        (match (funcall term_match nil pat stm)
+                        (match (#`term_match nil pat stm)
                           ((tuple _ tmin tyin)
                             (match (assoc pat ass_list)
                               ((tuple pred% (tuple th beta_fn))
                                 (let*
-                                  ((gv (funcall genvar (type_of stm)))
+                                  ((gv (#`genvar (type_of stm)))
                                     (abs%%
                                       (mk_abs
                                         (tuple
                                           gv
-                                          (funcall subst (cl:cons (tuple gv stm) nil) tm)))))
+                                          (#`subst (cl:cons (tuple gv stm) nil) tm)))))
                                   (cl:declare (cl:ignorable gv abs%%))
-                                  (match (funcall term_match nil pred% abs%%)
+                                  (match (#`term_match nil pred% abs%%)
                                     ((tuple _ tmin0 tyin0)
                                       (CONV_RULE
                                         beta_fn
@@ -1451,7 +1360,7 @@
 
 
 (defunc new_definition (tm)
-  (match (funcall strip_forall tm)
+  (match (#`strip_forall tm)
     ((tuple avs bod)
       (match
         (handler-case
@@ -1462,7 +1371,7 @@
               ((Failure _) (failwith "new_definition: Not an equation"))
               (_ (raise exception~2946)))))
         ((tuple l r)
-          (match (funcall strip_comb l)
+          (match (#`strip_comb l)
             ((tuple lv largs)
               (let*
                 ((rtm
@@ -1474,7 +1383,7 @@
                         ((Failure _)
                           (failwith "new_definition: Non-variable in LHS pattern"))
                         (_ (raise exception~2881))))))
-                  (def (funcall mk_eq (tuple lv rtm)))
+                  (def (#`mk_eq (tuple lv rtm)))
                   (th1 (new_basic_definition def))
                   (th2
                     (rev_itlist

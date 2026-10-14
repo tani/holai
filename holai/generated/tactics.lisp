@@ -635,7 +635,6 @@
     labelsc
     guard
     function-value
-    funcall
     fst
     fletc
     failwith
@@ -813,7 +812,7 @@
 (defunc inst_goal (p% arg~61)
   (match arg~61
     ((tuple thms w%)
-      (tuple (map (F_F #'I (INSTANTIATE_ALL p%)) thms) (funcall instantiate p% w%)))))
+      (tuple (map (F_F #'I (INSTANTIATE_ALL p%)) thms) (#`instantiate p% w%)))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Perform a sequential composition (left first) of instantiations.          *)
@@ -826,7 +825,7 @@
       (match arg~85
         ((cl:and i2 (tuple pats2 tmin2 tyin2))
           (let
-            ((tmin (map (F_F (funcall instantiate i2) (funcall inst tyin2)) tmin1))
+            ((tmin (map (F_F (#`instantiate i2) (#`inst tyin2)) tmin1))
               (tyin (map (F_F (type_subst tyin2) #'I) tyin1)))
             (cl:declare (cl:ignorable tmin tyin))
             (let
@@ -852,13 +851,12 @@
 
 (defparameter mk_fthm
   (let
-    ((pth (UNDISCH (fst (funcall EQ_IMP_RULE _FALSITY_))))
+    ((pth (UNDISCH (fst (#`EQ_IMP_RULE _FALSITY_))))
       (qth (ASSUME (parse_term "_FALSITY_"))))
     (cl:declare (cl:ignorable pth qth))
     (lambdac (arg~174)
       (match arg~174
-        ((tuple asl c%)
-          (PROVE_HYP qth (itlist #'ADD_ASSUM (funcall rev asl) (funcall CONTR c% pth))))))))
+        ((tuple asl c%) (PROVE_HYP qth (itlist #'ADD_ASSUM (#`rev asl) (#`CONTR c% pth))))))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Validity checking of tactics. This cannot be 100% accurate without making *)
@@ -879,17 +877,17 @@
                   asl
                   nil)))
               (cl:declare (cl:ignorable asms))
-              (funcall mk_fthm (tuple asms w%)))))))
+              (#`mk_fthm (tuple asms w%)))))))
       (false_tm (parse_term "_FALSITY_")))
     (cl:declare (cl:ignorable fake_thm false_tm))
     (lambdac (tac arg~221)
       (match arg~221
         ((tuple asl w%)
-          (match (funcall tac (tuple asl w%))
+          (match (#`tac (tuple asl w%))
             ((cl:and res (tuple (tuple mvs i%) gls just))
               (let ((ths (map fake_thm gls)))
                 (cl:declare (cl:ignorable ths))
-                (match (dest_thm (funcall just null_inst ths))
+                (match (dest_thm (#`just null_inst ths))
                   ((tuple asl% w%%)
                     (match (inst_goal i% (tuple asl w%))
                       ((tuple asl%% w%%%)
@@ -924,79 +922,61 @@
 (defparameter THENL nil)
 
 (match
-  (fletc
-    ((propagate_empty (i% arg~329) (match arg~329 (nil nil)))
-      (propagate_thm (th i% arg~335) (match arg~335 (nil (INSTANTIATE_ALL i% th)))))
-    (fletc
-      ((compose_justs
-        (n just1 just2 insts2 i% ths)
+  (holai.runtime:labelsc
+    ((:nonrecursive 0 propagate_empty (i% arg~329) (match arg~329 (nil nil)))
+      (:nonrecursive 0 propagate_thm (th i% arg~335)
+        (match arg~335 (nil (INSTANTIATE_ALL i% th))))
+      (:nonrecursive 1 compose_justs (n just1 just2 insts2 i% ths)
         (match (chop_list n ths)
           ((tuple ths1 ths2)
-            (cl:cons
-              (funcall just1 (compose_insts insts2 i%) ths1)
-              (funcall just2 i% ths2))))))
-      (labelsc
-        ((seqapply
-          (l1 l2)
-          (match (tuple l1 l2)
-            ((tuple nil nil) (tuple null_meta nil #'propagate_empty))
-            ((tuple (cl:cons tac tacs) (cl:cons goal goals))
-              (match (funcall tac goal)
-                ((tuple (tuple mvs1 insts1) gls1 just1)
-                  (let ((goals% (map (inst_goal insts1) goals)))
-                    (cl:declare (cl:ignorable goals%))
-                    (match (seqapply tacs goals%)
-                      ((tuple (tuple mvs2 insts2) gls2 just2)
-                        (tuple
-                          (tuple (union mvs1 mvs2) (compose_insts insts1 insts2))
-                          (append (map (inst_goal insts2) gls1) gls2)
-                          (compose_justs (funcall length gls1) just1 just2 insts2))))))))
-            ((tuple _ _) (failwith "seqapply: Length mismatch")))))
-        (fletc
-          ((justsequence
-            (just1 just2 insts2 i% ths)
-            (funcall just1 (compose_insts insts2 i%) (funcall just2 i% ths))))
-          (fletc
-            ((tacsequence
-              (arg~465 tacl)
-              (match arg~465
-                ((tuple (tuple mvs1 insts1) gls1 just1)
-                  (match (seqapply tacl gls1)
+            (cl:cons (#`just1 (compose_insts insts2 i%) ths1) (#`just2 i% ths2)))))
+      (:recursive 2 seqapply (l1 l2)
+        (match (tuple l1 l2)
+          ((tuple nil nil) (tuple null_meta nil #'propagate_empty))
+          ((tuple (cl:cons tac tacs) (cl:cons goal goals))
+            (match (#`tac goal)
+              ((tuple (tuple mvs1 insts1) gls1 just1)
+                (let ((goals% (map (inst_goal insts1) goals)))
+                  (cl:declare (cl:ignorable goals%))
+                  (match (seqapply tacs goals%)
                     ((tuple (tuple mvs2 insts2) gls2 just2)
-                      (let*
-                        ((jst (justsequence just1 just2 insts2))
-                          (just
-                            (if (= gls2 nil)
-                              (propagate_thm (funcall jst null_inst nil))
-                              jst)))
-                        (cl:declare (cl:ignorable jst just))
-                        (tuple
-                          (tuple (union mvs1 mvs2) (compose_insts insts1 insts2))
-                          gls2
-                          just))))))))
-            (fletc
-              ((THEN%
-                (tac1 tac2 g%)
-                (match (funcall tac1 g%)
-                  ((cl:and gstate (tuple _ gls _))
-                    (tacsequence gstate (replicate tac2 (funcall length gls))))))
-                (THENL%
-                  (tac1 tac2l g%)
-                  (match (funcall tac1 g%)
-                    ((cl:and gstate (tuple _ gls _))
-                      (if (= gls nil) (tacsequence gstate nil) (tacsequence gstate tac2l))))))
-              (tuple
-                #'THEN%
-                #'THENL%
-                (lambdac (tac1 tac2) (THENL% tac1 (cl:cons tac2 nil))))))))))
+                      (tuple
+                        (tuple (union mvs1 mvs2) (compose_insts insts1 insts2))
+                        (append (map (inst_goal insts2) gls1) gls2)
+                        (compose_justs (#`length gls1) just1 just2 insts2))))))))
+          ((tuple _ _) (failwith "seqapply: Length mismatch"))))
+      (:nonrecursive 3 justsequence (just1 just2 insts2 i% ths)
+        (#`just1 (compose_insts insts2 i%) (#`just2 i% ths)))
+      (:nonrecursive 4 tacsequence (arg~465 tacl)
+        (match arg~465
+          ((tuple (tuple mvs1 insts1) gls1 just1)
+            (match (seqapply tacl gls1)
+              ((tuple (tuple mvs2 insts2) gls2 just2)
+                (let*
+                  ((jst (justsequence just1 just2 insts2))
+                    (just (if (= gls2 nil) (propagate_thm (#`jst null_inst nil)) jst)))
+                  (cl:declare (cl:ignorable jst just))
+                  (tuple
+                    (tuple (union mvs1 mvs2) (compose_insts insts1 insts2))
+                    gls2
+                    just)))))))
+      (:nonrecursive 5 THEN% (tac1 tac2 g%)
+        (match (#`tac1 g%)
+          ((cl:and gstate (tuple _ gls _))
+            (tacsequence gstate (replicate tac2 (#`length gls))))))
+      (:nonrecursive 5 THENL% (tac1 tac2l g%)
+        (match (#`tac1 g%)
+          ((cl:and gstate (tuple _ gls _))
+            (if (= gls nil) (tacsequence gstate nil) (tacsequence gstate tac2l))))))
+    (tuple #'THEN% #'THENL% (lambdac (tac1 tac2) (THENL% tac1 (cl:cons tac2 nil)))))
   ((tuple THEN% THENL% then1_%) (setf then1_ then1_% THEN THEN% THENL THENL%)))
 
 (defunc ORELSE (tac1 tac2 g%)
   (handler-case
-    (funcall tac1 g%)
+    (#`tac1 g%)
     (holai.runtime:ocaml-condition
       (exception~587)
-      (match exception~587 ((Failure _) (funcall tac2 g%)) (_ (raise exception~587))))))
+      (match exception~587 ((Failure _) (#`tac2 g%)) (_ (raise exception~587))))))
 
 (defunc FAIL_TAC (tok g%) (failwith tok))
 
@@ -1023,12 +1003,10 @@
 (defunc MAP_FIRST (tacf lst) (FIRST (map tacf lst)))
 
 (defunc CHANGED_TAC (tac g%)
-  (match (funcall tac g%)
+  (match (#`tac g%)
     ((cl:and gstate (tuple meta gl _))
       (if
-        (cl:and
-          (= meta null_meta)
-          (cl:and (= (funcall length gl) 1) (equals_goal (hd gl) g%)))
+        (cl:and (= meta null_meta) (cl:and (= (#`length gl) 1) (equals_goal (hd gl) g%)))
         (failwith "CHANGED_TAC")
         gstate))))
 
@@ -1040,16 +1018,14 @@
 ;; (* ------------------------------------------------------------------------- *)
 
 
-(defunc THEN_TCL (ttcl1 ttcl2 ttac) (funcall ttcl1 (funcall ttcl2 ttac)))
+(defunc THEN_TCL (ttcl1 ttcl2 ttac) (#`ttcl1 (#`ttcl2 ttac)))
 
 (defunc ORELSE_TCL (ttcl1 ttcl2 ttac th)
   (handler-case
-    (funcall ttcl1 ttac th)
+    (#`ttcl1 ttac th)
     (holai.runtime:ocaml-condition
       (exception~744)
-      (match exception~744
-        ((Failure _) (funcall ttcl2 ttac th))
-        (_ (raise exception~744))))))
+      (match exception~744 ((Failure _) (#`ttcl2 ttac th)) (_ (raise exception~744))))))
 
 (defunc REPEAT_TCL (ttcl ttac th)
   (ORELSE_TCL (THEN_TCL ttcl (REPEAT_TCL ttcl)) #'I ttac th))
@@ -1059,12 +1035,10 @@
     ((REPEAT_GTCL%
       (ttcl ttac th g%)
       (handler-case
-        (funcall ttcl (REPEAT_GTCL% ttcl ttac) th g%)
+        (#`ttcl (REPEAT_GTCL% ttcl ttac) th g%)
         (holai.runtime:ocaml-condition
           (exception~774)
-          (match exception~774
-            ((Failure _) (funcall ttac th g%))
-            (_ (raise exception~774)))))))
+          (match exception~774 ((Failure _) (#`ttac th g%)) (_ (raise exception~774)))))))
     #'REPEAT_GTCL%))
 
 (defparameter ALL_THEN #'I)
@@ -1101,44 +1075,39 @@
 (defunc FIND_ASSUM (ttac t% arg~864)
   (match arg~864
     ((cl:and g% (tuple asl w%))
-      (funcall
-        ttac
+      (#`ttac
         (snd
           (find (lambdac (arg~869) (match arg~869 ((tuple _ th) (= (concl th) t%)))) asl))
         g%))))
 
 (defunc POP_ASSUM (ttac arg~893)
   (match arg~893
-    ((tuple (cl:cons (tuple _ th) asl) w%) (funcall ttac th (tuple asl w%)))
+    ((tuple (cl:cons (tuple _ th) asl) w%) (#`ttac th (tuple asl w%)))
     (_ (failwith "POP_ASSUM: No assumption to pop"))))
 
 (defunc ASSUM_LIST (aslfun arg~916)
   (match arg~916
-    ((tuple asl w%) (funcall aslfun (map (function-value #'snd 1) asl) (tuple asl w%)))))
+    ((tuple asl w%) (#`aslfun (map (function-value #'snd 1) asl) (tuple asl w%)))))
 
 (defunc POP_ASSUM_LIST (asltac arg~933)
   (match arg~933
-    ((tuple asl w%) (funcall asltac (map (function-value #'snd 1) asl) (tuple nil w%)))))
+    ((tuple asl w%) (#`asltac (map (function-value #'snd 1) asl) (tuple nil w%)))))
 
 (defunc EVERY_ASSUM (ttac) (ASSUM_LIST (MAP_EVERY ttac)))
 
 (defunc FIRST_ASSUM (ttac arg~956)
   (match arg~956
     ((cl:and g% (tuple asl w%))
-      (tryfind
-        (lambdac (arg~961) (match arg~961 ((tuple _ th) (funcall ttac th g%))))
-        asl))))
+      (tryfind (lambdac (arg~961) (match arg~961 ((tuple _ th) (#`ttac th g%)))) asl))))
 
 (defunc RULE_ASSUM_TAC (rule arg~981)
   (match arg~981
     ((tuple asl w%)
-      (funcall
-        THEN
+      (#`THEN
         (POP_ASSUM_LIST (K #'ALL_TAC))
         (MAP_EVERY
-          (lambdac (arg~988)
-            (match arg~988 ((tuple s th) (LABEL_TAC s (funcall rule th)))))
-          (funcall rev asl))
+          (lambdac (arg~988) (match arg~988 ((tuple s th) (LABEL_TAC s (#`rule th)))))
+          (#`rev asl))
         (tuple asl w%)))))
 
 ;; (* ------------------------------------------------------------------------- *)
@@ -1160,7 +1129,7 @@
                   (failwith (string-concat "USE_TAC: didn't find assumption " s)))
                 (_ (raise exception~1020)))))))
         (cl:declare (cl:ignorable th))
-        (funcall ttac th gl)))))
+        (#`ttac th gl)))))
 
 (defunc REMOVE_THEN (s ttac arg~1044)
   (match arg~1044
@@ -1180,22 +1149,19 @@
           ((tuple asl1 asl2)
             (let ((asl% (append asl1 (tl asl2))))
               (cl:declare (cl:ignorable asl%))
-              (funcall ttac th (tuple asl% w%)))))))))
+              (#`ttac th (tuple asl% w%)))))))))
 
 (defunc NAME_ASSUMS_TAC (arg~1090)
   (match arg~1090
     ((tuple asl g%)
       (let ((idx (ref 0)))
         (cl:declare (cl:ignorable idx))
-        (fletc
-          ((has
-            (name)
+        (holai.runtime:labelsc
+          ((:nonrecursive 0 has (name)
             (exists
               (lambdac (arg~1099) (match arg~1099 ((tuple name% _) (= name name%))))
-              asl)))
-          (labelsc
-            ((next_hyp_name
-              (arg~1112)
+              asl))
+            (:recursive 1 next_hyp_name (arg~1112)
               (match arg~1112
                 ((cl:type holai.runtime::unit-value)
                   (let ((n (string-concat "H" (string-of-int (deref idx)))))
@@ -1203,16 +1169,16 @@
                     (progn
                       (assign idx (+ (deref idx) 1))
                       (if (has n) (next_hyp_name unit) n)))))))
-            (let
-              ((asl%
-                (map
-                  (lambdac (arg~1136)
-                    (match arg~1136
-                      ((tuple name a%)
-                        (if (= name "") (tuple (next_hyp_name unit) a%) (tuple name a%)))))
-                  asl)))
-              (cl:declare (cl:ignorable asl%))
-              (ALL_TAC (tuple asl% g%)))))))))
+          (let
+            ((asl%
+              (map
+                (lambdac (arg~1136)
+                  (match arg~1136
+                    ((tuple name a%)
+                      (if (= name "") (tuple (next_hyp_name unit) a%) (tuple name a%)))))
+                asl)))
+            (cl:declare (cl:ignorable asl%))
+            (ALL_TAC (tuple asl% g%))))))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* General tools to augment a required set of theorems with assumptions.     *)
@@ -1224,14 +1190,14 @@
 (defunc ASM (tltac ths arg~1172)
   (match arg~1172
     ((cl:and g% (tuple asl w%))
-      (funcall tltac (append (map (function-value #'snd 1) asl) ths) g%))))
+      (#`tltac (append (map (function-value #'snd 1) asl) ths) g%))))
 
 (defparameter HYP
   (fletc
     ((ident%
       (arg~1192)
       (match arg~1192
-        ((guard (cl:cons (Ident s) rest) (funcall isalnum s)) (tuple s rest))
+        ((guard (cl:cons (Ident s) rest) (#`isalnum s)) (tuple s rest))
         (_ (raise (make-Noparse))))))
     (let ((parse_using (many #'ident%)))
       (cl:declare (cl:ignorable parse_using))
@@ -1239,7 +1205,7 @@
         ((HYP_LIST
           (tac l)
           (rev_itlist
-            (lambdac (s k% l%) (USE_THEN s (lambdac (th) (funcall k% (cl:cons th l%)))))
+            (lambdac (s k% l%) (USE_THEN s (lambdac (th) (#`k% (cl:cons th l%)))))
             l
             tac)))
         (lambdac (tac s)
@@ -1274,16 +1240,16 @@
     (lambdac (conv arg~1297)
       (match arg~1297
         ((cl:and g% (tuple asl w%))
-          (let* ((th (funcall conv w%)) (tm (concl th)))
+          (let* ((th (#`conv w%)) (tm (concl th)))
             (cl:declare (cl:ignorable th tm))
             (if (aconv tm w%)
-              (funcall ACCEPT_TAC th g%)
+              (#`ACCEPT_TAC th g%)
               (match (dest_eq tm)
                 ((tuple l r%)
                   (if (not (aconv l w%))
                     (failwith "CONV_TAC: bad equation")
                     (if (= r% t_tm)
-                      (funcall ACCEPT_TAC (EQT_ELIM th) g%)
+                      (#`ACCEPT_TAC (EQT_ELIM th) g%)
                       (let ((th% (SYM th)))
                         (cl:declare (cl:ignorable th%))
                         (tuple
@@ -1302,7 +1268,7 @@
   (match arg~1373
     ((cl:and g% (tuple asl w%))
       (handler-case
-        (funcall ACCEPT_TAC (REFL (rand w%)) g%)
+        (#`ACCEPT_TAC (REFL (rand w%)) g%)
         (holai.runtime:ocaml-condition
           (exception~1378)
           (match exception~1378
@@ -1323,25 +1289,24 @@
                       (o (o #'union #'thm_frees) (function-value #'snd 1))
                       asl
                       (frees w%)))
-                    (v (funcall mk_primed_var avoids lv)))
+                    (v (#`mk_primed_var avoids lv)))
                   (cl:declare (cl:ignorable avoids v))
                   (tuple
                     null_meta
                     (cl:cons
                       (tuple
                         asl
-                        (funcall
-                          mk_eq
+                        (#`mk_eq
                           (tuple
-                            (funcall vsubst (cl:cons (tuple v lv) nil) lb)
-                            (funcall vsubst (cl:cons (tuple v rv) nil) rb))))
+                            (#`vsubst (cl:cons (tuple v lv) nil) lb)
+                            (#`vsubst (cl:cons (tuple v rv) nil) rb))))
                       nil)
                     (lambdac (i% arg~1447)
                       (match arg~1447
                         ((cl:cons th nil)
                           (let ((ath (ABS% v th)))
                             (cl:declare (cl:ignorable ath))
-                            (EQ_MP (ALPHA (concl ath) (funcall instantiate i% w%)) ath)))))))))))
+                            (EQ_MP (ALPHA (concl ath) (#`instantiate i% w%)) ath)))))))))))
         (holai.runtime:ocaml-condition
           (exception~1400)
           (match exception~1400
@@ -1359,8 +1324,8 @@
                 (tuple
                   null_meta
                   (cl:cons
-                    (tuple asl (funcall mk_eq (tuple f g%)))
-                    (cl:cons (tuple asl (funcall mk_eq (tuple x y))) nil))
+                    (tuple asl (#`mk_eq (tuple f g%)))
+                    (cl:cons (tuple asl (#`mk_eq (tuple x y))) nil))
                   (lambdac (arg~1524 arg~1526)
                     (match arg~1526
                       ((cl:cons th1 (cl:cons th2 nil)) (MK_COMB% (tuple th1 th2))))))))))
@@ -1378,7 +1343,7 @@
     (cl:declare (cl:ignorable tac))
     (lambdac (gl)
       (handler-case
-        (funcall tac gl)
+        (#`tac gl)
         (holai.runtime:ocaml-condition
           (exception~1573)
           (match exception~1573
@@ -1393,7 +1358,7 @@
     (cl:declare (cl:ignorable tac))
     (lambdac (gl)
       (handler-case
-        (funcall tac gl)
+        (#`tac gl)
         (holai.runtime:ocaml-condition
           (exception~1594)
           (match exception~1594
@@ -1408,19 +1373,19 @@
     (cl:declare (cl:ignorable tac))
     (lambdac (gl)
       (handler-case
-        (funcall tac gl)
+        (#`tac gl)
         (holai.runtime:ocaml-condition
           (exception~1615)
           (match exception~1615
             ((Failure _) (failwith "AP_THM_TAC"))
             (_ (raise exception~1615))))))))
 
-(defunc SUBST1_TAC (th) (funcall CONV_TAC (SUBS_CONV (cl:cons th nil))))
+(defunc SUBST1_TAC (th) (#`CONV_TAC (SUBS_CONV (cl:cons th nil))))
 
 (defunc SUBST_ALL_TAC (rth)
   (holai.runtime:proof (SUBST1_TAC rth) THEN (RULE_ASSUM_TAC (SUBS (cl:cons rth nil)))))
 
-(defparameter BETA_TAC (funcall CONV_TAC (funcall REDEPTH_CONV #'BETA_CONV)))
+(defparameter BETA_TAC (#`CONV_TAC (#`REDEPTH_CONV #'BETA_CONV)))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Just use an equation to substitute if possible and uninstantiable.        *)
@@ -1460,7 +1425,7 @@
       (match arg~1722
         ((tuple asl w%)
           (handler-case
-            (match (funcall dest_imp w%)
+            (match (#`dest_imp w%)
               ((tuple ant c%)
                 (let ((th1 (ASSUME ant)))
                   (cl:declare (cl:ignorable th1))
@@ -1469,7 +1434,7 @@
                     (cl:cons (tuple (cl:cons (tuple "" th1) asl) c%) nil)
                     (lambdac (i% arg~1784)
                       (match arg~1784
-                        ((cl:cons th nil) (funcall DISCH (funcall instantiate i% ant) th))))))))
+                        ((cl:cons th nil) (#`DISCH (#`instantiate i% ant) th))))))))
             (holai.runtime:ocaml-condition
               (exception~1726)
               (match exception~1726
@@ -1483,9 +1448,7 @@
                         (lambdac (i% arg~1751)
                           (match arg~1751
                             ((cl:cons th nil)
-                              (funcall
-                                NOT_INTRO
-                                (funcall DISCH (funcall instantiate i% ant) th)))))))
+                              (#`NOT_INTRO (#`DISCH (#`instantiate i% ant) th)))))))
                     (holai.runtime:ocaml-condition
                       (exception~1729)
                       (match exception~1729
@@ -1498,9 +1461,9 @@
     ((tuple asl w%)
       (tuple
         null_meta
-        (cl:cons (tuple asl (funcall mk_imp (tuple (concl thm) w%))) nil)
+        (cl:cons (tuple asl (#`mk_imp (tuple (concl thm) w%))) nil)
         (lambdac (i% arg~1828)
-          (match arg~1828 ((cl:cons th nil) (funcall MP th (INSTANTIATE_ALL i% thm)))))))))
+          (match arg~1828 ((cl:cons th nil) (#`MP th (INSTANTIATE_ALL i% thm)))))))))
 
 (defunc EQ_TAC (arg~1846)
   (match arg~1846
@@ -1511,11 +1474,11 @@
             (tuple
               null_meta
               (cl:cons
-                (tuple asl (funcall mk_imp (tuple l r%)))
-                (cl:cons (tuple asl (funcall mk_imp (tuple r% l))) nil))
+                (tuple asl (#`mk_imp (tuple l r%)))
+                (cl:cons (tuple asl (#`mk_imp (tuple r% l))) nil))
               (lambdac (arg~1873 arg~1875)
                 (match arg~1875
-                  ((cl:cons th1 (cl:cons th2 nil)) (funcall IMP_ANTISYM_RULE th1 th2)))))))
+                  ((cl:cons th1 (cl:cons th2 nil)) (#`IMP_ANTISYM_RULE th1 th2)))))))
         (holai.runtime:ocaml-condition
           (exception~1850)
           (match exception~1850
@@ -1535,10 +1498,9 @@
               (cl:declare (cl:ignorable thm))
               (tuple
                 null_meta
-                (cl:cons (tuple asl% (funcall mk_imp (tuple tm w%))) nil)
+                (cl:cons (tuple asl% (#`mk_imp (tuple tm w%))) nil)
                 (lambdac (i% arg~1926)
-                  (match arg~1926
-                    ((cl:cons th nil) (funcall MP th (INSTANTIATE_ALL i% thm)))))))))
+                  (match arg~1926 ((cl:cons th nil) (#`MP th (INSTANTIATE_ALL i% thm)))))))))
         (holai.runtime:ocaml-condition
           (exception~1906)
           (match exception~1906
@@ -1556,13 +1518,10 @@
               (cl:cons
                 (tuple
                   asl
-                  (funcall
-                    mk_forall
-                    (tuple x (funcall subst (cl:cons (tuple x t%) nil) w%))))
+                  (#`mk_forall (tuple x (#`subst (cl:cons (tuple x t%) nil) w%))))
                 nil)
               (lambdac (i% arg~1992)
-                (match arg~1992
-                  ((cl:cons th nil) (funcall SPEC (funcall instantiate i% t%) th)))))
+                (match arg~1992 ((cl:cons th nil) (#`SPEC (#`instantiate i% t%) th)))))
             (holai.runtime:ocaml-condition
               (exception~1971)
               (match exception~1971
@@ -1576,9 +1535,8 @@
 (defparameter X_GEN_TAC nil)
 
 (match
-  (fletc
-    ((tactic_type_compatibility_check
-      (pfx e% g%)
+  (holai.runtime:labelsc
+    ((:nonrecursive 0 tactic_type_compatibility_check (pfx e% g%)
       (let ((et (type_of e%)) (gt (type_of g%)))
         (cl:declare (cl:ignorable et gt))
         (if (= et gt)
@@ -1589,11 +1547,9 @@
               (string-concat
                 ": expected type :"
                 (string-concat
-                  (funcall string_of_type et)
-                  (string-concat " but got :" (funcall string_of_type gt))))))))))
-    (fletc
-      ((X_GEN_TAC%
-        (x%)
+                  (#`string_of_type et)
+                  (string-concat " but got :" (#`string_of_type gt)))))))))
+      (:nonrecursive 1 X_GEN_TAC% (x%)
         (if (not (is_var x%))
           (failwith "X_GEN_TAC: not a variable")
           (lambdac (arg~2061)
@@ -1601,7 +1557,7 @@
               ((tuple asl w%)
                 (match
                   (handler-case
-                    (funcall dest_forall w%)
+                    (#`dest_forall w%)
                     (holai.runtime:ocaml-condition
                       (exception~2123)
                       (match exception~2123
@@ -1624,87 +1580,74 @@
                               (tuple
                                 null_meta
                                 (cl:cons
-                                  (tuple
-                                    asl
-                                    (funcall vsubst (cl:cons (tuple x% x) nil) bod))
+                                  (tuple asl (#`vsubst (cl:cons (tuple x% x) nil) bod))
                                   nil)
                                 (lambdac (i% arg~2094)
                                   (match arg~2094
-                                    ((cl:cons th nil) (funcall afn (funcall GEN x% th))))))))))))))))))
-        (X_CHOOSE_TAC%
-          (x% xth)
-          (let ((xtm (concl xth)))
-            (cl:declare (cl:ignorable xtm))
+                                    ((cl:cons th nil) (#`afn (#`GEN x% th))))))))))))))))))
+      (:nonrecursive 1 X_CHOOSE_TAC% (x% xth)
+        (let ((xtm (concl xth)))
+          (cl:declare (cl:ignorable xtm))
+          (match
+            (handler-case
+              (#`dest_exists xtm)
+              (holai.runtime:ocaml-condition
+                (exception~2227)
+                (match exception~2227
+                  ((Failure _) (failwith "X_CHOOSE_TAC: not existential"))
+                  (_ (raise exception~2227)))))
+            ((tuple x bod)
+              (match (tactic_type_compatibility_check "X_CHOOSE_TAC" x x%)
+                (_
+                  (let*
+                    ((pat (#`vsubst (cl:cons (tuple x% x) nil) bod)) (xth% (ASSUME pat)))
+                    (cl:declare (cl:ignorable pat xth%))
+                    (lambdac (arg~2160)
+                      (match arg~2160
+                        ((tuple asl w%)
+                          (let
+                            ((avoids
+                              (itlist
+                                (o
+                                  (o (o #'union #'frees) #'concl)
+                                  (function-value #'snd 1))
+                                asl
+                                (union (frees w%) (thm_frees xth)))))
+                            (cl:declare (cl:ignorable avoids))
+                            (if (mem x% avoids)
+                              (failwith "X_CHOOSE_TAC: invalid variable")
+                              (tuple
+                                null_meta
+                                (cl:cons (tuple (cl:cons (tuple "" xth%) asl) w%) nil)
+                                (lambdac (i% arg~2190)
+                                  (match arg~2190
+                                    ((cl:cons th nil)
+                                      (#`CHOOSE (tuple x% (INSTANTIATE_ALL i% xth)) th)))))))))))))))))
+      (:nonrecursive 1 EXISTS_TAC% (t% arg~2238)
+        (match arg~2238
+          ((tuple asl w%)
             (match
               (handler-case
-                (funcall dest_exists xtm)
+                (#`dest_exists w%)
                 (holai.runtime:ocaml-condition
-                  (exception~2227)
-                  (match exception~2227
-                    ((Failure _) (failwith "X_CHOOSE_TAC: not existential"))
-                    (_ (raise exception~2227)))))
-              ((tuple x bod)
-                (match (tactic_type_compatibility_check "X_CHOOSE_TAC" x x%)
+                  (exception~2283)
+                  (match exception~2283
+                    ((Failure _)
+                      (failwith "EXISTS_TAC: Goal not existentially quantified"))
+                    (_ (raise exception~2283)))))
+              ((tuple v bod)
+                (match (tactic_type_compatibility_check "EXISTS_TAC" v t%)
                   (_
-                    (let*
-                      ((pat (funcall vsubst (cl:cons (tuple x% x) nil) bod))
-                        (xth% (ASSUME pat)))
-                      (cl:declare (cl:ignorable pat xth%))
-                      (lambdac (arg~2160)
-                        (match arg~2160
-                          ((tuple asl w%)
-                            (let
-                              ((avoids
-                                (itlist
-                                  (o
-                                    (o (o #'union #'frees) #'concl)
-                                    (function-value #'snd 1))
-                                  asl
-                                  (union (frees w%) (thm_frees xth)))))
-                              (cl:declare (cl:ignorable avoids))
-                              (if (mem x% avoids)
-                                (failwith "X_CHOOSE_TAC: invalid variable")
-                                (tuple
-                                  null_meta
-                                  (cl:cons (tuple (cl:cons (tuple "" xth%) asl) w%) nil)
-                                  (lambdac (i% arg~2190)
-                                    (match arg~2190
-                                      ((cl:cons th nil)
-                                        (funcall
-                                          CHOOSE
-                                          (tuple x% (INSTANTIATE_ALL i% xth))
-                                          th)))))))))))))))))
-        (EXISTS_TAC%
-          (t% arg~2238)
-          (match arg~2238
-            ((tuple asl w%)
-              (match
-                (handler-case
-                  (funcall dest_exists w%)
-                  (holai.runtime:ocaml-condition
-                    (exception~2283)
-                    (match exception~2283
-                      ((Failure _)
-                        (failwith "EXISTS_TAC: Goal not existentially quantified"))
-                      (_ (raise exception~2283)))))
-                ((tuple v bod)
-                  (match (tactic_type_compatibility_check "EXISTS_TAC" v t%)
-                    (_
-                      (tuple
-                        null_meta
-                        (cl:cons
-                          (tuple asl (funcall vsubst (cl:cons (tuple t% v) nil) bod))
-                          nil)
-                        (lambdac (i% arg~2257)
-                          (match arg~2257
-                            ((cl:cons th nil)
-                              (funcall
-                                holai.bool:EXISTS
-                                (tuple
-                                  (funcall instantiate i% w%)
-                                  (funcall instantiate i% t%))
-                                th)))))))))))))
-      (tuple #'X_GEN_TAC% #'X_CHOOSE_TAC% #'EXISTS_TAC%)))
+                    (tuple
+                      null_meta
+                      (cl:cons (tuple asl (#`vsubst (cl:cons (tuple t% v) nil) bod)) nil)
+                      (lambdac (i% arg~2257)
+                        (match arg~2257
+                          ((cl:cons th nil)
+                            (#`holai.bool:EXISTS
+                              (tuple (#`instantiate i% w%) (#`instantiate i% t%))
+                              th)))))))))))))
+    (tuple #'X_GEN_TAC% #'X_CHOOSE_TAC% #'EXISTS_TAC%))
   ((tuple X_GEN_TAC% X_CHOOSE_TAC% EXISTS_TAC%)
     (setf EXISTS_TAC EXISTS_TAC% X_CHOOSE_TAC X_CHOOSE_TAC% X_GEN_TAC X_GEN_TAC%)))
 
@@ -1713,12 +1656,12 @@
     ((tuple asl w%)
       (handler-case
         (let*
-          ((x (fst (funcall dest_forall w%)))
+          ((x (fst (#`dest_forall w%)))
             (avoids
               (itlist (o (o #'union #'thm_frees) (function-value #'snd 1)) asl (frees w%)))
-            (x% (funcall mk_primed_var avoids x)))
+            (x% (#`mk_primed_var avoids x)))
           (cl:declare (cl:ignorable x avoids x%))
-          (funcall X_GEN_TAC x% (tuple asl w%)))
+          (#`X_GEN_TAC x% (tuple asl w%)))
         (holai.runtime:ocaml-condition
           (exception~2307)
           (match exception~2307
@@ -1727,7 +1670,7 @@
 
 (defunc CHOOSE_TAC (xth)
   (handler-case
-    (let ((x (fst (funcall dest_exists (concl xth)))))
+    (let ((x (fst (#`dest_exists (concl xth)))))
       (cl:declare (cl:ignorable x))
       (lambdac (arg~2355)
         (match arg~2355
@@ -1738,9 +1681,9 @@
                   (o (o #'union #'thm_frees) (function-value #'snd 1))
                   asl
                   (union (frees w%) (thm_frees xth))))
-                (x% (funcall mk_primed_var avoids x)))
+                (x% (#`mk_primed_var avoids x)))
               (cl:declare (cl:ignorable avoids x%))
-              (funcall X_CHOOSE_TAC x% xth (tuple asl w%)))))))
+              (#`X_CHOOSE_TAC x% xth (tuple asl w%)))))))
     (holai.runtime:ocaml-condition
       (exception~2345)
       (match exception~2345
@@ -1751,13 +1694,13 @@
   (match arg~2392
     ((tuple asl w%)
       (handler-case
-        (match (funcall dest_conj w%)
+        (match (#`dest_conj w%)
           ((tuple l r%)
             (tuple
               null_meta
               (cl:cons (tuple asl l) (cl:cons (tuple asl r%) nil))
               (lambdac (arg~2413 arg~2415)
-                (match arg~2415 ((cl:cons th1 (cl:cons th2 nil)) (funcall CONJ th1 th2)))))))
+                (match arg~2415 ((cl:cons th1 (cl:cons th2 nil)) (#`CONJ th1 th2)))))))
         (holai.runtime:ocaml-condition
           (exception~2396)
           (match exception~2396
@@ -1768,14 +1711,13 @@
   (match arg~2441
     ((tuple asl w%)
       (handler-case
-        (match (funcall dest_disj w%)
+        (match (#`dest_disj w%)
           ((tuple l r%)
             (tuple
               null_meta
               (cl:cons (tuple asl l) nil)
               (lambdac (i% arg~2459)
-                (match arg~2459
-                  ((cl:cons th nil) (funcall DISJ1 th (funcall instantiate i% r%))))))))
+                (match arg~2459 ((cl:cons th nil) (#`DISJ1 th (#`instantiate i% r%))))))))
         (holai.runtime:ocaml-condition
           (exception~2445)
           (match exception~2445
@@ -1786,14 +1728,13 @@
   (match arg~2484
     ((tuple asl w%)
       (handler-case
-        (match (funcall dest_disj w%)
+        (match (#`dest_disj w%)
           ((tuple l r%)
             (tuple
               null_meta
               (cl:cons (tuple asl r%) nil)
               (lambdac (i% arg~2502)
-                (match arg~2502
-                  ((cl:cons th nil) (funcall DISJ2 (funcall instantiate i% l) th)))))))
+                (match arg~2502 ((cl:cons th nil) (#`DISJ2 (#`instantiate i% l) th)))))))
         (holai.runtime:ocaml-condition
           (exception~2488)
           (match exception~2488
@@ -1804,7 +1745,7 @@
   (handler-case
     (let ((dtm (concl dth)))
       (cl:declare (cl:ignorable dtm))
-      (match (funcall dest_disj dtm)
+      (match (#`dest_disj dtm)
         ((tuple l r%)
           (let ((thl (ASSUME l)) (thr (ASSUME r%)))
             (cl:declare (cl:ignorable thl thr))
@@ -1819,7 +1760,7 @@
                     (lambdac (i% arg~2567)
                       (match arg~2567
                         ((cl:cons th1 (cl:cons th2 nil))
-                          (funcall DISJ_CASES (INSTANTIATE_ALL i% dth) th1 th2))))))))))))
+                          (#`DISJ_CASES (INSTANTIATE_ALL i% dth) th1 th2))))))))))))
     (holai.runtime:ocaml-condition
       (exception~2528)
       (match exception~2528
@@ -1832,7 +1773,7 @@
       (match arg~2609
         ((tuple asl w%)
           (handler-case
-            (let ((th (funcall CONTR w% cth)))
+            (let ((th (#`CONTR w% cth)))
               (cl:declare (cl:ignorable th))
               (tuple null_meta nil (propagate_thm th)))
             (holai.runtime:ocaml-condition
@@ -1842,14 +1783,14 @@
                 (_ (raise exception~2613))))))))))
 
 (defparameter MATCH_ACCEPT_TAC
-  (fletc ((propagate_thm (th i% arg~2639) (match arg~2639 (nil (INSTANTIATE_ALL i% th)))))
-    (fletc
-      ((rawtac
-        (th arg~2647)
+  (holai.runtime:labelsc
+    ((:nonrecursive 0 propagate_thm (th i% arg~2639)
+      (match arg~2639 (nil (INSTANTIATE_ALL i% th))))
+      (:nonrecursive 1 rawtac (th arg~2647)
         (match arg~2647
           ((tuple asl w%)
             (handler-case
-              (let ((ith (funcall PART_MATCH #'I th w%)))
+              (let ((ith (#`PART_MATCH #'I th w%)))
                 (cl:declare (cl:ignorable ith))
                 (tuple null_meta nil (propagate_thm ith)))
               (holai.runtime:ocaml-condition
@@ -1857,7 +1798,7 @@
                 (match exception~2651
                   ((Failure _) (failwith "ACCEPT_TAC"))
                   (_ (raise exception~2651)))))))))
-      (lambdac (th) (holai.runtime:proof (REPEAT #'GEN_TAC) THEN (rawtac th))))))
+    (lambdac (th) (holai.runtime:proof (REPEAT #'GEN_TAC) THEN (rawtac th)))))
 
 (defunc MATCH_MP_TAC (th)
   (let*
@@ -1865,9 +1806,9 @@
       (handler-case
         (let ((tm (concl th)))
           (cl:declare (cl:ignorable tm))
-          (match (funcall strip_forall tm)
+          (match (#`strip_forall tm)
             ((tuple avs bod)
-              (match (funcall dest_imp bod)
+              (match (#`dest_imp bod)
                 ((tuple ant con)
                   (let*
                     ((th1 (SPECL avs (ASSUME tm)))
@@ -1876,33 +1817,28 @@
                         (filter
                           (lambdac (v) (cl:and (vfree_in v ant) (not (vfree_in v con))))
                           avs))
-                      (th3 (itlist #'SIMPLE_CHOOSE evs (funcall DISCH tm th2)))
+                      (th3 (itlist #'SIMPLE_CHOOSE evs (#`DISCH tm th2)))
                       (tm3 (hd (holai.fusion.hol:hyp th3))))
                     (cl:declare (cl:ignorable th1 th2 evs th3 tm3))
-                    (funcall
-                      MP
-                      (funcall DISCH tm (GEN_ALL (funcall DISCH tm3 (UNDISCH th3))))
-                      th)))))))
+                    (#`MP (#`DISCH tm (GEN_ALL (#`DISCH tm3 (UNDISCH th3)))) th)))))))
         (holai.runtime:ocaml-condition
           (exception~2684)
           (match exception~2684
             ((Failure _) (failwith "MATCH_MP_TAC: Bad theorem"))
             (_ (raise exception~2684))))))
-      (match_fun (funcall PART_MATCH (o (function-value #'snd 1) dest_imp) sth)))
+      (match_fun (#`PART_MATCH (o (function-value #'snd 1) dest_imp) sth)))
     (cl:declare (cl:ignorable sth match_fun))
     (lambdac (arg~2762)
       (match arg~2762
         ((tuple asl w%)
           (handler-case
-            (let*
-              ((xth (funcall match_fun w%)) (lant (fst (funcall dest_imp (concl xth)))))
+            (let* ((xth (#`match_fun w%)) (lant (fst (#`dest_imp (concl xth)))))
               (cl:declare (cl:ignorable xth lant))
               (tuple
                 null_meta
                 (cl:cons (tuple asl lant) nil)
                 (lambdac (i% arg~2786)
-                  (match arg~2786
-                    ((cl:cons th% nil) (funcall MP (INSTANTIATE_ALL i% xth) th%))))))
+                  (match arg~2786 ((cl:cons th% nil) (#`MP (INSTANTIATE_ALL i% xth) th%))))))
             (holai.runtime:ocaml-condition
               (exception~2766)
               (match exception~2766
@@ -1910,11 +1846,11 @@
                 (_ (raise exception~2766))))))))))
 
 (defunc TRANS_TAC (th)
-  (let ((ctm (snd (funcall strip_forall (concl th)))))
+  (let ((ctm (snd (#`strip_forall (concl th)))))
     (cl:declare (cl:ignorable ctm))
-    (match (funcall dest_conj (funcall lhand ctm))
+    (match (#`dest_conj (#`lhand ctm))
       ((tuple cl cr)
-        (let ((x (funcall lhand cl)) (y (rand cl)) (z (rand cr)))
+        (let ((x (#`lhand cl)) (y (rand cl)) (z (rand cr)))
           (cl:declare (cl:ignorable x y z))
           (lambdac (tm arg~2828)
             (match arg~2828
@@ -1932,7 +1868,7 @@
                               nil))
                             (th% (INST_TYPE ilist th)))
                           (cl:declare (cl:ignorable ilist th%))
-                          (funcall THEN (MATCH_MP_TAC th%) (funcall EXISTS_TAC tm) gl))))))))))))))
+                          (#`THEN (MATCH_MP_TAC th%) (#`EXISTS_TAC tm) gl))))))))))))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Theorem continuations.                                                    *)
@@ -1940,16 +1876,16 @@
 
 
 (defunc CONJUNCTS_THEN2 (ttac1 ttac2 cth)
-  (match (funcall dest_conj (concl cth))
+  (match (#`dest_conj (concl cth))
     ((tuple c1 c2)
       (lambdac (gl)
-        (match (funcall THEN (funcall ttac1 (ASSUME c1)) (funcall ttac2 (ASSUME c2)) gl)
+        (match (#`THEN (#`ttac1 (ASSUME c1)) (#`ttac2 (ASSUME c2)) gl)
           ((tuple ti gls jfn)
             (fletc
               ((jfn%
                 (i% ths)
                 (match (CONJ_PAIR (INSTANTIATE_ALL i% cth))
-                  ((tuple th1 th2) (PROVE_HYP th1 (PROVE_HYP th2 (funcall jfn i% ths)))))))
+                  ((tuple th1 th2) (PROVE_HYP th1 (PROVE_HYP th2 (#`jfn i% ths)))))))
               (tuple ti gls #'jfn%))))))))
 
 (defparameter CONJUNCTS_THEN (W #'CONJUNCTS_THEN2))
@@ -1963,7 +1899,7 @@
 (defunc DISCH_THEN (ttac) (holai.runtime:proof DISCH_TAC THEN (POP_ASSUM ttac)))
 
 (defunc X_CHOOSE_THEN (x ttac th)
-  (holai.runtime:proof (funcall X_CHOOSE_TAC x th) THEN (POP_ASSUM ttac)))
+  (holai.runtime:proof (#`X_CHOOSE_TAC x th) THEN (POP_ASSUM ttac)))
 
 (defunc CHOOSE_THEN (ttac th) (holai.runtime:proof (CHOOSE_TAC th) THEN (POP_ASSUM ttac)))
 
@@ -1979,14 +1915,14 @@
 (defunc ANTE_RES_THEN (ttac ante)
   (ASSUM_LIST
     (lambdac (asl)
-      (let ((tacs (mapfilter (lambdac (imp) (funcall ttac (MATCH_MP imp ante))) asl)))
+      (let ((tacs (mapfilter (lambdac (imp) (#`ttac (MATCH_MP imp ante))) asl)))
         (cl:declare (cl:ignorable tacs))
         (if (= tacs nil) (failwith "IMP_RES_THEN") (EVERY tacs))))))
 
 (defunc IMP_RES_THEN (ttac imp)
   (ASSUM_LIST
     (lambdac (asl)
-      (let ((tacs (mapfilter (lambdac (ante) (funcall ttac (MATCH_MP imp ante))) asl)))
+      (let ((tacs (mapfilter (lambdac (ante) (#`ttac (MATCH_MP imp ante))) asl)))
         (cl:declare (cl:ignorable tacs))
         (if (= tacs nil) (failwith "IMP_RES_THEN") (EVERY tacs))))))
 
@@ -2007,16 +1943,16 @@
       (lambdac (gth)
         (FIRST
           (cl:cons
-            (funcall CONTR_TAC gth)
+            (#`CONTR_TAC gth)
             (cl:cons
-              (funcall ACCEPT_TAC gth)
-              (cl:cons (DISCARD_TAC gth) (cl:cons (funcall ASSUME_TAC gth) nil)))))))))
+              (#`ACCEPT_TAC gth)
+              (cl:cons (DISCARD_TAC gth) (cl:cons (#`ASSUME_TAC gth) nil)))))))))
 
 (defunc STRUCT_CASES_THEN (ttac) (REPEAT_TCL STRIP_THM_THEN ttac))
 
 (defparameter STRUCT_CASES_TAC
   (STRUCT_CASES_THEN
-    (lambdac (th) (holai.runtime:proof (SUBST1_TAC th) #'ORELSE (funcall ASSUME_TAC th)))))
+    (lambdac (th) (holai.runtime:proof (SUBST1_TAC th) #'ORELSE (#`ASSUME_TAC th)))))
 
 (defunc STRIP_GOAL_THEN (ttac)
   (FIRST (cl:cons #'GEN_TAC (cl:cons #'CONJ_TAC (cl:cons (DISCH_THEN ttac) nil)))))
@@ -2037,7 +1973,7 @@
         (remove
           (lambdac (arg~3176) (match arg~3176 ((tuple _ th) (aconv (concl th) tm))))
           asl)
-        ((tuple thp asl%) (funcall ttac (snd thp) (tuple asl% w%)))))))
+        ((tuple thp asl%) (#`ttac (snd thp) (tuple asl% w%)))))))
 
 (defunc FIRST_X_ASSUM (ttac) (FIRST_ASSUM (lambdac (th) (UNDISCH_THEN (concl th) ttac))))
 
@@ -2049,12 +1985,12 @@
 (defunc SUBGOAL_THEN (wa ttac arg~3207)
   (match arg~3207
     ((tuple asl w%)
-      (match (funcall ttac (ASSUME wa) (tuple asl w%))
+      (match (#`ttac (ASSUME wa) (tuple asl w%))
         ((tuple meta gl just)
           (tuple
             meta
             (cl:cons (tuple asl wa) gl)
-            (lambdac (i% l) (PROVE_HYP (hd l) (funcall just i% (tl l))))))))))
+            (lambdac (i% l) (PROVE_HYP (hd l) (#`just i% (tl l))))))))))
 
 (defunc SUBGOAL_TAC (s tm prfs)
   (match prfs
@@ -2068,9 +2004,9 @@
 (defunc FREEZE_THEN (ttac th arg~3280)
   (match arg~3280
     ((tuple asl w%)
-      (match (funcall ttac (ASSUME (concl th)) (tuple asl w%))
+      (match (#`ttac (ASSUME (concl th)) (tuple asl w%))
         ((tuple meta gl just)
-          (tuple meta gl (lambdac (i% l) (PROVE_HYP th (funcall just i% l)))))))))
+          (tuple meta gl (lambdac (i% l) (PROVE_HYP th (#`just i% l)))))))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Metavariable tactics.                                                     *)
@@ -2083,17 +2019,16 @@
       (handler-case
         (if (not (is_var t%))
           (fail unit)
-          (match (funcall dest_exists w%)
+          (match (#`dest_exists w%)
             ((tuple v bod)
               (tuple
                 (tuple (cl:cons t% nil) null_inst)
-                (cl:cons (tuple asl (funcall vsubst (cl:cons (tuple t% v) nil) bod)) nil)
+                (cl:cons (tuple asl (#`vsubst (cl:cons (tuple t% v) nil) bod)) nil)
                 (lambdac (i% arg~3344)
                   (match arg~3344
                     ((cl:cons th nil)
-                      (funcall
-                        holai.bool:EXISTS
-                        (tuple (funcall instantiate i% w%) (funcall instantiate i% t%))
+                      (#`holai.bool:EXISTS
+                        (tuple (#`instantiate i% w%) (#`instantiate i% t%))
                         th))))))))
         (holai.runtime:ocaml-condition
           (exception~3320)
@@ -2105,28 +2040,27 @@
   (match arg~3379
     ((cl:and gl (tuple asl w%))
       (let*
-        ((v (fst (funcall dest_exists w%)))
+        ((v (fst (#`dest_exists w%)))
           (avoids
             (itlist
               (o (o (o #'union #'frees) #'concl) (function-value #'snd 1))
               asl
               (frees w%)))
-          (v% (funcall mk_primed_var avoids v)))
+          (v% (#`mk_primed_var avoids v)))
         (cl:declare (cl:ignorable v avoids v%))
         (X_META_EXISTS_TAC v% gl)))))
 
 (defunc META_SPEC_TAC (t% thm arg~3419)
   (match arg~3419
     ((tuple asl w%)
-      (let ((sth (funcall SPEC t% thm)))
+      (let ((sth (#`SPEC t% thm)))
         (cl:declare (cl:ignorable sth))
         (tuple
           (tuple (cl:cons t% nil) null_inst)
           (cl:cons (tuple (cl:cons (tuple "" sth) asl) w%) nil)
           (lambdac (i% arg~3442)
             (match arg~3442
-              ((cl:cons th nil)
-                (PROVE_HYP (funcall SPEC (funcall instantiate i% t%) thm) th)))))))))
+              ((cl:cons th nil) (PROVE_HYP (#`SPEC (#`instantiate i% t%) thm) th)))))))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* If all else fails!                                                        *)
@@ -2134,15 +2068,14 @@
 
 
 (defunc CHEAT_TAC (arg~3463)
-  (match arg~3463
-    ((tuple asl w%) (funcall ACCEPT_TAC (mk_thm (tuple nil w%)) (tuple asl w%)))))
+  (match arg~3463 ((tuple asl w%) (#`ACCEPT_TAC (mk_thm (tuple nil w%)) (tuple asl w%)))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Intended for time-consuming rules; delays evaluation till it sees goal.   *)
 ;; (* ------------------------------------------------------------------------- *)
 
 
-(defunc RECALL_ACCEPT_TAC (r% a% g%) (funcall ACCEPT_TAC (time r% a%) g%))
+(defunc RECALL_ACCEPT_TAC (r% a% g%) (#`ACCEPT_TAC (time r% a%) g%))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Split off antecedent of antecedent as a subgoal.                          *)
@@ -2159,7 +2092,7 @@
             (itlist
               DISCH
               (cl:cons tm1 (cl:cons tm2 nil))
-              (funcall MP th2 (funcall MP (ASSUME tm2) th1)))))
+              (#`MP th2 (#`MP (ASSUME tm2) th1)))))
           (cl:declare (cl:ignorable th))
           (holai.runtime:proof (MATCH_MP_TAC th) THEN #'CONJ_TAC))))))
 
@@ -2181,15 +2114,12 @@
   (fletc
     ((with_color
       (color_flag)
-      (fletc
-        ((string_of_int3
-          (n)
+      (holai.runtime:labelsc
+        ((:nonrecursive 0 string_of_int3 (n)
           (if (< n 10)
             (string-concat "  " (string-of-int n))
-            (if (< n 100) (string-concat " " (string-of-int n)) (string-of-int n)))))
-        (fletc
-          ((print_hyp
-            (fmt n arg~3566)
+            (if (< n 100) (string-concat " " (string-of-int n)) (string-of-int n))))
+          (:nonrecursive 1 print_hyp (fmt n arg~3566)
             (match arg~3566
               ((tuple s th)
                 (progn
@@ -2203,8 +2133,7 @@
                       (match (deref print_goal_hyp_max_boxes)
                         ((None) unit)
                         ((Some hb) (pp-set-max-boxes fmt hb)))
-                      (funcall
-                        (if color_flag pp_print_colored_qterm pp_print_qterm)
+                      (#`(if color_flag pp_print_colored_qterm pp_print_qterm)
                         fmt
                         (concl th))
                       (pp-set-max-boxes fmt old_max_boxes)
@@ -2214,25 +2143,21 @@
                         (pp-print-string fmt (string-concat " (" (string-concat s ")")))
                         unit)
                       (pp-close-box fmt unit)
-                      (pp-print-newline fmt unit))))))))
-          (labelsc
-            ((print_hyps
-              (fmt n asl)
-              (if (= asl nil)
-                unit
-                (progn (print_hyp fmt n (hd asl)) (print_hyps fmt (+ n 1) (tl asl))))))
-            (lambdac (fmt arg~3663)
-              (match arg~3663
-                ((tuple asl w%)
-                  (progn
-                    (pp-print-newline fmt unit)
-                    (if (<> asl nil)
-                      (progn
-                        (print_hyps fmt 0 (funcall rev asl))
-                        (pp-print-newline fmt unit))
-                      unit)
-                    (funcall (if color_flag pp_print_colored_qterm pp_print_qterm) fmt w%)
-                    (pp-print-newline fmt unit))))))))))
+                      (pp-print-newline fmt unit)))))))
+          (:recursive 2 print_hyps (fmt n asl)
+            (if (= asl nil)
+              unit
+              (progn (print_hyp fmt n (hd asl)) (print_hyps fmt (+ n 1) (tl asl))))))
+        (lambdac (fmt arg~3663)
+          (match arg~3663
+            ((tuple asl w%)
+              (progn
+                (pp-print-newline fmt unit)
+                (if (<> asl nil)
+                  (progn (print_hyps fmt 0 (#`rev asl)) (pp-print-newline fmt unit))
+                  unit)
+                (#`(if color_flag pp_print_colored_qterm pp_print_qterm) fmt w%)
+                (pp-print-newline fmt unit))))))))
     (tuple (with_color cl:nil) (with_color cl:t)))
   ((tuple pp_print_goal% pp_print_colored_goal%)
     (setf pp_print_colored_goal pp_print_colored_goal% pp_print_goal pp_print_goal%)))
@@ -2242,13 +2167,12 @@
 (defparameter pp_print_goalstack nil)
 
 (match
-  (fletc
-    ((print_goalstate
-      (color_flag fmt k% gs)
+  (holai.runtime:labelsc
+    ((:nonrecursive 0 print_goalstate (color_flag fmt k% gs)
       (match gs
         ((tuple _ gl _)
           (let*
-            ((n (funcall length gl))
+            ((n (#`length gl))
               (s
                 (if (= n 0)
                   "No subgoals"
@@ -2267,12 +2191,10 @@
                 unit
                 (do_list
                   (o
-                    (funcall (if color_flag pp_print_colored_goal pp_print_goal) fmt)
+                    (#`(if color_flag pp_print_colored_goal pp_print_goal) fmt)
                     (C #'el gl))
-                  (funcall rev (-- 0 (- k% 1)))))))))))
-    (fletc
-      ((fn
-        (color_flag fmt l)
+                  (#`rev (-- 0 (- k% 1))))))))))
+      (:nonrecursive 1 fn (color_flag fmt l)
         (if (= l nil)
           (pp-print-string fmt "Empty goalstack")
           (if (= (tl l) nil)
@@ -2281,11 +2203,10 @@
             (match (tuple (hd l) (hd (tl l)))
               ((tuple (cl:and gs (tuple _ gl _)) (tuple _ gl0 _))
                 (let*
-                  ((p% (- (funcall length gl) (funcall length gl0)))
-                    (p%% (if (< p% 1) 1 (+ p% 1))))
+                  ((p% (- (#`length gl) (#`length gl0))) (p%% (if (< p% 1) 1 (+ p% 1))))
                   (cl:declare (cl:ignorable p% p%%))
                   (print_goalstate color_flag fmt p%% gs))))))))
-      (tuple (fn cl:nil) (fn cl:t))))
+    (tuple (fn cl:nil) (fn cl:t)))
   ((tuple pp_print_goalstack% pp_print_colored_goalstack%)
     (setf
       pp_print_colored_goalstack
@@ -2293,14 +2214,14 @@
       pp_print_goalstack
       pp_print_goalstack%)))
 
-(defparameter print_goal (funcall pp_print_goal std-formatter))
+(defparameter print_goal (#`pp_print_goal std-formatter))
 
-(defparameter print_goalstack (funcall pp_print_goalstack std-formatter))
+(defparameter print_goalstack (#`pp_print_goalstack std-formatter))
 
-(defunc PRINT_GOAL_TAC (gl) (progn (funcall print_goal gl) (ALL_TAC gl)))
+(defunc PRINT_GOAL_TAC (gl) (progn (#`print_goal gl) (ALL_TAC gl)))
 
 (defunc PRINT_COLORED_GOAL_TAC (gl)
-  (progn (funcall pp_print_colored_goal std-formatter gl) (ALL_TAC gl)))
+  (progn (#`pp_print_colored_goal std-formatter gl) (ALL_TAC gl)))
 
 (defunc REMARK_TAC (s gl) (progn (remark s) (ALL_TAC gl)))
 
@@ -2316,10 +2237,10 @@
         (failwith "No goal set")
         (let ((g% (hd gls)) (ogls (tl gls)))
           (cl:declare (cl:ignorable g% ogls))
-          (match (funcall tac g%)
+          (match (#`tac g%)
             ((tuple (tuple newmvs newinst) subgls subjust)
               (let*
-                ((n (funcall length subgls))
+                ((n (#`length subgls))
                   (mvs% (union newmvs mvs))
                   (inst%%% (compose_insts inst%% newinst))
                   (gls% (append subgls (map (inst_goal newinst) ogls))))
@@ -2331,9 +2252,9 @@
                       (cl:declare (cl:ignorable i%%))
                       (match (chop_list n ths)
                         ((tuple cths oths)
-                          (let ((sths (cl:cons (funcall subjust i% cths) oths)))
+                          (let ((sths (cl:cons (#`subjust i% cths) oths)))
                             (cl:declare (cl:ignorable sths))
-                            (funcall just i%% sths)))))))
+                            (#`just i%% sths)))))))
                   (tuple (tuple mvs% inst%%%) gls% #'just%))))))))))
 
 ;; (* ------------------------------------------------------------------------- *)
@@ -2354,7 +2275,7 @@
                 (i% ths)
                 (let ((ths% (cl:cons (last ths) (butlast ths))))
                   (cl:declare (cl:ignorable ths%))
-                  (funcall just i% ths%))))
+                  (#`just i% ths%))))
               (tuple meta sgs% #'just%))))))
       (rotate_n
         (arg~4039)
@@ -2367,7 +2288,7 @@
                   (i% ths)
                   (let ((ths% (append (tl ths) (cl:cons (hd ths) nil))))
                     (cl:declare (cl:ignorable ths%))
-                    (funcall just i% ths%))))
+                    (#`just i% ths%))))
                 (tuple meta sgs% #'just%)))))))
     (lambdac (n) (if (> n 0) (funpow n #'rotate_p) (funpow (- n) #'rotate_n)))))
 
@@ -2394,9 +2315,7 @@
         (cl:declare (cl:ignorable gstate))
         (match (by tac gstate)
           ((tuple _ sgs just)
-            (if (= sgs nil)
-              (funcall just null_inst nil)
-              (failwith "TAC_PROOF: Unsolved goals"))))))))
+            (if (= sgs nil) (#`just null_inst nil) (failwith "TAC_PROOF: Unsolved goals"))))))))
 
 (defunc prove (arg~4157)
   (match arg~4157
@@ -2430,7 +2349,7 @@
     (cl:declare (cl:ignorable l))
     (if (= l nil)
       (failwith "No current goal")
-      (let* ((h (hd l)) (res (cl:cons (funcall r% h) l)))
+      (let* ((h (hd l)) (res (cl:cons (#`r% h) l)))
         (cl:declare (cl:ignorable h res))
         (progn (assign current_goalstack res) (deref current_goalstack))))))
 
@@ -2441,9 +2360,9 @@
         (cl:declare (cl:ignorable l))
         (assign current_goalstack (cl:cons (hd l) nil))))))
 
-(defunc e (tac) (refine (by (funcall VALID tac))))
+(defunc e (tac) (refine (by (#`VALID tac))))
 
-(defunc r (n) (refine (funcall rotate n)))
+(defunc r (n) (refine (#`rotate n)))
 
 ;; (* A sequence of 'e tac; r n' where n is the number of subgoals after e tac. *)
 ;; (* This command is useful when you want to interactively try a list of       *)
@@ -2459,11 +2378,11 @@
     (match
       (match (deref current_goalstack)
         ((cl:cons (tuple _ gl _) (cl:cons (tuple _ glprev _) _))
-          (let ((n_subgoals (funcall length gl)))
+          (let ((n_subgoals (#`length gl)))
             (cl:declare (cl:ignorable n_subgoals))
             (if (= n_subgoals 0)
               (tuple 0 0)
-              (tuple (+ (- n_subgoals (funcall length glprev)) 1) n_subgoals))))
+              (tuple (+ (- n_subgoals (#`length glprev)) 1) n_subgoals))))
         (_ (failwith "current_goalstack must have at least 2 items after 'e'")))
       ((tuple n_subgoals_to_rotate n_subgoals)
         (if (cl:or (= n_subgoals_to_rotate 0) (= n_subgoals 1))
@@ -2471,10 +2390,9 @@
 
 ") e_result)
           (progn
-            (if (deref verbose) (funcall print_goalstack (deref current_goalstack)) unit)
+            (if (deref verbose) (#`print_goalstack (deref current_goalstack)) unit)
             (remark
-              (funcall
-                (printf-sprintf "
+              (#`(printf-sprintf "
 (Rotating %d subgoal%s...)
 
 ")
@@ -2519,7 +2437,7 @@
       (let ((l (deref current_goalstack)))
         (cl:declare (cl:ignorable l))
         (progn
-          (if (= (funcall length l) 1)
+          (if (= (#`length l) 1)
             (failwith "Can't back up any more")
             (assign current_goalstack (tl l)))
           (deref current_goalstack))))))
@@ -2542,6 +2460,5 @@
 (defunc top_thm (arg~4506)
   (match arg~4506
     ((cl:type holai.runtime::unit-value)
-      (match (deref current_goalstack)
-        ((cl:cons (tuple _ nil f) _) (funcall f null_inst nil))))))
+      (match (deref current_goalstack) ((cl:cons (tuple _ nil f) _) (#`f null_inst nil))))))
 

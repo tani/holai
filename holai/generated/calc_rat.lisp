@@ -393,7 +393,6 @@
     labelsc
     gcd-num
     function-value
-    funcall
     fst
     fletc
     failwith
@@ -520,7 +519,7 @@
 ;; (* ------------------------------------------------------------------------- *)
 
 
-(defparameter DECIMAL (funcall new_definition (parse_term "DECIMAL x y = &x / &y")))
+(defparameter DECIMAL (#`new_definition (parse_term "DECIMAL x y = &x / &y")))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Various handy lemmas.                                                     *)
@@ -538,7 +537,7 @@
         THEN BINOP_TAC
         THENL
           (cl:cons
-            (holai.runtime:proof (REWRITE_TAC (cl:cons (funcall GSYM REAL_MUL_ASSOC) nil))
+            (holai.runtime:proof (REWRITE_TAC (cl:cons (#`GSYM REAL_MUL_ASSOC) nil))
               THEN AP_TERM_TAC
               THEN
                 (ONCE_REWRITE_TAC
@@ -548,13 +547,13 @@
                 THEN AP_THM_TAC
                 THEN AP_TERM_TAC)
               nil))
-        THEN (GEN_REWRITE_TAC LAND_CONV (cl:cons (funcall GSYM REAL_MUL_RID) nil))
-        THEN (REWRITE_TAC (cl:cons (funcall GSYM REAL_MUL_ASSOC) nil))
+        THEN (GEN_REWRITE_TAC LAND_CONV (cl:cons (#`GSYM REAL_MUL_RID) nil))
+        THEN (REWRITE_TAC (cl:cons (#`GSYM REAL_MUL_ASSOC) nil))
         THEN (REWRITE_TAC (cl:cons REAL_EQ_MUL_LCANCEL nil))
         THEN #'DISJ2_TAC
-        THEN (funcall CONV_TAC #'SYM_CONV)
+        THEN (#`CONV_TAC #'SYM_CONV)
         THEN (MATCH_MP_TAC REAL_MUL_RINV)
-        THEN (funcall ASM_REWRITE_TAC nil)))))
+        THEN (#`ASM_REWRITE_TAC nil)))))
 
 (defparameter RAT_LEMMA2
   (prove
@@ -565,10 +564,10 @@
       (holai.runtime:proof DISCH_TAC
         THEN (MATCH_MP_TAC RAT_LEMMA1)
         THEN (POP_ASSUM #'MP_TAC)
-        THEN (ONCE_REWRITE_TAC (cl:cons (funcall GSYM CONTRAPOS_THM) nil))
+        THEN (ONCE_REWRITE_TAC (cl:cons (#`GSYM CONTRAPOS_THM) nil))
         THEN (REWRITE_TAC (cl:cons DE_MORGAN_THM nil))
         THEN #'STRIP_TAC
-        THEN (funcall ASM_REWRITE_TAC (cl:cons REAL_LT_REFL nil))))))
+        THEN (#`ASM_REWRITE_TAC (cl:cons REAL_LT_REFL nil))))))
 
 (defparameter RAT_LEMMA3
   (prove
@@ -579,10 +578,7 @@
       (holai.runtime:proof (DISCH_THEN (o (o #'MP_TAC #'GEN_ALL) (MATCH_MP RAT_LEMMA2)))
         THEN (REWRITE_TAC (cl:cons real_div nil))
         THEN DISCH_TAC
-        THEN
-          (funcall
-            ASM_REWRITE_TAC
-            (cl:cons real_sub (cl:cons (funcall GSYM REAL_MUL_LNEG) nil)))))))
+        THEN (#`ASM_REWRITE_TAC (cl:cons real_sub (cl:cons (#`GSYM REAL_MUL_LNEG) nil)))))))
 
 (defparameter RAT_LEMMA4
   (prove
@@ -605,10 +601,10 @@
                         (cl:cons
                           (holai.runtime:proof (REWRITE_TAC (cl:cons REAL_MUL_ASSOC nil))
                             THEN (MATCH_MP_TAC REAL_LE_MUL)
-                            THEN (funcall ASM_REWRITE_TAC nil)
+                            THEN (#`ASM_REWRITE_TAC nil)
                             THEN (MATCH_MP_TAC REAL_LE_INV)
                             THEN (MATCH_MP_TAC REAL_LT_IMP_LE)
-                            THEN (funcall ASM_REWRITE_TAC nil))
+                            THEN (#`ASM_REWRITE_TAC nil))
                           (cl:cons
                             (holai.runtime:proof (SUBGOAL_THEN
                                 (parse_term "y * inv y = &1")
@@ -620,9 +616,9 @@
                             nil)))
                     (cl:cons
                       (holai.runtime:proof (MATCH_MP_TAC REAL_LE_MUL)
-                        THEN (funcall ASM_REWRITE_TAC nil)
+                        THEN (#`ASM_REWRITE_TAC nil)
                         THEN (MATCH_MP_TAC REAL_LT_IMP_LE)
-                        THEN (funcall ASM_REWRITE_TAC nil))
+                        THEN (#`ASM_REWRITE_TAC nil))
                       nil)))))))
         (cl:declare (cl:ignorable lemma))
         (holai.runtime:proof (ONCE_REWRITE_TAC (cl:cons CONJ_SYM nil))
@@ -630,33 +626,31 @@
           THEN
             (ONCE_REWRITE_TAC
               (cl:cons
-                (funcall holai.realarith:REAL_ARITH (parse_term "a <= b <=> &0 <= b - a"))
+                (#`holai.realarith:REAL_ARITH (parse_term "a <= b <=> &0 <= b - a"))
                 nil))
           THEN
             (FIRST_ASSUM
               (lambdac (th) (REWRITE_TAC (cl:cons (MATCH_MP RAT_LEMMA3 th) nil))))
           THEN (MATCH_MP_TAC EQ_TRANS)
-          THEN (funcall EXISTS_TAC (parse_term "&0 <= (x2 * y1 - x1 * y2) * inv y2"))
+          THEN (#`EXISTS_TAC (parse_term "&0 <= (x2 * y1 - x1 * y2) * inv y2"))
           THEN (REWRITE_TAC (cl:cons REAL_MUL_ASSOC nil))
           THEN #'CONJ_TAC
           THEN (MATCH_MP_TAC lemma)
           THEN (MATCH_MP_TAC REAL_LT_INV)
-          THEN (funcall ASM_REWRITE_TAC nil))))))
+          THEN (#`ASM_REWRITE_TAC nil))))))
 
 (defparameter RAT_LEMMA5
   (prove
     (tuple
       (parse_term "&0 < y1 /\\ &0 < y2 ==> ((x1 / y1 = x2 / y2) <=> (x1 * y2 = x2 * y1))")
       (holai.runtime:proof (REPEAT DISCH_TAC)
-        THEN (REWRITE_TAC (cl:cons (funcall GSYM REAL_LE_ANTISYM) nil))
+        THEN (REWRITE_TAC (cl:cons (#`GSYM REAL_LE_ANTISYM) nil))
         THEN
           (MATCH_MP_TAC
-            (funcall
-              TAUT
-              (parse_term "(a <=> a') /\\ (b <=> b') ==> (a /\\ b <=> a' /\\ b')")))
+            (#`TAUT (parse_term "(a <=> a') /\\ (b <=> b') ==> (a /\\ b <=> a' /\\ b')")))
         THEN #'CONJ_TAC
         THEN (MATCH_MP_TAC RAT_LEMMA4)
-        THEN (funcall ASM_REWRITE_TAC nil)))))
+        THEN (#`ASM_REWRITE_TAC nil)))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Create trivial rational from integer or decimal, and postconvert back.    *)
@@ -701,9 +695,9 @@
     (fletc
       ((RAW_REAL_RAT_LE_CONV
         (tm)
-        (match (funcall dest_le tm)
+        (match (#`dest_le tm)
           ((tuple l r%)
-            (match (tuple (funcall dest_div l) (funcall dest_div r%))
+            (match (tuple (#`dest_div l) (#`dest_div r%))
               ((tuple (tuple lx ly) (tuple rx ry))
                 (let*
                   ((th0
@@ -734,11 +728,11 @@
             THEN
               (GEN_REWRITE_TAC
                 (o #'RAND_CONV ONCE_DEPTH_CONV)
-                (cl:cons (funcall GSYM REAL_NOT_LE) nil))
+                (cl:cons (#`GSYM REAL_NOT_LE) nil))
             THEN
               (SIMP_TAC
                 (cl:cons
-                  (funcall TAUT (parse_term "(~a <=> ~b) <=> (a <=> b)"))
+                  (#`TAUT (parse_term "(~a <=> ~b) <=> (a <=> b)"))
                   (cl:cons RAT_LEMMA4 nil)))))))
       (x1 (parse_term "x1:real"))
       (x2 (parse_term "x2:real"))
@@ -750,9 +744,9 @@
     (fletc
       ((RAW_REAL_RAT_LT_CONV
         (tm)
-        (match (funcall dest_lt tm)
+        (match (#`dest_lt tm)
           ((tuple l r%)
-            (match (tuple (funcall dest_div l) (funcall dest_div r%))
+            (match (tuple (#`dest_div l) (#`dest_div r%))
               ((tuple (tuple lx ly) (tuple rx ry))
                 (let*
                   ((th0
@@ -797,9 +791,9 @@
     (fletc
       ((RAW_REAL_RAT_EQ_CONV
         (tm)
-        (match (funcall dest_eq% tm)
+        (match (#`dest_eq% tm)
           ((tuple l r%)
-            (match (tuple (funcall dest_div l) (funcall dest_div r%))
+            (match (tuple (#`dest_div l) (#`dest_div r%))
               ((tuple (tuple lx ly) (tuple rx ry))
                 (let*
                   ((th0
@@ -824,13 +818,13 @@
   (THENC
     (THENC
       (GEN_REWRITE_CONV #'I (cl:cons real_sgn nil))
-      (RATOR_CONV (funcall LAND_CONV REAL_RAT_LT_CONV)))
+      (RATOR_CONV (#`LAND_CONV REAL_RAT_LT_CONV)))
     (ORELSEC
-      (GEN_REWRITE_CONV #'I (cl:cons (funcall CONJUNCT1 (SPEC_ALL COND_CLAUSES)) nil))
+      (GEN_REWRITE_CONV #'I (cl:cons (#`CONJUNCT1 (SPEC_ALL COND_CLAUSES)) nil))
       (THENC
         (THENC
-          (GEN_REWRITE_CONV #'I (cl:cons (funcall CONJUNCT2 (SPEC_ALL COND_CLAUSES)) nil))
-          (RATOR_CONV (funcall LAND_CONV REAL_RAT_LT_CONV)))
+          (GEN_REWRITE_CONV #'I (cl:cons (#`CONJUNCT2 (SPEC_ALL COND_CLAUSES)) nil))
+          (RATOR_CONV (#`LAND_CONV REAL_RAT_LT_CONV)))
         (GEN_REWRITE_CONV #'I (cl:cons COND_CLAUSES nil))))))
 
 ;; (* ------------------------------------------------------------------------- *)
@@ -863,7 +857,7 @@
       (cl:declare (cl:ignorable conv1))
       (lambdac (tm)
         (handler-case
-          (funcall conv1 tm)
+          (#`conv1 tm)
           (holai.runtime:ocaml-condition
             (exception~729)
             (match exception~729
@@ -977,23 +971,21 @@
      ==> (x1 / y1 + x2 / y2 = x3 / y3)")
           (holai.runtime:proof (REPEAT DISCH_TAC)
             THEN (MP_TAC RAT_LEMMA2)
-            THEN (funcall ASM_REWRITE_TAC nil)
+            THEN (#`ASM_REWRITE_TAC nil)
             THEN (DISCH_THEN #'SUBST1_TAC)
             THEN
               (REWRITE_TAC
-                (cl:cons
-                  (funcall GSYM REAL_INV_MUL)
-                  (cl:cons (funcall GSYM real_div) nil)))
+                (cl:cons (#`GSYM REAL_INV_MUL) (cl:cons (#`GSYM real_div) nil)))
             THEN (SUBGOAL_THEN (parse_term "&0 < y1 * y2 /\\ &0 < y3") #'MP_TAC)
             THENL
               (cl:cons
-                (holai.runtime:proof (funcall ASM_REWRITE_TAC nil)
+                (holai.runtime:proof (#`ASM_REWRITE_TAC nil)
                   THEN (MATCH_MP_TAC REAL_LT_MUL)
-                  THEN (funcall ASM_REWRITE_TAC nil))
+                  THEN (#`ASM_REWRITE_TAC nil))
                 (cl:cons
                   (DISCH_THEN
                     (lambdac (th)
-                      (funcall ASM_REWRITE_TAC (cl:cons (MATCH_MP RAT_LEMMA5 th) nil))))
+                      (#`ASM_REWRITE_TAC (cl:cons (MATCH_MP RAT_LEMMA5 th) nil))))
                   nil))))))
       (dest_divop (dest_binop (parse_term "(/)")))
       (dest_addop (dest_binop (parse_term "(+)")))
@@ -1007,9 +999,9 @@
     (fletc
       ((RAW_REAL_RAT_ADD_CONV
         (tm)
-        (match (funcall dest_addop tm)
+        (match (#`dest_addop tm)
           ((tuple r1 r2)
-            (match (tuple (funcall dest_divop r1) (funcall dest_divop r2))
+            (match (tuple (#`dest_divop r1) (#`dest_divop r2))
               ((tuple (tuple x1% y1%) (tuple x2% y2%))
                 (let
                   ((x1n (dest_realintconst x1%))
@@ -1028,8 +1020,8 @@
                         (if (> y3n% (num 0)) (tuple x3n% y3n%) (tuple (- x3n%) (- y3n%)))
                         ((tuple x3n%% y3n%%)
                           (let
-                            ((x3% (funcall mk_realintconst x3n%%))
-                              (y3% (funcall mk_realintconst y3n%%)))
+                            ((x3% (#`mk_realintconst x3n%%))
+                              (y3% (#`mk_realintconst y3n%%)))
                             (cl:declare (cl:ignorable x3% y3%))
                             (let*
                               ((th0
@@ -1048,13 +1040,12 @@
                                   pth))
                                 (th1 (funpow 3 (MP_CONV REAL_INT_LT_CONV) th0)))
                               (cl:declare (cl:ignorable th0 th1))
-                              (match (dest_eq (fst (funcall dest_imp (concl th1))))
+                              (match (dest_eq (fst (#`dest_imp (concl th1))))
                                 ((tuple tm2 tm3)
                                   (let
                                     ((th2
                                       (THENC
-                                        (funcall
-                                          LAND_CONV
+                                        (#`LAND_CONV
                                           (THENC
                                             (BINOP_CONV REAL_INT_MUL_CONV)
                                             REAL_INT_ADD_CONV))
@@ -1066,7 +1057,7 @@
                                           REAL_INT_MUL_CONV
                                           tm3)))
                                     (cl:declare (cl:ignorable th2 th3))
-                                    (funcall MP th1 (TRANS th2 (SYM th3)))))))))))))))))))
+                                    (#`MP th1 (TRANS th2 (SYM th3)))))))))))))))))))
       (THENC
         (THENC (BINOP_CONV REAL_INT_RAT_CONV) #'RAW_REAL_RAT_ADD_CONV)
         (TRY_CONV (GEN_REWRITE_CONV #'I (cl:cons REAL_DIV_1 nil)))))))
@@ -1109,7 +1100,7 @@
             (holai.runtime:proof (DISCH_THEN (CONJUNCTS_THEN2 ASSUME_TAC #'MP_TAC))
               THEN (DISCH_THEN (CONJUNCTS_THEN2 ASSUME_TAC #'MP_TAC))
               THEN (DISCH_THEN (REPEAT_TCL CONJUNCTS_THEN (o #'SUBST1_TAC #'SYM)))
-              THEN (funcall ASM_REWRITE_TAC (cl:cons real_div (cl:cons REAL_INV_MUL nil)))
+              THEN (#`ASM_REWRITE_TAC (cl:cons real_div (cl:cons REAL_INV_MUL nil)))
               THEN
                 (ONCE_REWRITE_TAC
                   (cl:cons
@@ -1119,8 +1110,7 @@
                         "((d1 * u1) * (id2 * iv1)) * ((d2 * u2) * id1 * iv2) =
       (u1 * u2) * (iv1 * iv2) * (id2 * d2) * (id1 * d1)"))
                     nil))
-              THEN
-                (funcall ASM_SIMP_TAC (cl:cons REAL_MUL_LINV (cl:cons REAL_MUL_RID nil)))))))
+              THEN (#`ASM_SIMP_TAC (cl:cons REAL_MUL_LINV (cl:cons REAL_MUL_RID nil)))))))
       (dest_divop (dest_binop (parse_term "(/)")))
       (dest_mulop (dest_binop (parse_term "(*)")))
       (x1 (parse_term "x1:real"))
@@ -1152,9 +1142,9 @@
     (fletc
       ((RAW_REAL_RAT_MUL_CONV
         (tm)
-        (match (funcall dest_mulop tm)
+        (match (#`dest_mulop tm)
           ((tuple r1 r2)
-            (match (tuple (funcall dest_divop r1) (funcall dest_divop r2))
+            (match (tuple (#`dest_divop r1) (#`dest_divop r2))
               ((tuple (tuple x1% y1%) (tuple x2% y2%))
                 (let
                   ((x1n (dest_realintconst x1%))
@@ -1184,12 +1174,12 @@
                           (v2n (quo-num y2n d1n)))
                         (cl:declare (cl:ignorable u1n u2n v1n v2n))
                         (let
-                          ((u1% (funcall mk_realintconst u1n))
-                            (u2% (funcall mk_realintconst u2n))
-                            (v1% (funcall mk_realintconst v1n))
-                            (v2% (funcall mk_realintconst v2n))
-                            (d1% (funcall mk_realintconst d1n))
-                            (d2% (funcall mk_realintconst d2n)))
+                          ((u1% (#`mk_realintconst u1n))
+                            (u2% (#`mk_realintconst u2n))
+                            (v1% (#`mk_realintconst v1n))
+                            (v2% (#`mk_realintconst v2n))
+                            (d1% (#`mk_realintconst d1n))
+                            (d2% (#`mk_realintconst d2n)))
                           (cl:declare (cl:ignorable u1% u2% v1% v2% d1% d2%))
                           (let*
                             ((th0
@@ -1215,11 +1205,8 @@
                                                   (cl:cons (tuple d2% d2) nil))))))))))
                                 pth_cancel))
                               (th1
-                                (EQT_ELIM
-                                  (funcall
-                                    REAL_INT_REDUCE_CONV
-                                    (funcall lhand (concl th0)))))
-                              (th2 (funcall MP th0 th1))
+                                (EQT_ELIM (#`REAL_INT_REDUCE_CONV (#`lhand (concl th0)))))
+                              (th2 (#`MP th0 th1))
                               (th3 (BINOP_CONV REAL_INT_MUL_CONV (rand (concl th2)))))
                             (cl:declare (cl:ignorable th0 th1 th2 th3))
                             (TRANS th2 th3)))))))))))))
@@ -1258,9 +1245,7 @@
     (ORELSEC
       REAL_INT_POW_CONV
       (THENC
-        (THENC
-          (funcall LAND_CONV REAL_INT_RAT_CONV)
-          (GEN_REWRITE_CONV #'I (cl:cons pth nil)))
+        (THENC (#`LAND_CONV REAL_INT_RAT_CONV) (GEN_REWRITE_CONV #'I (cl:cons pth nil)))
         (BINOP_CONV REAL_INT_POW_CONV)))))
 
 ;; (* ------------------------------------------------------------------------- *)
@@ -1270,16 +1255,12 @@
 
 (defparameter REAL_RAT_MAX_CONV
   (THENC
-    (THENC
-      (funcall REWR_CONV real_max)
-      (RATOR_CONV (RATOR_CONV (RAND_CONV REAL_RAT_LE_CONV))))
+    (THENC (#`REWR_CONV real_max) (RATOR_CONV (RATOR_CONV (RAND_CONV REAL_RAT_LE_CONV))))
     (GEN_REWRITE_CONV #'I (cl:cons COND_CLAUSES nil))))
 
 (defparameter REAL_RAT_MIN_CONV
   (THENC
-    (THENC
-      (funcall REWR_CONV real_min)
-      (RATOR_CONV (RATOR_CONV (RAND_CONV REAL_RAT_LE_CONV))))
+    (THENC (#`REWR_CONV real_min) (RATOR_CONV (RATOR_CONV (RAND_CONV REAL_RAT_LE_CONV))))
     (GEN_REWRITE_CONV #'I (cl:cons COND_CLAUSES nil))))
 
 ;; (* ------------------------------------------------------------------------- *)
@@ -1325,11 +1306,11 @@
 (defparameter REAL_RAT_RED_CONV
   (let
     ((gconv_net
-      (itlist (uncurry #'net_of_conv) real_rat_red_conv_list (funcall basic_net unit))))
+      (itlist (uncurry #'net_of_conv) real_rat_red_conv_list (#`basic_net unit))))
     (cl:declare (cl:ignorable gconv_net))
     (REWRITES_CONV gconv_net)))
 
-(defparameter REAL_RAT_REDUCE_CONV (funcall DEPTH_CONV REAL_RAT_RED_CONV))
+(defparameter REAL_RAT_REDUCE_CONV (#`DEPTH_CONV REAL_RAT_RED_CONV))
 
 (defparameter real_rat_compute_add_convs
   (let
@@ -1338,8 +1319,8 @@
         (lambdac (arg~1618)
           (match arg~1618
             ((tuple pat the_conv)
-              (match (funcall strip_comb pat)
-                ((tuple c% args) (tuple c% (funcall length args) the_conv))))))
+              (match (#`strip_comb pat)
+                ((tuple c% args) (tuple c% (#`length args) the_conv))))))
         real_rat_red_conv_list)))
     (cl:declare (cl:ignorable convlist))
     (lambdac (compset)
@@ -1354,7 +1335,7 @@
     (cl:declare (cl:ignorable cs))
     (progn
       (set_skip cs (parse_term "COND: bool -> A -> A -> A") (make-Some 1))
-      (funcall real_rat_compute_add_convs cs)
+      (#`real_rat_compute_add_convs cs)
       (WEAK_CBV_CONV cs))))
 
 ;; (* ------------------------------------------------------------------------- *)
@@ -1375,8 +1356,7 @@
 (defparameter REAL_POLY_SUB_CONV nil)
 
 (match
-  (funcall
-    SEMIRING_NORMALIZERS_CONV
+  (#`SEMIRING_NORMALIZERS_CONV
     REAL_POLY_CLAUSES
     REAL_POLY_NEG_CLAUSES
     (tuple #'is_ratconst REAL_RAT_ADD_CONV REAL_RAT_MUL_CONV REAL_RAT_POW_CONV)
@@ -1420,7 +1400,7 @@
       (abs_tm (parse_term "abs:real->real"))
       (max_tm (parse_term "max:real->real->real"))
       (min_tm (parse_term "min:real->real->real"))
-      (div_conv (funcall REWR_CONV real_div)))
+      (div_conv (#`REWR_CONV real_div)))
     (cl:declare
       (cl:ignorable
         neg_tm
@@ -1444,7 +1424,7 @@
               (if (= lop neg_tm)
                 (let ((th1 (AP_TERM lop (REAL_POLY_CONV% r%))))
                   (cl:declare (cl:ignorable th1))
-                  (TRANS th1 (funcall REAL_POLY_NEG_CONV (rand (concl th1)))))
+                  (TRANS th1 (#`REAL_POLY_NEG_CONV (rand (concl th1)))))
                 (if (= lop inv_tm)
                   (let ((th1 (AP_TERM lop (REAL_POLY_CONV% r%))))
                     (cl:declare (cl:ignorable th1))
@@ -1473,9 +1453,9 @@
                                         REAL_POLY_MUL_CONV
                                         REAL_POLY_SUB_CONV))))
                                 (cl:declare (cl:ignorable th1 fn))
-                                (TRANS th1 (funcall fn (rand (concl th1)))))
+                                (TRANS th1 (#`fn (rand (concl th1)))))
                               (if (= op div_tm)
-                                (let ((th1 (funcall div_conv tm)))
+                                (let ((th1 (#`div_conv tm)))
                                   (cl:declare (cl:ignorable th1))
                                   (TRANS th1 (REAL_POLY_CONV% (rand (concl th1)))))
                                 (if (cl:or (= op min_tm) (= op max_tm))
@@ -1509,12 +1489,12 @@
             THEN
               (REWRITE_TAC
                 (cl:cons
-                  (funcall GSYM REAL_OF_NUM_EQ)
+                  (#`GSYM REAL_OF_NUM_EQ)
                   (cl:cons
-                    (funcall GSYM REAL_OF_NUM_ADD)
-                    (cl:cons (funcall GSYM REAL_OF_NUM_MUL) nil))))
-            THEN (ONCE_REWRITE_TAC (cl:cons (funcall GSYM REAL_SUB_0) nil))
-            THEN (REWRITE_TAC (cl:cons (funcall GSYM REAL_ENTIRE) nil))
+                    (#`GSYM REAL_OF_NUM_ADD)
+                    (cl:cons (#`GSYM REAL_OF_NUM_MUL) nil))))
+            THEN (ONCE_REWRITE_TAC (cl:cons (#`GSYM REAL_SUB_0) nil))
+            THEN (REWRITE_TAC (cl:cons (#`GSYM REAL_ENTIRE) nil))
             THEN holai.real:REAL_ARITH_TAC))))
       (REAL_RABINOWITSCH
         (prove
@@ -1524,7 +1504,7 @@
               THEN
                 (GEN_REWRITE_TAC
                   (o LAND_CONV #'RAND_CONV)
-                  (cl:cons (funcall GSYM REAL_SUB_0) nil))
+                  (cl:cons (#`GSYM REAL_SUB_0) nil))
               THEN
                 (MESON_TAC
                   (cl:cons
@@ -1532,14 +1512,13 @@
                     (cl:cons
                       REAL_MUL_LZERO
                       (cl:cons
-                        (funcall holai.realarith:REAL_ARITH (parse_term "~(&1 = &0)"))
+                        (#`holai.realarith:REAL_ARITH (parse_term "~(&1 = &0)"))
                         nil))))))))
       (init (GEN_REWRITE_CONV ONCE_DEPTH_CONV (cl:cons DECIMAL nil)))
       (real_ty (parse_type "real")))
     (cl:declare (cl:ignorable REAL_INTEGRAL REAL_RABINOWITSCH init real_ty))
     (match
-      (funcall
-        RING_AND_IDEAL_CONV
+      (#`RING_AND_IDEAL_CONV
         (tuple
           #'rat_of_term
           term_of_rat
@@ -1557,12 +1536,12 @@
       ((tuple pure ideal)
         (tuple
           (lambdac (tm)
-            (let ((th (funcall init tm)))
+            (let ((th (#`init tm)))
               (cl:declare (cl:ignorable th))
-              (EQ_MP (SYM th) (funcall pure (rand (concl th))))))
+              (EQ_MP (SYM th) (#`pure (rand (concl th))))))
           (lambdac (tms tm)
             (if (forall (lambdac (t%) (= (type_of t%) real_ty)) (cl:cons tm tms))
-              (funcall ideal tms tm)
+              (#`ideal tms tm)
               (failwith "real_ideal_cofactors: not all terms have type :real")))))))
   ((tuple REAL_RING% real_ideal_cofactors%)
     (setf REAL_RING REAL_RING% real_ideal_cofactors real_ideal_cofactors%)))
@@ -1579,10 +1558,10 @@
     (cl:declare (cl:ignorable mk_add mk_mul))
     (lambdac (tms tm)
       (let*
-        ((cfs (funcall real_ideal_cofactors tms tm))
+        ((cfs (#`real_ideal_cofactors tms tm))
           (tm% (end_itlist mk_add (map2 mk_mul cfs tms)))
-          (th (funcall REAL_POLY_CONV tm))
-          (th% (funcall REAL_POLY_CONV tm%)))
+          (th (#`REAL_POLY_CONV tm))
+          (th% (#`REAL_POLY_CONV tm%)))
         (cl:declare (cl:ignorable cfs tm% th th%))
         (TRANS th (SYM th%))))))
 
@@ -1592,8 +1571,7 @@
 
 
 (defunc GEN_REAL_ARITH (PROVER%)
-  (funcall
-    holai.realarith:GEN_REAL_ARITH
+  (#`holai.realarith:GEN_REAL_ARITH
     (tuple
       term_of_rat
       REAL_RAT_EQ_CONV
@@ -1612,9 +1590,9 @@
     (cl:declare (cl:ignorable init pure))
     (lambdac (tm)
       (handler-case
-        (let ((th (funcall init tm)))
+        (let ((th (#`init tm)))
           (cl:declare (cl:ignorable th))
-          (EQ_MP (SYM th) (funcall pure (rand (concl th)))))
+          (EQ_MP (SYM th) (#`pure (rand (concl th)))))
         (holai.runtime:ocaml-condition
           (exception~2120)
           (match exception~2120
@@ -1622,10 +1600,10 @@
               (failwith
                 (string-concat
                   "REAL_ARITH `"
-                  (string-concat (funcall string_of_term tm) (string-concat "`: " m)))))
+                  (string-concat (#`string_of_term tm) (string-concat "`: " m)))))
             (_ (raise exception~2120))))))))
 
-(defparameter REAL_ARITH_TAC (funcall CONV_TAC REAL_ARITH))
+(defparameter REAL_ARITH_TAC (#`CONV_TAC REAL_ARITH))
 
 (defparameter ASM_REAL_ARITH_TAC
   (holai.runtime:proof (REPEAT
@@ -1651,7 +1629,7 @@
       (holai.runtime:proof (REPEAT #'GEN_TAC)
         THEN #'EQ_TAC
         THENL (cl:cons REAL_ARITH_TAC (cl:cons #'ALL_TAC nil))
-        THEN (DISCH_THEN (o #'MP_TAC (funcall SPEC (parse_term "y + (x - y) / &2"))))
+        THEN (DISCH_THEN (o #'MP_TAC (#`SPEC (parse_term "y + (x - y) / &2"))))
         THEN REAL_ARITH_TAC))))
 
 (defparameter REAL_LE_TRANS_LT
@@ -1661,7 +1639,7 @@
       (holai.runtime:proof (REPEAT #'GEN_TAC)
         THEN #'EQ_TAC
         THENL (cl:cons REAL_ARITH_TAC (cl:cons #'ALL_TAC nil))
-        THEN (DISCH_THEN (o #'MP_TAC (funcall SPEC (parse_term "y + (x - y) / &2"))))
+        THEN (DISCH_THEN (o #'MP_TAC (#`SPEC (parse_term "y + (x - y) / &2"))))
         THEN REAL_ARITH_TAC))))
 
 ;; (* ------------------------------------------------------------------------- *)
@@ -1683,14 +1661,11 @@
               (cl:cons REAL_INV_INV (cl:cons REAL_INV_MUL (cl:cons REAL_POW_ADD nil))))))
         (net_of_conv
           (parse_term "inv((x:real) pow n)")
-          (o
-            (funcall REWR_CONV (funcall GSYM REAL_POW_INV))
-            (check (o (o is_numeral #'rand) #'rand)))
+          (o (#`REWR_CONV (#`GSYM REAL_POW_INV)) (check (o (o is_numeral #'rand) #'rand)))
           empty_net)))
       (easy_nz_conv
         (THENC
-          (funcall
-            LAND_CONV
+          (#`LAND_CONV
             (GEN_REWRITE_CONV
               #'TRY_CONV
               (cl:cons
@@ -1702,10 +1677,8 @@
                 nil)))
           (TRY_CONV
             (THENC
-              (funcall LAND_CONV REAL_RAT_REDUCE_CONV)
-              (GEN_REWRITE_CONV
-                #'I
-                (cl:cons (funcall TAUT (parse_term "(T ==> p) <=> p")) nil)))))))
+              (#`LAND_CONV REAL_RAT_REDUCE_CONV)
+              (GEN_REWRITE_CONV #'I (cl:cons (#`TAUT (parse_term "(T ==> p) <=> p")) nil)))))))
     (cl:declare (cl:ignorable norm_net easy_nz_conv))
     (let
       ((prenex_conv%
@@ -1714,22 +1687,22 @@
             (THENC
               (THENC
                 (THENC
-                  (THENC (funcall TOP_DEPTH_CONV #'BETA_CONV) NUM_REDUCE_CONV)
-                  (funcall TOP_DEPTH_CONV (REWRITES_CONV norm_net)))
+                  (THENC (#`TOP_DEPTH_CONV #'BETA_CONV) NUM_REDUCE_CONV)
+                  (#`TOP_DEPTH_CONV (REWRITES_CONV norm_net)))
                 NNFC_CONV)
               (DEPTH_BINOP_CONV (parse_term "(/\\)") CONDS_CELIM_CONV))
             PRENEX_CONV)
           (ONCE_REWRITE_CONV
-            (cl:cons (funcall REAL_ARITH (parse_term "x < y <=> x < y /\\ ~(x = y)")) nil))))
+            (cl:cons (#`REAL_ARITH (parse_term "x < y <=> x < y /\\ ~(x = y)")) nil))))
         (setup_conv (THENC (THENC NNF_CONV WEAK_CNF_CONV) #'CONJ_CANON_CONV))
         (core_rule
           (lambdac (t%)
             (handler-case
-              (funcall REAL_RING t%)
+              (#`REAL_RING t%)
               (holai.runtime:ocaml-condition
                 (exception~2322)
                 (match exception~2322
-                  ((Failure _) (funcall REAL_ARITH t%))
+                  ((Failure _) (#`REAL_ARITH t%))
                   (_ (raise exception~2322)))))))
         (is_inv
           (let
@@ -1738,43 +1711,36 @@
             (cl:declare (cl:ignorable inv_tm is_div))
             (lambdac (tm)
               (cl:and
-                (cl:or (funcall is_div tm) (cl:and (is_comb tm) (= (rator tm) inv_tm)))
+                (cl:or (#`is_div tm) (cl:and (is_comb tm) (= (rator tm) inv_tm)))
                 (not (is_ratconst (rand tm))))))))
       (cl:declare (cl:ignorable prenex_conv% setup_conv core_rule is_inv))
       (fletc
         ((BASIC_REAL_FIELD
           (tm)
-          (fletc ((is_freeinv (t%) (cl:and (funcall is_inv t%) (free_in t% tm))))
+          (fletc ((is_freeinv (t%) (cl:and (#`is_inv t%) (free_in t% tm))))
             (let*
-              ((itms (setify (map #'rand (funcall find_terms #'is_freeinv tm))))
+              ((itms (setify (map #'rand (#`find_terms #'is_freeinv tm))))
                 (hyps
                   (map
-                    (lambdac (t%)
-                      (CONV_RULE easy_nz_conv (funcall SPEC t% REAL_MUL_RINV)))
+                    (lambdac (t%) (CONV_RULE easy_nz_conv (#`SPEC t% REAL_MUL_RINV)))
                     itms))
-                (tm%
-                  (itlist
-                    (lambdac (th t%) (funcall mk_imp (tuple (concl th) t%)))
-                    hyps
-                    tm))
-                (th1 (funcall setup_conv tm%))
-                (cjs (funcall conjuncts (rand (concl th1))))
+                (tm% (itlist (lambdac (th t%) (#`mk_imp (tuple (concl th) t%))) hyps tm))
+                (th1 (#`setup_conv tm%))
+                (cjs (#`conjuncts (rand (concl th1))))
                 (ths (map core_rule cjs))
                 (th2 (EQ_MP (SYM th1) (end_itlist CONJ ths))))
               (cl:declare (cl:ignorable itms hyps tm% th1 cjs ths th2))
               (rev_itlist (C MP) hyps th2)))))
         (lambdac (tm)
-          (let* ((th0 (funcall prenex_conv% tm)) (tm0 (rand (concl th0))))
+          (let* ((th0 (#`prenex_conv% tm)) (tm0 (rand (concl th0))))
             (cl:declare (cl:ignorable th0 tm0))
-            (match (funcall strip_forall tm0)
+            (match (#`strip_forall tm0)
               ((tuple avs bod)
                 (let*
-                  ((th1 (funcall setup_conv bod))
-                    (ths (map #'BASIC_REAL_FIELD (funcall conjuncts (rand (concl th1))))))
+                  ((th1 (#`setup_conv bod))
+                    (ths (map #'BASIC_REAL_FIELD (#`conjuncts (rand (concl th1))))))
                   (cl:declare (cl:ignorable th1 ths))
-                  (EQ_MP
-                    (SYM th0)
-                    (funcall GENL avs (EQ_MP (SYM th1) (end_itlist CONJ ths)))))))))))))
+                  (EQ_MP (SYM th0) (#`GENL avs (EQ_MP (SYM th1) (end_itlist CONJ ths)))))))))))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Useful monotone mappings between R and (-1,1)                             *)
@@ -1790,14 +1756,12 @@
           (REWRITE_TAC
             (cl:cons
               REAL_ABS_DIV
-              (cl:cons
-                (funcall REAL_ARITH (parse_term "abs(&1 + abs x) = &1 + abs x"))
-                nil)))
+              (cl:cons (#`REAL_ARITH (parse_term "abs(&1 + abs x) = &1 + abs x")) nil)))
         THEN
           (SIMP_TAC
             (cl:cons
               REAL_LT_LDIV_EQ
-              (cl:cons (funcall REAL_ARITH (parse_term "&0 < &1 + abs x")) nil)))
+              (cl:cons (#`REAL_ARITH (parse_term "&0 < &1 + abs x")) nil)))
         THEN REAL_ARITH_TAC))))
 
 (defparameter REAL_SHRINK_LT
@@ -1807,8 +1771,7 @@
       (holai.runtime:proof (REPEAT #'GEN_TAC)
         THEN
           (MATCH_MP_TAC
-            (funcall
-              REAL_ARITH
+            (#`REAL_ARITH
               (parse_term
                 "(&0 < x' <=> &0 < x) /\\ (&0 < y' <=> &0 < y) /\\
     (abs x' < abs y' <=> abs x < abs y) /\\ (abs y' < abs x' <=> abs y < abs x)
@@ -1818,7 +1781,7 @@
             (cl:cons
               REAL_LT_RDIV_EQ
               (cl:cons
-                (funcall REAL_ARITH (parse_term "&0 < &1 + abs x"))
+                (#`REAL_ARITH (parse_term "&0 < &1 + abs x"))
                 (cl:cons REAL_MUL_LZERO nil))))
         THEN
           (MAP_EVERY
@@ -1834,35 +1797,33 @@
           (REWRITE_TAC
             (cl:cons
               REAL_ABS_DIV
-              (cl:cons
-                (funcall REAL_ARITH (parse_term "abs(&1 + abs x) = &1 + abs x"))
-                nil)))
+              (cl:cons (#`REAL_ARITH (parse_term "abs(&1 + abs x) = &1 + abs x")) nil)))
         THEN
           (SIMP_TAC
             (cl:cons
               REAL_LT_RDIV_EQ
-              (cl:cons (funcall REAL_ARITH (parse_term "&0 < &1 + abs x")) nil)))
+              (cl:cons (#`REAL_ARITH (parse_term "&0 < &1 + abs x")) nil)))
         THEN
           (ONCE_REWRITE_TAC
-            (cl:cons (funcall REAL_ARITH (parse_term "a / b * c:real = (a * c) / b")) nil))
+            (cl:cons (#`REAL_ARITH (parse_term "a / b * c:real = (a * c) / b")) nil))
         THEN
           (SIMP_TAC
             (cl:cons
               REAL_LT_LDIV_EQ
-              (cl:cons (funcall REAL_ARITH (parse_term "&0 < &1 + abs x")) nil)))
+              (cl:cons (#`REAL_ARITH (parse_term "&0 < &1 + abs x")) nil)))
         THEN REAL_ARITH_TAC))))
 
 (defparameter REAL_SHRINK_LE
   (prove
     (tuple
       (parse_term "!x y. x / (&1 + abs x) <= y / (&1 + abs y) <=> x <= y")
-      (REWRITE_TAC (cl:cons (funcall GSYM REAL_NOT_LT) (cl:cons REAL_SHRINK_LT nil))))))
+      (REWRITE_TAC (cl:cons (#`GSYM REAL_NOT_LT) (cl:cons REAL_SHRINK_LT nil))))))
 
 (defparameter REAL_SHRINK_EQ
   (prove
     (tuple
       (parse_term "!x y. x / (&1 + abs x) = y / (&1 + abs y) <=> x = y")
-      (REWRITE_TAC (cl:cons (funcall GSYM REAL_LE_ANTISYM) (cl:cons REAL_SHRINK_LE nil))))))
+      (REWRITE_TAC (cl:cons (#`GSYM REAL_LE_ANTISYM) (cl:cons REAL_SHRINK_LE nil))))))
 
 (defparameter REAL_SHRINK_GALOIS
   (prove
@@ -1872,30 +1833,25 @@
         THEN #'EQ_TAC
         THEN #'STRIP_TAC
         THEN (FIRST_X_ASSUM (o #'SUBST1_TAC #'SYM))
-        THEN (funcall ASM_REWRITE_TAC (cl:cons REAL_SHRINK_RANGE nil))
+        THEN (#`ASM_REWRITE_TAC (cl:cons REAL_SHRINK_RANGE nil))
         THEN
-          (funcall
-            ASM_SIMP_TAC
+          (#`ASM_SIMP_TAC
             (cl:cons
               REAL_ABS_DIV
               (cl:cons
-                (funcall REAL_ARITH (parse_term "abs(&1 + abs x) = &1 + abs x"))
+                (#`REAL_ARITH (parse_term "abs(&1 + abs x) = &1 + abs x"))
                 (cl:cons
-                  (funcall
-                    REAL_ARITH
+                  (#`REAL_ARITH
                     (parse_term "abs y < &1 ==> abs(&1 - abs y) = &1 - abs y"))
                   nil))))
         THEN
           (MATCH_MP_TAC
-            (funcall
-              REAL_ARITH
-              (parse_term "x * inv y * inv z = x * &1 ==> x / y / z = x")))
+            (#`REAL_ARITH (parse_term "x * inv y * inv z = x * &1 ==> x / y / z = x")))
         THEN AP_TERM_TAC
         THEN
-          (MATCH_MP_TAC
-            (funcall REAL_FIELD (parse_term "x * y = &1 ==> inv x * inv y = &1")))
+          (MATCH_MP_TAC (#`REAL_FIELD (parse_term "x * y = &1 ==> inv x * inv y = &1")))
         THEN (REPEAT (POP_ASSUM #'MP_TAC))
-        THEN (funcall CONV_TAC REAL_FIELD)))))
+        THEN (#`CONV_TAC REAL_FIELD)))))
 
 (defparameter REAL_GROW_SHRINK
   (prove

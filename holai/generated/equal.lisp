@@ -264,7 +264,6 @@
     labelsc
     guard
     function-value
-    funcall
     fst
     format-printf
     fletc
@@ -346,10 +345,7 @@
   (labelsc
     ((svariant
       (avoid s)
-      (if
-        (cl:or
-          (mem s avoid)
-          (cl:and (can #'get_const_type s) (not (funcall is_hidden s))))
+      (if (cl:or (mem s avoid) (cl:and (can #'get_const_type s) (not (#`is_hidden s))))
         (svariant avoid (string-concat s "'"))
         s)))
     (lambdac (avoid v)
@@ -437,7 +433,7 @@
   (let ((afn (AP_TERM op)))
     (cl:declare (cl:ignorable afn))
     (lambdac (arg~220)
-      (match arg~220 ((tuple lth rth) (MK_COMB% (tuple (funcall afn lth) rth)))))))
+      (match arg~220 ((tuple lth rth) (MK_COMB% (tuple (#`afn lth) rth)))))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Terminal conversion combinators.                                          *)
@@ -454,16 +450,16 @@
 
 
 (defunc THENC (conv1 conv2 t%)
-  (let* ((th1 (funcall conv1 t%)) (th2 (funcall conv2 (rand (concl th1)))))
+  (let* ((th1 (#`conv1 t%)) (th2 (#`conv2 (rand (concl th1)))))
     (cl:declare (cl:ignorable th1 th2))
     (TRANS th1 th2)))
 
 (defunc ORELSEC (conv1 conv2 t%)
   (handler-case
-    (funcall conv1 t%)
+    (#`conv1 t%)
     (holai.runtime:ocaml-condition
       (exception~265)
-      (match exception~265 ((Failure _) (funcall conv2 t%)) (_ (raise exception~265))))))
+      (match exception~265 ((Failure _) (#`conv2 t%)) (_ (raise exception~265))))))
 
 (defparameter FIRST_CONV (end_itlist (lambdac (c1 c2) (ORELSEC c1 c2))))
 
@@ -474,7 +470,7 @@
     #'REPEATC%))
 
 (defunc CHANGED_CONV (conv tm)
-  (let ((th (funcall conv tm)))
+  (let ((th (#`conv tm)))
     (cl:declare (cl:ignorable th))
     (match (dest_eq (concl th))
       ((tuple l r) (if (aconv l r) (failwith "CHANGED_CONV") th)))))
@@ -488,19 +484,19 @@
 
 (defunc RATOR_CONV (conv tm)
   (match tm
-    ((Comb l r) (AP_THM (funcall conv l) r))
+    ((Comb l r) (AP_THM (#`conv l) r))
     (_ (failwith "RATOR_CONV: Not a combination"))))
 
 (defunc RAND_CONV (conv tm)
   (match tm
-    ((Comb l r) (MK_COMB% (tuple (REFL l) (funcall conv r))))
+    ((Comb l r) (MK_COMB% (tuple (REFL l) (#`conv r))))
     (_ (failwith "RAND_CONV: Not a combination"))))
 
 (defparameter LAND_CONV (o #'RATOR_CONV #'RAND_CONV))
 
 (defunc COMB2_CONV (lconv rconv tm)
   (match tm
-    ((Comb l r) (MK_COMB% (tuple (funcall lconv l) (funcall rconv r))))
+    ((Comb l r) (MK_COMB% (tuple (#`lconv l) (#`rconv r))))
     (_ (failwith "COMB2_CONV: Not a combination"))))
 
 (defparameter COMB_CONV (W #'COMB2_CONV))
@@ -508,7 +504,7 @@
 (defunc ABS_CONV (conv tm)
   (match (dest_abs tm)
     ((tuple v bod)
-      (let ((th (funcall conv bod)))
+      (let ((th (#`conv bod)))
         (cl:declare (cl:ignorable th))
         (handler-case
           (ABS% v th)
@@ -517,9 +513,9 @@
             (match exception~416
               ((Failure _)
                 (let*
-                  ((gv (funcall genvar (type_of v)))
-                    (gbod (funcall vsubst (cl:cons (tuple gv v) nil) bod))
-                    (gth (ABS% gv (funcall conv gbod)))
+                  ((gv (#`genvar (type_of v)))
+                    (gbod (#`vsubst (cl:cons (tuple gv v) nil) bod))
+                    (gth (ABS% gv (#`conv gbod)))
                     (gtm (concl gth)))
                   (cl:declare (cl:ignorable gv gbod gth gtm))
                   (match (dest_eq gtm)
@@ -529,7 +525,7 @@
                           (l% (holai.basics:alpha v% l))
                           (r% (holai.basics:alpha v% r)))
                         (cl:declare (cl:ignorable v% l% r%))
-                        (EQ_MP (ALPHA gtm (funcall mk_eq (tuple l% r%))) gth))))))
+                        (EQ_MP (ALPHA gtm (#`mk_eq (tuple l% r%))) gth))))))
               (_ (raise exception~416)))))))))
 
 (defunc BINDER_CONV (conv tm)
@@ -537,7 +533,7 @@
 
 (defunc SUB_CONV (conv tm)
   (match tm
-    ((Comb _ _) (funcall COMB_CONV conv tm))
+    ((Comb _ _) (#`COMB_CONV conv tm))
     ((Abs _ _) (ABS_CONV conv tm))
     (_ (REFL tm))))
 
@@ -545,13 +541,13 @@
   (match (dest_comb tm)
     ((tuple lop r)
       (match (dest_comb lop)
-        ((tuple op l) (MK_COMB% (tuple (AP_TERM op (funcall conv l)) (funcall conv r))))))))
+        ((tuple op l) (MK_COMB% (tuple (AP_TERM op (#`conv l)) (#`conv r))))))))
 
 (defunc BINOP2_CONV (conv1 conv2 tm)
   (match (dest_comb tm)
     ((tuple lop r)
       (match (dest_comb lop)
-        ((tuple op l) (MK_COMB% (tuple (AP_TERM op (funcall conv1 l)) (funcall conv2 r))))))))
+        ((tuple op l) (MK_COMB% (tuple (AP_TERM op (#`conv1 l)) (#`conv2 r))))))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Depth conversions; internal use of a failure-propagating `Boultonized'    *)
@@ -570,14 +566,13 @@
 (defparameter TOP_SWEEP_CONV nil)
 
 (match
-  (fletc
-    ((THENQC
-      (conv1 conv2 tm)
+  (holai.runtime:labelsc
+    ((:nonrecursive 0 THENQC (conv1 conv2 tm)
       (handler-case
-        (let ((th1 (funcall conv1 tm)))
+        (let ((th1 (#`conv1 tm)))
           (cl:declare (cl:ignorable th1))
           (handler-case
-            (let ((th2 (funcall conv2 (rand (concl th1)))))
+            (let ((th2 (#`conv2 (rand (concl th1)))))
               (cl:declare (cl:ignorable th2))
               (TRANS th1 th2))
             (holai.runtime:ocaml-condition
@@ -585,27 +580,25 @@
               (match exception~618 ((Failure _) th1) (_ (raise exception~618))))))
         (holai.runtime:ocaml-condition
           (exception~610)
-          (match exception~610 ((Failure _) (funcall conv2 tm)) (_ (raise exception~610))))))
-      (THENCQC
-        (conv1 conv2 tm)
-        (let ((th1 (funcall conv1 tm)))
+          (match exception~610 ((Failure _) (#`conv2 tm)) (_ (raise exception~610))))))
+      (:nonrecursive 0 THENCQC (conv1 conv2 tm)
+        (let ((th1 (#`conv1 tm)))
           (cl:declare (cl:ignorable th1))
           (handler-case
-            (let ((th2 (funcall conv2 (rand (concl th1)))))
+            (let ((th2 (#`conv2 (rand (concl th1)))))
               (cl:declare (cl:ignorable th2))
               (TRANS th1 th2))
             (holai.runtime:ocaml-condition
               (exception~640)
               (match exception~640 ((Failure _) th1) (_ (raise exception~640)))))))
-      (COMB_QCONV
-        (conv tm)
+      (:nonrecursive 0 COMB_QCONV (conv tm)
         (match tm
           ((Comb l r)
             (handler-case
-              (let ((th1 (funcall conv l)))
+              (let ((th1 (#`conv l)))
                 (cl:declare (cl:ignorable th1))
                 (handler-case
-                  (let ((th2 (funcall conv r)))
+                  (let ((th2 (#`conv r)))
                     (cl:declare (cl:ignorable th2))
                     (MK_COMB% (tuple th1 th2)))
                   (holai.runtime:ocaml-condition
@@ -616,44 +609,33 @@
               (holai.runtime:ocaml-condition
                 (exception~662)
                 (match exception~662
-                  ((Failure _) (AP_TERM l (funcall conv r)))
+                  ((Failure _) (AP_TERM l (#`conv r)))
                   (_ (raise exception~662))))))
-          (_ (failwith "COMB_QCONV: Not a combination")))))
-    (labelsc ((REPEATQC (conv tm) (THENCQC conv (REPEATQC conv) tm)))
-      (fletc
-        ((SUB_QCONV
-          (conv tm)
-          (match tm ((Abs _ _) (ABS_CONV conv tm)) (_ (COMB_QCONV conv tm)))))
-        (labelsc
-          ((ONCE_DEPTH_QCONV
-            (conv tm)
-            (ORELSEC conv (SUB_QCONV (ONCE_DEPTH_QCONV conv)) tm))
-            (DEPTH_QCONV
-              (conv tm)
-              (THENQC (SUB_QCONV (DEPTH_QCONV conv)) (REPEATQC conv) tm))
-            (REDEPTH_QCONV
-              (conv tm)
-              (THENQC
-                (SUB_QCONV (REDEPTH_QCONV conv))
-                (THENCQC conv (REDEPTH_QCONV conv))
-                tm))
-            (TOP_DEPTH_QCONV
-              (conv tm)
-              (THENQC
-                (REPEATQC conv)
-                (THENCQC
-                  (SUB_QCONV (TOP_DEPTH_QCONV conv))
-                  (THENCQC conv (TOP_DEPTH_QCONV conv)))
-                tm))
-            (TOP_SWEEP_QCONV
-              (conv tm)
-              (THENQC (REPEATQC conv) (SUB_QCONV (TOP_SWEEP_QCONV conv)) tm)))
-          (tuple
-            (lambdac (c%) (TRY_CONV (ONCE_DEPTH_QCONV c%)))
-            (lambdac (c%) (TRY_CONV (DEPTH_QCONV c%)))
-            (lambdac (c%) (TRY_CONV (REDEPTH_QCONV c%)))
-            (lambdac (c%) (TRY_CONV (TOP_DEPTH_QCONV c%)))
-            (lambdac (c%) (TRY_CONV (TOP_SWEEP_QCONV c%))))))))
+          (_ (failwith "COMB_QCONV: Not a combination"))))
+      (:recursive 1 REPEATQC (conv tm) (THENCQC conv (REPEATQC conv) tm))
+      (:nonrecursive 2 SUB_QCONV (conv tm)
+        (match tm ((Abs _ _) (ABS_CONV conv tm)) (_ (COMB_QCONV conv tm))))
+      (:recursive 3 ONCE_DEPTH_QCONV (conv tm)
+        (ORELSEC conv (SUB_QCONV (ONCE_DEPTH_QCONV conv)) tm))
+      (:recursive 3 DEPTH_QCONV (conv tm)
+        (THENQC (SUB_QCONV (DEPTH_QCONV conv)) (REPEATQC conv) tm))
+      (:recursive 3 REDEPTH_QCONV (conv tm)
+        (THENQC (SUB_QCONV (REDEPTH_QCONV conv)) (THENCQC conv (REDEPTH_QCONV conv)) tm))
+      (:recursive 3 TOP_DEPTH_QCONV (conv tm)
+        (THENQC
+          (REPEATQC conv)
+          (THENCQC
+            (SUB_QCONV (TOP_DEPTH_QCONV conv))
+            (THENCQC conv (TOP_DEPTH_QCONV conv)))
+          tm))
+      (:recursive 3 TOP_SWEEP_QCONV (conv tm)
+        (THENQC (REPEATQC conv) (SUB_QCONV (TOP_SWEEP_QCONV conv)) tm)))
+    (tuple
+      (lambdac (c%) (TRY_CONV (ONCE_DEPTH_QCONV c%)))
+      (lambdac (c%) (TRY_CONV (DEPTH_QCONV c%)))
+      (lambdac (c%) (TRY_CONV (REDEPTH_QCONV c%)))
+      (lambdac (c%) (TRY_CONV (TOP_DEPTH_QCONV c%)))
+      (lambdac (c%) (TRY_CONV (TOP_SWEEP_QCONV c%)))))
   ((tuple ONCE_DEPTH_CONV% DEPTH_CONV% REDEPTH_CONV% TOP_DEPTH_CONV% TOP_SWEEP_CONV%)
     (setf
       DEPTH_CONV
@@ -680,7 +662,7 @@
           (let ((lth (DEPTH_BINOP_CONV op conv l%)) (rth (DEPTH_BINOP_CONV op conv r%)))
             (cl:declare (cl:ignorable lth rth))
             (MK_COMB% (tuple (AP_TERM op% lth) rth))))))
-    (_ (funcall conv tm))))
+    (_ (#`conv tm))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Follow a path.                                                            *)
@@ -714,7 +696,7 @@
           (if (is_comb pat)
             (COMB2_CONV (PCONV xs (rator pat) conv) (PCONV xs (rand pat) conv))
             (ABS_CONV (PCONV xs (body pat) conv)))))))
-    (lambdac (pat) (match (funcall strip_abs pat) ((tuple xs pbod) (PCONV xs pbod))))))
+    (lambdac (pat) (match (#`strip_abs pat) ((tuple xs pbod) (PCONV xs pbod))))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Symmetry conversion.                                                      *)
@@ -735,7 +717,7 @@
 ;; (* ------------------------------------------------------------------------- *)
 
 
-(defunc CONV_RULE (conv th) (EQ_MP (funcall conv (concl th)) th))
+(defunc CONV_RULE (conv th) (EQ_MP (#`conv (concl th)) th))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Substitution conversion.                                                  *)
@@ -749,13 +731,13 @@
       (let*
         ((lefts (map (o lhand #'concl) ths))
           (gvs (map (o genvar #'type_of) lefts))
-          (pat (funcall subst (zip gvs lefts) tm))
+          (pat (#`subst (zip gvs lefts) tm))
           (abs%% (list_mk_abs (tuple gvs pat)))
           (th
             (rev_itlist
               (lambdac (y x)
                 (CONV_RULE
-                  (THENC (RAND_CONV #'BETA_CONV) (funcall LAND_CONV #'BETA_CONV))
+                  (THENC (RAND_CONV #'BETA_CONV) (#`LAND_CONV #'BETA_CONV))
                   (MK_COMB% (tuple x y))))
               ths
               (REFL abs%%))))
@@ -770,9 +752,9 @@
 ;; (* ------------------------------------------------------------------------- *)
 
 
-(defparameter BETA_RULE (CONV_RULE (funcall REDEPTH_CONV #'BETA_CONV)))
+(defparameter BETA_RULE (CONV_RULE (#`REDEPTH_CONV #'BETA_CONV)))
 
-(defparameter GSYM (CONV_RULE (funcall ONCE_DEPTH_CONV #'SYM_CONV)))
+(defparameter GSYM (CONV_RULE (#`ONCE_DEPTH_CONV #'SYM_CONV)))
 
 (defunc SUBS (ths) (CONV_RULE (SUBS_CONV ths)))
 
@@ -785,7 +767,7 @@
   (fletc
     ((ALPHA_HACK
       (th)
-      (let ((tm% (funcall lhand (concl th))))
+      (let ((tm% (#`lhand (concl th))))
         (cl:declare (cl:ignorable tm%))
         (lambdac (tm) (if (= tm% tm) th (TRANS (ALPHA tm tm%) th))))))
     (lambdac (conv)
@@ -793,17 +775,15 @@
         (cl:declare (cl:ignorable net))
         (lambdac (tm)
           (handler-case
-            (tryfind (lambdac (f) (funcall f tm)) (funcall lookup tm (deref net)))
+            (tryfind (lambdac (f) (#`f tm)) (#`lookup tm (deref net)))
             (holai.runtime:ocaml-condition
               (exception~1096)
               (match exception~1096
                 ((Failure _)
-                  (let ((th (funcall conv tm)))
+                  (let ((th (#`conv tm)))
                     (cl:declare (cl:ignorable th))
                     (progn
-                      (assign
-                        net
-                        (funcall enter nil (tuple tm (ALPHA_HACK th)) (deref net)))
+                      (assign net (#`enter nil (tuple tm (ALPHA_HACK th)) (deref net)))
                       th)))
                 (_ (raise exception~1096))))))))))
 
@@ -813,6 +793,6 @@
 
 
 (defunc PRINT_TERM_CONV (t%)
-  (progn (funcall (format-printf "%a
-") pp_print_qterm t%) (funcall ALL_CONV t%)))
+  (progn (#`(format-printf "%a
+") pp_print_qterm t%) (#`ALL_CONV t%)))
 

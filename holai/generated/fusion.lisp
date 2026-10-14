@@ -302,7 +302,6 @@
     labelsc
     guard
     function-value
-    funcall
     fst
     failwith
     Failure
@@ -461,7 +460,6 @@
     raise
     match
     lambdac
-    funcall
     failwith
     Failure
     defunc
@@ -619,7 +617,7 @@
                       (string-concat tyop " has not been defined"))))
                 (_ (raise exception~70)))))))
         (cl:declare (cl:ignorable arity))
-        (if (= arity (funcall length args))
+        (if (= arity (#`length args))
           (make-Tyapp tyop args)
           (failwith (string-concat "mk_type: wrong number of arguments to " tyop)))))))
 
@@ -957,7 +955,7 @@
                         (inst%%
                           env
                           tyin
-                          (make-Abs z (funcall vsubst (cl:cons (tuple z y) nil) t%))))))
+                          (make-Abs z (#`vsubst (cl:cons (tuple z y) nil) t%))))))
                   (_ (raise exception~938))))))))))
     (lambdac (tyin) (if (= tyin nil) (lambdac (tm) tm) (inst%% nil tyin)))))
 
@@ -1037,7 +1035,7 @@
     ((tuple nil l2%) l2%)
     ((tuple l1% nil) l1%)
     ((tuple (cl:cons h1 t1) (cl:cons h2 t2))
-      (let ((c% (funcall alphaorder h1 h2)))
+      (let ((c% (#`alphaorder h1 h2)))
         (cl:declare (cl:ignorable c%))
         (if (= c% 0)
           (cl:cons h1 (term_union t1 t2))
@@ -1046,7 +1044,7 @@
 (defunc term_remove (t% l)
   (match l
     ((cl:cons s ss)
-      (let ((c% (funcall alphaorder t% s)))
+      (let ((c% (#`alphaorder t% s)))
         (cl:declare (cl:ignorable c%))
         (if (> c% 0)
           (let ((ss% (term_remove t% ss)))
@@ -1058,7 +1056,7 @@
 (defunc term_image (f l)
   (match l
     ((cl:cons h t%)
-      (let ((h% (funcall f h)) (t%% (term_image f t%)))
+      (let ((h% (#`f h)) (t%% (term_image f t%)))
         (cl:declare (cl:ignorable h% t%%))
         (if (cl:and (== h% h) (== t%% t%)) l (term_union (cl:cons h% nil) t%%))))
     (nil l)))
@@ -1091,7 +1089,7 @@
               (tuple
                 (Comb (cl:and eql (Comb (Const "=" _) _)) m1)
                 (Comb (Comb (Const "=" _) m2) r))
-              (= (funcall alphaorder m1 m2) 0))
+              (= (#`alphaorder m1 m2) 0))
               (make-Sequent (tuple (term_union asl1 asl2) (make-Comb eql r))))
             (_ (failwith "TRANS"))))))))
 
@@ -1153,7 +1151,7 @@
       (match arg~1714
         ((Sequent (tuple asl2 c%))
           (match eq
-            ((guard (Comb (Comb (Const "=" _) l) r) (= (funcall alphaorder l c%) 0))
+            ((guard (Comb (Comb (Const "=" _) l) r) (= (#`alphaorder l c%) 0))
               (make-Sequent (tuple (term_union asl1 asl2) r)))
             (_ (failwith "EQ_MP"))))))))
 
@@ -1174,16 +1172,16 @@
 (defunc INST_TYPE (theta arg~1789)
   (match arg~1789
     ((Sequent (tuple asl c%))
-      (let ((inst_fn (funcall inst theta)))
+      (let ((inst_fn (#`inst theta)))
         (cl:declare (cl:ignorable inst_fn))
-        (make-Sequent (tuple (term_image inst_fn asl) (funcall inst_fn c%)))))))
+        (make-Sequent (tuple (term_image inst_fn asl) (#`inst_fn c%)))))))
 
 (defunc INST% (theta arg~1811)
   (match arg~1811
     ((Sequent (tuple asl c%))
-      (let ((inst_fun (funcall vsubst theta)))
+      (let ((inst_fun (#`vsubst theta)))
         (cl:declare (cl:ignorable inst_fun))
-        (make-Sequent (tuple (term_image inst_fun asl) (funcall inst_fun c%)))))))
+        (make-Sequent (tuple (term_image inst_fun asl) (#`inst_fun c%)))))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Handling of axioms.                                                       *)
@@ -1275,7 +1273,7 @@
                       (cl:declare (cl:ignorable tyvars%))
                       (match
                         (handler-case
-                          (new_type (tuple tyname (funcall length tyvars%)))
+                          (new_type (tuple tyname (#`length tyvars%)))
                           (holai.runtime:ocaml-condition
                             (exception~2074)
                             (match exception~2074
@@ -1340,8 +1338,7 @@
       (match arg~2170
         ((tuple l r)
           (handler-case
-            (let*
-              ((ty (type_of l)) (eq_tm (funcall inst (cl:cons (tuple ty aty) nil) eq)))
+            (let* ((ty (type_of l)) (eq_tm (#`inst (cl:cons (tuple ty aty) nil) eq)))
               (cl:declare (cl:ignorable ty eq_tm))
               (mk_comb (tuple (mk_comb (tuple eq_tm l)) r)))
             (holai.runtime:ocaml-condition
@@ -1355,7 +1352,7 @@
 ;; (* ------------------------------------------------------------------------- *)
 
 
-(defunc aconv (s t%) (= (funcall alphaorder s t%) 0))
+(defunc aconv (s t%) (= (#`alphaorder s t%) 0))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Comparison function on theorems. Currently the same as equality, but      *)

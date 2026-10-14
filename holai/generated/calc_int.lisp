@@ -236,7 +236,6 @@
     make-Some
     lambdac
     gcd-num
-    funcall
     fst
     fletc
     failwith
@@ -329,24 +328,24 @@
 
 (defunc is_realintconst (tm)
   (match tm
-    ((Comb (Const "real_of_num" _) n) (funcall is_numeral n))
+    ((Comb (Const "real_of_num" _) n) (#`is_numeral n))
     ((Comb (Const "real_neg" _) (Comb (Const "real_of_num" _) n))
-      (cl:and (funcall is_numeral n) (not (= (funcall dest_numeral n) num_0))))
+      (cl:and (#`is_numeral n) (not (= (#`dest_numeral n) num_0))))
     (_ cl:nil)))
 
 (defunc dest_realintconst (tm)
   (match tm
-    ((Comb (Const "real_of_num" _) n) (funcall dest_numeral n))
+    ((Comb (Const "real_of_num" _) n) (#`dest_numeral n))
     ((Comb (Const "real_neg" _) (Comb (Const "real_of_num" _) n))
-      (let ((nn (funcall dest_numeral n)))
+      (let ((nn (#`dest_numeral n)))
         (cl:declare (cl:ignorable nn))
-        (if (<> nn num_0) (- (funcall dest_numeral n)) (failwith "dest_realintconst"))))
+        (if (<> nn num_0) (- (#`dest_numeral n)) (failwith "dest_realintconst"))))
     (_ (failwith "dest_realintconst"))))
 
 (defparameter mk_realintconst
   (let ((cast_tm (parse_term "real_of_num")) (neg_tm (parse_term "(--)")))
     (cl:declare (cl:ignorable cast_tm neg_tm))
-    (fletc ((mk_numconst (n) (mk_comb (tuple cast_tm (funcall mk_numeral n)))))
+    (fletc ((mk_numconst (n) (mk_comb (tuple cast_tm (#`mk_numeral n)))))
       (lambdac (x)
         (if (< x num_0) (mk_comb (tuple neg_tm (mk_numconst (- x)))) (mk_numconst x))))))
 
@@ -376,11 +375,11 @@
     (lambdac (x)
       (match (numdom x)
         ((tuple p% q)
-          (let ((ptm (funcall mk_realintconst p%)))
+          (let ((ptm (#`mk_realintconst p%)))
             (cl:declare (cl:ignorable ptm))
             (if (= q num_1)
               ptm
-              (mk_comb (tuple (mk_comb (tuple div_tm ptm)) (funcall mk_realintconst q))))))))))
+              (mk_comb (tuple (mk_comb (tuple div_tm ptm)) (#`mk_realintconst q))))))))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Some elementary "bootstrapping" lemmas we need below.                     *)
@@ -409,7 +408,7 @@
       (holai.runtime:proof (REPEAT #'GEN_TAC)
         THEN #'EQ_TAC
         THEN DISCH_TAC
-        THEN (funcall ASM_REWRITE_TAC nil)
+        THEN (#`ASM_REWRITE_TAC nil)
         THEN (POP_ASSUM (o #'MP_TAC (AP_TERM (parse_term "(+) (--x)"))))
         THEN
           (REWRITE_TAC
@@ -465,10 +464,8 @@
     (tuple
       (parse_term "!x y. --(x + y) = --x + --y")
       (holai.runtime:proof (REPEAT #'GEN_TAC)
-        THEN
-          (MATCH_MP_TAC
-            (GEN_ALL (fst (funcall EQ_IMP_RULE (SPEC_ALL REAL_EQ_ADD_RCANCEL)))))
-        THEN (funcall EXISTS_TAC (parse_term "x + y"))
+        THEN (MATCH_MP_TAC (GEN_ALL (fst (#`EQ_IMP_RULE (SPEC_ALL REAL_EQ_ADD_RCANCEL)))))
+        THEN (#`EXISTS_TAC (parse_term "x + y"))
         THEN (REWRITE_TAC (cl:cons REAL_ADD_LINV nil))
         THEN
           (ONCE_REWRITE_TAC
@@ -498,16 +495,14 @@
         THEN (DISCH_THEN (o #'MP_TAC (MATCH_MP REAL_LE_LADD_IMP)))
         THENL
           (cl:cons
-            (holai.runtime:proof (DISCH_THEN
-                (o #'MP_TAC (funcall SPEC (parse_term "x:real"))))
+            (holai.runtime:proof (DISCH_THEN (o #'MP_TAC (#`SPEC (parse_term "x:real"))))
               THEN
                 (REWRITE_TAC
                   (cl:cons
                     (ONCE_REWRITE_RULE (cl:cons REAL_ADD_SYM nil) REAL_ADD_LINV)
                     nil)))
             (cl:cons
-              (holai.runtime:proof (DISCH_THEN
-                  (o #'MP_TAC (funcall SPEC (parse_term "--x"))))
+              (holai.runtime:proof (DISCH_THEN (o #'MP_TAC (#`SPEC (parse_term "--x"))))
                 THEN
                   (REWRITE_TAC
                     (cl:cons
@@ -527,30 +522,24 @@
       (parse_term "!x y. --x <= --y <=> y <= x")
       (holai.runtime:proof (REPEAT #'GEN_TAC)
         THEN
-          (GEN_REWRITE_TAC
-            (o #'RAND_CONV LAND_CONV)
-            (cl:cons (funcall GSYM REAL_NEG_NEG) nil))
+          (GEN_REWRITE_TAC (o #'RAND_CONV LAND_CONV) (cl:cons (#`GSYM REAL_NEG_NEG) nil))
         THEN (REWRITE_TAC (cl:cons REAL_LE_LNEG nil))
         THEN AP_TERM_TAC
-        THEN (funcall MATCH_ACCEPT_TAC REAL_ADD_SYM)))))
+        THEN (#`MATCH_ACCEPT_TAC REAL_ADD_SYM)))))
 
 (defparameter REAL_LE_RNEG
   (prove
     (tuple
       (parse_term "!x y. x <= --y <=> x + y <= &0")
       (holai.runtime:proof (REPEAT #'GEN_TAC)
-        THEN
-          (GEN_REWRITE_TAC
-            (o LAND_CONV LAND_CONV)
-            (cl:cons (funcall GSYM REAL_NEG_NEG) nil))
-        THEN
-          (REWRITE_TAC (cl:cons REAL_LE_LNEG (cl:cons (funcall GSYM REAL_NEG_ADD) nil)))
-        THEN (GEN_REWRITE_TAC #'RAND_CONV (cl:cons (funcall GSYM REAL_LE_NEG2) nil))
+        THEN (GEN_REWRITE_TAC (o LAND_CONV LAND_CONV) (cl:cons (#`GSYM REAL_NEG_NEG) nil))
+        THEN (REWRITE_TAC (cl:cons REAL_LE_LNEG (cl:cons (#`GSYM REAL_NEG_ADD) nil)))
+        THEN (GEN_REWRITE_TAC #'RAND_CONV (cl:cons (#`GSYM REAL_LE_NEG2) nil))
         THEN AP_THM_TAC
         THEN AP_TERM_TAC
-        THEN (REWRITE_TAC (cl:cons (funcall GSYM REAL_ADD_LINV) nil))
+        THEN (REWRITE_TAC (cl:cons (#`GSYM REAL_ADD_LINV) nil))
         THEN (REWRITE_TAC (cl:cons REAL_NEG_ADD (cl:cons REAL_NEG_NEG nil)))
-        THEN (funcall MATCH_ACCEPT_TAC REAL_ADD_SYM)))))
+        THEN (#`MATCH_ACCEPT_TAC REAL_ADD_SYM)))))
 
 (defparameter REAL_OF_NUM_POW
   (prove
@@ -559,8 +548,7 @@
       (holai.runtime:proof #'GEN_TAC
         THEN INDUCT_TAC
         THEN
-          (funcall
-            ASM_REWRITE_TAC
+          (#`ASM_REWRITE_TAC
             (cl:cons real_pow (cl:cons EXP (cl:cons REAL_OF_NUM_MUL nil))))))))
 
 (defparameter REAL_POW_NEG
@@ -569,11 +557,10 @@
       (parse_term "!x n. (--x) pow n = if EVEN n then x pow n else --(x pow n)")
       (holai.runtime:proof #'GEN_TAC
         THEN INDUCT_TAC
-        THEN (funcall ASM_REWRITE_TAC (cl:cons real_pow (cl:cons EVEN nil)))
+        THEN (#`ASM_REWRITE_TAC (cl:cons real_pow (cl:cons EVEN nil)))
         THEN (ASM_CASES_TAC (parse_term "EVEN n"))
         THEN
-          (funcall
-            ASM_REWRITE_TAC
+          (#`ASM_REWRITE_TAC
             (cl:cons REAL_MUL_RNEG (cl:cons REAL_MUL_LNEG (cl:cons REAL_NEG_NEG nil))))))))
 
 (defparameter REAL_ABS_NUM
@@ -612,12 +599,11 @@
 (match
   (let*
     ((tth
-      (funcall
-        TAUT
+      (#`TAUT
         (parse_term
           "(F /\\ F <=> F) /\\ (F /\\ T <=> F) /\\
           (T /\\ F <=> F) /\\ (T /\\ T <=> T)")))
-      (nth (funcall TAUT (parse_term "(~T <=> F) /\\ (~F <=> T)")))
+      (nth (#`TAUT (parse_term "(~T <=> F) /\\ (~F <=> T)")))
       (NUM2_EQ_CONV
         (THENC (BINOP_CONV NUM_EQ_CONV) (GEN_REWRITE_CONV #'I (cl:cons tth nil))))
       (NUM2_NE_CONV
@@ -642,8 +628,7 @@
       ((cl:cons pth_le1 (cl:cons pth_le2a (cl:cons pth_le2b (cl:cons pth_le3 nil))))
         (let
           ((REAL_INT_LE_CONV%
-            (funcall
-              FIRST_CONV
+            (#`FIRST_CONV
               (cl:cons
                 (GEN_REWRITE_CONV #'I (cl:cons pth_le1 nil))
                 (cl:cons
@@ -673,13 +658,12 @@
                           pth_le2b
                           (cl:cons
                             pth_le3
-                            (cl:cons (funcall GSYM NOT_LE) (cl:cons real_lt nil)))))))
-                  THEN (funcall CONV_TAC TAUT))))
+                            (cl:cons (#`GSYM NOT_LE) (cl:cons real_lt nil)))))))
+                  THEN (#`CONV_TAC TAUT))))
             ((cl:cons pth_lt1 (cl:cons pth_lt2a (cl:cons pth_lt2b (cl:cons pth_lt3 nil))))
               (let
                 ((REAL_INT_LT_CONV%
-                  (funcall
-                    FIRST_CONV
+                  (#`FIRST_CONV
                     (cl:cons
                       (GEN_REWRITE_CONV #'I (cl:cons pth_lt1 nil))
                       (cl:cons
@@ -708,14 +692,13 @@
                             (cl:cons
                               pth_le2a
                               (cl:cons pth_le2b (cl:cons pth_le3 (cl:cons real_ge nil))))))
-                        THEN (funcall CONV_TAC TAUT))))
+                        THEN (#`CONV_TAC TAUT))))
                   ((cl:cons
                     pth_ge1
                     (cl:cons pth_ge2a (cl:cons pth_ge2b (cl:cons pth_ge3 nil))))
                     (let
                       ((REAL_INT_GE_CONV%
-                        (funcall
-                          FIRST_CONV
+                        (#`FIRST_CONV
                           (cl:cons
                             (GEN_REWRITE_CONV #'I (cl:cons pth_ge1 nil))
                             (cl:cons
@@ -748,14 +731,13 @@
                                     (cl:cons
                                       pth_lt2b
                                       (cl:cons pth_lt3 (cl:cons real_gt nil))))))
-                              THEN (funcall CONV_TAC TAUT))))
+                              THEN (#`CONV_TAC TAUT))))
                         ((cl:cons
                           pth_gt1
                           (cl:cons pth_gt2a (cl:cons pth_gt2b (cl:cons pth_gt3 nil))))
                           (let
                             ((REAL_INT_GT_CONV%
-                              (funcall
-                                FIRST_CONV
+                              (#`FIRST_CONV
                                 (cl:cons
                                   (GEN_REWRITE_CONV #'I (cl:cons pth_gt1 nil))
                                   (cl:cons
@@ -782,8 +764,8 @@
      ((&m = --(&n)) <=> (m = 0) /\\ (n = 0))")
                                   (holai.runtime:proof (REWRITE_TAC
                                       (cl:cons
-                                        (funcall GSYM REAL_LE_ANTISYM)
-                                        (cl:cons (funcall GSYM LE_ANTISYM) nil)))
+                                        (#`GSYM REAL_LE_ANTISYM)
+                                        (cl:cons (#`GSYM LE_ANTISYM) nil)))
                                     THEN
                                       (REWRITE_TAC
                                         (cl:cons
@@ -795,7 +777,7 @@
                                               (cl:cons
                                                 pth_le3
                                                 (cl:cons LE (cl:cons LE_0 nil)))))))
-                                    THEN (funcall CONV_TAC TAUT))))
+                                    THEN (#`CONV_TAC TAUT))))
                               ((cl:cons
                                 pth_eq1a
                                 (cl:cons
@@ -803,8 +785,7 @@
                                   (cl:cons pth_eq2a (cl:cons pth_eq2b nil))))
                                 (let
                                   ((REAL_INT_EQ_CONV%
-                                    (funcall
-                                      FIRST_CONV
+                                    (#`FIRST_CONV
                                       (cl:cons
                                         (THENC
                                           (GEN_REWRITE_CONV
@@ -878,8 +859,7 @@
               (cl:cons REAL_MUL_LNEG (cl:cons REAL_MUL_RNEG (cl:cons REAL_NEG_NEG nil))))
             THEN (REWRITE_TAC (cl:cons REAL_OF_NUM_MUL nil))))))
     ((tuple pth0 (tuple pth1 pth2))
-      (funcall
-        FIRST_CONV
+      (#`FIRST_CONV
         (cl:cons
           (GEN_REWRITE_CONV #'I (cl:cons pth0 nil))
           (cl:cons
@@ -920,7 +900,7 @@
      (&m + --(&(m + n)) = --(&n)) /\\
      (&m + &n = &(m + n))")
             (holai.runtime:proof (REWRITE_TAC
-                (cl:cons (funcall GSYM REAL_OF_NUM_ADD) (cl:cons REAL_NEG_ADD nil)))
+                (cl:cons (#`GSYM REAL_OF_NUM_ADD) (cl:cons REAL_NEG_ADD nil)))
               THEN
                 (REWRITE_TAC
                   (cl:cons
@@ -941,7 +921,7 @@
             (GEN_REWRITE_CONV #'I (cl:cons pth0 nil))
             (lambdac (tm)
               (handler-case
-                (match (funcall dest tm)
+                (match (#`dest tm)
                   ((tuple l r%)
                     (if (cl:or (not (is_realintconst l)) (not (is_realintconst r%)))
                       (failwith "")
@@ -955,21 +935,16 @@
                                   (cl:cons (tuple (rand (rand r%)) n_tm) nil))
                                 pth1))
                               (tm1 (rand (rand (rand (concl th1)))))
-                              (th2
-                                (AP_TERM
-                                  neg_tm
-                                  (AP_TERM amp_tm (funcall NUM_ADD_CONV tm1)))))
+                              (th2 (AP_TERM neg_tm (AP_TERM amp_tm (#`NUM_ADD_CONV tm1)))))
                             (cl:declare (cl:ignorable th1 tm1 th2))
                             (TRANS th1 th2))
                           (let ((m (rand (rand l))) (n (rand r%)))
                             (cl:declare (cl:ignorable m n))
-                            (let
-                              ((m% (funcall dest_numeral m))
-                                (n% (funcall dest_numeral n)))
+                            (let ((m% (#`dest_numeral m)) (n% (#`dest_numeral n)))
                               (cl:declare (cl:ignorable m% n%))
                               (if (<= m% n%)
                                 (let*
-                                  ((p% (funcall mk_numeral (- n% m%)))
+                                  ((p% (#`mk_numeral (- n% m%)))
                                     (th1
                                       (INST%
                                         (cl:cons
@@ -977,14 +952,12 @@
                                           (cl:cons (tuple p% n_tm) nil))
                                         pth2))
                                     (th2
-                                      (funcall
-                                        NUM_ADD_CONV
-                                        (rand (rand (funcall lhand (concl th1))))))
+                                      (#`NUM_ADD_CONV (rand (rand (#`lhand (concl th1))))))
                                     (th3 (AP_TERM (rator tm) (AP_TERM amp_tm (SYM th2)))))
                                   (cl:declare (cl:ignorable p% th1 th2 th3))
                                   (TRANS th3 th1))
                                 (let*
-                                  ((p% (funcall mk_numeral (- m% n%)))
+                                  ((p% (#`mk_numeral (- m% n%)))
                                     (th1
                                       (INST%
                                         (cl:cons
@@ -992,11 +965,8 @@
                                           (cl:cons (tuple p% n_tm) nil))
                                         pth3))
                                     (th2
-                                      (funcall
-                                        NUM_ADD_CONV
-                                        (rand
-                                          (rand
-                                            (funcall lhand (funcall lhand (concl th1)))))))
+                                      (#`NUM_ADD_CONV
+                                        (rand (rand (#`lhand (#`lhand (concl th1)))))))
                                     (th3 (AP_TERM neg_tm (AP_TERM amp_tm (SYM th2))))
                                     (th4 (AP_THM (AP_TERM add_tm th3) (rand tm))))
                                   (cl:declare (cl:ignorable p% th1 th2 th3 th4))
@@ -1004,13 +974,11 @@
                         (if (= (rator r%) neg_tm)
                           (let ((m (rand l)) (n (rand (rand r%))))
                             (cl:declare (cl:ignorable m n))
-                            (let
-                              ((m% (funcall dest_numeral m))
-                                (n% (funcall dest_numeral n)))
+                            (let ((m% (#`dest_numeral m)) (n% (#`dest_numeral n)))
                               (cl:declare (cl:ignorable m% n%))
                               (if (<= n% m%)
                                 (let*
-                                  ((p% (funcall mk_numeral (- m% n%)))
+                                  ((p% (#`mk_numeral (- m% n%)))
                                     (th1
                                       (INST%
                                         (cl:cons
@@ -1018,15 +986,14 @@
                                           (cl:cons (tuple p% n_tm) nil))
                                         pth4))
                                     (th2
-                                      (funcall
-                                        NUM_ADD_CONV
-                                        (rand (funcall lhand (funcall lhand (concl th1))))))
+                                      (#`NUM_ADD_CONV
+                                        (rand (#`lhand (#`lhand (concl th1))))))
                                     (th3 (AP_TERM add_tm (AP_TERM amp_tm (SYM th2))))
                                     (th4 (AP_THM th3 (rand tm))))
                                   (cl:declare (cl:ignorable p% th1 th2 th3 th4))
                                   (TRANS th4 th1))
                                 (let*
-                                  ((p% (funcall mk_numeral (- n% m%)))
+                                  ((p% (#`mk_numeral (- n% m%)))
                                     (th1
                                       (INST%
                                         (cl:cons
@@ -1034,9 +1001,8 @@
                                           (cl:cons (tuple p% n_tm) nil))
                                         pth5))
                                     (th2
-                                      (funcall
-                                        NUM_ADD_CONV
-                                        (rand (rand (rand (funcall lhand (concl th1)))))))
+                                      (#`NUM_ADD_CONV
+                                        (rand (rand (rand (#`lhand (concl th1)))))))
                                     (th3 (AP_TERM neg_tm (AP_TERM amp_tm (SYM th2))))
                                     (th4 (AP_TERM (rator tm) th3)))
                                   (cl:declare (cl:ignorable p% th1 th2 th3 th4))
@@ -1049,7 +1015,7 @@
                                   (cl:cons (tuple (rand r%) n_tm) nil))
                                 pth6))
                               (tm1 (rand (rand (concl th1))))
-                              (th2 (AP_TERM amp_tm (funcall NUM_ADD_CONV tm1))))
+                              (th2 (AP_TERM amp_tm (#`NUM_ADD_CONV tm1))))
                             (cl:declare (cl:ignorable th1 tm1 th2))
                             (TRANS th1 th2)))))))
                 (holai.runtime:ocaml-condition
@@ -1135,11 +1101,11 @@
 (defparameter REAL_INT_RED_CONV
   (let
     ((gconv_net
-      (itlist (uncurry #'net_of_conv) real_int_red_conv_list (funcall basic_net unit))))
+      (itlist (uncurry #'net_of_conv) real_int_red_conv_list (#`basic_net unit))))
     (cl:declare (cl:ignorable gconv_net))
     (REWRITES_CONV gconv_net)))
 
-(defparameter REAL_INT_REDUCE_CONV (funcall DEPTH_CONV REAL_INT_RED_CONV))
+(defparameter REAL_INT_REDUCE_CONV (#`DEPTH_CONV REAL_INT_RED_CONV))
 
 (defparameter real_int_compute_add_convs
   (let
@@ -1148,8 +1114,8 @@
         (lambdac (arg~1730)
           (match arg~1730
             ((tuple pat the_conv)
-              (match (funcall strip_comb pat)
-                ((tuple c% args) (tuple c% (funcall length args) the_conv))))))
+              (match (#`strip_comb pat)
+                ((tuple c% args) (tuple c% (#`length args) the_conv))))))
         real_int_red_conv_list)))
     (cl:declare (cl:ignorable convlist))
     (lambdac (compset)
@@ -1164,6 +1130,6 @@
     (cl:declare (cl:ignorable cs))
     (progn
       (set_skip cs (parse_term "COND: bool -> A -> A -> A") (make-Some 1))
-      (funcall real_int_compute_add_convs cs)
+      (#`real_int_compute_add_convs cs)
       (WEAK_CBV_CONV cs))))
 

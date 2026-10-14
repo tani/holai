@@ -2263,7 +2263,6 @@
     lambdac
     labelsc
     function-value
-    funcall
     fletc
     failwith
     defunc
@@ -3044,40 +3043,40 @@
 
 (in-package :holai.sets)
 
-(funcall parse_as_infix (tuple "IN" (tuple 11 "right")))
+(#`parse_as_infix (tuple "IN" (tuple 11 "right")))
 
-(funcall parse_as_infix (tuple "SUBSET" (tuple 12 "right")))
+(#`parse_as_infix (tuple "SUBSET" (tuple 12 "right")))
 
-(funcall parse_as_infix (tuple "PSUBSET" (tuple 12 "right")))
+(#`parse_as_infix (tuple "PSUBSET" (tuple 12 "right")))
 
-(funcall parse_as_infix (tuple "INTER" (tuple 20 "right")))
+(#`parse_as_infix (tuple "INTER" (tuple 20 "right")))
 
-(funcall parse_as_infix (tuple "UNION" (tuple 16 "right")))
+(#`parse_as_infix (tuple "UNION" (tuple 16 "right")))
 
-(funcall parse_as_infix (tuple "DIFF" (tuple 18 "left")))
+(#`parse_as_infix (tuple "DIFF" (tuple 18 "left")))
 
-(funcall parse_as_infix (tuple "INSERT" (tuple 21 "right")))
+(#`parse_as_infix (tuple "INSERT" (tuple 21 "right")))
 
-(funcall parse_as_infix (tuple "DELETE" (tuple 21 "left")))
+(#`parse_as_infix (tuple "DELETE" (tuple 21 "left")))
 
-(funcall parse_as_infix (tuple "HAS_SIZE" (tuple 12 "right")))
+(#`parse_as_infix (tuple "HAS_SIZE" (tuple 12 "right")))
 
-(funcall parse_as_infix (tuple "<=_c" (tuple 12 "right")))
+(#`parse_as_infix (tuple "<=_c" (tuple 12 "right")))
 
-(funcall parse_as_infix (tuple "<_c" (tuple 12 "right")))
+(#`parse_as_infix (tuple "<_c" (tuple 12 "right")))
 
-(funcall parse_as_infix (tuple ">=_c" (tuple 12 "right")))
+(#`parse_as_infix (tuple ">=_c" (tuple 12 "right")))
 
-(funcall parse_as_infix (tuple ">_c" (tuple 12 "right")))
+(#`parse_as_infix (tuple ">_c" (tuple 12 "right")))
 
-(funcall parse_as_infix (tuple "=_c" (tuple 12 "right")))
+(#`parse_as_infix (tuple "=_c" (tuple 12 "right")))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Set membership.                                                           *)
 ;; (* ------------------------------------------------------------------------- *)
 
 
-(defparameter IN (funcall new_definition (parse_term "!P:A->bool. !x. x IN P <=> P x")))
+(defparameter IN (#`new_definition (parse_term "!P:A->bool. !x. x IN P <=> P x")))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Axiom of extensionality in this framework.                                *)
@@ -3095,10 +3094,10 @@
 ;; (* ------------------------------------------------------------------------- *)
 
 
-(defparameter GSPEC (funcall new_definition (parse_term "GSPEC (p:A->bool) = p")))
+(defparameter GSPEC (#`new_definition (parse_term "GSPEC (p:A->bool) = p")))
 
 (defparameter SETSPEC
-  (funcall new_definition (parse_term "SETSPEC (v:A) P t <=> P /\\ (v = t)")))
+  (#`new_definition (parse_term "SETSPEC (v:A) P t <=> P /\\ (v = t)")))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Rewrite rule for eliminating set-comprehension membership assertions.     *)
@@ -3127,32 +3126,32 @@
 ;; (* ------------------------------------------------------------------------- *)
 
 
-(defparameter EMPTY (funcall new_definition (parse_term "EMPTY = (\\x:A. F)")))
+(defparameter EMPTY (#`new_definition (parse_term "EMPTY = (\\x:A. F)")))
 
 (defparameter INSERT_DEF
-  (funcall new_definition (parse_term "x INSERT s = \\y:A. y IN s \\/ (y = x)")))
+  (#`new_definition (parse_term "x INSERT s = \\y:A. y IN s \\/ (y = x)")))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* The other basic operations.                                               *)
 ;; (* ------------------------------------------------------------------------- *)
 
 
-(defparameter UNIV (funcall new_definition (parse_term "UNIV = (\\x:A. T)")))
+(defparameter UNIV (#`new_definition (parse_term "UNIV = (\\x:A. T)")))
 
 (defparameter UNION
-  (funcall new_definition (parse_term "s UNION t = {x:A | x IN s \\/ x IN t}")))
+  (#`new_definition (parse_term "s UNION t = {x:A | x IN s \\/ x IN t}")))
 
 (defparameter UNIONS
-  (funcall new_definition (parse_term "UNIONS s = {x:A | ?u. u IN s /\\ x IN u}")))
+  (#`new_definition (parse_term "UNIONS s = {x:A | ?u. u IN s /\\ x IN u}")))
 
 (defparameter INTER
-  (funcall new_definition (parse_term "s INTER t = {x:A | x IN s /\\ x IN t}")))
+  (#`new_definition (parse_term "s INTER t = {x:A | x IN s /\\ x IN t}")))
 
 (defparameter INTERS
-  (funcall new_definition (parse_term "INTERS s = {x:A | !u. u IN s ==> x IN u}")))
+  (#`new_definition (parse_term "INTERS s = {x:A | !u. u IN s ==> x IN u}")))
 
 (defparameter DIFF
-  (funcall new_definition (parse_term "s DIFF t =  {x:A | x IN s /\\ ~(x IN t)}")))
+  (#`new_definition (parse_term "s DIFF t =  {x:A | x IN s /\\ ~(x IN t)}")))
 
 (defparameter INSERT
   (prove
@@ -3161,7 +3160,7 @@
       (REWRITE_TAC (cl:cons EXTENSION (cl:cons INSERT_DEF (cl:cons IN_ELIM_THM nil)))))))
 
 (defparameter DELETE
-  (funcall new_definition (parse_term "s DELETE x = {y:A | y IN s /\\ ~(y = x)}")))
+  (#`new_definition (parse_term "s DELETE x = {y:A | y IN s /\\ ~(y = x)}")))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Other basic predicates.                                                   *)
@@ -3169,17 +3168,15 @@
 
 
 (defparameter SUBSET
-  (funcall new_definition (parse_term "s SUBSET t <=> !x:A. x IN s ==> x IN t")))
+  (#`new_definition (parse_term "s SUBSET t <=> !x:A. x IN s ==> x IN t")))
 
 (defparameter PSUBSET
-  (funcall
-    new_definition
-    (parse_term "(s:A->bool) PSUBSET t <=> s SUBSET t /\\ ~(s = t)")))
+  (#`new_definition (parse_term "(s:A->bool) PSUBSET t <=> s SUBSET t /\\ ~(s = t)")))
 
 (defparameter DISJOINT
-  (funcall new_definition (parse_term "DISJOINT (s:A->bool) t <=> (s INTER t = EMPTY)")))
+  (#`new_definition (parse_term "DISJOINT (s:A->bool) t <=> (s INTER t = EMPTY)")))
 
-(defparameter SING (funcall new_definition (parse_term "SING s = ?x:A. s = {x}")))
+(defparameter SING (#`new_definition (parse_term "SING s = ?x:A. s = {x}")))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Finiteness.                                                               *)
@@ -3193,8 +3190,7 @@
 (defparameter FINITE_RULES nil)
 
 (match
-  (funcall
-    new_inductive_definition
+  (#`new_inductive_definition
     (parse_term
       "FINITE (EMPTY:A->bool) /\\
      !(x:A) s. FINITE s ==> FINITE (x INSERT s)"))
@@ -3208,7 +3204,7 @@
       FINITE_RULES%)))
 
 (defparameter INFINITE
-  (funcall new_definition (parse_term "INFINITE (s:A->bool) <=> ~(FINITE s)")))
+  (#`new_definition (parse_term "INFINITE (s:A->bool) <=> ~(FINITE s)")))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Stuff concerned with functions.                                           *)
@@ -3216,38 +3212,34 @@
 
 
 (defparameter IMAGE
-  (funcall
-    new_definition
-    (parse_term "IMAGE (f:A->B) s = { y | ?x. x IN s /\\ (y = f x)}")))
+  (#`new_definition (parse_term "IMAGE (f:A->B) s = { y | ?x. x IN s /\\ (y = f x)}")))
 
 (defparameter INJ
-  (funcall
-    new_definition
+  (#`new_definition
     (parse_term
       "INJ (f:A->B) s t <=>
      (!x. x IN s ==> (f x) IN t) /\\
      (!x y. x IN s /\\ y IN s /\\ (f x = f y) ==> (x = y))")))
 
 (defparameter SURJ
-  (funcall
-    new_definition
+  (#`new_definition
     (parse_term
       "SURJ (f:A->B) s t <=>
      (!x. x IN s ==> (f x) IN t) /\\
      (!x. (x IN t) ==> ?y. y IN s /\\ (f y = x))")))
 
 (defparameter BIJ
-  (funcall new_definition (parse_term "BIJ (f:A->B) s t <=> INJ f s t /\\ SURJ f s t")))
+  (#`new_definition (parse_term "BIJ (f:A->B) s t <=> INJ f s t /\\ SURJ f s t")))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Another funny thing.                                                      *)
 ;; (* ------------------------------------------------------------------------- *)
 
 
-(defparameter CHOICE (funcall new_definition (parse_term "CHOICE s = @x:A. x IN s")))
+(defparameter CHOICE (#`new_definition (parse_term "CHOICE s = @x:A. x IN s")))
 
 (defparameter REST
-  (funcall new_definition (parse_term "REST (s:A->bool) = s DELETE (CHOICE s)")))
+  (#`new_definition (parse_term "REST (s:A->bool) = s DELETE (CHOICE s)")))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Basic membership properties.                                              *)
@@ -3523,7 +3515,7 @@
       (holai.runtime:proof (MAP_EVERY #'MP_TAC ths)
         THEN (POP_ASSUM_LIST (K #'ALL_TAC))
         THEN (REPEAT (holai.runtime:proof COND_CASES_TAC THEN (POP_ASSUM #'MP_TAC)))
-        THEN (funcall CONV_TAC PRESET_CONV)
+        THEN (#`CONV_TAC PRESET_CONV)
         THEN
           (MAP_EVERY
             #'MP_TAC
@@ -3531,7 +3523,7 @@
         THEN (REWRITE_TAC (cl:cons IN nil))
         THEN (MESON_TAC nil)))))
 
-(defunc SET_RULE (tm) (prove (tuple tm (funcall SET_TAC nil))))
+(defunc SET_RULE (tm) (prove (tuple tm (#`SET_TAC nil))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Misc. theorems.                                                           *)
@@ -3542,7 +3534,7 @@
   (prove
     (tuple
       (parse_term "!s:A->bool. !t. ~(s = t) <=> ?x. x IN t <=> ~(x IN s)")
-      (funcall SET_TAC nil))))
+      (#`SET_TAC nil))))
 
 (defparameter INSERT_RESTRICT
   (prove
@@ -3554,7 +3546,7 @@
       (holai.runtime:proof (REPEAT #'GEN_TAC) THEN COND_CASES_TAC THEN (ASM SET_TAC nil)))))
 
 (defparameter UNIV_1
-  (prove (tuple (parse_term "(:1) = {one}") (funcall SET_TAC (cl:cons one nil)))))
+  (prove (tuple (parse_term "(:1) = {one}") (#`SET_TAC (cl:cons one nil)))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* The empty set.                                                            *)
@@ -3562,8 +3554,7 @@
 
 
 (defparameter MEMBER_NOT_EMPTY
-  (prove
-    (tuple (parse_term "!s:A->bool. (?x. x IN s) <=> ~(s = EMPTY)") (funcall SET_TAC nil))))
+  (prove (tuple (parse_term "!s:A->bool. (?x. x IN s) <=> ~(s = EMPTY)") (#`SET_TAC nil))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* The universal set.                                                        *)
@@ -3571,13 +3562,13 @@
 
 
 (defparameter UNIV_NOT_EMPTY
-  (prove (tuple (parse_term "~(UNIV:A->bool = EMPTY)") (funcall SET_TAC nil))))
+  (prove (tuple (parse_term "~(UNIV:A->bool = EMPTY)") (#`SET_TAC nil))))
 
 (defparameter EMPTY_NOT_UNIV
-  (prove (tuple (parse_term "~(EMPTY:A->bool = UNIV)") (funcall SET_TAC nil))))
+  (prove (tuple (parse_term "~(EMPTY:A->bool = UNIV)") (#`SET_TAC nil))))
 
 (defparameter EQ_UNIV
-  (prove (tuple (parse_term "(!x:A. x IN s) <=> (s = UNIV)") (funcall SET_TAC nil))))
+  (prove (tuple (parse_term "(!x:A. x IN s) <=> (s = UNIV)") (#`SET_TAC nil))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Set inclusion.                                                            *)
@@ -3588,41 +3579,38 @@
   (prove
     (tuple
       (parse_term "!(s:A->bool) t u. s SUBSET t /\\ t SUBSET u ==> s SUBSET u")
-      (funcall SET_TAC nil))))
+      (#`SET_TAC nil))))
 
 (defparameter SUBSET_REFL
-  (prove (tuple (parse_term "!s:A->bool. s SUBSET s") (funcall SET_TAC nil))))
+  (prove (tuple (parse_term "!s:A->bool. s SUBSET s") (#`SET_TAC nil))))
 
 (defparameter SUBSET_ANTISYM
   (prove
     (tuple
       (parse_term "!(s:A->bool) t. s SUBSET t /\\ t SUBSET s ==> s = t")
-      (funcall SET_TAC nil))))
+      (#`SET_TAC nil))))
 
 (defparameter SUBSET_ANTISYM_EQ
   (prove
     (tuple
       (parse_term "!(s:A->bool) t. s SUBSET t /\\ t SUBSET s <=> s = t")
-      (funcall SET_TAC nil))))
+      (#`SET_TAC nil))))
 
 (defparameter EMPTY_SUBSET
-  (prove (tuple (parse_term "!s:A->bool. EMPTY SUBSET s") (funcall SET_TAC nil))))
+  (prove (tuple (parse_term "!s:A->bool. EMPTY SUBSET s") (#`SET_TAC nil))))
 
 (defparameter SUBSET_EMPTY
   (prove
-    (tuple
-      (parse_term "!s:A->bool. s SUBSET EMPTY <=> (s = EMPTY)")
-      (funcall SET_TAC nil))))
+    (tuple (parse_term "!s:A->bool. s SUBSET EMPTY <=> (s = EMPTY)") (#`SET_TAC nil))))
 
 (defparameter SUBSET_UNIV
-  (prove (tuple (parse_term "!s:A->bool. s SUBSET UNIV") (funcall SET_TAC nil))))
+  (prove (tuple (parse_term "!s:A->bool. s SUBSET UNIV") (#`SET_TAC nil))))
 
 (defparameter UNIV_SUBSET
-  (prove
-    (tuple (parse_term "!s:A->bool. UNIV SUBSET s <=> (s = UNIV)") (funcall SET_TAC nil))))
+  (prove (tuple (parse_term "!s:A->bool. UNIV SUBSET s <=> (s = UNIV)") (#`SET_TAC nil))))
 
 (defparameter SING_SUBSET
-  (prove (tuple (parse_term "!s x:A. {x} SUBSET s <=> x IN s") (funcall SET_TAC nil))))
+  (prove (tuple (parse_term "!s x:A. {x} SUBSET s <=> x IN s") (#`SET_TAC nil))))
 
 (defparameter SUBSET_RESTRICT
   (prove
@@ -3639,41 +3627,39 @@
   (prove
     (tuple
       (parse_term "!(s:A->bool) t u. s PSUBSET t /\\ t PSUBSET u ==> s PSUBSET u")
-      (funcall SET_TAC nil))))
+      (#`SET_TAC nil))))
 
 (defparameter PSUBSET_SUBSET_TRANS
   (prove
     (tuple
       (parse_term "!(s:A->bool) t u. s PSUBSET t /\\ t SUBSET u ==> s PSUBSET u")
-      (funcall SET_TAC nil))))
+      (#`SET_TAC nil))))
 
 (defparameter SUBSET_PSUBSET_TRANS
   (prove
     (tuple
       (parse_term "!(s:A->bool) t u. s SUBSET t /\\ t PSUBSET u ==> s PSUBSET u")
-      (funcall SET_TAC nil))))
+      (#`SET_TAC nil))))
 
 (defparameter PSUBSET_IRREFL
-  (prove (tuple (parse_term "!s:A->bool. ~(s PSUBSET s)") (funcall SET_TAC nil))))
+  (prove (tuple (parse_term "!s:A->bool. ~(s PSUBSET s)") (#`SET_TAC nil))))
 
 (defparameter NOT_PSUBSET_EMPTY
-  (prove (tuple (parse_term "!s:A->bool. ~(s PSUBSET EMPTY)") (funcall SET_TAC nil))))
+  (prove (tuple (parse_term "!s:A->bool. ~(s PSUBSET EMPTY)") (#`SET_TAC nil))))
 
 (defparameter NOT_UNIV_PSUBSET
-  (prove (tuple (parse_term "!s:A->bool. ~(UNIV PSUBSET s)") (funcall SET_TAC nil))))
+  (prove (tuple (parse_term "!s:A->bool. ~(UNIV PSUBSET s)") (#`SET_TAC nil))))
 
 (defparameter PSUBSET_UNIV
   (prove
-    (tuple
-      (parse_term "!s:A->bool. s PSUBSET UNIV <=> ?x. ~(x IN s)")
-      (funcall SET_TAC nil))))
+    (tuple (parse_term "!s:A->bool. s PSUBSET UNIV <=> ?x. ~(x IN s)") (#`SET_TAC nil))))
 
 (defparameter PSUBSET_ALT
   (prove
     (tuple
       (parse_term
         "!s t:A->bool. s PSUBSET t <=> s SUBSET t /\\ (?a. a IN t /\\ ~(a IN s))")
-      (holai.runtime:proof (REWRITE_TAC (cl:cons PSUBSET nil)) THEN (funcall SET_TAC nil)))))
+      (holai.runtime:proof (REWRITE_TAC (cl:cons PSUBSET nil)) THEN (#`SET_TAC nil)))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Union.                                                                    *)
@@ -3684,14 +3670,13 @@
   (prove
     (tuple
       (parse_term "!(s:A->bool) t u. (s UNION t) UNION u = s UNION (t UNION u)")
-      (funcall SET_TAC nil))))
+      (#`SET_TAC nil))))
 
 (defparameter UNION_IDEMPOT
-  (prove (tuple (parse_term "!s:A->bool. s UNION s = s") (funcall SET_TAC nil))))
+  (prove (tuple (parse_term "!s:A->bool. s UNION s = s") (#`SET_TAC nil))))
 
 (defparameter UNION_COMM
-  (prove
-    (tuple (parse_term "!(s:A->bool) t. s UNION t = t UNION s") (funcall SET_TAC nil))))
+  (prove (tuple (parse_term "!(s:A->bool) t. s UNION t = t UNION s") (#`SET_TAC nil))))
 
 (defparameter SUBSET_UNION
   (prove
@@ -3699,13 +3684,11 @@
       (parse_term
         "(!s:A->bool. !t. s SUBSET (s UNION t)) /\\
    (!s:A->bool. !t. s SUBSET (t UNION s))")
-      (funcall SET_TAC nil))))
+      (#`SET_TAC nil))))
 
 (defparameter SUBSET_UNION_ABSORPTION
   (prove
-    (tuple
-      (parse_term "!s:A->bool. !t. s SUBSET t <=> (s UNION t = t)")
-      (funcall SET_TAC nil))))
+    (tuple (parse_term "!s:A->bool. !t. s SUBSET t <=> (s UNION t = t)") (#`SET_TAC nil))))
 
 (defparameter UNION_EMPTY
   (prove
@@ -3713,7 +3696,7 @@
       (parse_term
         "(!s:A->bool. EMPTY UNION s = s) /\\
    (!s:A->bool. s UNION EMPTY = s)")
-      (funcall SET_TAC nil))))
+      (#`SET_TAC nil))))
 
 (defparameter UNION_UNIV
   (prove
@@ -3721,19 +3704,19 @@
       (parse_term
         "(!s:A->bool. UNIV UNION s = UNIV) /\\
    (!s:A->bool. s UNION UNIV = UNIV)")
-      (funcall SET_TAC nil))))
+      (#`SET_TAC nil))))
 
 (defparameter EMPTY_UNION
   (prove
     (tuple
       (parse_term "!s:A->bool. !t. (s UNION t = EMPTY) <=> (s = EMPTY) /\\ (t = EMPTY)")
-      (funcall SET_TAC nil))))
+      (#`SET_TAC nil))))
 
 (defparameter UNION_SUBSET
   (prove
     (tuple
       (parse_term "!s t u:A->bool. (s UNION t) SUBSET u <=> s SUBSET u /\\ t SUBSET u")
-      (funcall SET_TAC nil))))
+      (#`SET_TAC nil))))
 
 (defparameter UNION_RESTRICT
   (prove
@@ -3742,7 +3725,7 @@
         "!P s t:A->bool.
         {x | x IN (s UNION t) /\\ P x} =
         {x | x IN s /\\ P x} UNION {x | x IN t /\\ P x}")
-      (funcall SET_TAC nil))))
+      (#`SET_TAC nil))))
 
 (defparameter FORALL_SUBSET_UNION
   (prove
@@ -3760,7 +3743,7 @@
               THEN (ASM SET_TAC nil))
             (cl:cons
               (holai.runtime:proof DISCH_TAC
-                THEN (funcall X_GEN_TAC (parse_term "s:A->bool"))
+                THEN (#`X_GEN_TAC (parse_term "s:A->bool"))
                 THEN DISCH_TAC
                 THEN
                   (FIRST_ASSUM
@@ -3833,14 +3816,13 @@
   (prove
     (tuple
       (parse_term "!(s:A->bool) t u. (s INTER t) INTER u = s INTER (t INTER u)")
-      (funcall SET_TAC nil))))
+      (#`SET_TAC nil))))
 
 (defparameter INTER_IDEMPOT
-  (prove (tuple (parse_term "!s:A->bool. s INTER s = s") (funcall SET_TAC nil))))
+  (prove (tuple (parse_term "!s:A->bool. s INTER s = s") (#`SET_TAC nil))))
 
 (defparameter INTER_COMM
-  (prove
-    (tuple (parse_term "!(s:A->bool) t. s INTER t = t INTER s") (funcall SET_TAC nil))))
+  (prove (tuple (parse_term "!(s:A->bool) t. s INTER t = t INTER s") (#`SET_TAC nil))))
 
 (defparameter INTER_SUBSET
   (prove
@@ -3848,13 +3830,11 @@
       (parse_term
         "(!s:A->bool. !t. (s INTER t) SUBSET s) /\\
    (!s:A->bool. !t. (t INTER s) SUBSET s)")
-      (funcall SET_TAC nil))))
+      (#`SET_TAC nil))))
 
 (defparameter SUBSET_INTER_ABSORPTION
   (prove
-    (tuple
-      (parse_term "!s:A->bool. !t. s SUBSET t <=> (s INTER t = s)")
-      (funcall SET_TAC nil))))
+    (tuple (parse_term "!s:A->bool. !t. s SUBSET t <=> (s INTER t = s)") (#`SET_TAC nil))))
 
 (defparameter INTER_EMPTY
   (prove
@@ -3862,20 +3842,20 @@
       (parse_term
         "(!s:A->bool. EMPTY INTER s = EMPTY) /\\
    (!s:A->bool. s INTER EMPTY = EMPTY)")
-      (funcall SET_TAC nil))))
+      (#`SET_TAC nil))))
 
 (defparameter INTER_UNIV
   (prove
     (tuple
       (parse_term "(!s:A->bool. UNIV INTER s = s) /\\
    (!s:A->bool. s INTER UNIV = s)")
-      (funcall SET_TAC nil))))
+      (#`SET_TAC nil))))
 
 (defparameter SUBSET_INTER
   (prove
     (tuple
       (parse_term "!s t u:A->bool. s SUBSET (t INTER u) <=> s SUBSET t /\\ s SUBSET u")
-      (funcall SET_TAC nil))))
+      (#`SET_TAC nil))))
 
 (defparameter INTER_RESTRICT
   (prove
@@ -3884,7 +3864,7 @@
         "!P s (t:A->bool).
         {x | x IN (s INTER t) /\\ P x} =
         {x | x IN s /\\ P x} INTER {x | x IN t /\\ P x}")
-      (funcall SET_TAC nil))))
+      (#`SET_TAC nil))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Distributivity.                                                           *)
@@ -3895,13 +3875,13 @@
   (prove
     (tuple
       (parse_term "!s:A->bool. !t u. s INTER (t UNION u) = (s INTER t) UNION (s INTER u)")
-      (funcall SET_TAC nil))))
+      (#`SET_TAC nil))))
 
 (defparameter INTER_OVER_UNION
   (prove
     (tuple
       (parse_term "!s:A->bool. !t u. s UNION (t INTER u) = (s UNION t) INTER (s UNION u)")
-      (funcall SET_TAC nil))))
+      (#`SET_TAC nil))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Disjoint sets.                                                            *)
@@ -3912,32 +3892,28 @@
   (prove
     (tuple
       (parse_term "!s:A->bool. !t. DISJOINT s t <=> ~(?x. x IN s /\\ x IN t)")
-      (funcall SET_TAC nil))))
+      (#`SET_TAC nil))))
 
 (defparameter DISJOINT_SYM
   (prove
-    (tuple
-      (parse_term "!s:A->bool. !t. DISJOINT s t <=> DISJOINT t s")
-      (funcall SET_TAC nil))))
+    (tuple (parse_term "!s:A->bool. !t. DISJOINT s t <=> DISJOINT t s") (#`SET_TAC nil))))
 
 (defparameter DISJOINT_EMPTY
   (prove
     (tuple
       (parse_term "!s:A->bool. DISJOINT EMPTY s /\\ DISJOINT s EMPTY")
-      (funcall SET_TAC nil))))
+      (#`SET_TAC nil))))
 
 (defparameter DISJOINT_EMPTY_REFL
   (prove
-    (tuple
-      (parse_term "!s:A->bool. (s = EMPTY) <=> (DISJOINT s s)")
-      (funcall SET_TAC nil))))
+    (tuple (parse_term "!s:A->bool. (s = EMPTY) <=> (DISJOINT s s)") (#`SET_TAC nil))))
 
 (defparameter DISJOINT_UNION%
   (prove
     (tuple
       (parse_term
         "!s:A->bool. !t u. DISJOINT (s UNION t) u <=> DISJOINT s u /\\ DISJOINT t u")
-      (funcall SET_TAC nil))))
+      (#`SET_TAC nil))))
 
 (defparameter DISJOINT_SING
   (prove
@@ -3945,7 +3921,7 @@
       (parse_term
         "(!s a:A. DISJOINT s {a} <=> ~(a IN s)) /\\
    (!s a:A. DISJOINT {a} s <=> ~(a IN s))")
-      (funcall SET_TAC nil))))
+      (#`SET_TAC nil))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Set difference.                                                           *)
@@ -3953,28 +3929,26 @@
 
 
 (defparameter DIFF_EMPTY
-  (prove (tuple (parse_term "!s:A->bool. s DIFF EMPTY = s") (funcall SET_TAC nil))))
+  (prove (tuple (parse_term "!s:A->bool. s DIFF EMPTY = s") (#`SET_TAC nil))))
 
 (defparameter EMPTY_DIFF
-  (prove (tuple (parse_term "!s:A->bool. EMPTY DIFF s = EMPTY") (funcall SET_TAC nil))))
+  (prove (tuple (parse_term "!s:A->bool. EMPTY DIFF s = EMPTY") (#`SET_TAC nil))))
 
 (defparameter DIFF_UNIV
-  (prove (tuple (parse_term "!s:A->bool. s DIFF UNIV = EMPTY") (funcall SET_TAC nil))))
+  (prove (tuple (parse_term "!s:A->bool. s DIFF UNIV = EMPTY") (#`SET_TAC nil))))
 
 (defparameter DIFF_DIFF
   (prove
-    (tuple
-      (parse_term "!s:A->bool. !t. (s DIFF t) DIFF t = s DIFF t")
-      (funcall SET_TAC nil))))
+    (tuple (parse_term "!s:A->bool. !t. (s DIFF t) DIFF t = s DIFF t") (#`SET_TAC nil))))
 
 (defparameter DIFF_EQ_EMPTY
-  (prove (tuple (parse_term "!s:A->bool. s DIFF s = EMPTY") (funcall SET_TAC nil))))
+  (prove (tuple (parse_term "!s:A->bool. s DIFF s = EMPTY") (#`SET_TAC nil))))
 
 (defparameter SUBSET_DIFF
-  (prove (tuple (parse_term "!s t:A->bool. (s DIFF t) SUBSET s") (funcall SET_TAC nil))))
+  (prove (tuple (parse_term "!s t:A->bool. (s DIFF t) SUBSET s") (#`SET_TAC nil))))
 
 (defparameter COMPL_COMPL
-  (prove (tuple (parse_term "!s. (:A) DIFF ((:A) DIFF s) = s") (funcall SET_TAC nil))))
+  (prove (tuple (parse_term "!s. (:A) DIFF ((:A) DIFF s) = s") (#`SET_TAC nil))))
 
 (defparameter DIFF_RESTRICT
   (prove
@@ -3983,7 +3957,7 @@
         "!P s (t:A->bool).
         {x | x IN (s DIFF t) /\\ P x} =
         {x | x IN s /\\ P x} DIFF {x | x IN t /\\ P x}")
-      (funcall SET_TAC nil))))
+      (#`SET_TAC nil))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Insertion and deletion.                                                   *)
@@ -3991,7 +3965,7 @@
 
 
 (defparameter COMPONENT
-  (prove (tuple (parse_term "!x:A. !s. x IN (x INSERT s)") (funcall SET_TAC nil))))
+  (prove (tuple (parse_term "!x:A. !s. x IN (x INSERT s)") (#`SET_TAC nil))))
 
 (defparameter DECOMPOSITION
   (prove
@@ -4000,10 +3974,10 @@
       (holai.runtime:proof (REPEAT #'GEN_TAC)
         THEN #'EQ_TAC
         THEN #'STRIP_TAC
-        THEN (funcall ASM_REWRITE_TAC (cl:cons IN_INSERT nil))
-        THEN (funcall EXISTS_TAC (parse_term "s DELETE x:A"))
+        THEN (#`ASM_REWRITE_TAC (cl:cons IN_INSERT nil))
+        THEN (#`EXISTS_TAC (parse_term "s DELETE x:A"))
         THEN (POP_ASSUM #'MP_TAC)
-        THEN (funcall SET_TAC nil)))))
+        THEN (#`SET_TAC nil)))))
 
 (defparameter SET_CASES
   (prove
@@ -4012,29 +3986,26 @@
       (MESON_TAC (cl:cons MEMBER_NOT_EMPTY (cl:cons DECOMPOSITION nil))))))
 
 (defparameter ABSORPTION
-  (prove
-    (tuple (parse_term "!x:A. !s. x IN s <=> (x INSERT s = s)") (funcall SET_TAC nil))))
+  (prove (tuple (parse_term "!x:A. !s. x IN s <=> (x INSERT s = s)") (#`SET_TAC nil))))
 
 (defparameter INSERT_INSERT
   (prove
-    (tuple
-      (parse_term "!x:A. !s. x INSERT (x INSERT s) = x INSERT s")
-      (funcall SET_TAC nil))))
+    (tuple (parse_term "!x:A. !s. x INSERT (x INSERT s) = x INSERT s") (#`SET_TAC nil))))
 
 (defparameter INSERT_COMM
   (prove
     (tuple
       (parse_term "!x:A. !y s. x INSERT (y INSERT s) = y INSERT (x INSERT s)")
-      (funcall SET_TAC nil))))
+      (#`SET_TAC nil))))
 
 (defparameter INSERT_UNIV
-  (prove (tuple (parse_term "!x:A. x INSERT UNIV = UNIV") (funcall SET_TAC nil))))
+  (prove (tuple (parse_term "!x:A. x INSERT UNIV = UNIV") (#`SET_TAC nil))))
 
 (defparameter NOT_INSERT_EMPTY
-  (prove (tuple (parse_term "!x:A. !s. ~(x INSERT s = EMPTY)") (funcall SET_TAC nil))))
+  (prove (tuple (parse_term "!x:A. !s. ~(x INSERT s = EMPTY)") (#`SET_TAC nil))))
 
 (defparameter NOT_EMPTY_INSERT
-  (prove (tuple (parse_term "!x:A. !s. ~(EMPTY = x INSERT s)") (funcall SET_TAC nil))))
+  (prove (tuple (parse_term "!x:A. !s. ~(EMPTY = x INSERT s)") (#`SET_TAC nil))))
 
 (defparameter INSERT_UNION
   (prove
@@ -4045,13 +4016,13 @@
       (holai.runtime:proof (REPEAT #'GEN_TAC)
         THEN COND_CASES_TAC
         THEN (POP_ASSUM #'MP_TAC)
-        THEN (funcall SET_TAC nil)))))
+        THEN (#`SET_TAC nil)))))
 
 (defparameter INSERT_UNION_EQ
   (prove
     (tuple
       (parse_term "!x:A. !s t. (x INSERT s) UNION t = x INSERT (s UNION t)")
-      (funcall SET_TAC nil))))
+      (#`SET_TAC nil))))
 
 (defparameter INSERT_INTER
   (prove
@@ -4062,25 +4033,25 @@
       (holai.runtime:proof (REPEAT #'GEN_TAC)
         THEN COND_CASES_TAC
         THEN (POP_ASSUM #'MP_TAC)
-        THEN (funcall SET_TAC nil)))))
+        THEN (#`SET_TAC nil)))))
 
 (defparameter DISJOINT_INSERT
   (prove
     (tuple
       (parse_term "!(x:A) s t. DISJOINT (x INSERT s) t <=> (DISJOINT s t) /\\ ~(x IN t)")
-      (funcall SET_TAC nil))))
+      (#`SET_TAC nil))))
 
 (defparameter INSERT_SUBSET
   (prove
     (tuple
       (parse_term "!x:A. !s t. (x INSERT s) SUBSET t <=> (x IN t /\\ s SUBSET t)")
-      (funcall SET_TAC nil))))
+      (#`SET_TAC nil))))
 
 (defparameter SUBSET_INSERT
   (prove
     (tuple
       (parse_term "!x:A. !s. ~(x IN s) ==> !t. s SUBSET (x INSERT t) <=> s SUBSET t")
-      (funcall SET_TAC nil))))
+      (#`SET_TAC nil))))
 
 (defparameter INSERT_DIFF
   (prove
@@ -4091,7 +4062,7 @@
       (holai.runtime:proof (REPEAT #'GEN_TAC)
         THEN COND_CASES_TAC
         THEN (POP_ASSUM #'MP_TAC)
-        THEN (funcall SET_TAC nil)))))
+        THEN (#`SET_TAC nil)))))
 
 (defparameter INSERT_AC
   (prove
@@ -4110,7 +4081,7 @@
    (p INTER q INTER r = q INTER p INTER r) /\\
    (p INTER p = p) /\\
    (p INTER p INTER q = p INTER q)")
-      (funcall SET_TAC nil))))
+      (#`SET_TAC nil))))
 
 (defparameter UNION_ACI
   (prove
@@ -4121,11 +4092,10 @@
    (p UNION q UNION r = q UNION p UNION r) /\\
    (p UNION p = p) /\\
    (p UNION p UNION q = p UNION q)")
-      (funcall SET_TAC nil))))
+      (#`SET_TAC nil))))
 
 (defparameter DELETE_NON_ELEMENT
-  (prove
-    (tuple (parse_term "!x:A. !s. ~(x IN s) <=> (s DELETE x = s)") (funcall SET_TAC nil))))
+  (prove (tuple (parse_term "!x:A. !s. ~(x IN s) <=> (s DELETE x = s)") (#`SET_TAC nil))))
 
 (defparameter IN_DELETE_EQ
   (prove
@@ -4133,49 +4103,47 @@
       (parse_term
         "!s x. !x':A.
      (x IN s <=> x' IN s) <=> (x IN (s DELETE x') <=> x' IN (s DELETE x))")
-      (funcall SET_TAC nil))))
+      (#`SET_TAC nil))))
 
 (defparameter EMPTY_DELETE
-  (prove (tuple (parse_term "!x:A. EMPTY DELETE x = EMPTY") (funcall SET_TAC nil))))
+  (prove (tuple (parse_term "!x:A. EMPTY DELETE x = EMPTY") (#`SET_TAC nil))))
 
 (defparameter DELETE_DELETE
   (prove
-    (tuple
-      (parse_term "!x:A. !s. (s DELETE x) DELETE x = s DELETE x")
-      (funcall SET_TAC nil))))
+    (tuple (parse_term "!x:A. !s. (s DELETE x) DELETE x = s DELETE x") (#`SET_TAC nil))))
 
 (defparameter DELETE_COMM
   (prove
     (tuple
       (parse_term "!x:A. !y. !s. (s DELETE x) DELETE y = (s DELETE y) DELETE x")
-      (funcall SET_TAC nil))))
+      (#`SET_TAC nil))))
 
 (defparameter DELETE_SUBSET
-  (prove (tuple (parse_term "!x:A. !s. (s DELETE x) SUBSET s") (funcall SET_TAC nil))))
+  (prove (tuple (parse_term "!x:A. !s. (s DELETE x) SUBSET s") (#`SET_TAC nil))))
 
 (defparameter SUBSET_DELETE
   (prove
     (tuple
       (parse_term "!x:A. !s t. s SUBSET (t DELETE x) <=> ~(x IN s) /\\ (s SUBSET t)")
-      (funcall SET_TAC nil))))
+      (#`SET_TAC nil))))
 
 (defparameter SUBSET_INSERT_DELETE
   (prove
     (tuple
       (parse_term "!x:A. !s t. s SUBSET (x INSERT t) <=> ((s DELETE x) SUBSET t)")
-      (funcall SET_TAC nil))))
+      (#`SET_TAC nil))))
 
 (defparameter DIFF_INSERT
   (prove
     (tuple
       (parse_term "!s t. !x:A. s DIFF (x INSERT t) = (s DELETE x) DIFF t")
-      (funcall SET_TAC nil))))
+      (#`SET_TAC nil))))
 
 (defparameter PSUBSET_INSERT_SUBSET
   (prove
     (tuple
       (parse_term "!s t. s PSUBSET t <=> ?x:A. ~(x IN s) /\\ (x INSERT s) SUBSET t")
-      (funcall SET_TAC nil))))
+      (#`SET_TAC nil))))
 
 (defparameter DELETE_INSERT
   (prove
@@ -4187,25 +4155,25 @@
       (holai.runtime:proof (REPEAT #'GEN_TAC)
         THEN COND_CASES_TAC
         THEN (POP_ASSUM #'MP_TAC)
-        THEN (funcall SET_TAC nil)))))
+        THEN (#`SET_TAC nil)))))
 
 (defparameter INSERT_DELETE
   (prove
     (tuple
       (parse_term "!x:A. !s. x IN s ==> (x INSERT (s DELETE x) = s)")
-      (funcall SET_TAC nil))))
+      (#`SET_TAC nil))))
 
 (defparameter DELETE_INTER
   (prove
     (tuple
       (parse_term "!s t. !x:A. (s DELETE x) INTER t = (s INTER t) DELETE x")
-      (funcall SET_TAC nil))))
+      (#`SET_TAC nil))))
 
 (defparameter DISJOINT_DELETE_SYM
   (prove
     (tuple
       (parse_term "!s t. !x:A. DISJOINT (s DELETE x) t = DISJOINT (t DELETE x) s")
-      (funcall SET_TAC nil))))
+      (#`SET_TAC nil))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Multiple union.                                                           *)
@@ -4213,40 +4181,39 @@
 
 
 (defparameter UNIONS_0
-  (prove (tuple (parse_term "UNIONS {}:A->bool = {}") (funcall SET_TAC nil))))
+  (prove (tuple (parse_term "UNIONS {}:A->bool = {}") (#`SET_TAC nil))))
 
 (defparameter UNIONS_1
-  (prove (tuple (parse_term "!s:A->bool. UNIONS {s} = s") (funcall SET_TAC nil))))
+  (prove (tuple (parse_term "!s:A->bool. UNIONS {s} = s") (#`SET_TAC nil))))
 
 (defparameter UNIONS_2
-  (prove
-    (tuple (parse_term "!s (t:A->bool). UNIONS {s,t} = s UNION t") (funcall SET_TAC nil))))
+  (prove (tuple (parse_term "!s (t:A->bool). UNIONS {s,t} = s UNION t") (#`SET_TAC nil))))
 
 (defparameter UNIONS_INSERT
   (prove
     (tuple
       (parse_term "!(s:A->bool) u. UNIONS (s INSERT u) = s UNION (UNIONS u)")
-      (funcall SET_TAC nil))))
+      (#`SET_TAC nil))))
 
 (defparameter FORALL_IN_UNIONS
   (prove
     (tuple
       (parse_term
         "!P s. (!x:A. x IN UNIONS s ==> P x) <=> !t x. t IN s /\\ x IN t ==> P x")
-      (funcall SET_TAC nil))))
+      (#`SET_TAC nil))))
 
 (defparameter EXISTS_IN_UNIONS
   (prove
     (tuple
       (parse_term
         "!P s. (?x:A. x IN UNIONS s /\\ P x) <=> (?t x. t IN s /\\ x IN t /\\ P x)")
-      (funcall SET_TAC nil))))
+      (#`SET_TAC nil))))
 
 (defparameter EMPTY_UNIONS
   (prove
     (tuple
       (parse_term "!s. (UNIONS s = {}) <=> !t:A->bool. t IN s ==> t = {}")
-      (funcall SET_TAC nil))))
+      (#`SET_TAC nil))))
 
 (defparameter INTER_UNIONS
   (prove
@@ -4263,25 +4230,25 @@
   (prove
     (tuple
       (parse_term "!f (t:A->bool). UNIONS f SUBSET t <=> !s. s IN f ==> s SUBSET t")
-      (funcall SET_TAC nil))))
+      (#`SET_TAC nil))))
 
 (defparameter SUBSET_UNIONS
   (prove
     (tuple
       (parse_term "!(f:(A->bool)->bool) g. f SUBSET g ==> UNIONS f SUBSET UNIONS g")
-      (funcall SET_TAC nil))))
+      (#`SET_TAC nil))))
 
 (defparameter UNIONS_UNION
   (prove
     (tuple
       (parse_term "!s t:(A->bool)->bool. UNIONS(s UNION t) = (UNIONS s) UNION (UNIONS t)")
-      (funcall SET_TAC nil))))
+      (#`SET_TAC nil))))
 
 (defparameter INTERS_UNION
   (prove
     (tuple
       (parse_term "!s t:(A->bool)->bool. INTERS (s UNION t) = INTERS s INTER INTERS t")
-      (funcall SET_TAC nil))))
+      (#`SET_TAC nil))))
 
 (defparameter UNIONS_MONO
   (prove
@@ -4289,7 +4256,7 @@
       (parse_term
         "!s t:(A->bool)->bool.
     (!x. x IN s ==> ?y. y IN t /\\ x SUBSET y) ==> UNIONS s SUBSET UNIONS t")
-      (funcall SET_TAC nil))))
+      (#`SET_TAC nil))))
 
 (defparameter UNIONS_MONO_IMAGE
   (prove
@@ -4298,7 +4265,7 @@
         "!(f:A->B->bool) g s.
         (!x. x IN s ==> f x SUBSET g x)
         ==> UNIONS(IMAGE f s) SUBSET UNIONS(IMAGE g s)")
-      (funcall SET_TAC nil))))
+      (#`SET_TAC nil))))
 
 (defparameter UNIONS_UNIV
   (prove
@@ -4329,27 +4296,25 @@
 ;; (* ------------------------------------------------------------------------- *)
 
 
-(defparameter INTERS_0
-  (prove (tuple (parse_term "INTERS {} = (:A)") (funcall SET_TAC nil))))
+(defparameter INTERS_0 (prove (tuple (parse_term "INTERS {} = (:A)") (#`SET_TAC nil))))
 
 (defparameter INTERS_1
-  (prove (tuple (parse_term "!s:A->bool. INTERS {s} = s") (funcall SET_TAC nil))))
+  (prove (tuple (parse_term "!s:A->bool. INTERS {s} = s") (#`SET_TAC nil))))
 
 (defparameter INTERS_2
-  (prove
-    (tuple (parse_term "!s (t:A->bool). INTERS {s,t} = s INTER t") (funcall SET_TAC nil))))
+  (prove (tuple (parse_term "!s (t:A->bool). INTERS {s,t} = s INTER t") (#`SET_TAC nil))))
 
 (defparameter INTERS_INSERT
   (prove
     (tuple
       (parse_term "!(s:A->bool) u. INTERS (s INSERT u) = s INTER (INTERS u)")
-      (funcall SET_TAC nil))))
+      (#`SET_TAC nil))))
 
 (defparameter SUBSET_INTERS
   (prove
     (tuple
       (parse_term "!(s:A->bool) f. s SUBSET INTERS f <=> (!t. t IN f ==> s SUBSET t)")
-      (funcall SET_TAC nil))))
+      (#`SET_TAC nil))))
 
 (defparameter INTERS_SUBSET
   (prove
@@ -4357,25 +4322,23 @@
       (parse_term
         "!u s:A->bool.
     ~(u = {}) /\\ (!t. t IN u ==> t SUBSET s) ==> INTERS u SUBSET s")
-      (funcall SET_TAC nil))))
+      (#`SET_TAC nil))))
 
 (defparameter INTERS_SUBSET_STRONG
   (prove
     (tuple
       (parse_term "!u s:A->bool. (?t. t IN u /\\ t SUBSET s) ==> INTERS u SUBSET s")
-      (funcall SET_TAC nil))))
+      (#`SET_TAC nil))))
 
 (defparameter INTERS_ANTIMONO
   (prove
     (tuple
       (parse_term "!(f:(A->bool)->bool) g. g SUBSET f ==> INTERS f SUBSET INTERS g")
-      (funcall SET_TAC nil))))
+      (#`SET_TAC nil))))
 
 (defparameter INTERS_EQ_UNIV
   (prove
-    (tuple
-      (parse_term "!f. INTERS f = (:A) <=> !s. s IN f ==> s = (:A)")
-      (funcall SET_TAC nil))))
+    (tuple (parse_term "!f. INTERS f = (:A) <=> !s. s IN f ==> s = (:A)") (#`SET_TAC nil))))
 
 (defparameter INTERS_ANTIMONO_GEN
   (prove
@@ -4384,7 +4347,7 @@
         "!s (t:(A->bool)->bool).
         (!y. y IN t ==> ?x. x IN s /\\ x SUBSET y)
         ==> INTERS s SUBSET INTERS t")
-      (funcall SET_TAC nil))))
+      (#`SET_TAC nil))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Image.                                                                    *)
@@ -4458,7 +4421,7 @@
         "!f:A->B s t.
         (!x y. x IN s /\\ y IN t /\\ f x = f y ==> x = y)
         ==> IMAGE f (s DIFF t) = IMAGE f s DIFF IMAGE f t")
-      (funcall SET_TAC nil))))
+      (#`SET_TAC nil))))
 
 (defparameter IMAGE_DIFF_INJ_ALT
   (prove
@@ -4467,7 +4430,7 @@
         "!f:A->B s t.
         (!x y. x IN s /\\ y IN s /\\ f x = f y ==> x = y) /\\ t SUBSET s
         ==> IMAGE f (s DIFF t) = IMAGE f s DIFF IMAGE f t")
-      (funcall SET_TAC nil))))
+      (#`SET_TAC nil))))
 
 (defparameter IMAGE_DELETE_INJ
   (prove
@@ -4476,7 +4439,7 @@
         "!f:A->B s a.
         (!x. x IN s /\\ f x = f a ==> x = a)
         ==> IMAGE f (s DELETE a) = IMAGE f s DELETE f a")
-      (funcall SET_TAC nil))))
+      (#`SET_TAC nil))))
 
 (defparameter IMAGE_DELETE_INJ_ALT
   (prove
@@ -4485,7 +4448,7 @@
         "!f:A->B s a.
         (!x y. x IN s /\\ y IN s /\\ f x = f y ==> x = y) /\\ a IN s
         ==> IMAGE f (s DELETE a) = IMAGE f s DELETE f a")
-      (funcall SET_TAC nil))))
+      (#`SET_TAC nil))))
 
 (defparameter IMAGE_EQ_EMPTY
   (prove
@@ -4501,7 +4464,7 @@
       (parse_term
         "!(f:A->B) P s. (!x y. x IN IMAGE f s /\\ y IN IMAGE f s ==> P x y) <=>
                  (!x y. x IN s /\\ y IN s ==> P (f x) (f y))")
-      (funcall SET_TAC nil))))
+      (#`SET_TAC nil))))
 
 (defparameter IMAGE_CONST
   (prove
@@ -4509,9 +4472,9 @@
       (parse_term "!(s:A->bool) (c:B). IMAGE (\\x. c) s = if s = {} then {} else {c}")
       (holai.runtime:proof (REPEAT #'GEN_TAC)
         THEN COND_CASES_TAC
-        THEN (funcall ASM_REWRITE_TAC (cl:cons IMAGE_CLAUSES nil))
+        THEN (#`ASM_REWRITE_TAC (cl:cons IMAGE_CLAUSES nil))
         THEN (REWRITE_TAC (cl:cons EXTENSION (cl:cons IN_IMAGE (cl:cons IN_SING nil))))
-        THEN (funcall ASM_MESON_TAC (cl:cons MEMBER_NOT_EMPTY nil))))))
+        THEN (#`ASM_MESON_TAC (cl:cons MEMBER_NOT_EMPTY nil))))))
 
 (defparameter SIMPLE_IMAGE
   (prove
@@ -4523,9 +4486,7 @@
 
 (defparameter SIMPLE_IMAGE_GEN
   (prove
-    (tuple
-      (parse_term "!(f:A->B) P. {f x | P x} = IMAGE f {x | P x}")
-      (funcall SET_TAC nil))))
+    (tuple (parse_term "!(f:A->B) P. {f x | P x} = IMAGE f {x | P x}") (#`SET_TAC nil))))
 
 (defparameter IMAGE_UNIONS
   (prove
@@ -4537,16 +4498,12 @@
         THEN (ONCE_REWRITE_TAC (cl:cons SWAP_EXISTS_THM nil))
         THEN
           (REWRITE_TAC
-            (cl:cons
-              (funcall GSYM CONJ_ASSOC)
-              (cl:cons UNWIND_THM2 (cl:cons IN_IMAGE nil))))
+            (cl:cons (#`GSYM CONJ_ASSOC) (cl:cons UNWIND_THM2 (cl:cons IN_IMAGE nil))))
         THEN (MESON_TAC nil)))))
 
 (defparameter FUN_IN_IMAGE
   (prove
-    (tuple
-      (parse_term "!(f:A->B) s x. x IN s ==> f(x) IN IMAGE f s")
-      (funcall SET_TAC nil))))
+    (tuple (parse_term "!(f:A->B) s x. x IN s ==> f(x) IN IMAGE f s") (#`SET_TAC nil))))
 
 (defparameter SURJECTIVE_IMAGE_EQ
   (prove
@@ -4555,38 +4512,35 @@
         "!(f:A->B) s t.
         (!y. y IN t ==> ?x. f x = y) /\\ (!x. (f x) IN t <=> x IN s)
         ==> IMAGE f s = t")
-      (funcall SET_TAC nil))))
+      (#`SET_TAC nil))))
 
 (defparameter IMAGE_EQ
   (prove
     (tuple
       (parse_term "!(f:A->B) g s. (!x. x IN s ==> f x = g x) ==> IMAGE f s = IMAGE g s")
-      (funcall SET_TAC nil))))
+      (#`SET_TAC nil))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Misc lemmas.                                                              *)
 ;; (* ------------------------------------------------------------------------- *)
 
 
-(defparameter EMPTY_GSPEC
-  (prove (tuple (parse_term "{x:A | F} = {}") (funcall SET_TAC nil))))
+(defparameter EMPTY_GSPEC (prove (tuple (parse_term "{x:A | F} = {}") (#`SET_TAC nil))))
 
-(defparameter UNIV_GSPEC
-  (prove (tuple (parse_term "{x | T} = (:A)") (funcall SET_TAC nil))))
+(defparameter UNIV_GSPEC (prove (tuple (parse_term "{x | T} = (:A)") (#`SET_TAC nil))))
 
 (defparameter SING_GSPEC
   (prove
     (tuple
       (parse_term "(!a:A. {x | x = a} = {a}) /\\
    (!a:A. {x | a = x} = {a})")
-      (funcall SET_TAC nil))))
+      (#`SET_TAC nil))))
 
 (defparameter SING_ALT
-  (prove
-    (tuple (parse_term "!s:A->bool. (?x. s = {x}) <=> ?!x. x IN s") (funcall SET_TAC nil))))
+  (prove (tuple (parse_term "!s:A->bool. (?x. s = {x}) <=> ?!x. x IN s") (#`SET_TAC nil))))
 
 (defparameter IN_GSPEC
-  (prove (tuple (parse_term "!s:A->bool. {x | x IN s} = s") (funcall SET_TAC nil))))
+  (prove (tuple (parse_term "!s:A->bool. {x | x IN s} = s") (#`SET_TAC nil))))
 
 (defparameter IN_ELIM_PAIR_THM
   (prove
@@ -4639,15 +4593,13 @@
   (prove
     (tuple
       (parse_term "!P:A->bool. UNIONS {{x} | P x} = {x | P x}")
-      (holai.runtime:proof (REWRITE_TAC (cl:cons UNIONS_GSPEC nil))
-        THEN (funcall SET_TAC nil)))))
+      (holai.runtime:proof (REWRITE_TAC (cl:cons UNIONS_GSPEC nil)) THEN (#`SET_TAC nil)))))
 
 (defparameter UNIONS_SINGS
   (prove
     (tuple
       (parse_term "!s:A->bool. UNIONS {{x} | x IN s} = s")
-      (holai.runtime:proof (REWRITE_TAC (cl:cons UNIONS_GSPEC nil))
-        THEN (funcall SET_TAC nil)))))
+      (holai.runtime:proof (REWRITE_TAC (cl:cons UNIONS_GSPEC nil)) THEN (#`SET_TAC nil)))))
 
 (defparameter IMAGE_INTERS
   (prove
@@ -4657,22 +4609,20 @@
         ~(s = {}) /\\
         (!x y. x IN UNIONS s /\\ y IN UNIONS s /\\ f x = f y ==> x = y)
         ==> IMAGE f (INTERS s) = INTERS(IMAGE (IMAGE f) s)")
-      (holai.runtime:proof (REWRITE_TAC (cl:cons INTERS_IMAGE nil))
-        THEN (funcall SET_TAC nil)))))
+      (holai.runtime:proof (REWRITE_TAC (cl:cons INTERS_IMAGE nil)) THEN (#`SET_TAC nil)))))
 
 (defparameter DIFF_INTERS
   (prove
     (tuple
       (parse_term "!(u:A->bool) s. u DIFF INTERS s = UNIONS {u DIFF t | t IN s}")
-      (holai.runtime:proof (REWRITE_TAC (cl:cons UNIONS_GSPEC nil))
-        THEN (funcall SET_TAC nil)))))
+      (holai.runtime:proof (REWRITE_TAC (cl:cons UNIONS_GSPEC nil)) THEN (#`SET_TAC nil)))))
 
 (defparameter INTERS_UNIONS
   (prove
     (tuple
       (parse_term "!s. INTERS s = UNIV DIFF (UNIONS {(:A) DIFF t | t IN s})")
-      (holai.runtime:proof (REWRITE_TAC (cl:cons (funcall GSYM DIFF_INTERS) nil))
-        THEN (funcall SET_TAC nil)))))
+      (holai.runtime:proof (REWRITE_TAC (cl:cons (#`GSYM DIFF_INTERS) nil))
+        THEN (#`SET_TAC nil)))))
 
 (defparameter UNIONS_INTERS
   (prove
@@ -4693,23 +4643,20 @@
   (prove
     (tuple
       (parse_term "!s t:A->bool. UNIONS s DIFF t = UNIONS {x DIFF t | x IN s}")
-      (holai.runtime:proof (REWRITE_TAC (cl:cons UNIONS_GSPEC nil))
-        THEN (funcall SET_TAC nil)))))
+      (holai.runtime:proof (REWRITE_TAC (cl:cons UNIONS_GSPEC nil)) THEN (#`SET_TAC nil)))))
 
 (defparameter DIFF_UNIONS
   (prove
     (tuple
       (parse_term "!(u:A->bool) s. u DIFF UNIONS s = u INTER INTERS {u DIFF t | t IN s}")
-      (holai.runtime:proof (REWRITE_TAC (cl:cons INTERS_GSPEC nil))
-        THEN (funcall SET_TAC nil)))))
+      (holai.runtime:proof (REWRITE_TAC (cl:cons INTERS_GSPEC nil)) THEN (#`SET_TAC nil)))))
 
 (defparameter DIFF_UNIONS_NONEMPTY
   (prove
     (tuple
       (parse_term
         "!(u:A->bool) s. ~(s = {}) ==> u DIFF UNIONS s = INTERS {u DIFF t | t IN s}")
-      (holai.runtime:proof (REWRITE_TAC (cl:cons INTERS_GSPEC nil))
-        THEN (funcall SET_TAC nil)))))
+      (holai.runtime:proof (REWRITE_TAC (cl:cons INTERS_GSPEC nil)) THEN (#`SET_TAC nil)))))
 
 (defparameter INTERS_OVER_UNIONS
   (prove
@@ -4726,7 +4673,7 @@
               SIMPLE_IMAGE
               (cl:cons INTERS_IMAGE (cl:cons UNIONS_IMAGE (cl:cons UNIONS_GSPEC nil)))))
         THEN (REWRITE_TAC (cl:cons IN_UNIONS (cl:cons IN_ELIM_THM nil)))
-        THEN (funcall X_GEN_TAC (parse_term "b:B"))
+        THEN (#`X_GEN_TAC (parse_term "b:B"))
         THEN (REWRITE_TAC (cl:cons RIGHT_IMP_EXISTS_THM (cl:cons SKOLEM_THM nil)))
         THEN (MESON_TAC nil)))))
 
@@ -4743,8 +4690,7 @@
       (holai.runtime:proof (REPEAT #'STRIP_TAC)
         THEN COND_CASES_TAC
         THEN
-          (funcall
-            ASM_REWRITE_TAC
+          (#`ASM_REWRITE_TAC
             (cl:cons INTERS_0 (cl:cons INTER_UNIV (cl:cons INTERS_GSPEC nil))))
         THEN (ASM SET_TAC nil)))))
 
@@ -4766,12 +4712,11 @@
         THEN #'GEN_TAC
         THEN
           (ONCE_REWRITE_TAC
-            (cl:cons (funcall TAUT (parse_term "(p <=> q) <=> (~p <=> ~q)")) nil))
+            (cl:cons (#`TAUT (parse_term "(p <=> q) <=> (~p <=> ~q)")) nil))
         THEN
           (REWRITE_TAC
             (cl:cons NOT_FORALL_THM (cl:cons NOT_IMP (cl:cons NOT_EXISTS_THM nil))))
-        THEN
-          (REWRITE_TAC (cl:cons AND_FORALL_THM (cl:cons (funcall GSYM SKOLEM_THM) nil)))
+        THEN (REWRITE_TAC (cl:cons AND_FORALL_THM (cl:cons (#`GSYM SKOLEM_THM) nil)))
         THEN (MESON_TAC nil)))))
 
 (defparameter UNIONS_EQ_INTERS
@@ -4784,27 +4729,26 @@
               (parse_term
                 "(?s. f = {s}) <=> ~(f = {}) /\\ !s t. s IN f /\\ t IN f ==> s = t"))
             nil))
-        THEN (funcall SET_TAC nil)))))
+        THEN (#`SET_TAC nil)))))
 
 (defparameter EXISTS_UNIQUE_UNIONS_INTERS
   (prove
     (tuple
       (parse_term "!P. (?!s:A->bool. P s) <=> UNIONS {s | P s} = INTERS {s | P s}")
       (holai.runtime:proof (REWRITE_TAC (cl:cons UNIONS_EQ_INTERS nil))
-        THEN (funcall SET_TAC nil)))))
+        THEN (#`SET_TAC nil)))))
 
 (defparameter IMAGE_INTERS_SUBSET
   (prove
     (tuple
       (parse_term "!(f:A->B) g. IMAGE f (INTERS g) SUBSET INTERS (IMAGE (IMAGE f) g)")
-      (holai.runtime:proof (REWRITE_TAC (cl:cons INTERS_IMAGE nil))
-        THEN (funcall SET_TAC nil)))))
+      (holai.runtime:proof (REWRITE_TAC (cl:cons INTERS_IMAGE nil)) THEN (#`SET_TAC nil)))))
 
 (defparameter IMAGE_INTER_SUBSET
   (prove
     (tuple
       (parse_term "!(f:A->B) s t. IMAGE f (s INTER t) SUBSET IMAGE f s INTER IMAGE f t")
-      (funcall SET_TAC nil))))
+      (#`SET_TAC nil))))
 
 (defparameter IMAGE_INTER_SATURATED_GEN
   (prove
@@ -4814,7 +4758,7 @@
         {x | x IN u /\\ f(x) IN IMAGE f s} SUBSET s /\\ t SUBSET u \\/
         {x | x IN u /\\ f(x) IN IMAGE f t} SUBSET t /\\ s SUBSET u
         ==> IMAGE f (s INTER t) = IMAGE f s INTER IMAGE f t")
-      (funcall SET_TAC nil))))
+      (#`SET_TAC nil))))
 
 (defparameter IMAGE_INTERS_SATURATED_GEN
   (prove
@@ -4844,13 +4788,12 @@
                       (cl:cons IN_ELIM_THM (cl:cons NOT_IN_EMPTY nil))))
                 THEN (ONCE_REWRITE_TAC (cl:cons SWAP_FORALL_THM nil))
                 THEN (REWRITE_TAC (cl:cons IMP_CONJ (cl:cons FORALL_UNWIND_THM2 nil)))
-                THEN (funcall SET_TAC nil))))))
+                THEN (#`SET_TAC nil))))))
         (cl:declare (cl:ignorable lemma))
         (holai.runtime:proof (REPEAT #'GEN_TAC)
           THEN (ASM_CASES_TAC (parse_term "(s:A->bool) IN g"))
           THEN
-            (funcall
-              ASM_SIMP_TAC
+            (#`ASM_SIMP_TAC
               (cl:cons (SET_RULE (parse_term "~(s IN g) ==> g DELETE s = g")) nil))
           THENL (cl:cons #'ALL_TAC (cl:cons (MESON_TAC (cl:cons lemma nil)) nil))
           THEN (REWRITE_TAC (cl:cons CONJ_ASSOC nil))
@@ -4864,8 +4807,7 @@
           THEN #'STRIP_TAC
           THEN (ASM_CASES_TAC (parse_term "g DELETE (s:A->bool) = {}"))
           THEN
-            (funcall
-              ASM_REWRITE_TAC
+            (#`ASM_REWRITE_TAC
               (cl:cons IMAGE_CLAUSES (cl:cons INTERS_0 (cl:cons INTERS_1 nil))))
           THEN (REWRITE_TAC (cl:cons IMAGE_CLAUSES (cl:cons INTERS_INSERT nil)))
           THEN
@@ -4878,7 +4820,7 @@
           THENL
             (cl:cons
               (holai.runtime:proof (MATCH_MP_TAC IMAGE_INTER_SATURATED_GEN)
-                THEN (funcall EXISTS_TAC (parse_term "u:A->bool"))
+                THEN (#`EXISTS_TAC (parse_term "u:A->bool"))
                 THEN (ASM SET_TAC nil))
               (cl:cons
                 (holai.runtime:proof (MATCH_MP_TAC lemma) THEN (ASM SET_TAC nil))
@@ -4891,7 +4833,7 @@
         "!f:A->B s t.
         {x | f(x) IN IMAGE f s} SUBSET s \\/ {x | f(x) IN IMAGE f t} SUBSET t
          ==> IMAGE f (s INTER t) = IMAGE f s INTER IMAGE f t")
-      (funcall SET_TAC nil))))
+      (#`SET_TAC nil))))
 
 (defparameter IMAGE_INTERS_SATURATED
   (prove
@@ -4906,7 +4848,7 @@
           (MAP_EVERY
             EXISTS_TAC
             (cl:cons (parse_term "s:A->bool") (cl:cons (parse_term "(:A)") nil)))
-        THEN (funcall ASM_REWRITE_TAC (cl:cons IN_UNIV (cl:cons SUBSET_UNIV nil)))))))
+        THEN (#`ASM_REWRITE_TAC (cl:cons IN_UNIV (cl:cons SUBSET_UNIV nil)))))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Stronger form of induction is sometimes handy.                            *)
@@ -4926,20 +4868,20 @@
           (SUBGOAL_THEN (parse_term "!s:A->bool. FINITE s ==> FINITE s /\\ P s") #'MP_TAC)
         THENL (cl:cons #'ALL_TAC (cl:cons (MESON_TAC nil) nil))
         THEN (MATCH_MP_TAC FINITE_INDUCT)
-        THEN (funcall ASM_SIMP_TAC (cl:cons FINITE_RULES nil))
+        THEN (#`ASM_SIMP_TAC (cl:cons FINITE_RULES nil))
         THEN (REPEAT #'STRIP_TAC)
-        THEN (funcall ASM_REWRITE_TAC nil)
+        THEN (#`ASM_REWRITE_TAC nil)
         THEN (ASM_CASES_TAC (parse_term "x:A IN s"))
         THENL
           (cl:cons
             (holai.runtime:proof (SUBGOAL_THEN
                 (parse_term "x:A INSERT s = s")
-                (lambdac (th) (funcall ASM_REWRITE_TAC (cl:cons th nil))))
+                (lambdac (th) (#`ASM_REWRITE_TAC (cl:cons th nil))))
               THEN (UNDISCH_TAC (parse_term "x:A IN s"))
-              THEN (funcall SET_TAC nil))
+              THEN (#`SET_TAC nil))
             (cl:cons
               (holai.runtime:proof (FIRST_ASSUM #'MATCH_MP_TAC)
-                THEN (funcall ASM_REWRITE_TAC nil))
+                THEN (#`ASM_REWRITE_TAC nil))
               nil))))))
 
 ;; (* ------------------------------------------------------------------------- *)
@@ -4986,7 +4928,7 @@
     (!y x. x IN s /\\ (y = (f:A->B) x) ==> (g y = x))"))))
         (cl:declare (cl:ignorable lemma))
         (holai.runtime:proof (REWRITE_TAC
-            (cl:cons lemma (cl:cons (funcall GSYM SKOLEM_THM) nil)))
+            (cl:cons lemma (cl:cons (#`GSYM SKOLEM_THM) nil)))
           THEN (MESON_TAC nil))))))
 
 (defparameter BIJECTIVE_ON_LEFT_RIGHT_INVERSE
@@ -5009,7 +4951,7 @@
         THEN AP_TERM_TAC
         THEN #'ABS_TAC
         THEN #'EQ_TAC
-        THEN (funcall ASM_MESON_TAC nil)))))
+        THEN (#`ASM_MESON_TAC nil)))))
 
 (defparameter SURJECTIVE_RIGHT_INVERSE
   (prove
@@ -5062,7 +5004,7 @@
               (parse_term
                 "(!x. P x ==> f(x) = g(k x)) <=> (!y x. P x /\\ y = k x ==> f x = g y)"))
             nil))
-        THEN (REWRITE_TAC (cl:cons (funcall GSYM SKOLEM_THM) nil))
+        THEN (REWRITE_TAC (cl:cons (#`GSYM SKOLEM_THM) nil))
         THEN (MESON_TAC nil)))))
 
 (defparameter FUNCTION_FACTORS_LEFT
@@ -5075,8 +5017,7 @@
           (cl:cons
             o_THM
             (cl:cons
-              (funcall
-                GSYM
+              (#`GSYM
                 (REWRITE_RULE nil (ISPEC (parse_term "\\x. T") FUNCTION_FACTORS_LEFT_GEN)))
               nil)))))))
 
@@ -5087,7 +5028,7 @@
         "!P (f:A->C) (g:B->C).
         (!x. P x ==> ?y. g(y) = f(x)) <=>
         (?h. !x. P x ==> f(x) = g(h x))")
-      (holai.runtime:proof (REWRITE_TAC (cl:cons (funcall GSYM SKOLEM_THM) nil))
+      (holai.runtime:proof (REWRITE_TAC (cl:cons (#`GSYM SKOLEM_THM) nil))
         THEN (MESON_TAC nil)))))
 
 (defparameter FUNCTION_FACTORS_RIGHT
@@ -5095,7 +5036,7 @@
     (tuple
       (parse_term "!(f:A->C) (g:B->C). (!x. ?y. g(y) = f(x)) <=> ?h. f = g o h")
       (holai.runtime:proof (REWRITE_TAC
-          (cl:cons FUN_EQ_THM (cl:cons o_THM (cl:cons (funcall GSYM SKOLEM_THM) nil))))
+          (cl:cons FUN_EQ_THM (cl:cons o_THM (cl:cons (#`GSYM SKOLEM_THM) nil))))
         THEN (MESON_TAC nil)))))
 
 (defparameter SURJECTIVE_FORALL_THM
@@ -5105,8 +5046,7 @@
       (holai.runtime:proof #'GEN_TAC
         THEN #'EQ_TAC
         THENL (cl:cons (MESON_TAC nil) (cl:cons #'ALL_TAC nil))
-        THEN
-          (DISCH_THEN (lambdac (th) (ONCE_REWRITE_TAC (cl:cons (funcall GSYM th) nil))))
+        THEN (DISCH_THEN (lambdac (th) (ONCE_REWRITE_TAC (cl:cons (#`GSYM th) nil))))
         THEN (MESON_TAC nil)))))
 
 (defparameter SURJECTIVE_EXISTS_THM
@@ -5116,8 +5056,7 @@
       (holai.runtime:proof #'GEN_TAC
         THEN #'EQ_TAC
         THENL (cl:cons (MESON_TAC nil) (cl:cons #'ALL_TAC nil))
-        THEN
-          (DISCH_THEN (o #'MP_TAC (funcall SPEC (parse_term "\\y:B. !x:A. ~(f x = y)"))))
+        THEN (DISCH_THEN (o #'MP_TAC (#`SPEC (parse_term "\\y:B. !x:A. ~(f x = y)"))))
         THEN (MESON_TAC nil)))))
 
 (defparameter SURJECTIVE_IMAGE_THM
@@ -5131,7 +5070,7 @@
         THENL
           (cl:cons
             #'ALL_TAC
-            (cl:cons (DISCH_THEN (o #'MP_TAC (funcall SPEC (parse_term "\\y:B. T")))) nil))
+            (cl:cons (DISCH_THEN (o #'MP_TAC (#`SPEC (parse_term "\\y:B. T")))) nil))
         THEN (MESON_TAC nil)))))
 
 (defparameter IMAGE_INJECTIVE_IMAGE_OF_SUBSET
@@ -5150,11 +5089,10 @@
         THENL
           (cl:cons
             (holai.runtime:proof (REWRITE_TAC
-                (cl:cons (funcall GSYM SURJECTIVE_ON_RIGHT_INVERSE) nil))
-              THEN (funcall SET_TAC nil))
+                (cl:cons (#`GSYM SURJECTIVE_ON_RIGHT_INVERSE) nil))
+              THEN (#`SET_TAC nil))
             (cl:cons
-              (holai.runtime:proof (funcall
-                  EXISTS_TAC
+              (holai.runtime:proof (#`EXISTS_TAC
                   (parse_term "IMAGE (g:B->A) (IMAGE (f:A->B) s)"))
                 THEN (ASM SET_TAC nil))
               nil))))))
@@ -5181,18 +5119,18 @@
           (cl:cons
             (MESON_TAC (cl:cons SUBSET_EMPTY (cl:cons FINITE_RULES nil)))
             (cl:cons #'ALL_TAC nil))
-        THEN (funcall X_GEN_TAC (parse_term "x:A"))
-        THEN (funcall X_GEN_TAC (parse_term "u:A->bool"))
+        THEN (#`X_GEN_TAC (parse_term "x:A"))
+        THEN (#`X_GEN_TAC (parse_term "u:A->bool"))
         THEN DISCH_TAC
-        THEN (funcall X_GEN_TAC (parse_term "t:A->bool"))
+        THEN (#`X_GEN_TAC (parse_term "t:A->bool"))
         THEN DISCH_TAC
         THEN (SUBGOAL_THEN (parse_term "FINITE((x:A) INSERT (t DELETE x))") ASSUME_TAC)
         THENL
           (cl:cons
-            (holai.runtime:proof (MATCH_MP_TAC (funcall CONJUNCT2 FINITE_RULES))
+            (holai.runtime:proof (MATCH_MP_TAC (#`CONJUNCT2 FINITE_RULES))
               THEN (FIRST_ASSUM #'MATCH_MP_TAC)
               THEN (UNDISCH_TAC (parse_term "t SUBSET (x:A INSERT u)"))
-              THEN (funcall SET_TAC nil))
+              THEN (#`SET_TAC nil))
             (cl:cons
               (holai.runtime:proof (ASM_CASES_TAC (parse_term "x:A IN t"))
                 THENL
@@ -5203,13 +5141,13 @@
                       THENL
                         (cl:cons
                           (holai.runtime:proof (UNDISCH_TAC (parse_term "x:A IN t"))
-                            THEN (funcall SET_TAC nil))
-                          (cl:cons (funcall ASM_REWRITE_TAC nil) nil)))
+                            THEN (#`SET_TAC nil))
+                          (cl:cons (#`ASM_REWRITE_TAC nil) nil)))
                     (cl:cons
                       (holai.runtime:proof (FIRST_ASSUM #'MATCH_MP_TAC)
                         THEN (UNDISCH_TAC (parse_term "t SUBSET x:A INSERT u"))
                         THEN (UNDISCH_TAC (parse_term "~(x:A IN t)"))
-                        THEN (funcall SET_TAC nil))
+                        THEN (#`SET_TAC nil))
                       nil)))
               nil))))))
 
@@ -5232,9 +5170,7 @@
             (parse_term "!x s t. (x:A INSERT s) UNION t = x INSERT (s UNION t)")
             (lambdac (th) (REWRITE_TAC (cl:cons th nil))))
         THENL
-          (cl:cons
-            (funcall SET_TAC nil)
-            (cl:cons (MESON_TAC (cl:cons FINITE_RULES nil)) nil))))))
+          (cl:cons (#`SET_TAC nil) (cl:cons (MESON_TAC (cl:cons FINITE_RULES nil)) nil))))))
 
 (defparameter FINITE_UNION
   (prove
@@ -5246,10 +5182,10 @@
           (cl:cons
             (holai.runtime:proof (REPEAT #'STRIP_TAC)
               THEN (MATCH_MP_TAC FINITE_SUBSET)
-              THEN (funcall EXISTS_TAC (parse_term "(s:A->bool) UNION t"))
-              THEN (funcall ASM_REWRITE_TAC nil)
-              THEN (funcall SET_TAC nil))
-            (cl:cons (funcall MATCH_ACCEPT_TAC FINITE_UNION_IMP) nil))))))
+              THEN (#`EXISTS_TAC (parse_term "(s:A->bool) UNION t"))
+              THEN (#`ASM_REWRITE_TAC nil)
+              THEN (#`SET_TAC nil))
+            (cl:cons (#`MATCH_ACCEPT_TAC FINITE_UNION_IMP) nil))))))
 
 (defparameter FINITE_INTER
   (prove
@@ -5267,12 +5203,12 @@
         THENL
           (cl:cons
             (holai.runtime:proof (MATCH_MP_TAC FINITE_SUBSET)
-              THEN (funcall EXISTS_TAC (parse_term "x:A INSERT s"))
-              THEN (funcall ASM_REWRITE_TAC nil)
-              THEN (funcall SET_TAC nil))
+              THEN (#`EXISTS_TAC (parse_term "x:A INSERT s"))
+              THEN (#`ASM_REWRITE_TAC nil)
+              THEN (#`SET_TAC nil))
             (cl:cons
-              (holai.runtime:proof (MATCH_MP_TAC (funcall CONJUNCT2 FINITE_RULES))
-                THEN (funcall ASM_REWRITE_TAC nil))
+              (holai.runtime:proof (MATCH_MP_TAC (#`CONJUNCT2 FINITE_RULES))
+                THEN (#`ASM_REWRITE_TAC nil))
               nil))))))
 
 (defparameter FINITE_SING
@@ -5287,7 +5223,7 @@
       (parse_term "!(s:A->bool) x. FINITE s ==> FINITE (s DELETE x)")
       (holai.runtime:proof (REPEAT #'STRIP_TAC)
         THEN (MATCH_MP_TAC FINITE_SUBSET)
-        THEN (funcall ASM_REWRITE_TAC nil)
+        THEN (#`ASM_REWRITE_TAC nil)
         THEN (ASM SET_TAC nil)))))
 
 (defparameter FINITE_DELETE
@@ -5306,13 +5242,13 @@
                   (GEN_REWRITE_TAC (o #'RAND_CONV #'RAND_CONV) (cl:cons th nil))))
               THEN (REWRITE_TAC (cl:cons FINITE_INSERT nil))
               THEN (POP_ASSUM #'MP_TAC)
-              THEN (funcall SET_TAC nil))
+              THEN (#`SET_TAC nil))
             (cl:cons
               (holai.runtime:proof (SUBGOAL_THEN
                   (parse_term "s DELETE x:A = s")
                   (lambdac (th) (REWRITE_TAC (cl:cons th nil))))
                 THEN (POP_ASSUM #'MP_TAC)
-                THEN (funcall SET_TAC nil))
+                THEN (#`SET_TAC nil))
               nil))))))
 
 (defparameter FINITE_FINITE_UNIONS
@@ -5380,10 +5316,10 @@
         THEN
           (FIRST_X_ASSUM
             (o #'MP_TAC (GEN_REWRITE_RULE #'I (cl:cons INJECTIVE_ON_LEFT_INVERSE nil))))
-        THEN (DISCH_THEN (funcall X_CHOOSE_TAC (parse_term "g:B->A")))
+        THEN (DISCH_THEN (#`X_CHOOSE_TAC (parse_term "g:B->A")))
         THEN (MATCH_MP_TAC FINITE_SUBSET)
-        THEN (funcall EXISTS_TAC (parse_term "IMAGE (g:B->A) A"))
-        THEN (funcall ASM_SIMP_TAC (cl:cons FINITE_IMAGE nil))
+        THEN (#`EXISTS_TAC (parse_term "IMAGE (g:B->A) A"))
+        THEN (#`ASM_SIMP_TAC (cl:cons FINITE_IMAGE nil))
         THEN (ASM SET_TAC nil)))))
 
 (defparameter FINITE_FINITE_PREIMAGE_GENERAL
@@ -5406,10 +5342,9 @@
             (holai.runtime:proof (GEN_REWRITE_TAC #'I (cl:cons EXTENSION nil))
               THEN (REWRITE_TAC (cl:cons IN_ELIM_THM (cl:cons IN_UNIONS nil)))
               THEN (REWRITE_TAC (cl:cons EXISTS_IN_IMAGE nil))
-              THEN (funcall SET_TAC nil))
+              THEN (#`SET_TAC nil))
             (cl:cons
-              (funcall
-                ASM_SIMP_TAC
+              (#`ASM_SIMP_TAC
                 (cl:cons
                   FINITE_FINITE_UNIONS
                   (cl:cons FINITE_IMAGE (cl:cons FORALL_IN_IMAGE nil))))
@@ -5442,13 +5377,13 @@
         ==> (FINITE(IMAGE f s) <=> FINITE s)")
       (holai.runtime:proof (REPEAT #'STRIP_TAC)
         THEN #'EQ_TAC
-        THEN (funcall ASM_SIMP_TAC (cl:cons FINITE_IMAGE nil))
+        THEN (#`ASM_SIMP_TAC (cl:cons FINITE_IMAGE nil))
         THEN (POP_ASSUM #'MP_TAC)
         THEN (REWRITE_TAC (cl:cons IMP_IMP nil))
         THEN (DISCH_THEN (o #'MP_TAC (MATCH_MP FINITE_IMAGE_INJ_GENERAL)))
         THEN (MATCH_MP_TAC EQ_IMP)
         THEN AP_TERM_TAC
-        THEN (funcall SET_TAC nil)))))
+        THEN (#`SET_TAC nil)))))
 
 (defparameter FINITE_IMAGE_INJ
   (prove
@@ -5481,7 +5416,7 @@
         THEN
           (FIRST_X_ASSUM
             (o #'MP_TAC (GEN_REWRITE_RULE #'I (cl:cons FUNCTION_FACTORS_LEFT_GEN nil))))
-        THEN (DISCH_THEN (funcall X_CHOOSE_TAC (parse_term "h:B->C")))
+        THEN (DISCH_THEN (#`X_CHOOSE_TAC (parse_term "h:B->C")))
         THEN
           (SUBGOAL_THEN
             (parse_term "IMAGE g s = IMAGE (h:B->C) (IMAGE (f:A->B) s)")
@@ -5490,7 +5425,7 @@
           (cl:cons
             (ASM SET_TAC nil)
             (cl:cons
-              (funcall ASM_MESON_TAC (cl:cons FINITE_IMAGE (cl:cons FINITE_SUBSET nil)))
+              (#`ASM_MESON_TAC (cl:cons FINITE_IMAGE (cl:cons FINITE_SUBSET nil)))
               nil))))))
 
 (defparameter INFINITE_IMAGE
@@ -5502,7 +5437,7 @@
         ==> INFINITE (IMAGE f s)")
       (holai.runtime:proof (REPEAT #'GEN_TAC)
         THEN (REWRITE_TAC (cl:cons IMP_CONJ_ALT (cl:cons INJECTIVE_ON_LEFT_INVERSE nil)))
-        THEN (DISCH_THEN (funcall X_CHOOSE_TAC (parse_term "g:B->A")))
+        THEN (DISCH_THEN (#`X_CHOOSE_TAC (parse_term "g:B->A")))
         THEN (REWRITE_TAC (cl:cons INFINITE (cl:cons CONTRAPOS_THM nil)))
         THEN DISCH_TAC
         THEN (SUBGOAL_THEN (parse_term "s = IMAGE (g:B->A) (IMAGE f s)") #'SUBST1_TAC)
@@ -5511,7 +5446,7 @@
             (ASM SET_TAC nil)
             (cl:cons
               (holai.runtime:proof (MATCH_MP_TAC FINITE_IMAGE)
-                THEN (funcall ASM_REWRITE_TAC nil))
+                THEN (#`ASM_REWRITE_TAC nil))
               nil))))))
 
 (defparameter INFINITE_IMAGE_INJ
@@ -5533,14 +5468,13 @@
     (tuple
       (parse_term "!s:A->bool t. INFINITE(s) /\\ FINITE(t) ==> INFINITE(s DIFF t)")
       (holai.runtime:proof (REPEAT #'GEN_TAC)
-        THEN
-          (MATCH_MP_TAC (funcall TAUT (parse_term "(b /\\ ~c ==> ~a) ==> a /\\ b ==> c")))
+        THEN (MATCH_MP_TAC (#`TAUT (parse_term "(b /\\ ~c ==> ~a) ==> a /\\ b ==> c")))
         THEN (REWRITE_TAC (cl:cons INFINITE nil))
         THEN #'STRIP_TAC
         THEN (MATCH_MP_TAC FINITE_SUBSET)
-        THEN (funcall EXISTS_TAC (parse_term "(t:A->bool) UNION (s DIFF t)"))
-        THEN (funcall ASM_REWRITE_TAC (cl:cons FINITE_UNION nil))
-        THEN (funcall SET_TAC nil)))))
+        THEN (#`EXISTS_TAC (parse_term "(t:A->bool) UNION (s DIFF t)"))
+        THEN (#`ASM_REWRITE_TAC (cl:cons FINITE_UNION nil))
+        THEN (#`SET_TAC nil)))))
 
 (defparameter SUBSET_IMAGE_INJ
   (prove
@@ -5564,8 +5498,8 @@
                   (parse_term
                     "s SUBSET IMAGE f t ==> !x. x IN s ==> ?y. y IN t /\\ f y = x")))))
         THEN (REWRITE_TAC (cl:cons SURJECTIVE_ON_RIGHT_INVERSE nil))
-        THEN (DISCH_THEN (funcall X_CHOOSE_TAC (parse_term "g:B->A")))
-        THEN (funcall EXISTS_TAC (parse_term "IMAGE (g:B->A) s"))
+        THEN (DISCH_THEN (#`X_CHOOSE_TAC (parse_term "g:B->A")))
+        THEN (#`EXISTS_TAC (parse_term "IMAGE (g:B->A) s"))
         THEN (ASM SET_TAC nil)))))
 
 (defparameter SUBSET_IMAGE
@@ -5578,7 +5512,7 @@
         THENL (cl:cons #'ALL_TAC (cl:cons (MESON_TAC (cl:cons IMAGE_SUBSET nil)) nil))
         THEN (REWRITE_TAC (cl:cons SUBSET_IMAGE_INJ nil))
         THEN (MATCH_MP_TAC MONO_EXISTS)
-        THEN (funcall SET_TAC nil)))))
+        THEN (#`SET_TAC nil)))))
 
 (defparameter EXISTS_SUBSET_IMAGE
   (prove
@@ -5626,7 +5560,7 @@
           (REWRITE_TAC
             (cl:cons
               NOT_IMP
-              (cl:cons EXISTS_SUBSET_IMAGE_INJ (cl:cons (funcall GSYM CONJ_ASSOC) nil))))))))
+              (cl:cons EXISTS_SUBSET_IMAGE_INJ (cl:cons (#`GSYM CONJ_ASSOC) nil))))))))
 
 (defparameter EXISTS_FINITE_SUBSET_IMAGE_INJ
   (prove
@@ -5638,7 +5572,7 @@
          (!x y. x IN t /\\ y IN t ==> (f x = f y <=> x = y)) /\\
          P (IMAGE f t))")
       (holai.runtime:proof (ONCE_REWRITE_TAC
-          (cl:cons (funcall TAUT (parse_term "p /\\ q /\\ r <=> q /\\ p /\\ r")) nil))
+          (cl:cons (#`TAUT (parse_term "p /\\ q /\\ r <=> q /\\ p /\\ r")) nil))
         THEN (REPEAT #'GEN_TAC)
         THEN (REWRITE_TAC (cl:cons EXISTS_SUBSET_IMAGE_INJ nil))
         THEN AP_TERM_TAC
@@ -5662,9 +5596,7 @@
           (REWRITE_TAC
             (cl:cons
               NOT_IMP
-              (cl:cons
-                EXISTS_FINITE_SUBSET_IMAGE_INJ
-                (cl:cons (funcall GSYM CONJ_ASSOC) nil))))))))
+              (cl:cons EXISTS_FINITE_SUBSET_IMAGE_INJ (cl:cons (#`GSYM CONJ_ASSOC) nil))))))))
 
 (defparameter EXISTS_FINITE_SUBSET_IMAGE
   (prove
@@ -5697,7 +5629,7 @@
           (REWRITE_TAC
             (cl:cons
               NOT_IMP
-              (cl:cons (funcall GSYM CONJ_ASSOC) (cl:cons EXISTS_FINITE_SUBSET_IMAGE nil))))))))
+              (cl:cons (#`GSYM CONJ_ASSOC) (cl:cons EXISTS_FINITE_SUBSET_IMAGE nil))))))))
 
 (defparameter FINITE_SUBSET_IMAGE
   (prove
@@ -5712,7 +5644,7 @@
           (cl:cons
             #'ALL_TAC
             (cl:cons
-              (funcall ASM_MESON_TAC (cl:cons FINITE_IMAGE (cl:cons IMAGE_SUBSET nil)))
+              (#`ASM_MESON_TAC (cl:cons FINITE_IMAGE (cl:cons IMAGE_SUBSET nil)))
               nil))
         THEN (SPEC_TAC (tuple (parse_term "t:B->bool") (parse_term "t:B->bool")))
         THEN (REWRITE_TAC (cl:cons FORALL_FINITE_SUBSET_IMAGE nil))
@@ -5758,7 +5690,7 @@
               SUBSET_IMAGE_INJ))
         THEN (REWRITE_TAC (cl:cons SUBSET_REFL nil))
         THEN (MATCH_MP_TAC MONO_EXISTS)
-        THEN (funcall ASM_METIS_TAC (cl:cons FINITE_IMAGE_INJ_EQ nil))))))
+        THEN (#`ASM_METIS_TAC (cl:cons FINITE_IMAGE_INJ_EQ nil))))))
 
 (defparameter FINITE_DIFF
   (prove
@@ -5787,7 +5719,7 @@
         THEN (ONCE_REWRITE_TAC (cl:cons IMP_CONJ nil))
         THEN (MATCH_MP_TAC FINITE_INDUCT_STRONG)
         THEN (REWRITE_TAC (cl:cons NOT_IN_EMPTY nil))
-        THEN (funcall SET_TAC nil)))))
+        THEN (#`SET_TAC nil)))))
 
 (defparameter UNIONS_MAXIMAL_SETS
   (prove
@@ -5798,14 +5730,14 @@
            UNIONS f")
       (holai.runtime:proof (SIMP_TAC
           (cl:cons
-            (funcall GSYM SUBSET_ANTISYM_EQ)
+            (#`GSYM SUBSET_ANTISYM_EQ)
             (cl:cons SUBSET_UNIONS (cl:cons SUBSET_RESTRICT nil))))
         THEN (REPEAT #'STRIP_TAC)
         THEN (MATCH_MP_TAC UNIONS_MONO)
-        THEN (funcall X_GEN_TAC (parse_term "s:A->bool"))
+        THEN (#`X_GEN_TAC (parse_term "s:A->bool"))
         THEN DISCH_TAC
         THEN (REWRITE_TAC (cl:cons EXISTS_IN_GSPEC nil))
-        THEN (GEN_REWRITE_TAC #'I (cl:cons (funcall TAUT (parse_term "p <=> ~ ~ p")) nil))
+        THEN (GEN_REWRITE_TAC #'I (cl:cons (#`TAUT (parse_term "p <=> ~ ~ p")) nil))
         THEN DISCH_TAC
         THEN
           (MP_TAC
@@ -5815,8 +5747,7 @@
                 (cl:cons (parse_term "{t:A->bool | t IN f /\\ s SUBSET t}") nil))
               FINITE_TRANSITIVITY_CHAIN))
         THEN
-          (funcall
-            ASM_SIMP_TAC
+          (#`ASM_SIMP_TAC
             (cl:cons
               NOT_IMP
               (cl:cons
@@ -5825,13 +5756,10 @@
         THEN (REPEAT #'CONJ_TAC)
         THENL
           (cl:cons
-            (funcall SET_TAC nil)
-            (cl:cons
-              (funcall SET_TAC nil)
-              (cl:cons #'ALL_TAC (cl:cons (ASM SET_TAC nil) nil))))
+            (#`SET_TAC nil)
+            (cl:cons (#`SET_TAC nil) (cl:cons #'ALL_TAC (cl:cons (ASM SET_TAC nil) nil))))
         THEN
-          (funcall
-            ASM_MESON_TAC
+          (#`ASM_MESON_TAC
             (cl:cons PSUBSET_TRANS (cl:cons SUBSET_PSUBSET_TRANS (cl:cons PSUBSET nil))))))))
 
 (defparameter FINITE_SUBSET_UNIONS
@@ -5848,10 +5776,10 @@
             (o LAND_CONV TOP_DEPTH_CONV)
             (cl:cons IN_UNIONS (cl:cons RIGHT_IMP_EXISTS_THM nil)))
         THEN (REWRITE_TAC (cl:cons SKOLEM_THM (cl:cons LEFT_IMP_EXISTS_THM nil)))
-        THEN (funcall X_GEN_TAC (parse_term "u:A->A->bool"))
+        THEN (#`X_GEN_TAC (parse_term "u:A->A->bool"))
         THEN DISCH_TAC
-        THEN (funcall EXISTS_TAC (parse_term "IMAGE (u:A->A->bool) s"))
-        THEN (funcall ASM_SIMP_TAC (cl:cons FINITE_IMAGE (cl:cons UNIONS_IMAGE nil)))
+        THEN (#`EXISTS_TAC (parse_term "IMAGE (u:A->A->bool) s"))
+        THEN (#`ASM_SIMP_TAC (cl:cons FINITE_IMAGE (cl:cons UNIONS_IMAGE nil)))
         THEN (ASM SET_TAC nil)))))
 
 (defparameter UNIONS_IN_CHAIN
@@ -5874,7 +5802,7 @@
             (cl:cons
               FORALL_AND_THM
               (cl:cons
-                (funcall TAUT (parse_term "p ==> q /\\ r <=> (p ==> q) /\\ (p ==> r)"))
+                (#`TAUT (parse_term "p ==> q /\\ r <=> (p ==> q) /\\ (p ==> r)"))
                 (cl:cons NOT_INSERT_EMPTY nil))))
         THEN
           (MAP_EVERY
@@ -5884,12 +5812,11 @@
               (cl:cons (parse_term "f:(A->bool)->bool") nil)))
         THEN (ASM_CASES_TAC (parse_term "f:(A->bool)->bool = {}"))
         THEN
-          (funcall
-            ASM_REWRITE_TAC
+          (#`ASM_REWRITE_TAC
             (cl:cons UNIONS_0 (cl:cons IN_INSERT (cl:cons UNION_EMPTY nil))))
         THEN
           (DISCH_THEN (lambdac (th) (holai.runtime:proof #'STRIP_TAC THEN (MP_TAC th))))
-        THEN (funcall ASM_REWRITE_TAC nil)
+        THEN (#`ASM_REWRITE_TAC nil)
         THEN
           (MATCH_MP_TAC
             (MESON
@@ -5919,7 +5846,7 @@
             (cl:cons
               FORALL_AND_THM
               (cl:cons
-                (funcall TAUT (parse_term "p ==> q /\\ r <=> (p ==> q) /\\ (p ==> r)"))
+                (#`TAUT (parse_term "p ==> q /\\ r <=> (p ==> q) /\\ (p ==> r)"))
                 (cl:cons NOT_INSERT_EMPTY nil))))
         THEN
           (MAP_EVERY
@@ -5929,12 +5856,11 @@
               (cl:cons (parse_term "f:(A->bool)->bool") nil)))
         THEN (ASM_CASES_TAC (parse_term "f:(A->bool)->bool = {}"))
         THEN
-          (funcall
-            ASM_REWRITE_TAC
+          (#`ASM_REWRITE_TAC
             (cl:cons INTERS_0 (cl:cons IN_INSERT (cl:cons INTER_UNIV nil))))
         THEN
           (DISCH_THEN (lambdac (th) (holai.runtime:proof #'STRIP_TAC THEN (MP_TAC th))))
-        THEN (funcall ASM_REWRITE_TAC nil)
+        THEN (#`ASM_REWRITE_TAC nil)
         THEN
           (MATCH_MP_TAC
             (MESON
@@ -5974,7 +5900,7 @@
         ==> (s SUBSET UNIONS f <=> ?t. t IN f /\\ s SUBSET t)")
       (holai.runtime:proof (REPEAT #'STRIP_TAC)
         THEN (MATCH_MP_TAC FINITE_SUBSET_UNIONS_DIRECTED_EQ)
-        THEN (funcall ASM_MESON_TAC (cl:cons SUBSET_REFL nil))))))
+        THEN (#`ASM_MESON_TAC (cl:cons SUBSET_REFL nil))))))
 
 (defparameter FINITE_SUBSET_UNIONS_CHAIN
   (prove
@@ -5992,8 +5918,7 @@
 
 
 (defparameter FINREC
-  (funcall
-    new_recursive_definition
+  (#`new_recursive_definition
     num_RECURSION
     (parse_term
       "(FINREC (f:A->B->B) b s a 0 <=> (s = {}) /\\ (a = b)) /\\
@@ -6011,7 +5936,7 @@
         THEN (REPEAT #'GEN_TAC)
         THEN AP_TERM_TAC
         THEN #'ABS_TAC
-        THEN (funcall SET_TAC nil)))))
+        THEN (#`SET_TAC nil)))))
 
 (defparameter FINREC_SUC_LEMMA
   (prove
@@ -6028,7 +5953,7 @@
           (prove
             (tuple
               (parse_term "s DELETE (x:A) DELETE y = s DELETE y DELETE x")
-              (funcall SET_TAC nil)))))
+              (#`SET_TAC nil)))))
         (cl:declare (cl:ignorable lem))
         (holai.runtime:proof (REPEAT #'GEN_TAC)
           THEN DISCH_TAC
@@ -6040,38 +5965,36 @@
                 THEN (REPEAT #'GEN_TAC)
                 THEN #'STRIP_TAC
                 THEN #'STRIP_TAC
-                THEN
-                  (funcall ASM_REWRITE_TAC (cl:cons IN_INSERT (cl:cons NOT_IN_EMPTY nil)))
+                THEN (#`ASM_REWRITE_TAC (cl:cons IN_INSERT (cl:cons NOT_IN_EMPTY nil)))
                 THEN (DISCH_THEN #'SUBST1_TAC)
-                THEN (funcall EXISTS_TAC (parse_term "b:B"))
-                THEN (funcall ASM_REWRITE_TAC nil)
-                THEN (funcall SET_TAC nil))
+                THEN (#`EXISTS_TAC (parse_term "b:B"))
+                THEN (#`ASM_REWRITE_TAC nil)
+                THEN (#`SET_TAC nil))
               (cl:cons
                 (holai.runtime:proof (REPEAT #'GEN_TAC)
                   THEN (GEN_REWRITE_TAC LAND_CONV (cl:cons FINREC nil))
                   THEN (DISCH_THEN (X_CHOOSE_THEN (parse_term "y:A") #'MP_TAC))
                   THEN (DISCH_THEN (X_CHOOSE_THEN (parse_term "c:B") STRIP_ASSUME_TAC))
-                  THEN (funcall X_GEN_TAC (parse_term "x:A"))
+                  THEN (#`X_GEN_TAC (parse_term "x:A"))
                   THEN DISCH_TAC
                   THEN (ASM_CASES_TAC (parse_term "x:A = y"))
-                  THEN (funcall ASM_REWRITE_TAC nil)
+                  THEN (#`ASM_REWRITE_TAC nil)
                   THENL
                     (cl:cons
-                      (holai.runtime:proof (funcall EXISTS_TAC (parse_term "c:B"))
-                        THEN (funcall ASM_REWRITE_TAC nil))
+                      (holai.runtime:proof (#`EXISTS_TAC (parse_term "c:B"))
+                        THEN (#`ASM_REWRITE_TAC nil))
                       (cl:cons
                         (holai.runtime:proof (UNDISCH_TAC
                             (parse_term "FINREC (f:A->B->B) b (s DELETE y) c (SUC n)"))
                           THEN
                             (DISCH_THEN
-                              (ANTE_RES_THEN
-                                (o #'MP_TAC (funcall SPEC (parse_term "x:A")))))
-                          THEN (funcall ASM_REWRITE_TAC (cl:cons IN_DELETE nil))
+                              (ANTE_RES_THEN (o #'MP_TAC (#`SPEC (parse_term "x:A")))))
+                          THEN (#`ASM_REWRITE_TAC (cl:cons IN_DELETE nil))
                           THEN
                             (DISCH_THEN
                               (X_CHOOSE_THEN (parse_term "v:B") STRIP_ASSUME_TAC))
-                          THEN (funcall EXISTS_TAC (parse_term "(f:A->B->B) y v"))
-                          THEN (funcall ASM_REWRITE_TAC (cl:cons FINREC nil))
+                          THEN (#`EXISTS_TAC (parse_term "(f:A->B->B) y v"))
+                          THEN (#`ASM_REWRITE_TAC (cl:cons FINREC nil))
                           THEN #'CONJ_TAC
                           THENL
                             (cl:cons
@@ -6081,10 +6004,10 @@
                                     (parse_term "y:A")
                                     (cl:cons (parse_term "v:B") nil)))
                                 THEN (ONCE_REWRITE_TAC (cl:cons lem nil))
-                                THEN (funcall ASM_REWRITE_TAC (cl:cons IN_DELETE nil)))
+                                THEN (#`ASM_REWRITE_TAC (cl:cons IN_DELETE nil)))
                               (cl:cons
                                 (holai.runtime:proof (FIRST_ASSUM #'MATCH_MP_TAC)
-                                  THEN (funcall ASM_REWRITE_TAC nil))
+                                  THEN (#`ASM_REWRITE_TAC nil))
                                 nil)))
                         nil)))
                 nil)))))))
@@ -6118,12 +6041,11 @@
                     THEN
                       (DISCH_THEN
                         (lambdac (th)
-                          (holai.runtime:proof (MP_TAC (funcall CONJUNCT1 th))
-                            THEN (MP_TAC th))))
-                    THEN (DISCH_THEN (funcall CONJUNCTS_THEN (ANTE_RES_THEN ASSUME_TAC)))
+                          (holai.runtime:proof (MP_TAC (#`CONJUNCT1 th)) THEN (MP_TAC th))))
+                    THEN (DISCH_THEN (#`CONJUNCTS_THEN (ANTE_RES_THEN ASSUME_TAC)))
                     THEN (REWRITE_TAC (cl:cons FINREC nil))
                     THEN #'STRIP_TAC
-                    THEN (funcall ASM_MESON_TAC nil))
+                    THEN (#`ASM_MESON_TAC nil))
                   nil))))))))
 
 (defparameter FINREC_EXISTS_LEMMA
@@ -6135,7 +6057,7 @@
           (prove
             (tuple
               (parse_term "~(x IN s ) ==> ((x:A INSERT s) DELETE x = s)")
-              (funcall SET_TAC nil)))))
+              (#`SET_TAC nil)))))
         (cl:declare (cl:ignorable lem))
         (holai.runtime:proof #'GEN_TAC
           THEN #'GEN_TAC
@@ -6161,8 +6083,7 @@
                   THEN
                     (FIRST_ASSUM
                       (lambdac (th)
-                        (funcall
-                          ASM_REWRITE_TAC
+                        (#`ASM_REWRITE_TAC
                           (cl:cons (MATCH_MP lem th) (cl:cons IN_INSERT nil))))))
                 nil)))))))
 
@@ -6175,7 +6096,7 @@
        (!n1 n2 s a1 a2. R s a1 n1 /\\ R s a2 n2 ==> (a1 = a2) /\\ (n1 = n2))
        ==> ?f. !s a. P s ==> ((?n. R s a n) <=> (f s = a))")
       (holai.runtime:proof (REPEAT #'STRIP_TAC)
-        THEN (funcall EXISTS_TAC (parse_term "\\s:A. @a:B. ?n:C. R s a n"))
+        THEN (#`EXISTS_TAC (parse_term "\\s:A. @a:B. ?n:C. R s a n"))
         THEN (REPEAT #'STRIP_TAC)
         THEN BETA_TAC
         THEN #'EQ_TAC
@@ -6183,11 +6104,11 @@
           (cl:cons
             (holai.runtime:proof #'STRIP_TAC
               THEN (MATCH_MP_TAC SELECT_UNIQUE)
-              THEN (funcall ASM_MESON_TAC nil))
+              THEN (#`ASM_MESON_TAC nil))
             (cl:cons
               (holai.runtime:proof (DISCH_THEN (o #'SUBST1_TAC #'SYM))
-                THEN (funcall CONV_TAC SELECT_CONV)
-                THEN (funcall ASM_MESON_TAC nil))
+                THEN (#`CONV_TAC SELECT_CONV)
+                THEN (#`ASM_MESON_TAC nil))
               nil))))))
 
 (defparameter FINREC_FUN
@@ -6201,61 +6122,58 @@
                       ==> (g s = f x (g (s DELETE x)))")
       (holai.runtime:proof (REPEAT #'STRIP_TAC)
         THEN (IMP_RES_THEN #'MP_TAC FINREC_UNIQUE_LEMMA)
-        THEN (DISCH_THEN (o #'MP_TAC (funcall SPEC (parse_term "b:B"))))
+        THEN (DISCH_THEN (o #'MP_TAC (#`SPEC (parse_term "b:B"))))
         THEN
           (DISCH_THEN
             (o
               #'MP_TAC
-              (funcall
-                CONJ
+              (#`CONJ
                 (SPECL
                   (cl:cons (parse_term "f:A->B->B") (cl:cons (parse_term "b:B") nil))
                   FINREC_EXISTS_LEMMA))))
         THEN (DISCH_THEN (o #'MP_TAC (MATCH_MP FINREC_FUN_LEMMA)))
-        THEN (DISCH_THEN (funcall X_CHOOSE_TAC (parse_term "g:(A->bool)->B")))
-        THEN (funcall EXISTS_TAC (parse_term "g:(A->bool)->B"))
+        THEN (DISCH_THEN (#`X_CHOOSE_TAC (parse_term "g:(A->bool)->B")))
+        THEN (#`EXISTS_TAC (parse_term "g:(A->bool)->B"))
         THEN #'CONJ_TAC
         THENL
           (cl:cons
             (holai.runtime:proof (SUBGOAL_THEN
                 (parse_term "FINITE(EMPTY:A->bool)")
                 (ANTE_RES_THEN
-                  (lambdac (th) (GEN_REWRITE_TAC #'I (cl:cons (funcall GSYM th) nil)))))
+                  (lambdac (th) (GEN_REWRITE_TAC #'I (cl:cons (#`GSYM th) nil)))))
               THENL
                 (cl:cons
                   (REWRITE_TAC (cl:cons FINITE_RULES nil))
                   (cl:cons
-                    (holai.runtime:proof (funcall EXISTS_TAC (parse_term "0"))
+                    (holai.runtime:proof (#`EXISTS_TAC (parse_term "0"))
                       THEN (REWRITE_TAC (cl:cons FINREC nil)))
                     nil)))
             (cl:cons
               (holai.runtime:proof (REPEAT #'STRIP_TAC)
                 THEN (ANTE_RES_THEN #'MP_TAC (ASSUME (parse_term "FINITE(s:A->bool)")))
                 THEN (DISCH_THEN (o ASSUME_TAC GSYM))
-                THEN (funcall ASM_REWRITE_TAC nil)
-                THEN
-                  (FIRST_ASSUM
-                    (o #'MP_TAC (funcall SPEC (parse_term "(g:(A->bool)->B) s"))))
+                THEN (#`ASM_REWRITE_TAC nil)
+                THEN (FIRST_ASSUM (o #'MP_TAC (#`SPEC (parse_term "(g:(A->bool)->B) s"))))
                 THEN (REWRITE_TAC nil)
                 THEN (REWRITE_TAC (cl:cons LEFT_IMP_EXISTS_THM nil))
                 THEN INDUCT_TAC
                 THENL
                   (cl:cons
-                    (holai.runtime:proof (funcall ASM_REWRITE_TAC (cl:cons FINREC nil))
+                    (holai.runtime:proof (#`ASM_REWRITE_TAC (cl:cons FINREC nil))
                       THEN DISCH_TAC
                       THEN (UNDISCH_TAC (parse_term "x:A IN s"))
-                      THEN (funcall ASM_REWRITE_TAC (cl:cons NOT_IN_EMPTY nil)))
+                      THEN (#`ASM_REWRITE_TAC (cl:cons NOT_IN_EMPTY nil)))
                     (cl:cons
                       (holai.runtime:proof (IMP_RES_THEN ASSUME_TAC FINREC_SUC_LEMMA)
                         THEN
                           (DISCH_THEN
-                            (ANTE_RES_THEN (o #'MP_TAC (funcall SPEC (parse_term "x:A")))))
-                        THEN (funcall ASM_REWRITE_TAC nil)
+                            (ANTE_RES_THEN (o #'MP_TAC (#`SPEC (parse_term "x:A")))))
+                        THEN (#`ASM_REWRITE_TAC nil)
                         THEN
                           (DISCH_THEN
                             (X_CHOOSE_THEN
                               (parse_term "w:B")
-                              (funcall CONJUNCTS_THEN ASSUME_TAC)))
+                              (#`CONJUNCTS_THEN ASSUME_TAC)))
                         THEN
                           (SUBGOAL_THEN
                             (parse_term "(g (s DELETE x:A) = w:B)")
@@ -6268,19 +6186,19 @@
                               THENL
                                 (cl:cons
                                   (holai.runtime:proof (MATCH_MP_TAC FINITE_SUBSET)
-                                    THEN (funcall EXISTS_TAC (parse_term "s:A->bool"))
-                                    THEN (funcall ASM_REWRITE_TAC nil)
-                                    THEN (funcall SET_TAC nil))
+                                    THEN (#`EXISTS_TAC (parse_term "s:A->bool"))
+                                    THEN (#`ASM_REWRITE_TAC nil)
+                                    THEN (#`SET_TAC nil))
                                   (cl:cons
                                     (holai.runtime:proof (DISCH_THEN
                                         (ANTE_RES_THEN (o #'MP_TAC GSYM)))
                                       THEN
                                         (DISCH_THEN
                                           (lambdac (th) (REWRITE_TAC (cl:cons th nil))))
-                                      THEN (funcall EXISTS_TAC (parse_term "n:num"))
-                                      THEN (funcall ASM_REWRITE_TAC nil))
+                                      THEN (#`EXISTS_TAC (parse_term "n:num"))
+                                      THEN (#`ASM_REWRITE_TAC nil))
                                     nil)))
-                            (cl:cons (funcall ASM_REWRITE_TAC nil) nil)))
+                            (cl:cons (#`ASM_REWRITE_TAC nil) nil)))
                       nil)))
               nil))))))
 
@@ -6296,20 +6214,19 @@
                                 if x IN s then g s else f x (g s))")
       (holai.runtime:proof (REPEAT #'GEN_TAC)
         THEN
-          (DISCH_THEN
-            (o (o #'MP_TAC (funcall SPEC (parse_term "b:B"))) (MATCH_MP FINREC_FUN)))
+          (DISCH_THEN (o (o #'MP_TAC (#`SPEC (parse_term "b:B"))) (MATCH_MP FINREC_FUN)))
         THEN (DISCH_THEN (X_CHOOSE_THEN (parse_term "g:(A->bool)->B") STRIP_ASSUME_TAC))
-        THEN (funcall EXISTS_TAC (parse_term "g:(A->bool)->B"))
-        THEN (funcall ASM_REWRITE_TAC nil)
+        THEN (#`EXISTS_TAC (parse_term "g:(A->bool)->B"))
+        THEN (#`ASM_REWRITE_TAC nil)
         THEN (REPEAT #'GEN_TAC)
         THEN COND_CASES_TAC
-        THEN (funcall ASM_REWRITE_TAC nil)
+        THEN (#`ASM_REWRITE_TAC nil)
         THEN DISCH_TAC
         THENL
           (cl:cons
             (holai.runtime:proof AP_TERM_TAC
-              THEN (REWRITE_TAC (cl:cons (funcall GSYM ABSORPTION) nil))
-              THEN (funcall ASM_REWRITE_TAC nil))
+              THEN (REWRITE_TAC (cl:cons (#`GSYM ABSORPTION) nil))
+              THEN (#`ASM_REWRITE_TAC nil))
             (cl:cons
               (holai.runtime:proof (SUBGOAL_THEN
                   (parse_term "FINITE(x:A INSERT s) /\\ x IN (x INSERT s)")
@@ -6317,18 +6234,17 @@
                 THENL
                   (cl:cons
                     (holai.runtime:proof (REWRITE_TAC (cl:cons IN_INSERT nil))
-                      THEN (funcall ASM_MESON_TAC (cl:cons FINITE_RULES nil)))
+                      THEN (#`ASM_MESON_TAC (cl:cons FINITE_RULES nil)))
                     (cl:cons
                       (holai.runtime:proof (DISCH_THEN (ANTE_RES_THEN #'SUBST1_TAC))
                         THEN (REPEAT AP_TERM_TAC)
                         THEN (UNDISCH_TAC (parse_term "~(x:A IN s)"))
-                        THEN (funcall SET_TAC nil))
+                        THEN (#`SET_TAC nil))
                       nil)))
               nil))))))
 
 (defparameter ITSET
-  (funcall
-    new_definition
+  (#`new_definition
     (parse_term
       "ITSET (f:A->B->B) s b =
         (@g. (g {} = b) /\\
@@ -6350,9 +6266,9 @@
       (holai.runtime:proof (REPEAT #'GEN_TAC)
         THEN DISCH_TAC
         THEN (REWRITE_TAC (cl:cons ITSET nil))
-        THEN (funcall CONV_TAC SELECT_CONV)
+        THEN (#`CONV_TAC SELECT_CONV)
         THEN (MATCH_MP_TAC SET_RECURSION_LEMMA)
-        THEN (funcall ASM_REWRITE_TAC nil)))))
+        THEN (#`ASM_REWRITE_TAC nil)))))
 
 (defparameter FINITE_RECURSION_DELETE
   (prove
@@ -6367,30 +6283,28 @@
                                  else ITSET f (s DELETE x) b)")
       (holai.runtime:proof (REPEAT #'GEN_TAC)
         THEN (DISCH_THEN (o #'MP_TAC (MATCH_MP FINITE_RECURSION)))
-        THEN (DISCH_THEN (o STRIP_ASSUME_TAC (funcall SPEC (parse_term "b:B"))))
-        THEN (funcall ASM_REWRITE_TAC nil)
+        THEN (DISCH_THEN (o STRIP_ASSUME_TAC (#`SPEC (parse_term "b:B"))))
+        THEN (#`ASM_REWRITE_TAC nil)
         THEN (REPEAT #'GEN_TAC)
         THEN (ASM_CASES_TAC (parse_term "x:A IN s"))
-        THEN (funcall ASM_REWRITE_TAC nil)
+        THEN (#`ASM_REWRITE_TAC nil)
         THENL
           (cl:cons
             (holai.runtime:proof (DISCH_THEN (o #'MP_TAC (MATCH_MP FINITE_DELETE_IMP)))
-              THEN
-                (DISCH_THEN
-                  (o (ANTE_RES_THEN #'MP_TAC) (funcall SPEC (parse_term "x:A"))))
-              THEN (DISCH_THEN (o #'MP_TAC (funcall SPEC (parse_term "x:A"))))
+              THEN (DISCH_THEN (o (ANTE_RES_THEN #'MP_TAC) (#`SPEC (parse_term "x:A"))))
+              THEN (DISCH_THEN (o #'MP_TAC (#`SPEC (parse_term "x:A"))))
               THEN (REWRITE_TAC (cl:cons IN_DELETE nil))
               THEN (DISCH_THEN (o #'SUBST1_TAC #'SYM))
               THEN AP_THM_TAC
               THEN AP_TERM_TAC
               THEN (UNDISCH_TAC (parse_term "x:A IN s"))
-              THEN (funcall SET_TAC nil))
+              THEN (#`SET_TAC nil))
             (cl:cons
               (holai.runtime:proof DISCH_TAC
                 THEN AP_THM_TAC
                 THEN AP_TERM_TAC
                 THEN (UNDISCH_TAC (parse_term "~(x:A IN s)"))
-                THEN (funcall SET_TAC nil))
+                THEN (#`SET_TAC nil))
               nil))))))
 
 (defparameter ITSET_EQ
@@ -6413,7 +6327,7 @@
         THEN
           (FIRST_ASSUM
             (o #'MATCH_MP_TAC (REWRITE_RULE (cl:cons RIGHT_IMP_FORALL_THM nil))))
-        THEN (funcall ASM_MESON_TAC nil)))))
+        THEN (#`ASM_MESON_TAC nil)))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Cardinality.                                                              *)
@@ -6421,7 +6335,7 @@
 
 
 (defparameter CARD
-  (funcall new_definition (parse_term "CARD (s:A->bool) = ITSET (\\x n. SUC n) s 0")))
+  (#`new_definition (parse_term "CARD (s:A->bool) = ITSET (\\x n. SUC n) s 0")))
 
 (defparameter CARD_CLAUSES
   (prove
@@ -6445,7 +6359,7 @@
          ==> (CARD (s UNION t) = CARD s + CARD t)")
       (holai.runtime:proof (REWRITE_TAC
           (cl:cons
-            (funcall TAUT (parse_term "a /\\ b /\\ c ==> d <=> a ==> b /\\ c ==> d"))
+            (#`TAUT (parse_term "a /\\ b /\\ c ==> d <=> a ==> b /\\ c ==> d"))
             nil))
         THEN (REWRITE_TAC (cl:cons RIGHT_FORALL_IMP_THM nil))
         THEN (MATCH_MP_TAC FINITE_INDUCT_STRONG)
@@ -6454,42 +6368,42 @@
             (cl:cons
               UNION_EMPTY
               (cl:cons CARD_CLAUSES (cl:cons INTER_EMPTY (cl:cons ADD_CLAUSES nil)))))
-        THEN (funcall X_GEN_TAC (parse_term "x:A"))
-        THEN (funcall X_GEN_TAC (parse_term "s:A->bool"))
+        THEN (#`X_GEN_TAC (parse_term "x:A"))
+        THEN (#`X_GEN_TAC (parse_term "s:A->bool"))
         THEN (REPEAT #'STRIP_TAC)
         THEN
           (SUBGOAL_THEN
             (parse_term "(x:A INSERT s) UNION t = x INSERT (s UNION t)")
             #'SUBST1_TAC)
-        THENL (cl:cons (funcall SET_TAC nil) (cl:cons #'ALL_TAC nil))
+        THENL (cl:cons (#`SET_TAC nil) (cl:cons #'ALL_TAC nil))
         THEN
           (SUBGOAL_THEN
             (parse_term "FINITE ((s:A->bool) UNION t) /\\ FINITE s")
             STRIP_ASSUME_TAC)
         THENL
           (cl:cons
-            (holai.runtime:proof (funcall ASM_REWRITE_TAC nil)
+            (holai.runtime:proof (#`ASM_REWRITE_TAC nil)
               THEN (MATCH_MP_TAC FINITE_UNION_IMP)
-              THEN (funcall ASM_REWRITE_TAC nil))
+              THEN (#`ASM_REWRITE_TAC nil))
             (cl:cons #'ALL_TAC nil))
         THEN
           (MP_TAC
             (ISPECL
               (cl:cons (parse_term "x:A") (cl:cons (parse_term "s:A->bool") nil))
-              (funcall CONJUNCT2 CARD_CLAUSES)))
+              (#`CONJUNCT2 CARD_CLAUSES)))
         THEN
           (MP_TAC
             (ISPECL
               (cl:cons (parse_term "x:A") (cl:cons (parse_term "s:A->bool UNION t") nil))
-              (funcall CONJUNCT2 CARD_CLAUSES)))
-        THEN (funcall ASM_REWRITE_TAC nil)
+              (#`CONJUNCT2 CARD_CLAUSES)))
+        THEN (#`ASM_REWRITE_TAC nil)
         THEN DISCH_TAC
         THEN DISCH_TAC
-        THEN (funcall ASM_REWRITE_TAC nil)
+        THEN (#`ASM_REWRITE_TAC nil)
         THEN (SUBGOAL_THEN (parse_term "~(x:A IN (s UNION t))") ASSUME_TAC)
         THENL
           (cl:cons
-            (holai.runtime:proof (funcall ASM_REWRITE_TAC (cl:cons IN_UNION nil))
+            (holai.runtime:proof (#`ASM_REWRITE_TAC (cl:cons IN_UNION nil))
               THEN (UNDISCH_TAC (parse_term "(x:A INSERT s) INTER t = EMPTY"))
               THEN
                 (REWRITE_TAC
@@ -6498,13 +6412,12 @@
                     (cl:cons IN_INSERT (cl:cons IN_INTER (cl:cons NOT_IN_EMPTY nil)))))
               THEN (MESON_TAC nil))
             (cl:cons
-              (holai.runtime:proof (funcall
-                  ASM_REWRITE_TAC
+              (holai.runtime:proof (#`ASM_REWRITE_TAC
                   (cl:cons SUC_INJ (cl:cons ADD_CLAUSES nil)))
                 THEN (FIRST_ASSUM #'MATCH_MP_TAC)
-                THEN (funcall ASM_REWRITE_TAC nil)
+                THEN (#`ASM_REWRITE_TAC nil)
                 THEN (UNDISCH_TAC (parse_term "x:A INSERT s INTER t = EMPTY"))
-                THEN (funcall SET_TAC nil))
+                THEN (#`SET_TAC nil))
               nil))))))
 
 (defparameter CARD_DELETE
@@ -6524,18 +6437,17 @@
               THENL
                 (cl:cons
                   (holai.runtime:proof (UNDISCH_TAC (parse_term "x:A IN s"))
-                    THEN (funcall SET_TAC nil))
+                    THEN (#`SET_TAC nil))
                   (cl:cons #'ALL_TAC nil))
               THEN
-                (funcall
-                  ASM_SIMP_TAC
+                (#`ASM_SIMP_TAC
                   (cl:cons
                     CARD_CLAUSES
                     (cl:cons FINITE_DELETE (cl:cons IN_DELETE (cl:cons SUC_SUB1 nil))))))
             (cl:cons
               (holai.runtime:proof AP_TERM_TAC
                 THEN (UNDISCH_TAC (parse_term "~(x:A IN s)"))
-                THEN (funcall SET_TAC nil))
+                THEN (#`SET_TAC nil))
               nil))))))
 
 (defparameter CARD_UNION_EQ
@@ -6553,10 +6465,9 @@
       (parse_term
         "!s t:A->bool. FINITE s /\\ t SUBSET s ==> CARD(s DIFF t) = CARD s - CARD t")
       (holai.runtime:proof (REPEAT #'STRIP_TAC)
-        THEN
-          (MATCH_MP_TAC (funcall ARITH_RULE (parse_term "a + b:num = c ==> a = c - b")))
+        THEN (MATCH_MP_TAC (#`ARITH_RULE (parse_term "a + b:num = c ==> a = c - b")))
         THEN (MATCH_MP_TAC CARD_UNION_EQ)
-        THEN (funcall ASM_SIMP_TAC nil)
+        THEN (#`ASM_SIMP_TAC nil)
         THEN (ASM SET_TAC nil)))))
 
 (defparameter CARD_EQ_0
@@ -6633,30 +6544,29 @@
       (holai.runtime:proof #'GEN_TAC
         THEN #'STRIP_TAC
         THEN #'GEN_TAC
-        THEN (funcall WF_INDUCT_TAC (parse_term "CARD(s:A->bool)"))
+        THEN (#`WF_INDUCT_TAC (parse_term "CARD(s:A->bool)"))
         THEN (ASM_CASES_TAC (parse_term "s:A->bool = {}"))
-        THEN (funcall ASM_REWRITE_TAC nil)
+        THEN (#`ASM_REWRITE_TAC nil)
         THEN DISCH_TAC
         THEN
           (UNDISCH_TAC
             (parse_term
               "!s. FINITE s /\\ ~(s = {}) ==> ?x:A. x IN s /\\ (P(s DELETE x) ==> P s)"))
-        THEN (DISCH_THEN (o #'MP_TAC (funcall SPEC (parse_term "s:A->bool"))))
-        THEN (funcall ASM_REWRITE_TAC nil)
+        THEN (DISCH_THEN (o #'MP_TAC (#`SPEC (parse_term "s:A->bool"))))
+        THEN (#`ASM_REWRITE_TAC nil)
         THEN
           (DISCH_THEN
             (X_CHOOSE_THEN (parse_term "x:A") (CONJUNCTS_THEN2 ASSUME_TAC #'MATCH_MP_TAC)))
-        THEN (FIRST_X_ASSUM (o #'MP_TAC (funcall SPEC (parse_term "s DELETE (x:A)"))))
+        THEN (FIRST_X_ASSUM (o #'MP_TAC (#`SPEC (parse_term "s DELETE (x:A)"))))
         THEN
-          (funcall
-            ASM_SIMP_TAC
+          (#`ASM_SIMP_TAC
             (cl:cons
               FINITE_DELETE
               (cl:cons
                 CARD_DELETE
                 (cl:cons
                   CARD_EQ_0
-                  (cl:cons (funcall ARITH_RULE (parse_term "n - 1 < n <=> ~(n = 0)")) nil)))))))))
+                  (cl:cons (#`ARITH_RULE (parse_term "n - 1 < n <=> ~(n = 0)")) nil)))))))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Relational form is often more useful.                                     *)
@@ -6664,9 +6574,7 @@
 
 
 (defparameter HAS_SIZE
-  (funcall
-    new_definition
-    (parse_term "(s:A->bool) HAS_SIZE n <=> FINITE s /\\ CARD s = n")))
+  (#`new_definition (parse_term "(s:A->bool) HAS_SIZE n <=> FINITE s /\\ CARD s = n")))
 
 (defparameter HAS_SIZE_CARD
   (prove
@@ -6682,7 +6590,7 @@
         THEN (REWRITE_TAC (cl:cons HAS_SIZE nil))
         THEN #'EQ_TAC
         THEN DISCH_TAC
-        THEN (funcall ASM_REWRITE_TAC (cl:cons FINITE_RULES (cl:cons CARD_CLAUSES nil)))
+        THEN (#`ASM_REWRITE_TAC (cl:cons FINITE_RULES (cl:cons CARD_CLAUSES nil)))
         THEN (FIRST_ASSUM (o #'MP_TAC CONJUNCT2))
         THEN (FIRST_ASSUM (o #'MP_TAC CONJUNCT1))
         THEN (SPEC_TAC (tuple (parse_term "s:A->bool") (parse_term "s:A->bool")))
@@ -6693,8 +6601,8 @@
         THEN
           (FIRST_ASSUM
             (lambdac (th)
-              (REWRITE_TAC (cl:cons (MATCH_MP (funcall CONJUNCT2 CARD_CLAUSES) th) nil))))
-        THEN (funcall ASM_REWRITE_TAC (cl:cons NOT_SUC nil))))))
+              (REWRITE_TAC (cl:cons (MATCH_MP (#`CONJUNCT2 CARD_CLAUSES) th) nil))))
+        THEN (#`ASM_REWRITE_TAC (cl:cons NOT_SUC nil))))))
 
 (defparameter HAS_SIZE_SUC
   (prove
@@ -6706,17 +6614,13 @@
         THEN (REWRITE_TAC (cl:cons HAS_SIZE nil))
         THEN (ASM_CASES_TAC (parse_term "s:A->bool = {}"))
         THEN
-          (funcall
-            ASM_REWRITE_TAC
+          (#`ASM_REWRITE_TAC
             (cl:cons
               CARD_CLAUSES
               (cl:cons FINITE_RULES (cl:cons NOT_IN_EMPTY (cl:cons NOT_SUC nil)))))
         THEN (REWRITE_TAC (cl:cons FINITE_DELETE nil))
         THEN (ASM_CASES_TAC (parse_term "FINITE(s:A->bool)"))
-        THEN
-          (funcall
-            ASM_REWRITE_TAC
-            (cl:cons NOT_FORALL_THM (cl:cons MEMBER_NOT_EMPTY nil)))
+        THEN (#`ASM_REWRITE_TAC (cl:cons NOT_FORALL_THM (cl:cons MEMBER_NOT_EMPTY nil)))
         THEN #'EQ_TAC
         THEN (REPEAT #'STRIP_TAC)
         THENL
@@ -6724,42 +6628,38 @@
             (holai.runtime:proof (MP_TAC
                 (ISPECL
                   (cl:cons (parse_term "a:A") (cl:cons (parse_term "s DELETE a:A") nil))
-                  (funcall CONJUNCT2 CARD_CLAUSES)))
-              THEN
-                (funcall ASM_REWRITE_TAC (cl:cons FINITE_DELETE (cl:cons IN_DELETE nil)))
+                  (#`CONJUNCT2 CARD_CLAUSES)))
+              THEN (#`ASM_REWRITE_TAC (cl:cons FINITE_DELETE (cl:cons IN_DELETE nil)))
               THEN (SUBGOAL_THEN (parse_term "a INSERT (s DELETE a:A) = s") #'SUBST1_TAC)
               THENL
                 (cl:cons
                   (holai.runtime:proof (UNDISCH_TAC (parse_term "a:A IN s"))
-                    THEN (funcall SET_TAC nil))
+                    THEN (#`SET_TAC nil))
                   (cl:cons
-                    (holai.runtime:proof (funcall ASM_REWRITE_TAC (cl:cons SUC_INJ nil))
+                    (holai.runtime:proof (#`ASM_REWRITE_TAC (cl:cons SUC_INJ nil))
                       THEN (MESON_TAC nil))
                     nil)))
             (cl:cons
               (holai.runtime:proof (FIRST_ASSUM
                   (o
                     #'MP_TAC
-                    (GEN_REWRITE_RULE #'I (cl:cons (funcall GSYM MEMBER_NOT_EMPTY) nil))))
-                THEN (DISCH_THEN (funcall X_CHOOSE_TAC (parse_term "a:A")))
+                    (GEN_REWRITE_RULE #'I (cl:cons (#`GSYM MEMBER_NOT_EMPTY) nil))))
+                THEN (DISCH_THEN (#`X_CHOOSE_TAC (parse_term "a:A")))
                 THEN
                   (MP_TAC
                     (ISPECL
                       (cl:cons
                         (parse_term "a:A")
                         (cl:cons (parse_term "s DELETE a:A") nil))
-                      (funcall CONJUNCT2 CARD_CLAUSES)))
-                THEN
-                  (funcall
-                    ASM_REWRITE_TAC
-                    (cl:cons FINITE_DELETE (cl:cons IN_DELETE nil)))
+                      (#`CONJUNCT2 CARD_CLAUSES)))
+                THEN (#`ASM_REWRITE_TAC (cl:cons FINITE_DELETE (cl:cons IN_DELETE nil)))
                 THEN
                   (SUBGOAL_THEN (parse_term "a INSERT (s DELETE a:A) = s") #'SUBST1_TAC)
                 THENL
                   (cl:cons
                     (holai.runtime:proof (UNDISCH_TAC (parse_term "a:A IN s"))
-                      THEN (funcall SET_TAC nil))
-                    (cl:cons (funcall ASM_MESON_TAC nil) nil)))
+                      THEN (#`SET_TAC nil))
+                    (cl:cons (#`ASM_MESON_TAC nil) nil)))
               nil))))))
 
 (defparameter HAS_SIZE_UNION
@@ -6795,7 +6695,7 @@
       (holai.runtime:proof (GEN_REWRITE_TAC
           (o (funpow 4 #'BINDER_CONV) (funpow 2 LAND_CONV))
           (cl:cons HAS_SIZE nil))
-        THEN (REWRITE_TAC (cl:cons (funcall GSYM CONJ_ASSOC) nil))
+        THEN (REWRITE_TAC (cl:cons (#`GSYM CONJ_ASSOC) nil))
         THEN (ONCE_REWRITE_TAC (cl:cons IMP_CONJ nil))
         THEN (REWRITE_TAC (cl:cons RIGHT_FORALL_IMP_THM nil))
         THEN (MATCH_MP_TAC FINITE_INDUCT_STRONG)
@@ -6821,7 +6721,7 @@
             (cl:cons
               (parse_term "t:A->B->bool")
               (cl:cons (parse_term "m:num") (cl:cons (parse_term "n:num") nil))))
-        THEN (funcall ASM_SIMP_TAC (cl:cons CARD_CLAUSES nil))
+        THEN (#`ASM_SIMP_TAC (cl:cons CARD_CLAUSES nil))
         THEN (DISCH_THEN (CONJUNCTS_THEN2 (o #'SUBST1_TAC #'SYM) STRIP_ASSUME_TAC))
         THEN
           (REWRITE_TAC
@@ -6831,19 +6731,17 @@
                   "UNIONS {t y | y IN x INSERT s} = t x UNION UNIONS {t y | y IN s}"))
               nil))
         THEN
-          (REWRITE_TAC
-            (cl:cons (funcall ARITH_RULE (parse_term "SUC a * b = b + a * b")) nil))
+          (REWRITE_TAC (cl:cons (#`ARITH_RULE (parse_term "SUC a * b = b + a * b")) nil))
         THEN (MATCH_MP_TAC HAS_SIZE_UNION)
-        THEN (funcall ASM_SIMP_TAC (cl:cons IN_INSERT nil))
+        THEN (#`ASM_SIMP_TAC (cl:cons IN_INSERT nil))
         THEN
           (REWRITE_TAC
             (cl:cons
               (SET_RULE
                 (parse_term "DISJOINT a (UNIONS s) <=> !x. x IN s ==> DISJOINT a x"))
               nil))
-        THEN
-          (funcall ASM_SIMP_TAC (cl:cons IN_ELIM_THM (cl:cons LEFT_IMP_EXISTS_THM nil)))
-        THEN (funcall ASM_MESON_TAC (cl:cons IN_INSERT nil))))))
+        THEN (#`ASM_SIMP_TAC (cl:cons IN_ELIM_THM (cl:cons LEFT_IMP_EXISTS_THM nil)))
+        THEN (#`ASM_MESON_TAC (cl:cons IN_INSERT nil))))))
 
 (defparameter FINITE_HAS_SIZE
   (prove
@@ -6871,7 +6769,7 @@
           THENL
             (cl:cons
               (holai.runtime:proof (REWRITE_TAC
-                  (cl:cons HAS_SIZE_SUC (cl:cons (funcall GSYM MEMBER_NOT_EMPTY) nil)))
+                  (cl:cons HAS_SIZE_SUC (cl:cons (#`GSYM MEMBER_NOT_EMPTY) nil)))
                 THEN (MESON_TAC (cl:cons lemma (cl:cons IN_DELETE nil))))
               (cl:cons
                 (SIMP_TAC
@@ -6894,7 +6792,7 @@
             "(~((a:A) IN {}) /\\ P <=> P) /\\
      (~(a IN {b}) /\\ P <=> ~(a = b) /\\ P) /\\
      (~(a IN (b INSERT cs)) /\\ P <=> ~(a = b) /\\ ~(a IN cs) /\\ P)")
-          (funcall SET_TAC nil))))
+          (#`SET_TAC nil))))
       (qth
         (prove
           (tuple
@@ -6906,57 +6804,48 @@
               THEN (MESON_TAC nil))))))
     (cl:declare (cl:ignorable pth qth))
     (let
-      ((qconv_0 (GEN_REWRITE_CONV #'I (cl:cons (funcall CONJUNCT1 qth) nil)))
-        (qconv_1 (GEN_REWRITE_CONV #'I (cl:cons (funcall CONJUNCT2 qth) nil)))
-        (rconv_0 (GEN_REWRITE_CONV #'I (cl:cons (funcall CONJUNCT1 pth) nil)))
-        (rconv_1 (GEN_REWRITE_CONV #'I (cl:cons (funcall CONJUNCT2 pth) nil))))
+      ((qconv_0 (GEN_REWRITE_CONV #'I (cl:cons (#`CONJUNCT1 qth) nil)))
+        (qconv_1 (GEN_REWRITE_CONV #'I (cl:cons (#`CONJUNCT2 qth) nil)))
+        (rconv_0 (GEN_REWRITE_CONV #'I (cl:cons (#`CONJUNCT1 pth) nil)))
+        (rconv_1 (GEN_REWRITE_CONV #'I (cl:cons (#`CONJUNCT2 pth) nil))))
       (cl:declare (cl:ignorable qconv_0 qconv_1 rconv_0 rconv_1))
-      (labelsc
-        ((EXISTS_HAS_SIZE_AND_CONV
-          (tm)
+      (holai.runtime:labelsc
+        ((:recursive 0 EXISTS_HAS_SIZE_AND_CONV (tm)
           (ORELSEC
             qconv_0
             (THENC
-              (THENC (BINDER_CONV (funcall LAND_CONV (RAND_CONV num_CONV))) qconv_1)
+              (THENC (BINDER_CONV (#`LAND_CONV (RAND_CONV num_CONV))) qconv_1)
               (BINDER_CONV #'EXISTS_HAS_SIZE_AND_CONV))
-            tm)))
-        (labelsc
-          ((NOT_IN_INSERT_CONV
-            (tm)
+            tm))
+          (:recursive 1 NOT_IN_INSERT_CONV (tm)
             (ORELSEC
               (ORELSEC
                 (THENC rconv_0 #'NOT_IN_INSERT_CONV)
                 (THENC rconv_1 (RAND_CONV #'NOT_IN_INSERT_CONV)))
               ALL_CONV
               tm)))
-          (let
-            ((HAS_SIZE_CONV%
-              (ORELSEC
-                (GEN_REWRITE_CONV #'I (cl:cons (funcall CONJUNCT1 HAS_SIZE_CLAUSES) nil))
+        (let
+          ((HAS_SIZE_CONV%
+            (ORELSEC
+              (GEN_REWRITE_CONV #'I (cl:cons (#`CONJUNCT1 HAS_SIZE_CLAUSES) nil))
+              (THENC
                 (THENC
-                  (THENC
-                    (RAND_CONV num_CONV)
-                    (GEN_REWRITE_CONV
-                      #'I
-                      (cl:cons (funcall CONJUNCT2 HAS_SIZE_CLAUSES) nil)))
-                  (BINDER_CONV #'EXISTS_HAS_SIZE_AND_CONV)))))
-            (cl:declare (cl:ignorable HAS_SIZE_CONV%))
-            (lambdac (tm)
-              (let* ((th (funcall HAS_SIZE_CONV% tm)) (tm% (rand (concl th))))
-                (cl:declare (cl:ignorable th tm%))
-                (match (funcall strip_exists tm%)
-                  ((tuple evs bod)
-                    (if (= evs nil)
-                      th
-                      (let
-                        ((th%
-                          (funpow
-                            (funcall length evs)
-                            #'BINDER_CONV
-                            #'NOT_IN_INSERT_CONV
-                            tm%)))
-                        (cl:declare (cl:ignorable th%))
-                        (TRANS th th%)))))))))))))
+                  (RAND_CONV num_CONV)
+                  (GEN_REWRITE_CONV #'I (cl:cons (#`CONJUNCT2 HAS_SIZE_CLAUSES) nil)))
+                (BINDER_CONV #'EXISTS_HAS_SIZE_AND_CONV)))))
+          (cl:declare (cl:ignorable HAS_SIZE_CONV%))
+          (lambdac (tm)
+            (let* ((th (#`HAS_SIZE_CONV% tm)) (tm% (rand (concl th))))
+              (cl:declare (cl:ignorable th tm%))
+              (match (#`strip_exists tm%)
+                ((tuple evs bod)
+                  (if (= evs nil)
+                    th
+                    (let
+                      ((th%
+                        (funpow (#`length evs) #'BINDER_CONV #'NOT_IN_INSERT_CONV tm%)))
+                      (cl:declare (cl:ignorable th%))
+                      (TRANS th th%))))))))))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Various useful lemmas about cardinalities of unions etc.                  *)
@@ -6978,39 +6867,37 @@
               CARD_UNION))
         THEN (SUBGOAL_THEN (parse_term "FINITE(a:A->bool)") ASSUME_TAC)
         THENL
-          (cl:cons
-            (funcall ASM_MESON_TAC (cl:cons FINITE_SUBSET nil))
-            (cl:cons #'ALL_TAC nil))
+          (cl:cons (#`ASM_MESON_TAC (cl:cons FINITE_SUBSET nil)) (cl:cons #'ALL_TAC nil))
         THEN (SUBGOAL_THEN (parse_term "FINITE(b:A->bool DIFF a)") ASSUME_TAC)
         THENL
           (cl:cons
             (holai.runtime:proof (MATCH_MP_TAC FINITE_SUBSET)
-              THEN (funcall EXISTS_TAC (parse_term "b:A->bool"))
-              THEN (funcall ASM_REWRITE_TAC nil)
-              THEN (funcall SET_TAC nil))
+              THEN (#`EXISTS_TAC (parse_term "b:A->bool"))
+              THEN (#`ASM_REWRITE_TAC nil)
+              THEN (#`SET_TAC nil))
             (cl:cons #'ALL_TAC nil))
         THEN (SUBGOAL_THEN (parse_term "a:A->bool INTER (b DIFF a) = EMPTY") ASSUME_TAC)
-        THENL (cl:cons (funcall SET_TAC nil) (cl:cons #'ALL_TAC nil))
-        THEN (funcall ASM_REWRITE_TAC nil)
+        THENL (cl:cons (#`SET_TAC nil) (cl:cons #'ALL_TAC nil))
+        THEN (#`ASM_REWRITE_TAC nil)
         THEN (SUBGOAL_THEN (parse_term "a UNION (b:A->bool DIFF a) = b") ASSUME_TAC)
         THENL
           (cl:cons
             (holai.runtime:proof (UNDISCH_TAC (parse_term "a:A->bool SUBSET b"))
-              THEN (funcall SET_TAC nil))
+              THEN (#`SET_TAC nil))
             (cl:cons #'ALL_TAC nil))
-        THEN (funcall ASM_REWRITE_TAC nil)
+        THEN (#`ASM_REWRITE_TAC nil)
         THEN
           (REWRITE_TAC
-            (cl:cons (funcall ARITH_RULE (parse_term "(a = a + b) <=> (b = 0)")) nil))
+            (cl:cons (#`ARITH_RULE (parse_term "(a = a + b) <=> (b = 0)")) nil))
         THEN DISCH_TAC
         THEN (SUBGOAL_THEN (parse_term "b:A->bool DIFF a = EMPTY") #'MP_TAC)
         THENL
           (cl:cons
-            (holai.runtime:proof (REWRITE_TAC (cl:cons (funcall GSYM HAS_SIZE_0) nil))
-              THEN (funcall ASM_REWRITE_TAC (cl:cons HAS_SIZE nil)))
+            (holai.runtime:proof (REWRITE_TAC (cl:cons (#`GSYM HAS_SIZE_0) nil))
+              THEN (#`ASM_REWRITE_TAC (cl:cons HAS_SIZE nil)))
             (cl:cons
               (holai.runtime:proof (UNDISCH_TAC (parse_term "a:A->bool SUBSET b"))
-                THEN (funcall SET_TAC nil))
+                THEN (#`SET_TAC nil))
               nil))))))
 
 (defparameter CARD_SUBSET
@@ -7022,7 +6909,7 @@
         THENL
           (cl:cons
             (holai.runtime:proof (UNDISCH_TAC (parse_term "a:A->bool SUBSET b"))
-              THEN (funcall SET_TAC nil))
+              THEN (#`SET_TAC nil))
             (cl:cons #'ALL_TAC nil))
         THEN
           (SUBGOAL_THEN
@@ -7035,14 +6922,14 @@
               THENL
                 (cl:cons
                   (holai.runtime:proof (MATCH_MP_TAC FINITE_SUBSET)
-                    THEN (funcall EXISTS_TAC (parse_term "b:A->bool"))
-                    THEN (funcall ASM_REWRITE_TAC nil))
+                    THEN (#`EXISTS_TAC (parse_term "b:A->bool"))
+                    THEN (#`ASM_REWRITE_TAC nil))
                   (cl:cons
                     (holai.runtime:proof (MATCH_MP_TAC FINITE_SUBSET)
-                      THEN (funcall EXISTS_TAC (parse_term "b:A->bool"))
-                      THEN (funcall ASM_REWRITE_TAC nil)
-                      THEN (funcall SET_TAC nil))
-                    (cl:cons (funcall SET_TAC nil) nil))))
+                      THEN (#`EXISTS_TAC (parse_term "b:A->bool"))
+                      THEN (#`ASM_REWRITE_TAC nil)
+                      THEN (#`SET_TAC nil))
+                    (cl:cons (#`SET_TAC nil) nil))))
             (cl:cons ARITH_TAC nil))))))
 
 (defparameter CARD_SUBSET_LE
@@ -7082,15 +6969,14 @@
         THEN (DISCH_THEN (CONJUNCTS_THEN2 #'MP_TAC ASSUME_TAC))
         THEN (DISCH_THEN (X_CHOOSE_THEN (parse_term "x:A") STRIP_ASSUME_TAC))
         THEN (MATCH_MP_TAC LET_TRANS)
-        THEN (funcall EXISTS_TAC (parse_term "CARD(b DELETE (x:A))"))
-        THEN (funcall ASM_SIMP_TAC (cl:cons CARD_SUBSET (cl:cons FINITE_DELETE nil)))
+        THEN (#`EXISTS_TAC (parse_term "CARD(b DELETE (x:A))"))
+        THEN (#`ASM_SIMP_TAC (cl:cons CARD_SUBSET (cl:cons FINITE_DELETE nil)))
         THEN
-          (funcall
-            ASM_SIMP_TAC
+          (#`ASM_SIMP_TAC
             (cl:cons
               CARD_DELETE
-              (cl:cons (funcall ARITH_RULE (parse_term "n - 1 < n <=> ~(n = 0)")) nil)))
-        THEN (funcall ASM_MESON_TAC (cl:cons CARD_EQ_0 (cl:cons MEMBER_NOT_EMPTY nil)))))))
+              (cl:cons (#`ARITH_RULE (parse_term "n - 1 < n <=> ~(n = 0)")) nil)))
+        THEN (#`ASM_MESON_TAC (cl:cons CARD_EQ_0 (cl:cons MEMBER_NOT_EMPTY nil)))))))
 
 (defparameter CARD_PSUBSET_IMP
   (prove
@@ -7113,10 +6999,9 @@
         FINITE s /\\ FINITE t ==> CARD(s UNION t) <= CARD(s) + CARD(t)")
       (holai.runtime:proof (REPEAT #'STRIP_TAC)
         THEN (MATCH_MP_TAC LE_TRANS)
-        THEN (funcall EXISTS_TAC (parse_term "CARD(s:A->bool) + CARD(t DIFF s)"))
+        THEN (#`EXISTS_TAC (parse_term "CARD(s:A->bool) + CARD(t DIFF s)"))
         THEN
-          (funcall
-            ASM_SIMP_TAC
+          (#`ASM_SIMP_TAC
             (cl:cons
               LE_ADD_LCANCEL
               (cl:cons CARD_SUBSET (cl:cons SUBSET_DIFF (cl:cons FINITE_DIFF nil)))))
@@ -7125,8 +7010,8 @@
           (ONCE_REWRITE_TAC
             (cl:cons (SET_RULE (parse_term "s UNION t = s UNION (t DIFF s)")) nil))
         THEN (MATCH_MP_TAC CARD_UNION)
-        THEN (funcall ASM_SIMP_TAC (cl:cons FINITE_DIFF nil))
-        THEN (funcall SET_TAC nil)))))
+        THEN (#`ASM_SIMP_TAC (cl:cons FINITE_DIFF nil))
+        THEN (#`SET_TAC nil)))))
 
 (defparameter FINITE_CARD_LE_UNION
   (prove
@@ -7151,7 +7036,7 @@
       (holai.runtime:proof (GEN_REWRITE_TAC
           (o (funpow 4 #'BINDER_CONV) (funpow 2 LAND_CONV))
           (cl:cons HAS_SIZE nil))
-        THEN (REWRITE_TAC (cl:cons (funcall GSYM CONJ_ASSOC) nil))
+        THEN (REWRITE_TAC (cl:cons (#`GSYM CONJ_ASSOC) nil))
         THEN (ONCE_REWRITE_TAC (cl:cons IMP_CONJ nil))
         THEN (REWRITE_TAC (cl:cons RIGHT_FORALL_IMP_THM nil))
         THEN (MATCH_MP_TAC FINITE_INDUCT_STRONG)
@@ -7164,7 +7049,7 @@
         THEN (REPEAT #'GEN_TAC)
         THEN #'STRIP_TAC
         THEN (REPEAT #'GEN_TAC)
-        THEN (funcall ASM_SIMP_TAC (cl:cons CARD_CLAUSES (cl:cons FINITE_RULES nil)))
+        THEN (#`ASM_SIMP_TAC (cl:cons CARD_CLAUSES (cl:cons FINITE_RULES nil)))
         THEN (DISCH_THEN (CONJUNCTS_THEN2 (o #'SUBST_ALL_TAC #'SYM) ASSUME_TAC))
         THEN
           (REWRITE_TAC
@@ -7175,21 +7060,19 @@
               nil))
         THEN (MATCH_MP_TAC LE_TRANS)
         THEN
-          (funcall
-            EXISTS_TAC
+          (#`EXISTS_TAC
             (parse_term
               "CARD((t:A->B->bool) x) + CARD(UNIONS {(t:A->B->bool) y | y IN s})"))
         THEN #'CONJ_TAC
         THENL
           (cl:cons
             (holai.runtime:proof (MATCH_MP_TAC CARD_UNION_LE)
-              THEN (funcall ASM_SIMP_TAC (cl:cons IN_INSERT nil))
+              THEN (#`ASM_SIMP_TAC (cl:cons IN_INSERT nil))
               THEN
                 (REWRITE_TAC
                   (cl:cons (SET_RULE (parse_term "{t x | x IN s} = IMAGE t s")) nil))
               THEN
-                (funcall
-                  ASM_SIMP_TAC
+                (#`ASM_SIMP_TAC
                   (cl:cons
                     FINITE_FINITE_UNIONS
                     (cl:cons
@@ -7197,10 +7080,9 @@
                       (cl:cons FORALL_IN_IMAGE (cl:cons IN_INSERT nil))))))
             (cl:cons
               (holai.runtime:proof (MATCH_MP_TAC
-                  (funcall
-                    ARITH_RULE
+                  (#`ARITH_RULE
                     (parse_term "a <= n /\\ b <= x * n ==> a + b <= SUC x * n")))
-                THEN (funcall ASM_SIMP_TAC (cl:cons IN_INSERT nil)))
+                THEN (#`ASM_SIMP_TAC (cl:cons IN_INSERT nil)))
               nil))))))
 
 (defparameter CARD_UNION_GEN
@@ -7215,19 +7097,18 @@
           (ONCE_REWRITE_TAC
             (cl:cons (SET_RULE (parse_term "s UNION t = s UNION (t DIFF s)")) nil))
         THEN
-          (funcall
-            ASM_SIMP_TAC
+          (#`ASM_SIMP_TAC
             (cl:cons
-              (funcall ARITH_RULE (parse_term "x:num <= y ==> (a + y) - x = a + (y - x)"))
+              (#`ARITH_RULE (parse_term "x:num <= y ==> (a + y) - x = a + (y - x)"))
               (cl:cons
                 CARD_SUBSET
-                (cl:cons INTER_SUBSET (cl:cons (funcall GSYM CARD_DIFF) nil)))))
+                (cl:cons INTER_SUBSET (cl:cons (#`GSYM CARD_DIFF) nil)))))
         THEN
           (REWRITE_TAC
             (cl:cons (SET_RULE (parse_term "t DIFF (s INTER t) = t DIFF s")) nil))
         THEN (MATCH_MP_TAC CARD_UNION)
-        THEN (funcall ASM_SIMP_TAC (cl:cons FINITE_DIFF nil))
-        THEN (funcall SET_TAC nil)))))
+        THEN (#`ASM_SIMP_TAC (cl:cons FINITE_DIFF nil))
+        THEN (#`SET_TAC nil)))))
 
 (defparameter CARD_UNION_OVERLAP_EQ
   (prove
@@ -7238,17 +7119,14 @@
         ==> (CARD(s UNION t) = CARD s + CARD t <=> s INTER t = {})")
       (holai.runtime:proof (REPEAT #'GEN_TAC)
         THEN #'STRIP_TAC
-        THEN (funcall ASM_SIMP_TAC (cl:cons CARD_UNION_GEN nil))
+        THEN (#`ASM_SIMP_TAC (cl:cons CARD_UNION_GEN nil))
         THEN
           (REWRITE_TAC
-            (cl:cons
-              (funcall ARITH_RULE (parse_term "a - b = a <=> b = 0 \\/ a = 0"))
-              nil))
+            (cl:cons (#`ARITH_RULE (parse_term "a - b = a <=> b = 0 \\/ a = 0")) nil))
         THEN
-          (funcall
-            ASM_SIMP_TAC
+          (#`ASM_SIMP_TAC
             (cl:cons ADD_EQ_0 (cl:cons CARD_EQ_0 (cl:cons FINITE_INTER nil))))
-        THEN (funcall SET_TAC nil)))))
+        THEN (#`SET_TAC nil)))))
 
 (defparameter CARD_UNION_OVERLAP
   (prove
@@ -7257,7 +7135,7 @@
         "!s t:A->bool.
         FINITE s /\\ FINITE t /\\ CARD(s UNION t) < CARD(s) + CARD(t)
         ==> ~(s INTER t = {})")
-      (holai.runtime:proof (SIMP_TAC (cl:cons (funcall GSYM CARD_UNION_OVERLAP_EQ) nil))
+      (holai.runtime:proof (SIMP_TAC (cl:cons (#`GSYM CARD_UNION_OVERLAP_EQ) nil))
         THEN ARITH_TAC))))
 
 ;; (* ------------------------------------------------------------------------- *)
@@ -7274,16 +7152,15 @@
       (holai.runtime:proof #'GEN_TAC
         THEN
           (REWRITE_TAC
-            (cl:cons (funcall TAUT (parse_term "a /\\ b ==> c <=> b ==> a ==> c")) nil))
+            (cl:cons (#`TAUT (parse_term "a /\\ b ==> c <=> b ==> a ==> c")) nil))
         THEN (MATCH_MP_TAC FINITE_INDUCT_STRONG)
         THEN (REWRITE_TAC (cl:cons NOT_IN_EMPTY (cl:cons IMAGE_CLAUSES nil)))
         THEN (REPEAT #'STRIP_TAC)
         THEN
-          (funcall
-            ASM_SIMP_TAC
+          (#`ASM_SIMP_TAC
             (cl:cons CARD_CLAUSES (cl:cons FINITE_IMAGE (cl:cons IN_IMAGE nil))))
         THEN COND_CASES_TAC
-        THEN (funcall ASM_MESON_TAC (cl:cons IN_INSERT nil))))))
+        THEN (#`ASM_MESON_TAC (cl:cons IN_INSERT nil))))))
 
 (defparameter HAS_SIZE_IMAGE_INJ
   (prove
@@ -7333,10 +7210,10 @@
         THENL
           (cl:cons
             (holai.runtime:proof (REWRITE_TAC (cl:cons EXTENSION (cl:cons IN_IMAGE nil)))
-              THEN (funcall ASM_MESON_TAC nil))
+              THEN (#`ASM_MESON_TAC nil))
             (cl:cons
               (holai.runtime:proof (MATCH_MP_TAC CARD_IMAGE_INJ)
-                THEN (funcall ASM_MESON_TAC nil))
+                THEN (#`ASM_MESON_TAC nil))
               nil))))))
 
 (defparameter CARD_SUBSET_IMAGE
@@ -7359,8 +7236,7 @@
         THEN (REWRITE_TAC (cl:cons HAS_SIZE nil))
         THEN
           (MATCH_MP_TAC
-            (funcall
-              TAUT
+            (#`TAUT
               (parse_term "(a' <=> a) /\\ (a ==> (b' <=> b)) ==> (a' /\\ b' <=> a /\\ b)")))
         THEN #'CONJ_TAC
         THENL
@@ -7372,7 +7248,7 @@
                 THEN AP_TERM_TAC
                 THEN (MATCH_MP_TAC CARD_IMAGE_INJ))
               nil))
-        THEN (funcall ASM_REWRITE_TAC nil)))))
+        THEN (#`ASM_REWRITE_TAC nil)))))
 
 (defparameter CARD_IMAGE_EQ_INJ
   (prove
@@ -7385,16 +7261,14 @@
       (holai.runtime:proof (REPEAT #'STRIP_TAC)
         THEN #'EQ_TAC
         THENL
-          (cl:cons
-            DISCH_TAC
-            (cl:cons (funcall ASM_MESON_TAC (cl:cons CARD_IMAGE_INJ nil)) nil))
+          (cl:cons DISCH_TAC (cl:cons (#`ASM_MESON_TAC (cl:cons CARD_IMAGE_INJ nil)) nil))
         THEN
           (MAP_EVERY
             X_GEN_TAC
             (cl:cons (parse_term "x:A") (cl:cons (parse_term "y:A") nil)))
         THEN #'STRIP_TAC
         THEN (ASM_CASES_TAC (parse_term "x:A = y"))
-        THEN (funcall ASM_REWRITE_TAC nil)
+        THEN (#`ASM_REWRITE_TAC nil)
         THEN (UNDISCH_TAC (parse_term "CARD(IMAGE (f:A->B) s) = CARD s"))
         THEN
           (SUBGOAL_THEN
@@ -7403,17 +7277,16 @@
         THENL (cl:cons (ASM SET_TAC nil) (cl:cons (REWRITE_TAC nil) nil))
         THEN
           (MATCH_MP_TAC
-            (funcall ARITH_RULE (parse_term "!n. m <= n /\\ n < p ==> ~(m:num = p)")))
-        THEN (funcall EXISTS_TAC (parse_term "CARD(s DELETE (y:A))"))
-        THEN (funcall ASM_SIMP_TAC (cl:cons CARD_IMAGE_LE (cl:cons FINITE_DELETE nil)))
+            (#`ARITH_RULE (parse_term "!n. m <= n /\\ n < p ==> ~(m:num = p)")))
+        THEN (#`EXISTS_TAC (parse_term "CARD(s DELETE (y:A))"))
+        THEN (#`ASM_SIMP_TAC (cl:cons CARD_IMAGE_LE (cl:cons FINITE_DELETE nil)))
         THEN
-          (funcall
-            ASM_SIMP_TAC
+          (#`ASM_SIMP_TAC
             (cl:cons
               CARD_DELETE
               (cl:cons
                 CARD_EQ_0
-                (cl:cons (funcall ARITH_RULE (parse_term "n - 1 < n <=> ~(n = 0)")) nil))))
+                (cl:cons (#`ARITH_RULE (parse_term "n - 1 < n <=> ~(n = 0)")) nil))))
         THEN (ASM SET_TAC nil)))))
 
 (defparameter EXISTS_SMALL_SUBSET_IMAGE_INJ
@@ -7427,7 +7300,7 @@
          P (IMAGE f t))")
       (holai.runtime:proof (ONCE_REWRITE_TAC
           (cl:cons
-            (funcall TAUT (parse_term "p /\\ q /\\ r /\\ s <=> r /\\ s /\\ p /\\ q"))
+            (#`TAUT (parse_term "p /\\ q /\\ r /\\ s <=> r /\\ s /\\ p /\\ q"))
             nil))
         THEN (REPEAT #'GEN_TAC)
         THEN (REWRITE_TAC (cl:cons EXISTS_SUBSET_IMAGE_INJ nil))
@@ -7436,8 +7309,7 @@
         THEN #'ABS_TAC
         THEN
           (MATCH_MP_TAC
-            (funcall
-              TAUT
+            (#`TAUT
               (parse_term
                 "(p ==> (q <=> s)) /\\ (p /\\ s ==> (r <=> t))
     ==> ((p /\\ q) /\\ r <=> (p /\\ s) /\\ t)")))
@@ -7460,9 +7332,7 @@
           (REWRITE_TAC
             (cl:cons
               NOT_IMP
-              (cl:cons
-                EXISTS_SMALL_SUBSET_IMAGE_INJ
-                (cl:cons (funcall GSYM CONJ_ASSOC) nil))))))))
+              (cl:cons EXISTS_SMALL_SUBSET_IMAGE_INJ (cl:cons (#`GSYM CONJ_ASSOC) nil))))))))
 
 (defparameter EXISTS_SMALL_SUBSET_IMAGE
   (prove
@@ -7500,7 +7370,7 @@
           (REWRITE_TAC
             (cl:cons
               NOT_IMP
-              (cl:cons EXISTS_SMALL_SUBSET_IMAGE (cl:cons (funcall GSYM CONJ_ASSOC) nil))))))))
+              (cl:cons EXISTS_SMALL_SUBSET_IMAGE (cl:cons (#`GSYM CONJ_ASSOC) nil))))))))
 
 (defparameter CARD_IMAGE_LE2
   (prove
@@ -7514,12 +7384,11 @@
         THEN
           (FIRST_X_ASSUM
             (o
-              (funcall X_CHOOSE_TAC (parse_term "h:C->B"))
+              (#`X_CHOOSE_TAC (parse_term "h:C->B"))
               (GEN_REWRITE_RULE #'I (cl:cons FUNCTION_FACTORS_LEFT_GEN nil))))
         THEN (TRANS_TAC LE_TRANS (parse_term "CARD(IMAGE ((h:C->B) o (g:A->C)) s)"))
         THEN
-          (funcall
-            ASM_SIMP_TAC
+          (#`ASM_SIMP_TAC
             (cl:cons IMAGE_o (cl:cons CARD_IMAGE_LE (cl:cons FINITE_IMAGE nil))))
         THEN (MATCH_MP_TAC EQ_IMP_LE)
         THEN AP_TERM_TAC
@@ -7538,7 +7407,7 @@
         THEN
           (FIRST_X_ASSUM
             (o
-              (funcall X_CHOOSE_TAC (parse_term "h:C->B"))
+              (#`X_CHOOSE_TAC (parse_term "h:C->B"))
               (GEN_REWRITE_RULE #'I (cl:cons FUNCTION_FACTORS_LEFT_GEN nil))))
         THEN
           (SUBGOAL_THEN
@@ -7546,8 +7415,7 @@
             #'SUBST1_TAC)
         THENL (cl:cons (ASM SET_TAC nil) (cl:cons #'ALL_TAC nil))
         THEN
-          (funcall
-            ASM_SIMP_TAC
+          (#`ASM_SIMP_TAC
             (cl:cons
               LT_LE
               (cl:cons
@@ -7576,29 +7444,27 @@
               FINITE_EMPTY
               (cl:cons
                 CARD_CLAUSES
-                (cl:cons (funcall ARITH_RULE (parse_term "~(SUC n <= 0)")) nil))))
+                (cl:cons (#`ARITH_RULE (parse_term "~(SUC n <= 0)")) nil))))
         THEN
           (MAP_EVERY
             X_GEN_TAC
             (cl:cons (parse_term "a:A") (cl:cons (parse_term "s:A->bool") nil)))
         THEN DISCH_TAC
         THEN
-          (funcall
-            ASM_SIMP_TAC
+          (#`ASM_SIMP_TAC
             (cl:cons CARD_CLAUSES (cl:cons FINITE_INSERT (cl:cons LE_SUC nil))))
         THEN DISCH_TAC
-        THEN (FIRST_X_ASSUM (o #'MP_TAC (funcall SPEC (parse_term "s:A->bool"))))
-        THEN (funcall ASM_REWRITE_TAC nil)
+        THEN (FIRST_X_ASSUM (o #'MP_TAC (#`SPEC (parse_term "s:A->bool"))))
+        THEN (#`ASM_REWRITE_TAC nil)
         THEN (DISCH_THEN (X_CHOOSE_THEN (parse_term "t:A->bool") STRIP_ASSUME_TAC))
-        THEN (funcall EXISTS_TAC (parse_term "(a:A) INSERT t"))
+        THEN (#`EXISTS_TAC (parse_term "(a:A) INSERT t"))
         THEN
           (REPEAT
             (holai.runtime:proof #'CONJ_TAC
               THENL (cl:cons (ASM SET_TAC nil) (cl:cons #'ALL_TAC nil))))
         THEN (RULE_ASSUM_TAC (REWRITE_RULE (cl:cons HAS_SIZE nil)))
         THEN
-          (funcall
-            ASM_SIMP_TAC
+          (#`ASM_SIMP_TAC
             (cl:cons
               HAS_SIZE
               (cl:cons
@@ -7622,9 +7488,7 @@
         THEN DISCH_TAC
         THEN (TRANS_TAC LE_TRANS (parse_term "CARD(t:A->bool)"))
         THEN
-          (funcall
-            ASM_MESON_TAC
-            (cl:cons CARD_SUBSET (cl:cons HAS_SIZE (cl:cons LE_REFL nil))))))))
+          (#`ASM_MESON_TAC (cl:cons CARD_SUBSET (cl:cons HAS_SIZE (cl:cons LE_REFL nil))))))))
 
 (defparameter CHOOSE_SUBSET
   (prove
@@ -7653,17 +7517,15 @@
           (cl:cons
             (holai.runtime:proof (ASM_CASES_TAC (parse_term "FINITE(u:A->bool)"))
               THEN
-                (funcall
-                  ASM_SIMP_TAC
+                (#`ASM_SIMP_TAC
                   (cl:cons
                     CARD_DIFF
                     (cl:cons
-                      (funcall ARITH_RULE (parse_term "n:num <= m ==> n - x <= m - x"))
+                      (#`ARITH_RULE (parse_term "n:num <= m ==> n - x <= m - x"))
                       nil)))
-              THEN (MATCH_MP_TAC (funcall TAUT (parse_term "~p ==> p ==> q")))
+              THEN (MATCH_MP_TAC (#`TAUT (parse_term "~p ==> p ==> q")))
               THEN
-                (funcall
-                  ASM_MESON_TAC
+                (#`ASM_MESON_TAC
                   (cl:cons
                     FINITE_UNION
                     (cl:cons
@@ -7672,7 +7534,7 @@
             (cl:cons
               (holai.runtime:proof (DISCH_THEN
                   (X_CHOOSE_THEN (parse_term "t:A->bool") STRIP_ASSUME_TAC))
-                THEN (funcall EXISTS_TAC (parse_term "s UNION t:A->bool"))
+                THEN (#`EXISTS_TAC (parse_term "s UNION t:A->bool"))
                 THEN
                   (REPEAT
                     (holai.runtime:proof #'CONJ_TAC
@@ -7682,8 +7544,8 @@
                     (parse_term "n:num = CARD(s) + (n - CARD(s:A->bool))")
                     #'SUBST1_TAC)
                 THENL (cl:cons ASM_ARITH_TAC (cl:cons (MATCH_MP_TAC HAS_SIZE_UNION) nil))
-                THEN (funcall ASM_REWRITE_TAC nil)
-                THEN (funcall ASM_REWRITE_TAC (cl:cons HAS_SIZE nil))
+                THEN (#`ASM_REWRITE_TAC nil)
+                THEN (#`ASM_REWRITE_TAC (cl:cons HAS_SIZE nil))
                 THEN (ASM SET_TAC nil))
               nil))))))
 
@@ -7698,33 +7560,32 @@
       (holai.runtime:proof (REPEAT #'GEN_TAC)
         THEN (ASM_CASES_TAC (parse_term "f:(A->bool)->bool = {}"))
         THEN
-          (funcall
-            ASM_REWRITE_TAC
+          (#`ASM_REWRITE_TAC
             (cl:cons
               UNIONS_0
               (cl:cons FINITE_EMPTY (cl:cons CARD_CLAUSES (cl:cons LE_0 nil)))))
         THEN (DISCH_THEN (CONJUNCTS_THEN2 ASSUME_TAC #'MP_TAC))
-        THEN (GEN_REWRITE_TAC #'I (cl:cons (funcall GSYM CONTRAPOS_THM) nil))
+        THEN (GEN_REWRITE_TAC #'I (cl:cons (#`GSYM CONTRAPOS_THM) nil))
         THEN
           (REWRITE_TAC
             (cl:cons
               NOT_FORALL_THM
               (cl:cons
                 NOT_IMP
-                (cl:cons (funcall TAUT (parse_term "~(p /\\ q) <=> p ==> ~q")) nil))))
+                (cl:cons (#`TAUT (parse_term "~(p /\\ q) <=> p ==> ~q")) nil))))
         THEN
           (REWRITE_TAC
-            (cl:cons (funcall ARITH_RULE (parse_term "~(x <= n) <=> SUC n <= x")) nil))
+            (cl:cons (#`ARITH_RULE (parse_term "~(x <= n) <=> SUC n <= x")) nil))
         THEN (REWRITE_TAC (cl:cons CHOOSE_SUBSET_EQ nil))
         THEN (REWRITE_TAC (cl:cons RIGHT_AND_EXISTS_THM nil))
         THEN (ONCE_REWRITE_TAC (cl:cons SWAP_EXISTS_THM nil))
         THEN (MATCH_MP_TAC MONO_EXISTS)
-        THEN (funcall X_GEN_TAC (parse_term "s:A->bool"))
+        THEN (#`X_GEN_TAC (parse_term "s:A->bool"))
         THEN (REWRITE_TAC (cl:cons HAS_SIZE nil))
         THEN #'STRIP_TAC
-        THEN (funcall ASM_REWRITE_TAC nil)
+        THEN (#`ASM_REWRITE_TAC nil)
         THEN (MATCH_MP_TAC FINITE_SUBSET_UNIONS_CHAIN)
-        THEN (funcall ASM_REWRITE_TAC nil)))))
+        THEN (#`ASM_REWRITE_TAC nil)))))
 
 (defparameter CARD_LE_1
   (prove
@@ -7733,10 +7594,10 @@
       (holai.runtime:proof #'GEN_TAC
         THEN
           (REWRITE_TAC
-            (cl:cons (funcall ARITH_RULE (parse_term "c <= 1 <=> c = 0 \\/ c = 1")) nil))
-        THEN (REWRITE_TAC (cl:cons LEFT_OR_DISTRIB (cl:cons (funcall GSYM HAS_SIZE) nil)))
-        THEN (funcall CONV_TAC (funcall ONCE_DEPTH_CONV HAS_SIZE_CONV))
-        THEN (funcall SET_TAC nil)))))
+            (cl:cons (#`ARITH_RULE (parse_term "c <= 1 <=> c = 0 \\/ c = 1")) nil))
+        THEN (REWRITE_TAC (cl:cons LEFT_OR_DISTRIB (cl:cons (#`GSYM HAS_SIZE) nil)))
+        THEN (#`CONV_TAC (#`ONCE_DEPTH_CONV HAS_SIZE_CONV))
+        THEN (#`SET_TAC nil)))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Lemmas about the parity of the set of fixed points of an involution.      *)
@@ -7756,19 +7617,19 @@
         THEN
           (REWRITE_TAC
             (cl:cons
-              (funcall TAUT (parse_term "p ==> q /\\ r ==> s <=> (q /\\ p) /\\ r ==> s"))
+              (#`TAUT (parse_term "p ==> q /\\ r ==> s <=> (q /\\ p) /\\ r ==> s"))
               nil))
         THEN
           (MAP_EVERY
             (lambdac (t%) (SPEC_TAC (tuple t% t%)))
             (cl:cons (parse_term "s:A->bool") (cl:cons (parse_term "n:num") nil)))
         THEN (MATCH_MP_TAC num_WF)
-        THEN (funcall X_GEN_TAC (parse_term "n:num"))
+        THEN (#`X_GEN_TAC (parse_term "n:num"))
         THEN DISCH_TAC
         THEN (ASM_CASES_TAC (parse_term "n = 0"))
-        THEN (funcall ASM_REWRITE_TAC (cl:cons ARITH nil))
+        THEN (#`ASM_REWRITE_TAC (cl:cons ARITH nil))
         THEN (MATCH_MP_TAC SET_PROVE_CASES)
-        THEN (funcall ASM_REWRITE_TAC (cl:cons CARD_CLAUSES nil))
+        THEN (#`ASM_REWRITE_TAC (cl:cons CARD_CLAUSES nil))
         THEN
           (MAP_EVERY
             X_GEN_TAC
@@ -7780,33 +7641,30 @@
               (cl:cons IMP_CONJ (cl:cons CARD_CLAUSES (cl:cons FORALL_IN_INSERT nil)))))
         THEN (REWRITE_TAC (cl:cons IN_INSERT nil))
         THEN (ASM_CASES_TAC (parse_term "f(a:A) = a"))
-        THEN (funcall ASM_REWRITE_TAC nil)
+        THEN (#`ASM_REWRITE_TAC nil)
         THEN (ASM_CASES_TAC (parse_term "n = 1"))
         THEN
-          (funcall
-            ASM_SIMP_TAC
+          (#`ASM_SIMP_TAC
             (cl:cons
-              (funcall ARITH_RULE (parse_term "SUC n = 1 <=> n = 0"))
+              (#`ARITH_RULE (parse_term "SUC n = 1 <=> n = 0"))
               (cl:cons CARD_EQ_0 (cl:cons NOT_IN_EMPTY nil))))
         THEN (REPEAT #'STRIP_TAC)
-        THEN (FIRST_X_ASSUM (o #'MP_TAC (funcall SPEC (parse_term "n - 2"))))
+        THEN (FIRST_X_ASSUM (o #'MP_TAC (#`SPEC (parse_term "n - 2"))))
         THEN ANTS_TAC
         THENL (cl:cons ASM_ARITH_TAC (cl:cons #'ALL_TAC nil))
-        THEN (DISCH_THEN (o #'MP_TAC (funcall SPEC (parse_term "s DELETE (f:A->A) a"))))
+        THEN (DISCH_THEN (o #'MP_TAC (#`SPEC (parse_term "s DELETE (f:A->A) a"))))
         THEN
-          (funcall
-            ASM_SIMP_TAC
+          (#`ASM_SIMP_TAC
             (cl:cons
               FINITE_DELETE
               (cl:cons CARD_DELETE (cl:cons EVEN_SUB (cl:cons ARITH nil)))))
         THEN
-          (funcall
-            ASM_REWRITE_TAC
+          (#`ASM_REWRITE_TAC
             (cl:cons
-              (funcall ARITH_RULE (parse_term "n <= 2 <=> n = 0 \\/ n = 1 \\/ n = 2"))
+              (#`ARITH_RULE (parse_term "n <= 2 <=> n = 0 \\/ n = 1 \\/ n = 2"))
               nil))
         THEN (ASM_CASES_TAC (parse_term "n = 2"))
-        THEN (funcall ASM_REWRITE_TAC (cl:cons ARITH nil))
+        THEN (#`ASM_REWRITE_TAC (cl:cons ARITH nil))
         THEN (DISCH_THEN #'MATCH_MP_TAC)
         THEN #'CONJ_TAC
         THENL (cl:cons ASM_ARITH_TAC (cl:cons (ASM SET_TAC nil) nil))))))
@@ -7829,13 +7687,10 @@
           (cl:cons
             #'ALL_TAC
             (cl:cons
-              (holai.runtime:proof AP_TERM_TAC
-                THEN AP_TERM_TAC
-                THEN (funcall SET_TAC nil))
+              (holai.runtime:proof AP_TERM_TAC THEN AP_TERM_TAC THEN (#`SET_TAC nil))
               nil))
         THEN
-          (funcall
-            ASM_SIMP_TAC
+          (#`ASM_SIMP_TAC
             (cl:cons
               EVEN_ADD
               (cl:cons
@@ -7846,12 +7701,10 @@
                     (SET_RULE
                       (parse_term "{x | x IN s /\\ P x} INTER {x | x IN s /\\ ~P x} = {}"))
                     nil)))))
-        THEN
-          (REWRITE_TAC
-            (cl:cons (funcall TAUT (parse_term "(p <=> (p <=> q)) <=> q")) nil))
+        THEN (REWRITE_TAC (cl:cons (#`TAUT (parse_term "(p <=> (p <=> q)) <=> q")) nil))
         THEN (MATCH_MP_TAC INVOLUTION_EVEN_NOFIXPOINTS)
-        THEN (funcall EXISTS_TAC (parse_term "f:A->A"))
-        THEN (funcall ASM_SIMP_TAC (cl:cons FINITE_RESTRICT nil))
+        THEN (#`EXISTS_TAC (parse_term "f:A->A"))
+        THEN (#`ASM_SIMP_TAC (cl:cons FINITE_RESTRICT nil))
         THEN (ASM SET_TAC nil)))))
 
 ;; (* ------------------------------------------------------------------------- *)
@@ -7879,14 +7732,14 @@
             (holai.runtime:proof #'GEN_TAC
               THEN (DISCH_THEN (o #'SUBST1_TAC #'SYM))
               THEN (REWRITE_TAC (cl:cons MULT_CLAUSES (cl:cons HAS_SIZE_0 nil)))
-              THEN (funcall SET_TAC nil))
+              THEN (#`SET_TAC nil))
             (cl:cons #'ALL_TAC nil))
         THEN
           (MAP_EVERY
             X_GEN_TAC
             (cl:cons (parse_term "x:A") (cl:cons (parse_term "s:A->bool") nil)))
         THEN #'STRIP_TAC
-        THEN (funcall X_GEN_TAC (parse_term "m:num"))
+        THEN (#`X_GEN_TAC (parse_term "m:num"))
         THEN (DISCH_THEN (o ASSUME_TAC #'SYM))
         THEN
           (MAP_EVERY
@@ -7895,7 +7748,7 @@
         THEN
           (REWRITE_TAC
             (cl:cons
-              (funcall TAUT (parse_term "a \\/ b ==> c <=> (a ==> c) /\\ (b ==> c)"))
+              (#`TAUT (parse_term "a \\/ b ==> c <=> (a ==> c) /\\ (b ==> c)"))
               nil))
         THEN
           (SIMP_TAC
@@ -7903,8 +7756,8 @@
               FORALL_AND_THM
               (cl:cons LEFT_FORALL_IMP_THM (cl:cons EXISTS_REFL nil))))
         THEN #'STRIP_TAC
-        THEN (FIRST_X_ASSUM (o #'MP_TAC (funcall SPEC (parse_term "CARD(s:A->bool)"))))
-        THEN (funcall ASM_REWRITE_TAC (cl:cons MULT_CLAUSES nil))
+        THEN (FIRST_X_ASSUM (o #'MP_TAC (#`SPEC (parse_term "CARD(s:A->bool)"))))
+        THEN (#`ASM_REWRITE_TAC (cl:cons MULT_CLAUSES nil))
         THEN DISCH_TAC
         THEN
           (REWRITE_TAC
@@ -7916,7 +7769,7 @@
      IMAGE (\\y. (a,y)) (t a)"))
               nil))
         THEN (MATCH_MP_TAC HAS_SIZE_UNION)
-        THEN (funcall ASM_SIMP_TAC (cl:cons HAS_SIZE_IMAGE_INJ (cl:cons PAIR_EQ nil)))
+        THEN (#`ASM_SIMP_TAC (cl:cons HAS_SIZE_IMAGE_INJ (cl:cons PAIR_EQ nil)))
         THEN
           (REWRITE_TAC
             (cl:cons
@@ -7933,7 +7786,7 @@
                         NOT_IN_EMPTY
                         (cl:cons EXISTS_PAIR_THM (cl:cons PAIR_EQ nil)))))))))
         THEN (REPEAT #'STRIP_TAC)
-        THEN (funcall ASM_MESON_TAC (cl:cons PAIR_EQ nil))))))
+        THEN (#`ASM_MESON_TAC (cl:cons PAIR_EQ nil))))))
 
 (defparameter FINITE_PRODUCT_DEPENDENT
   (prove
@@ -7945,8 +7798,7 @@
       (holai.runtime:proof (REPEAT #'STRIP_TAC)
         THEN (MATCH_MP_TAC FINITE_SUBSET)
         THEN
-          (funcall
-            EXISTS_TAC
+          (#`EXISTS_TAC
             (parse_term "IMAGE (\\(x,y). (f:A->B->C) x y) {x,y | x IN s /\\ y IN t x}"))
         THEN
           (REWRITE_TAC
@@ -7985,15 +7837,14 @@
             X_GEN_TAC
             (cl:cons (parse_term "a:A") (cl:cons (parse_term "s:A->bool") nil)))
         THEN #'STRIP_TAC
-        THEN (funcall X_GEN_TAC (parse_term "t:A->B->bool"))
+        THEN (#`X_GEN_TAC (parse_term "t:A->B->bool"))
         THEN
           (SUBGOAL_THEN
             (parse_term
               "{(x:A,y:B) | x IN (a INSERT s) /\\ y IN (t x)} =
     IMAGE (\\y. a,y) (t a) UNION {(x,y) | x IN s /\\ y IN (t x)}")
             (lambdac (th)
-              (funcall
-                ASM_SIMP_TAC
+              (#`ASM_SIMP_TAC
                 (cl:cons
                   IN_INSERT
                   (cl:cons FINITE_IMAGE (cl:cons FINITE_UNION (cl:cons th nil)))))))
@@ -8031,7 +7882,7 @@
                     (parse_term "\\x:A. t:B->bool")
                     (cl:cons (parse_term "CARD(t:B->bool)") nil))))
               HAS_SIZE_PRODUCT_DEPENDENT))
-        THEN (funcall ASM_SIMP_TAC (cl:cons HAS_SIZE nil))))))
+        THEN (#`ASM_SIMP_TAC (cl:cons HAS_SIZE nil))))))
 
 (defparameter HAS_SIZE_PRODUCT
   (prove
@@ -8041,11 +7892,10 @@
              ==> {(x:A,y:B) | x IN s /\\ y IN t} HAS_SIZE (m * n)")
       (SIMP_TAC (cl:cons HAS_SIZE (cl:cons CARD_PRODUCT (cl:cons FINITE_PRODUCT nil)))))))
 
-(funcall parse_as_infix (tuple "CROSS" (tuple 22 "right")))
+(#`parse_as_infix (tuple "CROSS" (tuple 22 "right")))
 
 (defparameter CROSS
-  (funcall
-    new_definition
+  (#`new_definition
     (parse_term "(s:A->bool) CROSS (t:B->bool) = {x,y | x IN s /\\ y IN t}")))
 
 (defparameter IN_CROSS
@@ -8121,9 +7971,9 @@
         FINITE(s CROSS t) <=> s = {} \\/ t = {} \\/ FINITE s /\\ FINITE t")
       (holai.runtime:proof (REPEAT #'GEN_TAC)
         THEN (ASM_CASES_TAC (parse_term "s:A->bool = {}"))
-        THEN (funcall ASM_REWRITE_TAC (cl:cons CROSS_EMPTY (cl:cons FINITE_EMPTY nil)))
+        THEN (#`ASM_REWRITE_TAC (cl:cons CROSS_EMPTY (cl:cons FINITE_EMPTY nil)))
         THEN (ASM_CASES_TAC (parse_term "t:B->bool = {}"))
-        THEN (funcall ASM_REWRITE_TAC (cl:cons CROSS_EMPTY (cl:cons FINITE_EMPTY nil)))
+        THEN (#`ASM_REWRITE_TAC (cl:cons CROSS_EMPTY (cl:cons FINITE_EMPTY nil)))
         THEN #'EQ_TAC
         THEN (REWRITE_TAC (cl:cons FINITE_CROSS nil))
         THEN (REPEAT #'STRIP_TAC)
@@ -8159,7 +8009,7 @@
       (parse_term "FINITE(:A#B) <=> FINITE(:A) /\\ FINITE(:B)")
       (REWRITE_TAC
         (cl:cons
-          (funcall GSYM CROSS_UNIV)
+          (#`GSYM CROSS_UNIV)
           (cl:cons FINITE_CROSS_EQ (cl:cons UNIV_NOT_EMPTY nil)))))))
 
 (defparameter INFINITE_CROSS_UNIV
@@ -8168,7 +8018,7 @@
       (parse_term "INFINITE(:A#B) <=> INFINITE(:A) \\/ INFINITE(:B)")
       (holai.runtime:proof (REWRITE_TAC
           (cl:cons
-            (funcall GSYM CROSS_UNIV)
+            (#`GSYM CROSS_UNIV)
             (cl:cons INFINITE_CROSS_EQ (cl:cons UNIV_NOT_EMPTY nil))))
         THEN (MESON_TAC nil)))))
 
@@ -8199,9 +8049,7 @@
         "!P s t. (?z:A#B. z IN s CROSS t /\\ P z) <=>
            (?x y. x IN s /\\ y IN t /\\ P(x,y))")
       (REWRITE_TAC
-        (cl:cons
-          EXISTS_PAIR_THM
-          (cl:cons (funcall GSYM CONJ_ASSOC) (cl:cons IN_CROSS nil)))))))
+        (cl:cons EXISTS_PAIR_THM (cl:cons (#`GSYM CONJ_ASSOC) (cl:cons IN_CROSS nil)))))))
 
 (defparameter SUBSET_CROSS
   (prove
@@ -8237,8 +8085,8 @@
         s CROSS t = s' CROSS t' <=>
         (s = {} \\/ t = {}) /\\ (s' = {} \\/ t' = {}) \\/ s = s' /\\ t = t'")
       (holai.runtime:proof (REWRITE_TAC
-          (cl:cons (funcall GSYM SUBSET_ANTISYM_EQ) (cl:cons SUBSET_CROSS nil)))
-        THEN (funcall SET_TAC nil)))))
+          (cl:cons (#`GSYM SUBSET_ANTISYM_EQ) (cl:cons SUBSET_CROSS nil)))
+        THEN (#`SET_TAC nil)))))
 
 (defparameter IMAGE_FST_CROSS
   (prove
@@ -8248,7 +8096,7 @@
         IMAGE FST (s CROSS t) = if t = {} then {} else s")
       (holai.runtime:proof (REPEAT #'GEN_TAC)
         THEN COND_CASES_TAC
-        THEN (funcall ASM_REWRITE_TAC (cl:cons CROSS_EMPTY (cl:cons IMAGE_CLAUSES nil)))
+        THEN (#`ASM_REWRITE_TAC (cl:cons CROSS_EMPTY (cl:cons IMAGE_CLAUSES nil)))
         THEN (REWRITE_TAC (cl:cons EXTENSION (cl:cons IN_IMAGE nil)))
         THEN (ONCE_REWRITE_TAC (cl:cons CONJ_SYM nil))
         THEN (REWRITE_TAC (cl:cons EXISTS_IN_CROSS (cl:cons FST nil)))
@@ -8262,7 +8110,7 @@
         IMAGE SND (s CROSS t) = if s = {} then {} else t")
       (holai.runtime:proof (REPEAT #'GEN_TAC)
         THEN COND_CASES_TAC
-        THEN (funcall ASM_REWRITE_TAC (cl:cons CROSS_EMPTY (cl:cons IMAGE_CLAUSES nil)))
+        THEN (#`ASM_REWRITE_TAC (cl:cons CROSS_EMPTY (cl:cons IMAGE_CLAUSES nil)))
         THEN (REWRITE_TAC (cl:cons EXTENSION (cl:cons IN_IMAGE nil)))
         THEN (ONCE_REWRITE_TAC (cl:cons CONJ_SYM nil))
         THEN (REWRITE_TAC (cl:cons EXISTS_IN_CROSS (cl:cons SND nil)))
@@ -8297,7 +8145,7 @@
             EXTENSION
             (cl:cons FORALL_PAIR_THM (cl:cons IN_INTER (cl:cons IN_CROSS nil)))))
         THEN (REPEAT #'STRIP_TAC)
-        THEN (funcall CONV_TAC TAUT)))))
+        THEN (#`CONV_TAC TAUT)))))
 
 (defparameter CROSS_UNION
   (prove
@@ -8312,7 +8160,7 @@
             EXTENSION
             (cl:cons FORALL_PAIR_THM (cl:cons IN_UNION (cl:cons IN_CROSS nil)))))
         THEN (REPEAT #'STRIP_TAC)
-        THEN (funcall CONV_TAC TAUT)))))
+        THEN (#`CONV_TAC TAUT)))))
 
 (defparameter CROSS_DIFF
   (prove
@@ -8327,7 +8175,7 @@
             EXTENSION
             (cl:cons FORALL_PAIR_THM (cl:cons IN_DIFF (cl:cons IN_CROSS nil)))))
         THEN (REPEAT #'STRIP_TAC)
-        THEN (funcall CONV_TAC TAUT)))))
+        THEN (#`CONV_TAC TAUT)))))
 
 (defparameter INTER_CROSS
   (prove
@@ -8339,7 +8187,7 @@
           (cl:cons
             EXTENSION
             (cl:cons IN_INTER (cl:cons FORALL_PAIR_THM (cl:cons IN_CROSS nil)))))
-        THEN (funcall CONV_TAC TAUT)))))
+        THEN (#`CONV_TAC TAUT)))))
 
 (defparameter CROSS_UNIONS nil)
 
@@ -8364,7 +8212,7 @@
             (cl:cons
               EXTENSION
               (cl:cons FORALL_PAIR_THM (cl:cons IN_ELIM_THM (cl:cons IN_CROSS nil))))))
-        THEN (funcall SET_TAC nil))))
+        THEN (#`SET_TAC nil))))
   ((tuple CROSS_UNIONS_UNIONS% CROSS_UNIONS%)
     (setf CROSS_UNIONS CROSS_UNIONS% CROSS_UNIONS_UNIONS CROSS_UNIONS_UNIONS%)))
 
@@ -8392,8 +8240,7 @@
       (holai.runtime:proof (REPEAT #'STRIP_TAC)
         THEN (REPEAT (holai.runtime:proof COND_CASES_TAC THEN (REWRITE_TAC nil)))
         THEN
-          (funcall
-            ASM_REWRITE_TAC
+          (#`ASM_REWRITE_TAC
             (cl:cons
               INTERS_GSPEC
               (cl:cons
@@ -8421,12 +8268,10 @@
 ;; (* ------------------------------------------------------------------------- *)
 
 
-(defparameter ARB (funcall new_definition (parse_term "ARB = (@x:A. F)")))
+(defparameter ARB (#`new_definition (parse_term "ARB = (@x:A. F)")))
 
 (defparameter EXTENSIONAL
-  (funcall
-    new_definition
-    (parse_term "EXTENSIONAL s = {f:A->B | !x. ~(x IN s) ==> f x = ARB}")))
+  (#`new_definition (parse_term "EXTENSIONAL s = {f:A->B | !x. ~(x IN s) ==> f x = ARB}")))
 
 (defparameter IN_EXTENSIONAL
   (prove
@@ -8469,8 +8314,8 @@
         THEN (ASM_CASES_TAC (parse_term "x:A IN s"))
         THENL
           (cl:cons
-            (funcall ASM_SIMP_TAC nil)
-            (cl:cons (funcall ASM_MESON_TAC (cl:cons IN_EXTENSIONAL_UNDEFINED nil)) nil))))))
+            (#`ASM_SIMP_TAC nil)
+            (cl:cons (#`ASM_MESON_TAC (cl:cons IN_EXTENSIONAL_UNDEFINED nil)) nil))))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Restriction of a function to an EXTENSIONAL one on a subset.              *)
@@ -8478,9 +8323,7 @@
 
 
 (defparameter RESTRICTION
-  (funcall
-    new_definition
-    (parse_term "RESTRICTION s (f:A->B) x = if x IN s then f x else ARB")))
+  (#`new_definition (parse_term "RESTRICTION s (f:A->B) x = if x IN s then f x else ARB")))
 
 (defparameter RESTRICTION_THM
   (prove
@@ -8543,7 +8386,7 @@
         "!s t f:A->B.
         s SUBSET t ==> RESTRICTION s (RESTRICTION t f) = RESTRICTION s f")
       (holai.runtime:proof (REWRITE_TAC (cl:cons FUN_EQ_THM (cl:cons RESTRICTION nil)))
-        THEN (funcall SET_TAC nil)))))
+        THEN (#`SET_TAC nil)))))
 
 (defparameter RESTRICTION_IDEMP
   (prove
@@ -8558,7 +8401,7 @@
       (parse_term "!f:A->B s t. s SUBSET t ==> IMAGE (RESTRICTION t f) s = IMAGE f s")
       (holai.runtime:proof (REWRITE_TAC
           (cl:cons EXTENSION (cl:cons IN_IMAGE (cl:cons RESTRICTION nil))))
-        THEN (funcall SET_TAC nil)))))
+        THEN (#`SET_TAC nil)))))
 
 (defparameter RESTRICTION_COMPOSE_RIGHT
   (prove
@@ -8570,7 +8413,7 @@
       (holai.runtime:proof (REWRITE_TAC
           (cl:cons FUN_EQ_THM (cl:cons o_DEF (cl:cons RESTRICTION nil))))
         THEN (SIMP_TAC (cl:cons SUBSET (cl:cons FORALL_IN_IMAGE nil)))
-        THEN (funcall SET_TAC nil)))))
+        THEN (#`SET_TAC nil)))))
 
 (defparameter RESTRICTION_COMPOSE_LEFT
   (prove
@@ -8583,7 +8426,7 @@
       (holai.runtime:proof (REWRITE_TAC
           (cl:cons FUN_EQ_THM (cl:cons o_DEF (cl:cons RESTRICTION nil))))
         THEN (SIMP_TAC (cl:cons SUBSET (cl:cons FORALL_IN_IMAGE nil)))
-        THEN (funcall SET_TAC nil)))))
+        THEN (#`SET_TAC nil)))))
 
 (defparameter RESTRICTION_COMPOSE
   (prove
@@ -8626,8 +8469,7 @@
 
 
 (defparameter cartesian_product
-  (funcall
-    new_definition
+  (#`new_definition
     (parse_term
       "cartesian_product k s =
         {f:K->A | EXTENSIONAL k f /\\ !i. i IN k ==> f i IN s i}")))
@@ -8665,7 +8507,7 @@
           (cl:cons
             RESTRICTION
             (cl:cons cartesian_product (cl:cons EXTENSIONAL (cl:cons IN_ELIM_THM nil)))))
-        THEN (funcall SET_TAC nil)))))
+        THEN (#`SET_TAC nil)))))
 
 (defparameter CARTESIAN_PRODUCT_AS_RESTRICTIONS
   (prove
@@ -8678,17 +8520,17 @@
         THEN
           (REWRITE_TAC
             (cl:cons
-              (funcall GSYM SUBSET_ANTISYM_EQ)
+              (#`GSYM SUBSET_ANTISYM_EQ)
               (cl:cons SUBSET (cl:cons FORALL_IN_GSPEC nil))))
         THEN (REWRITE_TAC (cl:cons RESTRICTION_IN_CARTESIAN_PRODUCT nil))
-        THEN (funcall X_GEN_TAC (parse_term "x:K->A"))
+        THEN (#`X_GEN_TAC (parse_term "x:K->A"))
         THEN
           (REWRITE_TAC
             (cl:cons cartesian_product (cl:cons IN_ELIM_THM (cl:cons EXTENSIONAL nil))))
         THEN #'STRIP_TAC
-        THEN (funcall EXISTS_TAC (parse_term "x:K->A"))
-        THEN (funcall ASM_REWRITE_TAC (cl:cons FUN_EQ_THM (cl:cons RESTRICTION nil)))
-        THEN (funcall ASM_MESON_TAC nil)))))
+        THEN (#`EXISTS_TAC (parse_term "x:K->A"))
+        THEN (#`ASM_REWRITE_TAC (cl:cons FUN_EQ_THM (cl:cons RESTRICTION nil)))
+        THEN (#`ASM_MESON_TAC nil)))))
 
 (defparameter CARTESIAN_PRODUCT_EQ_EMPTY
   (prove
@@ -8711,12 +8553,10 @@
         THEN (REWRITE_TAC (cl:cons IN_ELIM_THM (cl:cons NOT_IN_EMPTY nil)))
         THEN #'EQ_TAC
         THEN DISCH_TAC
-        THEN (funcall X_GEN_TAC (parse_term "f:K->A"))
+        THEN (#`X_GEN_TAC (parse_term "f:K->A"))
         THEN
           (FIRST_X_ASSUM
-            (o
-              #'MP_TAC
-              (funcall SPEC (parse_term "\\i. if i IN k then (f:K->A) i else ARB"))))
+            (o #'MP_TAC (#`SPEC (parse_term "\\i. if i IN k then (f:K->A) i else ARB"))))
         THEN (REWRITE_TAC (cl:cons EXTENSIONAL (cl:cons IN_ELIM_THM nil)))
         THEN (SIMP_TAC nil)))))
 
@@ -8741,8 +8581,8 @@
           (cl:cons cartesian_product (cl:cons IN_ELIM_THM nil)))
         THEN (REPEAT #'STRIP_TAC)
         THEN (MATCH_MP_TAC EXTENSIONAL_EQ)
-        THEN (funcall EXISTS_TAC (parse_term "k:K->bool"))
-        THEN (funcall ASM_REWRITE_TAC (cl:cons IN nil))))))
+        THEN (#`EXISTS_TAC (parse_term "k:K->bool"))
+        THEN (#`ASM_REWRITE_TAC (cl:cons IN nil))))))
 
 (defparameter CARTESIAN_PRODUCT_EQ_MEMBERS_EQ
   (prove
@@ -8763,7 +8603,7 @@
         cartesian_product k s = {} \\/ !i. i IN k ==> s i SUBSET t i")
       (holai.runtime:proof (REPEAT #'GEN_TAC)
         THEN (ASM_CASES_TAC (parse_term "cartesian_product k (s:K->A->bool) = {}"))
-        THEN (funcall ASM_REWRITE_TAC (cl:cons EMPTY_SUBSET nil))
+        THEN (#`ASM_REWRITE_TAC (cl:cons EMPTY_SUBSET nil))
         THEN
           (REWRITE_TAC
             (cl:cons SUBSET (cl:cons cartesian_product (cl:cons IN_ELIM_THM nil))))
@@ -8782,24 +8622,23 @@
                   "~(?i. i IN k /\\ s i = {}) <=> (!i. ?a. i IN k ==> a IN s i)"))
               nil))
         THEN (REWRITE_TAC (cl:cons SKOLEM_THM (cl:cons LEFT_IMP_EXISTS_THM nil)))
-        THEN (funcall X_GEN_TAC (parse_term "z:K->A"))
+        THEN (#`X_GEN_TAC (parse_term "z:K->A"))
         THEN DISCH_TAC
         THEN DISCH_TAC
-        THEN (funcall X_GEN_TAC (parse_term "i:K"))
+        THEN (#`X_GEN_TAC (parse_term "i:K"))
         THEN DISCH_TAC
-        THEN (funcall X_GEN_TAC (parse_term "x:A"))
+        THEN (#`X_GEN_TAC (parse_term "x:A"))
         THEN DISCH_TAC
         THEN
           (FIRST_X_ASSUM
             (o
               #'MP_TAC
-              (funcall
-                SPEC
+              (#`SPEC
                 (parse_term
                   "(\\j. if j IN k then if j = i then x else z j else ARB):K->A"))))
         THEN (REWRITE_TAC (cl:cons EXTENSIONAL (cl:cons IN_ELIM_THM nil)))
         THEN (SIMP_TAC nil)
-        THEN (funcall ASM_MESON_TAC nil)))))
+        THEN (#`ASM_MESON_TAC nil)))))
 
 (defparameter CARTESIAN_PRODUCT_EQ
   (prove
@@ -8811,24 +8650,22 @@
         !i. i IN k ==> s i = t i")
       (holai.runtime:proof (REPEAT #'GEN_TAC)
         THEN (ASM_CASES_TAC (parse_term "!i. i IN k ==> (s:K->A->bool) i = t i"))
-        THEN (funcall ASM_REWRITE_TAC nil)
+        THEN (#`ASM_REWRITE_TAC nil)
         THENL
           (cl:cons
-            (funcall
-              ASM_SIMP_TAC
+            (#`ASM_SIMP_TAC
               (cl:cons cartesian_product (cl:cons EXTENSION (cl:cons IN_ELIM_THM nil))))
             (cl:cons
               (holai.runtime:proof (ASM_CASES_TAC
                   (parse_term "cartesian_product k (t:K->A->bool) = {}"))
-                THEN (funcall ASM_REWRITE_TAC nil)
+                THEN (#`ASM_REWRITE_TAC nil)
                 THEN
                   (ASM_CASES_TAC (parse_term "cartesian_product k (s:K->A->bool) = {}"))
-                THEN (funcall ASM_REWRITE_TAC nil)
+                THEN (#`ASM_REWRITE_TAC nil)
                 THEN
-                  (funcall
-                    ASM_REWRITE_TAC
+                  (#`ASM_REWRITE_TAC
                     (cl:cons
-                      (funcall GSYM SUBSET_ANTISYM_EQ)
+                      (#`GSYM SUBSET_ANTISYM_EQ)
                       (cl:cons SUBSET_CARTESIAN_PRODUCT nil)))
                 THEN (ASM SET_TAC nil))
               nil))))))
@@ -8844,7 +8681,7 @@
           (cl:cons
             EXTENSION
             (cl:cons cartesian_product (cl:cons IN_INTER (cl:cons IN_ELIM_THM nil)))))
-        THEN (funcall SET_TAC nil)))))
+        THEN (#`SET_TAC nil)))))
 
 (defparameter CARTESIAN_PRODUCT_UNIV
   (prove
@@ -8892,14 +8729,14 @@
         else if i IN k then s i else {ARB}")
       (holai.runtime:proof (REPEAT #'GEN_TAC)
         THEN (ASM_CASES_TAC (parse_term "cartesian_product k (s:K->A->bool) = {}"))
-        THEN (funcall ASM_REWRITE_TAC (cl:cons IMAGE_CLAUSES nil))
+        THEN (#`ASM_REWRITE_TAC (cl:cons IMAGE_CLAUSES nil))
         THEN
           (REWRITE_TAC
             (cl:cons
-              (funcall GSYM SUBSET_ANTISYM_EQ)
+              (#`GSYM SUBSET_ANTISYM_EQ)
               (cl:cons SUBSET (cl:cons FORALL_IN_IMAGE nil))))
         THEN (SIMP_TAC (cl:cons CARTESIAN_PRODUCT% (cl:cons IN_ELIM_THM nil)))
-        THEN (funcall X_GEN_TAC (parse_term "x:A"))
+        THEN (#`X_GEN_TAC (parse_term "x:A"))
         THEN DISCH_TAC
         THEN
           (FIRST_X_ASSUM
@@ -8914,15 +8751,14 @@
                   "~(?i. i IN k /\\ s i = {}) <=> (!i. ?a. i IN k ==> a IN s i)"))
               nil))
         THEN (REWRITE_TAC (cl:cons SKOLEM_THM (cl:cons LEFT_IMP_EXISTS_THM nil)))
-        THEN (funcall X_GEN_TAC (parse_term "z:K->A"))
+        THEN (#`X_GEN_TAC (parse_term "z:K->A"))
         THEN DISCH_TAC
         THEN (REWRITE_TAC (cl:cons IN_IMAGE (cl:cons IN_ELIM_THM nil)))
         THEN
-          (funcall
-            EXISTS_TAC
+          (#`EXISTS_TAC
             (parse_term "\\j. if j = i then x else if j IN k then (z:K->A) j else ARB"))
-        THEN (funcall ASM_REWRITE_TAC nil)
-        THEN (funcall ASM_MESON_TAC (cl:cons IN_SING nil))))))
+        THEN (#`ASM_REWRITE_TAC nil)
+        THEN (#`ASM_MESON_TAC (cl:cons IN_SING nil))))))
 
 (defparameter FORALL_CARTESIAN_PRODUCT_ELEMENTS
   (prove
@@ -8934,7 +8770,7 @@
         (!i x. i IN k /\\ x IN s i ==> P i x)")
       (holai.runtime:proof (REPEAT #'GEN_TAC)
         THEN (ASM_CASES_TAC (parse_term "cartesian_product k (s:K->A->bool) = {}"))
-        THEN (funcall ASM_REWRITE_TAC (cl:cons NOT_IN_EMPTY nil))
+        THEN (#`ASM_REWRITE_TAC (cl:cons NOT_IN_EMPTY nil))
         THEN (REWRITE_TAC (cl:cons cartesian_product (cl:cons IN_ELIM_THM nil)))
         THEN #'EQ_TAC
         THENL (cl:cons DISCH_TAC (cl:cons (MESON_TAC nil) nil))
@@ -8954,7 +8790,7 @@
                     (parse_term
                       "~(?i. i IN k /\\ s i = {}) <=> (!i. ?x. i IN k ==> x IN s i)"))
                   nil))))
-        THEN (funcall X_GEN_TAC (parse_term "z:K->A"))
+        THEN (#`X_GEN_TAC (parse_term "z:K->A"))
         THEN DISCH_TAC
         THEN
           (MAP_EVERY
@@ -8970,8 +8806,8 @@
                   (parse_term
                     "\\j. if j = i then x else if j IN k then (z:K->A) j else ARB")
                   (cl:cons (parse_term "i:K") nil)))))
-        THEN (funcall ASM_REWRITE_TAC (cl:cons EXTENSIONAL (cl:cons IN_ELIM_THM nil)))
-        THEN (funcall ASM_MESON_TAC nil)))))
+        THEN (#`ASM_REWRITE_TAC (cl:cons EXTENSIONAL (cl:cons IN_ELIM_THM nil)))
+        THEN (#`ASM_MESON_TAC nil)))))
 
 (defparameter FORALL_CARTESIAN_PRODUCT_ELEMENTS_EQ
   (prove
@@ -9003,8 +8839,7 @@
 
 
 (defparameter product_map
-  (funcall
-    new_definition
+  (#`new_definition
     (parse_term "product_map k (f:K->A->B) = \\x. RESTRICTION k (\\i. f i (x i))")))
 
 (defparameter PRODUCT_MAP_RESTRICTION
@@ -9030,14 +8865,14 @@
         THEN (ONCE_REWRITE_TAC (cl:cons SIMPLE_IMAGE_GEN nil))
         THEN
           (REWRITE_TAC
-            (cl:cons product_map (cl:cons (funcall GSYM IMAGE_o) (cl:cons o_DEF nil))))
+            (cl:cons product_map (cl:cons (#`GSYM IMAGE_o) (cl:cons o_DEF nil))))
         THEN (GEN_REWRITE_TAC #'I (cl:cons EXTENSION nil))
-        THEN (funcall X_GEN_TAC (parse_term "g:K->B"))
+        THEN (#`X_GEN_TAC (parse_term "g:K->B"))
         THEN
           (REWRITE_TAC (cl:cons IN_IMAGE (cl:cons RESTRICTION (cl:cons IN_ELIM_THM nil))))
         THEN #'EQ_TAC
         THEN #'STRIP_TAC
-        THEN (funcall ASM_REWRITE_TAC (cl:cons RESTRICTION_EXTENSION nil))
+        THEN (#`ASM_REWRITE_TAC (cl:cons RESTRICTION_EXTENSION nil))
         THEN (ASM SET_TAC nil)))))
 
 ;; (* ------------------------------------------------------------------------- *)
@@ -9046,8 +8881,7 @@
 
 
 (defparameter disjoint_union
-  (funcall
-    new_definition
+  (#`new_definition
     (parse_term
       "disjoint_union (k:K->bool) (s:K->A->bool) = { (i,x) | i IN k /\\ x IN s i}")))
 
@@ -9061,7 +8895,7 @@
       (holai.runtime:proof (REWRITE_TAC
           (cl:cons SUBSET (cl:cons disjoint_union (cl:cons FORALL_IN_GSPEC nil))))
         THEN (REWRITE_TAC (cl:cons IN_ELIM_PAIR_THM nil))
-        THEN (funcall SET_TAC nil)))))
+        THEN (#`SET_TAC nil)))))
 
 (defparameter DISJOINT_UNION_EQ
   (prove
@@ -9071,8 +8905,8 @@
         disjoint_union k s = disjoint_union k t <=>
         !i. i IN k ==> s i = t i")
       (holai.runtime:proof (REWRITE_TAC
-          (cl:cons (funcall GSYM SUBSET_ANTISYM_EQ) (cl:cons SUBSET_DISJOINT_UNION nil)))
-        THEN (funcall SET_TAC nil)))))
+          (cl:cons (#`GSYM SUBSET_ANTISYM_EQ) (cl:cons SUBSET_DISJOINT_UNION nil)))
+        THEN (#`SET_TAC nil)))))
 
 (defparameter SUBSET_DISJOINT_UNION_EXISTS
   (prove
@@ -9087,7 +8921,7 @@
           (cl:cons
             DISCH_TAC
             (cl:cons (MESON_TAC (cl:cons SUBSET_DISJOINT_UNION nil)) nil))
-        THEN (funcall EXISTS_TAC (parse_term "\\i. {x | (i,x) IN (u:K#A->bool)}"))
+        THEN (#`EXISTS_TAC (parse_term "\\i. {x | (i,x) IN (u:K#A->bool)}"))
         THEN (POP_ASSUM #'MP_TAC)
         THEN (REWRITE_TAC (cl:cons SUBSET (cl:cons EXTENSION nil)))
         THEN
@@ -9095,7 +8929,7 @@
             (cl:cons
               disjoint_union
               (cl:cons FORALL_PAIR_THM (cl:cons IN_ELIM_PAIR_THM nil))))
-        THEN (funcall SET_TAC nil)))))
+        THEN (#`SET_TAC nil)))))
 
 (defparameter INTER_DISJOINT_UNION
   (prove
@@ -9141,7 +8975,7 @@
               (cl:cons
                 disjoint_union
                 (cl:cons IN_ELIM_PAIR_THM (cl:cons NOT_IN_EMPTY nil))))))
-        THEN (funcall SET_TAC nil)))))
+        THEN (#`SET_TAC nil)))))
 
 (defparameter DISJOINT_DISJOINT_UNION
   (prove
@@ -9178,9 +9012,9 @@
         THENL
           (cl:cons
             (holai.runtime:proof (REPEAT #'STRIP_TAC)
-              THEN (funcall ASM_REWRITE_TAC (cl:cons NOT_IN_EMPTY (cl:cons EXP nil)))
-              THEN (funcall CONV_TAC HAS_SIZE_CONV)
-              THEN (funcall EXISTS_TAC (parse_term "(\\x. d):A->B"))
+              THEN (#`ASM_REWRITE_TAC (cl:cons NOT_IN_EMPTY (cl:cons EXP nil)))
+              THEN (#`CONV_TAC HAS_SIZE_CONV)
+              THEN (#`EXISTS_TAC (parse_term "(\\x. d):A->B"))
               THEN
                 (REWRITE_TAC
                   (cl:cons EXTENSION (cl:cons IN_ELIM_THM (cl:cons IN_SING nil))))
@@ -9196,8 +9030,8 @@
               (parse_term "s0:A->bool")
               (cl:cons (parse_term "a:A") (cl:cons (parse_term "s:A->bool") nil))))
         THEN #'STRIP_TAC
-        THEN (FIRST_X_ASSUM (o #'MP_TAC (funcall SPEC (parse_term "s:A->bool"))))
-        THEN (funcall ASM_REWRITE_TAC nil)
+        THEN (FIRST_X_ASSUM (o #'MP_TAC (#`SPEC (parse_term "s:A->bool"))))
+        THEN (#`ASM_REWRITE_TAC nil)
         THEN #'STRIP_TAC
         THEN
           (SUBGOAL_THEN
@@ -9226,7 +9060,7 @@
                     (cl:cons
                       CONJ_ASSOC
                       (cl:cons (ONCE_REWRITE_RULE (cl:cons CONJ_SYM nil) UNWIND_THM1) nil))))
-              THEN (funcall X_GEN_TAC (parse_term "f:A->B"))
+              THEN (#`X_GEN_TAC (parse_term "f:A->B"))
               THEN (REWRITE_TAC (cl:cons IN_INSERT nil))
               THEN #'EQ_TAC
               THENL
@@ -9241,18 +9075,18 @@
                             (parse_term "\\x. if x IN s then (f:A->B) x else d")
                             nil)))
                     THEN (REWRITE_TAC (cl:cons FUN_EQ_THM nil))
-                    THEN (funcall ASM_MESON_TAC nil))
+                    THEN (#`ASM_MESON_TAC nil))
                   (cl:cons
                     (holai.runtime:proof (DISCH_THEN
                         (X_CHOOSE_THEN
                           (parse_term "b:B")
                           (X_CHOOSE_THEN (parse_term "g:A->B") STRIP_ASSUME_TAC)))
-                      THEN (funcall ASM_REWRITE_TAC nil)
-                      THEN (funcall ASM_MESON_TAC nil))
+                      THEN (#`ASM_REWRITE_TAC nil)
+                      THEN (#`ASM_MESON_TAC nil))
                     nil)))
             (cl:cons #'ALL_TAC nil))
         THEN (MATCH_MP_TAC HAS_SIZE_IMAGE_INJ)
-        THEN (funcall ASM_SIMP_TAC (cl:cons EXP (cl:cons HAS_SIZE_PRODUCT nil)))
+        THEN (#`ASM_SIMP_TAC (cl:cons EXP (cl:cons HAS_SIZE_PRODUCT nil)))
         THEN
           (REWRITE_TAC
             (cl:cons
@@ -9261,20 +9095,19 @@
         THEN
           (REWRITE_TAC
             (cl:cons (ONCE_REWRITE_RULE (cl:cons CONJ_SYM nil) UNWIND_THM1) nil))
-        THEN (funcall CONV_TAC (funcall ONCE_DEPTH_CONV GEN_BETA_CONV))
+        THEN (#`CONV_TAC (#`ONCE_DEPTH_CONV GEN_BETA_CONV))
         THEN (REWRITE_TAC (cl:cons FUN_EQ_THM nil))
         THEN (REPEAT #'GEN_TAC)
         THEN #'STRIP_TAC
         THEN #'CONJ_TAC
         THENL
           (cl:cons
-            (holai.runtime:proof (FIRST_X_ASSUM
-                (o #'MP_TAC (funcall SPEC (parse_term "a:A"))))
+            (holai.runtime:proof (FIRST_X_ASSUM (o #'MP_TAC (#`SPEC (parse_term "a:A"))))
               THEN (REWRITE_TAC nil))
             (cl:cons
-              (holai.runtime:proof (funcall X_GEN_TAC (parse_term "x:A"))
-                THEN (FIRST_X_ASSUM (o #'MP_TAC (funcall SPEC (parse_term "x:A"))))
-                THEN (funcall ASM_MESON_TAC nil))
+              (holai.runtime:proof (#`X_GEN_TAC (parse_term "x:A"))
+                THEN (FIRST_X_ASSUM (o #'MP_TAC (#`SPEC (parse_term "x:A"))))
+                THEN (#`ASM_MESON_TAC nil))
               nil))))))
 
 (defparameter CARD_FUNSPACE
@@ -9331,7 +9164,7 @@
           (cl:cons
             (holai.runtime:proof (REWRITE_TAC
                 (cl:cons EXTENSION (cl:cons IN_UNIV (cl:cons IN_INSERT nil))))
-              THEN (funcall CONV_TAC TAUT))
+              THEN (#`CONV_TAC TAUT))
             (cl:cons
               (SIMP_TAC
                 (cl:cons
@@ -9385,8 +9218,8 @@
                     (cl:cons SUBSET (cl:cons IN (cl:cons CONTRAPOS_THM nil)))))))
             (cl:cons
               (holai.runtime:proof (MATCH_MP_TAC HAS_SIZE_FUNSPACE)
-                THEN (funcall ASM_REWRITE_TAC nil)
-                THEN (funcall CONV_TAC HAS_SIZE_CONV)
+                THEN (#`ASM_REWRITE_TAC nil)
+                THEN (#`CONV_TAC HAS_SIZE_CONV)
                 THEN
                   (MAP_EVERY
                     EXISTS_TAC
@@ -9396,7 +9229,7 @@
                     (cl:cons
                       EXTENSION
                       (cl:cons IN_UNIV (cl:cons IN_INSERT (cl:cons NOT_IN_EMPTY nil)))))
-                THEN (funcall CONV_TAC TAUT))
+                THEN (#`CONV_TAC TAUT))
               nil))))))
 
 (defparameter CARD_POWERSET
@@ -9434,7 +9267,7 @@
             (cl:cons
               (holai.runtime:proof (MATCH_MP_TAC EQ_IMP)
                 THEN (MATCH_MP_TAC FINITE_IMAGE_INJ_EQ)
-                THEN (funcall SET_TAC nil))
+                THEN (#`SET_TAC nil))
               nil))))))
 
 (defparameter FINITE_RESTRICTED_SUBSETS
@@ -9443,9 +9276,9 @@
       (parse_term "!P s:A->bool. FINITE s ==> FINITE {t | t SUBSET s /\\ P t}")
       (holai.runtime:proof (REPEAT #'STRIP_TAC)
         THEN (MATCH_MP_TAC FINITE_SUBSET)
-        THEN (funcall EXISTS_TAC (parse_term "{t:A->bool | t SUBSET s}"))
-        THEN (funcall ASM_SIMP_TAC (cl:cons FINITE_POWERSET nil))
-        THEN (funcall SET_TAC nil)))))
+        THEN (#`EXISTS_TAC (parse_term "{t:A->bool | t SUBSET s}"))
+        THEN (#`ASM_SIMP_TAC (cl:cons FINITE_POWERSET nil))
+        THEN (#`SET_TAC nil)))))
 
 (defparameter FINITE_UNIONS
   (prove
@@ -9455,12 +9288,12 @@
         FINITE(UNIONS s) <=> FINITE s /\\ (!t. t IN s ==> FINITE t)")
       (holai.runtime:proof #'GEN_TAC
         THEN (ASM_CASES_TAC (parse_term "FINITE(s:(A->bool)->bool)"))
-        THEN (funcall ASM_SIMP_TAC (cl:cons FINITE_FINITE_UNIONS nil))
+        THEN (#`ASM_SIMP_TAC (cl:cons FINITE_FINITE_UNIONS nil))
         THEN (DISCH_THEN (o #'MP_TAC (MATCH_MP FINITE_POWERSET)))
         THEN (POP_ASSUM #'MP_TAC)
         THEN (REWRITE_TAC (cl:cons CONTRAPOS_THM nil))
         THEN (MATCH_MP_TAC (REWRITE_RULE (cl:cons IMP_CONJ_ALT nil) FINITE_SUBSET))
-        THEN (funcall SET_TAC nil)))))
+        THEN (#`SET_TAC nil)))))
 
 (defparameter FINITE_CARD_LE_UNIONS
   (prove
@@ -9473,18 +9306,16 @@
             CARD(UNIONS {t x | x IN s}) <= m * n")
       (holai.runtime:proof (REPEAT #'STRIP_TAC)
         THEN
-          (funcall
-            ASM_SIMP_TAC
+          (#`ASM_SIMP_TAC
             (cl:cons
               FINITE_UNIONS
               (cl:cons FORALL_IN_GSPEC (cl:cons FINITE_IMAGE (cl:cons SIMPLE_IMAGE nil)))))
         THEN (TRANS_TAC LE_TRANS (parse_term "CARD(s:A->bool) * n"))
         THEN
-          (funcall
-            ASM_REWRITE_TAC
-            (cl:cons (funcall GSYM SIMPLE_IMAGE) (cl:cons LE_MULT_RCANCEL nil)))
+          (#`ASM_REWRITE_TAC
+            (cl:cons (#`GSYM SIMPLE_IMAGE) (cl:cons LE_MULT_RCANCEL nil)))
         THEN (MATCH_MP_TAC CARD_UNIONS_LE)
-        THEN (funcall ASM_REWRITE_TAC (cl:cons HAS_SIZE nil))))))
+        THEN (#`ASM_REWRITE_TAC (cl:cons HAS_SIZE nil))))))
 
 (defparameter POWERSET_CLAUSES
   (prove
@@ -9505,13 +9336,13 @@
         THEN (REWRITE_TAC (cl:cons FORALL_IN_IMAGE (cl:cons FORALL_IN_GSPEC nil)))
         THEN (REWRITE_TAC (cl:cons IN_ELIM_THM (cl:cons IN_UNION (cl:cons IN_IMAGE nil))))
         THEN #'CONJ_TAC
-        THENL (cl:cons #'ALL_TAC (cl:cons (funcall SET_TAC nil) nil))
-        THEN (funcall X_GEN_TAC (parse_term "s:A->bool"))
+        THENL (cl:cons #'ALL_TAC (cl:cons (#`SET_TAC nil) nil))
+        THEN (#`X_GEN_TAC (parse_term "s:A->bool"))
         THEN (ASM_CASES_TAC (parse_term "(a:A) IN s"))
         THENL (cl:cons #'ALL_TAC (cl:cons (ASM SET_TAC nil) nil))
         THEN #'STRIP_TAC
         THEN #'DISJ2_TAC
-        THEN (funcall EXISTS_TAC (parse_term "s DELETE (a:A)"))
+        THEN (#`EXISTS_TAC (parse_term "s DELETE (a:A)"))
         THEN (ASM SET_TAC nil)))))
 
 (defparameter FINITE_IMAGE_INFINITE
@@ -9524,14 +9355,14 @@
       (holai.runtime:proof (REPEAT #'GEN_TAC)
         THEN (REWRITE_TAC (cl:cons IMP_CONJ_ALT nil))
         THEN DISCH_TAC
-        THEN (GEN_REWRITE_TAC #'I (cl:cons (funcall GSYM CONTRAPOS_THM) nil))
+        THEN (GEN_REWRITE_TAC #'I (cl:cons (#`GSYM CONTRAPOS_THM) nil))
         THEN
           (REWRITE_TAC
             (cl:cons
               NOT_EXISTS_THM
               (cl:cons
                 INFINITE
-                (cl:cons (funcall TAUT (parse_term "~(p /\\ q) <=> p ==> ~q")) nil))))
+                (cl:cons (#`TAUT (parse_term "~(p /\\ q) <=> p ==> ~q")) nil))))
         THEN DISCH_TAC
         THEN
           (SUBGOAL_THEN
@@ -9540,11 +9371,10 @@
         THENL
           (cl:cons
             (holai.runtime:proof (REWRITE_TAC (cl:cons UNIONS_GSPEC nil))
-              THEN (funcall SET_TAC nil))
+              THEN (#`SET_TAC nil))
             (cl:cons #'ALL_TAC nil))
         THEN
-          (funcall
-            ASM_SIMP_TAC
+          (#`ASM_SIMP_TAC
             (cl:cons
               FINITE_UNIONS
               (cl:cons SIMPLE_IMAGE (cl:cons FINITE_IMAGE (cl:cons FORALL_IN_IMAGE nil)))))))))
@@ -9558,7 +9388,7 @@
         FINITE s \\/ n = 0")
       (holai.runtime:proof (REPEAT #'GEN_TAC)
         THEN (ASM_CASES_TAC (parse_term "n = 0"))
-        THEN (funcall ASM_REWRITE_TAC nil)
+        THEN (#`ASM_REWRITE_TAC nil)
         THENL
           (cl:cons
             (holai.runtime:proof (REWRITE_TAC
@@ -9568,7 +9398,7 @@
               THEN (REWRITE_TAC (cl:cons SING_GSPEC (cl:cons FINITE_SING nil))))
             (cl:cons
               (holai.runtime:proof (ASM_CASES_TAC (parse_term "FINITE(s:A->bool)"))
-                THEN (funcall ASM_REWRITE_TAC nil)
+                THEN (#`ASM_REWRITE_TAC nil)
                 THENL
                   (cl:cons
                     (holai.runtime:proof (ONCE_REWRITE_TAC
@@ -9578,32 +9408,28 @@
                               "{x | P x /\\ Q x} = {x | x IN {y | P y} /\\ Q x}"))
                           nil))
                       THEN
-                        (funcall
-                          ASM_SIMP_TAC
+                        (#`ASM_SIMP_TAC
                           (cl:cons FINITE_RESTRICT (cl:cons FINITE_POWERSET nil))))
                     (cl:cons
                       (holai.runtime:proof DISCH_TAC
                         THEN (SUBGOAL_THEN (parse_term "FINITE(s:A->bool)") #'MP_TAC)
-                        THENL
-                          (cl:cons #'ALL_TAC (cl:cons (funcall ASM_REWRITE_TAC nil) nil))
+                        THENL (cl:cons #'ALL_TAC (cl:cons (#`ASM_REWRITE_TAC nil) nil))
                         THEN (MATCH_MP_TAC FINITE_SUBSET)
                         THEN
-                          (funcall
-                            EXISTS_TAC
+                          (#`EXISTS_TAC
                             (parse_term
                               "UNIONS {t:A->bool | t SUBSET s /\\ t HAS_SIZE n}"))
                         THEN #'CONJ_TAC
                         THENL
                           (cl:cons
-                            (holai.runtime:proof (funcall
-                                ASM_SIMP_TAC
+                            (holai.runtime:proof (#`ASM_SIMP_TAC
                                 (cl:cons FINITE_UNIONS (cl:cons FORALL_IN_GSPEC nil)))
                               THEN (SIMP_TAC (cl:cons HAS_SIZE nil)))
                             (cl:cons
                               (holai.runtime:proof (GEN_REWRITE_TAC
                                   #'I
                                   (cl:cons SUBSET nil))
-                                THEN (funcall X_GEN_TAC (parse_term "x:A"))
+                                THEN (#`X_GEN_TAC (parse_term "x:A"))
                                 THEN DISCH_TAC
                                 THEN
                                   (REWRITE_TAC
@@ -9616,12 +9442,11 @@
                                       nil))
                                 THEN (MATCH_MP_TAC CHOOSE_SUBSET_BETWEEN)
                                 THEN
-                                  (funcall
-                                    ASM_REWRITE_TAC
+                                  (#`ASM_REWRITE_TAC
                                     (cl:cons
                                       SING_SUBSET
                                       (cl:cons FINITE_SING (cl:cons CARD_SING nil))))
-                                THEN (funcall ASM_SIMP_TAC (cl:cons LE_1 nil)))
+                                THEN (#`ASM_SIMP_TAC (cl:cons LE_1 nil)))
                               nil)))
                       nil)))
               nil))))))
@@ -9636,23 +9461,20 @@
       (holai.runtime:proof (REPEAT #'STRIP_TAC)
         THEN (MATCH_MP_TAC FINITE_SUBSET)
         THEN
-          (funcall
-            EXISTS_TAC
+          (#`EXISTS_TAC
             (parse_term
               "IMAGE (\\u:(A#B)->bool x. if ?y. (x,y) IN u then @y. (x,y) IN u else k x)
           {u | u SUBSET (s CROSS t)}"))
         THEN
-          (funcall
-            ASM_SIMP_TAC
+          (#`ASM_SIMP_TAC
             (cl:cons FINITE_POWERSET (cl:cons FINITE_CROSS (cl:cons FINITE_IMAGE nil))))
         THEN (GEN_REWRITE_TAC #'I (cl:cons SUBSET nil))
         THEN (REWRITE_TAC (cl:cons FORALL_IN_GSPEC nil))
-        THEN (funcall X_GEN_TAC (parse_term "f:A->B"))
+        THEN (#`X_GEN_TAC (parse_term "f:A->B"))
         THEN #'STRIP_TAC
         THEN (REWRITE_TAC (cl:cons IN_IMAGE (cl:cons IN_ELIM_THM nil)))
-        THEN
-          (funcall EXISTS_TAC (parse_term "IMAGE (\\x. x,(f:A->B) x) {x | ~(f x = k x)}"))
-        THEN (funcall ASM_SIMP_TAC (cl:cons FINITE_IMAGE nil))
+        THEN (#`EXISTS_TAC (parse_term "IMAGE (\\x. x,(f:A->B) x) {x | ~(f x = k x)}"))
+        THEN (#`ASM_SIMP_TAC (cl:cons FINITE_IMAGE nil))
         THEN #'CONJ_TAC
         THENL
           (cl:cons
@@ -9665,15 +9487,13 @@
                 THEN (ASM SET_TAC nil))
               nil))
         THEN (REWRITE_TAC (cl:cons FUN_EQ_THM nil))
-        THEN (funcall X_GEN_TAC (parse_term "x:A"))
+        THEN (#`X_GEN_TAC (parse_term "x:A"))
         THEN (REWRITE_TAC (cl:cons IN_IMAGE (cl:cons IN_ELIM_THM (cl:cons PAIR_EQ nil))))
         THEN
           (REWRITE_TAC
-            (cl:cons
-              (funcall GSYM CONJ_ASSOC)
-              (cl:cons UNWIND_THM1 (cl:cons UNWIND_THM2 nil))))
+            (cl:cons (#`GSYM CONJ_ASSOC) (cl:cons UNWIND_THM1 (cl:cons UNWIND_THM2 nil))))
         THEN (ASM_CASES_TAC (parse_term "(f:A->B) x = k x"))
-        THEN (funcall ASM_REWRITE_TAC nil)))))
+        THEN (#`ASM_REWRITE_TAC nil)))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Set of numbers is infinite.                                               *)
@@ -9685,7 +9505,7 @@
     (tuple
       (parse_term "{i | i < 0} = {} /\\
    (!k. {i | i < SUC k} = k INSERT {i | i < k})")
-      (holai.runtime:proof (REWRITE_TAC (cl:cons LT nil)) THEN (funcall SET_TAC nil)))))
+      (holai.runtime:proof (REWRITE_TAC (cl:cons LT nil)) THEN (#`SET_TAC nil)))))
 
 (defparameter HAS_SIZE_NUMSEG_LT
   (prove
@@ -9694,8 +9514,7 @@
       (holai.runtime:proof (REWRITE_TAC (cl:cons HAS_SIZE nil))
         THEN INDUCT_TAC
         THEN
-          (funcall
-            ASM_SIMP_TAC
+          (#`ASM_SIMP_TAC
             (cl:cons
               NUMSEG_CLAUSES_LT
               (cl:cons
@@ -9722,14 +9541,14 @@
       (parse_term
         "{i | i <= 0} = {0} /\\
    (!k. {i | i <= SUC k} = SUC k INSERT {i | i <= k})")
-      (holai.runtime:proof (REWRITE_TAC (cl:cons LE nil)) THEN (funcall SET_TAC nil)))))
+      (holai.runtime:proof (REWRITE_TAC (cl:cons LE nil)) THEN (#`SET_TAC nil)))))
 
 (defparameter HAS_SIZE_NUMSEG_LE
   (prove
     (tuple
       (parse_term "!n. {m | m <= n} HAS_SIZE (n + 1)")
       (REWRITE_TAC
-        (cl:cons (funcall GSYM LT_SUC_LE) (cl:cons HAS_SIZE_NUMSEG_LT (cl:cons ADD1 nil)))))))
+        (cl:cons (#`GSYM LT_SUC_LE) (cl:cons HAS_SIZE_NUMSEG_LT (cl:cons ADD1 nil)))))))
 
 (defparameter FINITE_NUMSEG_LE
   (prove
@@ -9757,12 +9576,11 @@
               THEN (REWRITE_TAC (cl:cons IN_INSERT (cl:cons NOT_IN_EMPTY nil)))
               THEN (MESON_TAC (cl:cons LE_CASES (cl:cons LE_TRANS nil))))
             (cl:cons
-              (holai.runtime:proof (DISCH_THEN
-                  (funcall X_CHOOSE_TAC (parse_term "n:num")))
+              (holai.runtime:proof (DISCH_THEN (#`X_CHOOSE_TAC (parse_term "n:num")))
                 THEN (MATCH_MP_TAC FINITE_SUBSET)
-                THEN (funcall EXISTS_TAC (parse_term "{m:num | m <= n}"))
+                THEN (#`EXISTS_TAC (parse_term "{m:num | m <= n}"))
                 THEN (REWRITE_TAC (cl:cons FINITE_NUMSEG_LE nil))
-                THEN (funcall ASM_SIMP_TAC (cl:cons SUBSET (cl:cons IN_ELIM_THM nil))))
+                THEN (#`ASM_SIMP_TAC (cl:cons SUBSET (cl:cons IN_ELIM_THM nil))))
               nil))))))
 
 (defparameter num_FINITE_AVOID
@@ -9830,15 +9648,12 @@
         THENL
           (cl:cons
             (holai.runtime:proof (REPEAT #'GEN_TAC)
-              THEN (REWRITE_TAC (cl:cons (funcall GSYM REAL_NOT_LT) nil))
+              THEN (REWRITE_TAC (cl:cons (#`GSYM REAL_NOT_LT) nil))
               THEN (ASM_CASES_TAC (parse_term "a:real < b"))
               THEN
-                (funcall
-                  ASM_SIMP_TAC
+                (#`ASM_SIMP_TAC
                   (cl:cons
-                    (funcall
-                      REAL_ARITH
-                      (parse_term "~(a:real < b) ==> ~(a < x /\\ x < b)"))
+                    (#`REAL_ARITH (parse_term "~(a:real < b) ==> ~(a < x /\\ x < b)"))
                     nil))
               THEN (REWRITE_TAC (cl:cons EMPTY_GSPEC (cl:cons FINITE_EMPTY nil)))
               THEN
@@ -9850,9 +9665,7 @@
                 (DISCH_THEN
                   (o
                     #'MP_TAC
-                    (funcall
-                      SPEC
-                      (parse_term "IMAGE (\\n. a + (b - a) / (&n + &2)) (:num)"))))
+                    (#`SPEC (parse_term "IMAGE (\\n. a + (b - a) / (&n + &2)) (:num)"))))
               THEN
                 (REWRITE_TAC
                   (cl:cons
@@ -9863,11 +9676,10 @@
                   (cl:cons
                     REAL_LT_ADDR
                     (cl:cons
-                      (funcall REAL_ARITH (parse_term "a + x / y < b <=> x / y < b - a"))
+                      (#`REAL_ARITH (parse_term "a + x / y < b <=> x / y < b - a"))
                       nil)))
               THEN
-                (funcall
-                  ASM_SIMP_TAC
+                (#`ASM_SIMP_TAC
                   (cl:cons
                     REAL_LT_DIV
                     (cl:cons
@@ -9876,117 +9688,98 @@
                         REAL_LT_LDIV_EQ
                         (cl:cons
                           NOT_IMP
-                          (cl:cons
-                            (funcall REAL_ARITH (parse_term "&0:real < &n + &2"))
-                            nil))))))
+                          (cl:cons (#`REAL_ARITH (parse_term "&0:real < &n + &2")) nil))))))
               THEN
                 (REWRITE_TAC
                   (cl:cons
-                    (funcall
-                      REAL_ARITH
+                    (#`REAL_ARITH
                       (parse_term "x:real < x * (n + &2) <=> &0 < x * (n + &1)"))
                     nil))
               THEN
-                (funcall
-                  ASM_SIMP_TAC
+                (#`ASM_SIMP_TAC
                   (cl:cons
                     REAL_SUB_LT
                     (cl:cons
                       REAL_LT_MUL
-                      (cl:cons (funcall REAL_ARITH (parse_term "&0:real < &n + &1")) nil))))
+                      (cl:cons (#`REAL_ARITH (parse_term "&0:real < &n + &1")) nil))))
               THEN (MP_TAC num_INFINITE)
               THEN (REWRITE_TAC (cl:cons INFINITE nil))
               THEN (MATCH_MP_TAC EQ_IMP)
               THEN AP_TERM_TAC
-              THEN (funcall CONV_TAC #'SYM_CONV)
+              THEN (#`CONV_TAC #'SYM_CONV)
               THEN (MATCH_MP_TAC FINITE_IMAGE_INJ_EQ)
               THEN
-                (funcall
-                  ASM_SIMP_TAC
+                (#`ASM_SIMP_TAC
                   (cl:cons
                     REAL_OF_NUM_EQ
                     (cl:cons
-                      (funcall
-                        REAL_FIELD
+                      (#`REAL_FIELD
                         (parse_term
                           "a < b ==> (a + (b - a) / (&n + &2) = a + (b - a) / (&m + &2) <=>
                  &n:real = &m)"))
                       nil))))
             (cl:cons #'ALL_TAC nil))
-        THEN (funcall ASM_REWRITE_TAC nil)
+        THEN (#`ASM_REWRITE_TAC nil)
         THEN (REPEAT #'CONJ_TAC)
         THEN (REPEAT #'GEN_TAC)
         THENL
           (cl:cons
             (holai.runtime:proof (DISCH_THEN
                 (o
-                  (o
-                    #'MP_TAC
-                    (funcall SPEC (parse_term "{x:real | a < x /\\ x < a + &1}")))
+                  (o #'MP_TAC (#`SPEC (parse_term "{x:real | a < x /\\ x < a + &1}")))
                   (MATCH_MP (REWRITE_RULE (cl:cons IMP_CONJ nil) FINITE_SUBSET))))
-              THEN (funcall ASM_REWRITE_TAC (cl:cons SUBSET (cl:cons IN_ELIM_THM nil)))
+              THEN (#`ASM_REWRITE_TAC (cl:cons SUBSET (cl:cons IN_ELIM_THM nil)))
               THEN REAL_ARITH_TAC)
             (cl:cons
               (holai.runtime:proof (DISCH_THEN
                   (o
-                    (o
-                      #'MP_TAC
-                      (funcall SPEC (parse_term "{x:real | a < x /\\ x < a + &1}")))
+                    (o #'MP_TAC (#`SPEC (parse_term "{x:real | a < x /\\ x < a + &1}")))
                     (MATCH_MP (REWRITE_RULE (cl:cons IMP_CONJ nil) FINITE_SUBSET))))
-                THEN (funcall ASM_REWRITE_TAC (cl:cons SUBSET (cl:cons IN_ELIM_THM nil)))
+                THEN (#`ASM_REWRITE_TAC (cl:cons SUBSET (cl:cons IN_ELIM_THM nil)))
                 THEN REAL_ARITH_TAC)
               (cl:cons
                 (holai.runtime:proof (DISCH_THEN
                     (o
-                      (o
-                        #'MP_TAC
-                        (funcall SPEC (parse_term "{x:real | b - &1 < x /\\ x < b}")))
+                      (o #'MP_TAC (#`SPEC (parse_term "{x:real | b - &1 < x /\\ x < b}")))
                       (MATCH_MP (REWRITE_RULE (cl:cons IMP_CONJ nil) FINITE_SUBSET))))
-                  THEN
-                    (funcall ASM_REWRITE_TAC (cl:cons SUBSET (cl:cons IN_ELIM_THM nil)))
+                  THEN (#`ASM_REWRITE_TAC (cl:cons SUBSET (cl:cons IN_ELIM_THM nil)))
                   THEN REAL_ARITH_TAC)
                 (cl:cons
                   (holai.runtime:proof (DISCH_THEN
                       (o
                         (o
                           #'MP_TAC
-                          (funcall SPEC (parse_term "{x:real | b - &1 < x /\\ x < b}")))
+                          (#`SPEC (parse_term "{x:real | b - &1 < x /\\ x < b}")))
                         (MATCH_MP (REWRITE_RULE (cl:cons IMP_CONJ nil) FINITE_SUBSET))))
-                    THEN
-                      (funcall ASM_REWRITE_TAC (cl:cons SUBSET (cl:cons IN_ELIM_THM nil)))
+                    THEN (#`ASM_REWRITE_TAC (cl:cons SUBSET (cl:cons IN_ELIM_THM nil)))
                     THEN REAL_ARITH_TAC)
                   (cl:cons
                     (REWRITE_TAC
                       (cl:cons
-                        (funcall
-                          REAL_ARITH
+                        (#`REAL_ARITH
                           (parse_term
                             "a:real <= x /\\ x < b <=> (a < x /\\ x < b) \\/ ~(b <= a) /\\ x = a"))
                         nil))
                     (cl:cons
                       (REWRITE_TAC
                         (cl:cons
-                          (funcall
-                            REAL_ARITH
+                          (#`REAL_ARITH
                             (parse_term
                               "a:real < x /\\ x <= b <=> (a < x /\\ x < b) \\/ ~(b <= a) /\\ x = b"))
                           nil))
                       (cl:cons
                         (holai.runtime:proof (ASM_CASES_TAC (parse_term "b:real = a"))
                           THEN
-                            (funcall
-                              ASM_SIMP_TAC
+                            (#`ASM_SIMP_TAC
                               (cl:cons
                                 REAL_LE_ANTISYM
                                 (cl:cons
                                   REAL_LE_REFL
                                   (cl:cons SING_GSPEC (cl:cons FINITE_SING nil)))))
                           THEN
-                            (funcall
-                              ASM_SIMP_TAC
+                            (#`ASM_SIMP_TAC
                               (cl:cons
-                                (funcall
-                                  REAL_ARITH
+                                (#`REAL_ARITH
                                   (parse_term
                                     "~(b:real = a) ==>
         (a <= x /\\ x <= b <=> (a < x /\\ x < b) \\/ ~(b <= a) /\\ x = a \\/
@@ -9994,15 +9787,14 @@
                                 nil)))
                         nil)))))))
         THEN
-          (funcall
-            ASM_REWRITE_TAC
+          (#`ASM_REWRITE_TAC
             (cl:cons
               FINITE_UNION
               (cl:cons
                 (SET_RULE (parse_term "{x | p x \\/ q x} = {x | p x} UNION {x | q x}"))
                 nil)))
         THEN (ASM_CASES_TAC (parse_term "b:real <= a"))
-        THEN (funcall ASM_REWRITE_TAC (cl:cons EMPTY_GSPEC (cl:cons FINITE_EMPTY nil)))))))
+        THEN (#`ASM_REWRITE_TAC (cl:cons EMPTY_GSPEC (cl:cons FINITE_EMPTY nil)))))))
 
 (defparameter real_INFINITE
   (prove
@@ -10012,7 +9804,7 @@
         THEN
           (DISCH_THEN
             (o
-              (o #'MP_TAC (funcall SPEC (parse_term "{x:real | &0 <= x}")))
+              (o #'MP_TAC (#`SPEC (parse_term "{x:real | &0 <= x}")))
               (MATCH_MP (REWRITE_RULE (cl:cons IMP_CONJ nil) FINITE_SUBSET))))
         THEN (REWRITE_TAC (cl:cons FINITE_REAL_INTERVAL (cl:cons SUBSET_UNIV nil)))))))
 
@@ -10035,37 +9827,37 @@
             (cl:cons
               HAS_SIZE_0
               (cl:cons HAS_SIZE_SUC (cl:cons LT (cl:cons NOT_IN_EMPTY nil)))))
-        THEN (funcall X_GEN_TAC (parse_term "s:A->bool"))
+        THEN (#`X_GEN_TAC (parse_term "s:A->bool"))
         THEN (REWRITE_TAC (cl:cons EXTENSION (cl:cons NOT_IN_EMPTY nil)))
         THEN (REWRITE_TAC (cl:cons NOT_FORALL_THM nil))
         THEN
           (DISCH_THEN
             (CONJUNCTS_THEN2
-              (funcall X_CHOOSE_TAC (parse_term "a:A"))
-              (o #'MP_TAC (funcall SPEC (parse_term "a:A")))))
-        THEN (funcall ASM_REWRITE_TAC nil)
+              (#`X_CHOOSE_TAC (parse_term "a:A"))
+              (o #'MP_TAC (#`SPEC (parse_term "a:A")))))
+        THEN (#`ASM_REWRITE_TAC nil)
         THEN DISCH_TAC
-        THEN (FIRST_X_ASSUM (o #'MP_TAC (funcall SPEC (parse_term "s DELETE (a:A)"))))
-        THEN (funcall ASM_REWRITE_TAC nil)
+        THEN (FIRST_X_ASSUM (o #'MP_TAC (#`SPEC (parse_term "s DELETE (a:A)"))))
+        THEN (#`ASM_REWRITE_TAC nil)
         THEN (DISCH_THEN (X_CHOOSE_THEN (parse_term "f:num->A") STRIP_ASSUME_TAC))
-        THEN (funcall EXISTS_TAC (parse_term "\\m:num. if m < n then f(m) else a:A"))
+        THEN (#`EXISTS_TAC (parse_term "\\m:num. if m < n then f(m) else a:A"))
         THEN #'CONJ_TAC
         THENL
           (cl:cons
             (holai.runtime:proof #'GEN_TAC
               THEN (REWRITE_TAC nil)
               THEN COND_CASES_TAC
-              THEN (funcall ASM_MESON_TAC (cl:cons IN_DELETE nil)))
+              THEN (#`ASM_MESON_TAC (cl:cons IN_DELETE nil)))
             (cl:cons #'ALL_TAC nil))
-        THEN (funcall X_GEN_TAC (parse_term "x:A"))
+        THEN (#`X_GEN_TAC (parse_term "x:A"))
         THEN DISCH_TAC
-        THEN (funcall ASM_REWRITE_TAC nil)
-        THEN (FIRST_X_ASSUM (o #'MP_TAC (funcall SPEC (parse_term "x:A"))))
-        THEN (funcall ASM_REWRITE_TAC (cl:cons IN_DELETE nil))
-        THEN (funcall CONV_TAC (funcall ONCE_DEPTH_CONV COND_ELIM_CONV))
+        THEN (#`ASM_REWRITE_TAC nil)
+        THEN (FIRST_X_ASSUM (o #'MP_TAC (#`SPEC (parse_term "x:A"))))
+        THEN (#`ASM_REWRITE_TAC (cl:cons IN_DELETE nil))
+        THEN (#`CONV_TAC (#`ONCE_DEPTH_CONV COND_ELIM_CONV))
         THEN (ASM_CASES_TAC (parse_term "a:A = x"))
-        THEN (funcall ASM_SIMP_TAC nil)
-        THEN (funcall ASM_MESON_TAC (cl:cons LT_REFL (cl:cons IN_DELETE nil)))))))
+        THEN (#`ASM_SIMP_TAC nil)
+        THEN (#`ASM_MESON_TAC (cl:cons LT_REFL (cl:cons IN_DELETE nil)))))))
 
 (defparameter INFINITE_ENUMERATE
   (prove
@@ -10079,8 +9871,7 @@
         THEN (SUBGOAL_THEN (parse_term "!n:num. ?x. n <= x /\\ x IN s") #'MP_TAC)
         THENL
           (cl:cons
-            (funcall
-              ASM_MESON_TAC
+            (#`ASM_MESON_TAC
               (cl:cons
                 INFINITE
                 (cl:cons num_FINITE (cl:cons LT_IMP_LE (cl:cons NOT_LE nil)))))
@@ -10094,57 +9885,52 @@
               (cl:cons LEFT_IMP_EXISTS_THM (cl:cons FORALL_AND_THM nil))))
         THEN
           (REWRITE_TAC
-            (cl:cons
-              (funcall TAUT (parse_term "p ==> ~(q /\\ r) <=> q /\\ p ==> ~r"))
-              nil))
-        THEN (funcall X_GEN_TAC (parse_term "next:num->num"))
+            (cl:cons (#`TAUT (parse_term "p ==> ~(q /\\ r) <=> q /\\ p ==> ~r")) nil))
+        THEN (#`X_GEN_TAC (parse_term "next:num->num"))
         THEN #'STRIP_TAC
         THEN
           (o
             #'MP_TAC
-            (funcall prove_recursive_functions_exist num_RECURSION)
+            (#`prove_recursive_functions_exist num_RECURSION)
             (parse_term "(f(0) = next 0) /\\ (!n. f(SUC n) = next(f n + 1))"))
         THEN (MATCH_MP_TAC MONO_EXISTS)
-        THEN (funcall X_GEN_TAC (parse_term "r:num->num"))
+        THEN (#`X_GEN_TAC (parse_term "r:num->num"))
         THEN #'STRIP_TAC
-        THEN (MATCH_MP_TAC (funcall TAUT (parse_term "p /\\ (p ==> q) ==> p /\\ q")))
+        THEN (MATCH_MP_TAC (#`TAUT (parse_term "p /\\ (p ==> q) ==> p /\\ q")))
         THEN #'CONJ_TAC
         THENL
           (cl:cons
             (holai.runtime:proof #'GEN_TAC
               THEN INDUCT_TAC
-              THEN (funcall ASM_REWRITE_TAC (cl:cons LT nil))
+              THEN (#`ASM_REWRITE_TAC (cl:cons LT nil))
               THEN
-                (funcall
-                  ASM_MESON_TAC
+                (#`ASM_MESON_TAC
                   (cl:cons
-                    (funcall ARITH_RULE (parse_term "m <= n /\\ n + 1 <= p ==> m < p"))
+                    (#`ARITH_RULE (parse_term "m <= n /\\ n + 1 <= p ==> m < p"))
                     (cl:cons LE_LT nil))))
             (cl:cons DISCH_TAC nil))
         THEN
-          (funcall
-            ASM_REWRITE_TAC
+          (#`ASM_REWRITE_TAC
             (cl:cons
-              (funcall GSYM SUBSET_ANTISYM_EQ)
+              (#`GSYM SUBSET_ANTISYM_EQ)
               (cl:cons FORALL_IN_IMAGE (cl:cons SUBSET nil))))
         THEN (REWRITE_TAC (cl:cons IN_IMAGE (cl:cons IN_UNIV nil)))
         THEN #'CONJ_TAC
         THENL
           (cl:cons
-            (holai.runtime:proof INDUCT_TAC THEN (funcall ASM_MESON_TAC nil))
+            (holai.runtime:proof INDUCT_TAC THEN (#`ASM_MESON_TAC nil))
             (cl:cons #'ALL_TAC nil))
         THEN (MATCH_MP_TAC num_WF)
-        THEN (funcall X_GEN_TAC (parse_term "n:num"))
+        THEN (#`X_GEN_TAC (parse_term "n:num"))
         THEN (REPEAT #'STRIP_TAC)
         THEN (ASM_CASES_TAC (parse_term "?m:num. m < n /\\ m IN s"))
         THENL
           (cl:cons
             (holai.runtime:proof (MP_TAC
-                (funcall SPEC (parse_term "\\m:num. m < n /\\ m IN s") num_MAX))
-              THEN (funcall ASM_REWRITE_TAC nil)
+                (#`SPEC (parse_term "\\m:num. m < n /\\ m IN s") num_MAX))
+              THEN (#`ASM_REWRITE_TAC nil)
               THEN
-                (MATCH_MP_TAC
-                  (funcall TAUT (parse_term "p /\\ (q ==> r) ==> (p <=> q) ==> r")))
+                (MATCH_MP_TAC (#`TAUT (parse_term "p /\\ (q ==> r) ==> (p <=> q) ==> r")))
               THEN #'CONJ_TAC
               THENL (cl:cons (MESON_TAC (cl:cons LT_IMP_LE nil)) (cl:cons #'ALL_TAC nil))
               THEN (DISCH_THEN (X_CHOOSE_THEN (parse_term "p:num") STRIP_ASSUME_TAC))
@@ -10154,27 +9940,22 @@
                   (CHOOSE_THEN #'SUBST_ALL_TAC))
               THENL
                 (cl:cons
-                  (funcall ASM_MESON_TAC nil)
-                  (cl:cons (funcall EXISTS_TAC (parse_term "SUC q")) nil))
+                  (#`ASM_MESON_TAC nil)
+                  (cl:cons (#`EXISTS_TAC (parse_term "SUC q")) nil))
               THEN
-                (funcall
-                  ASM_REWRITE_TAC
-                  (cl:cons (funcall GSYM LE_ANTISYM) (cl:cons (funcall GSYM NOT_LT) nil)))
+                (#`ASM_REWRITE_TAC
+                  (cl:cons (#`GSYM LE_ANTISYM) (cl:cons (#`GSYM NOT_LT) nil)))
               THEN
-                (funcall
-                  ASM_MESON_TAC
+                (#`ASM_MESON_TAC
                   (cl:cons
                     NOT_LE
-                    (cl:cons (funcall ARITH_RULE (parse_term "r < p <=> r + 1 <= p")) nil))))
+                    (cl:cons (#`ARITH_RULE (parse_term "r < p <=> r + 1 <= p")) nil))))
             (cl:cons
-              (holai.runtime:proof (funcall EXISTS_TAC (parse_term "0"))
+              (holai.runtime:proof (#`EXISTS_TAC (parse_term "0"))
                 THEN
-                  (funcall
-                    ASM_REWRITE_TAC
-                    (cl:cons
-                      (funcall GSYM LE_ANTISYM)
-                      (cl:cons (funcall GSYM NOT_LT) nil)))
-                THEN (funcall ASM_MESON_TAC (cl:cons LE_0 nil)))
+                  (#`ASM_REWRITE_TAC
+                    (cl:cons (#`GSYM LE_ANTISYM) (cl:cons (#`GSYM NOT_LT) nil)))
+                THEN (#`ASM_MESON_TAC (cl:cons LE_0 nil)))
               nil))))))
 
 (defparameter INFINITE_ENUMERATE_EQ
@@ -10188,11 +9969,11 @@
         THEN (REWRITE_TAC (cl:cons INFINITE_ENUMERATE nil))
         THEN
           (DISCH_THEN (X_CHOOSE_THEN (parse_term "r:num->num") (o STRIP_ASSUME_TAC GSYM)))
-        THEN (funcall ASM_REWRITE_TAC nil)
+        THEN (#`ASM_REWRITE_TAC nil)
         THEN (MATCH_MP_TAC INFINITE_IMAGE)
         THEN (REWRITE_TAC (cl:cons num_INFINITE (cl:cons IN_UNIV nil)))
         THEN (MATCH_MP_TAC WLOG_LT)
-        THEN (funcall ASM_MESON_TAC (cl:cons LT_REFL nil))))))
+        THEN (#`ASM_MESON_TAC (cl:cons LT_REFL nil))))))
 
 (defparameter INFINITE_ENUMERATE_SUBSET
   (prove
@@ -10224,28 +10005,26 @@
                         (o
                           (o
                             #'MP_TAC
-                            (funcall SPEC (parse_term "IMAGE (f:num->A) {m | m < n}")))
+                            (#`SPEC (parse_term "IMAGE (f:num->A) {m | m < n}")))
                           (MATCH_MP
                             (REWRITE_RULE (cl:cons IMP_CONJ nil) INFINITE_DIFF_FINITE))))
                     THEN (SIMP_TAC (cl:cons FINITE_IMAGE (cl:cons FINITE_NUMSEG_LT nil)))
                     THEN (DISCH_THEN (o #'MP_TAC (MATCH_MP INFINITE_NONEMPTY)))
-                    THEN (funcall SET_TAC nil))
+                    THEN (#`SET_TAC nil))
                   (cl:cons
                     (holai.runtime:proof (MATCH_MP_TAC MONO_EXISTS)
                       THEN #'GEN_TAC
                       THEN #'STRIP_TAC
-                      THEN (funcall ASM_REWRITE_TAC nil)
+                      THEN (#`ASM_REWRITE_TAC nil)
                       THEN (MATCH_MP_TAC WLOG_LT)
                       THEN (ASM SET_TAC nil))
                     nil)))
             (cl:cons
               (holai.runtime:proof (MATCH_MP_TAC INFINITE_SUPERSET)
-                THEN (funcall EXISTS_TAC (parse_term "IMAGE (f:num->A) (:num)"))
+                THEN (#`EXISTS_TAC (parse_term "IMAGE (f:num->A) (:num)"))
+                THEN (#`ASM_REWRITE_TAC (cl:cons SUBSET (cl:cons FORALL_IN_IMAGE nil)))
                 THEN
-                  (funcall ASM_REWRITE_TAC (cl:cons SUBSET (cl:cons FORALL_IN_IMAGE nil)))
-                THEN
-                  (funcall
-                    ASM_MESON_TAC
+                  (#`ASM_MESON_TAC
                     (cl:cons INFINITE_IMAGE_INJ (cl:cons num_INFINITE nil))))
               nil))))))
 
@@ -10255,16 +10034,14 @@
 
 
 (defparameter set_of_list
-  (funcall
-    new_recursive_definition
+  (#`new_recursive_definition
     list_RECURSION
     (parse_term
       "(set_of_list ([]:A list) = {}) /\\
    (set_of_list (CONS (h:A) t) = h INSERT (set_of_list t))")))
 
 (defparameter list_of_set
-  (funcall
-    new_definition
+  (#`new_definition
     (parse_term "list_of_set s = @l:A list. set_of_list l = s /\\ LENGTH l = CARD s")))
 
 (defparameter LIST_OF_SET_PROPERTIES
@@ -10275,27 +10052,26 @@
                ==> (set_of_list(list_of_set s) = s) /\\
                    (LENGTH(list_of_set s) = CARD s)")
       (holai.runtime:proof (REWRITE_TAC (cl:cons list_of_set nil))
-        THEN (funcall CONV_TAC (BINDER_CONV (RAND_CONV SELECT_CONV)))
+        THEN (#`CONV_TAC (BINDER_CONV (RAND_CONV SELECT_CONV)))
         THEN (MATCH_MP_TAC FINITE_INDUCT_STRONG)
         THEN (REPEAT #'STRIP_TAC)
         THENL
           (cl:cons
-            (holai.runtime:proof (funcall EXISTS_TAC (parse_term "[]:A list"))
+            (holai.runtime:proof (#`EXISTS_TAC (parse_term "[]:A list"))
               THEN
                 (REWRITE_TAC
                   (cl:cons
                     CARD_CLAUSES
                     (cl:cons holai.lists:LENGTH (cl:cons set_of_list nil)))))
             (cl:cons
-              (holai.runtime:proof (funcall EXISTS_TAC (parse_term "CONS (x:A) l"))
-                THEN (funcall ASM_REWRITE_TAC (cl:cons holai.lists:LENGTH nil))
-                THEN (funcall ASM_REWRITE_TAC (cl:cons set_of_list nil))
+              (holai.runtime:proof (#`EXISTS_TAC (parse_term "CONS (x:A) l"))
+                THEN (#`ASM_REWRITE_TAC (cl:cons holai.lists:LENGTH nil))
+                THEN (#`ASM_REWRITE_TAC (cl:cons set_of_list nil))
                 THEN
                   (FIRST_ASSUM
                     (lambdac (th)
-                      (REWRITE_TAC
-                        (cl:cons (MATCH_MP (funcall CONJUNCT2 CARD_CLAUSES) th) nil))))
-                THEN (funcall ASM_REWRITE_TAC nil))
+                      (REWRITE_TAC (cl:cons (MATCH_MP (#`CONJUNCT2 CARD_CLAUSES) th) nil))))
+                THEN (#`ASM_REWRITE_TAC nil))
               nil))))))
 
 (defparameter SET_OF_LIST_OF_SET
@@ -10321,19 +10097,19 @@
             (lambdac (th)
               (GEN_REWRITE_TAC
                 (o #'BINDER_CONV (funpow 2 #'RAND_CONV))
-                (cl:cons (funcall GSYM th) nil))))
+                (cl:cons (#`GSYM th) nil))))
         THEN
           (SPEC_TAC (tuple (parse_term "list_of_set(s:A->bool)") (parse_term "l:A list")))
         THEN LIST_INDUCT_TAC
         THEN (REWRITE_TAC (cl:cons MEM (cl:cons set_of_list (cl:cons NOT_IN_EMPTY nil))))
-        THEN (funcall ASM_REWRITE_TAC (cl:cons IN_INSERT nil))))))
+        THEN (#`ASM_REWRITE_TAC (cl:cons IN_INSERT nil))))))
 
 (defparameter FINITE_SET_OF_LIST
   (prove
     (tuple
       (parse_term "!l:A list. FINITE(set_of_list l)")
       (holai.runtime:proof LIST_INDUCT_TAC
-        THEN (funcall ASM_SIMP_TAC (cl:cons set_of_list (cl:cons FINITE_RULES nil)))))))
+        THEN (#`ASM_SIMP_TAC (cl:cons set_of_list (cl:cons FINITE_RULES nil)))))))
 
 (defparameter IN_SET_OF_LIST
   (prove
@@ -10346,7 +10122,7 @@
             (cl:cons
               IN_INSERT
               (cl:cons NOT_IN_EMPTY (cl:cons MEM (cl:cons set_of_list nil)))))
-        THEN (funcall ASM_MESON_TAC nil)))))
+        THEN (#`ASM_MESON_TAC nil)))))
 
 (defparameter SET_OF_LIST_APPEND
   (prove
@@ -10366,8 +10142,7 @@
       (holai.runtime:proof #'GEN_TAC
         THEN LIST_INDUCT_TAC
         THEN
-          (funcall
-            ASM_REWRITE_TAC
+          (#`ASM_REWRITE_TAC
             (cl:cons set_of_list (cl:cons MAP (cl:cons IMAGE_CLAUSES nil))))))))
 
 (defparameter SET_OF_LIST_EQ_EMPTY
@@ -10383,7 +10158,7 @@
   (prove
     (tuple
       (parse_term "list_of_set {}:A list = []")
-      (holai.runtime:proof (REWRITE_TAC (cl:cons (funcall GSYM LENGTH_EQ_NIL) nil))
+      (holai.runtime:proof (REWRITE_TAC (cl:cons (#`GSYM LENGTH_EQ_NIL) nil))
         THEN
           (SIMP_TAC
             (cl:cons LENGTH_LIST_OF_SET (cl:cons FINITE_EMPTY (cl:cons CARD_CLAUSES nil))))))))
@@ -10416,7 +10191,7 @@
                 (cl:cons
                   CONS_11
                   (cl:cons SUC_INJ (cl:cons NOT_CONS_NIL (cl:cons NOT_SUC nil)))))))
-        THEN (funcall SET_TAC nil)))))
+        THEN (#`SET_TAC nil)))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Mappings from finite set enumerations to lists (no "setification").       *)
@@ -10427,7 +10202,7 @@
   (let ((fn (splitlist (dest_binary "INSERT"))))
     (cl:declare (cl:ignorable fn))
     (lambdac (tm)
-      (match (funcall fn tm)
+      (match (#`fn tm)
         ((tuple l n)
           (if (cl:and (is_const n) (= (holai.runtime:fst (dest_const n)) "EMPTY"))
             l
@@ -10444,12 +10219,12 @@
       (match arg~13235
         ((tuple l ty)
           (let
-            ((insert_tm (funcall inst (cl:cons (tuple ty aty) nil) insert_atm))
-              (nil_tm (funcall inst (cl:cons (tuple ty aty) nil) nil_atm)))
+            ((insert_tm (#`inst (cl:cons (tuple ty aty) nil) insert_atm))
+              (nil_tm (#`inst (cl:cons (tuple ty aty) nil) nil_atm)))
             (cl:declare (cl:ignorable insert_tm nil_tm))
             (itlist (mk_binop insert_tm) l nil_tm)))))))
 
-(defunc mk_fset (l) (funcall mk_setenum (tuple l (type_of (hd l)))))
+(defunc mk_fset (l) (#`mk_setenum (tuple l (type_of (hd l)))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Pairwise property over sets and lists.                                    *)
@@ -10457,8 +10232,7 @@
 
 
 (defparameter pairwise
-  (funcall
-    new_definition
+  (#`new_definition
     (parse_term
       "pairwise r (s:A->bool) <=> !x y. x IN s /\\ y IN s /\\ ~(x = y) ==> r x y")))
 
@@ -10484,15 +10258,13 @@
         pairwise P s /\\
         (!x y. x IN s /\\ y IN s /\\ P x y /\\ ~(x = y) ==> Q x y)
         ==> pairwise Q s")
-      (holai.runtime:proof (REWRITE_TAC (cl:cons pairwise nil))
-        THEN (funcall SET_TAC nil)))))
+      (holai.runtime:proof (REWRITE_TAC (cl:cons pairwise nil)) THEN (#`SET_TAC nil)))))
 
 (defparameter PAIRWISE_MONO
   (prove
     (tuple
       (parse_term "!(r:A->A->bool) s t. pairwise r s /\\ t SUBSET s ==> pairwise r t")
-      (holai.runtime:proof (REWRITE_TAC (cl:cons pairwise nil))
-        THEN (funcall SET_TAC nil)))))
+      (holai.runtime:proof (REWRITE_TAC (cl:cons pairwise nil)) THEN (#`SET_TAC nil)))))
 
 (defparameter PAIRWISE_AND
   (prove
@@ -10500,8 +10272,7 @@
       (parse_term
         "!R R' s. pairwise R s /\\ pairwise R' s <=>
             pairwise (\\x y:A. R x y /\\ R' x y) s")
-      (holai.runtime:proof (REWRITE_TAC (cl:cons pairwise nil))
-        THEN (funcall SET_TAC nil)))))
+      (holai.runtime:proof (REWRITE_TAC (cl:cons pairwise nil)) THEN (#`SET_TAC nil)))))
 
 (defparameter PAIRWISE_INSERT
   (prove
@@ -10542,8 +10313,7 @@
         "!R s t. pairwise R (s UNION t) <=>
            pairwise R s /\\ pairwise R t /\\
            (!x y:A. x IN s DIFF t /\\ y IN t DIFF s ==> R x y /\\ R y x)")
-      (holai.runtime:proof (REWRITE_TAC (cl:cons pairwise nil))
-        THEN (funcall SET_TAC nil)))))
+      (holai.runtime:proof (REWRITE_TAC (cl:cons pairwise nil)) THEN (#`SET_TAC nil)))))
 
 (defparameter PAIRWISE_CHAIN_UNIONS
   (prove
@@ -10553,8 +10323,7 @@
         (!s. s IN c ==> pairwise R s) /\\
         (!s t. s IN c /\\ t IN c ==> s SUBSET t \\/ t SUBSET s)
         ==> pairwise R (UNIONS c)")
-      (holai.runtime:proof (REWRITE_TAC (cl:cons pairwise nil))
-        THEN (funcall SET_TAC nil)))))
+      (holai.runtime:proof (REWRITE_TAC (cl:cons pairwise nil)) THEN (#`SET_TAC nil)))))
 
 (defparameter DIFF_UNIONS_PAIRWISE_DISJOINT
   (prove
@@ -10570,7 +10339,7 @@
         THEN #'CONJ_TAC
         THENL
           (cl:cons
-            (holai.runtime:proof (REWRITE_TAC (cl:cons (funcall GSYM UNIONS_UNION) nil))
+            (holai.runtime:proof (REWRITE_TAC (cl:cons (#`GSYM UNIONS_UNION) nil))
               THEN AP_TERM_TAC
               THEN (ASM SET_TAC nil))
             (cl:cons
@@ -10590,7 +10359,7 @@
                   (REPEAT
                     (holai.runtime:proof #'CONJ_TAC
                       THENL (cl:cons (ASM SET_TAC nil) (cl:cons #'ALL_TAC nil))))
-                THEN (funcall ASM_MESON_TAC nil))
+                THEN (#`ASM_MESON_TAC nil))
               nil))))))
 
 (defparameter INTER_UNIONS_PAIRWISE_DISJOINT
@@ -10613,7 +10382,7 @@
                 IN_UNIONS
                 (cl:cons IN_INTER (cl:cons IN_ELIM_THM (cl:cons IN_UNION nil))))))
         THEN DISCH_TAC
-        THEN (funcall X_GEN_TAC (parse_term "z:A"))
+        THEN (#`X_GEN_TAC (parse_term "z:A"))
         THEN (REWRITE_TAC (cl:cons RIGHT_AND_EXISTS_THM nil))
         THEN #'EQ_TAC
         THENL
@@ -10632,8 +10401,8 @@
               (SPECL
                 (cl:cons (parse_term "u:A->bool") (cl:cons (parse_term "v:A->bool") nil)))))
         THEN (ASM_CASES_TAC (parse_term "u:A->bool = v"))
-        THEN (funcall ASM_REWRITE_TAC nil)
-        THENL (cl:cons (funcall ASM_MESON_TAC nil) (cl:cons (ASM SET_TAC nil) nil))))))
+        THEN (#`ASM_REWRITE_TAC nil)
+        THENL (cl:cons (#`ASM_MESON_TAC nil) (cl:cons (ASM SET_TAC nil) nil))))))
 
 (defparameter PSUBSET_UNIONS_PAIRWISE_DISJOINT
   (prove
@@ -10655,7 +10424,7 @@
                 (o
                   (o
                     #'MP_TAC
-                    (funcall PART_MATCH (o lhand #'rand) DIFF_UNIONS_PAIRWISE_DISJOINT))
+                    (#`PART_MATCH (o lhand #'rand) DIFF_UNIONS_PAIRWISE_DISJOINT))
                   lhand)
                 #'rand)
               (function-value #'holai.runtime:snd 1)))
@@ -10668,20 +10437,18 @@
         THEN (REWRITE_TAC (cl:cons IN_DELETE (cl:cons IN_DIFF nil)))
         THEN (MESON_TAC nil)))))
 
-(funcall parse_as_infix (tuple "UNION_OF" (tuple 20 "right")))
+(#`parse_as_infix (tuple "UNION_OF" (tuple 20 "right")))
 
-(funcall parse_as_infix (tuple "INTERSECTION_OF" (tuple 20 "right")))
+(#`parse_as_infix (tuple "INTERSECTION_OF" (tuple 20 "right")))
 
 (defparameter UNION_OF
-  (funcall
-    new_definition
+  (#`new_definition
     (parse_term
       "P UNION_OF Q =
    \\s:A->bool. ?u. P u /\\ (!c. c IN u ==> Q c) /\\ UNIONS u = s")))
 
 (defparameter INTERSECTION_OF
-  (funcall
-    new_definition
+  (#`new_definition
     (parse_term
       "P INTERSECTION_OF Q =
    \\s:A->bool. ?u. P u /\\ (!c. c IN u ==> Q c) /\\ INTERS u = s")))
@@ -10692,8 +10459,8 @@
       (parse_term "!P Q s:A->bool. P {s} /\\ Q s ==> (P UNION_OF Q) s")
       (holai.runtime:proof (REPEAT #'STRIP_TAC)
         THEN (REWRITE_TAC (cl:cons UNION_OF nil))
-        THEN (funcall EXISTS_TAC (parse_term "{s:A->bool}"))
-        THEN (funcall ASM_SIMP_TAC (cl:cons UNIONS_1 (cl:cons IN_SING nil)))))))
+        THEN (#`EXISTS_TAC (parse_term "{s:A->bool}"))
+        THEN (#`ASM_SIMP_TAC (cl:cons UNIONS_1 (cl:cons IN_SING nil)))))))
 
 (defparameter INTERSECTION_OF_INC
   (prove
@@ -10701,8 +10468,8 @@
       (parse_term "!P Q s:A->bool. P {s} /\\ Q s ==> (P INTERSECTION_OF Q) s")
       (holai.runtime:proof (REPEAT #'STRIP_TAC)
         THEN (REWRITE_TAC (cl:cons INTERSECTION_OF nil))
-        THEN (funcall EXISTS_TAC (parse_term "{s:A->bool}"))
-        THEN (funcall ASM_SIMP_TAC (cl:cons INTERS_1 (cl:cons IN_SING nil)))))))
+        THEN (#`EXISTS_TAC (parse_term "{s:A->bool}"))
+        THEN (#`ASM_SIMP_TAC (cl:cons INTERS_1 (cl:cons IN_SING nil)))))))
 
 (defparameter UNION_OF_MONO
   (prove
@@ -10745,8 +10512,8 @@
       (parse_term "!P Q:(A->bool)->bool. P {} ==> (P UNION_OF Q) {}")
       (holai.runtime:proof (REPEAT #'STRIP_TAC)
         THEN (REWRITE_TAC (cl:cons UNION_OF nil))
-        THEN (funcall EXISTS_TAC (parse_term "{}:(A->bool)->bool"))
-        THEN (funcall ASM_REWRITE_TAC (cl:cons UNIONS_0 (cl:cons NOT_IN_EMPTY nil)))))))
+        THEN (#`EXISTS_TAC (parse_term "{}:(A->bool)->bool"))
+        THEN (#`ASM_REWRITE_TAC (cl:cons UNIONS_0 (cl:cons NOT_IN_EMPTY nil)))))))
 
 (defparameter INTERSECTION_OF_EMPTY
   (prove
@@ -10754,8 +10521,8 @@
       (parse_term "!P Q:(A->bool)->bool. P {} ==> (P INTERSECTION_OF Q) UNIV")
       (holai.runtime:proof (REPEAT #'STRIP_TAC)
         THEN (REWRITE_TAC (cl:cons INTERSECTION_OF nil))
-        THEN (funcall EXISTS_TAC (parse_term "{}:(A->bool)->bool"))
-        THEN (funcall ASM_REWRITE_TAC (cl:cons INTERS_0 (cl:cons NOT_IN_EMPTY nil)))))))
+        THEN (#`EXISTS_TAC (parse_term "{}:(A->bool)->bool"))
+        THEN (#`ASM_REWRITE_TAC (cl:cons INTERS_0 (cl:cons NOT_IN_EMPTY nil)))))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* The ARBITRARY and FINITE cases of UNION_OF / INTERSECTION_OF              *)
@@ -10763,7 +10530,7 @@
 
 
 (defparameter ARBITRARY
-  (funcall new_definition (parse_term "ARBITRARY (s:(A->bool)->bool) <=> T")))
+  (#`new_definition (parse_term "ARBITRARY (s:(A->bool)->bool) <=> T")))
 
 (defparameter ARBITRARY_UNION_OF_ALT
   (prove
@@ -10777,16 +10544,14 @@
           (REWRITE_TAC
             (cl:cons
               FORALL_AND_THM
-              (cl:cons
-                (funcall TAUT (parse_term "(p <=> q) <=> (p ==> q) /\\ (q ==> p)"))
-                nil)))
+              (cl:cons (#`TAUT (parse_term "(p <=> q) <=> (p ==> q) /\\ (q ==> p)")) nil)))
         THEN (REWRITE_TAC (cl:cons FORALL_UNION_OF (cl:cons ARBITRARY nil)))
         THEN #'CONJ_TAC
-        THENL (cl:cons (funcall SET_TAC nil) (cl:cons #'ALL_TAC nil))
-        THEN (funcall X_GEN_TAC (parse_term "s:A->bool"))
+        THENL (cl:cons (#`SET_TAC nil) (cl:cons #'ALL_TAC nil))
+        THEN (#`X_GEN_TAC (parse_term "s:A->bool"))
         THEN DISCH_TAC
         THEN (REWRITE_TAC (cl:cons ARBITRARY (cl:cons UNION_OF nil)))
-        THEN (funcall EXISTS_TAC (parse_term "{u:A->bool | u IN B /\\ u SUBSET s}"))
+        THEN (#`EXISTS_TAC (parse_term "{u:A->bool | u IN B /\\ u SUBSET s}"))
         THEN (ASM SET_TAC nil)))))
 
 (defparameter ARBITRARY_UNION_OF_EMPTY
@@ -10824,10 +10589,9 @@
         THEN #'EQ_TAC
         THEN
           (DISCH_THEN (X_CHOOSE_THEN (parse_term "u:(A->bool)->bool") STRIP_ASSUME_TAC))
-        THEN (funcall EXISTS_TAC (parse_term "IMAGE (\\c. (:A) DIFF c) u"))
+        THEN (#`EXISTS_TAC (parse_term "IMAGE (\\c. (:A) DIFF c) u"))
         THEN
-          (funcall
-            ASM_SIMP_TAC
+          (#`ASM_SIMP_TAC
             (cl:cons ARBITRARY (cl:cons FORALL_IN_IMAGE (cl:cons COMPL_COMPL nil))))
         THEN (ONCE_REWRITE_TAC (cl:cons UNIONS_INTERS (cl:cons INTERS_UNIONS nil)))
         THEN
@@ -10835,7 +10599,7 @@
             (cl:cons
               (SET_RULE (parse_term "{f y | y IN IMAGE g s} = IMAGE (\\x. f(g x)) s"))
               nil))
-        THEN (funcall ASM_REWRITE_TAC (cl:cons IMAGE_ID (cl:cons COMPL_COMPL nil)))))))
+        THEN (#`ASM_REWRITE_TAC (cl:cons IMAGE_ID (cl:cons COMPL_COMPL nil)))))))
 
 (defparameter ARBITRARY_INTERSECTION_OF_COMPLEMENT
   (prove
@@ -10854,11 +10618,11 @@
         ARBITRARY UNION_OF ARBITRARY UNION_OF P = ARBITRARY UNION_OF P")
       (holai.runtime:proof #'GEN_TAC
         THEN (REWRITE_TAC (cl:cons FUN_EQ_THM nil))
-        THEN (funcall X_GEN_TAC (parse_term "s:A->bool"))
+        THEN (#`X_GEN_TAC (parse_term "s:A->bool"))
         THEN #'EQ_TAC
         THEN (REWRITE_TAC (cl:cons ARBITRARY_UNION_OF_INC nil))
         THEN (REWRITE_TAC (cl:cons UNION_OF (cl:cons LEFT_IMP_EXISTS_THM nil)))
-        THEN (funcall X_GEN_TAC (parse_term "u:(A->bool)->bool"))
+        THEN (#`X_GEN_TAC (parse_term "u:(A->bool)->bool"))
         THEN (DISCH_THEN (CONJUNCTS_THEN2 ASSUME_TAC #'MP_TAC))
         THEN (DISCH_THEN (CONJUNCTS_THEN2 #'MP_TAC (o #'SUBST1_TAC #'SYM)))
         THEN
@@ -10866,14 +10630,13 @@
             (o LAND_CONV ONCE_DEPTH_CONV)
             (cl:cons RIGHT_IMP_EXISTS_THM nil))
         THEN (REWRITE_TAC (cl:cons SKOLEM_THM (cl:cons LEFT_IMP_EXISTS_THM nil)))
-        THEN (funcall X_GEN_TAC (parse_term "f:(A->bool)->(A->bool)->bool"))
+        THEN (#`X_GEN_TAC (parse_term "f:(A->bool)->(A->bool)->bool"))
         THEN DISCH_TAC
         THEN
-          (funcall
-            EXISTS_TAC
+          (#`EXISTS_TAC
             (parse_term
               "IMAGE SND {s,t | s IN u /\\ t IN (f:(A->bool)->(A->bool)->bool) s}"))
-        THEN (funcall ASM_SIMP_TAC (cl:cons ARBITRARY nil))
+        THEN (#`ASM_SIMP_TAC (cl:cons ARBITRARY nil))
         THEN (REWRITE_TAC (cl:cons FORALL_IN_IMAGE (cl:cons FORALL_IN_GSPEC nil)))
         THEN #'CONJ_TAC
         THENL
@@ -10897,7 +10660,7 @@
               ETA_AX
               (cl:cons
                 (REWRITE_RULE
-                  (cl:cons (funcall GSYM FUN_EQ_THM) (cl:cons ETA_AX nil))
+                  (cl:cons (#`GSYM FUN_EQ_THM) (cl:cons ETA_AX nil))
                   ARBITRARY_INTERSECTION_OF_COMPLEMENT)
                 nil))))
         THEN (REWRITE_TAC (cl:cons ARBITRARY_UNION_OF_IDEMPOT nil))))))
@@ -10910,11 +10673,11 @@
         (!s. s IN u ==> (ARBITRARY UNION_OF P) s)
         ==> (ARBITRARY UNION_OF P) (UNIONS u)")
       (holai.runtime:proof (REPEAT #'STRIP_TAC)
-        THEN (ONCE_REWRITE_TAC (cl:cons (funcall GSYM ARBITRARY_UNION_OF_IDEMPOT) nil))
+        THEN (ONCE_REWRITE_TAC (cl:cons (#`GSYM ARBITRARY_UNION_OF_IDEMPOT) nil))
         THEN (ONCE_REWRITE_TAC (cl:cons UNION_OF nil))
         THEN (REWRITE_TAC nil)
-        THEN (funcall EXISTS_TAC (parse_term "u:(A->bool)->bool"))
-        THEN (funcall ASM_REWRITE_TAC (cl:cons ARBITRARY nil))))))
+        THEN (#`EXISTS_TAC (parse_term "u:(A->bool)->bool"))
+        THEN (#`ASM_REWRITE_TAC (cl:cons ARBITRARY nil))))))
 
 (defparameter ARBITRARY_UNION_OF_UNION
   (prove
@@ -10924,9 +10687,9 @@
         (ARBITRARY UNION_OF P) s /\\ (ARBITRARY UNION_OF P) t
         ==> (ARBITRARY UNION_OF P) (s UNION t)")
       (holai.runtime:proof (REPEAT #'STRIP_TAC)
-        THEN (REWRITE_TAC (cl:cons (funcall GSYM UNIONS_2) nil))
+        THEN (REWRITE_TAC (cl:cons (#`GSYM UNIONS_2) nil))
         THEN (MATCH_MP_TAC ARBITRARY_UNION_OF_UNIONS)
-        THEN (funcall ASM_REWRITE_TAC (cl:cons ARBITRARY (cl:cons FORALL_IN_INSERT nil)))
+        THEN (#`ASM_REWRITE_TAC (cl:cons ARBITRARY (cl:cons FORALL_IN_INSERT nil)))
         THEN (REWRITE_TAC (cl:cons ARBITRARY (cl:cons NOT_IN_EMPTY nil)))))))
 
 (defparameter ARBITRARY_INTERSECTION_OF_INTERS
@@ -10937,13 +10700,11 @@
         (!s. s IN u ==> (ARBITRARY INTERSECTION_OF P) s)
         ==> (ARBITRARY INTERSECTION_OF P) (INTERS u)")
       (holai.runtime:proof (REPEAT #'STRIP_TAC)
-        THEN
-          (ONCE_REWRITE_TAC
-            (cl:cons (funcall GSYM ARBITRARY_INTERSECTION_OF_IDEMPOT) nil))
+        THEN (ONCE_REWRITE_TAC (cl:cons (#`GSYM ARBITRARY_INTERSECTION_OF_IDEMPOT) nil))
         THEN (ONCE_REWRITE_TAC (cl:cons INTERSECTION_OF nil))
         THEN (REWRITE_TAC nil)
-        THEN (funcall EXISTS_TAC (parse_term "u:(A->bool)->bool"))
-        THEN (funcall ASM_REWRITE_TAC (cl:cons ARBITRARY nil))))))
+        THEN (#`EXISTS_TAC (parse_term "u:(A->bool)->bool"))
+        THEN (#`ASM_REWRITE_TAC (cl:cons ARBITRARY nil))))))
 
 (defparameter ARBITRARY_INTERSECTION_OF_INTER
   (prove
@@ -10953,9 +10714,9 @@
         (ARBITRARY INTERSECTION_OF P) s /\\ (ARBITRARY INTERSECTION_OF P) t
         ==> (ARBITRARY INTERSECTION_OF P) (s INTER t)")
       (holai.runtime:proof (REPEAT #'STRIP_TAC)
-        THEN (REWRITE_TAC (cl:cons (funcall GSYM INTERS_2) nil))
+        THEN (REWRITE_TAC (cl:cons (#`GSYM INTERS_2) nil))
         THEN (MATCH_MP_TAC ARBITRARY_INTERSECTION_OF_INTERS)
-        THEN (funcall ASM_REWRITE_TAC (cl:cons ARBITRARY (cl:cons FORALL_IN_INSERT nil)))
+        THEN (#`ASM_REWRITE_TAC (cl:cons ARBITRARY (cl:cons FORALL_IN_INSERT nil)))
         THEN (REWRITE_TAC (cl:cons ARBITRARY (cl:cons NOT_IN_EMPTY nil)))))))
 
 (defparameter ARBITRARY_UNION_OF_INTER_EQ
@@ -10976,14 +10737,13 @@
         THEN (GEN_REWRITE_TAC (o LAND_CONV ONCE_DEPTH_CONV) (cl:cons UNION_OF nil))
         THEN (REWRITE_TAC nil)
         THEN (DISCH_THEN (o STRIP_ASSUME_TAC GSYM))
-        THEN (funcall ASM_REWRITE_TAC (cl:cons INTER_UNIONS nil))
+        THEN (#`ASM_REWRITE_TAC (cl:cons INTER_UNIONS nil))
         THEN
           (REPLICATE_TAC
             2
             (holai.runtime:proof (MATCH_MP_TAC ARBITRARY_UNION_OF_UNIONS)
               THEN
-                (funcall
-                  ASM_SIMP_TAC
+                (#`ASM_SIMP_TAC
                   (cl:cons SIMPLE_IMAGE (cl:cons ARBITRARY (cl:cons FORALL_IN_IMAGE nil))))
               THEN (REPEAT #'STRIP_TAC)))))))
 
@@ -11085,10 +10845,9 @@
         THEN #'EQ_TAC
         THEN
           (DISCH_THEN (X_CHOOSE_THEN (parse_term "u:(A->bool)->bool") STRIP_ASSUME_TAC))
-        THEN (funcall EXISTS_TAC (parse_term "IMAGE (\\c. (:A) DIFF c) u"))
+        THEN (#`EXISTS_TAC (parse_term "IMAGE (\\c. (:A) DIFF c) u"))
         THEN
-          (funcall
-            ASM_SIMP_TAC
+          (#`ASM_SIMP_TAC
             (cl:cons FINITE_IMAGE (cl:cons FORALL_IN_IMAGE (cl:cons COMPL_COMPL nil))))
         THEN (ONCE_REWRITE_TAC (cl:cons UNIONS_INTERS (cl:cons INTERS_UNIONS nil)))
         THEN
@@ -11096,7 +10855,7 @@
             (cl:cons
               (SET_RULE (parse_term "{f y | y IN IMAGE g s} = IMAGE (\\x. f(g x)) s"))
               nil))
-        THEN (funcall ASM_REWRITE_TAC (cl:cons IMAGE_ID (cl:cons COMPL_COMPL nil)))))))
+        THEN (#`ASM_REWRITE_TAC (cl:cons IMAGE_ID (cl:cons COMPL_COMPL nil)))))))
 
 (defparameter FINITE_INTERSECTION_OF_COMPLEMENT
   (prove
@@ -11115,11 +10874,11 @@
         FINITE UNION_OF FINITE UNION_OF P = FINITE UNION_OF P")
       (holai.runtime:proof #'GEN_TAC
         THEN (REWRITE_TAC (cl:cons FUN_EQ_THM nil))
-        THEN (funcall X_GEN_TAC (parse_term "s:A->bool"))
+        THEN (#`X_GEN_TAC (parse_term "s:A->bool"))
         THEN #'EQ_TAC
         THEN (REWRITE_TAC (cl:cons FINITE_UNION_OF_INC nil))
         THEN (REWRITE_TAC (cl:cons UNION_OF (cl:cons LEFT_IMP_EXISTS_THM nil)))
-        THEN (funcall X_GEN_TAC (parse_term "u:(A->bool)->bool"))
+        THEN (#`X_GEN_TAC (parse_term "u:(A->bool)->bool"))
         THEN (DISCH_THEN (CONJUNCTS_THEN2 ASSUME_TAC #'MP_TAC))
         THEN (DISCH_THEN (CONJUNCTS_THEN2 #'MP_TAC (o #'SUBST1_TAC #'SYM)))
         THEN
@@ -11127,17 +10886,14 @@
             (o LAND_CONV ONCE_DEPTH_CONV)
             (cl:cons RIGHT_IMP_EXISTS_THM nil))
         THEN (REWRITE_TAC (cl:cons SKOLEM_THM (cl:cons LEFT_IMP_EXISTS_THM nil)))
-        THEN (funcall X_GEN_TAC (parse_term "f:(A->bool)->(A->bool)->bool"))
+        THEN (#`X_GEN_TAC (parse_term "f:(A->bool)->(A->bool)->bool"))
         THEN DISCH_TAC
         THEN
-          (funcall
-            EXISTS_TAC
+          (#`EXISTS_TAC
             (parse_term
               "IMAGE SND {s,t | s IN u /\\ t IN (f:(A->bool)->(A->bool)->bool) s}"))
         THEN
-          (funcall
-            ASM_SIMP_TAC
-            (cl:cons FINITE_IMAGE (cl:cons FINITE_PRODUCT_DEPENDENT nil)))
+          (#`ASM_SIMP_TAC (cl:cons FINITE_IMAGE (cl:cons FINITE_PRODUCT_DEPENDENT nil)))
         THEN (REWRITE_TAC (cl:cons FORALL_IN_IMAGE (cl:cons FORALL_IN_GSPEC nil)))
         THEN #'CONJ_TAC
         THENL
@@ -11161,7 +10917,7 @@
               ETA_AX
               (cl:cons
                 (REWRITE_RULE
-                  (cl:cons (funcall GSYM FUN_EQ_THM) (cl:cons ETA_AX nil))
+                  (cl:cons (#`GSYM FUN_EQ_THM) (cl:cons ETA_AX nil))
                   FINITE_INTERSECTION_OF_COMPLEMENT)
                 nil))))
         THEN (REWRITE_TAC (cl:cons FINITE_UNION_OF_IDEMPOT nil))))))
@@ -11174,11 +10930,11 @@
         FINITE u /\\ (!s. s IN u ==> (FINITE UNION_OF P) s)
         ==> (FINITE UNION_OF P) (UNIONS u)")
       (holai.runtime:proof (REPEAT #'STRIP_TAC)
-        THEN (ONCE_REWRITE_TAC (cl:cons (funcall GSYM FINITE_UNION_OF_IDEMPOT) nil))
+        THEN (ONCE_REWRITE_TAC (cl:cons (#`GSYM FINITE_UNION_OF_IDEMPOT) nil))
         THEN (ONCE_REWRITE_TAC (cl:cons UNION_OF nil))
         THEN (REWRITE_TAC nil)
-        THEN (funcall EXISTS_TAC (parse_term "u:(A->bool)->bool"))
-        THEN (funcall ASM_REWRITE_TAC nil)))))
+        THEN (#`EXISTS_TAC (parse_term "u:(A->bool)->bool"))
+        THEN (#`ASM_REWRITE_TAC nil)))))
 
 (defparameter FINITE_UNION_OF_UNION
   (prove
@@ -11188,10 +10944,9 @@
         (FINITE UNION_OF P) s /\\ (FINITE UNION_OF P) t
         ==> (FINITE UNION_OF P) (s UNION t)")
       (holai.runtime:proof (REPEAT #'STRIP_TAC)
-        THEN (REWRITE_TAC (cl:cons (funcall GSYM UNIONS_2) nil))
+        THEN (REWRITE_TAC (cl:cons (#`GSYM UNIONS_2) nil))
         THEN (MATCH_MP_TAC FINITE_UNION_OF_UNIONS)
-        THEN
-          (funcall ASM_REWRITE_TAC (cl:cons FINITE_INSERT (cl:cons FORALL_IN_INSERT nil)))
+        THEN (#`ASM_REWRITE_TAC (cl:cons FINITE_INSERT (cl:cons FORALL_IN_INSERT nil)))
         THEN (REWRITE_TAC (cl:cons FINITE_EMPTY (cl:cons NOT_IN_EMPTY nil)))))))
 
 (defparameter FINITE_INTERSECTION_OF_INTERS
@@ -11202,12 +10957,11 @@
         FINITE u /\\ (!s. s IN u ==> (FINITE INTERSECTION_OF P) s)
         ==> (FINITE INTERSECTION_OF P) (INTERS u)")
       (holai.runtime:proof (REPEAT #'STRIP_TAC)
-        THEN
-          (ONCE_REWRITE_TAC (cl:cons (funcall GSYM FINITE_INTERSECTION_OF_IDEMPOT) nil))
+        THEN (ONCE_REWRITE_TAC (cl:cons (#`GSYM FINITE_INTERSECTION_OF_IDEMPOT) nil))
         THEN (ONCE_REWRITE_TAC (cl:cons INTERSECTION_OF nil))
         THEN (REWRITE_TAC nil)
-        THEN (funcall EXISTS_TAC (parse_term "u:(A->bool)->bool"))
-        THEN (funcall ASM_REWRITE_TAC nil)))))
+        THEN (#`EXISTS_TAC (parse_term "u:(A->bool)->bool"))
+        THEN (#`ASM_REWRITE_TAC nil)))))
 
 (defparameter FINITE_INTERSECTION_OF_INTER
   (prove
@@ -11217,10 +10971,9 @@
         (FINITE INTERSECTION_OF P) s /\\ (FINITE INTERSECTION_OF P) t
         ==> (FINITE INTERSECTION_OF P) (s INTER t)")
       (holai.runtime:proof (REPEAT #'STRIP_TAC)
-        THEN (REWRITE_TAC (cl:cons (funcall GSYM INTERS_2) nil))
+        THEN (REWRITE_TAC (cl:cons (#`GSYM INTERS_2) nil))
         THEN (MATCH_MP_TAC FINITE_INTERSECTION_OF_INTERS)
-        THEN
-          (funcall ASM_REWRITE_TAC (cl:cons FINITE_INSERT (cl:cons FORALL_IN_INSERT nil)))
+        THEN (#`ASM_REWRITE_TAC (cl:cons FINITE_INSERT (cl:cons FORALL_IN_INSERT nil)))
         THEN (REWRITE_TAC (cl:cons FINITE_EMPTY (cl:cons NOT_IN_EMPTY nil)))))))
 
 (defparameter FINITE_UNION_OF_INTER_EQ
@@ -11239,14 +10992,13 @@
         THEN (GEN_REWRITE_TAC (o LAND_CONV ONCE_DEPTH_CONV) (cl:cons UNION_OF nil))
         THEN (REWRITE_TAC nil)
         THEN (DISCH_THEN (o STRIP_ASSUME_TAC GSYM))
-        THEN (funcall ASM_REWRITE_TAC (cl:cons INTER_UNIONS nil))
+        THEN (#`ASM_REWRITE_TAC (cl:cons INTER_UNIONS nil))
         THEN
           (REPLICATE_TAC
             2
             (holai.runtime:proof (MATCH_MP_TAC FINITE_UNION_OF_UNIONS)
               THEN
-                (funcall
-                  ASM_SIMP_TAC
+                (#`ASM_SIMP_TAC
                   (cl:cons
                     SIMPLE_IMAGE
                     (cl:cons FINITE_IMAGE (cl:cons FORALL_IN_IMAGE nil))))
@@ -11343,8 +11095,7 @@
           (cl:cons HAS_SIZE (cl:cons FINITE_SET_OF_LIST nil)))
         THEN LIST_INDUCT_TAC
         THEN
-          (funcall
-            ASM_SIMP_TAC
+          (#`ASM_SIMP_TAC
             (cl:cons
               CARD_CLAUSES
               (cl:cons
@@ -11357,15 +11108,14 @@
                       ALL
                       (cl:cons
                         FINITE_SET_OF_LIST
-                        (cl:cons (funcall GSYM ALL_MEM) (cl:cons IN_SET_OF_LIST nil)))))))))
+                        (cl:cons (#`GSYM ALL_MEM) (cl:cons IN_SET_OF_LIST nil)))))))))
         THEN COND_CASES_TAC
-        THEN (funcall ASM_REWRITE_TAC (cl:cons SUC_INJ nil))
+        THEN (#`ASM_REWRITE_TAC (cl:cons SUC_INJ nil))
         THEN
-          (funcall
-            ASM_MESON_TAC
+          (#`ASM_MESON_TAC
             (cl:cons
               CARD_SET_OF_LIST_LE
-              (cl:cons (funcall ARITH_RULE (parse_term "~(SUC n <= n)")) nil)))))))
+              (cl:cons (#`ARITH_RULE (parse_term "~(SUC n <= n)")) nil)))))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Classic result on function of finite set into itself.                     *)
@@ -11386,42 +11136,37 @@
         THENL
           (cl:cons
             (holai.runtime:proof (ASM_CASES_TAC (parse_term "x:A = y"))
-              THEN (funcall ASM_REWRITE_TAC nil)
+              THEN (#`ASM_REWRITE_TAC nil)
               THEN
                 (SUBGOAL_THEN
                   (parse_term "CARD s <= CARD (IMAGE (f:A->B) (s DELETE y))")
                   #'MP_TAC)
               THENL
                 (cl:cons
-                  (holai.runtime:proof (funcall ASM_REWRITE_TAC nil)
+                  (holai.runtime:proof (#`ASM_REWRITE_TAC nil)
                     THEN (MATCH_MP_TAC CARD_SUBSET)
                     THEN
-                      (funcall
-                        ASM_SIMP_TAC
-                        (cl:cons FINITE_IMAGE (cl:cons FINITE_DELETE nil)))
+                      (#`ASM_SIMP_TAC (cl:cons FINITE_IMAGE (cl:cons FINITE_DELETE nil)))
                     THEN
                       (REWRITE_TAC
                         (cl:cons SUBSET (cl:cons IN_IMAGE (cl:cons IN_DELETE nil))))
-                    THEN (funcall ASM_MESON_TAC nil))
+                    THEN (#`ASM_MESON_TAC nil))
                   (cl:cons
                     (holai.runtime:proof (REWRITE_TAC (cl:cons NOT_LE nil))
                       THEN (MATCH_MP_TAC LET_TRANS)
-                      THEN (funcall EXISTS_TAC (parse_term "CARD(s DELETE (y:A))"))
+                      THEN (#`EXISTS_TAC (parse_term "CARD(s DELETE (y:A))"))
                       THEN
-                        (funcall
-                          ASM_SIMP_TAC
+                        (#`ASM_SIMP_TAC
                           (cl:cons CARD_IMAGE_LE (cl:cons FINITE_DELETE nil)))
                       THEN
-                        (funcall
-                          ASM_SIMP_TAC
+                        (#`ASM_SIMP_TAC
                           (cl:cons
                             CARD_DELETE
                             (cl:cons
-                              (funcall ARITH_RULE (parse_term "x - 1 < x <=> ~(x = 0)"))
+                              (#`ARITH_RULE (parse_term "x - 1 < x <=> ~(x = 0)"))
                               nil)))
                       THEN
-                        (funcall
-                          ASM_MESON_TAC
+                        (#`ASM_MESON_TAC
                           (cl:cons CARD_EQ_0 (cl:cons MEMBER_NOT_EMPTY nil))))
                     nil)))
             (cl:cons
@@ -11432,12 +11177,10 @@
                   (cl:cons
                     #'ALL_TAC
                     (cl:cons
-                      (funcall ASM_MESON_TAC (cl:cons EXTENSION (cl:cons IN_IMAGE nil)))
+                      (#`ASM_MESON_TAC (cl:cons EXTENSION (cl:cons IN_IMAGE nil)))
                       nil))
                 THEN
-                  (funcall
-                    ASM_MESON_TAC
-                    (cl:cons CARD_SUBSET_EQ (cl:cons CARD_IMAGE_INJ nil))))
+                  (#`ASM_MESON_TAC (cl:cons CARD_SUBSET_EQ (cl:cons CARD_IMAGE_INJ nil))))
               nil))))))
 
 (defparameter SURJECTIVE_IFF_INJECTIVE
@@ -11466,8 +11209,8 @@
                 (parse_term "s:A->bool")
                 (cl:cons (parse_term "t:B->bool") (cl:cons (parse_term "f:A->B") nil)))
               SURJECTIVE_IFF_INJECTIVE_GEN))
-        THEN (funcall ASM_SIMP_TAC (cl:cons SUBSET_REFL (cl:cons FINITE_IMAGE nil)))
-        THEN (funcall ASM_MESON_TAC (cl:cons EXTENSION (cl:cons IN_IMAGE nil)))))))
+        THEN (#`ASM_SIMP_TAC (cl:cons SUBSET_REFL (cl:cons FINITE_IMAGE nil)))
+        THEN (#`ASM_MESON_TAC (cl:cons EXTENSION (cl:cons IN_IMAGE nil)))))))
 
 (defparameter IMAGE_IMP_INJECTIVE
   (prove
@@ -11501,11 +11244,11 @@
                     (parse_term "s:A->bool")
                     (cl:cons (parse_term "t:B->bool") (cl:cons (parse_term "f:A->B") nil)))
                   SURJECTIVE_IFF_INJECTIVE_GEN))
-              THEN (funcall ASM_REWRITE_TAC nil)
+              THEN (#`ASM_REWRITE_TAC nil)
               THEN (ASM SET_TAC nil))
             (cl:cons
               (holai.runtime:proof (MATCH_MP_TAC HAS_SIZE_IMAGE_INJ)
-                THEN (funcall ASM_REWRITE_TAC nil)
+                THEN (#`ASM_REWRITE_TAC nil)
                 THEN (ASM SET_TAC nil))
               nil))))))
 
@@ -11543,12 +11286,12 @@
         THEN (DISCH_THEN (CONJUNCTS_THEN2 (K #'ALL_TAC) STRIP_ASSUME_TAC))
         THEN (REWRITE_TAC (cl:cons LE_SUC nil))
         THEN #'STRIP_TAC
-        THEN (FIRST_X_ASSUM (o #'MP_TAC (funcall SPEC (parse_term "t:B->bool"))))
-        THEN (funcall ASM_REWRITE_TAC nil)
+        THEN (FIRST_X_ASSUM (o #'MP_TAC (#`SPEC (parse_term "t:B->bool"))))
+        THEN (#`ASM_REWRITE_TAC nil)
         THEN (DISCH_THEN (X_CHOOSE_THEN (parse_term "f:A->B") STRIP_ASSUME_TAC))
-        THEN (funcall EXISTS_TAC (parse_term "\\z:A. if z = x then (y:B) else f(z)"))
+        THEN (#`EXISTS_TAC (parse_term "\\z:A. if z = x then (y:B) else f(z)"))
         THEN (REWRITE_TAC (cl:cons IN_INSERT (cl:cons SUBSET (cl:cons IN_IMAGE nil))))
-        THEN (funcall ASM_MESON_TAC (cl:cons SUBSET (cl:cons IN_IMAGE nil)))))))
+        THEN (#`ASM_MESON_TAC (cl:cons SUBSET (cl:cons IN_IMAGE nil)))))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Occasionally handy rewrites.                                              *)
@@ -11587,7 +11330,7 @@
     (!x y. x IN u /\\ y IN u /\\ f x = f y ==> x = y)")
       (holai.runtime:proof (REPEAT #'GEN_TAC)
         THEN #'EQ_TAC
-        THENL (cl:cons DISCH_TAC (cl:cons (funcall SET_TAC nil) nil))
+        THENL (cl:cons DISCH_TAC (cl:cons (#`SET_TAC nil) nil))
         THEN
           (MAP_EVERY
             X_GEN_TAC
@@ -11598,8 +11341,8 @@
             (o
               #'MP_TAC
               (SPECL (cl:cons (parse_term "{x:A}") (cl:cons (parse_term "{y:A}") nil)))))
-        THEN (funcall ASM_REWRITE_TAC (cl:cons SING_SUBSET (cl:cons IMAGE_CLAUSES nil)))
-        THEN (funcall SET_TAC nil)))))
+        THEN (#`ASM_REWRITE_TAC (cl:cons SING_SUBSET (cl:cons IMAGE_CLAUSES nil)))
+        THEN (#`SET_TAC nil)))))
 
 (defparameter INJECTIVE_IMAGE
   (prove
@@ -11627,15 +11370,15 @@
         THENL
           (cl:cons
             (holai.runtime:proof DISCH_TAC
-              THEN (funcall X_GEN_TAC (parse_term "y:B"))
+              THEN (#`X_GEN_TAC (parse_term "y:B"))
               THEN DISCH_TAC
-              THEN (FIRST_X_ASSUM (o #'MP_TAC (funcall SPEC (parse_term "{y:B}"))))
+              THEN (FIRST_X_ASSUM (o #'MP_TAC (#`SPEC (parse_term "{y:B}"))))
               THEN (ASM SET_TAC nil))
             (cl:cons
               (holai.runtime:proof DISCH_TAC
-                THEN (funcall X_GEN_TAC (parse_term "t:B->bool"))
+                THEN (#`X_GEN_TAC (parse_term "t:B->bool"))
                 THEN DISCH_TAC
-                THEN (funcall EXISTS_TAC (parse_term "{x | x IN u /\\ (f:A->B) x IN t}"))
+                THEN (#`EXISTS_TAC (parse_term "{x | x IN u /\\ (f:A->B) x IN t}"))
                 THEN (ASM SET_TAC nil))
               nil))))))
 
@@ -11667,7 +11410,7 @@
         THEN DISCH_TAC
         THENL (cl:cons #'ALL_TAC (cl:cons (ASM SET_TAC nil) nil))
         THEN (REWRITE_TAC (cl:cons SUBSET nil))
-        THEN (funcall X_GEN_TAC (parse_term "y:B"))
+        THEN (#`X_GEN_TAC (parse_term "y:B"))
         THEN
           (FIRST_X_ASSUM
             (o
@@ -11695,23 +11438,22 @@
                 (cl:cons
                   (holai.runtime:proof (REWRITE_TAC
                       (cl:cons SUBSET (cl:cons FORALL_IN_IMAGE nil)))
-                    THEN (funcall X_GEN_TAC (parse_term "x:A"))
+                    THEN (#`X_GEN_TAC (parse_term "x:A"))
                     THEN DISCH_TAC
-                    THEN (FIRST_X_ASSUM (o #'MP_TAC (funcall SPEC (parse_term "{x:A}"))))
+                    THEN (FIRST_X_ASSUM (o #'MP_TAC (#`SPEC (parse_term "{x:A}"))))
                     THEN (ASM SET_TAC nil))
                   (cl:cons
                     (holai.runtime:proof (MAP_EVERY
                         X_GEN_TAC
                         (cl:cons (parse_term "x:A") (cl:cons (parse_term "y:A") nil)))
                       THEN #'STRIP_TAC
-                      THEN
-                        (FIRST_X_ASSUM (o #'MP_TAC (funcall SPEC (parse_term "{x:A}"))))
+                      THEN (FIRST_X_ASSUM (o #'MP_TAC (#`SPEC (parse_term "{x:A}"))))
                       THEN (ASM SET_TAC nil))
                     nil)))
             (cl:cons
-              (holai.runtime:proof (funcall X_GEN_TAC (parse_term "k:A->bool"))
+              (holai.runtime:proof (#`X_GEN_TAC (parse_term "k:A->bool"))
                 THEN #'STRIP_TAC
-                THEN (funcall EXISTS_TAC (parse_term "IMAGE (f:A->B) k"))
+                THEN (#`EXISTS_TAC (parse_term "IMAGE (f:A->B) k"))
                 THEN (ASM SET_TAC nil))
               nil))))))
 
@@ -11731,7 +11473,7 @@
                 (cl:cons (parse_term "(:A)") (cl:cons (parse_term "(:B)") nil)))
               INJECTIVE_ON_PREIMAGE))
         THEN (REWRITE_TAC (cl:cons IN_UNIV (cl:cons SUBSET_UNIV nil)))
-        THEN (funcall SET_TAC nil)))))
+        THEN (#`SET_TAC nil)))))
 
 (defparameter SURJECTIVE_PREIMAGE
   (prove
@@ -11746,7 +11488,7 @@
                 (cl:cons (parse_term "(:A)") (cl:cons (parse_term "(:B)") nil)))
               SURJECTIVE_ON_PREIMAGE))
         THEN (REWRITE_TAC (cl:cons IN_UNIV (cl:cons SUBSET_UNIV nil)))
-        THEN (funcall SET_TAC nil)))))
+        THEN (#`SET_TAC nil)))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Existence of bijections between two finite sets of same size.             *)
@@ -11765,9 +11507,9 @@
         THEN (REPEAT (holai.runtime:proof (MATCH_MP_TAC MONO_FORALL) THEN #'GEN_TAC))
         THEN
           (DISCH_THEN (lambdac (th) (holai.runtime:proof #'STRIP_TAC THEN (MP_TAC th))))
-        THEN (funcall ASM_REWRITE_TAC (cl:cons LE_REFL nil))
+        THEN (#`ASM_REWRITE_TAC (cl:cons LE_REFL nil))
         THEN (MATCH_MP_TAC MONO_EXISTS)
-        THEN (funcall ASM_SIMP_TAC (cl:cons SURJECTIVE_IFF_INJECTIVE_GEN nil))
+        THEN (#`ASM_SIMP_TAC (cl:cons SURJECTIVE_IFF_INJECTIVE_GEN nil))
         THEN (MESON_TAC (cl:cons SUBSET (cl:cons IN_IMAGE nil)))))))
 
 (defparameter CARD_EQ_BIJECTIONS
@@ -11805,8 +11547,7 @@
                 (cl:cons (parse_term "t DELETE (b:B)") nil))
               CARD_EQ_BIJECTIONS))
         THEN
-          (funcall
-            ASM_SIMP_TAC
+          (#`ASM_SIMP_TAC
             (cl:cons
               FINITE_DELETE
               (cl:cons CARD_DELETE (cl:cons IN_DELETE (cl:cons LEFT_IMP_EXISTS_THM nil)))))
@@ -11815,9 +11556,9 @@
             X_GEN_TAC
             (cl:cons (parse_term "f:A->B") (cl:cons (parse_term "g:B->A") nil)))
         THEN #'STRIP_TAC
-        THEN (funcall EXISTS_TAC (parse_term "\\x. if x = a then b else (f:A->B) x"))
-        THEN (funcall EXISTS_TAC (parse_term "\\y. if y = b then a else (g:B->A) y"))
-        THEN (funcall ASM_MESON_TAC nil)))))
+        THEN (#`EXISTS_TAC (parse_term "\\x. if x = a then b else (f:A->B) x"))
+        THEN (#`EXISTS_TAC (parse_term "\\y. if y = b then a else (g:B->A) y"))
+        THEN (#`ASM_MESON_TAC nil)))))
 
 (defparameter BIJECTIONS_HAS_SIZE
   (prove
@@ -11835,7 +11576,7 @@
             (ASM SET_TAC nil)
             (cl:cons
               (holai.runtime:proof (MATCH_MP_TAC HAS_SIZE_IMAGE_INJ)
-                THEN (funcall ASM_MESON_TAC nil))
+                THEN (#`ASM_MESON_TAC nil))
               nil))))))
 
 (defparameter BIJECTIONS_HAS_SIZE_EQ
@@ -11852,7 +11593,7 @@
           (MATCH_MP_TAC
             (ONCE_REWRITE_RULE
               (cl:cons
-                (funcall TAUT (parse_term "a /\\ b /\\ c ==> d <=> a /\\ b ==> c ==> d"))
+                (#`TAUT (parse_term "a /\\ b /\\ c ==> d <=> a /\\ b ==> c ==> d"))
                 nil)
               BIJECTIONS_HAS_SIZE))
         THENL
@@ -11865,7 +11606,7 @@
                 EXISTS_TAC
                 (cl:cons (parse_term "g:B->A") (cl:cons (parse_term "f:A->B") nil)))
               nil))
-        THEN (funcall ASM_MESON_TAC nil)))))
+        THEN (#`ASM_MESON_TAC nil)))))
 
 (defparameter BIJECTIONS_CARD_EQ
   (prove
@@ -11901,18 +11642,17 @@
         THENL
           (cl:cons
             (holai.runtime:proof (MATCH_MP_TAC TRANSITIVE_STEPWISE_LT)
-              THEN (funcall ASM_MESON_TAC nil))
+              THEN (#`ASM_MESON_TAC nil))
             (cl:cons #'ALL_TAC nil))
         THEN (MP_TAC (ISPEC (parse_term "s:num->A") INFINITE_IMAGE_INJ))
         THEN ANTS_TAC
-        THENL
-          (cl:cons (funcall ASM_MESON_TAC (cl:cons LT_CASES nil)) (cl:cons #'ALL_TAC nil))
-        THEN (DISCH_THEN (o #'MP_TAC (funcall SPEC (parse_term "(:num)"))))
+        THENL (cl:cons (#`ASM_MESON_TAC (cl:cons LT_CASES nil)) (cl:cons #'ALL_TAC nil))
+        THEN (DISCH_THEN (o #'MP_TAC (#`SPEC (parse_term "(:num)"))))
         THEN (REWRITE_TAC (cl:cons num_INFINITE nil))
         THEN (REWRITE_TAC (cl:cons INFINITE nil))
         THEN (MATCH_MP_TAC FINITE_SUBSET)
-        THEN (funcall EXISTS_TAC (parse_term "s(0) INSERT {y:A | y << s(0)}"))
-        THEN (funcall ASM_REWRITE_TAC (cl:cons FINITE_INSERT nil))
+        THEN (#`EXISTS_TAC (parse_term "s(0) INSERT {y:A | y << s(0)}"))
+        THEN (#`ASM_REWRITE_TAC (cl:cons FINITE_INSERT nil))
         THEN
           (REWRITE_TAC
             (cl:cons
@@ -11920,7 +11660,7 @@
               (cl:cons FORALL_IN_IMAGE (cl:cons IN_UNIV (cl:cons IN_INSERT nil)))))
         THEN INDUCT_TAC
         THEN (REWRITE_TAC (cl:cons IN_ELIM_THM nil))
-        THEN (funcall ASM_MESON_TAC (cl:cons LT_0 nil))))))
+        THEN (#`ASM_MESON_TAC (cl:cons LT_0 nil))))))
 
 (defparameter WF_PSUBSET
   (prove
@@ -11931,13 +11671,11 @@
         THEN (SIMP_TAC (cl:cons CONJ_ASSOC nil))
         THEN #'CONJ_TAC
         THENL
-          (cl:cons
-            (funcall SET_TAC nil)
-            (cl:cons (funcall X_GEN_TAC (parse_term "t:A->bool")) nil))
+          (cl:cons (#`SET_TAC nil) (cl:cons (#`X_GEN_TAC (parse_term "t:A->bool")) nil))
         THEN (MATCH_MP_TAC FINITE_SUBSET)
-        THEN (funcall EXISTS_TAC (parse_term "{t:A->bool | t SUBSET s}"))
-        THEN (funcall ASM_SIMP_TAC (cl:cons FINITE_POWERSET nil))
-        THEN (funcall SET_TAC nil)))))
+        THEN (#`EXISTS_TAC (parse_term "{t:A->bool | t SUBSET s}"))
+        THEN (#`ASM_SIMP_TAC (cl:cons FINITE_POWERSET nil))
+        THEN (#`SET_TAC nil)))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Cardinal comparisons (more theory in Library/card.ml)                     *)
@@ -11945,31 +11683,28 @@
 
 
 (defparameter le_c
-  (funcall
-    new_definition
+  (#`new_definition
     (parse_term
       "s <=_c t <=>
    ?f:A->B. (!x. x IN s ==> f(x) IN t) /\\
             (!x y. x IN s /\\ y IN s /\\ f(x) = f(y) ==> x = y)")))
 
 (defparameter lt_c
-  (funcall
-    new_definition
+  (#`new_definition
     (parse_term "(s:A->bool) <_c (t:B->bool) <=> s <=_c t /\\ ~(t <=_c s)")))
 
 (defparameter eq_c
-  (funcall
-    new_definition
+  (#`new_definition
     (parse_term
       "(s:A->bool) =_c (t:B->bool) <=>
    ?f. (!x. x IN s ==> f(x) IN t) /\\
        !y. y IN t ==> ?!x. x IN s /\\ (f x = y)")))
 
 (defparameter ge_c
-  (funcall new_definition (parse_term "(s:A->bool) >=_c (t:B->bool) <=> t <=_c s")))
+  (#`new_definition (parse_term "(s:A->bool) >=_c (t:B->bool) <=> t <=_c s")))
 
 (defparameter gt_c
-  (funcall new_definition (parse_term "(s:A->bool) >_c (t:B->bool) <=> t <_c s")))
+  (#`new_definition (parse_term "(s:A->bool) >_c (t:B->bool) <=> t <_c s")))
 
 (defparameter LE_C%
   (prove
@@ -11995,7 +11730,7 @@
         THEN (MESON_TAC nil)))))
 
 (defparameter COUNTABLE
-  (funcall new_definition (parse_term "COUNTABLE (t:A->bool) <=> (:num) >=_c t")))
+  (#`new_definition (parse_term "COUNTABLE (t:A->bool) <=> (:num) >=_c t")))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Supremum and infimum.                                                     *)
@@ -12003,8 +11738,7 @@
 
 
 (defparameter sup
-  (funcall
-    new_definition
+  (#`new_definition
     (parse_term
       "sup s = @a:real. (!x. x IN s ==> x <= a) /\\
                     !b. (!x. x IN s ==> x <= b) ==> a <= b")))
@@ -12025,10 +11759,10 @@
        ==> (!x. x IN s ==> x <= sup s) /\\
            !b. (!x. x IN s ==> x <= b) ==> sup s <= b")
       (holai.runtime:proof (REWRITE_TAC (cl:cons sup nil))
-        THEN (funcall CONV_TAC (funcall ONCE_DEPTH_CONV SELECT_CONV))
+        THEN (#`CONV_TAC (#`ONCE_DEPTH_CONV SELECT_CONV))
         THEN (REPEAT #'STRIP_TAC)
         THEN (MATCH_MP_TAC REAL_COMPLETE)
-        THEN (funcall ASM_MESON_TAC (cl:cons MEMBER_NOT_EMPTY nil))))))
+        THEN (#`ASM_MESON_TAC (cl:cons MEMBER_NOT_EMPTY nil))))))
 
 (defparameter SUP_FINITE_LEMMA
   (prove
@@ -12038,7 +11772,7 @@
       (holai.runtime:proof (REWRITE_TAC (cl:cons IMP_CONJ nil))
         THEN (MATCH_MP_TAC FINITE_INDUCT_STRONG)
         THEN (REWRITE_TAC (cl:cons NOT_INSERT_EMPTY (cl:cons IN_INSERT nil)))
-        THEN (REWRITE_TAC (cl:cons (funcall GSYM MEMBER_NOT_EMPTY) nil))
+        THEN (REWRITE_TAC (cl:cons (#`GSYM MEMBER_NOT_EMPTY) nil))
         THEN (MESON_TAC (cl:cons REAL_LE_TOTAL (cl:cons REAL_LE_TRANS nil)))))))
 
 (defparameter SUP_FINITE
@@ -12050,8 +11784,7 @@
         THEN DISCH_TAC
         THEN (FIRST_ASSUM (o #'MP_TAC (MATCH_MP SUP_FINITE_LEMMA)))
         THEN
-          (funcall
-            ASM_MESON_TAC
+          (#`ASM_MESON_TAC
             (cl:cons REAL_LE_ANTISYM (cl:cons REAL_LE_TOTAL (cl:cons SUP% nil))))))))
 
 (defparameter REAL_LE_SUP_FINITE
@@ -12090,7 +11823,7 @@
       (holai.runtime:proof (REPEAT #'STRIP_TAC)
         THEN (REWRITE_TAC (cl:cons sup nil))
         THEN (MATCH_MP_TAC SELECT_UNIQUE)
-        THEN (funcall ASM_MESON_TAC (cl:cons REAL_NOT_LE (cl:cons REAL_LE_ANTISYM nil)))))))
+        THEN (#`ASM_MESON_TAC (cl:cons REAL_NOT_LE (cl:cons REAL_LE_ANTISYM nil)))))))
 
 (defparameter REAL_SUP_LE
   (prove
@@ -12106,7 +11839,7 @@
          ==> sup s <= sup t")
       (holai.runtime:proof (REPEAT #'STRIP_TAC)
         THEN (MATCH_MP_TAC REAL_SUP_LE)
-        THEN (MP_TAC (funcall SPEC (parse_term "t:real->bool") SUP%))
+        THEN (MP_TAC (#`SPEC (parse_term "t:real->bool") SUP%))
         THEN (ASM SET_TAC nil)))))
 
 (defparameter REAL_SUP_BOUNDS
@@ -12117,21 +11850,19 @@
            ==> a <= sup s /\\ sup s <= b")
       (holai.runtime:proof (REPEAT #'GEN_TAC)
         THEN #'STRIP_TAC
-        THEN (MP_TAC (funcall SPEC (parse_term "s:real->bool") SUP%))
+        THEN (MP_TAC (#`SPEC (parse_term "s:real->bool") SUP%))
         THEN ANTS_TAC
-        THENL (cl:cons (funcall ASM_MESON_TAC nil) (cl:cons #'ALL_TAC nil))
+        THENL (cl:cons (#`ASM_MESON_TAC nil) (cl:cons #'ALL_TAC nil))
         THEN
           (FIRST_X_ASSUM
-            (o
-              #'MP_TAC
-              (GEN_REWRITE_RULE #'I (cl:cons (funcall GSYM MEMBER_NOT_EMPTY) nil))))
-        THEN (funcall ASM_MESON_TAC (cl:cons REAL_LE_TRANS nil))))))
+            (o #'MP_TAC (GEN_REWRITE_RULE #'I (cl:cons (#`GSYM MEMBER_NOT_EMPTY) nil))))
+        THEN (#`ASM_MESON_TAC (cl:cons REAL_LE_TRANS nil))))))
 
 (defparameter REAL_ABS_SUP_LE
   (prove
     (tuple
       (parse_term "!s a. ~(s = {}) /\\ (!x. x IN s ==> abs(x) <= a) ==> abs(sup s) <= a")
-      (REWRITE_TAC (cl:cons (funcall GSYM REAL_BOUNDS_LE) (cl:cons REAL_SUP_BOUNDS nil))))))
+      (REWRITE_TAC (cl:cons (#`GSYM REAL_BOUNDS_LE) (cl:cons REAL_SUP_BOUNDS nil))))))
 
 (defparameter REAL_SUP_ASCLOSE
   (prove
@@ -12141,8 +11872,7 @@
            ==> abs(sup s - l) <= e")
       (holai.runtime:proof (SIMP_TAC
           (cl:cons
-            (funcall
-              REAL_ARITH
+            (#`REAL_ARITH
               (parse_term "abs(x - l):real <= e <=> l - e <= x /\\ x <= l + e"))
             nil))
         THEN (REWRITE_TAC (cl:cons REAL_SUP_BOUNDS nil))))))
@@ -12153,10 +11883,9 @@
       (parse_term
         "!s. FINITE s /\\ ~(s = {})
        ==> (sup s = a <=> a IN s /\\ !y. y IN s ==> y <= a)")
-      (holai.runtime:proof (funcall
-          ASM_SIMP_TAC
+      (holai.runtime:proof (#`ASM_SIMP_TAC
           (cl:cons
-            (funcall GSYM REAL_LE_ANTISYM)
+            (#`GSYM REAL_LE_ANTISYM)
             (cl:cons
               REAL_LE_SUP_FINITE
               (cl:cons
@@ -12176,8 +11905,7 @@
       (holai.runtime:proof (REPEAT #'STRIP_TAC)
         THEN COND_CASES_TAC
         THEN
-          (funcall
-            ASM_SIMP_TAC
+          (#`ASM_SIMP_TAC
             (cl:cons
               SUP_UNIQUE_FINITE
               (cl:cons
@@ -12191,12 +11919,10 @@
         THEN (REWRITE_TAC (cl:cons real_max nil))
         THEN COND_CASES_TAC
         THEN
-          (funcall
-            ASM_SIMP_TAC
+          (#`ASM_SIMP_TAC
             (cl:cons SUP_FINITE (cl:cons IN_INSERT (cl:cons REAL_LE_REFL nil))))
         THEN
-          (funcall
-            ASM_MESON_TAC
+          (#`ASM_MESON_TAC
             (cl:cons SUP_FINITE (cl:cons REAL_LE_TOTAL (cl:cons REAL_LE_TRANS nil))))))))
 
 (defparameter SUP_SING
@@ -12211,10 +11937,10 @@
       (parse_term "!a b s. sup (b INSERT a INSERT s) = sup (max a b INSERT s)")
       (holai.runtime:proof (REPEAT #'GEN_TAC)
         THEN (MATCH_MP_TAC SUP_EQ)
-        THEN (funcall X_GEN_TAC (parse_term "c:real"))
+        THEN (#`X_GEN_TAC (parse_term "c:real"))
         THEN (REWRITE_TAC (cl:cons FORALL_IN_INSERT nil))
         THEN (ASM_CASES_TAC (parse_term "!x:real. x IN s ==> x <= c"))
-        THEN (funcall ASM_REWRITE_TAC nil)
+        THEN (#`ASM_REWRITE_TAC nil)
         THEN REAL_ARITH_TAC))))
 
 (defparameter REAL_LE_SUP
@@ -12237,7 +11963,7 @@
     (tuple
       (parse_term "!s b. (!c. (!x. x IN s ==> x <= c) <=> b <= c) ==> sup s = b")
       (holai.runtime:proof (REPEAT #'STRIP_TAC)
-        THEN (GEN_REWRITE_TAC #'RAND_CONV (cl:cons (funcall GSYM SUP_SING) nil))
+        THEN (GEN_REWRITE_TAC #'RAND_CONV (cl:cons (#`GSYM SUP_SING) nil))
         THEN (MATCH_MP_TAC SUP_EQ)
         THEN (ASM SET_TAC nil)))))
 
@@ -12251,7 +11977,7 @@
       (holai.runtime:proof (REPEAT #'STRIP_TAC)
         THEN (MATCH_MP_TAC SUP_UNIQUE)
         THEN (REWRITE_TAC (cl:cons FORALL_IN_UNION (cl:cons REAL_MAX_LE nil)))
-        THEN (funcall ASM_MESON_TAC (cl:cons SUP% (cl:cons REAL_LE_TRANS nil)))))))
+        THEN (#`ASM_MESON_TAC (cl:cons SUP% (cl:cons REAL_LE_TRANS nil)))))))
 
 (defparameter ELEMENT_LE_SUP
   (prove
@@ -12265,25 +11991,19 @@
       (parse_term
         "!s c. ~(s = {}) /\\ (?b. !x. x IN s ==> x <= b) /\\ c < sup s
          ==> ?x. x IN s /\\ c < x")
-      (holai.runtime:proof (funcall INTRO_TAC "!s c; npty bound lt")
+      (holai.runtime:proof (#`INTRO_TAC "!s c; npty bound lt")
         THEN
-          (funcall
-            REFUTE_THEN
+          (#`REFUTE_THEN
             (o
               (LABEL_TAC "hp")
               (REWRITE_RULE
                 (cl:cons NOT_EXISTS_THM (cl:cons DE_MORGAN_THM (cl:cons REAL_NOT_LT nil))))))
         THEN (REMOVE_THEN "lt" #'MP_TAC)
         THEN (REWRITE_TAC (cl:cons REAL_NOT_LT nil))
-        THEN
-          (funcall
-            HYP
-            (o (o #'MP_TAC (MATCH_MP SUP%)) (end_itlist CONJ))
-            "npty bound"
-            nil)
-        THEN (funcall INTRO_TAC "_ sup")
+        THEN (#`HYP (o (o #'MP_TAC (MATCH_MP SUP%)) (end_itlist CONJ)) "npty bound" nil)
+        THEN (#`INTRO_TAC "_ sup")
         THEN (REMOVE_THEN "sup" #'MATCH_MP_TAC)
-        THEN (funcall ASM_MESON_TAC nil)))))
+        THEN (#`ASM_MESON_TAC nil)))))
 
 (defparameter REAL_MAX_SUP
   (prove
@@ -12291,7 +12011,7 @@
       (parse_term "!x y. max x y = sup {x,y}")
       (holai.runtime:proof (SIMP_TAC
           (cl:cons
-            (funcall GSYM REAL_LE_ANTISYM)
+            (#`GSYM REAL_LE_ANTISYM)
             (cl:cons
               REAL_SUP_LE_FINITE
               (cl:cons
@@ -12305,8 +12025,7 @@
         THEN (MESON_TAC (cl:cons REAL_LE_TOTAL nil))))))
 
 (defparameter inf%
-  (funcall
-    new_definition
+  (#`new_definition
     (parse_term
       "inf s = @a:real. (!x. x IN s ==> a <= x) /\\
                     !b. (!x. x IN s ==> b <= x) ==> b <= a")))
@@ -12329,17 +12048,15 @@
       (holai.runtime:proof #'GEN_TAC
         THEN #'STRIP_TAC
         THEN (REWRITE_TAC (cl:cons inf% nil))
-        THEN (funcall CONV_TAC (funcall ONCE_DEPTH_CONV SELECT_CONV))
-        THEN (ONCE_REWRITE_TAC (cl:cons (funcall GSYM REAL_LE_NEG2) nil))
-        THEN (funcall EXISTS_TAC (parse_term "--(sup (IMAGE (--) s))"))
-        THEN (MP_TAC (funcall SPEC (parse_term "IMAGE (--) (s:real->bool)") SUP%))
+        THEN (#`CONV_TAC (#`ONCE_DEPTH_CONV SELECT_CONV))
+        THEN (ONCE_REWRITE_TAC (cl:cons (#`GSYM REAL_LE_NEG2) nil))
+        THEN (#`EXISTS_TAC (parse_term "--(sup (IMAGE (--) s))"))
+        THEN (MP_TAC (#`SPEC (parse_term "IMAGE (--) (s:real->bool)") SUP%))
         THEN (REWRITE_TAC (cl:cons REAL_NEG_NEG nil))
         THEN (ABBREV_TAC (parse_term "a = sup (IMAGE (--) s)"))
+        THEN (REWRITE_TAC (cl:cons (#`GSYM MEMBER_NOT_EMPTY) (cl:cons IN_IMAGE nil)))
         THEN
-          (REWRITE_TAC (cl:cons (funcall GSYM MEMBER_NOT_EMPTY) (cl:cons IN_IMAGE nil)))
-        THEN
-          (funcall
-            ASM_MESON_TAC
+          (#`ASM_MESON_TAC
             (cl:cons REAL_NEG_NEG (cl:cons MEMBER_NOT_EMPTY (cl:cons REAL_LE_NEG2 nil))))))))
 
 (defparameter INF_FINITE_LEMMA
@@ -12350,7 +12067,7 @@
       (holai.runtime:proof (REWRITE_TAC (cl:cons IMP_CONJ nil))
         THEN (MATCH_MP_TAC FINITE_INDUCT_STRONG)
         THEN (REWRITE_TAC (cl:cons NOT_INSERT_EMPTY (cl:cons IN_INSERT nil)))
-        THEN (REWRITE_TAC (cl:cons (funcall GSYM MEMBER_NOT_EMPTY) nil))
+        THEN (REWRITE_TAC (cl:cons (#`GSYM MEMBER_NOT_EMPTY) nil))
         THEN (MESON_TAC (cl:cons REAL_LE_TOTAL (cl:cons REAL_LE_TRANS nil)))))))
 
 (defparameter INF_FINITE
@@ -12362,8 +12079,7 @@
         THEN DISCH_TAC
         THEN (FIRST_ASSUM (o #'MP_TAC (MATCH_MP INF_FINITE_LEMMA)))
         THEN
-          (funcall
-            ASM_MESON_TAC
+          (#`ASM_MESON_TAC
             (cl:cons REAL_LE_ANTISYM (cl:cons REAL_LE_TOTAL (cl:cons INF%% nil))))))))
 
 (defparameter REAL_LE_INF_FINITE
@@ -12402,7 +12118,7 @@
       (holai.runtime:proof (REPEAT #'STRIP_TAC)
         THEN (REWRITE_TAC (cl:cons inf% nil))
         THEN (MATCH_MP_TAC SELECT_UNIQUE)
-        THEN (funcall ASM_MESON_TAC (cl:cons REAL_NOT_LE (cl:cons REAL_LE_ANTISYM nil)))))))
+        THEN (#`ASM_MESON_TAC (cl:cons REAL_NOT_LE (cl:cons REAL_LE_ANTISYM nil)))))))
 
 (defparameter REAL_LE_INF
   (prove
@@ -12418,7 +12134,7 @@
          ==> inf s <= inf t")
       (holai.runtime:proof (REPEAT #'STRIP_TAC)
         THEN (MATCH_MP_TAC REAL_LE_INF)
-        THEN (MP_TAC (funcall SPEC (parse_term "s:real->bool") INF%%))
+        THEN (MP_TAC (#`SPEC (parse_term "s:real->bool") INF%%))
         THEN (ASM SET_TAC nil)))))
 
 (defparameter REAL_INF_BOUNDS
@@ -12429,21 +12145,19 @@
            ==> a <= inf s /\\ inf s <= b")
       (holai.runtime:proof (REPEAT #'GEN_TAC)
         THEN #'STRIP_TAC
-        THEN (MP_TAC (funcall SPEC (parse_term "s:real->bool") INF%%))
+        THEN (MP_TAC (#`SPEC (parse_term "s:real->bool") INF%%))
         THEN ANTS_TAC
-        THENL (cl:cons (funcall ASM_MESON_TAC nil) (cl:cons #'ALL_TAC nil))
+        THENL (cl:cons (#`ASM_MESON_TAC nil) (cl:cons #'ALL_TAC nil))
         THEN
           (FIRST_X_ASSUM
-            (o
-              #'MP_TAC
-              (GEN_REWRITE_RULE #'I (cl:cons (funcall GSYM MEMBER_NOT_EMPTY) nil))))
-        THEN (funcall ASM_MESON_TAC (cl:cons REAL_LE_TRANS nil))))))
+            (o #'MP_TAC (GEN_REWRITE_RULE #'I (cl:cons (#`GSYM MEMBER_NOT_EMPTY) nil))))
+        THEN (#`ASM_MESON_TAC (cl:cons REAL_LE_TRANS nil))))))
 
 (defparameter REAL_ABS_INF_LE
   (prove
     (tuple
       (parse_term "!s a. ~(s = {}) /\\ (!x. x IN s ==> abs(x) <= a) ==> abs(inf s) <= a")
-      (REWRITE_TAC (cl:cons (funcall GSYM REAL_BOUNDS_LE) (cl:cons REAL_INF_BOUNDS nil))))))
+      (REWRITE_TAC (cl:cons (#`GSYM REAL_BOUNDS_LE) (cl:cons REAL_INF_BOUNDS nil))))))
 
 (defparameter REAL_INF_ASCLOSE
   (prove
@@ -12453,8 +12167,7 @@
            ==> abs(inf s - l) <= e")
       (holai.runtime:proof (SIMP_TAC
           (cl:cons
-            (funcall
-              REAL_ARITH
+            (#`REAL_ARITH
               (parse_term "abs(x - l):real <= e <=> l - e <= x /\\ x <= l + e"))
             nil))
         THEN (REWRITE_TAC (cl:cons REAL_INF_BOUNDS nil))))))
@@ -12465,10 +12178,9 @@
       (parse_term
         "!s. FINITE s /\\ ~(s = {})
        ==> (inf s = a <=> a IN s /\\ !y. y IN s ==> a <= y)")
-      (holai.runtime:proof (funcall
-          ASM_SIMP_TAC
+      (holai.runtime:proof (#`ASM_SIMP_TAC
           (cl:cons
-            (funcall GSYM REAL_LE_ANTISYM)
+            (#`GSYM REAL_LE_ANTISYM)
             (cl:cons
               REAL_LE_INF_FINITE
               (cl:cons
@@ -12488,8 +12200,7 @@
       (holai.runtime:proof (REPEAT #'STRIP_TAC)
         THEN COND_CASES_TAC
         THEN
-          (funcall
-            ASM_SIMP_TAC
+          (#`ASM_SIMP_TAC
             (cl:cons
               INF_UNIQUE_FINITE
               (cl:cons
@@ -12503,12 +12214,10 @@
         THEN (REWRITE_TAC (cl:cons real_min nil))
         THEN COND_CASES_TAC
         THEN
-          (funcall
-            ASM_SIMP_TAC
+          (#`ASM_SIMP_TAC
             (cl:cons INF_FINITE (cl:cons IN_INSERT (cl:cons REAL_LE_REFL nil))))
         THEN
-          (funcall
-            ASM_MESON_TAC
+          (#`ASM_MESON_TAC
             (cl:cons INF_FINITE (cl:cons REAL_LE_TOTAL (cl:cons REAL_LE_TRANS nil))))))))
 
 (defparameter INF_SING
@@ -12523,10 +12232,10 @@
       (parse_term "!a b s. inf (b INSERT a INSERT s) = inf (min a b INSERT s)")
       (holai.runtime:proof (REPEAT #'GEN_TAC)
         THEN (MATCH_MP_TAC INF_EQ)
-        THEN (funcall X_GEN_TAC (parse_term "c:real"))
+        THEN (#`X_GEN_TAC (parse_term "c:real"))
         THEN (REWRITE_TAC (cl:cons FORALL_IN_INSERT nil))
         THEN (ASM_CASES_TAC (parse_term "!x:real. x IN s ==> c <= x"))
-        THEN (funcall ASM_REWRITE_TAC nil)
+        THEN (#`ASM_REWRITE_TAC nil)
         THEN REAL_ARITH_TAC))))
 
 (defparameter REAL_SUP_EQ_INF
@@ -12540,21 +12249,19 @@
         THENL
           (cl:cons
             (holai.runtime:proof DISCH_TAC
-              THEN (funcall EXISTS_TAC (parse_term "sup s"))
+              THEN (#`EXISTS_TAC (parse_term "sup s"))
               THEN
                 (MATCH_MP_TAC
                   (SET_RULE
                     (parse_term "~(s = {}) /\\ (!x. x IN s ==> x = a) ==> s = {a}")))
-              THEN (funcall ASM_REWRITE_TAC (cl:cons (funcall GSYM REAL_LE_ANTISYM) nil))
+              THEN (#`ASM_REWRITE_TAC (cl:cons (#`GSYM REAL_LE_ANTISYM) nil))
               THEN
-                (funcall
-                  ASM_MESON_TAC
+                (#`ASM_MESON_TAC
                   (cl:cons SUP% (cl:cons REAL_ABS_BOUNDS (cl:cons INF%% nil)))))
             (cl:cons
               (holai.runtime:proof #'STRIP_TAC
                 THEN
-                  (funcall
-                    ASM_SIMP_TAC
+                  (#`ASM_SIMP_TAC
                     (cl:cons
                       SUP_INSERT_FINITE
                       (cl:cons INF_INSERT_FINITE (cl:cons FINITE_EMPTY nil)))))
@@ -12580,7 +12287,7 @@
     (tuple
       (parse_term "!s b. (!c. (!x. x IN s ==> c <= x) <=> c <= b) ==> inf s = b")
       (holai.runtime:proof (REPEAT #'STRIP_TAC)
-        THEN (GEN_REWRITE_TAC #'RAND_CONV (cl:cons (funcall GSYM INF_SING) nil))
+        THEN (GEN_REWRITE_TAC #'RAND_CONV (cl:cons (#`GSYM INF_SING) nil))
         THEN (MATCH_MP_TAC INF_EQ)
         THEN (ASM SET_TAC nil)))))
 
@@ -12594,7 +12301,7 @@
       (holai.runtime:proof (REPEAT #'STRIP_TAC)
         THEN (MATCH_MP_TAC INF_UNIQUE)
         THEN (REWRITE_TAC (cl:cons FORALL_IN_UNION (cl:cons REAL_LE_MIN nil)))
-        THEN (funcall ASM_MESON_TAC (cl:cons INF%% (cl:cons REAL_LE_TRANS nil)))))))
+        THEN (#`ASM_MESON_TAC (cl:cons INF%% (cl:cons REAL_LE_TRANS nil)))))))
 
 (defparameter INF_LE_ELEMENT
   (prove
@@ -12608,25 +12315,19 @@
       (parse_term
         "!s c. ~(s = {}) /\\ (?b. !x. x IN s ==> b <= x) /\\ inf s < c
          ==> ?x. x IN s /\\ x < c")
-      (holai.runtime:proof (funcall INTRO_TAC "!s c; npty bound lt")
+      (holai.runtime:proof (#`INTRO_TAC "!s c; npty bound lt")
         THEN
-          (funcall
-            REFUTE_THEN
+          (#`REFUTE_THEN
             (o
               (LABEL_TAC "hp")
               (REWRITE_RULE
                 (cl:cons NOT_EXISTS_THM (cl:cons DE_MORGAN_THM (cl:cons REAL_NOT_LT nil))))))
         THEN (REMOVE_THEN "lt" #'MP_TAC)
         THEN (REWRITE_TAC (cl:cons REAL_NOT_LT nil))
-        THEN
-          (funcall
-            HYP
-            (o (o #'MP_TAC (MATCH_MP INF%%)) (end_itlist CONJ))
-            "npty bound"
-            nil)
-        THEN (funcall INTRO_TAC "_ inf")
+        THEN (#`HYP (o (o #'MP_TAC (MATCH_MP INF%%)) (end_itlist CONJ)) "npty bound" nil)
+        THEN (#`INTRO_TAC "_ inf")
         THEN (REMOVE_THEN "inf" #'MATCH_MP_TAC)
-        THEN (funcall ASM_MESON_TAC nil)))))
+        THEN (#`ASM_MESON_TAC nil)))))
 
 (defparameter REAL_MIN_INF
   (prove
@@ -12634,7 +12335,7 @@
       (parse_term "!x y. min x y = inf {x,y}")
       (holai.runtime:proof (SIMP_TAC
           (cl:cons
-            (funcall GSYM REAL_LE_ANTISYM)
+            (#`GSYM REAL_LE_ANTISYM)
             (cl:cons
               REAL_INF_LE_FINITE
               (cl:cons
@@ -12647,18 +12348,16 @@
         THEN (REWRITE_TAC (cl:cons IN_INSERT (cl:cons NOT_IN_EMPTY nil)))
         THEN (MESON_TAC (cl:cons REAL_LE_TOTAL nil))))))
 
-(funcall parse_as_infix (tuple "has_inf" (tuple 12 "right")))
+(#`parse_as_infix (tuple "has_inf" (tuple 12 "right")))
 
-(funcall parse_as_infix (tuple "has_sup" (tuple 12 "right")))
+(#`parse_as_infix (tuple "has_sup" (tuple 12 "right")))
 
 (defparameter has_inf
-  (funcall
-    new_definition
+  (#`new_definition
     (parse_term "s has_inf b <=> (!c. (!x:real. x IN s ==> c <= x) <=> c <= b)")))
 
 (defparameter has_sup
-  (funcall
-    new_definition
+  (#`new_definition
     (parse_term "s has_sup b <=> (!c. (!x:real. x IN s ==> x <= c) <=> b <= c)")))
 
 (defparameter HAS_INF_LBOUND
@@ -12695,36 +12394,36 @@
             (holai.runtime:proof #'CONJ_TAC
               THENL
                 (cl:cons
-                  (holai.runtime:proof (funcall REFUTE_THEN #'SUBST_ALL_TAC)
+                  (holai.runtime:proof (#`REFUTE_THEN #'SUBST_ALL_TAC)
                     THEN (POP_ASSUM #'MP_TAC)
                     THEN (REWRITE_TAC (cl:cons NOT_IN_EMPTY (cl:cons NOT_FORALL_THM nil)))
-                    THEN (funcall EXISTS_TAC (parse_term "l + &1:real"))
+                    THEN (#`EXISTS_TAC (parse_term "l + &1:real"))
                     THEN REAL_ARITH_TAC)
                   (cl:cons #'ALL_TAC nil))
               THEN #'CONJ_TAC
               THENL
                 (cl:cons
-                  (holai.runtime:proof (funcall ASM_REWRITE_TAC nil)
+                  (holai.runtime:proof (#`ASM_REWRITE_TAC nil)
                     THEN (MESON_TAC (cl:cons REAL_LE_REFL nil)))
                   (cl:cons #'ALL_TAC nil))
               THEN (MATCH_MP_TAC INF_UNIQUE)
-              THEN (funcall ASM_REWRITE_TAC nil))
+              THEN (#`ASM_REWRITE_TAC nil))
             (cl:cons
               (holai.runtime:proof #'GEN_TAC
-                THEN (MP_TAC (funcall SPEC (parse_term "s:real->bool") INF%%))
+                THEN (MP_TAC (#`SPEC (parse_term "s:real->bool") INF%%))
                 THEN ANTS_TAC
                 THENL
                   (cl:cons
-                    (holai.runtime:proof (funcall ASM_REWRITE_TAC nil)
-                      THEN (funcall ASM_MESON_TAC nil))
+                    (holai.runtime:proof (#`ASM_REWRITE_TAC nil)
+                      THEN (#`ASM_MESON_TAC nil))
                     (cl:cons #'ALL_TAC nil))
                 THEN (POP_ASSUM #'SUBST_ALL_TAC)
                 THEN #'STRIP_TAC
                 THEN #'EQ_TAC
-                THEN (funcall ASM_REWRITE_TAC nil)
+                THEN (#`ASM_REWRITE_TAC nil)
                 THEN (REPEAT #'STRIP_TAC)
                 THEN (TRANS_TAC REAL_LE_TRANS (parse_term "l:real"))
-                THEN (funcall ASM_SIMP_TAC nil))
+                THEN (#`ASM_SIMP_TAC nil))
               nil))))))
 
 (defparameter HAS_SUP_SUP
@@ -12745,36 +12444,36 @@
             (holai.runtime:proof #'CONJ_TAC
               THENL
                 (cl:cons
-                  (holai.runtime:proof (funcall REFUTE_THEN #'SUBST_ALL_TAC)
+                  (holai.runtime:proof (#`REFUTE_THEN #'SUBST_ALL_TAC)
                     THEN (POP_ASSUM #'MP_TAC)
                     THEN (REWRITE_TAC (cl:cons NOT_IN_EMPTY (cl:cons NOT_FORALL_THM nil)))
-                    THEN (funcall EXISTS_TAC (parse_term "l - &1:real"))
+                    THEN (#`EXISTS_TAC (parse_term "l - &1:real"))
                     THEN REAL_ARITH_TAC)
                   (cl:cons #'ALL_TAC nil))
               THEN #'CONJ_TAC
               THENL
                 (cl:cons
-                  (holai.runtime:proof (funcall ASM_REWRITE_TAC nil)
+                  (holai.runtime:proof (#`ASM_REWRITE_TAC nil)
                     THEN (MESON_TAC (cl:cons REAL_LE_REFL nil)))
                   (cl:cons #'ALL_TAC nil))
               THEN (MATCH_MP_TAC SUP_UNIQUE)
-              THEN (funcall ASM_REWRITE_TAC nil))
+              THEN (#`ASM_REWRITE_TAC nil))
             (cl:cons
               (holai.runtime:proof #'GEN_TAC
-                THEN (MP_TAC (funcall SPEC (parse_term "s:real->bool") SUP%))
+                THEN (MP_TAC (#`SPEC (parse_term "s:real->bool") SUP%))
                 THEN ANTS_TAC
                 THENL
                   (cl:cons
-                    (holai.runtime:proof (funcall ASM_REWRITE_TAC nil)
-                      THEN (funcall ASM_MESON_TAC nil))
+                    (holai.runtime:proof (#`ASM_REWRITE_TAC nil)
+                      THEN (#`ASM_MESON_TAC nil))
                     (cl:cons #'ALL_TAC nil))
                 THEN (POP_ASSUM #'SUBST_ALL_TAC)
                 THEN #'STRIP_TAC
                 THEN #'EQ_TAC
-                THEN (funcall ASM_REWRITE_TAC nil)
+                THEN (#`ASM_REWRITE_TAC nil)
                 THEN (REPEAT #'STRIP_TAC)
                 THEN (TRANS_TAC REAL_LE_TRANS (parse_term "l:real"))
-                THEN (funcall ASM_SIMP_TAC nil))
+                THEN (#`ASM_SIMP_TAC nil))
               nil))))))
 
 (defparameter INF_EXISTS
@@ -12815,44 +12514,40 @@
         THEN #'EQ_TAC
         THENL
           (cl:cons
-            (holai.runtime:proof (funcall INTRO_TAC "hp")
+            (holai.runtime:proof (#`INTRO_TAC "hp")
               THEN #'CONJ_TAC
               THENL
                 (cl:cons
-                  (holai.runtime:proof (funcall
-                      HYP_TAC
+                  (holai.runtime:proof (#`HYP_TAC
                       "hp"
                       (REWRITE_RULE (cl:cons HAS_INF_INF nil)))
-                    THEN (funcall ASM_REWRITE_TAC nil))
+                    THEN (#`ASM_REWRITE_TAC nil))
                   (cl:cons #'ALL_TAC nil))
               THEN #'CONJ_TAC
               THENL
                 (cl:cons
-                  (funcall ASM_MESON_TAC (cl:cons HAS_INF_LBOUND nil))
-                  (cl:cons (funcall ASM_MESON_TAC (cl:cons HAS_INF_APPROACH nil)) nil)))
+                  (#`ASM_MESON_TAC (cl:cons HAS_INF_LBOUND nil))
+                  (cl:cons (#`ASM_MESON_TAC (cl:cons HAS_INF_APPROACH nil)) nil)))
             (cl:cons #'ALL_TAC nil))
-        THEN (funcall INTRO_TAC "ne bound approach")
-        THEN (funcall ASM_REWRITE_TAC (cl:cons has_inf nil))
+        THEN (#`INTRO_TAC "ne bound approach")
+        THEN (#`ASM_REWRITE_TAC (cl:cons has_inf nil))
         THEN #'GEN_TAC
         THEN #'EQ_TAC
         THENL
           (cl:cons
-            (holai.runtime:proof (funcall INTRO_TAC "hp")
-              THEN (REWRITE_TAC (cl:cons (funcall GSYM REAL_NOT_LT) nil))
-              THEN (funcall INTRO_TAC "lc")
+            (holai.runtime:proof (#`INTRO_TAC "hp")
+              THEN (REWRITE_TAC (cl:cons (#`GSYM REAL_NOT_LT) nil))
+              THEN (#`INTRO_TAC "lc")
               THEN
-                (REMOVE_THEN
-                  "approach"
-                  (o #'MP_TAC (funcall SPEC (parse_term "(l + c) / &2"))))
+                (REMOVE_THEN "approach" (o #'MP_TAC (#`SPEC (parse_term "(l + c) / &2"))))
               THEN ANTS_TAC
-              THENL
-                (cl:cons ASM_REAL_ARITH_TAC (cl:cons (funcall INTRO_TAC "@x0. x0 +") nil))
-              THEN (USE_THEN "x0" (o (funcall HYP_TAC "hp") (C #'MATCH_MP)))
+              THENL (cl:cons ASM_REAL_ARITH_TAC (cl:cons (#`INTRO_TAC "@x0. x0 +") nil))
+              THEN (USE_THEN "x0" (o (#`HYP_TAC "hp") (C #'MATCH_MP)))
               THEN ASM_REAL_ARITH_TAC)
             (cl:cons
-              (holai.runtime:proof (funcall INTRO_TAC "hp; !x; x")
+              (holai.runtime:proof (#`INTRO_TAC "hp; !x; x")
                 THEN (TRANS_TAC REAL_LE_TRANS (parse_term "l:real"))
-                THEN (funcall ASM_SIMP_TAC nil))
+                THEN (#`ASM_SIMP_TAC nil))
               nil))))))
 
 (defparameter HAS_SUP%
@@ -12867,44 +12562,40 @@
         THEN #'EQ_TAC
         THENL
           (cl:cons
-            (holai.runtime:proof (funcall INTRO_TAC "hp")
+            (holai.runtime:proof (#`INTRO_TAC "hp")
               THEN #'CONJ_TAC
               THENL
                 (cl:cons
-                  (holai.runtime:proof (funcall
-                      HYP_TAC
+                  (holai.runtime:proof (#`HYP_TAC
                       "hp"
                       (REWRITE_RULE (cl:cons HAS_SUP_SUP nil)))
-                    THEN (funcall ASM_REWRITE_TAC nil))
+                    THEN (#`ASM_REWRITE_TAC nil))
                   (cl:cons #'ALL_TAC nil))
               THEN #'CONJ_TAC
               THENL
                 (cl:cons
-                  (funcall ASM_MESON_TAC (cl:cons HAS_SUP_UBOUND nil))
-                  (cl:cons (funcall ASM_MESON_TAC (cl:cons HAS_SUP_APPROACH nil)) nil)))
+                  (#`ASM_MESON_TAC (cl:cons HAS_SUP_UBOUND nil))
+                  (cl:cons (#`ASM_MESON_TAC (cl:cons HAS_SUP_APPROACH nil)) nil)))
             (cl:cons #'ALL_TAC nil))
-        THEN (funcall INTRO_TAC "ne bound approach")
-        THEN (funcall ASM_REWRITE_TAC (cl:cons has_sup nil))
+        THEN (#`INTRO_TAC "ne bound approach")
+        THEN (#`ASM_REWRITE_TAC (cl:cons has_sup nil))
         THEN #'GEN_TAC
         THEN #'EQ_TAC
         THENL
           (cl:cons
-            (holai.runtime:proof (funcall INTRO_TAC "hp")
-              THEN (REWRITE_TAC (cl:cons (funcall GSYM REAL_NOT_LT) nil))
-              THEN (funcall INTRO_TAC "lc")
+            (holai.runtime:proof (#`INTRO_TAC "hp")
+              THEN (REWRITE_TAC (cl:cons (#`GSYM REAL_NOT_LT) nil))
+              THEN (#`INTRO_TAC "lc")
               THEN
-                (REMOVE_THEN
-                  "approach"
-                  (o #'MP_TAC (funcall SPEC (parse_term "(l + c) / &2"))))
+                (REMOVE_THEN "approach" (o #'MP_TAC (#`SPEC (parse_term "(l + c) / &2"))))
               THEN ANTS_TAC
-              THENL
-                (cl:cons ASM_REAL_ARITH_TAC (cl:cons (funcall INTRO_TAC "@x0. x0 +") nil))
-              THEN (USE_THEN "x0" (o (funcall HYP_TAC "hp") (C #'MATCH_MP)))
+              THENL (cl:cons ASM_REAL_ARITH_TAC (cl:cons (#`INTRO_TAC "@x0. x0 +") nil))
+              THEN (USE_THEN "x0" (o (#`HYP_TAC "hp") (C #'MATCH_MP)))
               THEN ASM_REAL_ARITH_TAC)
             (cl:cons
-              (holai.runtime:proof (funcall INTRO_TAC "hp; !x; x")
+              (holai.runtime:proof (#`INTRO_TAC "hp; !x; x")
                 THEN (TRANS_TAC REAL_LE_TRANS (parse_term "l:real"))
-                THEN (funcall ASM_SIMP_TAC nil))
+                THEN (#`ASM_SIMP_TAC nil))
               nil))))))
 
 (defparameter HAS_INF_LE
@@ -12914,26 +12605,23 @@
         "!s t l m. s has_inf l /\\ t has_inf m /\\
              (!y. y IN t ==> ?x. x IN s /\\ x <= y)
              ==> l <= m")
-      (holai.runtime:proof (funcall INTRO_TAC "!s t l m; l m le")
-        THEN (funcall HYP_TAC "l: s l1 l2" (REWRITE_RULE (cl:cons HAS_INF% nil)))
-        THEN (funcall HYP_TAC "m: t m1 m2" (REWRITE_RULE (cl:cons HAS_INF% nil)))
-        THEN
-          (funcall
-            REFUTE_THEN
-            (o (LABEL_TAC "lt") (REWRITE_RULE (cl:cons REAL_NOT_LE nil))))
+      (holai.runtime:proof (#`INTRO_TAC "!s t l m; l m le")
+        THEN (#`HYP_TAC "l: s l1 l2" (REWRITE_RULE (cl:cons HAS_INF% nil)))
+        THEN (#`HYP_TAC "m: t m1 m2" (REWRITE_RULE (cl:cons HAS_INF% nil)))
+        THEN (#`REFUTE_THEN (o (LABEL_TAC "lt") (REWRITE_RULE (cl:cons REAL_NOT_LE nil))))
         THEN (CLAIM_TAC "@c. c1 c2" (parse_term "?c:real. m < c /\\ c < l"))
         THENL
           (cl:cons
-            (holai.runtime:proof (funcall EXISTS_TAC (parse_term "(l + m) / &2"))
+            (holai.runtime:proof (#`EXISTS_TAC (parse_term "(l + m) / &2"))
               THEN ASM_REAL_ARITH_TAC)
             (cl:cons #'ALL_TAC nil))
-        THEN (funcall HYP_TAC "m2: +" (funcall SPEC (parse_term "c:real")))
-        THEN (funcall ASM_REWRITE_TAC (cl:cons NOT_EXISTS_THM nil))
-        THEN (funcall INTRO_TAC "!x; x xc")
+        THEN (#`HYP_TAC "m2: +" (#`SPEC (parse_term "c:real")))
+        THEN (#`ASM_REWRITE_TAC (cl:cons NOT_EXISTS_THM nil))
+        THEN (#`INTRO_TAC "!x; x xc")
         THEN (CLAIM_TAC "@y. y yx" (parse_term "?y:real. y IN s /\\ y <= x"))
-        THENL (cl:cons (funcall HYP #'MESON_TAC "le x" nil) (cl:cons #'ALL_TAC nil))
-        THEN (funcall HYP_TAC "l1: +" (funcall SPEC (parse_term "y:real")))
-        THEN (funcall ASM_REWRITE_TAC nil)
+        THENL (cl:cons (#`HYP #'MESON_TAC "le x" nil) (cl:cons #'ALL_TAC nil))
+        THEN (#`HYP_TAC "l1: +" (#`SPEC (parse_term "y:real")))
+        THEN (#`ASM_REWRITE_TAC nil)
         THEN ASM_REAL_ARITH_TAC))))
 
 (defparameter HAS_SUP_LE
@@ -12943,26 +12631,23 @@
         "!s t l m. s has_sup l /\\ t has_sup m /\\
              (!y. y IN t ==> ?x. x IN s /\\ y <= x)
              ==> m <= l")
-      (holai.runtime:proof (funcall INTRO_TAC "!s t l m; l m le")
-        THEN (funcall HYP_TAC "l: s l1 l2" (REWRITE_RULE (cl:cons HAS_SUP% nil)))
-        THEN (funcall HYP_TAC "m: t m1 m2" (REWRITE_RULE (cl:cons HAS_SUP% nil)))
-        THEN
-          (funcall
-            REFUTE_THEN
-            (o (LABEL_TAC "lt") (REWRITE_RULE (cl:cons REAL_NOT_LE nil))))
+      (holai.runtime:proof (#`INTRO_TAC "!s t l m; l m le")
+        THEN (#`HYP_TAC "l: s l1 l2" (REWRITE_RULE (cl:cons HAS_SUP% nil)))
+        THEN (#`HYP_TAC "m: t m1 m2" (REWRITE_RULE (cl:cons HAS_SUP% nil)))
+        THEN (#`REFUTE_THEN (o (LABEL_TAC "lt") (REWRITE_RULE (cl:cons REAL_NOT_LE nil))))
         THEN (CLAIM_TAC "@c. c1 c2" (parse_term "?c:real. l < c /\\ c < m"))
         THENL
           (cl:cons
-            (holai.runtime:proof (funcall EXISTS_TAC (parse_term "(l + m) / &2"))
+            (holai.runtime:proof (#`EXISTS_TAC (parse_term "(l + m) / &2"))
               THEN ASM_REAL_ARITH_TAC)
             (cl:cons #'ALL_TAC nil))
-        THEN (funcall HYP_TAC "m2: +" (funcall SPEC (parse_term "c:real")))
-        THEN (funcall ASM_REWRITE_TAC (cl:cons NOT_EXISTS_THM nil))
-        THEN (funcall INTRO_TAC "!x; x xc")
+        THEN (#`HYP_TAC "m2: +" (#`SPEC (parse_term "c:real")))
+        THEN (#`ASM_REWRITE_TAC (cl:cons NOT_EXISTS_THM nil))
+        THEN (#`INTRO_TAC "!x; x xc")
         THEN (CLAIM_TAC "@y. y yx" (parse_term "?y:real. y IN s /\\ x <= y"))
-        THENL (cl:cons (funcall HYP #'MESON_TAC "le x" nil) (cl:cons #'ALL_TAC nil))
-        THEN (funcall HYP_TAC "l1: +" (funcall SPEC (parse_term "y:real")))
-        THEN (funcall ASM_REWRITE_TAC nil)
+        THENL (cl:cons (#`HYP #'MESON_TAC "le x" nil) (cl:cons #'ALL_TAC nil))
+        THEN (#`HYP_TAC "l1: +" (#`SPEC (parse_term "y:real")))
+        THEN (#`ASM_REWRITE_TAC nil)
         THEN ASM_REAL_ARITH_TAC))))
 
 ;; (* ------------------------------------------------------------------------- *)
@@ -12983,7 +12668,7 @@
                 (let
                   ((v
                     (variant
-                      (funcall variables tm)
+                      (#`variables tm)
                       (mk_var (tuple (string-concat "x" (string-of-int n)) ty)))))
                   (cl:declare (cl:ignorable v))
                   (f (+ n 1) (mk_comb (tuple tm v)) tys))))))
@@ -12991,58 +12676,51 @@
             (let ((tys (holai.runtime:fst (splitlist #'dest_fun_ty (type_of tm)))))
               (cl:declare (cl:ignorable tys))
               (f 0 tm tys)))))
-        (mk_eqin (o (funcall REWR_CONV (funcall GSYM IN)) comb_all)))
+        (mk_eqin (o (#`REWR_CONV (#`GSYM IN)) comb_all)))
       (cl:declare (cl:ignorable comb_all mk_eqin))
-      (fletc ((transf (conv) (o (o rhs #'concl) conv)))
-        (fletc
-          ((remove_in_conv
-            (ptm)
-            (let ((rconv (funcall REWR_CONV (SYM (funcall mk_eqin ptm)))))
+      (holai.runtime:labelsc
+        ((:nonrecursive 0 transf (conv) (o (o rhs #'concl) conv))
+          (:nonrecursive 1 remove_in_conv (ptm)
+            (let ((rconv (#`REWR_CONV (SYM (#`mk_eqin ptm)))))
               (cl:declare (cl:ignorable rconv))
               (lambdac (tm)
                 (let
                   ((htm
                     (holai.runtime:fst
-                      (funcall strip_comb (holai.runtime:snd (dest_binary "IN" tm))))))
+                      (#`strip_comb (holai.runtime:snd (dest_binary "IN" tm))))))
                   (cl:declare (cl:ignorable htm))
-                  (if (= htm ptm) (funcall rconv tm) (fail unit)))))))
-          (let
-            ((remove_in_transf
-              (o
-                (o (o #'transf ONCE_DEPTH_CONV) FIRST_CONV)
-                (holai.lib:map #'remove_in_conv))))
-            (cl:declare (cl:ignorable remove_in_transf))
-            (fletc
-              ((rule_head
-                (tm)
-                (let*
-                  ((tm% (holai.runtime:snd (funcall strip_forall tm)))
-                    (tm
-                      (holai.runtime:snd
-                        (splitlist (dest_binop (parse_term "(==>)")) tm%)))
-                    (tm% (holai.runtime:snd (dest_binary "IN" tm))))
-                  (cl:declare (cl:ignorable tm% tm tm%))
-                  (holai.runtime:fst (funcall strip_comb tm%)))))
-              (let
-                ((find_pvars
-                  (o
-                    (o #'setify (holai.lib:map #'rule_head))
-                    (binops (parse_term "(/\\)")))))
-                (cl:declare (cl:ignorable find_pvars))
-                (lambdac (tm)
-                  (let*
-                    ((pvars (funcall find_pvars tm))
-                      (dtm (funcall remove_in_transf pvars tm)))
-                    (cl:declare (cl:ignorable pvars dtm))
-                    (match (funcall new_inductive_definition dtm)
-                      ((tuple th_rules th_induct th_cases)
-                        (let
-                          ((insert_in_rule
-                            (REWRITE_RULE
-                              (holai.lib:map (o mk_eqin #'const_of_var) pvars))))
-                          (cl:declare (cl:ignorable insert_in_rule))
-                          (tuple
-                            (funcall insert_in_rule th_rules)
-                            (funcall insert_in_rule th_induct)
-                            (funcall insert_in_rule th_cases)))))))))))))))
+                  (if (= htm ptm) (#`rconv tm) (fail unit)))))))
+        (let
+          ((remove_in_transf
+            (o
+              (o (o #'transf ONCE_DEPTH_CONV) FIRST_CONV)
+              (holai.lib:map #'remove_in_conv))))
+          (cl:declare (cl:ignorable remove_in_transf))
+          (fletc
+            ((rule_head
+              (tm)
+              (let*
+                ((tm% (holai.runtime:snd (#`strip_forall tm)))
+                  (tm
+                    (holai.runtime:snd (splitlist (dest_binop (parse_term "(==>)")) tm%)))
+                  (tm% (holai.runtime:snd (dest_binary "IN" tm))))
+                (cl:declare (cl:ignorable tm% tm tm%))
+                (holai.runtime:fst (#`strip_comb tm%)))))
+            (let
+              ((find_pvars
+                (o (o #'setify (holai.lib:map #'rule_head)) (binops (parse_term "(/\\)")))))
+              (cl:declare (cl:ignorable find_pvars))
+              (lambdac (tm)
+                (let* ((pvars (#`find_pvars tm)) (dtm (#`remove_in_transf pvars tm)))
+                  (cl:declare (cl:ignorable pvars dtm))
+                  (match (#`new_inductive_definition dtm)
+                    ((tuple th_rules th_induct th_cases)
+                      (let
+                        ((insert_in_rule
+                          (REWRITE_RULE (holai.lib:map (o mk_eqin #'const_of_var) pvars))))
+                        (cl:declare (cl:ignorable insert_in_rule))
+                        (tuple
+                          (#`insert_in_rule th_rules)
+                          (#`insert_in_rule th_induct)
+                          (#`insert_in_rule th_cases))))))))))))))
 

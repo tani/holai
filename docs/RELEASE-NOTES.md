@@ -45,7 +45,7 @@ direct goal calls keep their ordinary paths. Fragment output preserves
 `proof-tactical` source ranges for joined left prefixes and child operands.
 See DESIGN §33 and the README's fully qualified handwritten example.
 
-Completed reader-inclusive validation used `nix develop path:. --command make release` on
+The preceding reader-inclusive PROOF variant used `nix develop path:. --command make release` on
 aarch64-linux (OCaml 4.14.2, Camlp5 8.02.01, SBCL 2.3.9.nixos): all 46
 inputs initialized, 122 existing native and 61 independent PROOF checks
 passed, and all 1,132 differential rows matched (1,125 serialized plus seven
@@ -80,8 +80,8 @@ evaluates the expression anew and uses `CL:APPLY` to preserve all arguments
 and multiple values. The README shows a real PROOF using
 ``#`holai.tactics:DISCH_TAC`` and ``#`holai.tactics:ACCEPT_TAC``.
 The wrapper is an operand, not directly a PROOF operator reference; bind it
-to a lexical value symbol for that role. Grammar and translator output do not
-change.
+to a lexical value symbol for that role. PROOF grammar is unchanged. Generated
+value-call notation now follows the separate cutover below.
 
 The runtime-only compile/load smoke passed, covering per-call evaluation,
 dynamic rebinding, zero/multiple/NIL arguments, multiple values, gensym hygiene
@@ -91,6 +91,75 @@ sum, positional decimal calculation, NIL classification, floor quotient/
 remainder and lexical-argument hygiene computations. This runtime addition
 leaves the 1,132 differential rows, 205,472 inclusive maps and 51 production
 units unchanged; no publication or performance result is claimed.
+
+## Reader-headed generated value calls
+
+Generated value applications now use ``(#`f arg1 arg2)`` to reduce indentation,
+including structurally computed heads and foreign excess-result calls.
+This is a source-preserving notation change, not a performance optimization.
+Direct named calls, `#'` references and foreign partial adapters retain their
+existing paths. Function values passed as arguments or captured in bindings
+stay eager plain references; they are not implicitly wrapped.
+
+The function expression is acquired once per invocation **after** left-to-right
+argument evaluation. An argument that rebinds it therefore selects the new
+function for the same call. Direct reader calls preserve partial currying and
+multiple return values. Runtime must be loaded before consumer files are read.
+PROOF recognition/grammar/tactical emission and runtime-internal funcall/API
+remain unchanged. A dedicated structural ReaderPrefix output node renders the
+prefix adjacent to the annotated head and preserves source-map origins;
+Fragment stays PROOF-only, with no generated-string postprocessing.
+
+Eight added native consumer checks bring the measured `proof_dsl_checks` count
+to 69 in the completed combined DESIGN34/35 release. One new
+`reader_computed_head` observation checks a computed head and evaluation count
+without duplicating existing partial/excess paths. No fixture/load component
+is added (11/51). Final integrated inventories are below; the earlier results
+remain historical. No new performance result is claimed.
+See DESIGN §34.
+
+## Shallow staged local named-function groups
+
+DESIGN §35 adds one shallow `labelsc` definition list for adjacent lowered
+FLETC/LABELSC groups. Entries are
+`(:nonrecursive stage name params body)` or
+`(:recursive stage name params body)`; stages preserve original source groups.
+Thus a later g can depend on an earlier f without making f see g, and a
+recursive member sees only its original recursive stage and preceding scopes.
+Macroexpansion folds the stages back into the original ordinary nesting.
+This parallel-looking display is not a parallel/mutually recursive scope:
+that would capture old references when sequential shadows reuse symbols.
+Untagged macros retain their existing behavior.
+
+LET values, modules, match, lambda and annotations stop grouping. Removed
+let Origins remain with coincident output spans; function/body origins,
+lowering/import/reference order and source binding identity are retained.
+No source algorithm, direct call, `#'` reference, adapter, initialization or
+evaluation order changes because of stage flattening. The separate DESIGN34
+reader-headed call cutover intentionally acquires heads after arguments.
+Runtime-first compile/load supports both mechanisms.
+
+The combined DESIGN34/35 `nix develop path:. --command make release` succeeded
+in 217.72 seconds with OCaml 4.14.2, Camlp5 8.02.01 and SBCL 2.3.9.nixos.
+All 46 inputs loaded; 122 existing native and 69 independent PROOF checks
+passed. All 1,139 differential rows matched (1,132 serialized, seven side
+effects), including the computed-head row and six new language-group rows
+covering chains, mixed stages, shadows/captured identities, parallel groups,
+imports and a once-only closure-initializer barrier.
+All 194,839 core/205,818 inclusive maps passed audit, retaining all scope
+Origins as coincident merged spans. Ten rejections preserved output;
+51 fresh-cache units had zero errors/warnings/style warnings, 94 clean outputs
+were identical and 55 input pins unchanged. Initial registries22/303/263/3,
+the original axioms and the two known initialization-message differences
+remain unchanged. Generated core Lisp totals 6,174,070 bytes, not a speed claim.
+
+Separate actual smokes proved a closed identity with generated core, checked
+all six language-group results and direct staged duplicate-name, parallel
+outer-RHS, captured-partial and mutual-recursion cases. Staged headers retain
+tag/stage/name/parameters on one line when they fit 90 columns, with the body
+on a new line. Ordinary untagged macro syntax remains necessary, not a
+compatibility alias. No universal indentation reduction or performance
+claim is made. See DESIGN §35.3 and the current release reports.
 
 ## Pending discussion
 

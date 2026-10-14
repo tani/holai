@@ -483,7 +483,6 @@
     lambdac
     labelsc
     function-value
-    funcall
     fst
     fletc
     failwith
@@ -557,7 +556,7 @@
             (let
               ((res
                 (handler-case
-                  (funcall f x)
+                  (#`f x)
                   (holai.runtime:ocaml-condition
                     (exception~12)
                     (match exception~12
@@ -568,36 +567,34 @@
 
 (defunc RIGHT_BETA (th)
   (handler-case
-    (TRANS th (BETA_CONV (funcall rhs (concl th))))
+    (TRANS th (BETA_CONV (#`rhs (concl th))))
     (holai.runtime:ocaml-condition
       (exception~42)
       (match exception~42 (_ (failwith "RIGHT_BETA")) (_ (raise exception~42))))))
 
 (defunc RIGHT_ETA (thm)
   (handler-case
-    (TRANS thm (funcall ETA_CONV (funcall rhs (concl thm))))
+    (TRANS thm (#`ETA_CONV (#`rhs (concl thm))))
     (holai.runtime:ocaml-condition
       (exception~56)
       (match exception~56 (_ (failwith "RIGHT_ETA")) (_ (raise exception~56))))))
 
 (defunc MK_comb (th)
-  (match (dest_comb (funcall rhs (concl th)))
+  (match (dest_comb (#`rhs (concl th)))
     ((tuple rator% rand%)
       (fletc ((mka (th1 th2) (TRANS th (MK_COMB% (tuple th1 th2)))))
         (tuple (REFL rator%) (REFL rand%) #'mka)))))
 
 (defunc MK_abs (th)
-  (match (dest_abs (funcall rhs (concl th)))
+  (match (dest_abs (#`rhs (concl th)))
     ((tuple bvar body%)
       (tuple bvar (REFL body%) (lambdac (th1) (TRANS th (ABS% bvar th1)))))))
 
 (defunc BODY_CONJUNCTS (th)
-  (if (funcall is_forall (concl th))
+  (if (#`is_forall (concl th))
     (BODY_CONJUNCTS (SPEC_ALL th))
-    (if (funcall is_conj (concl th))
-      (append
-        (BODY_CONJUNCTS (funcall CONJUNCT1 th))
-        (BODY_CONJUNCTS (funcall CONJUNCT2 th)))
+    (if (#`is_conj (concl th))
+      (append (BODY_CONJUNCTS (#`CONJUNCT1 th)) (BODY_CONJUNCTS (#`CONJUNCT2 th)))
       (cl:cons th nil))))
 
 (defvariant stack
@@ -638,14 +635,14 @@
     ((tuple th stk)
       (match (MK_comb th)
         ((tuple tha thb mka)
-          (tuple tha (make-Zrator (tuple mka (tuple thb (funcall f arg))) stk)))))))
+          (tuple tha (make-Zrator (tuple mka (tuple thb (#`f arg))) stk)))))))
 
 (defunc push_skip_stk (f arg arg~213)
   (match arg~213
     ((tuple th stk)
       (match (MK_comb th)
         ((tuple tha thb mka)
-          (tuple tha (make-Zrand (tuple (C mka) cl:t (tuple thb (funcall f arg))) stk)))))))
+          (tuple tha (make-Zrand (tuple (C mka) cl:t (tuple thb (#`f arg))) stk)))))))
 
 (defunc push_lam_in_stk (arg~244)
   (match arg~244
@@ -665,7 +662,7 @@
 
 (defunc FUNIFY (thm)
   (handler-case
-    (let ((x (rand (funcall lhs (concl thm)))))
+    (let ((x (rand (#`lhs (concl thm)))))
       (cl:declare (cl:ignorable x))
       (CONV_RULE
         (RATOR_CONV (RAND_CONV (CHANGED_CONV (PURE_REWRITE_CONV (cl:cons ETA_AX nil)))))
@@ -690,7 +687,7 @@
     ((iter
       (th)
       (handler-case
-        (iter (funcall f th))
+        (iter (#`f th))
         (holai.runtime:ocaml-condition
           (exception~329)
           (match exception~329 (_ th) (_ (raise exception~329)))))))
@@ -706,7 +703,7 @@
 (defunc eq_intro (thm)
   (if (is_eq (concl thm))
     thm
-    (if (is_neg (concl thm)) (funcall EQF_INTRO thm) (funcall EQT_INTRO thm))))
+    (if (is_neg (concl thm)) (#`EQF_INTRO thm) (#`EQT_INTRO thm))))
 
 (defvariant pattern (Pvar field0) (Papp field0 field1))
 
@@ -739,7 +736,7 @@
             (failwith
               (string-concat
                 "check_arg_form: lambda abstraction not allowed on lhs: `"
-                (string-concat (funcall string_of_term trm) "`"))))))))
+                (string-concat (#`string_of_term trm) "`"))))))))
     (match (chk trm nil nil)
       ((tuple fv% (Papp head args)) (tuple (list-rev fv%) head args))
       (_ (failwith "check_arg_form: ill-formed lhs")))))
@@ -773,7 +770,7 @@
         ((tyi_dt
           (arg~536)
           (match arg~536
-            ((Cst c% dbsk) (make-Cst (funcall inst tysub c%) dbsk))
+            ((Cst c% dbsk) (make-Cst (#`inst tysub c%) dbsk))
             ((App h l) (make-App (tyi_dt h) (map #'tyi_dt l)))
             ((Abs v%) (make-Abs (tyi_dt v%)))
             (v% v%))))
@@ -816,7 +813,7 @@
 (defunc key_of (arg~710)
   (match arg~710
     ((Rw (rewrite_rec :cst cst% :lhs lhs%))
-      (match (dest_const cst%) ((tuple name _) (tuple name (funcall length lhs%) cst%))))))
+      (match (dest_const cst%) ((tuple name _) (tuple name (#`length lhs%) cst%))))))
 
 (defunc is_skip (arg~732)
   (match arg~732
@@ -915,7 +912,7 @@
         ((tuple fv% cst% pats)
           (let*
             ((gen_thm (itlist GEN fv% eq_thm))
-              (rhsc (from_term (tuple rws% (funcall rev fv%) rhs%))))
+              (rhsc (from_term (tuple rws% (#`rev fv%) rhs%))))
             (cl:declare (cl:ignorable gen_thm rhsc))
             (make-Rw
               (make-rewrite_rec
@@ -926,12 +923,12 @@
                 :rhs
                 rhsc
                 :npv
-                (funcall length fv%)
+                (#`length fv%)
                 :thm
                 gen_thm))))))))
 
 (defunc unsuitable (th)
-  (match (dest_eq (concl th)) ((tuple l r%) (can (funcall term_match nil l) r%))))
+  (match (dest_eq (concl th)) ((tuple l r%) (can (#`term_match nil l) r%))))
 
 (defunc enter_thm (rws% thm0)
   (let ((thm (eq_intro thm0)))
@@ -1003,16 +1000,16 @@
                 (cl:cons (tuple hcst rws%) (get_actions tail))))))
           (let ((actionlist (list-concat (list-map #'get_actions dblist))))
             (cl:declare (cl:ignorable actionlist))
-            (fletc ((dest (arg~1268) (match arg~1268 ((Rw (rewrite_rec :thm thm)) thm))))
-              (fletc
-                ((dest_action
-                  (arg~1276)
+            (holai.runtime:labelsc
+              ((:nonrecursive 0 dest (arg~1268)
+                (match arg~1268 ((Rw (rewrite_rec :thm thm)) thm)))
+                (:nonrecursive 1 dest_action (arg~1276)
                   (match arg~1276
                     ((tuple hcst (Rewrite rws%)) (tuple hcst (map #'dest rws%)))
                     ((tuple hcst (Conv _)) (tuple hcst nil)))))
-                (let ((rwlist (list-map #'dest_action actionlist)))
-                  (cl:declare (cl:ignorable rwlist))
-                  rwlist)))))))))
+              (let ((rwlist (list-map #'dest_action actionlist)))
+                (cl:declare (cl:ignorable rwlist))
+                rwlist))))))))
 
 (defvariant transform (Conversion field0) (Rrules field0))
 
@@ -1051,21 +1048,21 @@
                   (match arg~1361 ((tuple s db) (tuple s (get_actions db)))))
                 dblist)))
             (cl:declare (cl:ignorable actionlist))
-            (fletc ((dest (arg~1376) (match arg~1376 ((Rw (rewrite_rec :thm thm)) thm))))
-              (fletc
-                ((dest_action
-                  (arg~1384)
+            (holai.runtime:labelsc
+              ((:nonrecursive 0 dest (arg~1376)
+                (match arg~1376 ((Rw (rewrite_rec :thm thm)) thm)))
+                (:nonrecursive 1 dest_action (arg~1384)
                   (match arg~1384
                     ((Rewrite rws%) (make-Rrules (map #'dest rws%)))
                     ((Conv ecnv) (make-Conversion ecnv)))))
-                (let
-                  ((rwlist
-                    (list-map
-                      (lambdac (arg~1399)
-                        (match arg~1399 ((tuple s act) (tuple s (map #'dest_action act)))))
-                      actionlist)))
-                  (cl:declare (cl:ignorable rwlist))
-                  rwlist)))))))))
+              (let
+                ((rwlist
+                  (list-map
+                    (lambdac (arg~1399)
+                      (match arg~1399 ((tuple s act) (tuple s (map #'dest_action act)))))
+                    actionlist)))
+                (cl:declare (cl:ignorable rwlist))
+                rwlist))))))))
 
 (define-exception No_match)
 
@@ -1122,7 +1119,7 @@
   (match (tuple pat arg)
     ((tuple (Pvar var%) arg%) (match_var bds var% arg%))
     ((tuple (Papp phead pargs) (tuple _ (Const (cst_rec :head head :args args))))
-      (if (= (funcall length pargs) (funcall length args))
+      (if (= (#`length pargs) (#`length args))
         (match_list (match_const bds phead head) pargs args)
         (raise (make-No_match))))
     (_ (raise (make-No_match)))))
@@ -1180,7 +1177,7 @@
   (match arg~1725
     ((tuple thm lv)
       (match arg~1729
-        ((Some (tuple tm v)) (tuple (funcall SPEC tm thm) (cl:cons v lv)))
+        ((Some (tuple tm v)) (tuple (#`SPEC tm thm) (cl:cons v lv)))
         ((None) (raise (make-Dead_code "inst_rw")))))))
 
 (defunc inst_rw (arg~1753)
@@ -1193,9 +1190,9 @@
         (cl:declare (cl:ignorable tirhs tithm))
         (match (array-fold-left #'inst_one_var (tuple tithm nil) bds)
           ((tuple spec_thm venv)
-            (match (if monitoring% (funcall print_term (concl spec_thm)) unit)
+            (match (if monitoring% (#`print_term (concl spec_thm)) unit)
               ((cl:type holai.runtime::unit-value)
-                (tuple (funcall trans_thm th spec_thm) (mk_clos (tuple venv tirhs)))))))))))
+                (tuple (#`trans_thm th spec_thm) (mk_clos (tuple venv tirhs)))))))))))
 
 (defparameter monitoring (ref (make-None)))
 
@@ -1223,11 +1220,11 @@
         (match
           (match (deref stoppers)
             ((None) unit)
-            ((Some p%) (if (funcall p% head) (raise (make-No_match)) unit)))
+            ((Some p%) (if (#`p% head) (raise (make-No_match)) unit)))
           ((cl:type holai.runtime::unit-value)
             (match
               (handler-case
-                (funcall term_match nil hcst head)
+                (#`term_match nil hcst head)
                 (holai.runtime:ocaml-condition
                   (exception~1887)
                   (match exception~1887
@@ -1236,10 +1233,7 @@
               ((tuple _ _ tytheta)
                 (let*
                   ((rule_inst% (try_rwn tytheta args rls))
-                    (mon
-                      (match (deref monitoring)
-                        ((None) cl:nil)
-                        ((Some f) (funcall f head))))
+                    (mon (match (deref monitoring) ((None) cl:nil) ((Some f) (#`f head))))
                     (insted (inst_rw (tuple th mon rule_inst%))))
                   (cl:declare (cl:ignorable rule_inst% mon insted))
                   (tuple cl:t insted))))))
@@ -1262,8 +1256,8 @@
         :skip
         skip))
       (handler-case
-        (match (funcall fconv (funcall rhs_concl th))
-          ((tuple thm ft) (tuple cl:t (tuple (funcall trans_thm th thm) ft))))
+        (match (#`fconv (#`rhs_concl th))
+          ((tuple thm ft) (tuple cl:t (tuple (#`trans_thm th thm) ft))))
         (holai.runtime:ocaml-condition
           (exception~1933)
           (match exception~1933
@@ -1289,14 +1283,14 @@
   (match arg~1983
     ((tuple th (Ztop)) th)
     ((tuple th (Zrator (tuple mka (tuple thb _)) ctx))
-      (stack_out (tuple (funcall mka th thb) ctx)))
+      (stack_out (tuple (#`mka th thb) ctx)))
     ((tuple th (Zrand (tuple mka _ (tuple tha _)) ctx))
-      (stack_out (tuple (funcall mka tha th) ctx)))
-    ((tuple th (Zabs mkl ctx)) (stack_out (tuple (funcall mkl th) ctx)))))
+      (stack_out (tuple (#`mka tha th) ctx)))
+    ((tuple th (Zabs mkl ctx)) (stack_out (tuple (#`mkl th) ctx)))))
 
 (defunc initial_state (rws% t%)
   (tuple
-    (tuple (funcall refl_thm t%) (mk_clos (tuple nil (from_term (tuple rws% nil t%)))))
+    (tuple (#`refl_thm t%) (mk_clos (tuple nil (from_term (tuple rws% nil t%)))))
     (make-Ztop)))
 
 ;; (*---------------------------------------------------------------------------
@@ -1329,9 +1323,7 @@
       (Zrator (tuple mka (tuple thb cl)) s%))
       (cbv_wk
         (tuple
-          (tuple
-            (funcall beta_thm (funcall mka th thb))
-            (mk_clos (tuple (cl:cons cl env) body%)))
+          (tuple (#`beta_thm (#`mka th thb)) (mk_clos (tuple (cl:cons cl env) body%)))
           s%)))
     ((tuple (tuple th (Const cargs)) stk)
       (match (reduce_cst (tuple th cargs))
@@ -1347,11 +1339,9 @@
         (if (is_skip hcl) (cbv_up new_state) (cbv_wk new_state))))
     ((tuple (tuple thb v) (Zrand (tuple mka cl:nil (tuple th (Const cargs))) stk))
       (cbv_wk
-        (tuple
-          (tuple (funcall mka th thb) (comb_ct cargs (tuple (funcall rhs_concl thb) v)))
-          stk)))
+        (tuple (tuple (#`mka th thb) (comb_ct cargs (tuple (#`rhs_concl thb) v))) stk)))
     ((tuple (tuple thb (Neutr)) (Zrand (tuple mka cl:nil (tuple th (Neutr))) stk))
-      (cbv_up (tuple (tuple (funcall mka th thb) (make-Neutr)) stk)))
+      (cbv_up (tuple (tuple (#`mka th thb) (make-Neutr)) stk)))
     ((tuple clos% stk) (tuple clos% stk))))
 
 ;; (*---------------------------------------------------------------------------
@@ -1388,14 +1378,14 @@
   (match arg~2386
     ((tuple th (Ztop)) th)
     ((tuple th (Zrand (tuple mka cl:nil (tuple tha (Neutr))) ctx))
-      (strong (cbv_wk (tuple (tuple (funcall mka tha th) (make-Neutr)) ctx))))
+      (strong (cbv_wk (tuple (tuple (#`mka tha th) (make-Neutr)) ctx))))
     ((tuple th (Zrand (tuple mka cl:nil clos%) ctx)) (raise (make-Dead_code "strong_up")))
     ((tuple th (Zrator (tuple mka clos%) ctx))
       (strong
         (cbv_wk (tuple clos% (make-Zrand (tuple mka cl:t (tuple th (make-Neutr))) ctx)))))
     ((tuple th (Zrand (tuple mka cl:t (tuple tha _)) ctx))
-      (strong_up (tuple (funcall mka tha th) ctx)))
-    ((tuple th (Zabs mkl ctx)) (strong_up (tuple (funcall mkl th) ctx)))))
+      (strong_up (tuple (#`mka tha th) ctx)))
+    ((tuple th (Zabs mkl ctx)) (strong_up (tuple (#`mkl th) ctx)))))
 
 ;; (*---------------------------------------------------------------------------
 ;;  * [CBV_CONV rws t] is a conversion that does the full normalization of t,
@@ -1428,11 +1418,9 @@
 
 
 (defunc extern_of_conv (rws% conv% tm)
-  (let ((thm (funcall conv% tm)))
+  (let ((thm (#`conv% tm)))
     (cl:declare (cl:ignorable thm))
-    (tuple
-      thm
-      (mk_clos (tuple nil (from_term (tuple rws% nil (funcall rhs (concl thm)))))))))
+    (tuple thm (mk_clos (tuple nil (from_term (tuple rws% nil (#`rhs (concl thm)))))))))
 
 (defunc add_conv (arg~2545 rws%)
   (match arg~2545
@@ -1453,7 +1441,7 @@
 
 (defparameter bool_redns
   (cl:cons
-    (funcall strictify_thm LET_DEF)
+    (#`strictify_thm LET_DEF)
     (list-map
       lazyfy_thm
       (cl:cons
@@ -1478,24 +1466,24 @@
   (match arg~2625
     ((cl:type holai.runtime::unit-value)
       (let*
-        ((basic_rws0 (funcall basic_rewrites unit))
+        ((basic_rws0 (#`basic_rewrites unit))
           (lhs_lambda_rules
             (map
               #'SPEC_ALL
               (cl:cons SELECT_REFL (cl:cons FORALL_SIMP (cl:cons EXISTS_SIMP nil)))))
           (basic_rws
             (list-filter (lambdac (th) (not (mem th lhs_lambda_rules))) basic_rws0))
-          (cs (funcall new_compset (list-map lazyfy_thm basic_rws))))
+          (cs (#`new_compset (list-map lazyfy_thm basic_rws))))
         (cl:declare (cl:ignorable basic_rws0 lhs_lambda_rules basic_rws cs))
         (progn
           (list-iter
             (lambdac (arg~2654)
               (match arg~2654
                 ((tuple _ (tuple pat the_conv))
-                  (match (funcall strip_comb pat)
+                  (match (#`strip_comb pat)
                     ((tuple cst% args)
-                      (add_conv (tuple cst% (funcall length args) the_conv) cs))))))
-            (funcall basic_convs unit))
+                      (add_conv (tuple cst% (#`length args) the_conv) cs))))))
+            (#`basic_convs unit))
           (add_conv (tuple (parse_term "LET:(A->B)->A->B") 2 let_CONV) cs)
           (set_skip cs (parse_term "COND: bool -> A -> A -> A") (make-None))
           cs)))))
@@ -1516,7 +1504,7 @@
 
 (defparameter EVAL_RULE (CONV_RULE EVAL_CONV))
 
-(defparameter EVAL_TAC (funcall CONV_TAC EVAL_CONV))
+(defparameter EVAL_TAC (#`CONV_TAC EVAL_CONV))
 
 (defunc same_const (c1 c2) (= (fst (dest_const c1)) (fst (dest_const c2))))
 

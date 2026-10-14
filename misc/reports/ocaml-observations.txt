@@ -717,6 +717,7 @@ proof_dsl_left_group=|-((c:==>:fun(bool(),fun(bool(),bool())) v:p:bool()) v:p:bo
 proof_dsl_right_group_rejected=true
 proof_dsl_shadow=42/42
 proof_dsl_named_shadow=|-((c:==>:fun(bool(),fun(bool(),bool())) v:p:bool()) v:p:bool())
+reader_computed_head=42,1
 proof_dsl_partial=|-((c:==>:fun(bool(),fun(bool(),bool())) v:p:bool()) v:p:bool())
 proof_dsl_applied_goal=
 ITAUT:p /\ q ==> q /\ p=|-((c:==>:fun(bool(),fun(bool(),bool())) ((c:/\:fun(bool(),fun(bool(),bool())) v:p:bool()) v:q:bool())) ((c:/\:fun(bool(),fun(bool(),bool())) v:q:bool()) v:p:bool()))
@@ -877,6 +878,12 @@ language_local=16,17,36
 language_nested=14
 language_import=46
 language_prefix_operator=9
+language_function_chain=42,42
+language_function_mixed=12,13,9,5,3
+language_function_shadow=42,42,42,42:true:true
+language_function_parallel=142,42,42
+language_function_import=42,42,101,42
+language_function_barrier=42,101,1
 language_loops=19,3
 language_lazy=0,42,42,1,1:true:true
 language_hash=5,9:true

@@ -343,7 +343,6 @@
     labelsc
     guard
     function-value
-    funcall
     fst
     fletc
     failwith
@@ -458,7 +457,7 @@
 (defunc occurs_in (ty bigty)
   (cl:or
     (= bigty ty)
-    (cl:and (funcall is_type bigty) (exists (occurs_in ty) (snd (dest_type bigty))))))
+    (cl:and (#`is_type bigty) (exists (occurs_in ty) (snd (dest_type bigty))))))
 
 (defunc tysubst (alist ty)
   (handler-case
@@ -467,7 +466,7 @@
       (exception~66)
       (match exception~66
         ((Failure _)
-          (if (funcall is_vartype ty)
+          (if (#`is_vartype ty)
             ty
             (match (dest_type ty)
               ((tuple tycon tyvars%)
@@ -614,10 +613,10 @@
             ((tuple ts xs)
               (lambdac (tm)
                 (let*
-                  ((gs (variants (funcall variables tm) (map (o genvar #'type_of) xs)))
+                  ((gs (variants (#`variables tm) (map (o genvar #'type_of) xs)))
                     (tm% (ssubst (zip gs xs) tm)))
                   (cl:declare (cl:ignorable gs tm%))
-                  (if (== tm% tm) tm (funcall vsubst (zip ts gs) tm%)))))))))))
+                  (if (== tm% tm) tm (#`vsubst (zip ts gs) tm%)))))))))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Alpha conversion term operation.                                          *)
@@ -637,7 +636,7 @@
       (if (= v v0)
         tm
         (if (cl:and (= (type_of v) (type_of v0)) (not (vfree_in v bod)))
-          (mk_abs (tuple v (funcall vsubst (cl:cons (tuple v v0) nil) bod)))
+          (mk_abs (tuple v (#`vsubst (cl:cons (tuple v v0) nil) bod)))
           (failwith "alpha: Invalid new variable"))))))
 
 ;; (* ------------------------------------------------------------------------- *)
@@ -646,7 +645,7 @@
 
 
 (defunc type_match (vty cty sofar)
-  (if (funcall is_vartype vty)
+  (if (#`is_vartype vty)
     (handler-case
       (if (= (rev_assoc vty sofar) cty) sofar (failwith "type_match"))
       (holai.runtime:ocaml-condition
@@ -691,7 +690,7 @@
         ((tuple "fun" (cl:cons ty (cl:cons _ nil)))
           (let ((tyins (type_match ty (type_of tm2) nil)))
             (cl:declare (cl:ignorable tyins))
-            (mk_comb (tuple (funcall inst tyins tm1) tm2))))))))
+            (mk_comb (tuple (#`inst tyins tm1) tm2))))))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Instantiates types for constant c and iteratively makes combination.      *)
@@ -734,7 +733,7 @@
 
 
 (defunc find_term (p tm)
-  (if (funcall p tm)
+  (if (#`p tm)
     tm
     (if (is_abs tm)
       (find_term p (body tm))
@@ -754,7 +753,7 @@
   (labelsc
     ((accum
       (tl% p tm)
-      (let ((tl%% (if (funcall p tm) (insert tm tl%) tl%)))
+      (let ((tl%% (if (#`p tm) (insert tm tl%) tl%)))
         (cl:declare (cl:ignorable tl%%))
         (if (is_abs tm)
           (accum tl%% p (body tm))
@@ -783,7 +782,7 @@
         ((tuple v tm)
           (mk_comb
             (tuple
-              (funcall inst (cl:cons (tuple (type_of v) aty) nil) c%)
+              (#`inst (cl:cons (tuple (type_of v) aty) nil) c%)
               (mk_abs (tuple v tm)))))))))
 
 ;; (* ------------------------------------------------------------------------- *)
@@ -928,7 +927,7 @@
             ((tuple l r)
               (if (not (= (fst (dest_const l)) "GABS"))
                 (fail unit)
-                (match (funcall dest_geq (snd (funcall strip_forall (body r))))
+                (match (#`dest_geq (snd (#`strip_forall (body r))))
                   ((tuple ltm rtm) (tuple (rand ltm) rtm)))))))
         (holai.runtime:ocaml-condition
           (exception~1161)
@@ -939,45 +938,39 @@
 (defparameter is_gabs (can dest_gabs))
 
 (defparameter mk_gabs
-  (fletc
-    ((mk_forall
-      (arg~1213)
+  (holai.runtime:labelsc
+    ((:nonrecursive 0 mk_forall (arg~1213)
       (match arg~1213
         ((tuple v t%)
           (let ((cop (mk_const (tuple "!" (cl:cons (tuple (type_of v) aty) nil)))))
             (cl:declare (cl:ignorable cop))
-            (mk_comb (tuple cop (mk_abs (tuple v t%)))))))))
-    (fletc
-      ((list_mk_forall
-        (arg~1239)
-        (match arg~1239 ((tuple vars bod) (itlist (curry #'mk_forall) vars bod)))))
-      (fletc
-        ((mk_geq
-          (arg~1252)
-          (match arg~1252
-            ((tuple t1 t2)
-              (let ((p (mk_const (tuple "GEQ" (cl:cons (tuple (type_of t1) aty) nil)))))
-                (cl:declare (cl:ignorable p))
-                (mk_comb (tuple (mk_comb (tuple p t1)) t2)))))))
-        (lambdac (arg~1277)
-          (match arg~1277
-            ((tuple tm1 tm2)
-              (if (is_var tm1)
-                (mk_abs (tuple tm1 tm2))
-                (let*
-                  ((fvs (frees tm1))
-                    (fty (mk_fun_ty (type_of tm1) (type_of tm2)))
-                    (f
-                      (variant (append (frees tm1) (frees tm2)) (mk_var (tuple "f" fty))))
-                    (bod
-                      (mk_abs
-                        (tuple
-                          f
-                          (list_mk_forall
-                            (tuple fvs (mk_geq (tuple (mk_comb (tuple f tm1)) tm2))))))))
-                  (cl:declare (cl:ignorable fvs fty f bod))
-                  (mk_comb
-                    (tuple (mk_const (tuple "GABS" (cl:cons (tuple fty aty) nil))) bod)))))))))))
+            (mk_comb (tuple cop (mk_abs (tuple v t%))))))))
+      (:nonrecursive 1 list_mk_forall (arg~1239)
+        (match arg~1239 ((tuple vars bod) (itlist (curry #'mk_forall) vars bod))))
+      (:nonrecursive 2 mk_geq (arg~1252)
+        (match arg~1252
+          ((tuple t1 t2)
+            (let ((p (mk_const (tuple "GEQ" (cl:cons (tuple (type_of t1) aty) nil)))))
+              (cl:declare (cl:ignorable p))
+              (mk_comb (tuple (mk_comb (tuple p t1)) t2)))))))
+    (lambdac (arg~1277)
+      (match arg~1277
+        ((tuple tm1 tm2)
+          (if (is_var tm1)
+            (mk_abs (tuple tm1 tm2))
+            (let*
+              ((fvs (frees tm1))
+                (fty (mk_fun_ty (type_of tm1) (type_of tm2)))
+                (f (variant (append (frees tm1) (frees tm2)) (mk_var (tuple "f" fty))))
+                (bod
+                  (mk_abs
+                    (tuple
+                      f
+                      (list_mk_forall
+                        (tuple fvs (mk_geq (tuple (mk_comb (tuple f tm1)) tm2))))))))
+              (cl:declare (cl:ignorable fvs fty f bod))
+              (mk_comb
+                (tuple (mk_const (tuple "GABS" (cl:cons (tuple fty aty) nil))) bod)))))))))
 
 (defunc list_mk_gabs (arg~1346)
   (match arg~1346 ((tuple vs bod) (itlist (curry mk_gabs) vs bod))))
@@ -991,11 +984,11 @@
 
 (defunc dest_let (tm)
   (handler-case
-    (match (funcall strip_comb tm)
+    (match (#`strip_comb tm)
       ((tuple l aargs)
         (if (<> (fst (dest_const l)) "LET")
           (fail unit)
-          (match (funcall strip_gabs (hd aargs))
+          (match (#`strip_gabs (hd aargs))
             ((tuple vars lebod)
               (let ((eqs (zip vars (tl aargs))))
                 (cl:declare (cl:ignorable eqs))
@@ -1076,7 +1069,7 @@
           (cl:declare (cl:ignorable v))
           (cl:cons v (margs (+ n 1) s (cl:cons v avoid) (tl tys)))))))
     (lambdac (s avoid tys)
-      (if (= (funcall length tys) 1)
+      (if (= (#`length tys) 1)
         (cl:cons (variant avoid (mk_var (tuple s (hd tys)))) nil)
         (margs 0 s avoid tys)))))
 
@@ -1089,7 +1082,7 @@
   (labelsc
     ((find_path%
       (p tm)
-      (if (funcall p tm)
+      (if (#`p tm)
         nil
         (if (is_abs tm)
           (cl:cons "b" (find_path% p (body tm)))
@@ -1134,9 +1127,9 @@
             r))
           (atoms% (atoms% acc l) r))
         ((Comb (Const "~" _) l) (atoms% acc l))
-        (_ (funcall %-> tm unit acc)))))
+        (_ (#`%-> tm unit acc)))))
     (lambdac (tm)
       (if (<> (type_of tm) bool_ty)
         (failwith "atoms: not Boolean")
-        (funcall foldl (lambdac (a x y) (cl:cons x a)) nil (atoms% undefined tm))))))
+        (#`foldl (lambdac (a x y) (cl:cons x a)) nil (atoms% undefined tm))))))
 

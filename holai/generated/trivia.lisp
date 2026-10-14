@@ -86,7 +86,7 @@
   (:shadowing-import-from :holai.lib I)
   (:shadowing-import-from :holai.parser parse_term)
   (:shadowing-import-from :holai.printer parse_as_infix)
-  (:shadowing-import-from :holai.runtime tuple funcall deref assign)
+  (:shadowing-import-from :holai.runtime tuple deref assign)
   (:shadowing-import-from
     :holai.simp
     REWRITE_TAC
@@ -133,7 +133,7 @@
 
 (in-package :holai.trivia)
 
-(funcall parse_as_infix (tuple "o" (tuple 26 "right")))
+(#`parse_as_infix (tuple "o" (tuple 26 "right")))
 
 (defparameter o_DEF (new_definition (parse_term "(o) (f:B->C) g = \\x:A. f(g(x))")))
 
@@ -144,7 +144,7 @@
     (tuple
       (parse_term "!f:B->C. !g:A->B. !x:A. (f o g) x = f(g(x))")
       (holai.runtime:proof (PURE_REWRITE_TAC (cl:cons o_DEF nil))
-        THEN (funcall CONV_TAC (funcall DEPTH_CONV #'BETA_CONV))
+        THEN (#`CONV_TAC (#`DEPTH_CONV #'BETA_CONV))
         THEN (REPEAT #'GEN_TAC)
         THEN #'REFL_TAC))))
 
@@ -154,7 +154,7 @@
       (parse_term "!f:C->D. !g:B->C. !h:A->B. f o (g o h) = (f o g) o h")
       (holai.runtime:proof (REPEAT #'GEN_TAC)
         THEN (REWRITE_TAC (cl:cons o_DEF nil))
-        THEN (funcall CONV_TAC (funcall REDEPTH_CONV #'BETA_CONV))
+        THEN (#`CONV_TAC (#`REDEPTH_CONV #'BETA_CONV))
         THEN #'REFL_TAC))))
 
 (defparameter I_THM
@@ -176,9 +176,9 @@
   (prove
     (tuple
       (parse_term "?b:bool. b")
-      (holai.runtime:proof (funcall EXISTS_TAC (parse_term "T"))
+      (holai.runtime:proof (#`EXISTS_TAC (parse_term "T"))
         THEN BETA_TAC
-        THEN (funcall ACCEPT_TAC TRUTH)))))
+        THEN (#`ACCEPT_TAC TRUTH)))))
 
 (defparameter one_tydef
   (new_type_definition "1" (tuple "one_ABS" "one_REP") EXISTS_ONE_REP))
@@ -190,11 +190,11 @@
     (tuple
       (parse_term "!v:1. v = one")
       (holai.runtime:proof (MP_TAC
-          (GEN_ALL (funcall SPEC (parse_term "one_REP a") (funcall CONJUNCT2 one_tydef))))
-        THEN (REWRITE_TAC (cl:cons (funcall CONJUNCT1 one_tydef) nil))
+          (GEN_ALL (#`SPEC (parse_term "one_REP a") (#`CONJUNCT2 one_tydef))))
+        THEN (REWRITE_TAC (cl:cons (#`CONJUNCT1 one_tydef) nil))
         THEN DISCH_TAC
-        THEN (ONCE_REWRITE_TAC (cl:cons (funcall GSYM (funcall CONJUNCT1 one_tydef)) nil))
-        THEN (funcall ASM_REWRITE_TAC nil)))))
+        THEN (ONCE_REWRITE_TAC (cl:cons (#`GSYM (#`CONJUNCT1 one_tydef)) nil))
+        THEN (#`ASM_REWRITE_TAC nil)))))
 
 (defparameter one_axiom
   (prove
@@ -217,7 +217,7 @@
     (tuple
       (parse_term "!e:A. ?fn. fn one = e")
       (holai.runtime:proof #'GEN_TAC
-        THEN (funcall EXISTS_TAC (parse_term "\\x:1. e:A"))
+        THEN (#`EXISTS_TAC (parse_term "\\x:1. e:A"))
         THEN BETA_TAC
         THEN #'REFL_TAC))))
 
@@ -230,7 +230,7 @@
         THEN (REPEAT #'STRIP_TAC)
         THEN (ONCE_REWRITE_TAC (cl:cons FUN_EQ_THM nil))
         THEN (ONCE_REWRITE_TAC (cl:cons one nil))
-        THEN (funcall ASM_REWRITE_TAC nil)))))
+        THEN (#`ASM_REWRITE_TAC nil)))))
 
 (defparameter FORALL_ONE_THM
   (prove
@@ -246,7 +246,7 @@
       (parse_term "(?x. P x) <=> P one")
       (holai.runtime:proof (GEN_REWRITE_TAC
           #'I
-          (cl:cons (funcall TAUT (parse_term "(p <=> q) <=> (~p <=> ~q)")) nil))
+          (cl:cons (#`TAUT (parse_term "(p <=> q) <=> (~p <=> ~q)")) nil))
         THEN (REWRITE_TAC (cl:cons NOT_EXISTS_THM (cl:cons FORALL_ONE_THM nil)))))))
 
 (defparameter ETA_ONE

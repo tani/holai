@@ -304,7 +304,6 @@
     int-div
     guard
     function-value
-    funcall
     fst
     fletc
     failwith
@@ -356,26 +355,26 @@
 
 (in-package :holai.parser)
 
-(funcall parse_as_infix (tuple "," (tuple 14 "right")))
+(#`parse_as_infix (tuple "," (tuple 14 "right")))
 
 (define-exception Noparse)
 
 (defunc %%% (parser1 parser2 input)
   (handler-case
-    (funcall parser1 input)
+    (#`parser1 input)
     (holai.runtime:ocaml-condition
       (exception~14)
-      (match exception~14 ((Noparse) (funcall parser2 input)) (_ (raise exception~14))))))
+      (match exception~14 ((Noparse) (#`parser2 input)) (_ (raise exception~14))))))
 
 (defunc ++ (parser1 parser2 input)
-  (match (funcall parser1 input)
+  (match (#`parser1 input)
     ((tuple result1 rest1)
-      (match (funcall parser2 rest1)
+      (match (#`parser2 rest1)
         ((tuple result2 rest2) (tuple (tuple result1 result2) rest2))))))
 
 (defunc many (prs input)
   (handler-case
-    (match (funcall prs input)
+    (match (#`prs input)
       ((tuple result next)
         (match (many prs next)
           ((tuple results rest) (tuple (cl:cons result results) rest)))))
@@ -384,12 +383,11 @@
       (match exception~51 ((Noparse) (tuple nil input)) (_ (raise exception~51))))))
 
 (defunc >> (prs treatment input)
-  (match (funcall prs input)
-    ((tuple result rest) (tuple (funcall treatment result) rest))))
+  (match (#`prs input) ((tuple result rest) (tuple (#`treatment result) rest))))
 
 (defunc fix (err prs input)
   (handler-case
-    (funcall prs input)
+    (#`prs input)
     (holai.runtime:ocaml-condition
       (exception~101)
       (match exception~101
@@ -413,11 +411,7 @@
         ((tuple x opxs)
           (match (unzip opxs)
             ((tuple ops xs)
-              (itlist2
-                (lambdac (op y x%) (funcall cons op x% y))
-                (funcall rev ops)
-                (funcall rev xs)
-                x))))))))
+              (itlist2 (lambdac (op y x%) (#`cons op x% y)) (#`rev ops) (#`rev xs) x))))))))
 
 (defunc rightbin (prs sep cons err)
   (>>
@@ -432,7 +426,7 @@
 
 (defunc possibly (prs input)
   (handler-case
-    (match (funcall prs input) ((tuple x rest) (tuple (cl:cons x nil) rest)))
+    (match (#`prs input) ((tuple x rest) (tuple (cl:cons x nil) rest)))
     (holai.runtime:ocaml-condition
       (exception~248)
       (match exception~248 ((Noparse) (tuple nil input)) (_ (raise exception~248))))))
@@ -440,126 +434,122 @@
 (defunc some (p arg~270)
   (match arg~270
     (nil (raise (make-Noparse)))
-    ((cl:cons h t%) (if (funcall p h) (tuple h t%) (raise (make-Noparse))))))
+    ((cl:cons h t%) (if (#`p h) (tuple h t%) (raise (make-Noparse))))))
 
 (defunc a (tok) (some (lambdac (item) (= item tok))))
 
 (defunc atleast (n prs i%)
-  (funcall
-    (if (<= n 0)
-      (many prs)
-      (>>
-        (++ prs (atleast (- n 1) prs))
-        (lambdac (arg~310) (match arg~310 ((tuple h t%) (cl:cons h t%))))))
+  (#`(if (<= n 0)
+    (many prs)
+    (>>
+      (++ prs (atleast (- n 1) prs))
+      (lambdac (arg~310) (match arg~310 ((tuple h t%) (cl:cons h t%))))))
     i%))
 
 (defunc finished (input) (if (= input nil) (tuple 0 input) (failwith "Unparsed input")))
 
 (defvariant lexcode (Ident field0) (Resword field0))
 
-(funcall reserve_words (cl:cons "//" nil))
+(#`reserve_words (cl:cons "//" nil))
 
 (defparameter comment_token (ref (make-Resword "//")))
 
 (defparameter lex
-  (fletc
-    ((collect
-      (arg~357)
+  (holai.runtime:labelsc
+    ((:nonrecursive 0 collect (arg~357)
       (match arg~357
-        ((tuple h t%) (end_itlist (function-value #'string-concat 2) (cl:cons h t%))))))
-    (fletc
-      ((reserve
-        (arg~370)
+        ((tuple h t%) (end_itlist (function-value #'string-concat 2) (cl:cons h t%)))))
+      (:nonrecursive 1 reserve (arg~370)
         (match arg~370
-          ((cl:and tok (Ident n)) (if (funcall is_reserved_word n) (make-Resword n) tok))
-          (t% t%))))
+          ((cl:and tok (Ident n)) (if (#`is_reserved_word n) (make-Resword n) tok))
+          (t% t%)))
+      (:nonrecursive 2 stringof (p)
+        (>> (atleast 1 p) (end_itlist (function-value #'string-concat 2)))))
+    (let*
+      ((simple_ident (%%% (stringof (some isalnum)) (stringof (some issymb))))
+        (undertail (>> (++ (stringof (a "_")) (possibly simple_ident)) #'collect))
+        (ident% (>> (++ (%%% undertail simple_ident) (many undertail)) #'collect))
+        (septok (stringof (some issep))))
+      (cl:declare (cl:ignorable simple_ident undertail ident% septok))
       (fletc
-        ((stringof (p) (>> (atleast 1 p) (end_itlist (function-value #'string-concat 2)))))
-        (let*
-          ((simple_ident (%%% (stringof (some isalnum)) (stringof (some issymb))))
-            (undertail (>> (++ (stringof (a "_")) (possibly simple_ident)) #'collect))
-            (ident% (>> (++ (%%% undertail simple_ident) (many undertail)) #'collect))
-            (septok (stringof (some issep))))
-          (cl:declare (cl:ignorable simple_ident undertail ident% septok))
-          (fletc
-            ((escapecode
-              (i%)
-              (match i%
-                ((cl:cons "\\" rst) (tuple "\\" rst))
-                ((cl:cons "\"" rst) (tuple "\"" rst))
-                ((cl:cons "'" rst) (tuple "'" rst))
-                ((cl:cons "n" rst) (tuple "
+        ((escapecode
+          (i%)
+          (match i%
+            ((cl:cons "\\" rst) (tuple "\\" rst))
+            ((cl:cons "\"" rst) (tuple "\"" rst))
+            ((cl:cons "'" rst) (tuple "'" rst))
+            ((cl:cons "n" rst) (tuple "
 " rst))
-                ((cl:cons "r" rst) (tuple "" rst))
-                ((cl:cons "t" rst) (tuple "	" rst))
-                ((cl:cons "b" rst) (tuple "" rst))
-                ((cl:cons " " rst) (tuple " " rst))
-                ((cl:cons "x" (cl:cons h (cl:cons l rst)))
-                  (tuple
-                    (string-make
-                      1
-                      (char-chr (int-of-string (string-concat "0x" (string-concat h l)))))
-                    rst))
-                ((guard
-                  (cl:cons a% (cl:cons b (cl:cons c% rst)))
-                  (forall isnum (cl:cons a% (cl:cons b (cl:cons c% nil)))))
-                  (tuple
-                    (string-make
-                      1
-                      (char-chr (int-of-string (string-concat a% (string-concat b c%)))))
-                    rst))
-                (_ (failwith "lex:unrecognized OCaml-style escape in string")))))
-            (let*
-              ((stringchar
-                (%%%
-                  (some (lambdac (i%) (cl:and (<> i% "\\") (<> i% "\""))))
-                  (>> (++ (a "\\") #'escapecode) (function-value #'snd 1))))
-                (string
-                  (>>
-                    (++ (++ (a "\"") (many stringchar)) (a "\""))
-                    (lambdac (arg~567)
-                      (match arg~567
-                        ((tuple (tuple _ s) _)
-                          (string-concat "\"" (string-concat (implode s) "\"")))))))
-                (rawtoken
-                  (>>
-                    (%%% (%%% (%%% string (some isbra)) septok) ident%)
-                    (lambdac (x) (make-Ident x))))
-                (simptoken
-                  (>>
-                    (++ (many (some isspace)) rawtoken)
-                    (o #'reserve (function-value #'snd 1)))))
-              (cl:declare (cl:ignorable stringchar string rawtoken simptoken))
-              (labelsc
-                ((tokens
-                  (i%)
-                  (handler-case
-                    (match (funcall simptoken i%)
-                      ((tuple t% rst)
-                        (if (= t% (deref comment_token))
-                          (>>
-                            (++
-                              (many
-                                (lambdac (i%%)
-                                  (if (cl:and (<> i%% nil) (<> (hd i%%) "
+            ((cl:cons "r" rst) (tuple "" rst))
+            ((cl:cons "t" rst) (tuple "	" rst))
+            ((cl:cons "b" rst) (tuple "" rst))
+            ((cl:cons " " rst) (tuple " " rst))
+            ((cl:cons "x" (cl:cons h (cl:cons l rst)))
+              (tuple
+                (string-make
+                  1
+                  (char-chr (int-of-string (string-concat "0x" (string-concat h l)))))
+                rst))
+            ((guard
+              (cl:cons a% (cl:cons b (cl:cons c% rst)))
+              (forall isnum (cl:cons a% (cl:cons b (cl:cons c% nil)))))
+              (tuple
+                (string-make
+                  1
+                  (char-chr (int-of-string (string-concat a% (string-concat b c%)))))
+                rst))
+            (_ (failwith "lex:unrecognized OCaml-style escape in string")))))
+        (let*
+          ((stringchar
+            (%%%
+              (some (lambdac (i%) (cl:and (<> i% "\\") (<> i% "\""))))
+              (>> (++ (a "\\") #'escapecode) (function-value #'snd 1))))
+            (string
+              (>>
+                (++ (++ (a "\"") (many stringchar)) (a "\""))
+                (lambdac (arg~567)
+                  (match arg~567
+                    ((tuple (tuple _ s) _)
+                      (string-concat "\"" (string-concat (implode s) "\"")))))))
+            (rawtoken
+              (>>
+                (%%% (%%% (%%% string (some isbra)) septok) ident%)
+                (lambdac (x) (make-Ident x))))
+            (simptoken
+              (>>
+                (++ (many (some isspace)) rawtoken)
+                (o #'reserve (function-value #'snd 1)))))
+          (cl:declare (cl:ignorable stringchar string rawtoken simptoken))
+          (labelsc
+            ((tokens
+              (i%)
+              (handler-case
+                (match (#`simptoken i%)
+                  ((tuple t% rst)
+                    (if (= t% (deref comment_token))
+                      (>>
+                        (++
+                          (many
+                            (lambdac (i%%)
+                              (if (cl:and (<> i%% nil) (<> (hd i%%) "
 "))
-                                    (tuple 1 (tl i%%))
-                                    (raise (make-Noparse)))))
-                              #'tokens)
-                            (function-value #'snd 1)
-                            rst)
-                          (match (tokens rst)
-                            ((tuple toks rst1) (tuple (cl:cons t% toks) rst1))))))
-                    (holai.runtime:ocaml-condition
-                      (exception~609)
-                      (match exception~609
-                        ((Noparse) (tuple nil i%))
-                        (_ (raise exception~609)))))))
-                (o
-                  (function-value #'fst 1)
-                  (>>
-                    (++ (++ #'tokens (many (some isspace))) #'finished)
-                    (o (function-value #'fst 1) (function-value #'fst 1))))))))))))
+                                (tuple 1 (tl i%%))
+                                (raise (make-Noparse)))))
+                          #'tokens)
+                        (function-value #'snd 1)
+                        rst)
+                      (match (tokens rst)
+                        ((tuple toks rst1) (tuple (cl:cons t% toks) rst1))))))
+                (holai.runtime:ocaml-condition
+                  (exception~609)
+                  (match exception~609
+                    ((Noparse) (tuple nil i%))
+                    (_ (raise exception~609)))))))
+            (o
+              (function-value #'fst 1)
+              (>>
+                (++ (++ #'tokens (many (some isspace))) #'finished)
+                (o (function-value #'fst 1) (function-value #'fst 1))))))))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Parser for pretypes. Concrete syntax:                                     *)
@@ -612,27 +602,25 @@
             (failwith "mk_prefinty")
             (prefinty n))))))
     (cl:declare (cl:ignorable mk_prefinty))
-    (fletc
-      ((btyop (n n% x y) (make-Ptycon n (cl:cons x (cl:cons y nil))))
-        (mk_apptype
-          (arg~750)
+    (holai.runtime:labelsc
+      ((:nonrecursive 0 btyop (n n% x y) (make-Ptycon n (cl:cons x (cl:cons y nil))))
+        (:nonrecursive 0 mk_apptype (arg~750)
           (match arg~750
             ((tuple (cl:cons s nil) nil) s)
             ((tuple tys (cl:cons c% nil)) (make-Ptycon c% tys))
             (_ (failwith "Bad type construction"))))
-        (type_atom
-          (input)
+        (:nonrecursive 0 type_atom (input)
           (match input
             ((cl:cons (Ident s) rest)
               (tuple
                 (handler-case
-                  (pretype_of_type (assoc s (funcall type_abbrevs unit)))
+                  (pretype_of_type (assoc s (#`type_abbrevs unit)))
                   (holai.runtime:ocaml-condition
                     (exception~779)
                     (match exception~779
                       ((Failure _)
                         (handler-case
-                          (funcall mk_prefinty (funcall num_of_string s))
+                          (#`mk_prefinty (#`num_of_string s))
                           (holai.runtime:ocaml-condition
                             (exception~782)
                             (match exception~782
@@ -651,8 +639,7 @@
                       (_ (raise exception~779)))))
                 rest))
             (_ (raise (make-Noparse)))))
-        (type_constructor
-          (input)
+        (:nonrecursive 0 type_constructor (input)
           (match input
             ((cl:cons (Ident s) rest)
               (if
@@ -663,64 +650,56 @@
                     (match exception~829 ((Failure _) cl:nil) (_ (raise exception~829)))))
                 (tuple s rest)
                 (raise (make-Noparse))))
-            (_ (raise (make-Noparse))))))
-      (labelsc
-        ((pretype
-          (i%)
+            (_ (raise (make-Noparse)))))
+        (:recursive 1 pretype (i%)
           (rightbin
             #'sumtype
             (a (make-Resword "->"))
             (btyop "fun")
             "proper use of type operator (->)"
             i%))
-          (sumtype
-            (i%)
-            (rightbin
-              #'prodtype
-              (a (make-Ident "+"))
-              (btyop "sum")
-              "proper use of type operator (+)"
-              i%))
-          (prodtype
-            (i%)
-            (rightbin
-              #'carttype
-              (a (make-Ident "#"))
-              (btyop "prod")
-              "proper use of type operator (#)"
-              i%))
-          (carttype
-            (i%)
-            (leftbin
-              #'apptype
-              (a (make-Ident "^"))
-              (btyop "cart")
-              "proper use of type operator (^)"
-              i%))
-          (apptype
-            (i%)
+        (:recursive 1 sumtype (i%)
+          (rightbin
+            #'prodtype
+            (a (make-Ident "+"))
+            (btyop "sum")
+            "proper use of type operator (+)"
+            i%))
+        (:recursive 1 prodtype (i%)
+          (rightbin
+            #'carttype
+            (a (make-Ident "#"))
+            (btyop "prod")
+            "proper use of type operator (#)"
+            i%))
+        (:recursive 1 carttype (i%)
+          (leftbin
+            #'apptype
+            (a (make-Ident "^"))
+            (btyop "cart")
+            "proper use of type operator (^)"
+            i%))
+        (:recursive 1 apptype (i%)
+          (>>
+            (++
+              #'atomictypes
+              (%%% (>> #'type_constructor (lambdac (x) (cl:cons x nil))) #'nothing))
+            #'mk_apptype
+            i%))
+        (:recursive 1 atomictypes (i%)
+          (%%%
             (>>
-              (++
-                #'atomictypes
-                (%%% (>> #'type_constructor (lambdac (x) (cl:cons x nil))) #'nothing))
-              #'mk_apptype
-              i%))
-          (atomictypes
-            (i%)
-            (%%%
-              (>>
-                (++ (++ (a (make-Resword "(")) #'typelist) (a (make-Resword ")")))
-                (o (function-value #'snd 1) (function-value #'fst 1)))
-              (>> #'type_atom (lambdac (x) (cl:cons x nil)))
-              i%))
-          (typelist
-            (i%)
-            (listof
-              #'pretype
-              (a (make-Ident ","))
-              "comma separated list for type constructor"
-              i%)))
-        #'pretype))))
+              (++ (++ (a (make-Resword "(")) #'typelist) (a (make-Resword ")")))
+              (o (function-value #'snd 1) (function-value #'fst 1)))
+            (>> #'type_atom (lambdac (x) (cl:cons x nil)))
+            i%))
+        (:recursive 1 typelist (i%)
+          (listof
+            #'pretype
+            (a (make-Ident ","))
+            "comma separated list for type constructor"
+            i%)))
+      #'pretype)))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Hook to allow installation of user parsers.                               *)
@@ -742,7 +721,7 @@
       (if (= ps nil)
         (raise (make-Noparse))
         (handler-case
-          (funcall (snd (hd ps)) i%)
+          (#`(snd (hd ps)) i%)
           (holai.runtime:ocaml-condition
             (exception~962)
             (match exception~962
@@ -812,15 +791,10 @@
 
 
 (defparameter parse_preterm
-  (labelsc
-    ((pairwise
-      (r l)
-      (match l
-        (nil cl:t)
-        ((cl:cons h t%) (cl:and (forall (funcall r h) t%) (pairwise r t%))))))
-    (labelsc
-      ((pfrees
-        (ptm)
+  (holai.runtime:labelsc
+    ((:recursive 0 pairwise (r l)
+      (match l (nil cl:t) ((cl:cons h t%) (cl:and (forall (#`r h) t%) (pairwise r t%)))))
+      (:recursive 1 pfrees (ptm)
         (match ptm
           ((Varp v pty)
             (if (cl:and (= v "") (= pty dpty))
@@ -838,491 +812,375 @@
           ((Constp _ _) nil)
           ((Combp p1 p2) (union (pfrees p1) (pfrees p2)))
           ((Absp p1 p2) (subtract (pfrees p2) (pfrees p1)))
-          ((Typing p _) (pfrees p)))))
-      (fletc
-        ((pdest_eq
-          (arg~1126)
-          (match arg~1126 ((Combp (Combp (Varp (cl:or "=" "<=>") _) l) r) (tuple l r)))))
-        (fletc
-          ((pmk_let
-            (arg~1143)
-            (match arg~1143
-              ((tuple letbindings body%)
-                (match (unzip (map #'pdest_eq letbindings))
-                  ((tuple vars tms)
-                    (match
-                      (warn
-                        (not
-                          (pairwise
-                            (lambdac (s t%) (= (intersect (pfrees s) (pfrees t%)) nil))
-                            vars))
-                        "duplicate names on left of let-binding: latest is used")
-                      (_
-                        (let*
-                          ((lend (make-Combp (make-Varp "LET_END" dpty) body%))
-                            (abs%% (itlist (lambdac (v t%) (make-Absp v t%)) vars lend))
-                            (labs (make-Combp (make-Varp "LET" dpty) abs%%)))
-                          (cl:declare (cl:ignorable lend abs%% labs))
-                          (rev_itlist (lambdac (x f) (make-Combp f x)) tms labs))))))))))
-          (fletc
-            ((pmk_vbinder
-              (arg~1212)
-              (match arg~1212
-                ((tuple n v bod)
-                  (if (= n "\\")
-                    (make-Absp v bod)
-                    (make-Combp (make-Varp n dpty) (make-Absp v bod)))))))
-            (fletc
-              ((pmk_binder
-                (arg~1236)
-                (match arg~1236
-                  ((tuple n vs bod)
-                    (itlist (lambdac (v b) (pmk_vbinder (tuple n v b))) vs bod)))))
-              (fletc
-                ((pmk_set_enum
-                  (ptms)
-                  (itlist
-                    (lambdac (x t%)
-                      (make-Combp (make-Combp (make-Varp "INSERT" dpty) x) t%))
-                    ptms
-                    (make-Varp "EMPTY" dpty))))
+          ((Typing p _) (pfrees p))))
+      (:nonrecursive 2 pdest_eq (arg~1126)
+        (match arg~1126 ((Combp (Combp (Varp (cl:or "=" "<=>") _) l) r) (tuple l r))))
+      (:nonrecursive 3 pmk_let (arg~1143)
+        (match arg~1143
+          ((tuple letbindings body%)
+            (match (unzip (map #'pdest_eq letbindings))
+              ((tuple vars tms)
+                (match
+                  (warn
+                    (not
+                      (pairwise
+                        (lambdac (s t%) (= (intersect (pfrees s) (pfrees t%)) nil))
+                        vars))
+                    "duplicate names on left of let-binding: latest is used")
+                  (_
+                    (let*
+                      ((lend (make-Combp (make-Varp "LET_END" dpty) body%))
+                        (abs%% (itlist (lambdac (v t%) (make-Absp v t%)) vars lend))
+                        (labs (make-Combp (make-Varp "LET" dpty) abs%%)))
+                      (cl:declare (cl:ignorable lend abs%% labs))
+                      (rev_itlist (lambdac (x f) (make-Combp f x)) tms labs)))))))))
+      (:nonrecursive 4 pmk_vbinder (arg~1212)
+        (match arg~1212
+          ((tuple n v bod)
+            (if (= n "\\")
+              (make-Absp v bod)
+              (make-Combp (make-Varp n dpty) (make-Absp v bod))))))
+      (:nonrecursive 5 pmk_binder (arg~1236)
+        (match arg~1236
+          ((tuple n vs bod) (itlist (lambdac (v b) (pmk_vbinder (tuple n v b))) vs bod))))
+      (:nonrecursive 6 pmk_set_enum (ptms)
+        (itlist
+          (lambdac (x t%) (make-Combp (make-Combp (make-Varp "INSERT" dpty) x) t%))
+          ptms
+          (make-Varp "EMPTY" dpty))))
+    (let
+      ((pgenvar
+        (let ((gcounter (ref 0)))
+          (cl:declare (cl:ignorable gcounter))
+          (lambdac (arg~1277)
+            (match arg~1277
+              ((cl:type holai.runtime::unit-value)
+                (let ((count (deref gcounter)))
+                  (cl:declare (cl:ignorable count))
+                  (progn
+                    (assign gcounter (+ count 1))
+                    (make-Varp (string-concat "GEN%PVAR%" (string-of-int count)) dpty)))))))))
+      (cl:declare (cl:ignorable pgenvar))
+      (holai.runtime:labelsc
+        ((:nonrecursive 0 pmk_exists (arg~1299)
+          (match arg~1299
+            ((tuple v ptm) (make-Combp (make-Varp "?" dpty) (make-Absp v ptm)))))
+          (:nonrecursive 1 pmk_list (els)
+            (itlist
+              (lambdac (x y) (make-Combp (make-Combp (make-Varp "CONS" dpty) x) y))
+              els
+              (make-Varp "NIL" dpty))))
+        (let
+          ((pmk_bool
+            (let ((tt (make-Varp "T" dpty)) (ff (make-Varp "F" dpty)))
+              (cl:declare (cl:ignorable tt ff))
+              (lambdac (b) (if b tt ff)))))
+          (cl:declare (cl:ignorable pmk_bool))
+          (holai.runtime:labelsc
+            ((:nonrecursive 0 pmk_char (c%)
+              (let
+                ((lis
+                  (map
+                    (lambdac (i%)
+                      (#`pmk_bool (= (int-mod (int-div c% (int-lsl 1 i%)) 2) 1)))
+                    (-- 0 7))))
+                (cl:declare (cl:ignorable lis))
+                (itlist (lambdac (x y) (make-Combp y x)) lis (make-Varp "ASCII" dpty))))
+              (:nonrecursive 1 pmk_string (s)
                 (let
-                  ((pgenvar
-                    (let ((gcounter (ref 0)))
-                      (cl:declare (cl:ignorable gcounter))
-                      (lambdac (arg~1277)
-                        (match arg~1277
-                          ((cl:type holai.runtime::unit-value)
-                            (let ((count (deref gcounter)))
-                              (cl:declare (cl:ignorable count))
-                              (progn
-                                (assign gcounter (+ count 1))
-                                (make-Varp
-                                  (string-concat "GEN%PVAR%" (string-of-int count))
-                                  dpty)))))))))
-                  (cl:declare (cl:ignorable pgenvar))
-                  (fletc
-                    ((pmk_exists
-                      (arg~1299)
-                      (match arg~1299
-                        ((tuple v ptm)
-                          (make-Combp (make-Varp "?" dpty) (make-Absp v ptm))))))
-                    (fletc
-                      ((pmk_list
-                        (els)
-                        (itlist
-                          (lambdac (x y)
-                            (make-Combp (make-Combp (make-Varp "CONS" dpty) x) y))
-                          els
-                          (make-Varp "NIL" dpty))))
+                  ((ns
+                    (map
+                      (lambdac (i%) (char-code (string-get s i%)))
+                      (-- 0 (- (string-length s) 1)))))
+                  (cl:declare (cl:ignorable ns))
+                  (pmk_list (map #'pmk_char ns))))
+              (:nonrecursive 2 pmk_setcompr (arg~1399)
+                (match arg~1399
+                  ((tuple fabs bvs babs)
+                    (let*
+                      ((v (#`pgenvar unit))
+                        (bod
+                          (itlist
+                            (curry #'pmk_exists)
+                            bvs
+                            (make-Combp
+                              (make-Combp (make-Combp (make-Varp "SETSPEC" dpty) v) babs)
+                              fabs))))
+                      (cl:declare (cl:ignorable v bod))
+                      (make-Combp (make-Varp "GSPEC" dpty) (make-Absp v bod))))))
+              (:nonrecursive 3 pmk_setabs (arg~1435)
+                (match arg~1435
+                  ((tuple fabs babs)
+                    (let
+                      ((evs
+                        (let ((fvs (pfrees fabs)) (bvs (pfrees babs)))
+                          (cl:declare (cl:ignorable fvs bvs))
+                          (if (cl:or (<= (#`length fvs) 1) (= bvs nil))
+                            fvs
+                            (intersect fvs bvs)))))
+                      (cl:declare (cl:ignorable evs))
+                      (pmk_setcompr (tuple fabs evs babs))))))
+              (:recursive 4 mk_precedence (infxs prs inp)
+                (match infxs
+                  ((cl:cons (tuple s (tuple p at)) _)
+                    (match
+                      (partition
+                        (lambdac (arg~1529)
+                          (match arg~1529 ((tuple s% pat%) (= pat% (tuple p at)))))
+                        infxs)
+                      ((tuple topins rest)
+                        (#`(if (= at "right") #'rightbin #'leftbin)
+                          (mk_precedence rest prs)
+                          (end_itlist
+                            #'%%%
+                            (map
+                              (lambdac (arg~1489)
+                                (match arg~1489 ((tuple s% _) (a (make-Ident s%)))))
+                              topins))
+                          (lambdac (arg~1502 x y)
+                            (match arg~1502
+                              ((Ident op)
+                                (make-Combp (make-Combp (make-Varp op dpty) x) y))))
+                          "term after binary operator"
+                          inp))))
+                  (_ (#`prs inp))))
+              (:nonrecursive 5 pmk_geq (s t%)
+                (make-Combp (make-Combp (make-Varp "GEQ" dpty) s) t%))
+              (:nonrecursive 6 pmk_pattern (arg~1561)
+                (match arg~1561
+                  ((tuple (tuple pat guards) res)
+                    (let ((x (#`pgenvar unit)) (y (#`pgenvar unit)))
+                      (cl:declare (cl:ignorable x y))
                       (let
-                        ((pmk_bool
-                          (let ((tt (make-Varp "T" dpty)) (ff (make-Varp "F" dpty)))
-                            (cl:declare (cl:ignorable tt ff))
-                            (lambdac (b) (if b tt ff)))))
-                        (cl:declare (cl:ignorable pmk_bool))
-                        (fletc
-                          ((pmk_char
-                            (c%)
-                            (let
-                              ((lis
-                                (map
-                                  (lambdac (i%)
-                                    (funcall
-                                      pmk_bool
-                                      (= (int-mod (int-div c% (int-lsl 1 i%)) 2) 1)))
-                                  (-- 0 7))))
-                              (cl:declare (cl:ignorable lis))
-                              (itlist
-                                (lambdac (x y) (make-Combp y x))
-                                lis
-                                (make-Varp "ASCII" dpty)))))
-                          (fletc
-                            ((pmk_string
-                              (s)
-                              (let
-                                ((ns
-                                  (map
-                                    (lambdac (i%) (char-code (string-get s i%)))
-                                    (-- 0 (- (string-length s) 1)))))
-                                (cl:declare (cl:ignorable ns))
-                                (pmk_list (map #'pmk_char ns)))))
-                            (fletc
-                              ((pmk_setcompr
-                                (arg~1399)
-                                (match arg~1399
-                                  ((tuple fabs bvs babs)
-                                    (let*
-                                      ((v (funcall pgenvar unit))
-                                        (bod
-                                          (itlist
-                                            (curry #'pmk_exists)
-                                            bvs
-                                            (make-Combp
-                                              (make-Combp
-                                                (make-Combp (make-Varp "SETSPEC" dpty) v)
-                                                babs)
-                                              fabs))))
-                                      (cl:declare (cl:ignorable v bod))
-                                      (make-Combp
-                                        (make-Varp "GSPEC" dpty)
-                                        (make-Absp v bod)))))))
-                              (fletc
-                                ((pmk_setabs
-                                  (arg~1435)
-                                  (match arg~1435
-                                    ((tuple fabs babs)
-                                      (let
-                                        ((evs
-                                          (let ((fvs (pfrees fabs)) (bvs (pfrees babs)))
-                                            (cl:declare (cl:ignorable fvs bvs))
-                                            (if
-                                              (cl:or
-                                                (<= (funcall length fvs) 1)
-                                                (= bvs nil))
-                                              fvs
-                                              (intersect fvs bvs)))))
-                                        (cl:declare (cl:ignorable evs))
-                                        (pmk_setcompr (tuple fabs evs babs)))))))
-                                (labelsc
-                                  ((mk_precedence
-                                    (infxs prs inp)
-                                    (match infxs
-                                      ((cl:cons (tuple s (tuple p at)) _)
-                                        (match
-                                          (partition
-                                            (lambdac (arg~1529)
-                                              (match arg~1529
-                                                ((tuple s% pat%) (= pat% (tuple p at)))))
-                                            infxs)
-                                          ((tuple topins rest)
-                                            (funcall
-                                              (if (= at "right") #'rightbin #'leftbin)
-                                              (mk_precedence rest prs)
-                                              (end_itlist
-                                                #'%%%
-                                                (map
-                                                  (lambdac (arg~1489)
-                                                    (match arg~1489
-                                                      ((tuple s% _) (a (make-Ident s%)))))
-                                                  topins))
-                                              (lambdac (arg~1502 x y)
-                                                (match arg~1502
-                                                  ((Ident op)
-                                                    (make-Combp
-                                                      (make-Combp (make-Varp op dpty) x)
-                                                      y))))
-                                              "term after binary operator"
-                                              inp))))
-                                      (_ (funcall prs inp)))))
-                                  (fletc
-                                    ((pmk_geq
-                                      (s t%)
-                                      (make-Combp
-                                        (make-Combp (make-Varp "GEQ" dpty) s)
-                                        t%)))
-                                    (fletc
-                                      ((pmk_pattern
-                                        (arg~1561)
-                                        (match arg~1561
-                                          ((tuple (tuple pat guards) res)
-                                            (let
-                                              ((x (funcall pgenvar unit))
-                                                (y (funcall pgenvar unit)))
-                                              (cl:declare (cl:ignorable x y))
-                                              (let
-                                                ((vs (pfrees pat))
-                                                  (bod
-                                                    (if (= guards nil)
-                                                      (make-Combp
-                                                        (make-Combp
-                                                          (make-Varp
-                                                            "_UNGUARDED_PATTERN"
-                                                            dpty)
-                                                          (pmk_geq pat x))
-                                                        (pmk_geq res y))
-                                                      (make-Combp
-                                                        (make-Combp
-                                                          (make-Combp
-                                                            (make-Varp
-                                                              "_GUARDED_PATTERN"
-                                                              dpty)
-                                                            (pmk_geq pat x))
-                                                          (hd guards))
-                                                        (pmk_geq res y)))))
-                                                (cl:declare (cl:ignorable vs bod))
-                                                (make-Absp
-                                                  x
-                                                  (make-Absp
-                                                    y
-                                                    (itlist (curry #'pmk_exists) vs bod)))))))))
-                                      (let
-                                        ((pretype parse_pretype)
-                                          (string
-                                            (lambdac (inp)
-                                              (match inp
-                                                ((guard
-                                                  (cl:cons (Ident s) rst)
-                                                  (cl:and
-                                                    (>= (string-length s) 2)
-                                                    (cl:and
-                                                      (= (string-sub s 0 1) "\"")
-                                                      (=
-                                                        (string-sub
-                                                          s
-                                                          (- (string-length s) 1)
-                                                          1)
-                                                        "\""))))
-                                                  (tuple
-                                                    (string-sub
-                                                      s
-                                                      1
-                                                      (- (string-length s) 2))
-                                                    rst))
-                                                (_ (raise (make-Noparse))))))
-                                          (singleton1 (lambdac (x) (cl:cons x nil)))
-                                          (lmk_ite
-                                            (lambdac (arg~1686)
-                                              (match arg~1686
-                                                ((tuple
-                                                  (tuple
-                                                    (tuple (tuple (tuple _ b) _) l)
-                                                    _)
-                                                  r)
-                                                  (make-Combp
-                                                    (make-Combp
-                                                      (make-Combp
-                                                        (make-Varp "COND" dpty)
-                                                        b)
-                                                      l)
-                                                    r)))))
-                                          (lmk_typed
-                                            (lambdac (arg~1712)
-                                              (match arg~1712
-                                                ((tuple p nil) p)
-                                                ((tuple p (cl:cons ty nil))
-                                                  (make-Typing p ty))
-                                                (_ (fail unit)))))
-                                          (lmk_let
-                                            (lambdac (arg~1733)
-                                              (match arg~1733
-                                                ((tuple (tuple (tuple _ bnds) _) ptm)
-                                                  (pmk_let (tuple bnds ptm))))))
-                                          (lmk_binder
-                                            (lambdac (arg~1749)
-                                              (match arg~1749
-                                                ((tuple
-                                                  (tuple (tuple (tuple s h) t%) _)
-                                                  p)
-                                                  (pmk_binder (tuple s (cl:cons h t%) p))))))
-                                          (lmk_setenum
-                                            (lambdac (arg~1772)
-                                              (match arg~1772
-                                                ((tuple l _) (pmk_set_enum l)))))
-                                          (lmk_setabs
-                                            (lambdac (arg~1781)
-                                              (match arg~1781
-                                                ((tuple (tuple (tuple l _) r) _)
-                                                  (pmk_setabs (tuple l r))))))
-                                          (lmk_setcompr
-                                            (lambdac (arg~1797)
-                                              (match arg~1797
-                                                ((tuple
-                                                  (tuple
-                                                    (tuple (tuple (tuple f _) vs) _)
-                                                    b)
-                                                  _)
-                                                  (pmk_setcompr (tuple f (pfrees vs) b))))))
-                                          (lmk_decimal
-                                            (lambdac (arg~1820)
-                                              (match arg~1820
-                                                ((tuple (tuple _ l0) ropt)
-                                                  (match
-                                                    (if (= ropt nil)
-                                                      (tuple l0 "1")
-                                                      (let*
-                                                        ((r0 (hd ropt))
-                                                          (n_l (funcall num_of_string l0))
-                                                          (n_r (funcall num_of_string r0)))
-                                                        (cl:declare
-                                                          (cl:ignorable r0 n_l n_r))
-                                                        (let*
-                                                          ((n_d
-                                                            (power-num
-                                                              (num 10)
-                                                              (num (string-length r0))))
-                                                            (n_n (+ (* n_l n_d) n_r)))
-                                                          (cl:declare
-                                                            (cl:ignorable n_d n_n))
-                                                          (tuple
-                                                            (string-of-num n_n)
-                                                            (string-of-num n_d)))))
-                                                    ((tuple l r)
-                                                      (make-Combp
-                                                        (make-Combp
-                                                          (make-Varp "DECIMAL" dpty)
-                                                          (make-Varp l dpty))
-                                                        (make-Varp r dpty))))))))
-                                          (lmk_univ
-                                            (lambdac (arg~1885)
-                                              (match arg~1885
-                                                ((tuple (tuple _ pty) _)
-                                                  (make-Typing
-                                                    (make-Varp "UNIV" dpty)
-                                                    (make-Ptycon
-                                                      "fun"
-                                                      (cl:cons
-                                                        pty
-                                                        (cl:cons
-                                                          (make-Ptycon "bool" nil)
-                                                          nil))))))))
-                                          (any_identifier
-                                            (lambdac (arg~1907)
-                                              (match arg~1907
-                                                ((cl:cons (Ident s) rest) (tuple s rest))
-                                                (_ (raise (make-Noparse))))))
-                                          (identifier
-                                            (lambdac (arg~1922)
-                                              (match arg~1922
-                                                ((cl:cons (Ident s) rest)
-                                                  (if
-                                                    (cl:or
-                                                      (can get_infix_status s)
-                                                      (cl:or
-                                                        (funcall is_prefix s)
-                                                        (funcall parses_as_binder s)))
-                                                    (raise (make-Noparse))
-                                                    (tuple s rest)))
-                                                (_ (raise (make-Noparse))))))
-                                          (binder
-                                            (lambdac (arg~1949)
-                                              (match arg~1949
-                                                ((cl:cons (Ident s) rest)
-                                                  (if (funcall parses_as_binder s)
-                                                    (tuple s rest)
-                                                    (raise (make-Noparse))))
-                                                (_ (raise (make-Noparse))))))
-                                          (pre_fix
-                                            (lambdac (arg~1969)
-                                              (match arg~1969
-                                                ((cl:cons (Ident s) rest)
-                                                  (if (funcall is_prefix s)
-                                                    (tuple s rest)
-                                                    (raise (make-Noparse))))
-                                                (_ (raise (make-Noparse)))))))
-                                        (cl:declare
-                                          (cl:ignorable
-                                            pretype
-                                            string
-                                            singleton1
-                                            lmk_ite
-                                            lmk_typed
-                                            lmk_let
-                                            lmk_binder
-                                            lmk_setenum
-                                            lmk_setabs
-                                            lmk_setcompr
-                                            lmk_decimal
-                                            lmk_univ
-                                            any_identifier
-                                            identifier
-                                            binder
-                                            pre_fix))
-                                        (labelsc
-                                          ((preterm
-                                            (i%)
-                                            (mk_precedence
-                                              (funcall infixes unit)
-                                              #'typed_appl_preterm
-                                              i%))
-                                            (nocommapreterm
-                                              (i%)
-                                              (let
-                                                ((infs
-                                                  (filter
-                                                    (lambdac (arg~2007)
-                                                      (match arg~2007
-                                                        ((tuple s _) (<> s ","))))
-                                                    (funcall infixes unit))))
-                                                (cl:declare (cl:ignorable infs))
-                                                (mk_precedence
-                                                  infs
-                                                  #'typed_appl_preterm
-                                                  i%)))
-                                            (typed_appl_preterm
-                                              (i%)
-                                              (>>
-                                                (++
-                                                  #'appl_preterm
-                                                  (possibly
-                                                    (>>
-                                                      (++ (a (make-Resword ":")) pretype)
-                                                      (function-value #'snd 1))))
-                                                lmk_typed
-                                                i%))
-                                            (appl_preterm
-                                              (i%)
-                                              (%%%
-                                                (>>
-                                                  (++ pre_fix #'appl_preterm)
-                                                  (lambdac (arg~2043)
-                                                    (match arg~2043
-                                                      ((tuple x y)
-                                                        (make-Combp (make-Varp x dpty) y)))))
-                                                (>>
-                                                  (++
-                                                    #'binder_preterm
-                                                    (many #'binder_preterm))
-                                                  (lambdac (arg~2061)
-                                                    (match arg~2061
-                                                      ((tuple h t%)
-                                                        (itlist
-                                                          (lambdac (x y) (make-Combp y x))
-                                                          (funcall rev t%)
-                                                          h)))))
-                                                i%))
-                                            (binder_preterm
-                                              (i%)
-                                              (%%%
-                                                (%%%
-                                                  (>>
-                                                    (++
-                                                      (++
-                                                        (++
-                                                          (a (make-Resword "let"))
-                                                          (leftbin
-                                                            (>> #'preterm singleton1)
-                                                            (a (make-Resword "and"))
-                                                            (K
-                                                              (function-value #'append 2))
-                                                            "binding"))
-                                                        (a (make-Resword "in")))
-                                                      #'preterm)
-                                                    lmk_let)
-                                                  (>>
-                                                    (++
-                                                      (++
-                                                        (++
-                                                          (++ binder #'typed_apreterm)
-                                                          (many #'typed_apreterm))
-                                                        (a (make-Resword ".")))
-                                                      #'preterm)
-                                                    lmk_binder))
-                                                #'atomic_preterm
-                                                i%))
-                                            (typed_apreterm
-                                              (i%)
-                                              (>>
-                                                (++
-                                                  #'atomic_preterm
-                                                  (possibly
-                                                    (>>
-                                                      (++ (a (make-Resword ":")) pretype)
-                                                      (function-value #'snd 1))))
-                                                lmk_typed
-                                                i%))
-                                            (atomic_preterm
-                                              (i%)
+                        ((vs (pfrees pat))
+                          (bod
+                            (if (= guards nil)
+                              (make-Combp
+                                (make-Combp
+                                  (make-Varp "_UNGUARDED_PATTERN" dpty)
+                                  (pmk_geq pat x))
+                                (pmk_geq res y))
+                              (make-Combp
+                                (make-Combp
+                                  (make-Combp
+                                    (make-Varp "_GUARDED_PATTERN" dpty)
+                                    (pmk_geq pat x))
+                                  (hd guards))
+                                (pmk_geq res y)))))
+                        (cl:declare (cl:ignorable vs bod))
+                        (make-Absp x (make-Absp y (itlist (curry #'pmk_exists) vs bod)))))))))
+            (let
+              ((pretype parse_pretype)
+                (string
+                  (lambdac (inp)
+                    (match inp
+                      ((guard
+                        (cl:cons (Ident s) rst)
+                        (cl:and
+                          (>= (string-length s) 2)
+                          (cl:and
+                            (= (string-sub s 0 1) "\"")
+                            (= (string-sub s (- (string-length s) 1) 1) "\""))))
+                        (tuple (string-sub s 1 (- (string-length s) 2)) rst))
+                      (_ (raise (make-Noparse))))))
+                (singleton1 (lambdac (x) (cl:cons x nil)))
+                (lmk_ite
+                  (lambdac (arg~1686)
+                    (match arg~1686
+                      ((tuple (tuple (tuple (tuple (tuple _ b) _) l) _) r)
+                        (make-Combp
+                          (make-Combp (make-Combp (make-Varp "COND" dpty) b) l)
+                          r)))))
+                (lmk_typed
+                  (lambdac (arg~1712)
+                    (match arg~1712
+                      ((tuple p nil) p)
+                      ((tuple p (cl:cons ty nil)) (make-Typing p ty))
+                      (_ (fail unit)))))
+                (lmk_let
+                  (lambdac (arg~1733)
+                    (match arg~1733
+                      ((tuple (tuple (tuple _ bnds) _) ptm) (pmk_let (tuple bnds ptm))))))
+                (lmk_binder
+                  (lambdac (arg~1749)
+                    (match arg~1749
+                      ((tuple (tuple (tuple (tuple s h) t%) _) p)
+                        (pmk_binder (tuple s (cl:cons h t%) p))))))
+                (lmk_setenum
+                  (lambdac (arg~1772) (match arg~1772 ((tuple l _) (pmk_set_enum l)))))
+                (lmk_setabs
+                  (lambdac (arg~1781)
+                    (match arg~1781
+                      ((tuple (tuple (tuple l _) r) _) (pmk_setabs (tuple l r))))))
+                (lmk_setcompr
+                  (lambdac (arg~1797)
+                    (match arg~1797
+                      ((tuple (tuple (tuple (tuple (tuple f _) vs) _) b) _)
+                        (pmk_setcompr (tuple f (pfrees vs) b))))))
+                (lmk_decimal
+                  (lambdac (arg~1820)
+                    (match arg~1820
+                      ((tuple (tuple _ l0) ropt)
+                        (match
+                          (if (= ropt nil)
+                            (tuple l0 "1")
+                            (let*
+                              ((r0 (hd ropt))
+                                (n_l (#`num_of_string l0))
+                                (n_r (#`num_of_string r0)))
+                              (cl:declare (cl:ignorable r0 n_l n_r))
+                              (let*
+                                ((n_d (power-num (num 10) (num (string-length r0))))
+                                  (n_n (+ (* n_l n_d) n_r)))
+                                (cl:declare (cl:ignorable n_d n_n))
+                                (tuple (string-of-num n_n) (string-of-num n_d)))))
+                          ((tuple l r)
+                            (make-Combp
+                              (make-Combp (make-Varp "DECIMAL" dpty) (make-Varp l dpty))
+                              (make-Varp r dpty))))))))
+                (lmk_univ
+                  (lambdac (arg~1885)
+                    (match arg~1885
+                      ((tuple (tuple _ pty) _)
+                        (make-Typing
+                          (make-Varp "UNIV" dpty)
+                          (make-Ptycon
+                            "fun"
+                            (cl:cons pty (cl:cons (make-Ptycon "bool" nil) nil))))))))
+                (any_identifier
+                  (lambdac (arg~1907)
+                    (match arg~1907
+                      ((cl:cons (Ident s) rest) (tuple s rest))
+                      (_ (raise (make-Noparse))))))
+                (identifier
+                  (lambdac (arg~1922)
+                    (match arg~1922
+                      ((cl:cons (Ident s) rest)
+                        (if
+                          (cl:or
+                            (can get_infix_status s)
+                            (cl:or (#`is_prefix s) (#`parses_as_binder s)))
+                          (raise (make-Noparse))
+                          (tuple s rest)))
+                      (_ (raise (make-Noparse))))))
+                (binder
+                  (lambdac (arg~1949)
+                    (match arg~1949
+                      ((cl:cons (Ident s) rest)
+                        (if (#`parses_as_binder s) (tuple s rest) (raise (make-Noparse))))
+                      (_ (raise (make-Noparse))))))
+                (pre_fix
+                  (lambdac (arg~1969)
+                    (match arg~1969
+                      ((cl:cons (Ident s) rest)
+                        (if (#`is_prefix s) (tuple s rest) (raise (make-Noparse))))
+                      (_ (raise (make-Noparse)))))))
+              (cl:declare
+                (cl:ignorable
+                  pretype
+                  string
+                  singleton1
+                  lmk_ite
+                  lmk_typed
+                  lmk_let
+                  lmk_binder
+                  lmk_setenum
+                  lmk_setabs
+                  lmk_setcompr
+                  lmk_decimal
+                  lmk_univ
+                  any_identifier
+                  identifier
+                  binder
+                  pre_fix))
+              (labelsc
+                ((preterm (i%) (mk_precedence (#`infixes unit) #'typed_appl_preterm i%))
+                  (nocommapreterm
+                    (i%)
+                    (let
+                      ((infs
+                        (filter
+                          (lambdac (arg~2007) (match arg~2007 ((tuple s _) (<> s ","))))
+                          (#`infixes unit))))
+                      (cl:declare (cl:ignorable infs))
+                      (mk_precedence infs #'typed_appl_preterm i%)))
+                  (typed_appl_preterm
+                    (i%)
+                    (>>
+                      (++
+                        #'appl_preterm
+                        (possibly
+                          (>>
+                            (++ (a (make-Resword ":")) pretype)
+                            (function-value #'snd 1))))
+                      lmk_typed
+                      i%))
+                  (appl_preterm
+                    (i%)
+                    (%%%
+                      (>>
+                        (++ pre_fix #'appl_preterm)
+                        (lambdac (arg~2043)
+                          (match arg~2043 ((tuple x y) (make-Combp (make-Varp x dpty) y)))))
+                      (>>
+                        (++ #'binder_preterm (many #'binder_preterm))
+                        (lambdac (arg~2061)
+                          (match arg~2061
+                            ((tuple h t%)
+                              (itlist (lambdac (x y) (make-Combp y x)) (#`rev t%) h)))))
+                      i%))
+                  (binder_preterm
+                    (i%)
+                    (%%%
+                      (%%%
+                        (>>
+                          (++
+                            (++
+                              (++
+                                (a (make-Resword "let"))
+                                (leftbin
+                                  (>> #'preterm singleton1)
+                                  (a (make-Resword "and"))
+                                  (K (function-value #'append 2))
+                                  "binding"))
+                              (a (make-Resword "in")))
+                            #'preterm)
+                          lmk_let)
+                        (>>
+                          (++
+                            (++
+                              (++ (++ binder #'typed_apreterm) (many #'typed_apreterm))
+                              (a (make-Resword ".")))
+                            #'preterm)
+                          lmk_binder))
+                      #'atomic_preterm
+                      i%))
+                  (typed_apreterm
+                    (i%)
+                    (>>
+                      (++
+                        #'atomic_preterm
+                        (possibly
+                          (>>
+                            (++ (a (make-Resword ":")) pretype)
+                            (function-value #'snd 1))))
+                      lmk_typed
+                      i%))
+                  (atomic_preterm
+                    (i%)
+                    (%%%
+                      (%%%
+                        (%%%
+                          (%%%
+                            (%%%
+                              (%%%
+                                (%%%
+                                  (%%%
+                                    (%%%
+                                      (%%%
+                                        (%%%
+                                          (%%%
+                                            (%%%
                                               (%%%
                                                 (%%%
                                                   (%%%
@@ -1333,406 +1191,255 @@
                                                             (%%%
                                                               (%%%
                                                                 (%%%
-                                                                  (%%%
-                                                                    (%%%
-                                                                      (%%%
-                                                                        (%%%
-                                                                          (%%%
-                                                                            (%%%
-                                                                              (%%%
-                                                                                (%%%
-                                                                                  (%%%
-                                                                                    (%%%
-                                                                                      (%%%
-                                                                                        (%%%
-                                                                                          (%%%
-                                                                                            try_user_parser
-                                                                                            (>>
-                                                                                              (++
-                                                                                                (++
-                                                                                                  (++
-                                                                                                    (a
-                                                                                                      (make-Resword
-                                                                                                        "("))
-                                                                                                    (a
-                                                                                                      (make-Resword
-                                                                                                        ":")))
-                                                                                                  pretype)
-                                                                                                (a
-                                                                                                  (make-Resword
-                                                                                                    ")")))
-                                                                                              lmk_univ))
-                                                                                          (>>
-                                                                                            (++
-                                                                                              (++
-                                                                                                (a
-                                                                                                  (make-Resword
-                                                                                                    "("))
-                                                                                                (a
-                                                                                                  (make-Resword
-                                                                                                    ":")))
-                                                                                              pretype)
-                                                                                            (lambdac
-                                                                                              (arg~2164)
-                                                                                              (failwith
-                                                                                                "closing right parenthesis on universe expected"))))
-                                                                                        (>>
-                                                                                          (++
-                                                                                            (a
-                                                                                              (make-Resword
-                                                                                                "("))
-                                                                                            (a
-                                                                                              (make-Resword
-                                                                                                ":")))
-                                                                                          (lambdac
-                                                                                            (arg~2178)
-                                                                                            (failwith
-                                                                                              "type in universe construction expected"))))
-                                                                                      (>>
-                                                                                        string
-                                                                                        #'pmk_string))
-                                                                                    (>>
-                                                                                      (++
-                                                                                        (++
-                                                                                          (a
-                                                                                            (make-Resword
-                                                                                              "("))
-                                                                                          (>>
-                                                                                            any_identifier
-                                                                                            (lambdac
-                                                                                              (s)
-                                                                                              (make-Varp
-                                                                                                s
-                                                                                                dpty))))
-                                                                                        (a
-                                                                                          (make-Resword
-                                                                                            ")")))
-                                                                                      (o
-                                                                                        (function-value
-                                                                                          #'snd
-                                                                                          1)
-                                                                                        (function-value
-                                                                                          #'fst
-                                                                                          1))))
-                                                                                  (>>
-                                                                                    (++
-                                                                                      (++
-                                                                                        (a
-                                                                                          (make-Resword
-                                                                                            "("))
-                                                                                        #'preterm)
-                                                                                      (a
-                                                                                        (make-Resword
-                                                                                          ")")))
-                                                                                    (o
-                                                                                      (function-value
-                                                                                        #'snd
-                                                                                        1)
-                                                                                      (function-value
-                                                                                        #'fst
-                                                                                        1))))
-                                                                                (>>
-                                                                                  (++
-                                                                                    (++
-                                                                                      (++
-                                                                                        (++
-                                                                                          (++
-                                                                                            (a
-                                                                                              (make-Resword
-                                                                                                "if"))
-                                                                                            #'preterm)
-                                                                                          (a
-                                                                                            (make-Resword
-                                                                                              "then")))
-                                                                                        #'preterm)
-                                                                                      (a
-                                                                                        (make-Resword
-                                                                                          "else")))
-                                                                                    #'preterm)
-                                                                                  lmk_ite))
-                                                                              (>>
-                                                                                (++
-                                                                                  (++
-                                                                                    (++
-                                                                                      (++
-                                                                                        (a
-                                                                                          (make-Resword
-                                                                                            "if"))
-                                                                                        #'preterm)
-                                                                                      (a
-                                                                                        (make-Resword
-                                                                                          "then")))
-                                                                                    #'preterm)
-                                                                                  (a
-                                                                                    (make-Resword
-                                                                                      "else")))
-                                                                                (lambdac
-                                                                                  (arg~2258)
-                                                                                  (failwith
-                                                                                    "malformed else clause"))))
-                                                                            (>>
-                                                                              (++
-                                                                                (++
-                                                                                  (++
-                                                                                    (a
-                                                                                      (make-Resword
-                                                                                        "if"))
-                                                                                    #'preterm)
-                                                                                  (a
-                                                                                    (make-Resword
-                                                                                      "then")))
-                                                                                #'preterm)
-                                                                              (lambdac
-                                                                                (arg~2276)
-                                                                                (failwith
-                                                                                  "missing else following then clause"))))
-                                                                          (>>
-                                                                            (++
-                                                                              (++
-                                                                                (a
-                                                                                  (make-Resword
-                                                                                    "if"))
-                                                                                #'preterm)
-                                                                              (a
-                                                                                (make-Resword
-                                                                                  "then")))
-                                                                            (lambdac
-                                                                              (arg~2292)
-                                                                              (failwith
-                                                                                "malformed then clause in if-then-else statement"))))
-                                                                        (>>
-                                                                          (++
-                                                                            (a
-                                                                              (make-Resword
-                                                                                "if"))
-                                                                            #'preterm)
-                                                                          (lambdac
-                                                                            (arg~2304)
-                                                                            (failwith
-                                                                              "missing 'then' reserved word in if-then-else statement"))))
-                                                                      (>>
-                                                                        (a
-                                                                          (make-Resword
-                                                                            "if"))
-                                                                        (lambdac
-                                                                          (arg~2314)
-                                                                          (failwith
-                                                                            "malformed if-then-else"))))
-                                                                    (>>
+                                                                  try_user_parser
+                                                                  (>>
+                                                                    (++
                                                                       (++
                                                                         (++
                                                                           (a
                                                                             (make-Resword
-                                                                              "["))
-                                                                          (elistof
-                                                                            #'preterm
-                                                                            (a
-                                                                              (make-Resword
-                                                                                ";"))
-                                                                            "semicolon separated list of terms"))
-                                                                        (a
-                                                                          (make-Resword
-                                                                            "]")))
-                                                                      (o
-                                                                        (o
-                                                                          #'pmk_list
-                                                                          (function-value
-                                                                            #'snd
-                                                                            1))
-                                                                        (function-value
-                                                                          #'fst
-                                                                          1))))
-                                                                  (>>
-                                                                    (++
-                                                                      (a
-                                                                        (make-Resword "["))
-                                                                      (elistof
-                                                                        #'preterm
-                                                                        (a
-                                                                          (make-Resword
-                                                                            ";"))
-                                                                        "semicolon separated list of terms"))
-                                                                    (lambdac (arg~2352)
-                                                                      (failwith
-                                                                        "closing square bracket of list expected"))))
-                                                                (>>
-                                                                  (++
-                                                                    (a (make-Resword "{"))
-                                                                    (%%%
-                                                                      (%%%
-                                                                        (>>
-                                                                          (++
-                                                                            (elistof
-                                                                              #'nocommapreterm
-                                                                              (a
-                                                                                (make-Ident
-                                                                                  ","))
-                                                                              "comma separated list of terms")
-                                                                            (a
-                                                                              (make-Resword
-                                                                                "}")))
-                                                                          lmk_setenum)
-                                                                        (>>
-                                                                          (++
-                                                                            (++
-                                                                              (++
-                                                                                #'preterm
-                                                                                (a
-                                                                                  (make-Resword
-                                                                                    "|")))
-                                                                              #'preterm)
-                                                                            (a
-                                                                              (make-Resword
-                                                                                "}")))
-                                                                          lmk_setabs))
-                                                                      (>>
-                                                                        (++
-                                                                          (++
-                                                                            (++
-                                                                              (++
-                                                                                (++
-                                                                                  #'preterm
-                                                                                  (a
-                                                                                    (make-Resword
-                                                                                      "|")))
-                                                                                #'preterm)
-                                                                              (a
-                                                                                (make-Resword
-                                                                                  "|")))
-                                                                            #'preterm)
+                                                                              "("))
                                                                           (a
                                                                             (make-Resword
-                                                                              "}")))
-                                                                        lmk_setcompr)))
-                                                                  (function-value #'snd 1)))
-                                                              (>>
-                                                                (a (make-Resword "{"))
-                                                                (lambdac (arg~2415)
-                                                                  (failwith
-                                                                    "malformed set {}"))))
-                                                            (>>
-                                                              (++
-                                                                (++
+                                                                              ":")))
+                                                                        pretype)
+                                                                      (a
+                                                                        (make-Resword ")")))
+                                                                    lmk_univ))
+                                                                (>>
                                                                   (++
-                                                                    (a
-                                                                      (make-Resword
-                                                                        "match"))
-                                                                    #'preterm)
-                                                                  (a
-                                                                    (make-Resword "with")))
-                                                                #'clauses)
-                                                              (lambdac (arg~2433)
-                                                                (match arg~2433
-                                                                  ((tuple
-                                                                    (tuple (tuple _ e) _)
-                                                                    c%)
-                                                                    (make-Combp
-                                                                      (make-Combp
-                                                                        (make-Varp
-                                                                          "_MATCH"
-                                                                          dpty)
-                                                                        e)
-                                                                      c%))))))
+                                                                    (++
+                                                                      (a
+                                                                        (make-Resword "("))
+                                                                      (a
+                                                                        (make-Resword ":")))
+                                                                    pretype)
+                                                                  (lambdac (arg~2164)
+                                                                    (failwith
+                                                                      "closing right parenthesis on universe expected"))))
+                                                              (>>
+                                                                (++
+                                                                  (a (make-Resword "("))
+                                                                  (a (make-Resword ":")))
+                                                                (lambdac (arg~2178)
+                                                                  (failwith
+                                                                    "type in universe construction expected"))))
+                                                            (>> string #'pmk_string))
                                                           (>>
-                                                            (a (make-Resword "match"))
-                                                            (lambdac (arg~2457)
-                                                              (failwith
-                                                                "malformed match-with statement"))))
+                                                            (++
+                                                              (++
+                                                                (a (make-Resword "("))
+                                                                (>>
+                                                                  any_identifier
+                                                                  (lambdac (s)
+                                                                    (make-Varp s dpty))))
+                                                              (a (make-Resword ")")))
+                                                            (o
+                                                              (function-value #'snd 1)
+                                                              (function-value #'fst 1))))
                                                         (>>
                                                           (++
-                                                            (a (make-Resword "function"))
-                                                            #'clauses)
-                                                          (lambdac (arg~2469)
-                                                            (match arg~2469
-                                                              ((tuple _ c%)
-                                                                (make-Combp
-                                                                  (make-Varp
-                                                                    "_FUNCTION"
-                                                                    dpty)
-                                                                  c%))))))
+                                                            (++
+                                                              (a (make-Resword "("))
+                                                              #'preterm)
+                                                            (a (make-Resword ")")))
+                                                          (o
+                                                            (function-value #'snd 1)
+                                                            (function-value #'fst 1))))
                                                       (>>
-                                                        (a (make-Resword "function"))
-                                                        (lambdac (arg~2486)
-                                                          (failwith
-                                                            "malformed function and pattern clauses"))))
+                                                        (++
+                                                          (++
+                                                            (++
+                                                              (++
+                                                                (++
+                                                                  (a (make-Resword "if"))
+                                                                  #'preterm)
+                                                                (a (make-Resword "then")))
+                                                              #'preterm)
+                                                            (a (make-Resword "else")))
+                                                          #'preterm)
+                                                        lmk_ite))
                                                     (>>
                                                       (++
                                                         (++
-                                                          (a (make-Ident "#"))
-                                                          identifier)
-                                                        (possibly
-                                                          (>>
+                                                          (++
                                                             (++
-                                                              (a (make-Resword "."))
-                                                              identifier)
-                                                            (function-value #'snd 1))))
-                                                      lmk_decimal))
-                                                  (>>
-                                                    (a (make-Ident "#"))
-                                                    (lambdac (arg~2513)
-                                                      (failwith
-                                                        "malformed numerical # identifier"))))
-                                                (>>
-                                                  identifier
-                                                  (lambdac (s) (make-Varp s dpty)))
-                                                i%))
-                                            (pattern
-                                              (i%)
-                                              (++
-                                                #'preterm
-                                                (possibly
+                                                              (a (make-Resword "if"))
+                                                              #'preterm)
+                                                            (a (make-Resword "then")))
+                                                          #'preterm)
+                                                        (a (make-Resword "else")))
+                                                      (lambdac (arg~2258)
+                                                        (failwith "malformed else clause"))))
                                                   (>>
                                                     (++
-                                                      (a (make-Resword "when"))
+                                                      (++
+                                                        (++
+                                                          (a (make-Resword "if"))
+                                                          #'preterm)
+                                                        (a (make-Resword "then")))
                                                       #'preterm)
-                                                    (function-value #'snd 1)))
-                                                i%))
-                                            (clause
-                                              (i%)
-                                              (>>
-                                                (++
-                                                  #'pattern
-                                                  (>>
-                                                    (++ (a (make-Resword "->")) #'preterm)
-                                                    (function-value #'snd 1)))
-                                                #'pmk_pattern
-                                                i%))
-                                            (clauses
-                                              (i%)
-                                              (>>
+                                                    (lambdac (arg~2276)
+                                                      (failwith
+                                                        "missing else following then clause"))))
                                                 (>>
                                                   (++
-                                                    (possibly (a (make-Resword "|")))
-                                                    (listof
-                                                      #'clause
-                                                      (a (make-Resword "|"))
-                                                      "pattern-match clause"))
-                                                  (function-value #'snd 1))
-                                                (end_itlist
-                                                  (lambdac (s t%)
-                                                    (make-Combp
-                                                      (make-Combp
-                                                        (make-Varp "_SEQPATTERN" dpty)
-                                                        s)
-                                                      t%)))
-                                                i%)))
-                                          (lambdac (inp)
-                                            (match inp
-                                              ((guard
-                                                (cl:cons (Ident s) nil)
-                                                (not
-                                                  (cl:and
-                                                    (>= (string-length s) 2)
-                                                    (cl:and
-                                                      (= (string-sub s 0 1) "\"")
-                                                      (=
-                                                        (string-sub
-                                                          s
-                                                          (- (string-length s) 1)
-                                                          1)
-                                                        "\"")))))
-                                                (tuple (make-Varp s dpty) nil))
-                                              (_ (preterm inp)))))))))))))))))))))))))
+                                                    (++ (a (make-Resword "if")) #'preterm)
+                                                    (a (make-Resword "then")))
+                                                  (lambdac (arg~2292)
+                                                    (failwith
+                                                      "malformed then clause in if-then-else statement"))))
+                                              (>>
+                                                (++ (a (make-Resword "if")) #'preterm)
+                                                (lambdac (arg~2304)
+                                                  (failwith
+                                                    "missing 'then' reserved word in if-then-else statement"))))
+                                            (>>
+                                              (a (make-Resword "if"))
+                                              (lambdac (arg~2314)
+                                                (failwith "malformed if-then-else"))))
+                                          (>>
+                                            (++
+                                              (++
+                                                (a (make-Resword "["))
+                                                (elistof
+                                                  #'preterm
+                                                  (a (make-Resword ";"))
+                                                  "semicolon separated list of terms"))
+                                              (a (make-Resword "]")))
+                                            (o
+                                              (o #'pmk_list (function-value #'snd 1))
+                                              (function-value #'fst 1))))
+                                        (>>
+                                          (++
+                                            (a (make-Resword "["))
+                                            (elistof
+                                              #'preterm
+                                              (a (make-Resword ";"))
+                                              "semicolon separated list of terms"))
+                                          (lambdac (arg~2352)
+                                            (failwith
+                                              "closing square bracket of list expected"))))
+                                      (>>
+                                        (++
+                                          (a (make-Resword "{"))
+                                          (%%%
+                                            (%%%
+                                              (>>
+                                                (++
+                                                  (elistof
+                                                    #'nocommapreterm
+                                                    (a (make-Ident ","))
+                                                    "comma separated list of terms")
+                                                  (a (make-Resword "}")))
+                                                lmk_setenum)
+                                              (>>
+                                                (++
+                                                  (++
+                                                    (++ #'preterm (a (make-Resword "|")))
+                                                    #'preterm)
+                                                  (a (make-Resword "}")))
+                                                lmk_setabs))
+                                            (>>
+                                              (++
+                                                (++
+                                                  (++
+                                                    (++
+                                                      (++
+                                                        #'preterm
+                                                        (a (make-Resword "|")))
+                                                      #'preterm)
+                                                    (a (make-Resword "|")))
+                                                  #'preterm)
+                                                (a (make-Resword "}")))
+                                              lmk_setcompr)))
+                                        (function-value #'snd 1)))
+                                    (>>
+                                      (a (make-Resword "{"))
+                                      (lambdac (arg~2415) (failwith "malformed set {}"))))
+                                  (>>
+                                    (++
+                                      (++
+                                        (++ (a (make-Resword "match")) #'preterm)
+                                        (a (make-Resword "with")))
+                                      #'clauses)
+                                    (lambdac (arg~2433)
+                                      (match arg~2433
+                                        ((tuple (tuple (tuple _ e) _) c%)
+                                          (make-Combp
+                                            (make-Combp (make-Varp "_MATCH" dpty) e)
+                                            c%))))))
+                                (>>
+                                  (a (make-Resword "match"))
+                                  (lambdac (arg~2457)
+                                    (failwith "malformed match-with statement"))))
+                              (>>
+                                (++ (a (make-Resword "function")) #'clauses)
+                                (lambdac (arg~2469)
+                                  (match arg~2469
+                                    ((tuple _ c%)
+                                      (make-Combp (make-Varp "_FUNCTION" dpty) c%))))))
+                            (>>
+                              (a (make-Resword "function"))
+                              (lambdac (arg~2486)
+                                (failwith "malformed function and pattern clauses"))))
+                          (>>
+                            (++
+                              (++ (a (make-Ident "#")) identifier)
+                              (possibly
+                                (>>
+                                  (++ (a (make-Resword ".")) identifier)
+                                  (function-value #'snd 1))))
+                            lmk_decimal))
+                        (>>
+                          (a (make-Ident "#"))
+                          (lambdac (arg~2513)
+                            (failwith "malformed numerical # identifier"))))
+                      (>> identifier (lambdac (s) (make-Varp s dpty)))
+                      i%))
+                  (pattern
+                    (i%)
+                    (++
+                      #'preterm
+                      (possibly
+                        (>>
+                          (++ (a (make-Resword "when")) #'preterm)
+                          (function-value #'snd 1)))
+                      i%))
+                  (clause
+                    (i%)
+                    (>>
+                      (++
+                        #'pattern
+                        (>>
+                          (++ (a (make-Resword "->")) #'preterm)
+                          (function-value #'snd 1)))
+                      #'pmk_pattern
+                      i%))
+                  (clauses
+                    (i%)
+                    (>>
+                      (>>
+                        (++
+                          (possibly (a (make-Resword "|")))
+                          (listof #'clause (a (make-Resword "|")) "pattern-match clause"))
+                        (function-value #'snd 1))
+                      (end_itlist
+                        (lambdac (s t%)
+                          (make-Combp (make-Combp (make-Varp "_SEQPATTERN" dpty) s) t%)))
+                      i%)))
+                (lambdac (inp)
+                  (match inp
+                    ((guard
+                      (cl:cons (Ident s) nil)
+                      (not
+                        (cl:and
+                          (>= (string-length s) 2)
+                          (cl:and
+                            (= (string-sub s 0 1) "\"")
+                            (= (string-sub s (- (string-length s) 1) 1) "\"")))))
+                      (tuple (make-Varp s dpty) nil))
+                    (_ (preterm inp))))))))))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Type and term parsers.                                                    *)
@@ -1742,14 +1449,12 @@
 (defunc parse_type (s)
   (match (o (o parse_pretype lex) #'explode s)
     ((tuple pty l)
-      (if (= l nil)
-        (funcall type_of_pretype pty)
-        (failwith "Unparsed input following type")))))
+      (if (= l nil) (#`type_of_pretype pty) (failwith "Unparsed input following type")))))
 
 (defunc parse_term (s)
   (match (o (o parse_preterm lex) #'explode s)
     ((tuple ptm l)
       (if (= l nil)
-        (o term_of_preterm (funcall retypecheck nil) ptm)
+        (o term_of_preterm (#`retypecheck nil) ptm)
         (failwith "Unparsed input following term")))))
 

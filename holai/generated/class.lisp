@@ -293,7 +293,6 @@
     match
     lambdac
     function-value
-    funcall
     fst
     fletc
     failwith
@@ -441,8 +440,7 @@
   (let*
     ((t% (parse_term "t:A->B"))
       (pth
-        (prove
-          (tuple (parse_term "(\\x. (t:A->B) x) = t") (funcall MATCH_ACCEPT_TAC ETA_AX)))))
+        (prove (tuple (parse_term "(\\x. (t:A->B) x) = t") (#`MATCH_ACCEPT_TAC ETA_AX)))))
     (cl:declare (cl:ignorable t% pth))
     (lambdac (tm)
       (handler-case
@@ -473,7 +471,7 @@
       (holai.runtime:proof (REPEAT #'GEN_TAC)
         THEN
           (DISCH_THEN
-            (o (o #'MP_TAC (ABS% (parse_term "x:A"))) (funcall SPEC (parse_term "x:A"))))
+            (o (o #'MP_TAC (ABS% (parse_term "x:A"))) (#`SPEC (parse_term "x:A"))))
         THEN (REWRITE_TAC (cl:cons ETA_AX nil))))))
 
 (defparameter FUN_EQ_THM
@@ -485,11 +483,11 @@
         THENL
           (cl:cons
             (holai.runtime:proof (DISCH_THEN #'SUBST1_TAC) THEN #'GEN_TAC THEN #'REFL_TAC)
-            (cl:cons (funcall MATCH_ACCEPT_TAC EQ_EXT) nil))))))
+            (cl:cons (#`MATCH_ACCEPT_TAC EQ_EXT) nil))))))
 
 (new_constant (tuple "@" (parse_type "(A->bool)->A")))
 
-(funcall parse_as_binder "@")
+(#`parse_as_binder "@")
 
 (defparameter is_select (is_binder "@"))
 
@@ -510,17 +508,16 @@
       (parse_term "(?) = \\P:A->bool. P ((@) P)")
       (holai.runtime:proof (MATCH_MP_TAC EQ_EXT)
         THEN BETA_TAC
-        THEN (funcall X_GEN_TAC (parse_term "P:A->bool"))
-        THEN
-          (GEN_REWRITE_TAC (o LAND_CONV #'RAND_CONV) (cl:cons (funcall GSYM ETA_AX) nil))
+        THEN (#`X_GEN_TAC (parse_term "P:A->bool"))
+        THEN (GEN_REWRITE_TAC (o LAND_CONV #'RAND_CONV) (cl:cons (#`GSYM ETA_AX) nil))
         THEN #'EQ_TAC
         THENL
           (cl:cons
             (holai.runtime:proof (DISCH_THEN (CHOOSE_THEN #'MP_TAC))
-              THEN (funcall MATCH_ACCEPT_TAC SELECT_AX))
+              THEN (#`MATCH_ACCEPT_TAC SELECT_AX))
             (cl:cons
               (holai.runtime:proof DISCH_TAC
-                THEN (funcall EXISTS_TAC (parse_term "((@) P):A"))
+                THEN (#`EXISTS_TAC (parse_term "((@) P):A"))
                 THEN (POP_ASSUM ACCEPT_TAC))
               nil))))))
 
@@ -544,8 +541,7 @@
           (cl:declare (cl:ignorable abs%% ty))
           (CONV_RULE
             #'BETA_CONV
-            (funcall
-              MP
+            (#`MP
               (PINST (cl:cons (tuple ty aty) nil) (cl:cons (tuple abs%% P%) nil) pth)
               th)))
         (holai.runtime:ocaml-condition
@@ -571,17 +567,16 @@
           ((is_epsok
             (t%)
             (cl:and
-              (funcall is_select t%)
-              (match (funcall dest_select t%)
-                ((tuple bv bod)
-                  (aconv tm (funcall vsubst (cl:cons (tuple t% bv) nil) bod)))))))
+              (#`is_select t%)
+              (match (#`dest_select t%)
+                ((tuple bv bod) (aconv tm (#`vsubst (cl:cons (tuple t% bv) nil) bod)))))))
           (let*
             ((pickeps (find_term #'is_epsok tm))
               (abs%% (rand pickeps))
               (ty (type_of (bndvar abs%%))))
             (cl:declare (cl:ignorable pickeps abs%% ty))
             (CONV_RULE
-              (funcall LAND_CONV #'BETA_CONV)
+              (#`LAND_CONV #'BETA_CONV)
               (PINST (cl:cons (tuple ty aty) nil) (cl:cons (tuple abs%% P%) nil) pth))))
         (holai.runtime:ocaml-condition
           (exception~261)
@@ -599,8 +594,8 @@
     (tuple
       (parse_term "!x:A. (@y. y = x) = x")
       (holai.runtime:proof #'GEN_TAC
-        THEN (funcall CONV_TAC SELECT_CONV)
-        THEN (funcall EXISTS_TAC (parse_term "x:A"))
+        THEN (#`CONV_TAC SELECT_CONV)
+        THEN (#`EXISTS_TAC (parse_term "x:A"))
         THEN #'REFL_TAC))))
 
 (defparameter SELECT_UNIQUE
@@ -608,11 +603,10 @@
     (tuple
       (parse_term "!P x. (!y:A. P y = (y = x)) ==> ((@) P = x)")
       (holai.runtime:proof (REPEAT #'STRIP_TAC)
-        THEN
-          (GEN_REWRITE_TAC (o LAND_CONV #'RAND_CONV) (cl:cons (funcall GSYM ETA_AX) nil))
-        THEN (funcall ASM_REWRITE_TAC (cl:cons SELECT_REFL nil))))))
+        THEN (GEN_REWRITE_TAC (o LAND_CONV #'RAND_CONV) (cl:cons (#`GSYM ETA_AX) nil))
+        THEN (#`ASM_REWRITE_TAC (cl:cons SELECT_REFL nil))))))
 
-(funcall extend_basic_rewrites (cl:cons SELECT_REFL nil))
+(#`extend_basic_rewrites (cl:cons SELECT_REFL nil))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Now we can derive type definitions from existence; check benignity.       *)
@@ -636,19 +630,15 @@
             ((Failure _)
               (let
                 ((th0
-                  (CONV_RULE
-                    (THENC (RATOR_CONV (funcall REWR_CONV EXISTS_THM)) #'BETA_CONV)
-                    th)))
+                  (CONV_RULE (THENC (RATOR_CONV (#`REWR_CONV EXISTS_THM)) #'BETA_CONV) th)))
                 (cl:declare (cl:ignorable th0))
                 (match (new_basic_type_definition tyname (tuple absname repname) th0)
                   ((tuple th1 th2)
                     (let
                       ((tth
-                        (funcall
-                          CONJ
+                        (#`CONJ
                           (GEN_ALL th1)
-                          (GEN_ALL
-                            (CONV_RULE (funcall LAND_CONV (TRY_CONV #'BETA_CONV)) th2)))))
+                          (GEN_ALL (CONV_RULE (#`LAND_CONV (TRY_CONV #'BETA_CONV)) th2)))))
                       (cl:declare (cl:ignorable tth))
                       (progn
                         (assign
@@ -678,11 +668,11 @@
         THENL
           (cl:cons
             (holai.runtime:proof #'CONJ_TAC
-              THEN (funcall CONV_TAC SELECT_CONV)
+              THEN (#`CONV_TAC SELECT_CONV)
               THENL
                 (cl:cons
-                  (funcall EXISTS_TAC (parse_term "F"))
-                  (cl:cons (funcall EXISTS_TAC (parse_term "T")) nil))
+                  (#`EXISTS_TAC (parse_term "F"))
+                  (cl:cons (#`EXISTS_TAC (parse_term "T")) nil))
               THEN #'DISJ1_TAC
               THEN #'REFL_TAC)
             (cl:cons
@@ -691,11 +681,9 @@
                 THEN #'DISJ2_TAC
                 THEN DISCH_TAC
                 THEN (MP_TAC (ITAUT (parse_term "~(T <=> F)")))
-                THEN (funcall PURE_ONCE_ASM_REWRITE_TAC nil)
+                THEN (#`PURE_ONCE_ASM_REWRITE_TAC nil)
                 THEN
-                  (funcall
-                    ASM_REWRITE_TAC
-                    (cl:cons (ITAUT (parse_term "p \\/ T <=> T")) nil)))
+                  (#`ASM_REWRITE_TAC (cl:cons (ITAUT (parse_term "p \\/ T <=> T")) nil)))
               nil))))))
 
 (defparameter BOOL_CASES_AX
@@ -703,17 +691,17 @@
     (tuple
       (parse_term "!t. (t <=> T) \\/ (t <=> F)")
       (holai.runtime:proof #'GEN_TAC
-        THEN (DISJ_CASES_TAC (funcall SPEC (parse_term "t:bool") EXCLUDED_MIDDLE))
-        THEN (funcall ASM_REWRITE_TAC nil)))))
+        THEN (DISJ_CASES_TAC (#`SPEC (parse_term "t:bool") EXCLUDED_MIDDLE))
+        THEN (#`ASM_REWRITE_TAC nil)))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Classically based tactics. (See also COND_CASES_TAC later on.)            *)
 ;; (* ------------------------------------------------------------------------- *)
 
 
-(defunc BOOL_CASES_TAC (p%) (funcall STRUCT_CASES_TAC (funcall SPEC p% BOOL_CASES_AX)))
+(defunc BOOL_CASES_TAC (p%) (#`STRUCT_CASES_TAC (#`SPEC p% BOOL_CASES_AX)))
 
-(defunc ASM_CASES_TAC (t%) (DISJ_CASES_TAC (funcall SPEC t% EXCLUDED_MIDDLE)))
+(defunc ASM_CASES_TAC (t%) (DISJ_CASES_TAC (#`SPEC t% EXCLUDED_MIDDLE)))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Set up a reasonable tautology checker for classical logic.                *)
@@ -734,8 +722,7 @@
                 (cl:and
                   (= (type_of t%) bool_ty)
                   (cl:and (can (find_term #'is_var) t%) (free_in t% w%)))))
-              (funcall
-                THEN
+              (#`THEN
                 PROP_REWRITE_TAC
                 (W
                   (o
@@ -743,13 +730,12 @@
                       (o
                         (o
                           (o
-                            (funcall
-                              (lambdac (t1 t2) (holai.runtime:proof t1 THEN t2))
+                            (#`(lambdac (t1 t2) (holai.runtime:proof t1 THEN t2))
                               (REWRITE_TAC nil))
                             #'BOOL_CASES_TAC)
                           #'hd)
                         (sort #'free_in))
-                      (funcall find_terms #'ok))
+                      (#`find_terms #'ok))
                     (function-value #'snd 1)))
                 (tuple asl w%)))))))
       (let
@@ -766,20 +752,19 @@
 
 
 (defparameter DE_MORGAN_THM
-  (funcall
-    TAUT~1
+  (#`TAUT~1
     (parse_term
       "!t1 t2. (~(t1 /\\ t2) <=> ~t1 \\/ ~t2) /\\ (~(t1 \\/ t2) <=> ~t1 /\\ ~t2)")))
 
 (defparameter NOT_CLAUSES
-  (funcall TAUT~1 (parse_term "(!t. ~ ~t <=> t) /\\ (~T <=> F) /\\ (~F <=> T)")))
+  (#`TAUT~1 (parse_term "(!t. ~ ~t <=> t) /\\ (~T <=> F) /\\ (~F <=> T)")))
 
-(defparameter NOT_IMP (funcall TAUT~1 (parse_term "!t1 t2. ~(t1 ==> t2) <=> t1 /\\ ~t2")))
+(defparameter NOT_IMP (#`TAUT~1 (parse_term "!t1 t2. ~(t1 ==> t2) <=> t1 /\\ ~t2")))
 
 (defparameter CONTRAPOS_THM
-  (funcall TAUT~1 (parse_term "!t1 t2. (~t1 ==> ~t2) <=> (t2 ==> t1)")))
+  (#`TAUT~1 (parse_term "!t1 t2. (~t1 ==> ~t2) <=> (t2 ==> t1)")))
 
-(funcall extend_basic_rewrites (cl:cons (funcall CONJUNCT1 NOT_CLAUSES) nil))
+(#`extend_basic_rewrites (cl:cons (#`CONJUNCT1 NOT_CLAUSES) nil))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Some classically based rules.                                             *)
@@ -787,14 +772,13 @@
 
 
 (defparameter CCONTR
-  (let*
-    ((P% (parse_term "P:bool")) (pth (funcall TAUT~1 (parse_term "(~P ==> F) ==> P"))))
+  (let* ((P% (parse_term "P:bool")) (pth (#`TAUT~1 (parse_term "(~P ==> F) ==> P"))))
     (cl:declare (cl:ignorable P% pth))
     (lambdac (tm th)
       (handler-case
-        (let ((tm% (funcall mk_neg tm)))
+        (let ((tm% (#`mk_neg tm)))
           (cl:declare (cl:ignorable tm%))
-          (funcall MP (INST% (cl:cons (tuple tm P%) nil) pth) (funcall DISCH tm% th)))
+          (#`MP (INST% (cl:cons (tuple tm P%) nil) pth) (#`DISCH tm% th)))
         (holai.runtime:ocaml-condition
           (exception~661)
           (match exception~661
@@ -804,11 +788,11 @@
 (defparameter CONTRAPOS_CONV
   (let ((a% (parse_term "a:bool")) (b% (parse_term "b:bool")))
     (cl:declare (cl:ignorable a% b%))
-    (let ((pth (funcall TAUT~1 (parse_term "(a ==> b) <=> (~b ==> ~a)"))))
+    (let ((pth (#`TAUT~1 (parse_term "(a ==> b) <=> (~b ==> ~a)"))))
       (cl:declare (cl:ignorable pth))
       (lambdac (tm)
         (handler-case
-          (match (funcall dest_imp tm)
+          (match (#`dest_imp tm)
             ((tuple P% Q) (INST% (cl:cons (tuple P% a%) (cl:cons (tuple Q b%) nil)) pth)))
           (holai.runtime:ocaml-condition
             (exception~698)
@@ -824,7 +808,7 @@
 (defparameter REFUTE_THEN
   (let
     ((f_tm (parse_term "F"))
-      (conv (funcall REWR_CONV (funcall TAUT~1 (parse_term "p <=> ~p ==> F")))))
+      (conv (#`REWR_CONV (#`TAUT~1 (parse_term "p <=> ~p ==> F")))))
     (cl:declare (cl:ignorable f_tm conv))
     (lambdac (ttac arg~737)
       (match arg~737
@@ -833,7 +817,7 @@
             (ALL_TAC gl)
             (if (is_neg w%)
               (DISCH_THEN ttac gl)
-              (funcall THEN (funcall CONV_TAC conv) (DISCH_THEN ttac) gl))))))))
+              (#`THEN (#`CONV_TAC conv) (DISCH_THEN ttac) gl))))))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Infinite de Morgan laws.                                                  *)
@@ -853,11 +837,11 @@
               THEN DISCH_TAC
               THEN (UNDISCH_TAC (parse_term "~(?x:A. P x)"))
               THEN (REWRITE_TAC nil)
-              THEN (funcall EXISTS_TAC (parse_term "x:A"))
+              THEN (#`EXISTS_TAC (parse_term "x:A"))
               THEN (POP_ASSUM ACCEPT_TAC))
             (cl:cons
               (holai.runtime:proof (DISCH_THEN (CHOOSE_THEN #'MP_TAC))
-                THEN (funcall ASM_REWRITE_TAC nil))
+                THEN (#`ASM_REWRITE_TAC nil))
               nil))))))
 
 (defparameter EXISTS_NOT_THM
@@ -865,20 +849,20 @@
     (tuple
       (parse_term "!P. (?x:A. ~(P x)) <=> ~(!x. P x)")
       (holai.runtime:proof (ONCE_REWRITE_TAC
-          (cl:cons (funcall TAUT~1 (parse_term "(a <=> ~b) <=> (~a <=> b)")) nil))
+          (cl:cons (#`TAUT~1 (parse_term "(a <=> ~b) <=> (~a <=> b)")) nil))
         THEN (REWRITE_TAC (cl:cons NOT_EXISTS_THM nil))))))
 
 (defparameter NOT_FORALL_THM
   (prove
     (tuple
       (parse_term "!P. ~(!x. P x) <=> (?x:A. ~(P x))")
-      (funcall MATCH_ACCEPT_TAC (funcall GSYM EXISTS_NOT_THM)))))
+      (#`MATCH_ACCEPT_TAC (#`GSYM EXISTS_NOT_THM)))))
 
 (defparameter FORALL_NOT_THM
   (prove
     (tuple
       (parse_term "!P. (!x. ~(P x)) <=> ~(?x:A. P x)")
-      (funcall MATCH_ACCEPT_TAC (funcall GSYM NOT_EXISTS_THM)))))
+      (#`MATCH_ACCEPT_TAC (#`GSYM NOT_EXISTS_THM)))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Expand quantification over Booleans.                                      *)
@@ -891,17 +875,17 @@
       (parse_term "(!b. P b) <=> P T /\\ P F")
       (holai.runtime:proof #'EQ_TAC
         THEN DISCH_TAC
-        THEN (funcall ASM_REWRITE_TAC nil)
+        THEN (#`ASM_REWRITE_TAC nil)
         THEN #'GEN_TAC
         THEN (BOOL_CASES_TAC (parse_term "b:bool"))
-        THEN (funcall ASM_REWRITE_TAC nil)))))
+        THEN (#`ASM_REWRITE_TAC nil)))))
 
 (defparameter EXISTS_BOOL_THM
   (prove
     (tuple
       (parse_term "(?b. P b) <=> P T \\/ P F")
       (holai.runtime:proof (MATCH_MP_TAC
-          (funcall TAUT~1 (parse_term "(~p <=> ~q) ==> (p <=> q)")))
+          (#`TAUT~1 (parse_term "(~p <=> ~q) ==> (p <=> q)")))
         THEN
           (REWRITE_TAC
             (cl:cons DE_MORGAN_THM (cl:cons NOT_EXISTS_THM (cl:cons FORALL_BOOL_THM nil))))))))
@@ -918,7 +902,7 @@
       (holai.runtime:proof (REPEAT #'GEN_TAC)
         THEN
           (ONCE_REWRITE_TAC
-            (cl:cons (funcall TAUT~1 (parse_term "(a <=> b) <=> (~a <=> ~b)")) nil))
+            (cl:cons (#`TAUT~1 (parse_term "(a <=> b) <=> (~a <=> ~b)")) nil))
         THEN
           (REWRITE_TAC
             (cl:cons
@@ -932,7 +916,7 @@
       (holai.runtime:proof (REPEAT #'GEN_TAC)
         THEN
           (ONCE_REWRITE_TAC
-            (cl:cons (funcall TAUT~1 (parse_term "(a <=> b) <=> (~a <=> ~b)")) nil))
+            (cl:cons (#`TAUT~1 (parse_term "(a <=> b) <=> (~a <=> ~b)")) nil))
         THEN
           (REWRITE_TAC
             (cl:cons
@@ -943,13 +927,13 @@
   (prove
     (tuple
       (parse_term "!P Q. (!x:A. P x) \\/ Q <=> (!x. P x \\/ Q)")
-      (funcall MATCH_ACCEPT_TAC (funcall GSYM LEFT_FORALL_OR_THM)))))
+      (#`MATCH_ACCEPT_TAC (#`GSYM LEFT_FORALL_OR_THM)))))
 
 (defparameter RIGHT_OR_FORALL_THM
   (prove
     (tuple
       (parse_term "!P Q. P \\/ (!x:A. Q x) <=> (!x. P \\/ Q x)")
-      (funcall MATCH_ACCEPT_TAC (funcall GSYM RIGHT_FORALL_OR_THM)))))
+      (#`MATCH_ACCEPT_TAC (#`GSYM RIGHT_FORALL_OR_THM)))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Implication and quantifiers.                                              *)
@@ -963,7 +947,7 @@
       (holai.runtime:proof (REPEAT #'GEN_TAC)
         THEN
           (ONCE_REWRITE_TAC
-            (cl:cons (funcall TAUT~1 (parse_term "(a <=> b) <=> (~a <=> ~b)")) nil))
+            (cl:cons (#`TAUT~1 (parse_term "(a <=> b) <=> (~a <=> ~b)")) nil))
         THEN
           (REWRITE_TAC
             (cl:cons NOT_EXISTS_THM (cl:cons NOT_IMP (cl:cons LEFT_AND_FORALL_THM nil))))))))
@@ -972,7 +956,7 @@
   (prove
     (tuple
       (parse_term "!P Q. (?x. P x ==> Q) <=> ((!x:A. P x) ==> Q)")
-      (funcall MATCH_ACCEPT_TAC (funcall GSYM LEFT_IMP_FORALL_THM)))))
+      (#`MATCH_ACCEPT_TAC (#`GSYM LEFT_IMP_FORALL_THM)))))
 
 (defparameter RIGHT_IMP_EXISTS_THM
   (prove
@@ -981,7 +965,7 @@
       (holai.runtime:proof (REPEAT #'GEN_TAC)
         THEN
           (ONCE_REWRITE_TAC
-            (cl:cons (funcall TAUT~1 (parse_term "(a <=> b) <=> (~a <=> ~b)")) nil))
+            (cl:cons (#`TAUT~1 (parse_term "(a <=> b) <=> (~a <=> ~b)")) nil))
         THEN
           (REWRITE_TAC
             (cl:cons NOT_EXISTS_THM (cl:cons NOT_IMP (cl:cons RIGHT_AND_FORALL_THM nil))))))))
@@ -990,7 +974,7 @@
   (prove
     (tuple
       (parse_term "!P Q. (?x:A. P ==> Q x) <=> (P ==> ?x:A. Q x)")
-      (funcall MATCH_ACCEPT_TAC (funcall GSYM RIGHT_IMP_EXISTS_THM)))))
+      (#`MATCH_ACCEPT_TAC (#`GSYM RIGHT_IMP_EXISTS_THM)))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* The conditional.                                                          *)
@@ -1046,7 +1030,7 @@
         ((Failure _) (failwith "dest_cond"))
         (_ (raise exception~1084))))))
 
-(funcall extend_basic_rewrites (cl:cons COND_CLAUSES nil))
+(#`extend_basic_rewrites (cl:cons COND_CLAUSES nil))
 
 (defparameter COND_EXPAND
   (prove
@@ -1115,8 +1099,7 @@
                 (cl:and
                   (= (type_of t%) bool_ty)
                   (cl:and (can (find_term #'is_var) t%) (free_in t% w%)))))
-              (funcall
-                THEN
+              (#`THEN
                 PROP_REWRITE_TAC
                 (W
                   (o
@@ -1124,13 +1107,12 @@
                       (o
                         (o
                           (o
-                            (funcall
-                              (lambdac (t1 t2) (holai.runtime:proof t1 THEN t2))
+                            (#`(lambdac (t1 t2) (holai.runtime:proof t1 THEN t2))
                               (REWRITE_TAC nil))
                             #'BOOL_CASES_TAC)
                           #'hd)
                         (sort #'free_in))
-                      (funcall find_terms #'ok))
+                      (#`find_terms #'ok))
                     (function-value #'snd 1)))
                 (tuple asl w%)))))))
       (let
@@ -1149,7 +1131,7 @@
                   (failwith
                     (string-concat
                       "TAUT `"
-                      (string-concat (funcall string_of_term tm) "`: cannot solve"))))
+                      (string-concat (#`string_of_term tm) "`: cannot solve"))))
                 (_ (raise exception~1289))))))))))
 
 ;; (* ------------------------------------------------------------------------- *)
@@ -1164,7 +1146,7 @@
         "(A ==> B) /\\ (C ==> D) ==> (if b then A else C) ==> (if b then B else D)")
       (holai.runtime:proof #'STRIP_TAC
         THEN (BOOL_CASES_TAC (parse_term "b:bool"))
-        THEN (funcall ASM_REWRITE_TAC nil)))))
+        THEN (#`ASM_REWRITE_TAC nil)))))
 
 (assign monotonicity_theorems (cl:cons MONO_COND (deref monotonicity_theorems)))
 
@@ -1179,36 +1161,33 @@
       (parse_term "(P:A->bool) (if c then x else y) <=> (c ==> P x) /\\ (~c ==> P y)")
       (holai.runtime:proof (BOOL_CASES_TAC (parse_term "c:bool")) THEN (REWRITE_TAC nil)))))
 
-(defparameter COND_ELIM_CONV
-  (funcall HIGHER_REWRITE_CONV (cl:cons COND_ELIM_THM nil) cl:t))
+(defparameter COND_ELIM_CONV (#`HIGHER_REWRITE_CONV (cl:cons COND_ELIM_THM nil) cl:t))
 
 (defparameter COND_CASES_TAC
   (let
-    ((DENEG_RULE
-      (GEN_REWRITE_RULE #'I (cl:cons (funcall TAUT (parse_term "~ ~ p <=> p")) nil))))
+    ((DENEG_RULE (GEN_REWRITE_RULE #'I (cl:cons (#`TAUT (parse_term "~ ~ p <=> p")) nil))))
     (cl:declare (cl:ignorable DENEG_RULE))
-    (holai.runtime:proof (funcall CONV_TAC COND_ELIM_CONV)
+    (holai.runtime:proof (#`CONV_TAC COND_ELIM_CONV)
       THEN #'CONJ_TAC
       THENL
         (cl:cons
           (DISCH_THEN
             (lambdac (th)
-              (holai.runtime:proof (funcall ASSUME_TAC th)
-                THEN (SUBST1_TAC (funcall EQT_INTRO th)))))
+              (holai.runtime:proof (#`ASSUME_TAC th) THEN (SUBST1_TAC (#`EQT_INTRO th)))))
           (cl:cons
             (DISCH_THEN
               (lambdac (th)
                 (handler-case
-                  (let ((th% (funcall DENEG_RULE th)))
+                  (let ((th% (#`DENEG_RULE th)))
                     (cl:declare (cl:ignorable th%))
-                    (holai.runtime:proof (funcall ASSUME_TAC th%)
-                      THEN (SUBST1_TAC (funcall EQT_INTRO th%))))
+                    (holai.runtime:proof (#`ASSUME_TAC th%)
+                      THEN (SUBST1_TAC (#`EQT_INTRO th%))))
                   (holai.runtime:ocaml-condition
                     (exception~1372)
                     (match exception~1372
                       ((Failure _)
-                        (holai.runtime:proof (funcall ASSUME_TAC th)
-                          THEN (SUBST1_TAC (funcall EQF_INTRO th))))
+                        (holai.runtime:proof (#`ASSUME_TAC th)
+                          THEN (SUBST1_TAC (#`EQF_INTRO th))))
                       (_ (raise exception~1372)))))))
             nil)))))
 
@@ -1224,11 +1203,11 @@
       (holai.runtime:proof (REPEAT (holai.runtime:proof #'STRIP_TAC #'ORELSE #'EQ_TAC))
         THENL
           (cl:cons
-            (holai.runtime:proof (funcall EXISTS_TAC (parse_term "\\x:A. @y:B. P x y"))
+            (holai.runtime:proof (#`EXISTS_TAC (parse_term "\\x:A. @y:B. P x y"))
               THEN #'GEN_TAC
               THEN BETA_TAC
-              THEN (funcall CONV_TAC SELECT_CONV))
-            (cl:cons (funcall EXISTS_TAC (parse_term "(y:A->B) x")) nil))
+              THEN (#`CONV_TAC SELECT_CONV))
+            (cl:cons (#`EXISTS_TAC (parse_term "(y:A->B) x")) nil))
         THEN (POP_ASSUM MATCH_ACCEPT_TAC)))))
 
 (defparameter SKOLEM_THM_GEN
@@ -1263,16 +1242,16 @@
           (REWRITE_TAC
             (cl:cons EXISTS_UNIQUE_THM (cl:cons SKOLEM_THM (cl:cons FORALL_AND_THM nil))))
         THEN #'EQ_TAC
-        THEN (DISCH_THEN (funcall CONJUNCTS_THEN ASSUME_TAC))
-        THEN (funcall ASM_REWRITE_TAC nil)
+        THEN (DISCH_THEN (#`CONJUNCTS_THEN ASSUME_TAC))
+        THEN (#`ASM_REWRITE_TAC nil)
         THENL
           (cl:cons
             (holai.runtime:proof (REPEAT #'STRIP_TAC)
               THEN (ONCE_REWRITE_TAC (cl:cons FUN_EQ_THM nil))
-              THEN (funcall X_GEN_TAC (parse_term "x:A"))
+              THEN (#`X_GEN_TAC (parse_term "x:A"))
               THEN (FIRST_ASSUM #'MATCH_MP_TAC)
-              THEN (funcall EXISTS_TAC (parse_term "x:A"))
-              THEN (funcall ASM_REWRITE_TAC nil))
+              THEN (#`EXISTS_TAC (parse_term "x:A"))
+              THEN (#`ASM_REWRITE_TAC nil))
             (cl:cons
               (holai.runtime:proof (MAP_EVERY
                   X_GEN_TAC
@@ -1280,7 +1259,7 @@
                     (parse_term "x:A")
                     (cl:cons (parse_term "y1:B") (cl:cons (parse_term "y2:B") nil))))
                 THEN #'STRIP_TAC
-                THEN (FIRST_ASSUM (funcall X_CHOOSE_TAC (parse_term "f:A->B")))
+                THEN (FIRST_ASSUM (#`X_CHOOSE_TAC (parse_term "f:A->B")))
                 THEN
                   (SUBGOAL_THEN
                     (parse_term
@@ -1293,7 +1272,7 @@
                       THEN (REPEAT #'STRIP_TAC)
                       THEN BETA_TAC
                       THEN COND_CASES_TAC
-                      THEN (funcall ASM_REWRITE_TAC nil))
+                      THEN (#`ASM_REWRITE_TAC nil))
                     (cl:cons
                       (holai.runtime:proof (DISCH_THEN
                           (o #'MP_TAC (C #'AP_THM (parse_term "x:A"))))
@@ -1303,21 +1282,20 @@
 
 (let
   ((COND_CONG
-    (funcall
-      TAUT
+    (#`TAUT
       (parse_term
         "(g = g') ==>
         (g' ==> (t = t')) ==>
         (~g' ==> (e = e')) ==>
         ((if g then t else e) = (if g' then t' else e'))"))))
   (cl:declare (cl:ignorable COND_CONG))
-  (funcall extend_basic_congs (cl:cons COND_CONG nil)))
+  (#`extend_basic_congs (cl:cons COND_CONG nil)))
 
 (let
   ((COND_EQ_CLAUSE
     (prove (tuple (parse_term "(if x = x then y else z) = y") (REWRITE_TAC nil)))))
   (cl:declare (cl:ignorable COND_EQ_CLAUSE))
-  (funcall extend_basic_rewrites (cl:cons COND_EQ_CLAUSE nil)))
+  (#`extend_basic_rewrites (cl:cons COND_EQ_CLAUSE nil)))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* We can now treat "bool" as an enumerated type for some purposes.          *)
@@ -1329,15 +1307,15 @@
     (tuple
       (parse_term "!P. P F /\\ P T ==> !x. P x")
       (holai.runtime:proof (REPEAT #'STRIP_TAC)
-        THEN (DISJ_CASES_TAC (funcall SPEC (parse_term "x:bool") BOOL_CASES_AX))
-        THEN (funcall ASM_REWRITE_TAC nil)))))
+        THEN (DISJ_CASES_TAC (#`SPEC (parse_term "x:bool") BOOL_CASES_AX))
+        THEN (#`ASM_REWRITE_TAC nil)))))
 
 (defparameter bool_RECURSION
   (prove
     (tuple
       (parse_term "!a b:A. ?f. f F = a /\\ f T = b")
       (holai.runtime:proof (REPEAT #'GEN_TAC)
-        THEN (funcall EXISTS_TAC (parse_term "\\x. if x then b:A else a"))
+        THEN (#`EXISTS_TAC (parse_term "\\x. if x then b:A else a"))
         THEN (REWRITE_TAC nil)))))
 
 (defparameter inductive_type_store

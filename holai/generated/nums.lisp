@@ -229,7 +229,6 @@
     labelsc
     int-of-num
     function-value
-    funcall
     fst
     fletc
     failwith
@@ -328,11 +327,9 @@
 
 
 (defparameter ONE_ONE
-  (funcall
-    new_definition
-    (parse_term "ONE_ONE(f:A->B) = !x1 x2. (f x1 = f x2) ==> (x1 = x2)")))
+  (#`new_definition (parse_term "ONE_ONE(f:A->B) = !x1 x2. (f x1 = f x2) ==> (x1 = x2)")))
 
-(defparameter ONTO (funcall new_definition (parse_term "ONTO(f:A->B) = !y. ?x. y = f x")))
+(defparameter ONTO (#`new_definition (parse_term "ONTO(f:A->B) = !y. ?x. y = f x")))
 
 (defparameter INFINITY_AX (new_axiom (parse_term "?f:ind->ind. ONE_ONE f /\\ ~(ONTO f)")))
 
@@ -346,8 +343,8 @@
     (tuple
       (parse_term
         "?(f:ind->ind) z. (!x1 x2. (f x1 = f x2) = (x1 = x2)) /\\ (!x. ~(f x = z))")
-      (holai.runtime:proof (funcall X_CHOOSE_TAC (parse_term "f:ind->ind") INFINITY_AX)
-        THEN (funcall EXISTS_TAC (parse_term "f:ind->ind"))
+      (holai.runtime:proof (#`X_CHOOSE_TAC (parse_term "f:ind->ind") INFINITY_AX)
+        THEN (#`EXISTS_TAC (parse_term "f:ind->ind"))
         THEN (POP_ASSUM #'MP_TAC)
         THEN (REWRITE_TAC (cl:cons ONE_ONE (cl:cons ONTO nil)))
         THEN (MESON_TAC nil)))))
@@ -355,23 +352,18 @@
 (defparameter IND_SUC_SPEC
   (let*
     ((th1
-      (funcall
-        new_definition
+      (#`new_definition
         (parse_term
           "IND_SUC = @f:ind->ind. ?z. (!x1 x2. (f x1 = f x2) = (x1 = x2)) /\\
                                 (!x. ~(f x = z))")))
-      (th2
-        (REWRITE_RULE
-          (cl:cons (funcall GSYM th1) nil)
-          (funcall SELECT_RULE IND_SUC_0_EXISTS)))
+      (th2 (REWRITE_RULE (cl:cons (#`GSYM th1) nil) (#`SELECT_RULE IND_SUC_0_EXISTS)))
       (th3
-        (funcall
-          new_definition
+        (#`new_definition
           (parse_term
             "IND_0 = @z:ind. (!x1 x2. IND_SUC x1 = IND_SUC x2 <=> x1 = x2) /\\
                     (!x. ~(IND_SUC x = z))"))))
     (cl:declare (cl:ignorable th1 th2 th3))
-    (REWRITE_RULE (cl:cons (funcall GSYM th3) nil) (funcall SELECT_RULE th2))))
+    (REWRITE_RULE (cl:cons (#`GSYM th3) nil) (#`SELECT_RULE th2))))
 
 (defparameter IND_SUC_0 nil)
 
@@ -392,8 +384,7 @@
 (defparameter NUM_REP_RULES nil)
 
 (match
-  (funcall
-    new_inductive_definition
+  (#`new_inductive_definition
     (parse_term "NUM_REP IND_0 /\\
     (!i. NUM_REP i ==> NUM_REP (IND_SUC i))"))
   ((tuple NUM_REP_RULES% NUM_REP_INDUCT% NUM_REP_CASES%)
@@ -409,12 +400,12 @@
   (new_basic_type_definition
     "num"
     (tuple "mk_num" "dest_num")
-    (funcall CONJUNCT1 NUM_REP_RULES)))
+    (#`CONJUNCT1 NUM_REP_RULES)))
 
-(defparameter ZERO_DEF (funcall new_definition (parse_term "_0 = mk_num IND_0")))
+(defparameter ZERO_DEF (#`new_definition (parse_term "_0 = mk_num IND_0")))
 
 (defparameter SUC_DEF
-  (funcall new_definition (parse_term "SUC n = mk_num(IND_SUC(dest_num n))")))
+  (#`new_definition (parse_term "SUC n = mk_num(IND_SUC(dest_num n))")))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Distinctness and injectivity of constructors.                             *)
@@ -440,17 +431,17 @@
         THEN (REWRITE_TAC (cl:cons SUC_DEF nil))
         THEN #'EQ_TAC
         THEN DISCH_TAC
-        THEN (funcall ASM_REWRITE_TAC nil)
+        THEN (#`ASM_REWRITE_TAC nil)
         THEN (POP_ASSUM (o #'MP_TAC (AP_TERM (parse_term "dest_num"))))
         THEN (SUBGOAL_THEN (parse_term "!p. NUM_REP (IND_SUC (dest_num p))") #'MP_TAC)
         THENL
           (cl:cons
             (holai.runtime:proof #'GEN_TAC
-              THEN (MATCH_MP_TAC (funcall CONJUNCT2 NUM_REP_RULES)))
+              THEN (MATCH_MP_TAC (#`CONJUNCT2 NUM_REP_RULES)))
             (cl:cons #'ALL_TAC nil))
         THEN (REWRITE_TAC (cl:cons (fst num_tydef) (cl:cons (snd num_tydef) nil)))
         THEN DISCH_TAC
-        THEN (funcall ASM_REWRITE_TAC (cl:cons IND_SUC_INJ nil))
+        THEN (#`ASM_REWRITE_TAC (cl:cons IND_SUC_INJ nil))
         THEN (DISCH_THEN (o #'MP_TAC (AP_TERM (parse_term "mk_num"))))
         THEN (REWRITE_TAC (cl:cons (fst num_tydef) nil))))))
 
@@ -466,14 +457,8 @@
       (holai.runtime:proof (REPEAT #'STRIP_TAC)
         THEN
           (MP_TAC
-            (funcall
-              SPEC
-              (parse_term "\\i. NUM_REP i /\\ P(mk_num i):bool")
-              NUM_REP_INDUCT))
-        THEN
-          (funcall
-            ASM_REWRITE_TAC
-            (cl:cons (funcall GSYM ZERO_DEF) (cl:cons NUM_REP_RULES nil)))
+            (#`SPEC (parse_term "\\i. NUM_REP i /\\ P(mk_num i):bool") NUM_REP_INDUCT))
+        THEN (#`ASM_REWRITE_TAC (cl:cons (#`GSYM ZERO_DEF) (cl:cons NUM_REP_RULES nil)))
         THEN
           (W
             (o
@@ -486,8 +471,8 @@
             (holai.runtime:proof (REPEAT #'STRIP_TAC)
               THENL
                 (cl:cons
-                  (holai.runtime:proof (MATCH_MP_TAC (funcall CONJUNCT2 NUM_REP_RULES))
-                    THEN (funcall ASM_REWRITE_TAC nil))
+                  (holai.runtime:proof (MATCH_MP_TAC (#`CONJUNCT2 NUM_REP_RULES))
+                    THEN (#`ASM_REWRITE_TAC nil))
                   (cl:cons
                     (holai.runtime:proof (SUBGOAL_THEN
                         (parse_term "mk_num(IND_SUC i) = SUC(mk_num i)")
@@ -496,9 +481,8 @@
                         (cl:cons
                           (holai.runtime:proof (REWRITE_TAC (cl:cons SUC_DEF nil))
                             THEN (REPEAT AP_TERM_TAC)
-                            THEN (funcall CONV_TAC #'SYM_CONV)
-                            THEN
-                              (REWRITE_TAC (cl:cons (funcall GSYM (snd num_tydef)) nil))
+                            THEN (#`CONV_TAC #'SYM_CONV)
+                            THEN (REWRITE_TAC (cl:cons (#`GSYM (snd num_tydef)) nil))
                             THEN (FIRST_ASSUM MATCH_ACCEPT_TAC))
                           (cl:cons
                             (holai.runtime:proof (FIRST_ASSUM #'MATCH_MP_TAC)
@@ -507,7 +491,7 @@
                     nil)))
             (cl:cons
               (holai.runtime:proof (DISCH_THEN
-                  (o #'MP_TAC (funcall SPEC (parse_term "dest_num n"))))
+                  (o #'MP_TAC (#`SPEC (parse_term "dest_num n"))))
                 THEN (REWRITE_TAC (cl:cons (fst num_tydef) (cl:cons (snd num_tydef) nil))))
               nil))))))
 
@@ -541,11 +525,11 @@
                     THEN
                       (FIRST_ASSUM
                         (lambdac (th)
-                          (GEN_REWRITE_TAC #'BINDER_CONV (cl:cons (funcall GSYM th) nil))))
+                          (GEN_REWRITE_TAC #'BINDER_CONV (cl:cons (#`GSYM th) nil))))
                     THEN
                       (REWRITE_TAC
                         (cl:cons
-                          (funcall GSYM NOT_SUC~1)
+                          (#`GSYM NOT_SUC~1)
                           (cl:cons
                             NOT_SUC~1
                             (cl:cons SUC_INJ (cl:cons EXISTS_UNIQUE_REFL nil)))))
@@ -554,11 +538,9 @@
                     THEN (REWRITE_TAC (cl:cons EXISTS_UNIQUE_THM nil))
                     THEN
                       (DISCH_THEN
-                        (CONJUNCTS_THEN2
-                          (funcall X_CHOOSE_TAC (parse_term "y:A"))
-                          ASSUME_TAC))
+                        (CONJUNCTS_THEN2 (#`X_CHOOSE_TAC (parse_term "y:A")) ASSUME_TAC))
                     THEN (REPEAT #'STRIP_TAC)
-                    THEN (funcall ASM_REWRITE_TAC nil)
+                    THEN (#`ASM_REWRITE_TAC nil)
                     THENL
                       (cl:cons
                         (MAP_EVERY
@@ -571,29 +553,28 @@
                             THEN AP_TERM_TAC
                             THEN (FIRST_ASSUM #'MATCH_MP_TAC))
                           nil))
-                    THEN (funcall ASM_REWRITE_TAC nil))
+                    THEN (#`ASM_REWRITE_TAC nil))
                   (cl:cons
                     (holai.runtime:proof (REWRITE_TAC (cl:cons UNIQUE_SKOLEM_ALT nil))
                       THEN
                         (DISCH_THEN
                           (X_CHOOSE_THEN (parse_term "fn:num->A") (o ASSUME_TAC GSYM)))
-                      THEN (funcall EXISTS_TAC (parse_term "fn:num->A"))
-                      THEN (funcall ASM_REWRITE_TAC nil)
+                      THEN (#`EXISTS_TAC (parse_term "fn:num->A"))
+                      THEN (#`ASM_REWRITE_TAC nil)
                       THEN #'GEN_TAC
                       THEN (FIRST_ASSUM (o #'MATCH_MP_TAC CONJUNCT2))
                       THEN
                         (FIRST_ASSUM
-                          (lambdac (th)
-                            (GEN_REWRITE_TAC #'I (cl:cons (funcall GSYM th) nil))))
+                          (lambdac (th) (GEN_REWRITE_TAC #'I (cl:cons (#`GSYM th) nil))))
                       THEN #'REFL_TAC)
                     nil)))
             (cl:cons
               (holai.runtime:proof (REPEAT #'STRIP_TAC)
                 THEN (ONCE_REWRITE_TAC (cl:cons FUN_EQ_THM nil))
                 THEN (MATCH_MP_TAC num_INDUCTION~1)
-                THEN (funcall ASM_REWRITE_TAC nil)
+                THEN (#`ASM_REWRITE_TAC nil)
                 THEN (REPEAT #'STRIP_TAC)
-                THEN (funcall ASM_REWRITE_TAC nil))
+                THEN (#`ASM_REWRITE_TAC nil))
               nil))))))
 
 ;; (* ------------------------------------------------------------------------- *)
@@ -603,14 +584,12 @@
 
 (defparameter NUMERAL
   (let*
-    ((num_ty (type_of (funcall lhand (concl ZERO_DEF))))
+    ((num_ty (type_of (#`lhand (concl ZERO_DEF))))
       (funn_ty (mk_fun_ty num_ty num_ty))
       (numeral_tm (mk_var (tuple "NUMERAL" funn_ty)))
       (n_tm (mk_var (tuple "n" num_ty))))
     (cl:declare (cl:ignorable num_ty funn_ty numeral_tm n_tm))
-    (funcall
-      new_definition
-      (funcall mk_eq (tuple (mk_comb (tuple numeral_tm n_tm)) n_tm)))))
+    (#`new_definition (#`mk_eq (tuple (mk_comb (tuple numeral_tm n_tm)) n_tm)))))
 
 (defparameter NOT_SUC nil)
 
@@ -638,9 +617,9 @@
     THENL (cl:cons #'ALL_TAC (cl:cons (holai.runtime:proof #'GEN_TAC THEN DISCH_TAC) nil))))
 
 (defparameter num_RECURSION
-  (let ((avs (fst (funcall strip_forall (concl num_Axiom)))))
+  (let ((avs (fst (#`strip_forall (concl num_Axiom)))))
     (cl:declare (cl:ignorable avs))
-    (funcall GENL avs (funcall EXISTENCE (SPECL avs num_Axiom)))))
+    (#`GENL avs (#`EXISTENCE (SPECL avs num_Axiom)))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Cases theorem.                                                            *)
@@ -666,36 +645,31 @@
 
 (defparameter BIT0_DEF
   (let*
-    ((funn_ty
-      (type_of (rator (funcall lhand (snd (funcall dest_forall (concl NUMERAL)))))))
+    ((funn_ty (type_of (rator (#`lhand (snd (#`dest_forall (concl NUMERAL)))))))
       (bit0_tm (mk_var (tuple "BIT0" funn_ty)))
       (def
-        (funcall
-          new_definition
-          (funcall
-            mk_eq
+        (#`new_definition
+          (#`mk_eq
             (tuple
               bit0_tm
               (parse_term "@fn. fn 0 = 0 /\\ (!n. fn (SUC n) = SUC (SUC(fn n)))")))))
       (th
-        (funcall
-          BETA_RULE
+        (#`BETA_RULE
           (ISPECL
             (cl:cons (parse_term "0") (cl:cons (parse_term "\\m n:num. SUC(SUC m)") nil))
             num_RECURSION))))
     (cl:declare (cl:ignorable funn_ty bit0_tm def th))
-    (REWRITE_RULE (cl:cons (funcall GSYM def) nil) (funcall SELECT_RULE th))))
+    (REWRITE_RULE (cl:cons (#`GSYM def) nil) (#`SELECT_RULE th))))
 
 (defparameter BIT1_DEF
   (let*
-    ((funn_ty (type_of (rator (funcall lhand (funcall lhand (concl BIT0_DEF))))))
+    ((funn_ty (type_of (rator (#`lhand (#`lhand (concl BIT0_DEF))))))
       (num_ty (snd (dest_fun_ty funn_ty)))
       (n_tm (mk_var (tuple "n" num_ty)))
       (bit1_tm (mk_var (tuple "BIT1" funn_ty))))
     (cl:declare (cl:ignorable funn_ty num_ty n_tm bit1_tm))
-    (funcall
-      new_definition
-      (funcall mk_eq (tuple (mk_comb (tuple bit1_tm n_tm)) (parse_term "SUC (BIT0 n)"))))))
+    (#`new_definition
+      (#`mk_eq (tuple (mk_comb (tuple bit1_tm n_tm)) (parse_term "SUC (BIT0 n)"))))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Syntax operations on numerals.                                            *)
@@ -711,10 +685,9 @@
       (BIT1_tm (mk_const (tuple "BIT1" nil)))
       (NUMERAL_tm (mk_const (tuple "NUMERAL" nil))))
     (cl:declare (cl:ignorable pow24 num_0% zero_tm BIT0_tm BIT1_tm NUMERAL_tm))
-    (labelsc ((stripzeros (l) (match l ((cl:cons cl:nil t%) (stripzeros t%)) (_ l))))
-      (labelsc
-        ((raw_list_of_num
-          (l n)
+    (holai.runtime:labelsc
+      ((:recursive 0 stripzeros (l) (match l ((cl:cons cl:nil t%) (stripzeros t%)) (_ l)))
+        (:recursive 1 raw_list_of_num (l n)
           (if (= n num_0%)
             (stripzeros l)
             (let ((h (int-of-num (mod-num n pow24))))
@@ -769,23 +742,22 @@
                                                               (cl:cons
                                                                 (<> (logand h 1) 0)
                                                                 l))))))))))))))))))))))))
-                (quo-num n pow24))))))
-        (labelsc
-          ((numeral_of_list
-            (t% l)
-            (match l
-              (nil t%)
-              ((cl:cons b% r%)
-                (numeral_of_list (mk_comb (tuple (if b% BIT1_tm BIT0_tm) t%)) r%)))))
-          (fletc ((mk_raw_numeral (n) (numeral_of_list zero_tm (raw_list_of_num nil n))))
-            (lambdac (n)
-              (if (< n num_0%)
-                (failwith "mk_numeral: negative argument")
-                (mk_comb (tuple NUMERAL_tm (mk_raw_numeral n)))))))))))
+                (quo-num n pow24)))))
+        (:recursive 2 numeral_of_list (t% l)
+          (match l
+            (nil t%)
+            ((cl:cons b% r%)
+              (numeral_of_list (mk_comb (tuple (if b% BIT1_tm BIT0_tm) t%)) r%))))
+        (:nonrecursive 3 mk_raw_numeral (n)
+          (numeral_of_list zero_tm (raw_list_of_num nil n))))
+      (lambdac (n)
+        (if (< n num_0%)
+          (failwith "mk_numeral: negative argument")
+          (mk_comb (tuple NUMERAL_tm (mk_raw_numeral n))))))))
 
-(defunc mk_small_numeral (n) (funcall mk_numeral (num n)))
+(defunc mk_small_numeral (n) (#`mk_numeral (num n)))
 
-(defunc dest_small_numeral (t%) (int-of-num (funcall dest_numeral t%)))
+(defunc dest_small_numeral (t%) (int-of-num (#`dest_numeral t%)))
 
 (defparameter is_numeral (can dest_numeral))
 
@@ -803,106 +775,93 @@
 (defparameter the_specifications (ref nil))
 
 (defparameter new_specification
-  (fletc ((code (c%) (mk_small_numeral (char-code (string-get c% 0)))))
-    (fletc ((mk_code (name) (end_itlist (curry mk_pair) (map #'code (explode name)))))
-      (fletc
-        ((check_distinct
-          (l)
-          (handler-case
-            (progn
-              (itlist
-                (lambdac (t% res) (if (mem t% res) (fail unit) (cl:cons t% res)))
-                l
-                nil)
-              cl:t)
-            (holai.runtime:ocaml-condition
-              (exception~992)
-              (match exception~992 ((Failure _) cl:nil) (_ (raise exception~992)))))))
-        (fletc
-          ((specify
-            (name th)
-            (let*
-              ((ntm (mk_code name))
-                (gv (funcall genvar (type_of ntm)))
-                (th0 (CONV_RULE (funcall REWR_CONV SKOLEM_THM) (funcall GEN gv th)))
-                (th1
-                  (CONV_RULE
-                    (THENC (RATOR_CONV (funcall REWR_CONV EXISTS_THM)) #'BETA_CONV)
-                    th0)))
-              (cl:declare (cl:ignorable ntm gv th0 th1))
-              (match (dest_comb (concl th1))
-                ((tuple l r%)
-                  (let*
-                    ((rn (mk_comb (tuple r% ntm)))
-                      (ty (type_of rn))
-                      (th2
-                        (funcall
-                          new_definition
-                          (funcall mk_eq (tuple (mk_var (tuple name ty)) rn)))))
-                    (cl:declare (cl:ignorable rn ty th2))
-                    (GEN_REWRITE_RULE
-                      ONCE_DEPTH_CONV
-                      (cl:cons (funcall GSYM th2) nil)
-                      (funcall SPEC ntm (CONV_RULE #'BETA_CONV th1)))))))))
-          (labelsc
-            ((specifies
-              (names th)
-              (match names
-                (nil th)
-                ((cl:cons name onames)
-                  (let ((th% (specify name th)))
-                    (cl:declare (cl:ignorable th%))
-                    (specifies onames th%))))))
-            (lambdac (names th)
-              (match (dest_thm th)
-                ((tuple asl c%)
-                  (if (not (= asl nil))
-                    (failwith "new_specification: Assumptions not allowed in theorem")
-                    (if (not (= (frees c%) nil))
-                      (failwith
-                        (string-concat
-                          "new_specification: Free variables in predicate: "
-                          (string-join
-                            ", "
-                            (map
-                              (lambdac (arg~1185) (match arg~1185 ((Var name _) name)))
-                              (frees c%)))))
-                      (let ((avs (fst (funcall strip_exists c%))))
-                        (cl:declare (cl:ignorable avs))
-                        (if
-                          (cl:or
-                            (= (funcall length names) 0)
-                            (> (funcall length names) (funcall length avs)))
-                          (failwith
-                            "new_specification: Unsuitable number of constant names")
-                          (if (not (check_distinct names))
-                            (failwith "new_specification: Constant names not distinct")
-                            (handler-case
-                              (let
-                                ((sth
-                                  (snd
-                                    (find
-                                      (lambdac (arg~1132)
-                                        (match arg~1132
-                                          ((tuple (tuple names% th%) sth%)
-                                            (cl:and
-                                              (= names% names)
-                                              (aconv (concl th%) (concl th))))))
-                                      (deref the_specifications)))))
-                                (cl:declare (cl:ignorable sth))
-                                (progn (warn cl:t "Benign respecification") sth))
-                              (holai.runtime:ocaml-condition
-                                (exception~1111)
-                                (match exception~1111
-                                  ((Failure _)
-                                    (let ((sth (specifies names th)))
-                                      (cl:declare (cl:ignorable sth))
-                                      (progn
-                                        (assign
-                                          the_specifications
-                                          (cl:cons
-                                            (tuple (tuple names th) sth)
-                                            (deref the_specifications)))
-                                        sth)))
-                                  (_ (raise exception~1111)))))))))))))))))))
+  (holai.runtime:labelsc
+    ((:nonrecursive 0 code (c%) (mk_small_numeral (char-code (string-get c% 0))))
+      (:nonrecursive 1 mk_code (name)
+        (end_itlist (curry mk_pair) (map #'code (explode name))))
+      (:nonrecursive 2 check_distinct (l)
+        (handler-case
+          (progn
+            (itlist
+              (lambdac (t% res) (if (mem t% res) (fail unit) (cl:cons t% res)))
+              l
+              nil)
+            cl:t)
+          (holai.runtime:ocaml-condition
+            (exception~992)
+            (match exception~992 ((Failure _) cl:nil) (_ (raise exception~992))))))
+      (:nonrecursive 3 specify (name th)
+        (let*
+          ((ntm (mk_code name))
+            (gv (#`genvar (type_of ntm)))
+            (th0 (CONV_RULE (#`REWR_CONV SKOLEM_THM) (#`GEN gv th)))
+            (th1
+              (CONV_RULE (THENC (RATOR_CONV (#`REWR_CONV EXISTS_THM)) #'BETA_CONV) th0)))
+          (cl:declare (cl:ignorable ntm gv th0 th1))
+          (match (dest_comb (concl th1))
+            ((tuple l r%)
+              (let*
+                ((rn (mk_comb (tuple r% ntm)))
+                  (ty (type_of rn))
+                  (th2 (#`new_definition (#`mk_eq (tuple (mk_var (tuple name ty)) rn)))))
+                (cl:declare (cl:ignorable rn ty th2))
+                (GEN_REWRITE_RULE
+                  ONCE_DEPTH_CONV
+                  (cl:cons (#`GSYM th2) nil)
+                  (#`SPEC ntm (CONV_RULE #'BETA_CONV th1))))))))
+      (:recursive 4 specifies (names th)
+        (match names
+          (nil th)
+          ((cl:cons name onames)
+            (let ((th% (specify name th)))
+              (cl:declare (cl:ignorable th%))
+              (specifies onames th%))))))
+    (lambdac (names th)
+      (match (dest_thm th)
+        ((tuple asl c%)
+          (if (not (= asl nil))
+            (failwith "new_specification: Assumptions not allowed in theorem")
+            (if (not (= (frees c%) nil))
+              (failwith
+                (string-concat
+                  "new_specification: Free variables in predicate: "
+                  (string-join
+                    ", "
+                    (map
+                      (lambdac (arg~1185) (match arg~1185 ((Var name _) name)))
+                      (frees c%)))))
+              (let ((avs (fst (#`strip_exists c%))))
+                (cl:declare (cl:ignorable avs))
+                (if (cl:or (= (#`length names) 0) (> (#`length names) (#`length avs)))
+                  (failwith "new_specification: Unsuitable number of constant names")
+                  (if (not (check_distinct names))
+                    (failwith "new_specification: Constant names not distinct")
+                    (handler-case
+                      (let
+                        ((sth
+                          (snd
+                            (find
+                              (lambdac (arg~1132)
+                                (match arg~1132
+                                  ((tuple (tuple names% th%) sth%)
+                                    (cl:and
+                                      (= names% names)
+                                      (aconv (concl th%) (concl th))))))
+                              (deref the_specifications)))))
+                        (cl:declare (cl:ignorable sth))
+                        (progn (warn cl:t "Benign respecification") sth))
+                      (holai.runtime:ocaml-condition
+                        (exception~1111)
+                        (match exception~1111
+                          ((Failure _)
+                            (let ((sth (specifies names th)))
+                              (cl:declare (cl:ignorable sth))
+                              (progn
+                                (assign
+                                  the_specifications
+                                  (cl:cons
+                                    (tuple (tuple names th) sth)
+                                    (deref the_specifications)))
+                                sth)))
+                          (_ (raise exception~1111)))))))))))))))
 

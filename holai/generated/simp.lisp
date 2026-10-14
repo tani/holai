@@ -430,7 +430,6 @@
     labelsc
     guard
     function-value
-    funcall
     fst
     fletc
     failwith
@@ -548,10 +547,9 @@
 ;; (* ------------------------------------------------------------------------- *)
 
 
-(defparameter REWR_CONV (funcall PART_MATCH lhs))
+(defparameter REWR_CONV (#`PART_MATCH lhs))
 
-(defparameter IMP_REWR_CONV
-  (funcall PART_MATCH (o (o lhs (function-value #'snd 1)) dest_imp)))
+(defparameter IMP_REWR_CONV (#`PART_MATCH (o (o lhs (function-value #'snd 1)) dest_imp)))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Versions with ordered rewriting. We must have l' > r' for the rewrite     *)
@@ -560,26 +558,24 @@
 
 
 (defunc ORDERED_REWR_CONV (ord th)
-  (let ((basic_conv (funcall REWR_CONV th)))
+  (let ((basic_conv (#`REWR_CONV th)))
     (cl:declare (cl:ignorable basic_conv))
     (lambdac (tm)
-      (let ((thm (funcall basic_conv tm)))
+      (let ((thm (#`basic_conv tm)))
         (cl:declare (cl:ignorable thm))
         (match (dest_eq (concl thm))
           ((tuple l r%)
-            (if (funcall ord l r%) thm (failwith "ORDERED_REWR_CONV: wrong orientation"))))))))
+            (if (#`ord l r%) thm (failwith "ORDERED_REWR_CONV: wrong orientation"))))))))
 
 (defunc ORDERED_IMP_REWR_CONV (ord th)
-  (let ((basic_conv (funcall IMP_REWR_CONV th)))
+  (let ((basic_conv (#`IMP_REWR_CONV th)))
     (cl:declare (cl:ignorable basic_conv))
     (lambdac (tm)
-      (let ((thm (funcall basic_conv tm)))
+      (let ((thm (#`basic_conv tm)))
         (cl:declare (cl:ignorable thm))
         (match (dest_eq (rand (concl thm)))
           ((tuple l r%)
-            (if (funcall ord l r%)
-              thm
-              (failwith "ORDERED_IMP_REWR_CONV: wrong orientation"))))))))
+            (if (#`ord l r%) thm (failwith "ORDERED_IMP_REWR_CONV: wrong orientation"))))))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Standard AC-compatible term ordering: a "dynamic" lexicographic ordering. *)
@@ -601,25 +597,22 @@
 
 
 (defparameter term_order
-  (labelsc
-    ((lexify
-      (ord l1 l2)
+  (holai.runtime:labelsc
+    ((:recursive 0 lexify (ord l1 l2)
       (if (= l1 nil)
         cl:nil
         (if (= l2 nil)
           cl:t
           (let ((h1 (hd l1)) (h2 (hd l2)))
             (cl:declare (cl:ignorable h1 h2))
-            (cl:or (funcall ord h1 h2) (cl:and (= h1 h2) (lexify ord (tl l1) (tl l2)))))))))
-    (labelsc
-      ((dyn_order
-        (top tm1 tm2)
-        (match (tuple (funcall strip_comb tm1) (funcall strip_comb tm2))
+            (cl:or (#`ord h1 h2) (cl:and (= h1 h2) (lexify ord (tl l1) (tl l2))))))))
+      (:recursive 1 dyn_order (top tm1 tm2)
+        (match (tuple (#`strip_comb tm1) (#`strip_comb tm2))
           ((tuple (tuple f1 args1) (tuple f2 args2))
             (if (= f1 f2)
               (lexify (dyn_order f1) args1 args2)
               (if (= f2 top) cl:nil (if (= f1 top) cl:t (> f1 f2))))))))
-      (dyn_order (parse_term "T")))))
+    (dyn_order (parse_term "T"))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Create a gconv net for a theorem as a (cond) rewrite. The "rep" flag      *)
@@ -635,7 +628,7 @@
   (let*
     ((tm (concl th))
       (lconsts (freesl (hyp th)))
-      (matchable (o #'can (funcall term_match lconsts))))
+      (matchable (o #'can (#`term_match lconsts))))
     (cl:declare (cl:ignorable tm lconsts matchable))
     (match tm
       ((guard
@@ -646,35 +639,32 @@
             (tm%)
             (match tm%
               ((guard (Abs y (Comb t% y%)) (cl:and (= y y%) (not (free_in y t%))))
-                (funcall INSTANTIATE% (funcall term_match nil v t%) th))
+                (#`INSTANTIATE% (#`term_match nil v t%) th))
               (_ (failwith "REWR_CONV (ETA_AX special case)")))))
-          (funcall enter lconsts (tuple l (tuple 1 #'conv)))))
+          (#`enter lconsts (tuple l (tuple 1 #'conv)))))
       ((Comb (Comb (Const "=" _) l) r%)
         (if (cl:and rep (free_in l r%))
-          (let ((th% (funcall EQT_INTRO th)))
+          (let ((th% (#`EQT_INTRO th)))
             (cl:declare (cl:ignorable th%))
-            (funcall enter lconsts (tuple l (tuple 1 (funcall REWR_CONV th%)))))
-          (if (cl:and rep (cl:and (funcall matchable l r%) (funcall matchable r% l)))
-            (funcall enter lconsts (tuple l (tuple 1 (ORDERED_REWR_CONV term_order th))))
-            (funcall enter lconsts (tuple l (tuple 1 (funcall REWR_CONV th)))))))
+            (#`enter lconsts (tuple l (tuple 1 (#`REWR_CONV th%)))))
+          (if (cl:and rep (cl:and (#`matchable l r%) (#`matchable r% l)))
+            (#`enter lconsts (tuple l (tuple 1 (ORDERED_REWR_CONV term_order th))))
+            (#`enter lconsts (tuple l (tuple 1 (#`REWR_CONV th)))))))
       ((Comb (Comb _ t%) (Comb (Comb (Const "=" _) l) r%))
         (if (cl:and rep (free_in l r%))
-          (let ((th% (funcall DISCH t% (funcall EQT_INTRO (UNDISCH th)))))
+          (let ((th% (#`DISCH t% (#`EQT_INTRO (UNDISCH th)))))
             (cl:declare (cl:ignorable th%))
-            (funcall enter lconsts (tuple l (tuple 3 (funcall IMP_REWR_CONV th%)))))
-          (if (cl:and rep (cl:and (funcall matchable l r%) (funcall matchable r% l)))
-            (funcall
-              enter
-              lconsts
-              (tuple l (tuple 3 (ORDERED_IMP_REWR_CONV term_order th))))
-            (funcall enter lconsts (tuple l (tuple 3 (funcall IMP_REWR_CONV th))))))))))
+            (#`enter lconsts (tuple l (tuple 3 (#`IMP_REWR_CONV th%)))))
+          (if (cl:and rep (cl:and (#`matchable l r%) (#`matchable r% l)))
+            (#`enter lconsts (tuple l (tuple 3 (ORDERED_IMP_REWR_CONV term_order th))))
+            (#`enter lconsts (tuple l (tuple 3 (#`IMP_REWR_CONV th))))))))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Create a gconv net for a conversion with a term index.                    *)
 ;; (* ------------------------------------------------------------------------- *)
 
 
-(defunc net_of_conv (tm conv sofar) (funcall enter nil (tuple tm (tuple 2 conv)) sofar))
+(defunc net_of_conv (tm conv sofar) (#`enter nil (tuple tm (tuple 2 conv)) sofar))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Create a gconv net for a congruence rule (in canonical form!)             *)
@@ -685,16 +675,15 @@
   (match
     (repeat
       (lambdac (arg~415)
-        (match arg~415 ((tuple tm m) (tuple (snd (funcall dest_imp tm)) (+ m 1)))))
+        (match arg~415 ((tuple tm m) (tuple (snd (#`dest_imp tm)) (+ m 1)))))
       (tuple (concl th) 0))
     ((tuple conc n)
       (if (= n 0)
         (failwith "net_of_cong: Non-implicational congruence")
         (let*
-          ((pat (funcall lhs conc))
-            (conv (funcall GEN_PART_MATCH (o lhand (funpow n #'rand)) th)))
+          ((pat (#`lhs conc)) (conv (#`GEN_PART_MATCH (o lhand (funpow n #'rand)) th)))
           (cl:declare (cl:ignorable pat conv))
-          (funcall enter nil (tuple pat (tuple 4 conv)) sofar))))))
+          (#`enter nil (tuple pat (tuple 4 conv)) sofar))))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Rewrite maker for ordinary and conditional rewrites (via "cf" flag).      *)
@@ -708,63 +697,53 @@
 
 (defparameter mk_rewrites
   (let
-    ((IMP_CONJ_CONV
-      (funcall REWR_CONV (ITAUT (parse_term "p ==> q ==> r <=> p /\\ q ==> r"))))
+    ((IMP_CONJ_CONV (#`REWR_CONV (ITAUT (parse_term "p ==> q ==> r <=> p /\\ q ==> r"))))
       (IMP_EXISTS_RULE
         (let
-          ((cnv
-            (funcall REWR_CONV (ITAUT (parse_term "(!x. P x ==> Q) <=> (?x. P x) ==> Q")))))
+          ((cnv (#`REWR_CONV (ITAUT (parse_term "(!x. P x ==> Q) <=> (?x. P x) ==> Q")))))
           (cl:declare (cl:ignorable cnv))
-          (lambdac (v th) (CONV_RULE cnv (funcall GEN v th))))))
+          (lambdac (v th) (CONV_RULE cnv (#`GEN v th))))))
     (cl:declare (cl:ignorable IMP_CONJ_CONV IMP_EXISTS_RULE))
-    (fletc
-      ((collect_condition
-        (oldhyps th)
+    (holai.runtime:labelsc
+      ((:nonrecursive 0 collect_condition (oldhyps th)
         (let ((conds (subtract (hyp th) oldhyps)))
           (cl:declare (cl:ignorable conds))
           (if (= conds nil)
             th
             (let*
               ((jth (itlist DISCH conds th))
-                (kth (CONV_RULE (funcall REPEATC IMP_CONJ_CONV) jth)))
+                (kth (CONV_RULE (#`REPEATC IMP_CONJ_CONV) jth)))
               (cl:declare (cl:ignorable jth kth))
-              (match (funcall dest_imp (concl kth))
+              (match (#`dest_imp (concl kth))
                 ((tuple cond% eqn)
                   (let
                     ((fvs
                       (subtract (subtract (frees cond%) (frees eqn)) (freesl oldhyps))))
                     (cl:declare (cl:ignorable fvs))
-                    (itlist IMP_EXISTS_RULE fvs kth)))))))))
-      (labelsc
-        ((split_rewrites
-          (oldhyps cf th sofar)
+                    (itlist IMP_EXISTS_RULE fvs kth))))))))
+        (:recursive 1 split_rewrites (oldhyps cf th sofar)
           (let ((tm (concl th)))
             (cl:declare (cl:ignorable tm))
-            (if (funcall is_forall tm)
+            (if (#`is_forall tm)
               (split_rewrites oldhyps cf (SPEC_ALL th) sofar)
-              (if (funcall is_conj tm)
+              (if (#`is_conj tm)
                 (split_rewrites
                   oldhyps
                   cf
-                  (funcall CONJUNCT1 th)
-                  (split_rewrites oldhyps cf (funcall CONJUNCT2 th) sofar))
-                (if (cl:and (funcall is_imp tm) cf)
+                  (#`CONJUNCT1 th)
+                  (split_rewrites oldhyps cf (#`CONJUNCT2 th) sofar))
+                (if (cl:and (#`is_imp tm) cf)
                   (split_rewrites oldhyps cf (UNDISCH th) sofar)
                   (if (is_eq tm)
                     (cl:cons (if cf (collect_condition oldhyps th) th) sofar)
                     (if (is_neg tm)
-                      (let
-                        ((ths (split_rewrites oldhyps cf (funcall EQF_INTRO th) sofar)))
+                      (let ((ths (split_rewrites oldhyps cf (#`EQF_INTRO th) sofar)))
                         (cl:declare (cl:ignorable ths))
                         (if (is_eq (rand tm))
-                          (split_rewrites
-                            oldhyps
-                            cf
-                            (funcall EQF_INTRO (funcall GSYM th))
-                            ths)
+                          (split_rewrites oldhyps cf (#`EQF_INTRO (#`GSYM th)) ths)
                           ths))
-                      (split_rewrites oldhyps cf (funcall EQT_INTRO th) sofar)))))))))
-        (lambdac (cf th sofar) (split_rewrites (hyp th) cf th sofar))))))
+                      (split_rewrites oldhyps cf (#`EQT_INTRO th) sofar)))))))))
+      (lambdac (cf th sofar) (split_rewrites (hyp th) cf th sofar)))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Rewriting (and application of other conversions) based on a convnet.      *)
@@ -772,12 +751,10 @@
 
 
 (defunc REWRITES_CONV (net tm)
-  (let ((pconvs (funcall lookup tm net)))
+  (let ((pconvs (#`lookup tm net)))
     (cl:declare (cl:ignorable pconvs))
     (handler-case
-      (tryfind
-        (lambdac (arg~616) (match arg~616 ((tuple _ cnv) (funcall cnv tm))))
-        pconvs)
+      (tryfind (lambdac (arg~616) (match arg~616 ((tuple _ cnv) (#`cnv tm)))) pconvs)
       (holai.runtime:ocaml-condition
         (exception~611)
         (match exception~611
@@ -791,15 +768,15 @@
     ((mk_prover%
       (state)
       (let
-        ((apply% (funcall applicator state))
-          (augment% (lambdac (thms) (mk_prover% (funcall augmentor state thms)))))
+        ((apply% (#`applicator state))
+          (augment% (lambdac (thms) (mk_prover% (#`augmentor state thms)))))
         (cl:declare (cl:ignorable apply% augment%))
         (make-Prover apply% augment%))))
     #'mk_prover%))
 
-(defunc augment (arg~655 thms) (match arg~655 ((Prover _ aug) (funcall aug thms))))
+(defunc augment (arg~655 thms) (match arg~655 ((Prover _ aug) (#`aug thms))))
 
-(defunc apply_prover (arg~666 tm) (match arg~666 ((Prover conv _) (funcall conv tm))))
+(defunc apply_prover (arg~666 tm) (match arg~666 ((Prover conv _) (#`conv tm))))
 
 (defvariant simpset (Simpset field0 field1 field2 field3))
 
@@ -814,7 +791,7 @@
       (let
         ((sth
           (handler-case
-            (funcall strat ss lev tm)
+            (#`strat ss lev tm)
             (holai.runtime:ocaml-condition
               (exception~690)
               (match exception~690 ((Failure _) (REFL tm)) (_ (raise exception~690)))))))
@@ -882,7 +859,7 @@
     ((Simpset net prover% provers rewmaker)
       (let*
         ((provers% (map (C #'augment (cl:cons cth nil)) provers))
-          (cthms (funcall rewmaker cth nil))
+          (cthms (#`rewmaker cth nil))
           (net% (itlist (net_of_thm cl:t) cthms net)))
         (cl:declare (cl:ignorable provers% cthms net%))
         (make-Simpset net% prover% provers% rewmaker)))))
@@ -903,9 +880,8 @@
 (defparameter TOP_SWEEP_SQCONV nil)
 
 (match
-  (fletc
-    ((IMP_REWRITES_CONV
-      (strat arg~933 lev pconvs tm)
+  (holai.runtime:labelsc
+    ((:nonrecursive 0 IMP_REWRITES_CONV (strat arg~933 lev pconvs tm)
       (match arg~933
         ((cl:and ss (Simpset net prover% provers rewmaker))
           (tryfind
@@ -914,27 +890,23 @@
                 ((tuple n cnv)
                   (if (>= n 4)
                     (fail unit)
-                    (let* ((th (funcall cnv tm)) (etm (concl th)))
+                    (let* ((th (#`cnv tm)) (etm (concl th)))
                       (cl:declare (cl:ignorable th etm))
                       (if (is_eq etm)
                         th
                         (if (<= lev 0)
                           (failwith "IMP_REWRITES_CONV: Too deep")
-                          (let
-                            ((cth
-                              (funcall prover% strat ss (- lev 1) (funcall lhand etm))))
+                          (let ((cth (#`prover% strat ss (- lev 1) (#`lhand etm))))
                             (cl:declare (cl:ignorable cth))
-                            (funcall MP th cth)))))))))
-            pconvs)))))
-    (labelsc
-      ((RUN_SUB_CONV
-        (strat ss lev triv th)
+                            (#`MP th cth)))))))))
+            pconvs))))
+      (:recursive 1 RUN_SUB_CONV (strat ss lev triv th)
         (let ((tm (concl th)))
           (cl:declare (cl:ignorable tm))
-          (if (funcall is_imp tm)
-            (let ((subtm (funcall lhand tm)))
+          (if (#`is_imp tm)
+            (let ((subtm (#`lhand tm)))
               (cl:declare (cl:ignorable subtm))
-              (match (funcall strip_forall subtm)
+              (match (#`strip_forall subtm)
                 ((tuple avs bod)
                   (match
                     (handler-case
@@ -943,17 +915,17 @@
                         (exception~1082)
                         (match exception~1082
                           ((Failure _)
-                            (match (funcall dest_imp bod)
+                            (match (#`dest_imp bod)
                               ((tuple cxt deq)
                                 (tuple
                                   (dest_eq deq)
                                   (AUGMENT_SIMPSET (ASSUME cxt) ss)
-                                  (funcall DISCH cxt)))))
+                                  (#`DISCH cxt)))))
                           (_ (raise exception~1082)))))
                     ((tuple (tuple t% t%%) ss% mk_fun)
                       (match
                         (handler-case
-                          (tuple (funcall strat ss% lev t%) cl:nil)
+                          (tuple (#`strat ss% lev t%) cl:nil)
                           (holai.runtime:ocaml-condition
                             (exception~1061)
                             (match exception~1061
@@ -961,226 +933,198 @@
                               (_ (raise exception~1061)))))
                         ((tuple eth triv%)
                           (let*
-                            ((eth% (funcall GENL avs (funcall mk_fun eth)))
+                            ((eth% (#`GENL avs (#`mk_fun eth)))
                               (th%
                                 (if (is_var t%%)
                                   (INST% (cl:cons (tuple (rand (concl eth)) t%%) nil) th)
-                                  (funcall GEN_PART_MATCH lhand th (concl eth%))))
-                              (th%% (funcall MP th% eth%)))
+                                  (#`GEN_PART_MATCH lhand th (concl eth%))))
+                              (th%% (#`MP th% eth%)))
                             (cl:declare (cl:ignorable eth% th% th%%))
                             (RUN_SUB_CONV strat ss lev triv% th%%)))))))))
-            (if triv (fail unit) th)))))
-      (fletc
-        ((GEN_SUB_CONV
-          (strat ss lev pconvs tm)
-          (handler-case
-            (tryfind
-              (lambdac (arg~1256)
-                (match arg~1256
-                  ((tuple n cnv)
-                    (if (< n 4)
-                      (fail unit)
-                      (let ((th (funcall cnv tm)))
-                        (cl:declare (cl:ignorable th))
-                        (RUN_SUB_CONV strat ss lev cl:t th))))))
-              pconvs)
-            (holai.runtime:ocaml-condition
-              (exception~1126)
-              (match exception~1126
-                ((Failure _)
-                  (if (is_comb tm)
-                    (match (dest_comb tm)
-                      ((tuple l r%)
-                        (handler-case
-                          (let ((th1 (funcall strat ss lev l)))
-                            (cl:declare (cl:ignorable th1))
-                            (handler-case
-                              (let ((th2 (funcall strat ss lev r%)))
-                                (cl:declare (cl:ignorable th2))
-                                (MK_COMB% (tuple th1 th2)))
-                              (holai.runtime:ocaml-condition
-                                (exception~1228)
-                                (match exception~1228
-                                  ((Failure _) (AP_THM th1 r%))
-                                  (_ (raise exception~1228))))))
-                          (holai.runtime:ocaml-condition
-                            (exception~1214)
-                            (match exception~1214
-                              ((Failure _) (AP_TERM l (funcall strat ss lev r%)))
-                              (_ (raise exception~1214)))))))
-                    (if (is_abs tm)
-                      (match (dest_abs tm)
-                        ((tuple v bod)
-                          (let ((th (funcall strat ss lev bod)))
-                            (cl:declare (cl:ignorable th))
-                            (handler-case
-                              (ABS% v th)
-                              (holai.runtime:ocaml-condition
-                                (exception~1138)
-                                (match exception~1138
-                                  ((Failure _)
-                                    (let*
-                                      ((gv (funcall genvar (type_of v)))
-                                        (gbod
-                                          (funcall vsubst (cl:cons (tuple gv v) nil) bod))
-                                        (gth (ABS% gv (funcall strat ss lev gbod)))
-                                        (gtm (concl gth)))
-                                      (cl:declare (cl:ignorable gv gbod gth gtm))
-                                      (match (dest_eq gtm)
-                                        ((tuple l r%)
-                                          (let*
-                                            ((v% (variant (frees gtm) v))
-                                              (l% (alpha v% l))
-                                              (r%% (alpha v% r%)))
-                                            (cl:declare (cl:ignorable v% l% r%%))
-                                            (EQ_MP
-                                              (holai.equal:ALPHA
-                                                gtm
-                                                (funcall mk_eq (tuple l% r%%)))
-                                              gth))))))
-                                  (_ (raise exception~1138))))))))
-                      (failwith "GEN_SUB_CONV"))))
-                (_ (raise exception~1126)))))))
-        (labelsc
-          ((ONCE_DEPTH_SQCONV%
-            (arg~1284 lev tm)
-            (match arg~1284
-              ((cl:and ss (Simpset net prover% provers rewmaker))
-                (let ((pconvs (funcall lookup tm net)))
-                  (cl:declare (cl:ignorable pconvs))
-                  (handler-case
-                    (IMP_REWRITES_CONV #'ONCE_DEPTH_SQCONV% ss lev pconvs tm)
-                    (holai.runtime:ocaml-condition
-                      (exception~1297)
-                      (match exception~1297
-                        ((Failure _) (GEN_SUB_CONV #'ONCE_DEPTH_SQCONV% ss lev pconvs tm))
-                        (_ (raise exception~1297))))))))))
-          (labelsc
-            ((DEPTH_SQCONV%
-              (arg~1322 lev tm)
-              (match arg~1322
-                ((cl:and ss (Simpset net prover% provers rewmaker))
-                  (let ((pconvs (funcall lookup tm net)))
-                    (cl:declare (cl:ignorable pconvs))
-                    (handler-case
-                      (let*
-                        ((th1 (GEN_SUB_CONV #'DEPTH_SQCONV% ss lev pconvs tm))
-                          (tm1 (rand (concl th1)))
-                          (pconvs1 (funcall lookup tm1 net)))
-                        (cl:declare (cl:ignorable th1 tm1 pconvs1))
-                        (handler-case
-                          (TRANS
-                            th1
-                            (IMP_REWRITES_CONV #'DEPTH_SQCONV% ss lev pconvs1 tm1))
-                          (holai.runtime:ocaml-condition
-                            (exception~1359)
-                            (match exception~1359
-                              ((Failure _) th1)
-                              (_ (raise exception~1359))))))
-                      (holai.runtime:ocaml-condition
-                        (exception~1335)
-                        (match exception~1335
-                          ((Failure _)
-                            (IMP_REWRITES_CONV #'DEPTH_SQCONV% ss lev pconvs tm))
-                          (_ (raise exception~1335))))))))))
-            (labelsc
-              ((REDEPTH_SQCONV%
-                (arg~1385 lev tm)
-                (match arg~1385
-                  ((cl:and ss (Simpset net prover% provers rewmaker))
-                    (let*
-                      ((pconvs (funcall lookup tm net))
-                        (th
-                          (handler-case
-                            (let*
-                              ((th1 (GEN_SUB_CONV #'REDEPTH_SQCONV% ss lev pconvs tm))
-                                (tm1 (rand (concl th1)))
-                                (pconvs1 (funcall lookup tm1 net)))
-                              (cl:declare (cl:ignorable th1 tm1 pconvs1))
-                              (handler-case
-                                (TRANS
-                                  th1
-                                  (IMP_REWRITES_CONV #'REDEPTH_SQCONV% ss lev pconvs1 tm1))
-                                (holai.runtime:ocaml-condition
-                                  (exception~1423)
-                                  (match exception~1423
-                                    ((Failure _) th1)
-                                    (_ (raise exception~1423))))))
-                            (holai.runtime:ocaml-condition
-                              (exception~1399)
-                              (match exception~1399
-                                ((Failure _)
-                                  (IMP_REWRITES_CONV #'REDEPTH_SQCONV% ss lev pconvs tm))
-                                (_ (raise exception~1399)))))))
-                      (cl:declare (cl:ignorable pconvs th))
+            (if triv (fail unit) th))))
+      (:nonrecursive 2 GEN_SUB_CONV (strat ss lev pconvs tm)
+        (handler-case
+          (tryfind
+            (lambdac (arg~1256)
+              (match arg~1256
+                ((tuple n cnv)
+                  (if (< n 4)
+                    (fail unit)
+                    (let ((th (#`cnv tm)))
+                      (cl:declare (cl:ignorable th))
+                      (RUN_SUB_CONV strat ss lev cl:t th))))))
+            pconvs)
+          (holai.runtime:ocaml-condition
+            (exception~1126)
+            (match exception~1126
+              ((Failure _)
+                (if (is_comb tm)
+                  (match (dest_comb tm)
+                    ((tuple l r%)
                       (handler-case
-                        (let ((th% (REDEPTH_SQCONV% ss lev (rand (concl th)))))
-                          (cl:declare (cl:ignorable th%))
-                          (TRANS th th%))
-                        (holai.runtime:ocaml-condition
-                          (exception~1440)
-                          (match exception~1440
-                            ((Failure _) th)
-                            (_ (raise exception~1440))))))))))
-              (labelsc
-                ((TOP_DEPTH_SQCONV%
-                  (arg~1466 lev tm)
-                  (match arg~1466
-                    ((cl:and ss (Simpset net prover% provers rewmaker))
-                      (let*
-                        ((pconvs (funcall lookup tm net))
-                          (th1
-                            (handler-case
-                              (IMP_REWRITES_CONV #'TOP_DEPTH_SQCONV% ss lev pconvs tm)
-                              (holai.runtime:ocaml-condition
-                                (exception~1480)
-                                (match exception~1480
-                                  ((Failure _)
-                                    (GEN_SUB_CONV #'TOP_DEPTH_SQCONV% ss lev pconvs tm))
-                                  (_ (raise exception~1480)))))))
-                        (cl:declare (cl:ignorable pconvs th1))
-                        (handler-case
-                          (let ((th2 (TOP_DEPTH_SQCONV% ss lev (rand (concl th1)))))
-                            (cl:declare (cl:ignorable th2))
-                            (TRANS th1 th2))
-                          (holai.runtime:ocaml-condition
-                            (exception~1496)
-                            (match exception~1496
-                              ((Failure _) th1)
-                              (_ (raise exception~1496))))))))))
-                (labelsc
-                  ((TOP_SWEEP_SQCONV%
-                    (arg~1522 lev tm)
-                    (match arg~1522
-                      ((cl:and ss (Simpset net prover% provers rewmaker))
-                        (let ((pconvs (funcall lookup tm net)))
-                          (cl:declare (cl:ignorable pconvs))
+                        (let ((th1 (#`strat ss lev l)))
+                          (cl:declare (cl:ignorable th1))
                           (handler-case
-                            (let
-                              ((th1
-                                (IMP_REWRITES_CONV #'TOP_SWEEP_SQCONV% ss lev pconvs tm)))
-                              (cl:declare (cl:ignorable th1))
-                              (handler-case
-                                (let ((th2 (TOP_SWEEP_SQCONV% ss lev (rand (concl th1)))))
-                                  (cl:declare (cl:ignorable th2))
-                                  (TRANS th1 th2))
-                                (holai.runtime:ocaml-condition
-                                  (exception~1551)
-                                  (match exception~1551
-                                    ((Failure _) th1)
-                                    (_ (raise exception~1551))))))
+                            (let ((th2 (#`strat ss lev r%)))
+                              (cl:declare (cl:ignorable th2))
+                              (MK_COMB% (tuple th1 th2)))
                             (holai.runtime:ocaml-condition
-                              (exception~1535)
-                              (match exception~1535
+                              (exception~1228)
+                              (match exception~1228
+                                ((Failure _) (AP_THM th1 r%))
+                                (_ (raise exception~1228))))))
+                        (holai.runtime:ocaml-condition
+                          (exception~1214)
+                          (match exception~1214
+                            ((Failure _) (AP_TERM l (#`strat ss lev r%)))
+                            (_ (raise exception~1214)))))))
+                  (if (is_abs tm)
+                    (match (dest_abs tm)
+                      ((tuple v bod)
+                        (let ((th (#`strat ss lev bod)))
+                          (cl:declare (cl:ignorable th))
+                          (handler-case
+                            (ABS% v th)
+                            (holai.runtime:ocaml-condition
+                              (exception~1138)
+                              (match exception~1138
                                 ((Failure _)
-                                  (GEN_SUB_CONV #'TOP_SWEEP_SQCONV% ss lev pconvs tm))
-                                (_ (raise exception~1535))))))))))
-                  (tuple
-                    #'ONCE_DEPTH_SQCONV%
-                    #'DEPTH_SQCONV%
-                    #'REDEPTH_SQCONV%
-                    #'TOP_DEPTH_SQCONV%
-                    #'TOP_SWEEP_SQCONV%)))))))))
+                                  (let*
+                                    ((gv (#`genvar (type_of v)))
+                                      (gbod (#`vsubst (cl:cons (tuple gv v) nil) bod))
+                                      (gth (ABS% gv (#`strat ss lev gbod)))
+                                      (gtm (concl gth)))
+                                    (cl:declare (cl:ignorable gv gbod gth gtm))
+                                    (match (dest_eq gtm)
+                                      ((tuple l r%)
+                                        (let*
+                                          ((v% (variant (frees gtm) v))
+                                            (l% (alpha v% l))
+                                            (r%% (alpha v% r%)))
+                                          (cl:declare (cl:ignorable v% l% r%%))
+                                          (EQ_MP
+                                            (holai.equal:ALPHA
+                                              gtm
+                                              (#`mk_eq (tuple l% r%%)))
+                                            gth))))))
+                                (_ (raise exception~1138))))))))
+                    (failwith "GEN_SUB_CONV"))))
+              (_ (raise exception~1126))))))
+      (:recursive 3 ONCE_DEPTH_SQCONV% (arg~1284 lev tm)
+        (match arg~1284
+          ((cl:and ss (Simpset net prover% provers rewmaker))
+            (let ((pconvs (#`lookup tm net)))
+              (cl:declare (cl:ignorable pconvs))
+              (handler-case
+                (IMP_REWRITES_CONV #'ONCE_DEPTH_SQCONV% ss lev pconvs tm)
+                (holai.runtime:ocaml-condition
+                  (exception~1297)
+                  (match exception~1297
+                    ((Failure _) (GEN_SUB_CONV #'ONCE_DEPTH_SQCONV% ss lev pconvs tm))
+                    (_ (raise exception~1297)))))))))
+      (:recursive 4 DEPTH_SQCONV% (arg~1322 lev tm)
+        (match arg~1322
+          ((cl:and ss (Simpset net prover% provers rewmaker))
+            (let ((pconvs (#`lookup tm net)))
+              (cl:declare (cl:ignorable pconvs))
+              (handler-case
+                (let*
+                  ((th1 (GEN_SUB_CONV #'DEPTH_SQCONV% ss lev pconvs tm))
+                    (tm1 (rand (concl th1)))
+                    (pconvs1 (#`lookup tm1 net)))
+                  (cl:declare (cl:ignorable th1 tm1 pconvs1))
+                  (handler-case
+                    (TRANS th1 (IMP_REWRITES_CONV #'DEPTH_SQCONV% ss lev pconvs1 tm1))
+                    (holai.runtime:ocaml-condition
+                      (exception~1359)
+                      (match exception~1359 ((Failure _) th1) (_ (raise exception~1359))))))
+                (holai.runtime:ocaml-condition
+                  (exception~1335)
+                  (match exception~1335
+                    ((Failure _) (IMP_REWRITES_CONV #'DEPTH_SQCONV% ss lev pconvs tm))
+                    (_ (raise exception~1335)))))))))
+      (:recursive 5 REDEPTH_SQCONV% (arg~1385 lev tm)
+        (match arg~1385
+          ((cl:and ss (Simpset net prover% provers rewmaker))
+            (let*
+              ((pconvs (#`lookup tm net))
+                (th
+                  (handler-case
+                    (let*
+                      ((th1 (GEN_SUB_CONV #'REDEPTH_SQCONV% ss lev pconvs tm))
+                        (tm1 (rand (concl th1)))
+                        (pconvs1 (#`lookup tm1 net)))
+                      (cl:declare (cl:ignorable th1 tm1 pconvs1))
+                      (handler-case
+                        (TRANS
+                          th1
+                          (IMP_REWRITES_CONV #'REDEPTH_SQCONV% ss lev pconvs1 tm1))
+                        (holai.runtime:ocaml-condition
+                          (exception~1423)
+                          (match exception~1423
+                            ((Failure _) th1)
+                            (_ (raise exception~1423))))))
+                    (holai.runtime:ocaml-condition
+                      (exception~1399)
+                      (match exception~1399
+                        ((Failure _)
+                          (IMP_REWRITES_CONV #'REDEPTH_SQCONV% ss lev pconvs tm))
+                        (_ (raise exception~1399)))))))
+              (cl:declare (cl:ignorable pconvs th))
+              (handler-case
+                (let ((th% (REDEPTH_SQCONV% ss lev (rand (concl th)))))
+                  (cl:declare (cl:ignorable th%))
+                  (TRANS th th%))
+                (holai.runtime:ocaml-condition
+                  (exception~1440)
+                  (match exception~1440 ((Failure _) th) (_ (raise exception~1440)))))))))
+      (:recursive 6 TOP_DEPTH_SQCONV% (arg~1466 lev tm)
+        (match arg~1466
+          ((cl:and ss (Simpset net prover% provers rewmaker))
+            (let*
+              ((pconvs (#`lookup tm net))
+                (th1
+                  (handler-case
+                    (IMP_REWRITES_CONV #'TOP_DEPTH_SQCONV% ss lev pconvs tm)
+                    (holai.runtime:ocaml-condition
+                      (exception~1480)
+                      (match exception~1480
+                        ((Failure _) (GEN_SUB_CONV #'TOP_DEPTH_SQCONV% ss lev pconvs tm))
+                        (_ (raise exception~1480)))))))
+              (cl:declare (cl:ignorable pconvs th1))
+              (handler-case
+                (let ((th2 (TOP_DEPTH_SQCONV% ss lev (rand (concl th1)))))
+                  (cl:declare (cl:ignorable th2))
+                  (TRANS th1 th2))
+                (holai.runtime:ocaml-condition
+                  (exception~1496)
+                  (match exception~1496 ((Failure _) th1) (_ (raise exception~1496)))))))))
+      (:recursive 7 TOP_SWEEP_SQCONV% (arg~1522 lev tm)
+        (match arg~1522
+          ((cl:and ss (Simpset net prover% provers rewmaker))
+            (let ((pconvs (#`lookup tm net)))
+              (cl:declare (cl:ignorable pconvs))
+              (handler-case
+                (let ((th1 (IMP_REWRITES_CONV #'TOP_SWEEP_SQCONV% ss lev pconvs tm)))
+                  (cl:declare (cl:ignorable th1))
+                  (handler-case
+                    (let ((th2 (TOP_SWEEP_SQCONV% ss lev (rand (concl th1)))))
+                      (cl:declare (cl:ignorable th2))
+                      (TRANS th1 th2))
+                    (holai.runtime:ocaml-condition
+                      (exception~1551)
+                      (match exception~1551 ((Failure _) th1) (_ (raise exception~1551))))))
+                (holai.runtime:ocaml-condition
+                  (exception~1535)
+                  (match exception~1535
+                    ((Failure _) (GEN_SUB_CONV #'TOP_SWEEP_SQCONV% ss lev pconvs tm))
+                    (_ (raise exception~1535))))))))))
+    (tuple
+      #'ONCE_DEPTH_SQCONV%
+      #'DEPTH_SQCONV%
+      #'REDEPTH_SQCONV%
+      #'TOP_DEPTH_SQCONV%
+      #'TOP_SWEEP_SQCONV%))
   ((tuple
     ONCE_DEPTH_SQCONV%
     DEPTH_SQCONV%
@@ -1221,9 +1165,8 @@
 (match
   (let ((rewrites (ref nil)) (conversions (ref nil)) (conv_net (ref empty_net)))
     (cl:declare (cl:ignorable rewrites conversions conv_net))
-    (fletc
-      ((rehash_convnet
-        (arg~1634)
+    (holai.runtime:labelsc
+      ((:nonrecursive 0 rehash_convnet (arg~1634)
         (match arg~1634
           ((cl:type holai.runtime::unit-value)
             (assign
@@ -1235,54 +1178,46 @@
                   (lambdac (arg~1640)
                     (match arg~1640 ((tuple _ (tuple pat cnv)) (net_of_conv pat cnv))))
                   (deref conversions)
-                  empty_net)))))))
-      (fletc
-        ((set_basic_rewrites%
-          (thl)
-          (let ((canon_thl (itlist (funcall mk_rewrites cl:nil) thl nil)))
+                  empty_net))))))
+        (:nonrecursive 1 set_basic_rewrites% (thl)
+          (let ((canon_thl (itlist (#`mk_rewrites cl:nil) thl nil)))
             (cl:declare (cl:ignorable canon_thl))
             (progn (assign rewrites canon_thl) (rehash_convnet unit))))
-          (extend_basic_rewrites%
-            (thl)
-            (let ((canon_thl (itlist (funcall mk_rewrites cl:nil) thl nil)))
-              (cl:declare (cl:ignorable canon_thl))
+        (:nonrecursive 1 extend_basic_rewrites% (thl)
+          (let ((canon_thl (itlist (#`mk_rewrites cl:nil) thl nil)))
+            (cl:declare (cl:ignorable canon_thl))
+            (progn
+              (assign rewrites (append canon_thl (deref rewrites)))
+              (rehash_convnet unit))))
+        (:nonrecursive 1 basic_rewrites% (arg~1699)
+          (match arg~1699 ((cl:type holai.runtime::unit-value) (deref rewrites))))
+        (:nonrecursive 1 set_basic_convs% (cnvs)
+          (progn (assign conversions cnvs) (rehash_convnet unit)))
+        (:nonrecursive 1 extend_basic_convs% (arg~1711)
+          (match arg~1711
+            ((tuple name patcong)
               (progn
-                (assign rewrites (append canon_thl (deref rewrites)))
-                (rehash_convnet unit))))
-          (basic_rewrites%
-            (arg~1699)
-            (match arg~1699 ((cl:type holai.runtime::unit-value) (deref rewrites))))
-          (set_basic_convs%
-            (cnvs)
-            (progn (assign conversions cnvs) (rehash_convnet unit)))
-          (extend_basic_convs%
-            (arg~1711)
-            (match arg~1711
-              ((tuple name patcong)
-                (progn
-                  (assign
-                    conversions
-                    (cl:cons
-                      (tuple name patcong)
-                      (filter
-                        (lambdac (arg~1718)
-                          (match arg~1718 ((tuple name% _) (<> name name%))))
-                        (deref conversions))))
-                  (rehash_convnet unit)))))
-          (basic_convs%
-            (arg~1740)
-            (match arg~1740 ((cl:type holai.runtime::unit-value) (deref conversions))))
-          (basic_net%
-            (arg~1745)
-            (match arg~1745 ((cl:type holai.runtime::unit-value) (deref conv_net)))))
-        (tuple
-          #'set_basic_rewrites%
-          #'extend_basic_rewrites%
-          #'basic_rewrites%
-          #'set_basic_convs%
-          #'extend_basic_convs%
-          #'basic_convs%
-          #'basic_net%))))
+                (assign
+                  conversions
+                  (cl:cons
+                    (tuple name patcong)
+                    (filter
+                      (lambdac (arg~1718)
+                        (match arg~1718 ((tuple name% _) (<> name name%))))
+                      (deref conversions))))
+                (rehash_convnet unit)))))
+        (:nonrecursive 1 basic_convs% (arg~1740)
+          (match arg~1740 ((cl:type holai.runtime::unit-value) (deref conversions))))
+        (:nonrecursive 1 basic_net% (arg~1745)
+          (match arg~1745 ((cl:type holai.runtime::unit-value) (deref conv_net)))))
+      (tuple
+        #'set_basic_rewrites%
+        #'extend_basic_rewrites%
+        #'basic_rewrites%
+        #'set_basic_convs%
+        #'extend_basic_convs%
+        #'basic_convs%
+        #'basic_net%)))
   ((tuple
     set_basic_rewrites%
     extend_basic_rewrites%
@@ -1342,23 +1277,23 @@
 
 (defunc GENERAL_REWRITE_CONV (rep cnvl builtin_net thl)
   (let*
-    ((thl_canon (itlist (funcall mk_rewrites cl:nil) thl nil))
+    ((thl_canon (itlist (#`mk_rewrites cl:nil) thl nil))
       (final_net (itlist (net_of_thm rep) thl_canon builtin_net)))
     (cl:declare (cl:ignorable thl_canon final_net))
-    (funcall cnvl (REWRITES_CONV final_net))))
+    (#`cnvl (REWRITES_CONV final_net))))
 
 (defunc GEN_REWRITE_CONV (cnvl thl) (GENERAL_REWRITE_CONV cl:nil cnvl empty_net thl))
 
 (defunc PURE_REWRITE_CONV (thl) (GENERAL_REWRITE_CONV cl:t TOP_DEPTH_CONV empty_net thl))
 
 (defunc REWRITE_CONV (thl)
-  (GENERAL_REWRITE_CONV cl:t TOP_DEPTH_CONV (funcall basic_net unit) thl))
+  (GENERAL_REWRITE_CONV cl:t TOP_DEPTH_CONV (#`basic_net unit) thl))
 
 (defunc PURE_ONCE_REWRITE_CONV (thl)
   (GENERAL_REWRITE_CONV cl:nil ONCE_DEPTH_CONV empty_net thl))
 
 (defunc ONCE_REWRITE_CONV (thl)
-  (GENERAL_REWRITE_CONV cl:nil ONCE_DEPTH_CONV (funcall basic_net unit) thl))
+  (GENERAL_REWRITE_CONV cl:nil ONCE_DEPTH_CONV (#`basic_net unit) thl))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Rewriting rules and tactics.                                              *)
@@ -1386,15 +1321,15 @@
 (defunc ONCE_ASM_REWRITE_RULE (thl th)
   (ONCE_REWRITE_RULE (append (map #'ASSUME (hyp th)) thl) th))
 
-(defunc GEN_REWRITE_TAC (cnvl thl) (funcall CONV_TAC (GEN_REWRITE_CONV cnvl thl)))
+(defunc GEN_REWRITE_TAC (cnvl thl) (#`CONV_TAC (GEN_REWRITE_CONV cnvl thl)))
 
-(defunc PURE_REWRITE_TAC (thl) (funcall CONV_TAC (PURE_REWRITE_CONV thl)))
+(defunc PURE_REWRITE_TAC (thl) (#`CONV_TAC (PURE_REWRITE_CONV thl)))
 
-(defunc REWRITE_TAC (thl) (funcall CONV_TAC (REWRITE_CONV thl)))
+(defunc REWRITE_TAC (thl) (#`CONV_TAC (REWRITE_CONV thl)))
 
-(defunc PURE_ONCE_REWRITE_TAC (thl) (funcall CONV_TAC (PURE_ONCE_REWRITE_CONV thl)))
+(defunc PURE_ONCE_REWRITE_TAC (thl) (#`CONV_TAC (PURE_ONCE_REWRITE_CONV thl)))
 
-(defunc ONCE_REWRITE_TAC (thl) (funcall CONV_TAC (ONCE_REWRITE_CONV thl)))
+(defunc ONCE_REWRITE_TAC (thl) (#`CONV_TAC (ONCE_REWRITE_CONV thl)))
 
 (defparameter PURE_ASM_REWRITE_TAC (ASM #'PURE_REWRITE_TAC))
 
@@ -1412,7 +1347,7 @@
 (defunc GEN_SIMPLIFY_CONV (strat ss lev thl)
   (let ((ss% (itlist #'AUGMENT_SIMPSET thl ss)))
     (cl:declare (cl:ignorable ss%))
-    (TRY_CONV (funcall strat ss% lev))))
+    (TRY_CONV (#`strat ss% lev))))
 
 (defunc ONCE_SIMPLIFY_CONV (ss) (GEN_SIMPLIFY_CONV ONCE_DEPTH_SQCONV ss 1))
 
@@ -1423,25 +1358,24 @@
 ;; (* ------------------------------------------------------------------------- *)
 
 
-(defparameter empty_ss
-  (make-Simpset empty_net #'basic_prover nil (funcall mk_rewrites cl:t)))
+(defparameter empty_ss (make-Simpset empty_net #'basic_prover nil (#`mk_rewrites cl:t)))
 
 (defparameter basic_ss
-  (let ((rewmaker (funcall mk_rewrites cl:t)))
+  (let ((rewmaker (#`mk_rewrites cl:t)))
     (cl:declare (cl:ignorable rewmaker))
     (lambdac (thl)
       (let*
         ((cthms (itlist rewmaker thl nil))
-          (net% (itlist (net_of_thm cl:t) cthms (funcall basic_net unit)))
-          (net%% (itlist #'net_of_cong (funcall basic_congs unit) net%)))
+          (net% (itlist (net_of_thm cl:t) cthms (#`basic_net unit)))
+          (net%% (itlist #'net_of_cong (#`basic_congs unit) net%)))
         (cl:declare (cl:ignorable cthms net% net%%))
         (make-Simpset net%% #'basic_prover nil rewmaker)))))
 
-(defunc SIMP_CONV (thl) (SIMPLIFY_CONV (funcall basic_ss nil) thl))
+(defunc SIMP_CONV (thl) (SIMPLIFY_CONV (#`basic_ss nil) thl))
 
 (defunc PURE_SIMP_CONV (thl) (SIMPLIFY_CONV empty_ss thl))
 
-(defunc ONCE_SIMP_CONV (thl) (ONCE_SIMPLIFY_CONV (funcall basic_ss nil) thl))
+(defunc ONCE_SIMP_CONV (thl) (ONCE_SIMPLIFY_CONV (#`basic_ss nil) thl))
 
 (defunc SIMP_RULE (thl) (CONV_RULE (SIMP_CONV thl)))
 
@@ -1449,11 +1383,11 @@
 
 (defunc ONCE_SIMP_RULE (thl) (CONV_RULE (ONCE_SIMP_CONV thl)))
 
-(defunc SIMP_TAC (thl) (funcall CONV_TAC (SIMP_CONV thl)))
+(defunc SIMP_TAC (thl) (#`CONV_TAC (SIMP_CONV thl)))
 
-(defunc PURE_SIMP_TAC (thl) (funcall CONV_TAC (PURE_SIMP_CONV thl)))
+(defunc PURE_SIMP_TAC (thl) (#`CONV_TAC (PURE_SIMP_CONV thl)))
 
-(defunc ONCE_SIMP_TAC (thl) (funcall CONV_TAC (ONCE_SIMP_CONV thl)))
+(defunc ONCE_SIMP_TAC (thl) (#`CONV_TAC (ONCE_SIMP_CONV thl)))
 
 (defparameter ASM_SIMP_TAC (ASM #'SIMP_TAC))
 
@@ -1469,22 +1403,19 @@
 (defunc ABBREV_TAC (tm)
   (match (dest_eq tm)
     ((tuple cvs t%)
-      (match (funcall strip_comb cvs)
+      (match (#`strip_comb cvs)
         ((tuple v vs)
           (let*
             ((rs (list_mk_abs (tuple vs t%)))
-              (eq (funcall mk_eq (tuple rs v)))
+              (eq (#`mk_eq (tuple rs v)))
               (th1
                 (itlist
-                  (lambdac (v% th)
-                    (CONV_RULE (funcall LAND_CONV #'BETA_CONV) (AP_THM th v%)))
-                  (funcall rev vs)
+                  (lambdac (v% th) (CONV_RULE (#`LAND_CONV #'BETA_CONV) (AP_THM th v%)))
+                  (#`rev vs)
                   (ASSUME eq)))
-              (th2 (SIMPLE_CHOOSE v (SIMPLE_EXISTS v (funcall GENL vs th1))))
+              (th2 (SIMPLE_CHOOSE v (SIMPLE_EXISTS v (#`GENL vs th1))))
               (th3
-                (PROVE_HYP
-                  (funcall EXISTS (tuple (funcall mk_exists (tuple v eq)) rs) (REFL rs))
-                  th2)))
+                (PROVE_HYP (#`EXISTS (tuple (#`mk_exists (tuple v eq)) rs) (REFL rs)) th2)))
             (cl:declare (cl:ignorable rs eq th1 th2 th3))
             (lambdac (arg~2187)
               (match arg~2187
@@ -1503,7 +1434,7 @@
                           (holai.runtime:proof (RULE_ASSUM_TAC
                               (PURE_ONCE_REWRITE_RULE (cl:cons th nil)))
                             THEN (PURE_ONCE_REWRITE_TAC (cl:cons th nil))
-                            THEN (funcall ASSUME_TAC th)))
+                            THEN (#`ASSUME_TAC th)))
                         th3
                         gl))))))))))))
 

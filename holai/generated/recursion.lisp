@@ -123,7 +123,6 @@
     lambdac
     ignore-value
     function-value
-    funcall
     fst
     fletc
     Failure
@@ -144,20 +143,19 @@
 
 
 (defparameter prove_recursive_functions_exist
-  (fletc
-    ((prove_raw_recursive_functions_exist
-      (ax tm)
+  (holai.runtime:labelsc
+    ((:nonrecursive 0 prove_raw_recursive_functions_exist (ax tm)
       (let*
-        ((rawcls (funcall conjuncts tm))
+        ((rawcls (#`conjuncts tm))
           (spcls (map (o (function-value #'snd 1) strip_forall) rawcls))
           (lpats (map (o strip_comb lhand) spcls))
           (ufns (itlist (o #'insert (function-value #'fst 1)) lpats nil))
           (axth (SPEC_ALL ax)))
         (cl:declare (cl:ignorable rawcls spcls lpats ufns axth))
-        (match (funcall strip_exists (concl axth))
+        (match (#`strip_exists (concl axth))
           ((tuple exvs axbody)
             (let*
-              ((axcls (funcall conjuncts axbody))
+              ((axcls (#`conjuncts axbody))
                 (f
                   (o
                     (o
@@ -168,7 +166,7 @@
                         lhand)
                       (function-value #'snd 1))
                     strip_forall))
-                (findax (C #'assoc (map (lambdac (t%) (tuple (funcall f t%) t%)) axcls)))
+                (findax (C #'assoc (map (lambdac (t%) (tuple (#`f t%) t%)) axcls)))
                 (raxs
                   (map
                     (o
@@ -193,31 +191,28 @@
                         (setify (zip axfns (map (function-value #'fst 1) lpats)))
                         v))
                     exvs))
-                (axtm (list_mk_exists (tuple exvs (funcall list_mk_conj raxs))))
+                (axtm (list_mk_exists (tuple exvs (#`list_mk_conj raxs))))
                 (urtm (list_mk_exists (tuple urfns tm))))
               (cl:declare (cl:ignorable axcls f findax raxs axfns urfns axtm urtm))
               (let*
-                ((insts (funcall term_match nil axtm urtm))
-                  (ixth (funcall INSTANTIATE% insts axth)))
+                ((insts (#`term_match nil axtm urtm)) (ixth (#`INSTANTIATE% insts axth)))
                 (cl:declare (cl:ignorable insts ixth))
-                (match (funcall strip_exists (concl ixth))
+                (match (#`strip_exists (concl ixth))
                   ((tuple ixvs ixbody)
                     (let*
-                      ((ixtm (funcall subst (zip urfns ixvs) ixbody))
-                        (ixths (funcall holai.bool:CONJUNCTS (ASSUME ixtm)))
+                      ((ixtm (#`subst (zip urfns ixvs) ixbody))
+                        (ixths (#`holai.bool:CONJUNCTS (ASSUME ixtm)))
                         (rixths
                           (map (lambdac (t%) (find (o (aconv t%) #'concl) ixths)) rawcls))
                         (rixth (itlist #'SIMPLE_EXISTS ufns (end_itlist CONJ rixths))))
                       (cl:declare (cl:ignorable ixtm ixths rixths rixth))
-                      (PROVE_HYP ixth (itlist #'SIMPLE_CHOOSE urfns rixth))))))))))))
-    (fletc
-      ((canonize
-        (t%)
-        (match (funcall strip_forall t%)
+                      (PROVE_HYP ixth (itlist #'SIMPLE_CHOOSE urfns rixth)))))))))))
+      (:nonrecursive 1 canonize (t%)
+        (match (#`strip_forall t%)
           ((tuple avs bod)
             (match (dest_eq bod)
               ((tuple l r%)
-                (match (funcall strip_comb l)
+                (match (#`strip_comb l)
                   ((tuple fn args)
                     (let ((rarg (hd args)) (vargs (tl args)))
                       (cl:declare (cl:ignorable rarg vargs))
@@ -229,76 +224,63 @@
                           ((fvs (frees rarg))
                             (def
                               (ASSUME
-                                (list_mk_forall
-                                  (tuple fvs (funcall mk_eq (tuple l% r%%)))))))
+                                (list_mk_forall (tuple fvs (#`mk_eq (tuple l% r%%)))))))
                           (cl:declare (cl:ignorable fvs def))
-                          (funcall GENL avs (funcall RIGHT_BETAS vargs (SPECL fvs def))))))))))))))
-      (fletc
-        ((prove_canon_recursive_functions_exist
-          (ax tm)
-          (let*
-            ((ths (map #'canonize (funcall conjuncts tm)))
-              (atm (funcall list_mk_conj (map (o #'hd #'hyp) ths)))
-              (aths (funcall holai.bool:CONJUNCTS (ASSUME atm)))
-              (rth (end_itlist CONJ (map2 #'PROVE_HYP aths ths)))
-              (eth (prove_raw_recursive_functions_exist ax atm))
-              (evs (fst (funcall strip_exists (concl eth)))))
-            (cl:declare (cl:ignorable ths atm aths rth eth evs))
-            (PROVE_HYP eth (itlist #'SIMPLE_CHOOSE evs (itlist #'SIMPLE_EXISTS evs rth))))))
-        (fletc
-          ((reshuffle
-            (fn args acc)
-            (let
-              ((args% (uncurry (C (function-value #'append 2)) (partition #'is_var args))))
-              (cl:declare (cl:ignorable args%))
-              (if (= args args%)
-                acc
-                (let*
-                  ((gvs (map (o genvar #'type_of) args))
-                    (gvs% (map (C #'assoc (zip args gvs)) args%))
-                    (lty
-                      (itlist
-                        (o #'mk_fun_ty #'type_of)
-                        gvs%
-                        (funpow
-                          (funcall length gvs)
-                          (o (o (o #'hd #'tl) (function-value #'snd 1)) #'dest_type)
-                          (type_of fn))))
-                    (fn% (funcall genvar lty))
-                    (def
-                      (funcall
-                        mk_eq
-                        (tuple
-                          fn
-                          (list_mk_abs (tuple gvs (list_mk_comb (tuple fn% gvs%))))))))
-                  (cl:declare (cl:ignorable gvs gvs% lty fn% def))
-                  (cl:cons (ASSUME def) acc)))))
-            (scrub_def
-              (t% th)
-              (match (dest_eq t%)
-                ((tuple l r%)
-                  (funcall
-                    MP
-                    (INST% (cl:cons (tuple r% l) nil) (funcall DISCH t% th))
-                    (REFL r%))))))
-          (lambdac (ax tm)
+                          (#`GENL avs (#`RIGHT_BETAS vargs (SPECL fvs def)))))))))))))
+      (:nonrecursive 2 prove_canon_recursive_functions_exist (ax tm)
+        (let*
+          ((ths (map #'canonize (#`conjuncts tm)))
+            (atm (#`list_mk_conj (map (o #'hd #'hyp) ths)))
+            (aths (#`holai.bool:CONJUNCTS (ASSUME atm)))
+            (rth (end_itlist CONJ (map2 #'PROVE_HYP aths ths)))
+            (eth (prove_raw_recursive_functions_exist ax atm))
+            (evs (fst (#`strip_exists (concl eth)))))
+          (cl:declare (cl:ignorable ths atm aths rth eth evs))
+          (PROVE_HYP eth (itlist #'SIMPLE_CHOOSE evs (itlist #'SIMPLE_EXISTS evs rth)))))
+      (:nonrecursive 3 reshuffle (fn args acc)
+        (let ((args% (uncurry (C (function-value #'append 2)) (partition #'is_var args))))
+          (cl:declare (cl:ignorable args%))
+          (if (= args args%)
+            acc
             (let*
-              ((rawcls (funcall conjuncts tm))
-                (spcls (map (o (function-value #'snd 1) strip_forall) rawcls))
-                (lpats (map (o strip_comb lhand) spcls))
-                (ufns (itlist (o #'insert (function-value #'fst 1)) lpats nil))
-                (uxargs (map (C #'assoc lpats) ufns))
-                (trths (itlist2 #'reshuffle ufns uxargs nil))
-                (tth (GEN_REWRITE_CONV REDEPTH_CONV (cl:cons BETA_THM trths) tm))
-                (eth (prove_canon_recursive_functions_exist ax (rand (concl tth)))))
-              (cl:declare (cl:ignorable rawcls spcls lpats ufns uxargs trths tth eth))
-              (match (funcall strip_exists (concl eth))
-                ((tuple evs ebod)
-                  (let*
-                    ((fth (itlist #'SIMPLE_EXISTS ufns (EQ_MP (SYM tth) (ASSUME ebod))))
-                      (gth (itlist #'scrub_def (map #'concl trths) fth)))
-                    (cl:declare (cl:ignorable fth gth))
-                    (PROVE_HYP eth (itlist #'SIMPLE_CHOOSE evs gth))))))))))))
+              ((gvs (map (o genvar #'type_of) args))
+                (gvs% (map (C #'assoc (zip args gvs)) args%))
+                (lty
+                  (itlist
+                    (o #'mk_fun_ty #'type_of)
+                    gvs%
+                    (funpow
+                      (#`length gvs)
+                      (o (o (o #'hd #'tl) (function-value #'snd 1)) #'dest_type)
+                      (type_of fn))))
+                (fn% (#`genvar lty))
+                (def
+                  (#`mk_eq
+                    (tuple fn (list_mk_abs (tuple gvs (list_mk_comb (tuple fn% gvs%))))))))
+              (cl:declare (cl:ignorable gvs gvs% lty fn% def))
+              (cl:cons (ASSUME def) acc)))))
+      (:nonrecursive 3 scrub_def (t% th)
+        (match (dest_eq t%)
+          ((tuple l r%)
+            (#`MP (INST% (cl:cons (tuple r% l) nil) (#`DISCH t% th)) (REFL r%))))))
+    (lambdac (ax tm)
+      (let*
+        ((rawcls (#`conjuncts tm))
+          (spcls (map (o (function-value #'snd 1) strip_forall) rawcls))
+          (lpats (map (o strip_comb lhand) spcls))
+          (ufns (itlist (o #'insert (function-value #'fst 1)) lpats nil))
+          (uxargs (map (C #'assoc lpats) ufns))
+          (trths (itlist2 #'reshuffle ufns uxargs nil))
+          (tth (GEN_REWRITE_CONV REDEPTH_CONV (cl:cons BETA_THM trths) tm))
+          (eth (prove_canon_recursive_functions_exist ax (rand (concl tth)))))
+        (cl:declare (cl:ignorable rawcls spcls lpats ufns uxargs trths tth eth))
+        (match (#`strip_exists (concl eth))
+          ((tuple evs ebod)
+            (let*
+              ((fth (itlist #'SIMPLE_EXISTS ufns (EQ_MP (SYM tth) (ASSUME ebod))))
+                (gth (itlist #'scrub_def (map #'concl trths) fth)))
+              (cl:declare (cl:ignorable fth gth))
+              (PROVE_HYP eth (itlist #'SIMPLE_CHOOSE evs gth)))))))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Version that defines function(s).                                         *)
@@ -311,9 +293,9 @@
     (fletc
       ((find_redefinition
         (tm th)
-        (let ((th% (funcall PART_MATCH #'I th tm)))
+        (let ((th% (#`PART_MATCH #'I th tm)))
           (cl:declare (cl:ignorable th%))
-          (progn (ignore-value (funcall PART_MATCH #'I th% (concl th))) th%))))
+          (progn (ignore-value (#`PART_MATCH #'I th% (concl th))) th%))))
       (lambdac (ax tm)
         (handler-case
           (let ((th (tryfind (find_redefinition tm) (deref the_recursive_definitions))))
@@ -324,27 +306,22 @@
             (match exception~518
               ((Failure _)
                 (let*
-                  ((rawcls (funcall conjuncts tm))
+                  ((rawcls (#`conjuncts tm))
                     (spcls (map (o (function-value #'snd 1) strip_forall) rawcls))
                     (lpats (map (o strip_comb lhand) spcls))
                     (ufns (itlist (o #'insert (function-value #'fst 1)) lpats nil))
                     (fvs (map (lambdac (t%) (subtract (frees t%) ufns)) rawcls))
                     (gcls (map2 (curry #'list_mk_forall) fvs rawcls))
-                    (eth
-                      (funcall
-                        prove_recursive_functions_exist
-                        ax
-                        (funcall list_mk_conj gcls))))
+                    (eth (#`prove_recursive_functions_exist ax (#`list_mk_conj gcls))))
                   (cl:declare (cl:ignorable rawcls spcls lpats ufns fvs gcls eth))
-                  (match (funcall strip_exists (concl eth))
+                  (match (#`strip_exists (concl eth))
                     ((tuple evs bod)
                       (let*
                         ((dth
-                          (funcall
-                            new_specification
+                          (#`new_specification
                             (map (o (function-value #'fst 1) #'dest_var) evs)
                             eth))
-                          (dths (map2 #'SPECL fvs (funcall holai.bool:CONJUNCTS dth)))
+                          (dths (map2 #'SPECL fvs (#`holai.bool:CONJUNCTS dth)))
                           (th (end_itlist CONJ dths)))
                         (cl:declare (cl:ignorable dth dths th))
                         (progn

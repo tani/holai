@@ -347,7 +347,6 @@
     int-of-string
     guard
     function-value
-    funcall
     fst
     fletc
     failwith
@@ -502,7 +501,7 @@
     (tuple
       (parse_term "!x:A. (x = x) <=> T")
       (holai.runtime:proof #'GEN_TAC
-        THEN (funcall MATCH_ACCEPT_TAC (funcall EQT_INTRO (SPEC_ALL EQ_REFL)))))))
+        THEN (#`MATCH_ACCEPT_TAC (#`EQT_INTRO (SPEC_ALL EQ_REFL)))))))
 
 (defparameter EQ_SYM
   (prove
@@ -516,14 +515,14 @@
       (parse_term "!(x:A) y. (x = y) <=> (y = x)")
       (holai.runtime:proof (REPEAT #'GEN_TAC)
         THEN #'EQ_TAC
-        THEN (funcall MATCH_ACCEPT_TAC EQ_SYM)))))
+        THEN (#`MATCH_ACCEPT_TAC EQ_SYM)))))
 
 (defparameter EQ_TRANS
   (prove
     (tuple
       (parse_term "!(x:A) y z. (x = y) /\\ (y = z) ==> (x = z)")
       (holai.runtime:proof (REPEAT #'STRIP_TAC)
-        THEN (funcall PURE_ASM_REWRITE_TAC nil)
+        THEN (#`PURE_ASM_REWRITE_TAC nil)
         THEN #'REFL_TAC))))
 
 ;; (* ------------------------------------------------------------------------- *)
@@ -596,7 +595,7 @@
 (defparameter IMP_CONJ
   (prove (tuple (parse_term "p /\\ q ==> r <=> p ==> q ==> r") ITAUT_TAC)))
 
-(defparameter IMP_IMP (funcall GSYM IMP_CONJ))
+(defparameter IMP_IMP (#`GSYM IMP_CONJ))
 
 (defparameter IMP_CONJ_ALT
   (prove (tuple (parse_term "p /\\ q ==> r <=> q ==> p ==> r") ITAUT_TAC)))
@@ -668,8 +667,7 @@
        (t ==> t <=> T) /\\ (t ==> F <=> ~t)")
       ITAUT_TAC)))
 
-(funcall
-  extend_basic_rewrites
+(#`extend_basic_rewrites
   (cl:cons
     REFL_CLAUSE
     (cl:cons
@@ -696,14 +694,13 @@
                               (parse_term "((x = x) ==> p) <=> p")
                               (REWRITE_TAC
                                 (cl:cons
-                                  (funcall EQT_INTRO (SPEC_ALL EQ_REFL))
+                                  (#`EQT_INTRO (SPEC_ALL EQ_REFL))
                                   (cl:cons IMP_CLAUSES nil)))))))
                         (cl:declare (cl:ignorable IMP_EQ_CLAUSE))
                         IMP_EQ_CLAUSE)
                       nil)))))))))))
 
-(funcall
-  extend_basic_congs
+(#`extend_basic_congs
   (cl:cons
     (ITAUT (parse_term "(p <=> p') ==> (p' ==> (q <=> q')) ==> (p ==> q <=> p' ==> q')"))
     nil))
@@ -729,7 +726,7 @@
     (tuple
       (parse_term "!a:A. ?x. x = a")
       (holai.runtime:proof #'GEN_TAC
-        THEN (funcall EXISTS_TAC (parse_term "a:A"))
+        THEN (#`EXISTS_TAC (parse_term "a:A"))
         THEN #'REFL_TAC))))
 
 (defparameter EXISTS_UNIQUE_REFL
@@ -741,8 +738,8 @@
         THEN (REPEAT (holai.runtime:proof #'EQ_TAC #'ORELSE #'STRIP_TAC))
         THENL
           (cl:cons
-            (funcall EXISTS_TAC (parse_term "a:A"))
-            (cl:cons (funcall ASM_REWRITE_TAC nil) nil))
+            (#`EXISTS_TAC (parse_term "a:A"))
+            (cl:cons (#`ASM_REWRITE_TAC nil) nil))
         THEN #'REFL_TAC))))
 
 ;; (* ------------------------------------------------------------------------- *)
@@ -761,7 +758,7 @@
             (DISCH_THEN (CHOOSE_THEN (CONJUNCTS_THEN2 #'SUBST1_TAC ACCEPT_TAC)))
             (cl:cons
               (holai.runtime:proof DISCH_TAC
-                THEN (funcall EXISTS_TAC (parse_term "a:A"))
+                THEN (#`EXISTS_TAC (parse_term "a:A"))
                 THEN #'CONJ_TAC
                 THEN (TRY (FIRST_ASSUM MATCH_ACCEPT_TAC))
                 THEN #'REFL_TAC)
@@ -772,8 +769,8 @@
     (tuple
       (parse_term "!P (a:A). (?x. x = a /\\ P x) <=> P a")
       (holai.runtime:proof (REPEAT #'GEN_TAC)
-        THEN (funcall CONV_TAC (funcall LAND_CONV (funcall ONCE_DEPTH_CONV #'SYM_CONV)))
-        THEN (funcall MATCH_ACCEPT_TAC UNWIND_THM1)))))
+        THEN (#`CONV_TAC (#`LAND_CONV (#`ONCE_DEPTH_CONV #'SYM_CONV)))
+        THEN (#`MATCH_ACCEPT_TAC UNWIND_THM1)))))
 
 (defparameter FORALL_UNWIND_THM2
   (prove
@@ -783,14 +780,13 @@
         THEN #'EQ_TAC
         THENL
           (cl:cons
-            (holai.runtime:proof (DISCH_THEN
-                (o #'MP_TAC (funcall SPEC (parse_term "a:A"))))
+            (holai.runtime:proof (DISCH_THEN (o #'MP_TAC (#`SPEC (parse_term "a:A"))))
               THEN (REWRITE_TAC nil))
             (cl:cons
               (holai.runtime:proof DISCH_TAC
                 THEN #'GEN_TAC
                 THEN (DISCH_THEN #'SUBST1_TAC)
-                THEN (funcall ASM_REWRITE_TAC nil))
+                THEN (#`ASM_REWRITE_TAC nil))
               nil))))))
 
 (defparameter FORALL_UNWIND_THM1
@@ -798,8 +794,8 @@
     (tuple
       (parse_term "!P (a:A). (!x. a = x ==> P x) <=> P a")
       (holai.runtime:proof (REPEAT #'GEN_TAC)
-        THEN (funcall CONV_TAC (funcall LAND_CONV (funcall ONCE_DEPTH_CONV #'SYM_CONV)))
-        THEN (funcall MATCH_ACCEPT_TAC FORALL_UNWIND_THM2)))))
+        THEN (#`CONV_TAC (#`LAND_CONV (#`ONCE_DEPTH_CONV #'SYM_CONV)))
+        THEN (#`MATCH_ACCEPT_TAC FORALL_UNWIND_THM2)))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Permuting quantifiers.                                                    *)
@@ -935,17 +931,17 @@
       (parse_term "(!x:A. P x ==> Q x) ==> ((!x. P x) ==> (!x. Q x))")
       (holai.runtime:proof (REPEAT #'STRIP_TAC)
         THEN (FIRST_ASSUM #'MATCH_MP_TAC)
-        THEN (funcall ASM_REWRITE_TAC nil)))))
+        THEN (#`ASM_REWRITE_TAC nil)))))
 
 (defparameter MONO_EXISTS
   (prove
     (tuple
       (parse_term "(!x:A. P x ==> Q x) ==> ((?x. P x) ==> (?x. Q x))")
       (holai.runtime:proof DISCH_TAC
-        THEN (DISCH_THEN (funcall X_CHOOSE_TAC (parse_term "x:A")))
-        THEN (funcall EXISTS_TAC (parse_term "x:A"))
+        THEN (DISCH_THEN (#`X_CHOOSE_TAC (parse_term "x:A")))
+        THEN (#`EXISTS_TAC (parse_term "x:A"))
         THEN (FIRST_ASSUM #'MATCH_MP_TAC)
-        THEN (funcall ASM_REWRITE_TAC nil)))))
+        THEN (#`ASM_REWRITE_TAC nil)))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* A generic "without loss of generality" lemma for symmetry.                *)
@@ -965,7 +961,7 @@
           (DISCH_THEN (CONJUNCTS_THEN2 ASSUME_TAC (CONJUNCTS_THEN2 #'MP_TAC ASSUME_TAC)))
         THEN (REPEAT (holai.runtime:proof (MATCH_MP_TAC MONO_FORALL) THEN #'GEN_TAC))
         THEN #'STRIP_TAC
-        THEN (funcall ASM_SIMP_TAC nil)))))
+        THEN (#`ASM_SIMP_TAC nil)))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Alternative versions of unique existence.                                 *)
@@ -982,24 +978,24 @@
         THENL
           (cl:cons
             (holai.runtime:proof (DISCH_THEN
-                (CONJUNCTS_THEN2 (funcall X_CHOOSE_TAC (parse_term "x:A")) ASSUME_TAC))
-              THEN (funcall EXISTS_TAC (parse_term "x:A"))
+                (CONJUNCTS_THEN2 (#`X_CHOOSE_TAC (parse_term "x:A")) ASSUME_TAC))
+              THEN (#`EXISTS_TAC (parse_term "x:A"))
               THEN #'GEN_TAC
               THEN #'EQ_TAC
               THENL
                 (cl:cons
                   (holai.runtime:proof DISCH_TAC
                     THEN (FIRST_ASSUM #'MATCH_MP_TAC)
-                    THEN (funcall ASM_REWRITE_TAC nil))
+                    THEN (#`ASM_REWRITE_TAC nil))
                   (cl:cons
                     (holai.runtime:proof (DISCH_THEN (o #'SUBST1_TAC #'SYM))
                       THEN (FIRST_ASSUM MATCH_ACCEPT_TAC))
                     nil)))
             (cl:cons
-              (holai.runtime:proof (DISCH_THEN (funcall X_CHOOSE_TAC (parse_term "x:A")))
-                THEN (funcall ASM_REWRITE_TAC (cl:cons (funcall GSYM EXISTS_REFL) nil))
+              (holai.runtime:proof (DISCH_THEN (#`X_CHOOSE_TAC (parse_term "x:A")))
+                THEN (#`ASM_REWRITE_TAC (cl:cons (#`GSYM EXISTS_REFL) nil))
                 THEN (REPEAT #'GEN_TAC)
-                THEN (DISCH_THEN (funcall CONJUNCTS_THEN (o #'SUBST1_TAC #'SYM)))
+                THEN (DISCH_THEN (#`CONJUNCTS_THEN (o #'SUBST1_TAC #'SYM)))
                 THEN #'REFL_TAC)
               nil))))))
 
@@ -1044,14 +1040,14 @@
           ((tuple asl w%)
             (handler-case
               (let*
-                ((x (fst (funcall dest_forall w%)))
+                ((x (fst (#`dest_forall w%)))
                   (avoids
                     (itlist
                       (o (o #'union #'thm_frees) (function-value #'snd 1))
                       asl
                       (frees w%))))
                 (cl:declare (cl:ignorable x avoids))
-                (if (mem x avoids) (fail unit) (funcall X_GEN_TAC x (tuple asl w%))))
+                (if (mem x avoids) (fail unit) (#`X_GEN_TAC x (tuple asl w%))))
               (holai.runtime:ocaml-condition
                 (exception~822)
                 (match exception~822
@@ -1068,7 +1064,7 @@
                 (function-value #'snd 1)
                 gl)))
             (cl:declare (cl:ignorable ty))
-            (funcall X_GEN_TAC (mk_var (tuple s ty)) gl))))
+            (#`X_GEN_TAC (mk_var (tuple s ty)) gl))))
       (OBTAIN_THEN
         (lambdac (v ttac th)
           (let
@@ -1093,7 +1089,7 @@
               THEN (REPEAT #'DISJ1_TAC)))))
       (NAME_PULL_FORALL_CONV
         (let
-          ((SWAP_FORALL_CONV (funcall REWR_CONV SWAP_FORALL_THM))
+          ((SWAP_FORALL_CONV (#`REWR_CONV SWAP_FORALL_THM))
             (AND_FORALL_CONV (GEN_REWRITE_CONV #'I (cl:cons AND_FORALL_THM nil)))
             (RIGHT_IMP_FORALL_CONV
               (GEN_REWRITE_CONV #'I (cl:cons RIGHT_IMP_FORALL_THM nil))))
@@ -1103,13 +1099,13 @@
             (labelsc
               ((PULL_FORALL
                 (tm)
-                (if (funcall is_forall tm)
-                  (if (= (name_of (fst (funcall dest_forall tm))) s)
+                (if (#`is_forall tm)
+                  (if (= (name_of (fst (#`dest_forall tm))) s)
                     (REFL tm)
                     (THENC (BINDER_CONV #'PULL_FORALL) SWAP_FORALL_CONV tm))
-                  (if (funcall is_imp tm)
+                  (if (#`is_imp tm)
                     (THENC (RAND_CONV #'PULL_FORALL) RIGHT_IMP_FORALL_CONV tm)
-                    (if (funcall is_conj tm)
+                    (if (#`is_conj tm)
                       (THENC (BINOP_CONV #'PULL_FORALL) AND_FORALL_CONV tm)
                       (fail unit))))))
               #'PULL_FORALL)))))
@@ -1125,7 +1121,7 @@
       ((pa_ident
         (p% arg~989)
         (match arg~989
-          ((guard (cl:cons (Ident s) rest) (funcall p% s)) (tuple s rest))
+          ((guard (cl:cons (Ident s) rest) (#`p% s)) (tuple s rest))
           (_ (raise (make-Noparse))))))
       (let ((pa_label (pa_ident isalnum)) (pa_var (pa_ident isalpha)))
         (cl:declare (cl:ignorable pa_label pa_var))
@@ -1134,17 +1130,15 @@
             (fletc
               ((fix_var
                 (v)
-                (holai.runtime:proof (funcall CONV_TAC (funcall NAME_PULL_FORALL_CONV v))
+                (holai.runtime:proof (#`CONV_TAC (#`NAME_PULL_FORALL_CONV v))
                   THEN PURE_GEN_TAC))
                 (fix_rename
                   (arg~1021)
                   (match arg~1021
                     ((tuple u (cl:cons v nil))
-                      (holai.runtime:proof (funcall
-                          CONV_TAC
-                          (funcall NAME_PULL_FORALL_CONV v))
-                        THEN (funcall NAME_GEN_TAC u)))
-                    ((tuple u _) (funcall NAME_GEN_TAC u)))))
+                      (holai.runtime:proof (#`CONV_TAC (#`NAME_PULL_FORALL_CONV v))
+                        THEN (#`NAME_GEN_TAC u)))
+                    ((tuple u _) (#`NAME_GEN_TAC u)))))
               (let
                 ((vars
                   (let
@@ -1214,7 +1208,7 @@
                             (match arg~1176
                               ((cl:cons (Ident "_") res) (tuple (K #'ALL_TAC) res))
                               ((cl:cons (Ident "+") res) (tuple #'MP_TAC res))
-                              ((guard (cl:cons (Ident s) res) (funcall isalnum s))
+                              ((guard (cl:cons (Ident s) res) (#`isalnum s))
                                 (tuple (LABEL_TAC s) res))
                               (_ (raise (make-Noparse))))))
                           (paren
@@ -1295,9 +1289,8 @@
                             toks))))
                     #'pa_intro)))))
             (cl:declare (cl:ignorable intro_tac%))
-            (fletc
-              ((hyp_tac%
-                (rule)
+            (holai.runtime:labelsc
+              ((:nonrecursive 0 hyp_tac% (rule)
                 (fletc
                   ((pa_action
                     (arg~1353)
@@ -1310,30 +1303,25 @@
                     (lambdac (arg~1380)
                       (match arg~1380
                         ((tuple lbl (cl:cons (tuple action tac) nil))
-                          (funcall action lbl (o tac rule)))
-                        ((tuple lbl _) (REMOVE_THEN lbl (o (LABEL_TAC lbl) rule)))))))))
-              (fletc
-                ((DESTRUCT_TAC%%
-                  (s)
+                          (#`action lbl (o tac rule)))
+                        ((tuple lbl _) (REMOVE_THEN lbl (o (LABEL_TAC lbl) rule))))))))
+                (:nonrecursive 1 DESTRUCT_TAC%% (s)
                   (match (o (o (fix "Destruct pattern" destruct_tac%) lex) #'explode s)
                     ((tuple tac rest)
                       (if (= rest nil) tac (failwith "Garbage after destruct pattern")))))
-                  (INTRO_TAC%%
-                    (s)
-                    (match (o (o (fix "Introduction pattern" intro_tac%) lex) #'explode s)
-                      ((tuple tac rest)
-                        (if (= rest nil) tac (failwith "Garbage after intro pattern")))))
-                  (FIX_TAC%%
-                    (s)
-                    (match (o (o fix_tac% lex) #'explode s)
-                      ((tuple tac rest)
-                        (if (= rest nil) tac (failwith "FIX_TAC: invalid pattern")))))
-                  (HYP_TAC%%
-                    (s rule)
-                    (match (o (o (hyp_tac% rule) lex) #'explode s)
-                      ((tuple tac rest)
-                        (if (= rest nil) tac (failwith "HYP_TAC: invalid pattern"))))))
-                (tuple #'DESTRUCT_TAC%% #'FIX_TAC%% #'INTRO_TAC%% #'HYP_TAC%%))))))))
+                (:nonrecursive 1 INTRO_TAC%% (s)
+                  (match (o (o (fix "Introduction pattern" intro_tac%) lex) #'explode s)
+                    ((tuple tac rest)
+                      (if (= rest nil) tac (failwith "Garbage after intro pattern")))))
+                (:nonrecursive 1 FIX_TAC%% (s)
+                  (match (o (o fix_tac% lex) #'explode s)
+                    ((tuple tac rest)
+                      (if (= rest nil) tac (failwith "FIX_TAC: invalid pattern")))))
+                (:nonrecursive 1 HYP_TAC%% (s rule)
+                  (match (o (o (hyp_tac% rule) lex) #'explode s)
+                    ((tuple tac rest)
+                      (if (= rest nil) tac (failwith "HYP_TAC: invalid pattern"))))))
+              (tuple #'DESTRUCT_TAC%% #'FIX_TAC%% #'INTRO_TAC%% #'HYP_TAC%%)))))))
   ((tuple DESTRUCT_TAC% FIX_TAC% INTRO_TAC% HYP_TAC%)
     (setf
       DESTRUCT_TAC
@@ -1345,5 +1333,5 @@
       INTRO_TAC
       INTRO_TAC%)))
 
-(defunc CLAIM_TAC (s tm) (SUBGOAL_THEN tm (funcall DESTRUCT_TAC s)))
+(defunc CLAIM_TAC (s tm) (SUBGOAL_THEN tm (#`DESTRUCT_TAC s)))
 

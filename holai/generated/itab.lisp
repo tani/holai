@@ -82,7 +82,6 @@
     match
     lambdac
     labelsc
-    funcall
     fst
     fletc
     failwith
@@ -127,14 +126,14 @@
 (defunc UNIFY_ACCEPT_TAC (mvs th arg~4)
   (match arg~4
     ((tuple asl w%)
-      (let ((insts (funcall term_unify mvs (concl th) w%)))
+      (let ((insts (#`term_unify mvs (concl th) w%)))
         (cl:declare (cl:ignorable insts))
         (tuple
           (tuple nil insts)
           nil
-          (let ((th% (funcall INSTANTIATE% insts th)))
+          (let ((th% (#`INSTANTIATE% insts th)))
             (cl:declare (cl:ignorable th%))
-            (lambdac (i% arg~23) (match arg~23 (nil (funcall INSTANTIATE% i% th%))))))))))
+            (lambdac (i% arg~23) (match arg~23 (nil (#`INSTANTIATE% i% th%))))))))))
 
 ;; (* REFL version of UNIFY_ACCEPT_TAC.
 ;;    The conclusion ust be `expr = x` where x is a meta variable.
@@ -152,9 +151,9 @@
               (failwith
                 (string-concat
                   "UNIFY_REFL_TAC: failed: `"
-                  (string-concat (funcall string_of_term w%) "`")))
+                  (string-concat (#`string_of_term w%) "`")))
               (UNIFY_ACCEPT_TAC (cl:cons w_rhs nil) (REFL w_lhs) (tuple asl w%)))
-            (match (funcall strip_comb w_rhs)
+            (match (#`strip_comb w_rhs)
               ((tuple constr rargs)
                 (if (not (is_var constr))
                   (failwith "UNIFY_REFL_TAC: not variable")
@@ -162,7 +161,7 @@
                     (failwith
                       (string-concat
                         "UNIFY_REFL_TAC: failed: `"
-                        (string-concat (funcall string_of_term w%) "`")))
+                        (string-concat (#`string_of_term w%) "`")))
                     (let*
                       ((rargs_vars
                         (map
@@ -170,23 +169,20 @@
                             (if (is_var v)
                               v
                               (match
-                                (funcall
-                                  (printf-printf
-                                    "UNIFY_REFL_TAC: warning: this isn't var: %s
+                                (#`(printf-printf
+                                  "UNIFY_REFL_TAC: warning: this isn't var: %s
 ")
-                                  (funcall string_of_term v))
-                                (_ (funcall genvar (type_of v))))))
+                                  (#`string_of_term v))
+                                (_ (#`genvar (type_of v))))))
                           rargs))
                         (f (list_mk_abs (tuple rargs_vars w_lhs)))
-                        (the_goal
-                          (funcall mk_eq (tuple w_lhs (list_mk_comb (tuple f rargs)))))
+                        (the_goal (#`mk_eq (tuple w_lhs (list_mk_comb (tuple f rargs)))))
                         (th
                           (prove
                             (tuple
                               the_goal
-                              (holai.runtime:proof (funcall
-                                  CONV_TAC
-                                  (RAND_CONV (funcall DEPTH_CONV #'BETA_CONV)))
+                              (holai.runtime:proof (#`CONV_TAC
+                                  (RAND_CONV (#`DEPTH_CONV #'BETA_CONV)))
                                 THEN #'REFL_TAC)))))
                       (cl:declare (cl:ignorable rargs_vars f the_goal th))
                       (UNIFY_ACCEPT_TAC (cl:cons constr nil) th (tuple asl w%)))))))))))))
@@ -197,103 +193,88 @@
 
 
 (defparameter ITAUT_TAC
-  (fletc
-    ((CONJUNCTS_THEN%
-      (ttac cth)
-      (holai.runtime:proof (funcall ttac (funcall CONJUNCT1 cth))
-        THEN (funcall ttac (funcall CONJUNCT2 cth)))))
-    (fletc
-      ((IMPLICATE
-        (t%)
+  (holai.runtime:labelsc
+    ((:nonrecursive 0 CONJUNCTS_THEN% (ttac cth)
+      (holai.runtime:proof (#`ttac (#`CONJUNCT1 cth)) THEN (#`ttac (#`CONJUNCT2 cth))))
+      (:nonrecursive 1 IMPLICATE (t%)
         (let ((th1 (AP_THM NOT_DEF (dest_neg t%))))
           (cl:declare (cl:ignorable th1))
           (CONV_RULE (RAND_CONV #'BETA_CONV) th1))))
-      (let
-        ((RIGHT_REVERSIBLE_TAC
-          (FIRST
-            (cl:cons
-              #'CONJ_TAC
-              (cl:cons #'GEN_TAC (cl:cons DISCH_TAC (cl:cons #'EQ_TAC nil))))))
-          (LEFT_REVERSIBLE_TAC
-            (lambdac (th gl)
-              (tryfind
-                (lambdac (ttac) (funcall ttac th gl))
+    (let
+      ((RIGHT_REVERSIBLE_TAC
+        (FIRST
+          (cl:cons
+            #'CONJ_TAC
+            (cl:cons #'GEN_TAC (cl:cons DISCH_TAC (cl:cons #'EQ_TAC nil))))))
+        (LEFT_REVERSIBLE_TAC
+          (lambdac (th gl)
+            (tryfind
+              (lambdac (ttac) (#`ttac th gl))
+              (cl:cons
+                (CONJUNCTS_THEN% ASSUME_TAC)
                 (cl:cons
-                  (CONJUNCTS_THEN% ASSUME_TAC)
+                  #'DISJ_CASES_TAC
                   (cl:cons
-                    #'DISJ_CASES_TAC
+                    #'CHOOSE_TAC
                     (cl:cons
-                      #'CHOOSE_TAC
+                      (lambdac (th%) (#`ASSUME_TAC (EQ_MP (IMPLICATE (concl th%)) th%)))
                       (cl:cons
-                        (lambdac (th%)
-                          (funcall ASSUME_TAC (EQ_MP (IMPLICATE (concl th%)) th%)))
-                        (cl:cons
-                          (o (o (CONJUNCTS_THEN% #'MP_TAC) (uncurry CONJ)) EQ_IMP_RULE)
-                          nil)))))))))
-        (cl:declare (cl:ignorable RIGHT_REVERSIBLE_TAC LEFT_REVERSIBLE_TAC))
-        (labelsc
-          ((ITAUT_TAC%
-            (mvs n gl)
-            (if (<= n 0)
-              (failwith "ITAUT_TAC: Too deep")
+                        (o (o (CONJUNCTS_THEN% #'MP_TAC) (uncurry CONJ)) EQ_IMP_RULE)
+                        nil)))))))))
+      (cl:declare (cl:ignorable RIGHT_REVERSIBLE_TAC LEFT_REVERSIBLE_TAC))
+      (holai.runtime:labelsc
+        ((:recursive 0 ITAUT_TAC% (mvs n gl)
+          (if (<= n 0)
+            (failwith "ITAUT_TAC: Too deep")
+            (ORELSE
+              (holai.runtime:proof (FIRST_ASSUM (UNIFY_ACCEPT_TAC mvs))
+                #'ORELSE (#`ACCEPT_TAC TRUTH)
+                #'ORELSE (FIRST_ASSUM CONTR_TAC)
+                #'ORELSE
+                  (holai.runtime:proof RIGHT_REVERSIBLE_TAC THEN (TRY (ITAUT_TAC% mvs n)))
+                #'ORELSE
+                  (holai.runtime:proof (FIRST_X_ASSUM LEFT_REVERSIBLE_TAC)
+                    THEN (TRY (ITAUT_TAC% mvs n)))
+                #'ORELSE
+                  (FIRST_X_ASSUM
+                    (lambdac (th)
+                      (holai.runtime:proof (#`ASSUME_TAC th)
+                        THEN
+                          (let
+                            ((gv (#`genvar (type_of (fst (#`dest_forall (concl th)))))))
+                            (cl:declare (cl:ignorable gv))
+                            (holai.runtime:proof (META_SPEC_TAC gv th)
+                              THEN (ITAUT_TAC% (cl:cons gv mvs) (- n 2))
+                              THEN NO_TAC)))))
+                #'ORELSE
+                  (holai.runtime:proof #'DISJ1_TAC THEN (ITAUT_TAC% mvs n) THEN NO_TAC)
+                #'ORELSE
+                  (holai.runtime:proof #'DISJ2_TAC THEN (ITAUT_TAC% mvs n) THEN NO_TAC)
+                #'ORELSE
+                  (lambdac (gl%)
+                    (let ((gv (#`genvar (type_of (fst (#`dest_exists (snd gl%)))))))
+                      (cl:declare (cl:ignorable gv))
+                      (#`THEN
+                        (holai.runtime:proof (X_META_EXISTS_TAC gv)
+                          THEN (ITAUT_TAC% (cl:cons gv mvs) (- n 2)))
+                        NO_TAC
+                        gl%))))
+              (FIRST_ASSUM
+                (lambdac (th)
+                  (holai.runtime:proof (SUBGOAL_THEN
+                      (fst (#`dest_imp (concl th)))
+                      (lambdac (ath) (#`ASSUME_TAC (#`MP th ath))))
+                    THEN (ITAUT_TAC% mvs (- n 1))
+                    THEN NO_TAC)))
+              gl)))
+          (:recursive 1 ITAUT_ITERDEEP_TAC (n gl)
+            (progn
+              (remark (string-concat "Searching with limit " (string-of-int n)))
               (ORELSE
-                (holai.runtime:proof (FIRST_ASSUM (UNIFY_ACCEPT_TAC mvs))
-                  #'ORELSE (funcall ACCEPT_TAC TRUTH)
-                  #'ORELSE (FIRST_ASSUM CONTR_TAC)
-                  #'ORELSE
-                    (holai.runtime:proof RIGHT_REVERSIBLE_TAC
-                      THEN (TRY (ITAUT_TAC% mvs n)))
-                  #'ORELSE
-                    (holai.runtime:proof (FIRST_X_ASSUM LEFT_REVERSIBLE_TAC)
-                      THEN (TRY (ITAUT_TAC% mvs n)))
-                  #'ORELSE
-                    (FIRST_X_ASSUM
-                      (lambdac (th)
-                        (holai.runtime:proof (funcall ASSUME_TAC th)
-                          THEN
-                            (let
-                              ((gv
-                                (funcall
-                                  genvar
-                                  (type_of (fst (funcall dest_forall (concl th)))))))
-                              (cl:declare (cl:ignorable gv))
-                              (holai.runtime:proof (META_SPEC_TAC gv th)
-                                THEN (ITAUT_TAC% (cl:cons gv mvs) (- n 2))
-                                THEN NO_TAC)))))
-                  #'ORELSE
-                    (holai.runtime:proof #'DISJ1_TAC THEN (ITAUT_TAC% mvs n) THEN NO_TAC)
-                  #'ORELSE
-                    (holai.runtime:proof #'DISJ2_TAC THEN (ITAUT_TAC% mvs n) THEN NO_TAC)
-                  #'ORELSE
-                    (lambdac (gl%)
-                      (let
-                        ((gv
-                          (funcall genvar (type_of (fst (funcall dest_exists (snd gl%)))))))
-                        (cl:declare (cl:ignorable gv))
-                        (funcall
-                          THEN
-                          (holai.runtime:proof (X_META_EXISTS_TAC gv)
-                            THEN (ITAUT_TAC% (cl:cons gv mvs) (- n 2)))
-                          NO_TAC
-                          gl%))))
-                (FIRST_ASSUM
-                  (lambdac (th)
-                    (holai.runtime:proof (SUBGOAL_THEN
-                        (fst (funcall dest_imp (concl th)))
-                        (lambdac (ath) (funcall ASSUME_TAC (funcall MP th ath))))
-                      THEN (ITAUT_TAC% mvs (- n 1))
-                      THEN NO_TAC)))
+                (holai.runtime:proof (ITAUT_TAC% nil n) THEN NO_TAC)
+                (ITAUT_ITERDEEP_TAC (+ n 1))
                 gl))))
-          (labelsc
-            ((ITAUT_ITERDEEP_TAC
-              (n gl)
-              (progn
-                (remark (string-concat "Searching with limit " (string-of-int n)))
-                (ORELSE
-                  (holai.runtime:proof (ITAUT_TAC% nil n) THEN NO_TAC)
-                  (ITAUT_ITERDEEP_TAC (+ n 1))
-                  gl))))
-            (ITAUT_ITERDEEP_TAC 0)))))))
+        (ITAUT_ITERDEEP_TAC 0)))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Alternative interface.                                                    *)

@@ -37,6 +37,13 @@ let interactive_observations () =
    "goal_one=" ^ one_s;"goal_solved=" ^ solved_s;
    "goal_top_thm=" ^ theorem_string theorem;"print_stack=" ^ printed;
    "no_goal_refine=" ^ bool_string (not (can (fun () -> e ALL_TAC) ()))];;
+let reader_computed_head () =
+  let evaluations = ref 0 in
+  let result =
+    (incr evaluations;
+     if true then (fun tens units -> 10 * tens + units)
+     else (fun left right -> left - right)) 4 2 in
+  int_list_string [result;!evaluations];;
 let tactical_observations () =
   verbose := false;
   let p = parse_term "p:bool" and q = parse_term "q:bool" in
@@ -89,6 +96,7 @@ let tactical_observations () =
        (let proof tactic = tactic in
         theorem_string (prove(identity,
           proof DISCH_TAC THEN FIRST_ASSUM ACCEPT_TAC)));
+     "reader_computed_head=" ^ reader_computed_head ();
      "proof_dsl_partial=" ^
        (let finish = (THEN) DISCH_TAC in
         theorem_string (prove(identity,finish (FIRST_ASSUM ACCEPT_TAC))));

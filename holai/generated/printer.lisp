@@ -460,7 +460,6 @@
     labelsc
     get-margin
     function-value
-    funcall
     fst
     formatter-of-buffer
     format-printf
@@ -1053,18 +1052,15 @@
 (defparameter pp_print_type nil)
 
 (match
-  (fletc
-    ((soc
-      (sep flag ss)
+  (holai.runtime:labelsc
+    ((:nonrecursive 0 soc (sep flag ss)
       (if (= ss nil)
         ""
         (let
           ((s (end_itlist (lambdac (s1 s2) (string-concat s1 (string-concat sep s2))) ss)))
           (cl:declare (cl:ignorable s))
-          (if flag (string-concat "(" (string-concat s ")")) s)))))
-    (labelsc
-      ((sot
-        (pr ty)
+          (if flag (string-concat "(" (string-concat s ")")) s))))
+      (:recursive 1 sot (pr ty)
         (handler-case
           (dest_vartype ty)
           (holai.runtime:ocaml-condition
@@ -1103,13 +1099,13 @@
                             (string-concat (soc "," cl:t (map (sot 0) args)) con))))
                       (_ (raise exception~792))))))
               (_ (raise exception~789)))))))
-      (tuple
-        (lambdac (fmt ty) (pp-print-string fmt (sot 0 ty)))
-        (lambdac (fmt ty)
-          (progn
-            (pp-print-string fmt "`:")
-            (pp-print-string fmt (sot 0 ty))
-            (pp-print-string fmt "`"))))))
+    (tuple
+      (lambdac (fmt ty) (pp-print-string fmt (sot 0 ty)))
+      (lambdac (fmt ty)
+        (progn
+          (pp-print-string fmt "`:")
+          (pp-print-string fmt (sot 0 ty))
+          (pp-print-string fmt "`")))))
   ((tuple pp_print_type% pp_print_qtype%)
     (setf pp_print_qtype pp_print_qtype% pp_print_type pp_print_type%)))
 
@@ -1122,11 +1118,10 @@
 (defparameter pp_print_colored_type nil)
 
 (match
-  (fletc
-    ((color_print_str (fmt s) (pp_print_colored_string (deref printer_color_type) fmt s)))
-    (fletc
-      ((soc
-        (sep flag ss fmt)
+  (holai.runtime:labelsc
+    ((:nonrecursive 0 color_print_str (fmt s)
+      (pp_print_colored_string (deref printer_color_type) fmt s))
+      (:nonrecursive 1 soc (sep flag ss fmt)
         (if (= ss nil)
           unit
           (match (if flag (color_print_str fmt "(") unit)
@@ -1135,66 +1130,61 @@
                 ((tuple_printer
                   (end_itlist
                     (lambdac (pp pp_next fmt%)
-                      (progn
-                        (funcall pp fmt%)
-                        (color_print_str fmt% sep)
-                        (funcall pp_next fmt%)))
+                      (progn (#`pp fmt%) (color_print_str fmt% sep) (#`pp_next fmt%)))
                     ss)))
                 (cl:declare (cl:ignorable tuple_printer))
-                (match (funcall tuple_printer fmt)
+                (match (#`tuple_printer fmt)
                   ((cl:type holai.runtime::unit-value)
-                    (if flag (color_print_str fmt ")") unit)))))))))
-      (labelsc
-        ((sot
-          (pr ty fmt)
-          (handler-case
-            (funcall pp_print_colored_tyvar fmt (dest_vartype ty))
-            (holai.runtime:ocaml-condition
-              (exception~1008)
-              (match exception~1008
-                ((Failure _)
-                  (handler-case
-                    (color_print_str fmt (string-of-num (dest_finty ty)))
-                    (holai.runtime:ocaml-condition
-                      (exception~1011)
-                      (match exception~1011
-                        ((Failure _)
-                          (match (dest_type ty)
-                            ((tuple con nil) (color_print_str fmt con))
-                            ((tuple "fun" (cl:cons ty1 (cl:cons ty2 nil)))
-                              (soc
-                                "->"
-                                (> pr 0)
-                                (cl:cons (sot 1 ty1) (cl:cons (sot 0 ty2) nil))
-                                fmt))
-                            ((tuple "sum" (cl:cons ty1 (cl:cons ty2 nil)))
-                              (soc
-                                "+"
-                                (> pr 2)
-                                (cl:cons (sot 3 ty1) (cl:cons (sot 2 ty2) nil))
-                                fmt))
-                            ((tuple "prod" (cl:cons ty1 (cl:cons ty2 nil)))
-                              (soc
-                                "#"
-                                (> pr 4)
-                                (cl:cons (sot 5 ty1) (cl:cons (sot 4 ty2) nil))
-                                fmt))
-                            ((tuple "cart" (cl:cons ty1 (cl:cons ty2 nil)))
-                              (soc
-                                "^"
-                                (> pr 6)
-                                (cl:cons (sot 6 ty1) (cl:cons (sot 7 ty2) nil))
-                                fmt))
-                            ((tuple con args)
-                              (progn
-                                (soc "," cl:t (map (sot 0) args) fmt)
-                                (color_print_str fmt con)))))
-                        (_ (raise exception~1011))))))
-                (_ (raise exception~1008)))))))
-        (tuple
-          (lambdac (fmt ty) (sot 0 ty fmt))
-          (lambdac (fmt ty)
-            (progn (pp-print-string fmt "`:") (sot 0 ty fmt) (pp-print-string fmt "`")))))))
+                    (if flag (color_print_str fmt ")") unit))))))))
+      (:recursive 2 sot (pr ty fmt)
+        (handler-case
+          (#`pp_print_colored_tyvar fmt (dest_vartype ty))
+          (holai.runtime:ocaml-condition
+            (exception~1008)
+            (match exception~1008
+              ((Failure _)
+                (handler-case
+                  (color_print_str fmt (string-of-num (dest_finty ty)))
+                  (holai.runtime:ocaml-condition
+                    (exception~1011)
+                    (match exception~1011
+                      ((Failure _)
+                        (match (dest_type ty)
+                          ((tuple con nil) (color_print_str fmt con))
+                          ((tuple "fun" (cl:cons ty1 (cl:cons ty2 nil)))
+                            (soc
+                              "->"
+                              (> pr 0)
+                              (cl:cons (sot 1 ty1) (cl:cons (sot 0 ty2) nil))
+                              fmt))
+                          ((tuple "sum" (cl:cons ty1 (cl:cons ty2 nil)))
+                            (soc
+                              "+"
+                              (> pr 2)
+                              (cl:cons (sot 3 ty1) (cl:cons (sot 2 ty2) nil))
+                              fmt))
+                          ((tuple "prod" (cl:cons ty1 (cl:cons ty2 nil)))
+                            (soc
+                              "#"
+                              (> pr 4)
+                              (cl:cons (sot 5 ty1) (cl:cons (sot 4 ty2) nil))
+                              fmt))
+                          ((tuple "cart" (cl:cons ty1 (cl:cons ty2 nil)))
+                            (soc
+                              "^"
+                              (> pr 6)
+                              (cl:cons (sot 6 ty1) (cl:cons (sot 7 ty2) nil))
+                              fmt))
+                          ((tuple con args)
+                            (progn
+                              (soc "," cl:t (map (sot 0) args) fmt)
+                              (color_print_str fmt con)))))
+                      (_ (raise exception~1011))))))
+              (_ (raise exception~1008)))))))
+    (tuple
+      (lambdac (fmt ty) (sot 0 ty fmt))
+      (lambdac (fmt ty)
+        (progn (pp-print-string fmt "`:") (sot 0 ty fmt) (pp-print-string fmt "`")))))
   ((tuple pp_print_colored_type% pp_print_colored_qtype%)
     (setf
       pp_print_colored_qtype
@@ -1241,11 +1231,11 @@
               (deref user_color_printers)))))
       (lambdac (fmt tm)
         (tryfind
-          (lambdac (arg~1261) (match arg~1261 ((tuple _ pr) (funcall pr fmt tm))))
+          (lambdac (arg~1261) (match arg~1261 ((tuple _ pr) (#`pr fmt tm))))
           (deref user_printers)))
       (lambdac (fmt tm)
         (tryfind
-          (lambdac (arg~1277) (match arg~1277 ((tuple _ pr) (funcall pr fmt tm))))
+          (lambdac (arg~1277) (match arg~1277 ((tuple _ pr) (#`pr fmt tm))))
           (deref user_color_printers)))))
   ((tuple
     install_user_printer%
@@ -1278,9 +1268,8 @@
 (defparameter pp_print_term nil)
 
 (match
-  (fletc
-    ((reverse_interface
-      (arg~1304)
+  (holai.runtime:labelsc
+    ((:nonrecursive 0 reverse_interface (arg~1304)
       (match arg~1304
         ((tuple s0 ty0)
           (if (not (deref reverse_interface_mapping))
@@ -1295,10 +1284,8 @@
                   (deref the_interface)))
               (holai.runtime:ocaml-condition
                 (exception~1308)
-                (match exception~1308 ((Failure _) s0) (_ (raise exception~1308))))))))))
-    (fletc
-      ((DEST_BINARY%
-        (c% tm)
+                (match exception~1308 ((Failure _) s0) (_ (raise exception~1308)))))))))
+      (:nonrecursive 1 DEST_BINARY% (c% tm)
         (handler-case
           (match (dest_comb tm)
             ((tuple il r)
@@ -1321,949 +1308,732 @@
             (match exception~1349
               ((Failure _) (failwith "DEST_BINARY"))
               (_ (raise exception~1349))))))
-        (ARIGHT (s) (match (snd (funcall get_infix_status s)) ("right" cl:t) (_ cl:nil))))
-      (labelsc
-        ((powerof10
-          (n)
-          (if (< (abs-num n) (num 1))
-            cl:nil
-            (if (= n (num 1)) cl:t (powerof10 (/ n (num 10)))))))
-        (fletc
-          ((bool_of_term
-            (t%)
-            (match t%
-              ((Const "T" _) cl:t)
-              ((Const "F" _) cl:nil)
-              (_ (failwith "bool_of_term")))))
-          (fletc
-            ((code_of_term
-              (t%)
-              (match (funcall strip_comb t%)
-                ((tuple f tms)
-                  (if
-                    (cl:or
-                      (not (cl:and (is_const f) (= (fst (dest_const f)) "ASCII")))
-                      (not (= (funcall length tms) 8)))
-                    (failwith "code_of_term")
-                    (itlist
-                      (lambdac (b f%) (if b (+ 1 (* 2 f%)) (* 2 f%)))
-                      (map #'bool_of_term (funcall rev tms))
-                      0))))))
-            (labelsc
-              ((dest_clause
-                (tm)
-                (let ((pbod (snd (funcall strip_exists (body (body tm))))))
-                  (cl:declare (cl:ignorable pbod))
-                  (match (funcall strip_comb pbod)
-                    ((tuple s args)
-                      (if
-                        (cl:and
-                          (= (name_of s) "_UNGUARDED_PATTERN")
-                          (= (funcall length args) 2))
-                        (cl:cons
-                          (rand (rator (hd args)))
-                          (cl:cons (rand (rator (hd (tl args)))) nil))
-                        (if
-                          (cl:and
-                            (= (name_of s) "_GUARDED_PATTERN")
-                            (= (funcall length args) 3))
-                          (cl:cons
-                            (rand (rator (hd args)))
-                            (cl:cons
-                              (hd (tl args))
-                              (cl:cons (rand (rator (hd (tl (tl args))))) nil)))
-                          (failwith "dest_clause"))))))))
-              (labelsc
-                ((dest_clauses
-                  (tm)
-                  (match (funcall strip_comb tm)
-                    ((tuple s args)
-                      (if
-                        (cl:and (= (name_of s) "_SEQPATTERN") (= (funcall length args) 2))
-                        (cl:cons (dest_clause (hd args)) (dest_clauses (hd (tl args))))
-                        (cl:cons (dest_clause tm) nil))))))
-                (fletc
-                  ((pdest_cond
-                    (tm)
-                    (match tm
-                      ((Comb (Comb (Comb (Const "COND" _) i%) t%) e)
-                        (tuple (tuple i% t%) e))
-                      (_ (failwith "pdest_cond")))))
-                  (fletc
-                    ((print_colored_term
-                      (use_color fmt)
-                      (fletc
-                        ((color_switch
-                          (pp)
-                          (if use_color pp (function-value #'pp-print-string 2))))
-                        (fletc
-                          ((try_user_printers
-                            (tm)
-                            (if use_color
+      (:nonrecursive 1 ARIGHT (s)
+        (match (snd (#`get_infix_status s)) ("right" cl:t) (_ cl:nil)))
+      (:recursive 2 powerof10 (n)
+        (if (< (abs-num n) (num 1))
+          cl:nil
+          (if (= n (num 1)) cl:t (powerof10 (/ n (num 10))))))
+      (:nonrecursive 3 bool_of_term (t%)
+        (match t%
+          ((Const "T" _) cl:t)
+          ((Const "F" _) cl:nil)
+          (_ (failwith "bool_of_term"))))
+      (:nonrecursive 4 code_of_term (t%)
+        (match (#`strip_comb t%)
+          ((tuple f tms)
+            (if
+              (cl:or
+                (not (cl:and (is_const f) (= (fst (dest_const f)) "ASCII")))
+                (not (= (#`length tms) 8)))
+              (failwith "code_of_term")
+              (itlist
+                (lambdac (b f%) (if b (+ 1 (* 2 f%)) (* 2 f%)))
+                (map #'bool_of_term (#`rev tms))
+                0)))))
+      (:recursive 5 dest_clause (tm)
+        (let ((pbod (snd (#`strip_exists (body (body tm))))))
+          (cl:declare (cl:ignorable pbod))
+          (match (#`strip_comb pbod)
+            ((tuple s args)
+              (if (cl:and (= (name_of s) "_UNGUARDED_PATTERN") (= (#`length args) 2))
+                (cl:cons
+                  (rand (rator (hd args)))
+                  (cl:cons (rand (rator (hd (tl args)))) nil))
+                (if (cl:and (= (name_of s) "_GUARDED_PATTERN") (= (#`length args) 3))
+                  (cl:cons
+                    (rand (rator (hd args)))
+                    (cl:cons
+                      (hd (tl args))
+                      (cl:cons (rand (rator (hd (tl (tl args))))) nil)))
+                  (failwith "dest_clause")))))))
+      (:recursive 6 dest_clauses (tm)
+        (match (#`strip_comb tm)
+          ((tuple s args)
+            (if (cl:and (= (name_of s) "_SEQPATTERN") (= (#`length args) 2))
+              (cl:cons (dest_clause (hd args)) (dest_clauses (hd (tl args))))
+              (cl:cons (dest_clause tm) nil)))))
+      (:nonrecursive 7 pdest_cond (tm)
+        (match tm
+          ((Comb (Comb (Comb (Const "COND" _) i%) t%) e) (tuple (tuple i% t%) e))
+          (_ (failwith "pdest_cond"))))
+      (:nonrecursive 8 print_colored_term (use_color fmt)
+        (holai.runtime:labelsc
+          ((:nonrecursive 0 color_switch (pp)
+            (if use_color pp (function-value #'pp-print-string 2)))
+            (:nonrecursive 1 try_user_printers (tm)
+              (if use_color
+                (handler-case
+                  (#`try_user_color_printer fmt tm)
+                  (holai.runtime:ocaml-condition
+                    (exception~1623)
+                    (match exception~1623
+                      (_ (#`try_user_printer fmt tm))
+                      (_ (raise exception~1623)))))
+                (#`try_user_printer fmt tm)))
+            (:nonrecursive 2 print_numeral (tm)
+              (pp-print-string fmt (string-of-num (#`dest_numeral tm))))
+            (:recursive 3 print_term% (prec tm)
+              (handler-case
+                (try_user_printers tm)
+                (holai.runtime:ocaml-condition
+                  (exception~1663)
+                  (match exception~1663
+                    ((Failure _)
+                      (handler-case
+                        (print_numeral tm)
+                        (holai.runtime:ocaml-condition
+                          (exception~1666)
+                          (match exception~1666
+                            ((Failure _)
                               (handler-case
-                                (funcall try_user_color_printer fmt tm)
+                                (print_string_or_list tm)
                                 (holai.runtime:ocaml-condition
-                                  (exception~1623)
-                                  (match exception~1623
-                                    (_ (funcall try_user_printer fmt tm))
-                                    (_ (raise exception~1623)))))
-                              (funcall try_user_printer fmt tm))))
-                          (fletc
-                            ((print_numeral
-                              (tm)
-                              (pp-print-string
-                                fmt
-                                (string-of-num (funcall dest_numeral tm)))))
-                            (labelsc
-                              ((print_term%
-                                (prec tm)
-                                (handler-case
-                                  (try_user_printers tm)
-                                  (holai.runtime:ocaml-condition
-                                    (exception~1663)
-                                    (match exception~1663
-                                      ((Failure _)
-                                        (handler-case
-                                          (print_numeral tm)
-                                          (holai.runtime:ocaml-condition
-                                            (exception~1666)
-                                            (match exception~1666
-                                              ((Failure _)
-                                                (handler-case
-                                                  (print_string_or_list tm)
-                                                  (holai.runtime:ocaml-condition
-                                                    (exception~1669)
-                                                    (match exception~1669
-                                                      ((Failure _)
-                                                        (if (funcall is_gabs tm)
-                                                          (print_binder prec tm)
-                                                          (match (funcall strip_comb tm)
-                                                            ((tuple hop args)
-                                                              (let
-                                                                ((s
-                                                                  (reverse_interface
-                                                                    (tuple
-                                                                      (name_of hop)
-                                                                      (type_of hop)))))
-                                                                (cl:declare
-                                                                  (cl:ignorable s))
-                                                                (handler-case
-                                                                  (print_empty_set
-                                                                    s
-                                                                    tm
-                                                                    args)
-                                                                  (holai.runtime:ocaml-condition
-                                                                    (exception~1681)
-                                                                    (match exception~1681
-                                                                      ((Failure _)
-                                                                        (handler-case
-                                                                          (print_universal_set
-                                                                            s
-                                                                            tm
-                                                                            args)
-                                                                          (holai.runtime:ocaml-condition
-                                                                            (exception~1684)
-                                                                            (match
-                                                                              exception~1684
-                                                                              ((Failure _)
-                                                                                (handler-case
-                                                                                  (print_finite_set
-                                                                                    s
-                                                                                    tm)
-                                                                                  (holai.runtime:ocaml-condition
-                                                                                    (exception~1687)
-                                                                                    (match
-                                                                                      exception~1687
-                                                                                      ((Failure
-                                                                                        _)
-                                                                                        (handler-case
-                                                                                          (print_set_comprehension
-                                                                                            s
-                                                                                            tm)
-                                                                                          (holai.runtime:ocaml-condition
-                                                                                            (exception~1690)
-                                                                                            (match
-                                                                                              exception~1690
-                                                                                              ((Failure
-                                                                                                _)
-                                                                                                (handler-case
-                                                                                                  (print_let_term
-                                                                                                    s
-                                                                                                    prec
-                                                                                                    tm)
-                                                                                                  (holai.runtime:ocaml-condition
-                                                                                                    (exception~1693)
-                                                                                                    (match
-                                                                                                      exception~1693
-                                                                                                      ((Failure
-                                                                                                        _)
-                                                                                                        (handler-case
-                                                                                                          (print_decimal
-                                                                                                            s
-                                                                                                            args)
-                                                                                                          (holai.runtime:ocaml-condition
-                                                                                                            (exception~1696)
-                                                                                                            (match
-                                                                                                              exception~1696
-                                                                                                              ((Failure
-                                                                                                                _)
-                                                                                                                (handler-case
-                                                                                                                  (print_match
-                                                                                                                    s
-                                                                                                                    prec
-                                                                                                                    args)
-                                                                                                                  (holai.runtime:ocaml-condition
-                                                                                                                    (exception~1699)
-                                                                                                                    (match
-                                                                                                                      exception~1699
-                                                                                                                      ((Failure
-                                                                                                                        _)
-                                                                                                                        (handler-case
-                                                                                                                          (print_function
-                                                                                                                            s
-                                                                                                                            prec
-                                                                                                                            args)
-                                                                                                                          (holai.runtime:ocaml-condition
-                                                                                                                            (exception~1702)
-                                                                                                                            (match
-                                                                                                                              exception~1702
-                                                                                                                              ((Failure
-                                                                                                                                _)
-                                                                                                                                (handler-case
-                                                                                                                                  (print_cond
-                                                                                                                                    s
-                                                                                                                                    prec
-                                                                                                                                    tm
-                                                                                                                                    args)
-                                                                                                                                  (holai.runtime:ocaml-condition
-                                                                                                                                    (exception~1705)
-                                                                                                                                    (match
-                                                                                                                                      exception~1705
-                                                                                                                                      ((Failure
-                                                                                                                                        _)
-                                                                                                                                        (handler-case
-                                                                                                                                          (print_prefix_app
-                                                                                                                                            s
-                                                                                                                                            prec
-                                                                                                                                            args)
-                                                                                                                                          (holai.runtime:ocaml-condition
-                                                                                                                                            (exception~1708)
-                                                                                                                                            (match
-                                                                                                                                              exception~1708
-                                                                                                                                              ((Failure
-                                                                                                                                                _)
-                                                                                                                                                (handler-case
-                                                                                                                                                  (print_binder_app
-                                                                                                                                                    s
-                                                                                                                                                    prec
-                                                                                                                                                    tm
-                                                                                                                                                    args)
-                                                                                                                                                  (holai.runtime:ocaml-condition
-                                                                                                                                                    (exception~1711)
-                                                                                                                                                    (match
-                                                                                                                                                      exception~1711
-                                                                                                                                                      ((Failure
-                                                                                                                                                        _)
-                                                                                                                                                        (handler-case
-                                                                                                                                                          (print_infix_app
-                                                                                                                                                            s
-                                                                                                                                                            prec
-                                                                                                                                                            tm
-                                                                                                                                                            hop
-                                                                                                                                                            args)
-                                                                                                                                                          (holai.runtime:ocaml-condition
-                                                                                                                                                            (exception~1714)
-                                                                                                                                                            (match
-                                                                                                                                                              exception~1714
-                                                                                                                                                              ((Failure
-                                                                                                                                                                _)
-                                                                                                                                                                (if
-                                                                                                                                                                  (cl:and
-                                                                                                                                                                    (cl:or
-                                                                                                                                                                      (is_const
-                                                                                                                                                                        hop)
-                                                                                                                                                                      (is_var
-                                                                                                                                                                        hop))
-                                                                                                                                                                    (=
-                                                                                                                                                                      args
-                                                                                                                                                                      nil))
-                                                                                                                                                                  (print_atom
-                                                                                                                                                                    hop
-                                                                                                                                                                    s)
-                                                                                                                                                                  (print_generic_app
-                                                                                                                                                                    prec
-                                                                                                                                                                    tm)))
-                                                                                                                                                              (_
-                                                                                                                                                                (raise
-                                                                                                                                                                  exception~1714))))))
-                                                                                                                                                      (_
-                                                                                                                                                        (raise
-                                                                                                                                                          exception~1711))))))
-                                                                                                                                              (_
-                                                                                                                                                (raise
-                                                                                                                                                  exception~1708))))))
-                                                                                                                                      (_
-                                                                                                                                        (raise
-                                                                                                                                          exception~1705))))))
-                                                                                                                              (_
-                                                                                                                                (raise
-                                                                                                                                  exception~1702))))))
-                                                                                                                      (_
-                                                                                                                        (raise
-                                                                                                                          exception~1699))))))
-                                                                                                              (_
-                                                                                                                (raise
-                                                                                                                  exception~1696))))))
-                                                                                                      (_
-                                                                                                        (raise
-                                                                                                          exception~1693))))))
-                                                                                              (_
-                                                                                                (raise
-                                                                                                  exception~1690))))))
-                                                                                      (_
-                                                                                        (raise
-                                                                                          exception~1687))))))
-                                                                              (_
-                                                                                (raise
-                                                                                  exception~1684))))))
-                                                                      (_
-                                                                        (raise
-                                                                          exception~1681))))))))))
-                                                      (_ (raise exception~1669))))))
-                                              (_ (raise exception~1666))))))
-                                      (_ (raise exception~1663))))))
-                                (print_string_or_list
-                                  (tm)
-                                  (let ((tms (dest_list tm)))
-                                    (cl:declare (cl:ignorable tms))
-                                    (handler-case
-                                      (if
-                                        (<>
-                                          (fst
-                                            (dest_type
-                                              (hd (snd (dest_type (type_of tm))))))
-                                          "char")
-                                        (fail unit)
-                                        (let*
-                                          ((ccs
-                                            (map
-                                              (o
-                                                (o
-                                                  (partial
-                                                    (function-value #'string-make 2)
-                                                    1)
-                                                  (function-value #'char-chr 1))
-                                                #'code_of_term)
-                                              tms))
-                                            (s
-                                              (string-concat
-                                                "\""
-                                                (string-concat
-                                                  (string-escaped (implode ccs))
-                                                  "\""))))
-                                          (cl:declare (cl:ignorable ccs s))
-                                          (pp-print-string fmt s)))
-                                      (holai.runtime:ocaml-condition
-                                        (exception~1820)
-                                        (match exception~1820
-                                          ((Failure _)
-                                            (progn
-                                              (pp-open-box fmt 0)
-                                              (pp-print-string fmt "[")
-                                              (pp-open-box fmt 0)
-                                              (print_term_sequence cl:t ";" 0 tms)
-                                              (pp-close-box fmt unit)
-                                              (pp-print-string fmt "]")
-                                              (pp-close-box fmt unit)))
-                                          (_ (raise exception~1820)))))))
-                                (print_empty_set
-                                  (s tm args)
+                                  (exception~1669)
+                                  (match exception~1669
+                                    ((Failure _)
+                                      (if (#`is_gabs tm)
+                                        (print_binder prec tm)
+                                        (match (#`strip_comb tm)
+                                          ((tuple hop args)
+                                            (let
+                                              ((s
+                                                (reverse_interface
+                                                  (tuple (name_of hop) (type_of hop)))))
+                                              (cl:declare (cl:ignorable s))
+                                              (handler-case
+                                                (print_empty_set s tm args)
+                                                (holai.runtime:ocaml-condition
+                                                  (exception~1681)
+                                                  (match exception~1681
+                                                    ((Failure _)
+                                                      (handler-case
+                                                        (print_universal_set s tm args)
+                                                        (holai.runtime:ocaml-condition
+                                                          (exception~1684)
+                                                          (match exception~1684
+                                                            ((Failure _)
+                                                              (handler-case
+                                                                (print_finite_set s tm)
+                                                                (holai.runtime:ocaml-condition
+                                                                  (exception~1687)
+                                                                  (match exception~1687
+                                                                    ((Failure _)
+                                                                      (handler-case
+                                                                        (print_set_comprehension
+                                                                          s
+                                                                          tm)
+                                                                        (holai.runtime:ocaml-condition
+                                                                          (exception~1690)
+                                                                          (match
+                                                                            exception~1690
+                                                                            ((Failure _)
+                                                                              (handler-case
+                                                                                (print_let_term
+                                                                                  s
+                                                                                  prec
+                                                                                  tm)
+                                                                                (holai.runtime:ocaml-condition
+                                                                                  (exception~1693)
+                                                                                  (match
+                                                                                    exception~1693
+                                                                                    ((Failure
+                                                                                      _)
+                                                                                      (handler-case
+                                                                                        (print_decimal
+                                                                                          s
+                                                                                          args)
+                                                                                        (holai.runtime:ocaml-condition
+                                                                                          (exception~1696)
+                                                                                          (match
+                                                                                            exception~1696
+                                                                                            ((Failure
+                                                                                              _)
+                                                                                              (handler-case
+                                                                                                (print_match
+                                                                                                  s
+                                                                                                  prec
+                                                                                                  args)
+                                                                                                (holai.runtime:ocaml-condition
+                                                                                                  (exception~1699)
+                                                                                                  (match
+                                                                                                    exception~1699
+                                                                                                    ((Failure
+                                                                                                      _)
+                                                                                                      (handler-case
+                                                                                                        (print_function
+                                                                                                          s
+                                                                                                          prec
+                                                                                                          args)
+                                                                                                        (holai.runtime:ocaml-condition
+                                                                                                          (exception~1702)
+                                                                                                          (match
+                                                                                                            exception~1702
+                                                                                                            ((Failure
+                                                                                                              _)
+                                                                                                              (handler-case
+                                                                                                                (print_cond
+                                                                                                                  s
+                                                                                                                  prec
+                                                                                                                  tm
+                                                                                                                  args)
+                                                                                                                (holai.runtime:ocaml-condition
+                                                                                                                  (exception~1705)
+                                                                                                                  (match
+                                                                                                                    exception~1705
+                                                                                                                    ((Failure
+                                                                                                                      _)
+                                                                                                                      (handler-case
+                                                                                                                        (print_prefix_app
+                                                                                                                          s
+                                                                                                                          prec
+                                                                                                                          args)
+                                                                                                                        (holai.runtime:ocaml-condition
+                                                                                                                          (exception~1708)
+                                                                                                                          (match
+                                                                                                                            exception~1708
+                                                                                                                            ((Failure
+                                                                                                                              _)
+                                                                                                                              (handler-case
+                                                                                                                                (print_binder_app
+                                                                                                                                  s
+                                                                                                                                  prec
+                                                                                                                                  tm
+                                                                                                                                  args)
+                                                                                                                                (holai.runtime:ocaml-condition
+                                                                                                                                  (exception~1711)
+                                                                                                                                  (match
+                                                                                                                                    exception~1711
+                                                                                                                                    ((Failure
+                                                                                                                                      _)
+                                                                                                                                      (handler-case
+                                                                                                                                        (print_infix_app
+                                                                                                                                          s
+                                                                                                                                          prec
+                                                                                                                                          tm
+                                                                                                                                          hop
+                                                                                                                                          args)
+                                                                                                                                        (holai.runtime:ocaml-condition
+                                                                                                                                          (exception~1714)
+                                                                                                                                          (match
+                                                                                                                                            exception~1714
+                                                                                                                                            ((Failure
+                                                                                                                                              _)
+                                                                                                                                              (if
+                                                                                                                                                (cl:and
+                                                                                                                                                  (cl:or
+                                                                                                                                                    (is_const
+                                                                                                                                                      hop)
+                                                                                                                                                    (is_var
+                                                                                                                                                      hop))
+                                                                                                                                                  (=
+                                                                                                                                                    args
+                                                                                                                                                    nil))
+                                                                                                                                                (print_atom
+                                                                                                                                                  hop
+                                                                                                                                                  s)
+                                                                                                                                                (print_generic_app
+                                                                                                                                                  prec
+                                                                                                                                                  tm)))
+                                                                                                                                            (_
+                                                                                                                                              (raise
+                                                                                                                                                exception~1714))))))
+                                                                                                                                    (_
+                                                                                                                                      (raise
+                                                                                                                                        exception~1711))))))
+                                                                                                                            (_
+                                                                                                                              (raise
+                                                                                                                                exception~1708))))))
+                                                                                                                    (_
+                                                                                                                      (raise
+                                                                                                                        exception~1705))))))
+                                                                                                            (_
+                                                                                                              (raise
+                                                                                                                exception~1702))))))
+                                                                                                    (_
+                                                                                                      (raise
+                                                                                                        exception~1699))))))
+                                                                                            (_
+                                                                                              (raise
+                                                                                                exception~1696))))))
+                                                                                    (_
+                                                                                      (raise
+                                                                                        exception~1693))))))
+                                                                            (_
+                                                                              (raise
+                                                                                exception~1690))))))
+                                                                    (_
+                                                                      (raise
+                                                                        exception~1687))))))
+                                                            (_ (raise exception~1684))))))
+                                                    (_ (raise exception~1681))))))))))
+                                    (_ (raise exception~1669))))))
+                            (_ (raise exception~1666))))))
+                    (_ (raise exception~1663))))))
+            (:recursive 3 print_string_or_list (tm)
+              (let ((tms (dest_list tm)))
+                (cl:declare (cl:ignorable tms))
+                (handler-case
+                  (if (<> (fst (dest_type (hd (snd (dest_type (type_of tm)))))) "char")
+                    (fail unit)
+                    (let*
+                      ((ccs
+                        (map
+                          (o
+                            (o
+                              (partial (function-value #'string-make 2) 1)
+                              (function-value #'char-chr 1))
+                            #'code_of_term)
+                          tms))
+                        (s
+                          (string-concat
+                            "\""
+                            (string-concat (string-escaped (implode ccs)) "\""))))
+                      (cl:declare (cl:ignorable ccs s))
+                      (pp-print-string fmt s)))
+                  (holai.runtime:ocaml-condition
+                    (exception~1820)
+                    (match exception~1820
+                      ((Failure _)
+                        (progn
+                          (pp-open-box fmt 0)
+                          (pp-print-string fmt "[")
+                          (pp-open-box fmt 0)
+                          (print_term_sequence cl:t ";" 0 tms)
+                          (pp-close-box fmt unit)
+                          (pp-print-string fmt "]")
+                          (pp-close-box fmt unit)))
+                      (_ (raise exception~1820)))))))
+            (:recursive 3 print_empty_set (s tm args)
+              (if (cl:and (= s "EMPTY") (cl:and (is_const tm) (= args nil)))
+                (pp-print-string fmt "{}")
+                (fail unit)))
+            (:recursive 3 print_universal_set (s tm args)
+              (if
+                (cl:and
+                  (= s "UNIV")
+                  (cl:and
+                    (deref typify_universal_set)
+                    (cl:and (is_const tm) (= args nil))))
+                (let ((ty (fst (dest_fun_ty (type_of tm)))))
+                  (cl:declare (cl:ignorable ty))
+                  (progn
+                    (pp-print-string fmt "(:")
+                    (#`pp_print_type fmt ty)
+                    (pp-print-string fmt ")")))
+                (fail unit)))
+            (:recursive 3 print_finite_set (s tm)
+              (if (<> s "INSERT")
+                (fail unit)
+                (match (splitlist (dest_binary "INSERT") tm)
+                  ((tuple mems oth)
+                    (if (cl:and (is_const oth) (= (fst (dest_const oth)) "EMPTY"))
+                      (progn
+                        (pp-open-box fmt 0)
+                        (pp-print-string fmt "{")
+                        (pp-open-box fmt 0)
+                        (print_term_sequence cl:t "," 14 mems)
+                        (pp-close-box fmt unit)
+                        (pp-print-string fmt "}")
+                        (pp-close-box fmt unit))
+                      (fail unit))))))
+            (:recursive 3 print_set_comprehension (s tm)
+              (if (<> s "GSPEC")
+                (fail unit)
+                (match (#`strip_exists (body (rand tm)))
+                  ((tuple evs bod)
+                    (match (dest_comb bod)
+                      ((tuple bod1 fabs)
+                        (match (dest_comb bod1)
+                          ((tuple bod2 babs)
+                            (let ((c% (rator bod2)))
+                              (cl:declare (cl:ignorable c%))
+                              (progn
+                                (if (<> (fst (dest_const c%)) "SETSPEC")
+                                  (fail unit)
+                                  (pp-print-string fmt "{"))
+                                (print_term% 0 fabs)
+                                (pp-print-string fmt " | ")
+                                (let ((fvs (frees fabs)) (bvs (frees babs)))
+                                  (cl:declare (cl:ignorable fvs bvs))
                                   (if
                                     (cl:and
-                                      (= s "EMPTY")
-                                      (cl:and (is_const tm) (= args nil)))
-                                    (pp-print-string fmt "{}")
-                                    (fail unit)))
-                                (print_universal_set
-                                  (s tm args)
-                                  (if
-                                    (cl:and
-                                      (= s "UNIV")
-                                      (cl:and
-                                        (deref typify_universal_set)
-                                        (cl:and (is_const tm) (= args nil))))
-                                    (let ((ty (fst (dest_fun_ty (type_of tm)))))
-                                      (cl:declare (cl:ignorable ty))
-                                      (progn
-                                        (pp-print-string fmt "(:")
-                                        (funcall pp_print_type fmt ty)
-                                        (pp-print-string fmt ")")))
-                                    (fail unit)))
-                                (print_finite_set
-                                  (s tm)
-                                  (if (<> s "INSERT")
-                                    (fail unit)
-                                    (match (splitlist (dest_binary "INSERT") tm)
-                                      ((tuple mems oth)
-                                        (if
-                                          (cl:and
-                                            (is_const oth)
-                                            (= (fst (dest_const oth)) "EMPTY"))
-                                          (progn
-                                            (pp-open-box fmt 0)
-                                            (pp-print-string fmt "{")
-                                            (pp-open-box fmt 0)
-                                            (print_term_sequence cl:t "," 14 mems)
-                                            (pp-close-box fmt unit)
-                                            (pp-print-string fmt "}")
-                                            (pp-close-box fmt unit))
-                                          (fail unit))))))
-                                (print_set_comprehension
-                                  (s tm)
-                                  (if (<> s "GSPEC")
-                                    (fail unit)
-                                    (match (funcall strip_exists (body (rand tm)))
-                                      ((tuple evs bod)
-                                        (match (dest_comb bod)
-                                          ((tuple bod1 fabs)
-                                            (match (dest_comb bod1)
-                                              ((tuple bod2 babs)
-                                                (let ((c% (rator bod2)))
-                                                  (cl:declare (cl:ignorable c%))
-                                                  (progn
-                                                    (if
-                                                      (<> (fst (dest_const c%)) "SETSPEC")
-                                                      (fail unit)
-                                                      (pp-print-string fmt "{"))
-                                                    (print_term% 0 fabs)
-                                                    (pp-print-string fmt " | ")
-                                                    (let
-                                                      ((fvs (frees fabs))
-                                                        (bvs (frees babs)))
-                                                      (cl:declare (cl:ignorable fvs bvs))
-                                                      (if
-                                                        (cl:and
-                                                          (not
-                                                            (deref
-                                                              print_unambiguous_comprehensions))
-                                                          (set_eq
-                                                            evs
-                                                            (if
-                                                              (cl:or
-                                                                (<=
-                                                                  (funcall length fvs)
-                                                                  1)
-                                                                (= bvs nil))
-                                                              fvs
-                                                              (intersect fvs bvs))))
-                                                        unit
-                                                        (progn
-                                                          (print_term_sequence
-                                                            cl:nil
-                                                            ","
-                                                            14
-                                                            evs)
-                                                          (pp-print-string fmt " | "))))
-                                                    (print_term% 0 babs)
-                                                    (pp-print-string fmt "}")))))))))))
-                                (print_let_term
-                                  (s prec tm)
-                                  (if (<> s "LET")
-                                    (fail unit)
-                                    (match (dest_let tm)
-                                      ((tuple eqs bod)
-                                        (progn
-                                          (if (= prec 0)
-                                            (pp-open-hvbox fmt 0)
-                                            (progn
-                                              (pp-open-hvbox fmt 1)
-                                              (pp-print-string fmt "(")))
-                                          (color_switch
-                                            pp_print_colored_resword
-                                            fmt
-                                            "let ")
-                                          (print_term% 0 (funcall mk_eq (hd eqs)))
-                                          (do_list
-                                            (lambdac (arg~2117)
-                                              (match arg~2117
-                                                ((tuple v t%)
-                                                  (progn
-                                                    (pp-print-break fmt 1 0)
-                                                    (color_switch
-                                                      pp_print_colored_resword
-                                                      fmt
-                                                      "and ")
-                                                    (print_term%
-                                                      0
-                                                      (funcall mk_eq (tuple v t%)))))))
-                                            (tl eqs))
-                                          (color_switch
-                                            pp_print_colored_resword
-                                            fmt
-                                            " in")
-                                          (pp-print-break fmt 1 0)
-                                          (print_term% 0 bod)
-                                          (if (= prec 0) unit (pp-print-string fmt ")"))
-                                          (pp-close-box fmt unit))))))
-                                (print_decimal
-                                  (s args)
-                                  (if (<> s "DECIMAL")
-                                    (fail unit)
-                                    (let
-                                      ((n_num (funcall dest_numeral (hd args)))
-                                        (n_den (funcall dest_numeral (hd (tl args)))))
-                                      (cl:declare (cl:ignorable n_num n_den))
-                                      (if (not (powerof10 n_den))
-                                        (fail unit)
-                                        (let*
-                                          ((s_num (string-of-num (quo-num n_num n_den)))
-                                            (s_den
-                                              (implode
-                                                (tl
-                                                  (explode
-                                                    (string-of-num
-                                                      (+ n_den (mod-num n_num n_den))))))))
-                                          (cl:declare (cl:ignorable s_num s_den))
-                                          (pp-print-string
-                                            fmt
-                                            (string-concat
-                                              "#"
-                                              (string-concat
-                                                s_num
-                                                (string-concat
-                                                  (if (= n_den (num 1)) "" ".")
-                                                  s_den)))))))))
-                                (print_match
-                                  (s prec args)
-                                  (if (cl:or (<> s "_MATCH") (<> (funcall length args) 2))
-                                    (fail unit)
-                                    (let ((cls (dest_clauses (hd (tl args)))))
-                                      (cl:declare (cl:ignorable cls))
-                                      (progn
-                                        (if (= prec 0) unit (pp-print-string fmt "("))
-                                        (pp-open-hvbox fmt 0)
-                                        (color_switch
-                                          pp_print_colored_resword
-                                          fmt
-                                          "match ")
-                                        (print_term% 0 (hd args))
-                                        (color_switch
-                                          pp_print_colored_resword
-                                          fmt
-                                          " with")
-                                        (pp-print-break fmt 1 2)
-                                        (print_clauses cls)
-                                        (pp-close-box fmt unit)
-                                        (if (= prec 0) unit (pp-print-string fmt ")"))))))
-                                (print_function
-                                  (s prec args)
-                                  (if
-                                    (cl:or
-                                      (<> s "_FUNCTION")
-                                      (<> (funcall length args) 1))
-                                    (fail unit)
-                                    (let ((cls (dest_clauses (hd args))))
-                                      (cl:declare (cl:ignorable cls))
-                                      (progn
-                                        (if (= prec 0) unit (pp-print-string fmt "("))
-                                        (pp-open-hvbox fmt 0)
-                                        (color_switch
-                                          pp_print_colored_resword
-                                          fmt
-                                          "function")
-                                        (pp-print-break fmt 1 2)
-                                        (print_clauses cls)
-                                        (pp-close-box fmt unit)
-                                        (if (= prec 0) unit (pp-print-string fmt ")"))))))
-                                (print_cond
-                                  (s prec tm args)
-                                  (if (cl:or (<> s "COND") (<> (funcall length args) 3))
-                                    (fail unit)
-                                    (progn
-                                      (if (= prec 0) unit (pp-print-string fmt "("))
-                                      (pp-open-hvbox fmt (- 1))
-                                      (match (splitlist #'pdest_cond tm)
-                                        ((tuple ccls ecl)
-                                          (if (<= (funcall length ccls) 4)
-                                            (progn
-                                              (color_switch
-                                                pp_print_colored_resword
-                                                fmt
-                                                "if ")
-                                              (print_term% 0 (hd args))
-                                              (pp-print-break fmt 0 0)
-                                              (color_switch
-                                                pp_print_colored_resword
-                                                fmt
-                                                " then ")
-                                              (print_term% 0 (hd (tl args)))
-                                              (pp-print-break fmt 0 0)
-                                              (color_switch
-                                                pp_print_colored_resword
-                                                fmt
-                                                " else ")
-                                              (print_term% 0 (hd (tl (tl args)))))
-                                            (progn
-                                              (color_switch
-                                                pp_print_colored_resword
-                                                fmt
-                                                "if ")
-                                              (print_term% 0 (fst (hd ccls)))
-                                              (color_switch
-                                                pp_print_colored_resword
-                                                fmt
-                                                " then ")
-                                              (print_term% 0 (snd (hd ccls)))
-                                              (pp-print-break fmt 0 0)
-                                              (do_list
-                                                (lambdac (arg~2387)
-                                                  (match arg~2387
-                                                    ((tuple i% t%)
-                                                      (progn
-                                                        (color_switch
-                                                          pp_print_colored_resword
-                                                          fmt
-                                                          " else if ")
-                                                        (print_term% 0 i%)
-                                                        (color_switch
-                                                          pp_print_colored_resword
-                                                          fmt
-                                                          " then ")
-                                                        (print_term% 0 t%)
-                                                        (pp-print-break fmt 0 0)))))
-                                                (tl ccls))
-                                              (color_switch
-                                                pp_print_colored_resword
-                                                fmt
-                                                " else ")
-                                              (print_term% 0 ecl)))))
-                                      (pp-close-box fmt unit)
-                                      (if (= prec 0) unit (pp-print-string fmt ")")))))
-                                (print_prefix_app
-                                  (s prec args)
-                                  (if
-                                    (not
-                                      (cl:and
-                                        (funcall is_prefix s)
-                                        (= (funcall length args) 1)))
-                                    (fail unit)
-                                    (progn
-                                      (if (= prec 1000) (pp-print-string fmt "(") unit)
-                                      (color_switch pp_print_colored_prefix fmt s)
-                                      (if
-                                        (cl:or
-                                          (funcall isalnum s)
-                                          (cl:or
-                                            (cl:and
-                                              (= s "--")
-                                              (cl:and
-                                                (= (funcall length args) 1)
-                                                (handler-case
-                                                  (match (dest_comb (hd args))
-                                                    ((tuple l _)
-                                                      (let
-                                                        ((s0 (name_of l))
-                                                          (ty0 (type_of l)))
-                                                        (cl:declare (cl:ignorable s0 ty0))
-                                                        (cl:or
-                                                          (=
-                                                            (reverse_interface
-                                                              (tuple s0 ty0))
-                                                            "--")
-                                                          (mem
-                                                            (fst (dest_const l))
-                                                            (cl:cons
-                                                              "real_of_num"
-                                                              (cl:cons "int_of_num" nil)))))))
-                                                  (holai.runtime:ocaml-condition
-                                                    (exception~2527)
-                                                    (match exception~2527
-                                                      ((Failure _) cl:nil)
-                                                      (_ (raise exception~2527)))))))
-                                            (cl:and
-                                              (= s "~")
-                                              (cl:and
-                                                (= (funcall length args) 1)
-                                                (is_neg (hd args))))))
-                                        (pp-print-string fmt " ")
-                                        unit)
-                                      (print_term% 999 (hd args))
-                                      (if (= prec 1000) (pp-print-string fmt ")") unit))))
-                                (print_binder_app
-                                  (s prec tm args)
-                                  (if
-                                    (not
-                                      (cl:and
-                                        (funcall parses_as_binder s)
-                                        (cl:and
-                                          (= (funcall length args) 1)
-                                          (funcall is_gabs (hd args)))))
-                                    (fail unit)
-                                    (print_binder prec tm)))
-                                (print_infix_app
-                                  (s prec tm hop args)
-                                  (if
-                                    (cl:or
-                                      (<> (funcall length args) 2)
-                                      (not (can get_infix_status s)))
-                                    (fail unit)
-                                    (let*
-                                      ((bargs
-                                        (if (ARIGHT s)
-                                          (match (splitlist (DEST_BINARY% hop) tm)
-                                            ((tuple tms tmt)
-                                              (append tms (cl:cons tmt nil))))
-                                          (match (rev_splitlist (DEST_BINARY% hop) tm)
-                                            ((tuple tmt tms) (cl:cons tmt tms)))))
-                                        (newprec (fst (funcall get_infix_status s))))
-                                      (cl:declare (cl:ignorable bargs newprec))
-                                      (progn
-                                        (if (<= newprec prec)
-                                          (progn
-                                            (pp-open-hvbox fmt 1)
-                                            (pp-print-string fmt "("))
-                                          (pp-open-hvbox fmt 0))
-                                        (print_term% newprec (hd bargs))
-                                        (do_list
-                                          (lambdac (x)
-                                            (progn
-                                              (if (mem s (deref unspaced_binops))
-                                                unit
-                                                (if (mem s (deref prebroken_binops))
-                                                  (pp-print-break fmt 1 0)
-                                                  (pp-print-string fmt " ")))
-                                              (color_switch pp_print_colored_infix fmt s)
-                                              (if (mem s (deref unspaced_binops))
-                                                (pp-print-break fmt 0 0)
-                                                (if (mem s (deref prebroken_binops))
-                                                  (pp-print-string fmt " ")
-                                                  (pp-print-break fmt 1 0)))
-                                              (print_term% newprec x)))
-                                          (tl bargs))
-                                        (if (<= newprec prec)
-                                          (pp-print-string fmt ")")
-                                          unit)
-                                        (pp-close-box fmt unit)))))
-                                (print_atom
-                                  (hop s)
-                                  (let
-                                    ((s%
-                                      (if
-                                        (cl:or
-                                          (funcall parses_as_binder s)
-                                          (cl:or
-                                            (can get_infix_status s)
-                                            (funcall is_prefix s)))
-                                        (string-concat "(" (string-concat s ")"))
-                                        s)))
-                                    (cl:declare (cl:ignorable s%))
-                                    (labelsc
-                                      ((has_invented_typevar
-                                        (ty)
-                                        (if (funcall is_vartype ty)
-                                          (=
-                                            (string-get (dest_vartype ty) 0)
-                                            (cl:code-char 63))
-                                          (list-exists
-                                            #'has_invented_typevar
-                                            (snd (dest_type ty))))))
-                                      (if
-                                        (cl:or
-                                          (= (deref print_types_of_subterms) 2)
-                                          (cl:and
-                                            (= (deref print_types_of_subterms) 1)
-                                            (has_invented_typevar (type_of hop))))
-                                        (progn
-                                          (pp-open-box fmt 0)
-                                          (pp-print-string fmt "(")
-                                          (if (is_const hop)
-                                            (color_switch pp_print_colored_const fmt s%)
-                                            (pp-print-string fmt s%))
-                                          (if
-                                            (cl:and
-                                              (> (string-length s%) 0)
-                                              (funcall
-                                                issymb
-                                                (string-sub s% (- (string-length s%) 1) 1)))
-                                            (pp-print-string fmt " ")
-                                            unit)
-                                          (pp-print-string fmt ":")
-                                          (funcall
-                                            (if use_color
-                                              pp_print_colored_type
-                                              pp_print_type)
-                                            fmt
-                                            (type_of hop))
-                                          (pp-print-string fmt ")")
-                                          (pp-close-box fmt unit))
-                                        (if (is_const hop)
-                                          (color_switch pp_print_colored_const fmt s%)
-                                          (pp-print-string fmt s%))))))
-                                (print_generic_app
-                                  (prec tm)
-                                  (match (dest_comb tm)
-                                    ((tuple l r)
-                                      (progn
-                                        (pp-open-hvbox fmt 0)
-                                        (if (= prec 1000) (pp-print-string fmt "(") unit)
-                                        (print_term% 999 l)
-                                        (if
-                                          (handler-case
-                                            (mem
-                                              (fst (dest_const l))
-                                              (cl:cons
-                                                "real_of_num"
-                                                (cl:cons "int_of_num" nil)))
-                                            (holai.runtime:ocaml-condition
-                                              (exception~2895)
-                                              (match exception~2895
-                                                ((Failure _) cl:nil)
-                                                (_ (raise exception~2895)))))
-                                          unit
-                                          (pp-print-space fmt unit))
-                                        (print_term% 1000 r)
-                                        (if (= prec 1000) (pp-print-string fmt ")") unit)
-                                        (pp-close-box fmt unit)))))
-                                (print_term_sequence
-                                  (break sep prec tms)
-                                  (if (= tms nil)
+                                      (not (deref print_unambiguous_comprehensions))
+                                      (set_eq
+                                        evs
+                                        (if (cl:or (<= (#`length fvs) 1) (= bvs nil))
+                                          fvs
+                                          (intersect fvs bvs))))
                                     unit
                                     (progn
-                                      (print_term% prec (hd tms))
-                                      (let ((ttms (tl tms)))
-                                        (cl:declare (cl:ignorable ttms))
-                                        (if (= ttms nil)
-                                          unit
-                                          (progn
-                                            (pp-print-string fmt sep)
-                                            (if break (pp-print-space fmt unit) unit)
-                                            (print_term_sequence break sep prec ttms)))))))
-                                (print_binder
-                                  (prec tm)
-                                  (let ((absf (funcall is_gabs tm)))
-                                    (cl:declare (cl:ignorable absf))
-                                    (match
-                                      (if absf
-                                        (tuple "\\" "\\")
-                                        (let* ((bt (rator tm)) (sn (name_of bt)))
-                                          (cl:declare (cl:ignorable bt sn))
-                                          (tuple
-                                            sn
-                                            (reverse_interface (tuple sn (type_of bt))))))
-                                      ((tuple s s%)
-                                        (labelsc
-                                          ((collectvs
-                                            (tm%)
-                                            (if absf
-                                              (if (is_abs tm%)
-                                                (match (dest_abs tm%)
-                                                  ((tuple v t%)
-                                                    (match (collectvs t%)
-                                                      ((tuple vs bod)
-                                                        (tuple
-                                                          (cl:cons (tuple cl:nil v) vs)
-                                                          bod)))))
-                                                (if (funcall is_gabs tm%)
-                                                  (match (funcall dest_gabs tm%)
-                                                    ((tuple v t%)
-                                                      (match (collectvs t%)
-                                                        ((tuple vs bod)
-                                                          (tuple
-                                                            (cl:cons (tuple cl:t v) vs)
-                                                            bod)))))
-                                                  (tuple nil tm%)))
-                                              (if
-                                                (cl:and
-                                                  (is_comb tm%)
-                                                  (= (name_of (rator tm%)) s))
-                                                (if (is_abs (rand tm%))
-                                                  (match (dest_abs (rand tm%))
-                                                    ((tuple v t%)
-                                                      (match (collectvs t%)
-                                                        ((tuple vs bod)
-                                                          (tuple
-                                                            (cl:cons (tuple cl:nil v) vs)
-                                                            bod)))))
-                                                  (if (funcall is_gabs (rand tm%))
-                                                    (match (funcall dest_gabs (rand tm%))
-                                                      ((tuple v t%)
-                                                        (match (collectvs t%)
-                                                          ((tuple vs bod)
-                                                            (tuple
-                                                              (cl:cons (tuple cl:t v) vs)
-                                                              bod)))))
-                                                    (tuple nil tm%)))
-                                                (tuple nil tm%)))))
-                                          (match (collectvs tm)
-                                            ((tuple vs bod)
-                                              (progn
-                                                (if (= prec 0)
-                                                  (pp-open-hvbox fmt 4)
-                                                  (progn
-                                                    (pp-open-hvbox fmt 5)
-                                                    (pp-print-string fmt "(")))
-                                                (color_switch
-                                                  pp_print_colored_binder
-                                                  fmt
-                                                  s%)
-                                                (if (funcall isalnum s%)
-                                                  (pp-print-string fmt " ")
-                                                  unit)
-                                                (do_list
-                                                  (lambdac (arg~3133)
-                                                    (match arg~3133
-                                                      ((tuple b x)
-                                                        (progn
-                                                          (if b
-                                                            (pp-print-string fmt "(")
-                                                            unit)
-                                                          (print_term% 0 x)
-                                                          (if b
-                                                            (pp-print-string fmt ")")
-                                                            unit)
-                                                          (pp-print-string fmt " ")))))
-                                                  (butlast vs))
-                                                (if (fst (last vs))
-                                                  (pp-print-string fmt "(")
-                                                  unit)
-                                                (print_term% 0 (snd (last vs)))
-                                                (if (fst (last vs))
-                                                  (pp-print-string fmt ")")
-                                                  unit)
-                                                (pp-print-string fmt ".")
-                                                (pp-print-space fmt unit)
-                                                (print_term% 0 bod)
-                                                (if (= prec 0)
-                                                  unit
-                                                  (pp-print-string fmt ")"))
-                                                (pp-close-box fmt unit)))))))))
-                                (print_clauses
-                                  (cls)
-                                  (match cls
-                                    ((cl:cons c% nil) (print_clause c%))
-                                    ((cl:cons c% cs)
-                                      (progn
-                                        (print_clause c%)
-                                        (pp-print-break fmt 1 0)
-                                        (pp-print-string fmt "| ")
-                                        (print_clauses cs)))))
-                                (print_clause
-                                  (cl)
-                                  (match cl
-                                    ((cl:cons p (cl:cons g (cl:cons r nil)))
-                                      (progn
-                                        (print_term% 1 p)
-                                        (pp-print-string fmt " when ")
-                                        (print_term% 1 g)
-                                        (pp-print-string fmt " -> ")
-                                        (print_term% 1 r)))
-                                    ((cl:cons p (cl:cons r nil))
-                                      (progn
-                                        (print_term% 1 p)
-                                        (pp-print-string fmt " -> ")
-                                        (print_term% 1 r))))))
-                              (print_term% 0)))))))
-                    (tuple (print_colored_term cl:nil) (print_colored_term cl:t)))))))))))
+                                      (print_term_sequence cl:nil "," 14 evs)
+                                      (pp-print-string fmt " | "))))
+                                (print_term% 0 babs)
+                                (pp-print-string fmt "}")))))))))))
+            (:recursive 3 print_let_term (s prec tm)
+              (if (<> s "LET")
+                (fail unit)
+                (match (dest_let tm)
+                  ((tuple eqs bod)
+                    (progn
+                      (if (= prec 0)
+                        (pp-open-hvbox fmt 0)
+                        (progn (pp-open-hvbox fmt 1) (pp-print-string fmt "(")))
+                      (color_switch pp_print_colored_resword fmt "let ")
+                      (print_term% 0 (#`mk_eq (hd eqs)))
+                      (do_list
+                        (lambdac (arg~2117)
+                          (match arg~2117
+                            ((tuple v t%)
+                              (progn
+                                (pp-print-break fmt 1 0)
+                                (color_switch pp_print_colored_resword fmt "and ")
+                                (print_term% 0 (#`mk_eq (tuple v t%)))))))
+                        (tl eqs))
+                      (color_switch pp_print_colored_resword fmt " in")
+                      (pp-print-break fmt 1 0)
+                      (print_term% 0 bod)
+                      (if (= prec 0) unit (pp-print-string fmt ")"))
+                      (pp-close-box fmt unit))))))
+            (:recursive 3 print_decimal (s args)
+              (if (<> s "DECIMAL")
+                (fail unit)
+                (let
+                  ((n_num (#`dest_numeral (hd args)))
+                    (n_den (#`dest_numeral (hd (tl args)))))
+                  (cl:declare (cl:ignorable n_num n_den))
+                  (if (not (powerof10 n_den))
+                    (fail unit)
+                    (let*
+                      ((s_num (string-of-num (quo-num n_num n_den)))
+                        (s_den
+                          (implode
+                            (tl (explode (string-of-num (+ n_den (mod-num n_num n_den))))))))
+                      (cl:declare (cl:ignorable s_num s_den))
+                      (pp-print-string
+                        fmt
+                        (string-concat
+                          "#"
+                          (string-concat
+                            s_num
+                            (string-concat (if (= n_den (num 1)) "" ".") s_den)))))))))
+            (:recursive 3 print_match (s prec args)
+              (if (cl:or (<> s "_MATCH") (<> (#`length args) 2))
+                (fail unit)
+                (let ((cls (dest_clauses (hd (tl args)))))
+                  (cl:declare (cl:ignorable cls))
+                  (progn
+                    (if (= prec 0) unit (pp-print-string fmt "("))
+                    (pp-open-hvbox fmt 0)
+                    (color_switch pp_print_colored_resword fmt "match ")
+                    (print_term% 0 (hd args))
+                    (color_switch pp_print_colored_resword fmt " with")
+                    (pp-print-break fmt 1 2)
+                    (print_clauses cls)
+                    (pp-close-box fmt unit)
+                    (if (= prec 0) unit (pp-print-string fmt ")"))))))
+            (:recursive 3 print_function (s prec args)
+              (if (cl:or (<> s "_FUNCTION") (<> (#`length args) 1))
+                (fail unit)
+                (let ((cls (dest_clauses (hd args))))
+                  (cl:declare (cl:ignorable cls))
+                  (progn
+                    (if (= prec 0) unit (pp-print-string fmt "("))
+                    (pp-open-hvbox fmt 0)
+                    (color_switch pp_print_colored_resword fmt "function")
+                    (pp-print-break fmt 1 2)
+                    (print_clauses cls)
+                    (pp-close-box fmt unit)
+                    (if (= prec 0) unit (pp-print-string fmt ")"))))))
+            (:recursive 3 print_cond (s prec tm args)
+              (if (cl:or (<> s "COND") (<> (#`length args) 3))
+                (fail unit)
+                (progn
+                  (if (= prec 0) unit (pp-print-string fmt "("))
+                  (pp-open-hvbox fmt (- 1))
+                  (match (splitlist #'pdest_cond tm)
+                    ((tuple ccls ecl)
+                      (if (<= (#`length ccls) 4)
+                        (progn
+                          (color_switch pp_print_colored_resword fmt "if ")
+                          (print_term% 0 (hd args))
+                          (pp-print-break fmt 0 0)
+                          (color_switch pp_print_colored_resword fmt " then ")
+                          (print_term% 0 (hd (tl args)))
+                          (pp-print-break fmt 0 0)
+                          (color_switch pp_print_colored_resword fmt " else ")
+                          (print_term% 0 (hd (tl (tl args)))))
+                        (progn
+                          (color_switch pp_print_colored_resword fmt "if ")
+                          (print_term% 0 (fst (hd ccls)))
+                          (color_switch pp_print_colored_resword fmt " then ")
+                          (print_term% 0 (snd (hd ccls)))
+                          (pp-print-break fmt 0 0)
+                          (do_list
+                            (lambdac (arg~2387)
+                              (match arg~2387
+                                ((tuple i% t%)
+                                  (progn
+                                    (color_switch
+                                      pp_print_colored_resword
+                                      fmt
+                                      " else if ")
+                                    (print_term% 0 i%)
+                                    (color_switch pp_print_colored_resword fmt " then ")
+                                    (print_term% 0 t%)
+                                    (pp-print-break fmt 0 0)))))
+                            (tl ccls))
+                          (color_switch pp_print_colored_resword fmt " else ")
+                          (print_term% 0 ecl)))))
+                  (pp-close-box fmt unit)
+                  (if (= prec 0) unit (pp-print-string fmt ")")))))
+            (:recursive 3 print_prefix_app (s prec args)
+              (if (not (cl:and (#`is_prefix s) (= (#`length args) 1)))
+                (fail unit)
+                (progn
+                  (if (= prec 1000) (pp-print-string fmt "(") unit)
+                  (color_switch pp_print_colored_prefix fmt s)
+                  (if
+                    (cl:or
+                      (#`isalnum s)
+                      (cl:or
+                        (cl:and
+                          (= s "--")
+                          (cl:and
+                            (= (#`length args) 1)
+                            (handler-case
+                              (match (dest_comb (hd args))
+                                ((tuple l _)
+                                  (let ((s0 (name_of l)) (ty0 (type_of l)))
+                                    (cl:declare (cl:ignorable s0 ty0))
+                                    (cl:or
+                                      (= (reverse_interface (tuple s0 ty0)) "--")
+                                      (mem
+                                        (fst (dest_const l))
+                                        (cl:cons "real_of_num" (cl:cons "int_of_num" nil)))))))
+                              (holai.runtime:ocaml-condition
+                                (exception~2527)
+                                (match exception~2527
+                                  ((Failure _) cl:nil)
+                                  (_ (raise exception~2527)))))))
+                        (cl:and
+                          (= s "~")
+                          (cl:and (= (#`length args) 1) (is_neg (hd args))))))
+                    (pp-print-string fmt " ")
+                    unit)
+                  (print_term% 999 (hd args))
+                  (if (= prec 1000) (pp-print-string fmt ")") unit))))
+            (:recursive 3 print_binder_app (s prec tm args)
+              (if
+                (not
+                  (cl:and
+                    (#`parses_as_binder s)
+                    (cl:and (= (#`length args) 1) (#`is_gabs (hd args)))))
+                (fail unit)
+                (print_binder prec tm)))
+            (:recursive 3 print_infix_app (s prec tm hop args)
+              (if (cl:or (<> (#`length args) 2) (not (can get_infix_status s)))
+                (fail unit)
+                (let*
+                  ((bargs
+                    (if (ARIGHT s)
+                      (match (splitlist (DEST_BINARY% hop) tm)
+                        ((tuple tms tmt) (append tms (cl:cons tmt nil))))
+                      (match (rev_splitlist (DEST_BINARY% hop) tm)
+                        ((tuple tmt tms) (cl:cons tmt tms)))))
+                    (newprec (fst (#`get_infix_status s))))
+                  (cl:declare (cl:ignorable bargs newprec))
+                  (progn
+                    (if (<= newprec prec)
+                      (progn (pp-open-hvbox fmt 1) (pp-print-string fmt "("))
+                      (pp-open-hvbox fmt 0))
+                    (print_term% newprec (hd bargs))
+                    (do_list
+                      (lambdac (x)
+                        (progn
+                          (if (mem s (deref unspaced_binops))
+                            unit
+                            (if (mem s (deref prebroken_binops))
+                              (pp-print-break fmt 1 0)
+                              (pp-print-string fmt " ")))
+                          (color_switch pp_print_colored_infix fmt s)
+                          (if (mem s (deref unspaced_binops))
+                            (pp-print-break fmt 0 0)
+                            (if (mem s (deref prebroken_binops))
+                              (pp-print-string fmt " ")
+                              (pp-print-break fmt 1 0)))
+                          (print_term% newprec x)))
+                      (tl bargs))
+                    (if (<= newprec prec) (pp-print-string fmt ")") unit)
+                    (pp-close-box fmt unit)))))
+            (:recursive 3 print_atom (hop s)
+              (let
+                ((s%
+                  (if
+                    (cl:or
+                      (#`parses_as_binder s)
+                      (cl:or (can get_infix_status s) (#`is_prefix s)))
+                    (string-concat "(" (string-concat s ")"))
+                    s)))
+                (cl:declare (cl:ignorable s%))
+                (labelsc
+                  ((has_invented_typevar
+                    (ty)
+                    (if (#`is_vartype ty)
+                      (= (string-get (dest_vartype ty) 0) (cl:code-char 63))
+                      (list-exists #'has_invented_typevar (snd (dest_type ty))))))
+                  (if
+                    (cl:or
+                      (= (deref print_types_of_subterms) 2)
+                      (cl:and
+                        (= (deref print_types_of_subterms) 1)
+                        (has_invented_typevar (type_of hop))))
+                    (progn
+                      (pp-open-box fmt 0)
+                      (pp-print-string fmt "(")
+                      (if (is_const hop)
+                        (color_switch pp_print_colored_const fmt s%)
+                        (pp-print-string fmt s%))
+                      (if
+                        (cl:and
+                          (> (string-length s%) 0)
+                          (#`issymb (string-sub s% (- (string-length s%) 1) 1)))
+                        (pp-print-string fmt " ")
+                        unit)
+                      (pp-print-string fmt ":")
+                      (#`(if use_color pp_print_colored_type pp_print_type)
+                        fmt
+                        (type_of hop))
+                      (pp-print-string fmt ")")
+                      (pp-close-box fmt unit))
+                    (if (is_const hop)
+                      (color_switch pp_print_colored_const fmt s%)
+                      (pp-print-string fmt s%))))))
+            (:recursive 3 print_generic_app (prec tm)
+              (match (dest_comb tm)
+                ((tuple l r)
+                  (progn
+                    (pp-open-hvbox fmt 0)
+                    (if (= prec 1000) (pp-print-string fmt "(") unit)
+                    (print_term% 999 l)
+                    (if
+                      (handler-case
+                        (mem
+                          (fst (dest_const l))
+                          (cl:cons "real_of_num" (cl:cons "int_of_num" nil)))
+                        (holai.runtime:ocaml-condition
+                          (exception~2895)
+                          (match exception~2895
+                            ((Failure _) cl:nil)
+                            (_ (raise exception~2895)))))
+                      unit
+                      (pp-print-space fmt unit))
+                    (print_term% 1000 r)
+                    (if (= prec 1000) (pp-print-string fmt ")") unit)
+                    (pp-close-box fmt unit)))))
+            (:recursive 3 print_term_sequence (break sep prec tms)
+              (if (= tms nil)
+                unit
+                (progn
+                  (print_term% prec (hd tms))
+                  (let ((ttms (tl tms)))
+                    (cl:declare (cl:ignorable ttms))
+                    (if (= ttms nil)
+                      unit
+                      (progn
+                        (pp-print-string fmt sep)
+                        (if break (pp-print-space fmt unit) unit)
+                        (print_term_sequence break sep prec ttms)))))))
+            (:recursive 3 print_binder (prec tm)
+              (let ((absf (#`is_gabs tm)))
+                (cl:declare (cl:ignorable absf))
+                (match
+                  (if absf
+                    (tuple "\\" "\\")
+                    (let* ((bt (rator tm)) (sn (name_of bt)))
+                      (cl:declare (cl:ignorable bt sn))
+                      (tuple sn (reverse_interface (tuple sn (type_of bt))))))
+                  ((tuple s s%)
+                    (labelsc
+                      ((collectvs
+                        (tm%)
+                        (if absf
+                          (if (is_abs tm%)
+                            (match (dest_abs tm%)
+                              ((tuple v t%)
+                                (match (collectvs t%)
+                                  ((tuple vs bod)
+                                    (tuple (cl:cons (tuple cl:nil v) vs) bod)))))
+                            (if (#`is_gabs tm%)
+                              (match (#`dest_gabs tm%)
+                                ((tuple v t%)
+                                  (match (collectvs t%)
+                                    ((tuple vs bod)
+                                      (tuple (cl:cons (tuple cl:t v) vs) bod)))))
+                              (tuple nil tm%)))
+                          (if (cl:and (is_comb tm%) (= (name_of (rator tm%)) s))
+                            (if (is_abs (rand tm%))
+                              (match (dest_abs (rand tm%))
+                                ((tuple v t%)
+                                  (match (collectvs t%)
+                                    ((tuple vs bod)
+                                      (tuple (cl:cons (tuple cl:nil v) vs) bod)))))
+                              (if (#`is_gabs (rand tm%))
+                                (match (#`dest_gabs (rand tm%))
+                                  ((tuple v t%)
+                                    (match (collectvs t%)
+                                      ((tuple vs bod)
+                                        (tuple (cl:cons (tuple cl:t v) vs) bod)))))
+                                (tuple nil tm%)))
+                            (tuple nil tm%)))))
+                      (match (collectvs tm)
+                        ((tuple vs bod)
+                          (progn
+                            (if (= prec 0)
+                              (pp-open-hvbox fmt 4)
+                              (progn (pp-open-hvbox fmt 5) (pp-print-string fmt "(")))
+                            (color_switch pp_print_colored_binder fmt s%)
+                            (if (#`isalnum s%) (pp-print-string fmt " ") unit)
+                            (do_list
+                              (lambdac (arg~3133)
+                                (match arg~3133
+                                  ((tuple b x)
+                                    (progn
+                                      (if b (pp-print-string fmt "(") unit)
+                                      (print_term% 0 x)
+                                      (if b (pp-print-string fmt ")") unit)
+                                      (pp-print-string fmt " ")))))
+                              (butlast vs))
+                            (if (fst (last vs)) (pp-print-string fmt "(") unit)
+                            (print_term% 0 (snd (last vs)))
+                            (if (fst (last vs)) (pp-print-string fmt ")") unit)
+                            (pp-print-string fmt ".")
+                            (pp-print-space fmt unit)
+                            (print_term% 0 bod)
+                            (if (= prec 0) unit (pp-print-string fmt ")"))
+                            (pp-close-box fmt unit)))))))))
+            (:recursive 3 print_clauses (cls)
+              (match cls
+                ((cl:cons c% nil) (print_clause c%))
+                ((cl:cons c% cs)
+                  (progn
+                    (print_clause c%)
+                    (pp-print-break fmt 1 0)
+                    (pp-print-string fmt "| ")
+                    (print_clauses cs)))))
+            (:recursive 3 print_clause (cl)
+              (match cl
+                ((cl:cons p (cl:cons g (cl:cons r nil)))
+                  (progn
+                    (print_term% 1 p)
+                    (pp-print-string fmt " when ")
+                    (print_term% 1 g)
+                    (pp-print-string fmt " -> ")
+                    (print_term% 1 r)))
+                ((cl:cons p (cl:cons r nil))
+                  (progn (print_term% 1 p) (pp-print-string fmt " -> ") (print_term% 1 r))))))
+          (print_term% 0))))
+    (tuple (print_colored_term cl:nil) (print_colored_term cl:t)))
   ((tuple pp_print_term% pp_print_colored_term%)
     (setf pp_print_colored_term pp_print_colored_term% pp_print_term pp_print_term%)))
 
@@ -2282,7 +2052,7 @@
       (use_color fmt tm)
       (progn
         (pp-print-string fmt "`")
-        (funcall (if use_color pp_print_colored_term pp_print_term) fmt tm)
+        (#`(if use_color pp_print_colored_term pp_print_term) fmt tm)
         (pp-print-string fmt "`"))))
     (tuple (fn cl:nil) (fn cl:t)))
   ((tuple pp_print_qterm% pp_print_colored_qterm%)
@@ -2308,26 +2078,20 @@
               (progn
                 (if (deref print_all_thm)
                   (progn
-                    (funcall
-                      (if use_color pp_print_colored_term pp_print_term)
-                      fmt
-                      (hd asl))
+                    (#`(if use_color pp_print_colored_term pp_print_term) fmt (hd asl))
                     (do_list
                       (lambdac (x)
                         (progn
                           (pp-print-string fmt ",")
                           (pp-print-space fmt unit)
-                          (funcall
-                            (if use_color pp_print_colored_term pp_print_term)
-                            fmt
-                            x)))
+                          (#`(if use_color pp_print_colored_term pp_print_term) fmt x)))
                       (tl asl)))
                   (pp-print-string fmt "..."))
                 (pp-print-space fmt unit))
               unit)
             (pp-open-hbox fmt unit)
             (pp-print-string fmt "|- ")
-            (funcall (if use_color pp_print_colored_term pp_print_term) fmt tm)
+            (#`(if use_color pp_print_colored_term pp_print_term) fmt tm)
             (pp-close-box fmt unit))))))
     (tuple (fn cl:nil) (fn cl:t)))
   ((tuple pp_print_thm% pp_print_colored_thm%)
@@ -2338,15 +2102,15 @@
 ;; (* ------------------------------------------------------------------------- *)
 
 
-(defparameter print_type (funcall pp_print_type std-formatter))
+(defparameter print_type (#`pp_print_type std-formatter))
 
-(defparameter print_qtype (funcall pp_print_qtype std-formatter))
+(defparameter print_qtype (#`pp_print_qtype std-formatter))
 
-(defparameter print_term (funcall pp_print_term std-formatter))
+(defparameter print_term (#`pp_print_term std-formatter))
 
-(defparameter print_qterm (funcall pp_print_qterm std-formatter))
+(defparameter print_qterm (#`pp_print_qterm std-formatter))
 
-(defparameter print_thm (funcall pp_print_thm std-formatter))
+(defparameter print_thm (#`pp_print_thm std-formatter))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Conversions to string.                                                    *)
@@ -2359,15 +2123,15 @@
     (match (pp-set-max-boxes fmt 100)
       ((cl:type holai.runtime::unit-value)
         (let*
-          ((print (funcall printer fmt))
+          ((print (#`printer fmt))
             (flush (partial (function-value #'pp-print-flush 2) fmt)))
           (cl:declare (cl:ignorable print flush))
           (lambdac (x)
             (match (pp-set-margin fmt (get-margin unit))
               ((cl:type holai.runtime::unit-value)
-                (match (funcall print x)
+                (match (#`print x)
                   ((cl:type holai.runtime::unit-value)
-                    (match (funcall flush unit)
+                    (match (#`flush unit)
                       ((cl:type holai.runtime::unit-value)
                         (let ((s (buffer-contents buf)))
                           (cl:declare (cl:ignorable s))

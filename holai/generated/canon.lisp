@@ -310,7 +310,6 @@
     labelsc
     guard
     function-value
-    funcall
     fst
     fletc
     failwith
@@ -435,14 +434,13 @@
       (th fn)
       (let ((tm (concl th)))
         (cl:declare (cl:ignorable tm))
-        (if (funcall is_conj tm)
+        (if (#`is_conj tm)
           (match (CONJ_PAIR th) ((tuple th1 th2) (mk_fun th1 (mk_fun th2 fn))))
-          (funcall %-> tm th fn))))
+          (#`%-> tm th fn))))
       (use_fun
         (fn tm)
-        (if (funcall is_conj tm)
-          (match (funcall dest_conj tm)
-            ((tuple l r%) (funcall CONJ (use_fun fn l) (use_fun fn r%))))
+        (if (#`is_conj tm)
+          (match (#`dest_conj tm) ((tuple l r%) (#`CONJ (use_fun fn l) (use_fun fn r%))))
           (apply fn tm))))
     (lambdac (fm)
       (match (dest_eq fm)
@@ -453,29 +451,27 @@
               ((th (use_fun (mk_fun (ASSUME p%) undefined) p%%))
                 (th% (use_fun (mk_fun (ASSUME p%%) undefined) p%)))
               (cl:declare (cl:ignorable th th%))
-              (funcall IMP_ANTISYM_RULE (DISCH_ALL th) (DISCH_ALL th%)))))))))
+              (#`IMP_ANTISYM_RULE (DISCH_ALL th) (DISCH_ALL th%)))))))))
 
 (defparameter DISJ_ACI_RULE
   (let
-    ((pth_left (UNDISCH (funcall TAUT (parse_term "~(a \\/ b) ==> ~a"))))
-      (pth_right (UNDISCH (funcall TAUT (parse_term "~(a \\/ b) ==> ~b"))))
-      (pth (repeat #'UNDISCH (funcall TAUT (parse_term "~a ==> ~b ==> ~(a \\/ b)"))))
-      (pth_neg (UNDISCH (funcall TAUT (parse_term "(~a <=> ~b) ==> (a <=> b)"))))
+    ((pth_left (UNDISCH (#`TAUT (parse_term "~(a \\/ b) ==> ~a"))))
+      (pth_right (UNDISCH (#`TAUT (parse_term "~(a \\/ b) ==> ~b"))))
+      (pth (repeat #'UNDISCH (#`TAUT (parse_term "~a ==> ~b ==> ~(a \\/ b)"))))
+      (pth_neg (UNDISCH (#`TAUT (parse_term "(~a <=> ~b) ==> (a <=> b)"))))
       (a_tm (parse_term "a:bool"))
       (b_tm (parse_term "b:bool")))
     (cl:declare (cl:ignorable pth_left pth_right pth pth_neg a_tm b_tm))
-    (fletc
-      ((NOT_DISJ_PAIR
-        (th)
-        (match (funcall dest_disj (rand (concl th)))
+    (holai.runtime:labelsc
+      ((:nonrecursive 0 NOT_DISJ_PAIR (th)
+        (match (#`dest_disj (rand (concl th)))
           ((tuple p% q)
             (let ((ilist (cl:cons (tuple p% a_tm) (cl:cons (tuple q b_tm) nil))))
               (cl:declare (cl:ignorable ilist))
               (tuple
                 (PROVE_HYP th (INST% ilist pth_left))
                 (PROVE_HYP th (INST% ilist pth_right)))))))
-        (NOT_DISJ
-          (th1 th2)
+        (:nonrecursive 0 NOT_DISJ (th1 th2)
           (let
             ((th3
               (INST%
@@ -484,37 +480,34 @@
                   (cl:cons (tuple (rand (concl th2)) b_tm) nil))
                 pth)))
             (cl:declare (cl:ignorable th3))
-            (PROVE_HYP th1 (PROVE_HYP th2 th3)))))
-      (labelsc
-        ((mk_fun
-          (th fn)
+            (PROVE_HYP th1 (PROVE_HYP th2 th3))))
+        (:recursive 1 mk_fun (th fn)
           (let ((tm (rand (concl th))))
             (cl:declare (cl:ignorable tm))
-            (if (funcall is_disj tm)
+            (if (#`is_disj tm)
               (match (NOT_DISJ_PAIR th) ((tuple th1 th2) (mk_fun th1 (mk_fun th2 fn))))
-              (funcall %-> tm th fn))))
-          (use_fun
-            (fn tm)
-            (if (funcall is_disj tm)
-              (match (funcall dest_disj tm)
-                ((tuple l r%) (NOT_DISJ (use_fun fn l) (use_fun fn r%))))
-              (apply fn tm))))
-        (lambdac (fm)
-          (match (dest_eq fm)
-            ((tuple p% p%%)
-              (if (= p% p%%)
-                (REFL p%)
-                (let
-                  ((th (use_fun (mk_fun (ASSUME (funcall mk_neg p%)) undefined) p%%))
-                    (th% (use_fun (mk_fun (ASSUME (funcall mk_neg p%%)) undefined) p%)))
-                  (cl:declare (cl:ignorable th th%))
-                  (let ((th1 (funcall IMP_ANTISYM_RULE (DISCH_ALL th) (DISCH_ALL th%))))
-                    (cl:declare (cl:ignorable th1))
-                    (PROVE_HYP
-                      th1
-                      (INST%
-                        (cl:cons (tuple p% a_tm) (cl:cons (tuple p%% b_tm) nil))
-                        pth_neg))))))))))))
+              (#`%-> tm th fn))))
+        (:recursive 1 use_fun (fn tm)
+          (if (#`is_disj tm)
+            (match (#`dest_disj tm)
+              ((tuple l r%) (NOT_DISJ (use_fun fn l) (use_fun fn r%))))
+            (apply fn tm))))
+      (lambdac (fm)
+        (match (dest_eq fm)
+          ((tuple p% p%%)
+            (if (= p% p%%)
+              (REFL p%)
+              (let
+                ((th (use_fun (mk_fun (ASSUME (#`mk_neg p%)) undefined) p%%))
+                  (th% (use_fun (mk_fun (ASSUME (#`mk_neg p%%)) undefined) p%)))
+                (cl:declare (cl:ignorable th th%))
+                (let ((th1 (#`IMP_ANTISYM_RULE (DISCH_ALL th) (DISCH_ALL th%))))
+                  (cl:declare (cl:ignorable th1))
+                  (PROVE_HYP
+                    th1
+                    (INST%
+                      (cl:cons (tuple p% a_tm) (cl:cons (tuple p%% b_tm) nil))
+                      pth_neg)))))))))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Order canonically, right-associate and remove duplicates.                 *)
@@ -522,14 +515,14 @@
 
 
 (defunc CONJ_CANON_CONV (tm)
-  (let ((tm% (funcall list_mk_conj (setify (funcall conjuncts tm)))))
+  (let ((tm% (#`list_mk_conj (setify (#`conjuncts tm)))))
     (cl:declare (cl:ignorable tm%))
-    (funcall CONJ_ACI_RULE (funcall mk_eq (tuple tm tm%)))))
+    (#`CONJ_ACI_RULE (#`mk_eq (tuple tm tm%)))))
 
 (defunc DISJ_CANON_CONV (tm)
-  (let ((tm% (funcall list_mk_disj (setify (funcall disjuncts tm)))))
+  (let ((tm% (#`list_mk_disj (setify (#`disjuncts tm)))))
     (cl:declare (cl:ignorable tm%))
-    (funcall DISJ_ACI_RULE (funcall mk_eq (tuple tm tm%)))))
+    (#`DISJ_ACI_RULE (#`mk_eq (tuple tm tm%)))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* General NNF conversion. The user supplies some conversion to be applied   *)
@@ -554,15 +547,15 @@
       (parse_term "(/\\)")
       (parse_term "(\\/)")
       (parse_term "(~)")
-      (funcall TAUT (parse_term "~ ~ p = p"))
-      (funcall TAUT (parse_term "~(p /\\ q) <=> ~p \\/ ~q"))
-      (funcall TAUT (parse_term "~(p \\/ q) <=> ~p /\\ ~q"))
-      (funcall TAUT (parse_term "p ==> q <=> ~p \\/ q"))
-      (funcall TAUT (parse_term "~(p ==> q) <=> p /\\ ~q"))
-      (funcall TAUT (parse_term "(p <=> q) <=> p /\\ q \\/ ~p /\\ ~q"))
-      (funcall TAUT (parse_term "~(p <=> q) <=> p /\\ ~q \\/ ~p /\\ q"))
-      (funcall TAUT (parse_term "(p <=> q) <=> (p \\/ ~q) /\\ (~p \\/ q)"))
-      (funcall TAUT (parse_term "~(p <=> q) <=> (p \\/ q) /\\ (~p \\/ ~q)"))
+      (#`TAUT (parse_term "~ ~ p = p"))
+      (#`TAUT (parse_term "~(p /\\ q) <=> ~p \\/ ~q"))
+      (#`TAUT (parse_term "~(p \\/ q) <=> ~p /\\ ~q"))
+      (#`TAUT (parse_term "p ==> q <=> ~p \\/ q"))
+      (#`TAUT (parse_term "~(p ==> q) <=> p /\\ ~q"))
+      (#`TAUT (parse_term "(p <=> q) <=> p /\\ q \\/ ~p /\\ ~q"))
+      (#`TAUT (parse_term "~(p <=> q) <=> p /\\ ~q \\/ ~p /\\ q"))
+      (#`TAUT (parse_term "(p <=> q) <=> (p \\/ ~q) /\\ (~p \\/ q)"))
+      (#`TAUT (parse_term "~(p <=> q) <=> (p \\/ q) /\\ (~p \\/ ~q)"))
       (o
         holai.bool:CONJUNCTS
         #'prove
@@ -575,7 +568,7 @@
             THEN
               (GEN_REWRITE_TAC
                 (o LAND_CONV (funpow 2 #'RAND_CONV))
-                (cl:cons (funcall GSYM ETA_AX) nil))
+                (cl:cons (#`GSYM ETA_AX) nil))
             THEN
               (REWRITE_TAC
                 (cl:cons
@@ -591,14 +584,12 @@
           (parse_term "((?!) P) <=> (?x:A. P x) /\\ !x y. ~(P x) \\/ ~(P y) \\/ (y = x)")
           (holai.runtime:proof (GEN_REWRITE_TAC
               (o LAND_CONV #'RAND_CONV)
-              (cl:cons (funcall GSYM ETA_AX) nil))
+              (cl:cons (#`GSYM ETA_AX) nil))
             THEN
               (REWRITE_TAC
                 (cl:cons
                   EXISTS_UNIQUE_DEF
-                  (cl:cons
-                    (funcall TAUT (parse_term "a /\\ b ==> c <=> ~a \\/ ~b \\/ c"))
-                    nil)))
+                  (cl:cons (#`TAUT (parse_term "a /\\ b ==> c <=> ~a \\/ ~b \\/ c")) nil)))
             THEN (REWRITE_TAC (cl:cons EQ_SYM_EQ nil)))))
       (parse_term "p:bool")
       (parse_term "q:bool"))
@@ -619,9 +610,8 @@
       pth_exu
       p_tm
       q_tm)
-      (labelsc
-        ((NNF_DCONV
-          (cf baseconvs tm)
+      (holai.runtime:labelsc
+        ((:recursive 0 NNF_DCONV (cf baseconvs tm)
           (match tm
             ((Comb (Comb (Const "/\\" _) l) r%)
               (match (tuple (NNF_DCONV cf baseconvs l) (NNF_DCONV cf baseconvs r%))
@@ -721,7 +711,7 @@
                           (INST_TYPE (cl:cons (tuple ty aty) nil) pth_not_forall)))
                         (th2 (TRANS (AP_TERM not_tm (BETA (mk_comb (tuple bod x)))) th_n)))
                       (cl:declare (cl:ignorable th1 th2))
-                      (TRANS th1 (funcall MK_EXISTS x th2)))))))
+                      (TRANS th1 (#`MK_EXISTS x th2)))))))
             ((Comb
               (cl:and
                 q
@@ -740,18 +730,18 @@
                           (INST_TYPE (cl:cons (tuple ty aty) nil) pth_not_exists)))
                         (th2 (TRANS (AP_TERM not_tm (BETA (mk_comb (tuple bod x)))) th_n)))
                       (cl:declare (cl:ignorable th1 th2))
-                      (TRANS th1 (funcall MK_FORALL x th2)))))))
+                      (TRANS th1 (#`MK_FORALL x th2)))))))
             ((Comb
               (Const "?!" (Tyapp "fun" (cl:cons (Tyapp "fun" (cl:cons ty _)) _)))
               (cl:and bod (Abs x t%)))
               (match
                 (tuple (variant (cl:cons x (frees t%)) x) (NNF_DCONV cf baseconvs t%))
                 ((tuple y (tuple th_p th_n))
-                  (let ((eq (funcall mk_eq (tuple y x))))
+                  (let ((eq (#`mk_eq (tuple y x))))
                     (cl:declare (cl:ignorable eq))
                     (match
                       (tuple
-                        (funcall baseconvs eq)
+                        (#`baseconvs eq)
                         (BETA (mk_comb (tuple bod x)))
                         (BETA_CONV (mk_comb (tuple bod y))))
                       ((tuple (tuple eth_p eth_n) bth bth%)
@@ -777,14 +767,10 @@
                               (th2
                                 (MK_COMB%
                                   (tuple
-                                    (AP_TERM
-                                      and_tm
-                                      (funcall MK_EXISTS x (TRANS bth th_p)))
-                                    (funcall
-                                      MK_FORALL
+                                    (AP_TERM and_tm (#`MK_EXISTS x (TRANS bth th_p)))
+                                    (#`MK_FORALL
                                       x
-                                      (funcall
-                                        MK_FORALL
+                                      (#`MK_FORALL
                                         y
                                         (MK_COMB%
                                           (tuple
@@ -802,15 +788,10 @@
                                   (tuple
                                     (AP_TERM
                                       or_tm
-                                      (funcall
-                                        MK_FORALL
-                                        x
-                                        (TRANS (AP_TERM not_tm bth) th_n)))
-                                    (funcall
-                                      MK_EXISTS
+                                      (#`MK_FORALL x (TRANS (AP_TERM not_tm bth) th_n)))
+                                    (#`MK_EXISTS
                                       x
-                                      (funcall
-                                        MK_EXISTS
+                                      (#`MK_EXISTS
                                         y
                                         (MK_COMB%
                                           (tuple
@@ -829,15 +810,13 @@
                     (TRANS (INST% (cl:cons (tuple t% p_tm) nil) pth_not_not) th1)))))
             (_
               (handler-case
-                (funcall baseconvs tm)
+                (#`baseconvs tm)
                 (holai.runtime:ocaml-condition
                   (exception~1062)
                   (match exception~1062
-                    ((Failure _) (tuple (REFL tm) (REFL (funcall mk_neg tm))))
-                    (_ (raise exception~1062)))))))))
-        (labelsc
-          ((NNF_CONV%
-            (cf arg~1079 tm)
+                    ((Failure _) (tuple (REFL tm) (REFL (#`mk_neg tm))))
+                    (_ (raise exception~1062))))))))
+          (:recursive 1 NNF_CONV% (cf arg~1079 tm)
             (match arg~1079
               ((cl:and baseconvs (tuple base1 base2))
                 (match tm
@@ -911,11 +890,11 @@
                     (match
                       (tuple (variant (cl:cons x (frees t%)) x) (NNF_DCONV cf base2 t%))
                       ((tuple y (tuple th_p th_n))
-                        (let ((eq (funcall mk_eq (tuple y x))))
+                        (let ((eq (#`mk_eq (tuple y x))))
                           (cl:declare (cl:ignorable eq))
                           (match
                             (tuple
-                              (funcall base2 eq)
+                              (#`base2 eq)
                               (BETA (mk_comb (tuple bod x)))
                               (BETA_CONV (mk_comb (tuple bod y))))
                             ((tuple (tuple eth_p eth_n) bth bth%)
@@ -932,14 +911,10 @@
                                   (th2
                                     (MK_COMB%
                                       (tuple
-                                        (AP_TERM
-                                          and_tm
-                                          (funcall MK_EXISTS x (TRANS bth th_p)))
-                                        (funcall
-                                          MK_FORALL
+                                        (AP_TERM and_tm (#`MK_EXISTS x (TRANS bth th_p)))
+                                        (#`MK_FORALL
                                           x
-                                          (funcall
-                                            MK_FORALL
+                                          (#`MK_FORALL
                                             y
                                             (MK_COMB%
                                               (tuple
@@ -957,168 +932,160 @@
                   ((Comb (Const "~" _) t%) (NNF_CONV%% cf baseconvs t%))
                   (_
                     (handler-case
-                      (funcall base1 tm)
+                      (#`base1 tm)
                       (holai.runtime:ocaml-condition
                         (exception~1474)
                         (match exception~1474
                           ((Failure _) (REFL tm))
                           (_ (raise exception~1474))))))))))
-            (NNF_CONV%%
-              (cf arg~1490 tm)
-              (match arg~1490
-                ((cl:and baseconvs (tuple base1 base2))
-                  (match tm
-                    ((Comb (Comb (Const "/\\" _) l) r%)
-                      (let
-                        ((th_ln (NNF_CONV%% cf baseconvs l))
-                          (th_rn (NNF_CONV%% cf baseconvs r%)))
-                        (cl:declare (cl:ignorable th_ln th_rn))
-                        (TRANS
-                          (INST%
-                            (cl:cons (tuple l p_tm) (cl:cons (tuple r% q_tm) nil))
-                            pth_not_and)
-                          (MK_COMB% (tuple (AP_TERM or_tm th_ln) th_rn)))))
-                    ((Comb (Comb (Const "\\/" _) l) r%)
-                      (let
-                        ((th_ln (NNF_CONV%% cf baseconvs l))
-                          (th_rn (NNF_CONV%% cf baseconvs r%)))
-                        (cl:declare (cl:ignorable th_ln th_rn))
-                        (TRANS
-                          (INST%
-                            (cl:cons (tuple l p_tm) (cl:cons (tuple r% q_tm) nil))
-                            pth_not_or)
-                          (MK_COMB% (tuple (AP_TERM and_tm th_ln) th_rn)))))
-                    ((Comb (Comb (Const "==>" _) l) r%)
-                      (let
-                        ((th_lp (NNF_CONV% cf baseconvs l))
-                          (th_rn (NNF_CONV%% cf baseconvs r%)))
-                        (cl:declare (cl:ignorable th_lp th_rn))
-                        (TRANS
-                          (INST%
-                            (cl:cons (tuple l p_tm) (cl:cons (tuple r% q_tm) nil))
-                            pth_not_imp)
-                          (MK_COMB% (tuple (AP_TERM and_tm th_lp) th_rn)))))
-                    ((Comb
-                      (Comb (Const "=" (Tyapp "fun" (cl:cons (Tyapp "bool" _) _))) l)
-                      r%)
-                      (match (tuple (NNF_DCONV cf base2 l) (NNF_DCONV cf base2 r%))
-                        ((tuple (tuple th_lp th_ln) (tuple th_rp th_rn))
-                          (if cf
-                            (TRANS
-                              (INST%
-                                (cl:cons (tuple l p_tm) (cl:cons (tuple r% q_tm) nil))
-                                pth_not_eq%)
-                              (MK_COMB%
-                                (tuple
-                                  (AP_TERM
-                                    and_tm
-                                    (MK_COMB% (tuple (AP_TERM or_tm th_lp) th_rp)))
-                                  (MK_COMB% (tuple (AP_TERM or_tm th_ln) th_rn)))))
-                            (TRANS
-                              (INST%
-                                (cl:cons (tuple l p_tm) (cl:cons (tuple r% q_tm) nil))
-                                pth_not_eq)
-                              (MK_COMB%
-                                (tuple
-                                  (AP_TERM
-                                    or_tm
-                                    (MK_COMB% (tuple (AP_TERM and_tm th_lp) th_rn)))
-                                  (MK_COMB% (tuple (AP_TERM and_tm th_ln) th_rp)))))))))
-                    ((Comb
-                      (Const "!" (Tyapp "fun" (cl:cons (Tyapp "fun" (cl:cons ty _)) _)))
-                      (cl:and bod (Abs x t%)))
-                      (let*
-                        ((th_n (NNF_CONV%% cf baseconvs t%))
-                          (th1
+          (:recursive 1 NNF_CONV%% (cf arg~1490 tm)
+            (match arg~1490
+              ((cl:and baseconvs (tuple base1 base2))
+                (match tm
+                  ((Comb (Comb (Const "/\\" _) l) r%)
+                    (let
+                      ((th_ln (NNF_CONV%% cf baseconvs l))
+                        (th_rn (NNF_CONV%% cf baseconvs r%)))
+                      (cl:declare (cl:ignorable th_ln th_rn))
+                      (TRANS
+                        (INST%
+                          (cl:cons (tuple l p_tm) (cl:cons (tuple r% q_tm) nil))
+                          pth_not_and)
+                        (MK_COMB% (tuple (AP_TERM or_tm th_ln) th_rn)))))
+                  ((Comb (Comb (Const "\\/" _) l) r%)
+                    (let
+                      ((th_ln (NNF_CONV%% cf baseconvs l))
+                        (th_rn (NNF_CONV%% cf baseconvs r%)))
+                      (cl:declare (cl:ignorable th_ln th_rn))
+                      (TRANS
+                        (INST%
+                          (cl:cons (tuple l p_tm) (cl:cons (tuple r% q_tm) nil))
+                          pth_not_or)
+                        (MK_COMB% (tuple (AP_TERM and_tm th_ln) th_rn)))))
+                  ((Comb (Comb (Const "==>" _) l) r%)
+                    (let
+                      ((th_lp (NNF_CONV% cf baseconvs l))
+                        (th_rn (NNF_CONV%% cf baseconvs r%)))
+                      (cl:declare (cl:ignorable th_lp th_rn))
+                      (TRANS
+                        (INST%
+                          (cl:cons (tuple l p_tm) (cl:cons (tuple r% q_tm) nil))
+                          pth_not_imp)
+                        (MK_COMB% (tuple (AP_TERM and_tm th_lp) th_rn)))))
+                  ((Comb
+                    (Comb (Const "=" (Tyapp "fun" (cl:cons (Tyapp "bool" _) _))) l)
+                    r%)
+                    (match (tuple (NNF_DCONV cf base2 l) (NNF_DCONV cf base2 r%))
+                      ((tuple (tuple th_lp th_ln) (tuple th_rp th_rn))
+                        (if cf
+                          (TRANS
                             (INST%
-                              (cl:cons
-                                (tuple bod (mk_var (tuple "P" (mk_fun_ty ty bool_ty))))
-                                nil)
-                              (INST_TYPE (cl:cons (tuple ty aty) nil) pth_not_forall)))
-                          (th2
-                            (TRANS (AP_TERM not_tm (BETA (mk_comb (tuple bod x)))) th_n)))
-                        (cl:declare (cl:ignorable th_n th1 th2))
-                        (TRANS th1 (funcall MK_EXISTS x th2))))
-                    ((Comb
-                      (Const "?" (Tyapp "fun" (cl:cons (Tyapp "fun" (cl:cons ty _)) _)))
-                      (cl:and bod (Abs x t%)))
-                      (let*
-                        ((th_n (NNF_CONV%% cl:t baseconvs t%))
-                          (th1
-                            (INST%
-                              (cl:cons
-                                (tuple bod (mk_var (tuple "P" (mk_fun_ty ty bool_ty))))
-                                nil)
-                              (INST_TYPE (cl:cons (tuple ty aty) nil) pth_not_exists)))
-                          (th2
-                            (TRANS (AP_TERM not_tm (BETA (mk_comb (tuple bod x)))) th_n)))
-                        (cl:declare (cl:ignorable th_n th1 th2))
-                        (TRANS th1 (funcall MK_FORALL x th2))))
-                    ((Comb
-                      (Const "?!" (Tyapp "fun" (cl:cons (Tyapp "fun" (cl:cons ty _)) _)))
-                      (cl:and bod (Abs x t%)))
-                      (match
-                        (tuple (variant (cl:cons x (frees t%)) x) (NNF_DCONV cf base2 t%))
-                        ((tuple y (tuple th_p th_n))
-                          (let ((eq (funcall mk_eq (tuple y x))))
-                            (cl:declare (cl:ignorable eq))
-                            (match
+                              (cl:cons (tuple l p_tm) (cl:cons (tuple r% q_tm) nil))
+                              pth_not_eq%)
+                            (MK_COMB%
                               (tuple
-                                (funcall base2 eq)
-                                (BETA (mk_comb (tuple bod x)))
-                                (BETA_CONV (mk_comb (tuple bod y))))
-                              ((tuple (tuple eth_p eth_n) bth bth%)
-                                (let*
-                                  ((th_p% (INST% (cl:cons (tuple y x) nil) th_p))
-                                    (th1%
-                                      (INST%
-                                        (cl:cons
-                                          (tuple
-                                            bod
-                                            (mk_var (tuple "P" (mk_fun_ty ty bool_ty))))
-                                          nil)
-                                        (INST_TYPE
-                                          (cl:cons (tuple ty aty) nil)
-                                          pth_not_exu)))
-                                    (th2%
-                                      (MK_COMB%
+                                (AP_TERM
+                                  and_tm
+                                  (MK_COMB% (tuple (AP_TERM or_tm th_lp) th_rp)))
+                                (MK_COMB% (tuple (AP_TERM or_tm th_ln) th_rn)))))
+                          (TRANS
+                            (INST%
+                              (cl:cons (tuple l p_tm) (cl:cons (tuple r% q_tm) nil))
+                              pth_not_eq)
+                            (MK_COMB%
+                              (tuple
+                                (AP_TERM
+                                  or_tm
+                                  (MK_COMB% (tuple (AP_TERM and_tm th_lp) th_rn)))
+                                (MK_COMB% (tuple (AP_TERM and_tm th_ln) th_rp)))))))))
+                  ((Comb
+                    (Const "!" (Tyapp "fun" (cl:cons (Tyapp "fun" (cl:cons ty _)) _)))
+                    (cl:and bod (Abs x t%)))
+                    (let*
+                      ((th_n (NNF_CONV%% cf baseconvs t%))
+                        (th1
+                          (INST%
+                            (cl:cons
+                              (tuple bod (mk_var (tuple "P" (mk_fun_ty ty bool_ty))))
+                              nil)
+                            (INST_TYPE (cl:cons (tuple ty aty) nil) pth_not_forall)))
+                        (th2 (TRANS (AP_TERM not_tm (BETA (mk_comb (tuple bod x)))) th_n)))
+                      (cl:declare (cl:ignorable th_n th1 th2))
+                      (TRANS th1 (#`MK_EXISTS x th2))))
+                  ((Comb
+                    (Const "?" (Tyapp "fun" (cl:cons (Tyapp "fun" (cl:cons ty _)) _)))
+                    (cl:and bod (Abs x t%)))
+                    (let*
+                      ((th_n (NNF_CONV%% cl:t baseconvs t%))
+                        (th1
+                          (INST%
+                            (cl:cons
+                              (tuple bod (mk_var (tuple "P" (mk_fun_ty ty bool_ty))))
+                              nil)
+                            (INST_TYPE (cl:cons (tuple ty aty) nil) pth_not_exists)))
+                        (th2 (TRANS (AP_TERM not_tm (BETA (mk_comb (tuple bod x)))) th_n)))
+                      (cl:declare (cl:ignorable th_n th1 th2))
+                      (TRANS th1 (#`MK_FORALL x th2))))
+                  ((Comb
+                    (Const "?!" (Tyapp "fun" (cl:cons (Tyapp "fun" (cl:cons ty _)) _)))
+                    (cl:and bod (Abs x t%)))
+                    (match
+                      (tuple (variant (cl:cons x (frees t%)) x) (NNF_DCONV cf base2 t%))
+                      ((tuple y (tuple th_p th_n))
+                        (let ((eq (#`mk_eq (tuple y x))))
+                          (cl:declare (cl:ignorable eq))
+                          (match
+                            (tuple
+                              (#`base2 eq)
+                              (BETA (mk_comb (tuple bod x)))
+                              (BETA_CONV (mk_comb (tuple bod y))))
+                            ((tuple (tuple eth_p eth_n) bth bth%)
+                              (let*
+                                ((th_p% (INST% (cl:cons (tuple y x) nil) th_p))
+                                  (th1%
+                                    (INST%
+                                      (cl:cons
                                         (tuple
-                                          (AP_TERM
-                                            or_tm
-                                            (funcall
-                                              MK_FORALL
-                                              x
-                                              (TRANS (AP_TERM not_tm bth) th_n)))
-                                          (funcall
-                                            MK_EXISTS
+                                          bod
+                                          (mk_var (tuple "P" (mk_fun_ty ty bool_ty))))
+                                        nil)
+                                      (INST_TYPE (cl:cons (tuple ty aty) nil) pth_not_exu)))
+                                  (th2%
+                                    (MK_COMB%
+                                      (tuple
+                                        (AP_TERM
+                                          or_tm
+                                          (#`MK_FORALL
                                             x
-                                            (funcall
-                                              MK_EXISTS
-                                              y
-                                              (MK_COMB%
-                                                (tuple
-                                                  (AP_TERM and_tm (TRANS bth th_p))
-                                                  (MK_COMB%
-                                                    (tuple
-                                                      (AP_TERM and_tm (TRANS bth% th_p%))
-                                                      eth_n))))))))))
-                                  (cl:declare (cl:ignorable th_p% th1% th2%))
-                                  (TRANS th1% th2%))))))))
-                    ((Comb (Const "~" _) t%)
-                      (let ((th1 (NNF_CONV% cf baseconvs t%)))
-                        (cl:declare (cl:ignorable th1))
-                        (TRANS (INST% (cl:cons (tuple t% p_tm) nil) pth_not_not) th1)))
-                    (_
-                      (let ((tm% (funcall mk_neg tm)))
-                        (cl:declare (cl:ignorable tm%))
-                        (handler-case
-                          (funcall base1 tm%)
-                          (holai.runtime:ocaml-condition
-                            (exception~1981)
-                            (match exception~1981
-                              ((Failure _) (REFL tm%))
-                              (_ (raise exception~1981))))))))))))
-          #'NNF_CONV%)))))
+                                            (TRANS (AP_TERM not_tm bth) th_n)))
+                                        (#`MK_EXISTS
+                                          x
+                                          (#`MK_EXISTS
+                                            y
+                                            (MK_COMB%
+                                              (tuple
+                                                (AP_TERM and_tm (TRANS bth th_p))
+                                                (MK_COMB%
+                                                  (tuple
+                                                    (AP_TERM and_tm (TRANS bth% th_p%))
+                                                    eth_n))))))))))
+                                (cl:declare (cl:ignorable th_p% th1% th2%))
+                                (TRANS th1% th2%))))))))
+                  ((Comb (Const "~" _) t%)
+                    (let ((th1 (NNF_CONV% cf baseconvs t%)))
+                      (cl:declare (cl:ignorable th1))
+                      (TRANS (INST% (cl:cons (tuple t% p_tm) nil) pth_not_not) th1)))
+                  (_
+                    (let ((tm% (#`mk_neg tm)))
+                      (cl:declare (cl:ignorable tm%))
+                      (handler-case
+                        (#`base1 tm%)
+                        (holai.runtime:ocaml-condition
+                          (exception~1981)
+                          (match exception~1981
+                            ((Failure _) (REFL tm%))
+                            (_ (raise exception~1981))))))))))))
+        #'NNF_CONV%))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Some common special cases.                                                *)
@@ -1126,16 +1093,14 @@
 
 
 (defparameter NNF_CONV
-  (funcall
-    GEN_NNF_CONV
+  (#`GEN_NNF_CONV
     cl:nil
-    (tuple ALL_CONV (lambdac (t%) (tuple (REFL t%) (REFL (funcall mk_neg t%)))))))
+    (tuple ALL_CONV (lambdac (t%) (tuple (REFL t%) (REFL (#`mk_neg t%)))))))
 
 (defparameter NNFC_CONV
-  (funcall
-    GEN_NNF_CONV
+  (#`GEN_NNF_CONV
     cl:t
-    (tuple ALL_CONV (lambdac (t%) (tuple (REFL t%) (REFL (funcall mk_neg t%)))))))
+    (tuple ALL_CONV (lambdac (t%) (tuple (REFL t%) (REFL (#`mk_neg t%)))))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Skolemize a term already in NNF (doesn't matter if it's not prenex).      *)
@@ -1214,8 +1179,8 @@
 
 (match
   (let
-    ((pth1 (funcall TAUT (parse_term "a /\\ (b \\/ c) <=> a /\\ b \\/ a /\\ c")))
-      (pth2 (funcall TAUT (parse_term "(a \\/ b) /\\ c <=> a /\\ c \\/ b /\\ c")))
+    ((pth1 (#`TAUT (parse_term "a /\\ (b \\/ c) <=> a /\\ b \\/ a /\\ c")))
+      (pth2 (#`TAUT (parse_term "(a \\/ b) /\\ c <=> a /\\ c \\/ b /\\ c")))
       (a_tm (parse_term "a:bool"))
       (b_tm (parse_term "b:bool"))
       (c_tm (parse_term "c:bool")))
@@ -1280,7 +1245,7 @@
               (tm)
               (let ((th (substrongdnf tm)))
                 (cl:declare (cl:ignorable th))
-                (TRANS th (funcall strengthen (rand (concl th)))))))
+                (TRANS th (#`strengthen (rand (concl th)))))))
           (tuple #'weakdnf #'strongdnf)))))
   ((tuple WEAK_DNF_CONV% DNF_CONV%)
     (setf DNF_CONV DNF_CONV% WEAK_DNF_CONV WEAK_DNF_CONV%)))
@@ -1296,8 +1261,8 @@
 
 (match
   (let
-    ((pth1 (funcall TAUT (parse_term "a \\/ (b /\\ c) <=> (a \\/ b) /\\ (a \\/ c)")))
-      (pth2 (funcall TAUT (parse_term "(a /\\ b) \\/ c <=> (a \\/ c) /\\ (b \\/ c)")))
+    ((pth1 (#`TAUT (parse_term "a \\/ (b /\\ c) <=> (a \\/ b) /\\ (a \\/ c)")))
+      (pth2 (#`TAUT (parse_term "(a /\\ b) \\/ c <=> (a \\/ c) /\\ (b \\/ c)")))
       (a_tm (parse_term "a:bool"))
       (b_tm (parse_term "b:bool"))
       (c_tm (parse_term "c:bool")))
@@ -1362,7 +1327,7 @@
               (tm)
               (let ((th (substrongcnf tm)))
                 (cl:declare (cl:ignorable th))
-                (TRANS th (funcall strengthen (rand (concl th)))))))
+                (TRANS th (#`strengthen (rand (concl th)))))))
           (tuple #'weakcnf #'strongcnf)))))
   ((tuple WEAK_CNF_CONV% CNF_CONV%)
     (setf CNF_CONV CNF_CONV% WEAK_CNF_CONV WEAK_CNF_CONV%)))
@@ -1375,15 +1340,14 @@
 (defunc ASSOC_CONV (th)
   (let ((th% (SYM (SPEC_ALL th))))
     (cl:declare (cl:ignorable th%))
-    (match (dest_comb (funcall rhs (concl th%)))
+    (match (dest_comb (#`rhs (concl th%)))
       ((tuple opx yopz)
         (match (dest_comb opx)
           ((tuple op x)
-            (let ((y (funcall lhand yopz)) (z (rand yopz)))
+            (let ((y (#`lhand yopz)) (z (rand yopz)))
               (cl:declare (cl:ignorable y z))
-              (labelsc
-                ((distrib
-                  (tm)
+              (holai.runtime:labelsc
+                ((:recursive 0 distrib (tm)
                   (match tm
                     ((guard
                       (Comb (Comb op% (Comb (Comb op%% p%) q)) r%)
@@ -1403,17 +1367,15 @@
                                 (th3 (distrib (rand (concl th2)))))
                               (cl:declare (cl:ignorable th2 th3))
                               (TRANS th1 (TRANS th2 th3)))))))
-                    (_ (REFL tm)))))
-                (labelsc
-                  ((assoc%
-                    (tm)
+                    (_ (REFL tm))))
+                  (:recursive 1 assoc% (tm)
                     (match tm
                       ((guard (Comb (cl:and l (Comb op% p%)) q) (= op% op))
                         (let ((th%% (AP_TERM l (assoc% q))))
                           (cl:declare (cl:ignorable th%%))
                           (TRANS th%% (distrib (rand (concl th%%))))))
                       (_ (REFL tm)))))
-                  #'assoc%)))))))))
+                #'assoc%))))))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Eliminate select terms from a goal.                                       *)
@@ -1440,7 +1402,7 @@
                 ((tuple stm atm)
                   (if (cl:and (is_const stm) (= (fst (dest_const stm)) "@"))
                     (CONV_RULE
-                      (funcall LAND_CONV #'BETA_CONV)
+                      (#`LAND_CONV #'BETA_CONV)
                       (PINST
                         (cl:cons (tuple (type_of (bndvar atm)) aty) nil)
                         (cl:cons (tuple atm ptm) nil)
@@ -1448,7 +1410,7 @@
                     (failwith "SELECT_ELIM_THM: not a select-term"))))))))
         (cl:declare (cl:ignorable SELECT_ELIM_THM))
         (lambdac (tm)
-          (PURE_REWRITE_CONV (map SELECT_ELIM_THM (funcall find_terms is_select tm)) tm))))
+          (PURE_REWRITE_CONV (map SELECT_ELIM_THM (#`find_terms is_select tm)) tm))))
       (SELECT_ELIM_ICONV
         (let
           ((SELECT_AX_THM
@@ -1469,51 +1431,45 @@
                               pth))
                           (th2 (CONV_RULE (BINDER_CONV (BINOP_CONV #'BETA_CONV)) th1)))
                         (cl:declare (cl:ignorable fvs th1 th2))
-                        (funcall GENL fvs th2))
+                        (#`GENL fvs th2))
                       (failwith "SELECT_AX_THM: not a select-term"))))))))
           (cl:declare (cl:ignorable SELECT_AX_THM))
-          (fletc
-            ((SELECT_ELIM_ICONV
-              (tm)
+          (holai.runtime:labelsc
+            ((:nonrecursive 0 SELECT_ELIM_ICONV (tm)
               (let*
                 ((t% (find_term is_select tm))
-                  (th1 (funcall SELECT_AX_THM t%))
-                  (itm (funcall mk_imp (tuple (concl th1) tm)))
-                  (th2 (DISCH_ALL (funcall MP (ASSUME itm) th1)))
+                  (th1 (#`SELECT_AX_THM t%))
+                  (itm (#`mk_imp (tuple (concl th1) tm)))
+                  (th2 (DISCH_ALL (#`MP (ASSUME itm) th1)))
                   (fvs (frees t%))
                   (fty (itlist (o #'mk_fun_ty #'type_of) fvs (type_of t%)))
-                  (fn (funcall genvar fty))
+                  (fn (#`genvar fty))
                   (atm (list_mk_abs (tuple fvs t%))))
                 (cl:declare (cl:ignorable t% th1 itm th2 fvs fty fn atm))
                 (let*
-                  ((rawdef (funcall mk_eq (tuple fn atm)))
-                    (def
-                      (funcall GENL fvs (SYM (funcall RIGHT_BETAS fvs (ASSUME rawdef)))))
-                    (th3
-                      (PURE_REWRITE_CONV (cl:cons def nil) (funcall lhand (concl th2))))
-                    (gtm (funcall holai.bool:mk_forall (tuple fn (rand (concl th3)))))
-                    (th4 (EQ_MP (SYM th3) (funcall SPEC fn (ASSUME gtm))))
-                    (th5 (funcall IMP_TRANS (funcall DISCH gtm th4) th2)))
+                  ((rawdef (#`mk_eq (tuple fn atm)))
+                    (def (#`GENL fvs (SYM (#`RIGHT_BETAS fvs (ASSUME rawdef)))))
+                    (th3 (PURE_REWRITE_CONV (cl:cons def nil) (#`lhand (concl th2))))
+                    (gtm (#`holai.bool:mk_forall (tuple fn (rand (concl th3)))))
+                    (th4 (EQ_MP (SYM th3) (#`SPEC fn (ASSUME gtm))))
+                    (th5 (#`IMP_TRANS (#`DISCH gtm th4) th2)))
                   (cl:declare (cl:ignorable rawdef def th3 gtm th4 th5))
-                  (funcall
-                    MP
-                    (INST% (cl:cons (tuple atm fn) nil) (funcall DISCH rawdef th5))
-                    (REFL atm))))))
-            (labelsc
-              ((SELECT_ELIMS_ICONV
-                (tm)
+                  (#`MP
+                    (INST% (cl:cons (tuple atm fn) nil) (#`DISCH rawdef th5))
+                    (REFL atm)))))
+              (:recursive 1 SELECT_ELIMS_ICONV (tm)
                 (handler-case
-                  (let* ((th (SELECT_ELIM_ICONV tm)) (tm% (funcall lhand (concl th))))
+                  (let* ((th (SELECT_ELIM_ICONV tm)) (tm% (#`lhand (concl th))))
                     (cl:declare (cl:ignorable th tm%))
-                    (funcall IMP_TRANS (SELECT_ELIMS_ICONV tm%) th))
+                    (#`IMP_TRANS (SELECT_ELIMS_ICONV tm%) th))
                   (holai.runtime:ocaml-condition
                     (exception~3130)
                     (match exception~3130
-                      ((Failure _) (funcall DISCH tm (ASSUME tm)))
+                      ((Failure _) (#`DISCH tm (ASSUME tm)))
                       (_ (raise exception~3130)))))))
-              #'SELECT_ELIMS_ICONV)))))
+            #'SELECT_ELIMS_ICONV))))
     (cl:declare (cl:ignorable SELECT_ELIM_CONV SELECT_ELIM_ICONV))
-    (holai.runtime:proof (funcall CONV_TAC SELECT_ELIM_CONV)
+    (holai.runtime:proof (#`CONV_TAC SELECT_ELIM_CONV)
       THEN (W (o (o #'MATCH_MP_TAC SELECT_ELIM_ICONV) (function-value #'snd 1))))))
 
 ;; (* ------------------------------------------------------------------------- *)
@@ -1542,19 +1498,15 @@
                 tm))))
           #'conv))))
     (cl:declare (cl:ignorable HALF_MK_ABS_CONV))
-    (labelsc
-      ((find_lambda
-        (tm)
+    (holai.runtime:labelsc
+      ((:recursive 0 find_lambda (tm)
         (if (is_abs tm)
           tm
           (if (cl:or (is_var tm) (is_const tm))
             (failwith "find_lambda")
             (if (is_abs tm)
               tm
-              (if
-                (cl:or
-                  (funcall is_forall tm)
-                  (cl:or (funcall is_exists tm) (funcall is_uexists tm)))
+              (if (cl:or (#`is_forall tm) (cl:or (#`is_exists tm) (#`is_uexists tm)))
                 (find_lambda (body (rand tm)))
                 (match (dest_comb tm)
                   ((tuple l r%)
@@ -1564,12 +1516,10 @@
                         (exception~3205)
                         (match exception~3205
                           ((Failure _) (find_lambda r%))
-                          (_ (raise exception~3205)))))))))))))
-      (labelsc
-        ((ELIM_LAMBDA
-          (conv tm)
+                          (_ (raise exception~3205))))))))))))
+        (:recursive 1 ELIM_LAMBDA (conv tm)
           (handler-case
-            (funcall conv tm)
+            (#`conv tm)
             (holai.runtime:ocaml-condition
               (exception~3251)
               (match exception~3251
@@ -1580,55 +1530,51 @@
                       (REFL tm)
                       (if
                         (cl:or
-                          (funcall is_forall tm)
-                          (cl:or (funcall is_exists tm) (funcall is_uexists tm)))
+                          (#`is_forall tm)
+                          (cl:or (#`is_exists tm) (#`is_uexists tm)))
                         (BINDER_CONV (ELIM_LAMBDA conv) tm)
-                        (funcall COMB_CONV (ELIM_LAMBDA conv) tm)))))
+                        (#`COMB_CONV (ELIM_LAMBDA conv) tm)))))
                 (_ (raise exception~3251)))))))
-        (let
-          ((APPLY_PTH
-            (let
-              ((pth
-                (prove
-                  (tuple
-                    (parse_term
-                      "(!a. (a = c) ==> (P = Q a)) ==> (P <=> !a. (a = c) ==> Q a)")
-                    (SIMP_TAC (cl:cons LEFT_FORALL_IMP_THM (cl:cons EXISTS_REFL nil)))))))
-              (cl:declare (cl:ignorable pth))
-              (MATCH_MP pth))))
-          (cl:declare (cl:ignorable APPLY_PTH))
-          (fletc
-            ((LAMB1_CONV
-              (tm)
-              (let ((atm (find_lambda tm)))
-                (cl:declare (cl:ignorable atm))
-                (match (dest_abs atm)
-                  ((tuple v bod)
-                    (let*
-                      ((vs (frees atm))
-                        (vs% (append vs (cl:cons v nil)))
-                        (aatm (list_mk_abs (tuple vs atm)))
-                        (f (funcall genvar (type_of aatm)))
-                        (eq (funcall mk_eq (tuple f aatm)))
-                        (th1 (SYM (funcall RIGHT_BETAS vs (ASSUME eq))))
-                        (th2 (ELIM_LAMBDA (GEN_REWRITE_CONV #'I (cl:cons th1 nil)) tm))
-                        (th3 (funcall APPLY_PTH (funcall GEN f (DISCH_ALL th2)))))
-                      (cl:declare (cl:ignorable vs vs% aatm f eq th1 th2 th3))
-                      (CONV_RULE
-                        (RAND_CONV
-                          (BINDER_CONV (funcall LAND_CONV (funcall HALF_MK_ABS_CONV vs%))))
-                        th3)))))))
-            (labelsc
-              ((conv
-                (tm)
-                (handler-case
-                  (THENC #'LAMB1_CONV #'conv tm)
-                  (holai.runtime:ocaml-condition
-                    (exception~3378)
-                    (match exception~3378
-                      ((Failure _) (REFL tm))
-                      (_ (raise exception~3378)))))))
-              #'conv)))))))
+      (let
+        ((APPLY_PTH
+          (let
+            ((pth
+              (prove
+                (tuple
+                  (parse_term
+                    "(!a. (a = c) ==> (P = Q a)) ==> (P <=> !a. (a = c) ==> Q a)")
+                  (SIMP_TAC (cl:cons LEFT_FORALL_IMP_THM (cl:cons EXISTS_REFL nil)))))))
+            (cl:declare (cl:ignorable pth))
+            (MATCH_MP pth))))
+        (cl:declare (cl:ignorable APPLY_PTH))
+        (holai.runtime:labelsc
+          ((:nonrecursive 0 LAMB1_CONV (tm)
+            (let ((atm (find_lambda tm)))
+              (cl:declare (cl:ignorable atm))
+              (match (dest_abs atm)
+                ((tuple v bod)
+                  (let*
+                    ((vs (frees atm))
+                      (vs% (append vs (cl:cons v nil)))
+                      (aatm (list_mk_abs (tuple vs atm)))
+                      (f (#`genvar (type_of aatm)))
+                      (eq (#`mk_eq (tuple f aatm)))
+                      (th1 (SYM (#`RIGHT_BETAS vs (ASSUME eq))))
+                      (th2 (ELIM_LAMBDA (GEN_REWRITE_CONV #'I (cl:cons th1 nil)) tm))
+                      (th3 (#`APPLY_PTH (#`GEN f (DISCH_ALL th2)))))
+                    (cl:declare (cl:ignorable vs vs% aatm f eq th1 th2 th3))
+                    (CONV_RULE
+                      (RAND_CONV (BINDER_CONV (#`LAND_CONV (#`HALF_MK_ABS_CONV vs%))))
+                      th3))))))
+            (:recursive 1 conv (tm)
+              (handler-case
+                (THENC #'LAMB1_CONV #'conv tm)
+                (holai.runtime:ocaml-condition
+                  (exception~3378)
+                  (match exception~3378
+                    ((Failure _) (REFL tm))
+                    (_ (raise exception~3378)))))))
+          #'conv)))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Eliminate conditionals; CONDS_ELIM_CONV aims for disjunctive splitting,   *)
@@ -1650,7 +1596,7 @@
             "((b <=> F) ==> x = x0) /\\ ((b <=> T) ==> x = x1)
      ==> x = (b /\\ x1 \\/ ~b /\\ x0)")
           (holai.runtime:proof (BOOL_CASES_TAC (parse_term "b:bool"))
-            THEN (funcall ASM_REWRITE_TAC nil)))))
+            THEN (#`ASM_REWRITE_TAC nil)))))
       (th_cond%
         (prove
           (tuple
@@ -1658,26 +1604,25 @@
               "((b <=> F) ==> x = x0) /\\ ((b <=> T) ==> x = x1)
      ==> x = ((~b \\/ x1) /\\ (b \\/ x0))")
             (holai.runtime:proof (BOOL_CASES_TAC (parse_term "b:bool"))
-              THEN (funcall ASM_REWRITE_TAC nil)))))
-      (propsimps (funcall basic_net unit))
+              THEN (#`ASM_REWRITE_TAC nil)))))
+      (propsimps (#`basic_net unit))
       (false_tm (parse_term "F"))
       (true_tm (parse_term "T")))
     (cl:declare (cl:ignorable th_cond th_cond% propsimps false_tm true_tm))
     (let
       ((match_th (MATCH_MP th_cond))
         (match_th% (MATCH_MP th_cond%))
-        (propsimp_conv (funcall DEPTH_CONV (REWRITES_CONV propsimps)))
+        (propsimp_conv (#`DEPTH_CONV (REWRITES_CONV propsimps)))
         (proptsimp_conv
           (let ((cnv (TRY_CONV (REWRITES_CONV propsimps))))
             (cl:declare (cl:ignorable cnv))
             (THENC (BINOP_CONV cnv) cnv))))
       (cl:declare (cl:ignorable match_th match_th% propsimp_conv proptsimp_conv))
-      (labelsc
-        ((find_conditional
-          (fvs tm)
+      (holai.runtime:labelsc
+        ((:recursive 0 find_conditional (fvs tm)
           (match tm
             ((Comb s t%)
-              (if (cl:and (is_cond tm) (= (intersect (frees (funcall lhand s)) fvs) nil))
+              (if (cl:and (is_cond tm) (= (intersect (frees (#`lhand s)) fvs) nil))
                 tm
                 (handler-case
                   (find_conditional fvs s)
@@ -1687,20 +1632,18 @@
                       ((Failure _) (find_conditional fvs t%))
                       (_ (raise exception~3464)))))))
             ((Abs x t%) (find_conditional (cl:cons x fvs) t%))
-            (_ (failwith "find_conditional")))))
-        (labelsc
-          ((CONDS_ELIM_CONV%
-            (dfl tm)
+            (_ (failwith "find_conditional"))))
+          (:recursive 1 CONDS_ELIM_CONV% (dfl tm)
             (handler-case
               (let*
                 ((t% (find_conditional nil tm))
-                  (p% (funcall lhand (rator t%)))
+                  (p% (#`lhand (rator t%)))
                   (th_new
                     (if (cl:or (= p% false_tm) (= p% true_tm))
-                      (funcall propsimp_conv tm)
+                      (#`propsimp_conv tm)
                       (let
-                        ((asm_0 (funcall mk_eq (tuple p% false_tm)))
-                          (asm_1 (funcall mk_eq (tuple p% true_tm))))
+                        ((asm_0 (#`mk_eq (tuple p% false_tm)))
+                          (asm_1 (#`mk_eq (tuple p% true_tm))))
                         (cl:declare (cl:ignorable asm_0 asm_1))
                         (let
                           ((simp_0 (net_of_thm cl:nil (ASSUME asm_0) propsimps))
@@ -1708,24 +1651,15 @@
                           (cl:declare (cl:ignorable simp_0 simp_1))
                           (let
                             ((th_0
-                              (funcall
-                                DISCH
-                                asm_0
-                                (funcall DEPTH_CONV (REWRITES_CONV simp_0) tm)))
+                              (#`DISCH asm_0 (#`DEPTH_CONV (REWRITES_CONV simp_0) tm)))
                               (th_1
-                                (funcall
-                                  DISCH
-                                  asm_1
-                                  (funcall DEPTH_CONV (REWRITES_CONV simp_1) tm))))
+                                (#`DISCH asm_1 (#`DEPTH_CONV (REWRITES_CONV simp_1) tm))))
                             (cl:declare (cl:ignorable th_0 th_1))
                             (let*
-                              ((th_2 (funcall CONJ th_0 th_1))
-                                (th_3
-                                  (if dfl
-                                    (funcall match_th th_2)
-                                    (funcall match_th% th_2))))
+                              ((th_2 (#`CONJ th_0 th_1))
+                                (th_3 (if dfl (#`match_th th_2) (#`match_th% th_2))))
                               (cl:declare (cl:ignorable th_2 th_3))
-                              (TRANS th_3 (funcall proptsimp_conv (rand (concl th_3)))))))))))
+                              (TRANS th_3 (#`proptsimp_conv (rand (concl th_3)))))))))))
                 (cl:declare (cl:ignorable t% p% th_new))
                 (CONV_RULE (RAND_CONV (CONDS_ELIM_CONV% dfl)) th_new))
               (holai.runtime:ocaml-condition
@@ -1734,20 +1668,20 @@
                   ((Failure _)
                     (if (is_neg tm)
                       (RAND_CONV (CONDS_ELIM_CONV% (not dfl)) tm)
-                      (if (cl:or (funcall is_conj tm) (funcall is_disj tm))
+                      (if (cl:or (#`is_conj tm) (#`is_disj tm))
                         (BINOP_CONV (CONDS_ELIM_CONV% dfl) tm)
-                        (if (cl:or (funcall is_imp tm) (is_iff tm))
+                        (if (cl:or (#`is_imp tm) (is_iff tm))
                           (COMB2_CONV
                             (RAND_CONV (CONDS_ELIM_CONV% (not dfl)))
                             (CONDS_ELIM_CONV% dfl)
                             tm)
-                          (if (funcall is_forall tm)
+                          (if (#`is_forall tm)
                             (BINDER_CONV (CONDS_ELIM_CONV% cl:nil) tm)
-                            (if (cl:or (funcall is_exists tm) (funcall is_uexists tm))
+                            (if (cl:or (#`is_exists tm) (#`is_uexists tm))
                               (BINDER_CONV (CONDS_ELIM_CONV% cl:t) tm)
                               (REFL tm)))))))
                   (_ (raise exception~3504)))))))
-          (tuple (CONDS_ELIM_CONV% cl:t) (CONDS_ELIM_CONV% cl:nil))))))
+        (tuple (CONDS_ELIM_CONV% cl:t) (CONDS_ELIM_CONV% cl:nil)))))
   ((tuple CONDS_ELIM_CONV% CONDS_CELIM_CONV%)
     (setf CONDS_CELIM_CONV CONDS_CELIM_CONV% CONDS_ELIM_CONV CONDS_ELIM_CONV%)))
 
@@ -1758,13 +1692,12 @@
 
 
 (defparameter ASM_FOL_TAC
-  (labelsc
-    ((get_heads
-      (lconsts tm arg~3658)
+  (holai.runtime:labelsc
+    ((:recursive 0 get_heads (lconsts tm arg~3658)
       (match arg~3658
         ((cl:and sofar (tuple cheads vheads))
           (handler-case
-            (match (funcall dest_forall tm)
+            (match (#`dest_forall tm)
               ((tuple v bod) (get_heads (subtract lconsts (cl:cons v nil)) bod sofar)))
             (holai.runtime:ocaml-condition
               (exception~3663)
@@ -1773,11 +1706,11 @@
                   (handler-case
                     (match
                       (handler-case
-                        (funcall dest_conj tm)
+                        (#`dest_conj tm)
                         (holai.runtime:ocaml-condition
                           (exception~3738)
                           (match exception~3738
-                            ((Failure _) (funcall dest_disj tm))
+                            ((Failure _) (#`dest_disj tm))
                             (_ (raise exception~3738)))))
                       ((tuple l r%) (get_heads lconsts l (get_heads lconsts r% sofar))))
                     (holai.runtime:ocaml-condition
@@ -1792,10 +1725,10 @@
                               (exception~3669)
                               (match exception~3669
                                 ((Failure _)
-                                  (match (funcall strip_comb tm)
+                                  (match (#`strip_comb tm)
                                     ((tuple hop args)
                                       (let*
-                                        ((len (funcall length args))
+                                        ((len (#`length args))
                                           (newheads
                                             (if (cl:or (is_const hop) (mem hop lconsts))
                                               (tuple
@@ -1810,95 +1743,91 @@
                                         (itlist (get_heads lconsts) args newheads)))))
                                 (_ (raise exception~3669))))))
                         (_ (raise exception~3666))))))
-                (_ (raise exception~3663)))))))))
-    (fletc ((get_thm_heads (th sofar) (get_heads (freesl (hyp th)) (concl th) sofar)))
-      (let
-        ((APP_CONV
-          (let
-            ((th
-              (prove
-                (tuple
-                  (parse_term "!(f:A->B) x. f x = I f x")
-                  (REWRITE_TAC (cl:cons I_THM nil))))))
-            (cl:declare (cl:ignorable th))
-            (funcall REWR_CONV th))))
-        (cl:declare (cl:ignorable APP_CONV))
-        (labelsc
-          ((APP_N_CONV
-            (n tm)
-            (if (= n 1)
-              (funcall APP_CONV tm)
-              (THENC (RATOR_CONV (APP_N_CONV (- n 1))) APP_CONV tm))))
-          (labelsc
-            ((FOL_CONV
-              (hddata tm)
-              (if (funcall is_forall tm)
-                (BINDER_CONV (FOL_CONV hddata) tm)
-                (if (cl:or (funcall is_conj tm) (funcall is_disj tm))
-                  (BINOP_CONV (FOL_CONV hddata) tm)
-                  (match (funcall strip_comb tm)
-                    ((tuple op args)
-                      (let*
-                        ((th
-                          (rev_itlist
-                            (C (curry #'MK_COMB%))
-                            (map (FOL_CONV hddata) args)
-                            (REFL op)))
-                          (tm% (rand (concl th)))
-                          (n
-                            (handler-case
-                              (- (funcall length args) (assoc op hddata))
-                              (holai.runtime:ocaml-condition
-                                (exception~3831)
-                                (match exception~3831
-                                  ((Failure _) 0)
-                                  (_ (raise exception~3831)))))))
-                        (cl:declare (cl:ignorable th tm% n))
-                        (if (= n 0) th (TRANS th (APP_N_CONV n tm%))))))))))
-            (fletc
-              ((GEN_FOL_CONV
-                (arg~3879)
-                (match arg~3879
-                  ((tuple cheads vheads)
-                    (let
-                      ((hddata
-                        (if (= vheads nil)
-                          (let ((hops (setify (map (function-value #'fst 1) cheads))))
-                            (cl:declare (cl:ignorable hops))
-                            (fletc
-                              ((getmin
-                                (h)
-                                (let
-                                  ((ns
-                                    (mapfilter
-                                      (lambdac (arg~3916)
-                                        (match arg~3916
-                                          ((tuple k% n) (if (= k% h) n (fail unit)))))
-                                      cheads)))
-                                  (cl:declare (cl:ignorable ns))
-                                  (if (< (funcall length ns) 2)
-                                    (fail unit)
-                                    (tuple h (end_itlist (function-value #'min 2) ns))))))
-                              (mapfilter #'getmin hops)))
-                          (map
-                            (lambdac (t%)
-                              (if (cl:and (is_const t%) (= (fst (dest_const t%)) "="))
-                                (tuple t% 2)
-                                (tuple t% 0)))
-                            (setify (map (function-value #'fst 1) (append vheads cheads)))))))
-                      (cl:declare (cl:ignorable hddata))
-                      (FOL_CONV hddata))))))
-              (lambdac (arg~3961)
-                (match arg~3961
-                  ((cl:and gl (tuple asl w%))
-                    (let
-                      ((headsp
-                        (itlist
-                          (o #'get_thm_heads (function-value #'snd 1))
-                          asl
-                          (tuple nil nil))))
-                      (cl:declare (cl:ignorable headsp))
-                      (RULE_ASSUM_TAC (CONV_RULE (GEN_FOL_CONV headsp)) gl))))))))))))
+                (_ (raise exception~3663))))))))
+      (:nonrecursive 1 get_thm_heads (th sofar)
+        (get_heads (freesl (hyp th)) (concl th) sofar)))
+    (let
+      ((APP_CONV
+        (let
+          ((th
+            (prove
+              (tuple
+                (parse_term "!(f:A->B) x. f x = I f x")
+                (REWRITE_TAC (cl:cons I_THM nil))))))
+          (cl:declare (cl:ignorable th))
+          (#`REWR_CONV th))))
+      (cl:declare (cl:ignorable APP_CONV))
+      (holai.runtime:labelsc
+        ((:recursive 0 APP_N_CONV (n tm)
+          (if (= n 1)
+            (#`APP_CONV tm)
+            (THENC (RATOR_CONV (APP_N_CONV (- n 1))) APP_CONV tm)))
+          (:recursive 1 FOL_CONV (hddata tm)
+            (if (#`is_forall tm)
+              (BINDER_CONV (FOL_CONV hddata) tm)
+              (if (cl:or (#`is_conj tm) (#`is_disj tm))
+                (BINOP_CONV (FOL_CONV hddata) tm)
+                (match (#`strip_comb tm)
+                  ((tuple op args)
+                    (let*
+                      ((th
+                        (rev_itlist
+                          (C (curry #'MK_COMB%))
+                          (map (FOL_CONV hddata) args)
+                          (REFL op)))
+                        (tm% (rand (concl th)))
+                        (n
+                          (handler-case
+                            (- (#`length args) (assoc op hddata))
+                            (holai.runtime:ocaml-condition
+                              (exception~3831)
+                              (match exception~3831
+                                ((Failure _) 0)
+                                (_ (raise exception~3831)))))))
+                      (cl:declare (cl:ignorable th tm% n))
+                      (if (= n 0) th (TRANS th (APP_N_CONV n tm%)))))))))
+          (:nonrecursive 2 GEN_FOL_CONV (arg~3879)
+            (match arg~3879
+              ((tuple cheads vheads)
+                (let
+                  ((hddata
+                    (if (= vheads nil)
+                      (let ((hops (setify (map (function-value #'fst 1) cheads))))
+                        (cl:declare (cl:ignorable hops))
+                        (fletc
+                          ((getmin
+                            (h)
+                            (let
+                              ((ns
+                                (mapfilter
+                                  (lambdac (arg~3916)
+                                    (match arg~3916
+                                      ((tuple k% n) (if (= k% h) n (fail unit)))))
+                                  cheads)))
+                              (cl:declare (cl:ignorable ns))
+                              (if (< (#`length ns) 2)
+                                (fail unit)
+                                (tuple h (end_itlist (function-value #'min 2) ns))))))
+                          (mapfilter #'getmin hops)))
+                      (map
+                        (lambdac (t%)
+                          (if (cl:and (is_const t%) (= (fst (dest_const t%)) "="))
+                            (tuple t% 2)
+                            (tuple t% 0)))
+                        (setify (map (function-value #'fst 1) (append vheads cheads)))))))
+                  (cl:declare (cl:ignorable hddata))
+                  (FOL_CONV hddata))))))
+        (lambdac (arg~3961)
+          (match arg~3961
+            ((cl:and gl (tuple asl w%))
+              (let
+                ((headsp
+                  (itlist
+                    (o #'get_thm_heads (function-value #'snd 1))
+                    asl
+                    (tuple nil nil))))
+                (cl:declare (cl:ignorable headsp))
+                (RULE_ASSUM_TAC (CONV_RULE (GEN_FOL_CONV headsp)) gl)))))))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Depth conversion to apply at "atomic" formulas in "first-order" term.     *)

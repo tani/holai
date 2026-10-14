@@ -122,7 +122,6 @@
     match
     lambdac
     function-value
-    funcall
     fst
     Failure
     defunc
@@ -180,16 +179,13 @@
         (cl:declare (cl:ignorable ty pty s x))
         (let*
           ((eqvx (mk_comb (tuple eqv x)))
-            (pred
-              (mk_abs
-                (tuple s (funcall mk_exists (tuple x (funcall mk_eq (tuple s eqvx)))))))
+            (pred (mk_abs (tuple s (#`mk_exists (tuple x (#`mk_eq (tuple s eqvx)))))))
             (th0 (BETA_CONV (mk_comb (tuple pred eqvx))))
-            (th1 (funcall EXISTS (tuple (rand (concl th0)) x) (REFL eqvx)))
+            (th1 (#`EXISTS (tuple (rand (concl th0)) x) (REFL eqvx)))
             (th2 (EQ_MP (SYM th0) th1)))
           (cl:declare (cl:ignorable eqvx pred th0 th1 th2))
           (match (new_basic_type_definition tyname (tuple absname repname) th2)
-            ((tuple abs%% rep)
-              (tuple abs%% (CONV_RULE (funcall LAND_CONV #'BETA_CONV) rep)))))))))
+            ((tuple abs%% rep) (tuple abs%% (CONV_RULE (#`LAND_CONV #'BETA_CONV) rep)))))))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Given a welldefinedness theorem for a curried function f, of the form:    *)
@@ -216,7 +212,7 @@
           (parse_term "!x:A. (@y. x = y) = x")
           (holai.runtime:proof #'GEN_TAC
             THEN (GEN_REWRITE_TAC (o LAND_CONV #'BINDER_CONV) (cl:cons EQ_SYM_EQ nil))
-            THEN (funcall MATCH_ACCEPT_TAC SELECT_REFL))))))
+            THEN (#`MATCH_ACCEPT_TAC SELECT_REFL))))))
     (cl:declare (cl:ignorable SELECT_LEMMA))
     (lambdac (tybij2)
       (match (dest_comb (concl tybij2))
@@ -243,10 +239,7 @@
                                   (cl:declare (cl:ignorable wtm wfvs))
                                   (match
                                     (handler-case
-                                      (F_F
-                                        holai.basics:conjuncts
-                                        #'I
-                                        (funcall dest_imp wtm))
+                                      (F_F holai.basics:conjuncts #'I (#`dest_imp wtm))
                                       (holai.runtime:ocaml-condition
                                         (exception~520)
                                         (match exception~520
@@ -283,9 +276,7 @@
                                                       (mk_var (tuple "u" (type_of rcon)))))
                                                     (ucon (mk_comb (tuple lcon u)))
                                                     (dbod
-                                                      (funcall
-                                                        list_mk_conj
-                                                        (cl:cons ucon mems)))
+                                                      (#`list_mk_conj (cl:cons ucon mems)))
                                                     (detm
                                                       (list_mk_exists (tuple rvs dbod)))
                                                     (datm (mk_abs (tuple u detm)))
@@ -299,13 +290,13 @@
                                                       (map
                                                         (lambdac (e%)
                                                           (handler-case
-                                                            (funcall lhs e%)
+                                                            (#`lhs e%)
                                                             (holai.runtime:ocaml-condition
                                                               (exception~235)
                                                               (match exception~235
                                                                 ((Failure _)
                                                                   (assoc
-                                                                    (funcall lhand e%)
+                                                                    (#`lhand e%)
                                                                     (zip rvs evs)))
                                                                 (_ (raise exception~235))))))
                                                         hyps))
@@ -316,7 +307,7 @@
                                                         (tuple fname (type_of rdef))))
                                                     (dth
                                                       (new_definition
-                                                        (funcall mk_eq (tuple ldef rdef))))
+                                                        (#`mk_eq (tuple ldef rdef))))
                                                     (eth
                                                       (rev_itlist
                                                         (lambdac (v th)
@@ -342,11 +333,8 @@
                                                         (cl:declare (cl:ignorable th))
                                                         (EQ_MP
                                                           th
-                                                          (funcall
-                                                            EXISTS
-                                                            (tuple
-                                                              (funcall lhs (concl th))
-                                                              xtm)
+                                                          (#`EXISTS
+                                                            (tuple (#`lhs (concl th)) xtm)
                                                             (REFL eqvx)))))
                                                     (ith (INST% (zip targs evs) eth))
                                                     (jth
@@ -379,7 +367,7 @@
                                                     ((tuple apop uxtm)
                                                       (let ((extm (body uxtm)))
                                                         (cl:declare (cl:ignorable extm))
-                                                        (match (funcall strip_exists extm)
+                                                        (match (#`strip_exists extm)
                                                           ((tuple evs% bod)
                                                             (let*
                                                               ((th1 (ASSUME bod))
@@ -391,8 +379,7 @@
                                                                         (let*
                                                                           ((ethlist
                                                                             (append
-                                                                              (funcall
-                                                                                CONJUNCTS
+                                                                              (#`CONJUNCTS
                                                                                 th2b)
                                                                               (map
                                                                                 #'REFL
@@ -410,8 +397,7 @@
                                                                                             (function-value
                                                                                               #'=
                                                                                               2)
-                                                                                            (funcall
-                                                                                              lhand
+                                                                                            (#`lhand
                                                                                               v))
                                                                                           lhand)
                                                                                         #'concl)
@@ -434,8 +420,7 @@
                                                                                       _)
                                                                                       (MATCH_MP
                                                                                         trans_th
-                                                                                        (funcall
-                                                                                          CONJ
+                                                                                        (#`CONJ
                                                                                           th2d
                                                                                           th2a)))
                                                                                     (_
@@ -470,8 +455,7 @@
                                                                     (DISCH_ALL th5)
                                                                     th4))
                                                                 (th7
-                                                                  (funcall
-                                                                    IMP_ANTISYM_RULE
+                                                                  (#`IMP_ANTISYM_RULE
                                                                     (DISCH_ALL th2)
                                                                     (DISCH_ALL th6)))
                                                                 (th8
@@ -482,8 +466,7 @@
                                                                       (ABS% u th7))))
                                                                 (fconv
                                                                   (if (is_eq con)
-                                                                    (funcall
-                                                                      REWR_CONV
+                                                                    (#`REWR_CONV
                                                                       SELECT_LEMMA)
                                                                     (RAND_CONV ETA_CONV)))
                                                                 (th9
@@ -502,9 +485,7 @@
                                                                   th8
                                                                   fconv
                                                                   th9))
-                                                              (tuple
-                                                                eth
-                                                                (funcall GSYM th9)))))))))))))))))))))))))))))))))
+                                                              (tuple eth (#`GSYM th9)))))))))))))))))))))))))))))))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Lifts a theorem. This can be done by higher order rewriting alone.        *)
@@ -534,37 +515,33 @@
                 (parse_term
                   "!x y. (mk((R:Repty->Repty->bool) x):Absty = mk(R y)) <=> (R x = R y)")
                 ASSUME_TAC)
-            THENL (cl:cons (funcall ASM_MESON_TAC nil) (cl:cons #'ALL_TAC nil))
+            THENL (cl:cons (#`ASM_MESON_TAC nil) (cl:cons #'ALL_TAC nil))
             THEN
               (MATCH_MP_TAC
-                (funcall
-                  TAUT
+                (#`TAUT
                   (parse_term
                     "(a /\\ b /\\ c) /\\ (b ==> a ==> d)
                        ==> a /\\ b /\\ c /\\ d")))
             THEN #'CONJ_TAC
             THENL
               (cl:cons
-                (holai.runtime:proof (funcall ASM_REWRITE_TAC nil)
+                (holai.runtime:proof (#`ASM_REWRITE_TAC nil)
                   THEN (REWRITE_TAC (cl:cons FUN_EQ_THM nil))
-                  THEN (funcall ASM_MESON_TAC nil))
+                  THEN (#`ASM_MESON_TAC nil))
                 (cl:cons #'ALL_TAC nil))
             THEN
               (holai.tactics:REPEAT
-                (DISCH_THEN (lambdac (th) (REWRITE_TAC (cl:cons (funcall GSYM th) nil)))))
-            THEN (funcall X_GEN_TAC (parse_term "x:Repty"))
+                (DISCH_THEN (lambdac (th) (REWRITE_TAC (cl:cons (#`GSYM th) nil)))))
+            THEN (#`X_GEN_TAC (parse_term "x:Repty"))
             THEN
               (SUBGOAL_THEN
                 (parse_term "dest(mk((R:Repty->Repty->bool) x):Absty) = R x")
                 #'SUBST1_TAC)
-            THENL (cl:cons (funcall ASM_MESON_TAC nil) (cl:cons #'ALL_TAC nil))
-            THEN
-              (GEN_REWRITE_TAC
-                (o LAND_CONV #'RAND_CONV)
-                (cl:cons (funcall GSYM ETA_AX) nil))
+            THENL (cl:cons (#`ASM_MESON_TAC nil) (cl:cons #'ALL_TAC nil))
+            THEN (GEN_REWRITE_TAC (o LAND_CONV #'RAND_CONV) (cl:cons (#`GSYM ETA_AX) nil))
             THEN (FIRST_ASSUM (lambdac (th) (GEN_REWRITE_TAC #'I (cl:cons th nil))))
-            THEN (funcall CONV_TAC SELECT_CONV)
-            THEN (funcall ASM_MESON_TAC nil))))))
+            THEN (#`CONV_TAC SELECT_CONV)
+            THEN (#`ASM_MESON_TAC nil))))))
     (cl:declare (cl:ignorable pth))
     (lambdac (tybij arg~662)
       (match arg~662

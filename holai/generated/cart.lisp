@@ -407,7 +407,6 @@
     lambdac
     labelsc
     function-value
-    funcall
     failwith)
   (:shadowing-import-from
     :holai.sets
@@ -600,8 +599,7 @@
 
 
 (defparameter dimindex
-  (funcall
-    new_definition
+  (#`new_definition
     (parse_term "dimindex(s:A->bool) = if FINITE(:A) then CARD(:A) else 1")))
 
 (defparameter DIMINDEX_NONZERO
@@ -611,8 +609,8 @@
       (holai.runtime:proof #'GEN_TAC
         THEN (REWRITE_TAC (cl:cons dimindex nil))
         THEN COND_CASES_TAC
-        THEN (funcall ASM_SIMP_TAC (cl:cons CARD_EQ_0 (cl:cons ARITH nil)))
-        THEN (funcall SET_TAC nil)))))
+        THEN (#`ASM_SIMP_TAC (cl:cons CARD_EQ_0 (cl:cons ARITH nil)))
+        THEN (#`SET_TAC nil)))))
 
 (defparameter DIMINDEX_GE_1
   (prove
@@ -620,7 +618,7 @@
       (parse_term "!s:A->bool. 1 <= dimindex(s)")
       (REWRITE_TAC
         (cl:cons
-          (funcall ARITH_RULE (parse_term "1 <= x <=> ~(x = 0)"))
+          (#`ARITH_RULE (parse_term "1 <= x <=> ~(x = 0)"))
           (cl:cons DIMINDEX_NONZERO nil))))))
 
 (defparameter DIMINDEX_UNIV
@@ -680,7 +678,7 @@
     (prove
       (tuple
         (parse_term "?x. x IN 1..dimindex(:A)")
-        (holai.runtime:proof (funcall EXISTS_TAC (parse_term "1"))
+        (holai.runtime:proof (#`EXISTS_TAC (parse_term "1"))
           THEN
             (REWRITE_TAC
               (cl:cons IN_NUMSEG (cl:cons LE_REFL (cl:cons DIMINDEX_GE_1 nil)))))))))
@@ -737,7 +735,7 @@
         "!i:(A)finite_image.
         ?!n. 1 <= n /\\ n <= dimindex(:A) /\\ (finite_index n = i)")
       (holai.runtime:proof (REWRITE_TAC
-          (cl:cons CONJ_ASSOC (cl:cons (funcall GSYM IN_NUMSEG) nil)))
+          (cl:cons CONJ_ASSOC (cl:cons (#`GSYM IN_NUMSEG) nil)))
         THEN (MESON_TAC (cl:cons finite_image_tybij nil))))))
 
 (defparameter FINITE_INDEX_INJ
@@ -769,10 +767,10 @@
     (tuple "mk_cart" "dest_cart")
     (prove (tuple (parse_term "?f:(B)finite_image->A. T") (REWRITE_TAC nil)))))
 
-(funcall parse_as_infix (tuple "$" (tuple 25 "left")))
+(#`parse_as_infix (tuple "$" (tuple 25 "left")))
 
 (defparameter finite_index
-  (funcall new_definition (parse_term "(x:A^N)$i = dest_cart x (finite_index i)")))
+  (#`new_definition (parse_term "(x:A^N)$i = dest_cart x (finite_index i)")))
 
 (defparameter CART_EQ
   (prove
@@ -782,16 +780,14 @@
     (x = y) <=> !i. 1 <= i /\\ i <= dimindex(:B) ==> (x$i = y$i)")
       (holai.runtime:proof (REPEAT #'GEN_TAC)
         THEN
-          (REWRITE_TAC
-            (cl:cons finite_index (cl:cons (funcall GSYM FORALL_FINITE_INDEX) nil)))
-        THEN (REWRITE_TAC (cl:cons (funcall GSYM FUN_EQ_THM) (cl:cons ETA_AX nil)))
+          (REWRITE_TAC (cl:cons finite_index (cl:cons (#`GSYM FORALL_FINITE_INDEX) nil)))
+        THEN (REWRITE_TAC (cl:cons (#`GSYM FUN_EQ_THM) (cl:cons ETA_AX nil)))
         THEN (MESON_TAC (cl:cons cart_tybij nil))))))
 
-(funcall parse_as_binder "lambda")
+(#`parse_as_binder "lambda")
 
 (defparameter lambda%
-  (funcall
-    new_definition
+  (#`new_definition
     (parse_term
       "(lambda) g =
      @f:A^B. !i. 1 <= i /\\ i <= dimindex(:B) ==> (f$i = g i)")))
@@ -803,10 +799,9 @@
         "!i. 1 <= i /\\ i <= dimindex(:B)
        ==> (((lambda) g:A^B) $i = g i)")
       (holai.runtime:proof (REWRITE_TAC (cl:cons lambda% nil))
-        THEN (funcall CONV_TAC SELECT_CONV)
+        THEN (#`CONV_TAC SELECT_CONV)
         THEN
-          (funcall
-            EXISTS_TAC
+          (#`EXISTS_TAC
             (parse_term
               "mk_cart(\\k. g(@i. 1 <= i /\\  i <= dimindex(:B) /\\
                                 (finite_index i = k))):A^B"))
@@ -818,9 +813,7 @@
         THEN #'GEN_TAC
         THEN (REWRITE_TAC nil)
         THEN
-          (funcall
-            ASM_MESON_TAC
-            (cl:cons FINITE_INDEX_INJ (cl:cons DIMINDEX_FINITE_IMAGE nil)))))))
+          (#`ASM_MESON_TAC (cl:cons FINITE_INDEX_INJ (cl:cons DIMINDEX_FINITE_IMAGE nil)))))))
 
 (defparameter LAMBDA_UNIQUE
   (prove
@@ -879,7 +872,7 @@
       (prove
         (tuple
           (parse_term "?x. x IN 1..(dimindex(:A) + dimindex(:B))")
-          (holai.runtime:proof (funcall EXISTS_TAC (parse_term "1"))
+          (holai.runtime:proof (#`EXISTS_TAC (parse_term "1"))
             THEN
               (SIMP_TAC
                 (cl:cons
@@ -888,28 +881,22 @@
                     LE_REFL
                     (cl:cons
                       DIMINDEX_GE_1
-                      (cl:cons
-                        (funcall ARITH_RULE (parse_term "1 <= a ==> 1 <= a + b"))
-                        nil))))))))))
+                      (cl:cons (#`ARITH_RULE (parse_term "1 <= a ==> 1 <= a + b")) nil))))))))))
     (cl:declare (cl:ignorable th))
     (new_type_definition "finite_sum" (tuple "mk_finite_sum" "dest_finite_sum") th)))
 
 (defparameter pastecart
-  (funcall
-    new_definition
+  (#`new_definition
     (parse_term
       "(pastecart:A^M->A^N->A^(M,N)finite_sum) f g =
         lambda i. if i <= dimindex(:M) then f$i
                   else g$(i - dimindex(:M))")))
 
 (defparameter fstcart
-  (funcall
-    new_definition
-    (parse_term "(fstcart:A^(M,N)finite_sum->A^M) f = lambda i. f$i")))
+  (#`new_definition (parse_term "(fstcart:A^(M,N)finite_sum->A^M) f = lambda i. f$i")))
 
 (defparameter sndcart
-  (funcall
-    new_definition
+  (#`new_definition
     (parse_term
       "(sndcart:A^(M,N)finite_sum->A^N) f =
         lambda i. f$(i + dimindex(:M))")))
@@ -960,7 +947,7 @@
                 LAMBDA_BETA
                 (cl:cons
                   DIMINDEX_FINITE_SUM
-                  (cl:cons (funcall ARITH_RULE (parse_term "a <= b ==> a <= b + c")) nil))))))))))
+                  (cl:cons (#`ARITH_RULE (parse_term "a <= b ==> a <= b + c")) nil))))))))))
 
 (defparameter SNDCART_PASTECART
   (prove
@@ -976,29 +963,24 @@
             (lambdac (arg~628)
               (match arg~628
                 ((tuple _ w%)
-                  (MP_TAC
-                    (funcall PART_MATCH (o lhs #'rand) LAMBDA_BETA (funcall lhand w%)))))))
+                  (MP_TAC (#`PART_MATCH (o lhs #'rand) LAMBDA_BETA (#`lhand w%)))))))
         THEN ANTS_TAC
         THENL
           (cl:cons
             (holai.runtime:proof (REWRITE_TAC (cl:cons DIMINDEX_FINITE_SUM nil))
               THEN
                 (MATCH_MP_TAC
-                  (funcall
-                    ARITH_RULE
+                  (#`ARITH_RULE
                     (parse_term "1 <= i /\\ i <= b ==> 1 <= i + a /\\ i + a <= a + b")))
-              THEN (funcall ASM_REWRITE_TAC nil))
+              THEN (#`ASM_REWRITE_TAC nil))
             (cl:cons
               (holai.runtime:proof (DISCH_THEN #'SUBST1_TAC)
                 THEN (REWRITE_TAC nil)
                 THEN
-                  (funcall
-                    ASM_SIMP_TAC
+                  (#`ASM_SIMP_TAC
                     (cl:cons
                       ADD_SUB
-                      (cl:cons
-                        (funcall ARITH_RULE (parse_term "1 <= i ==> ~(i + a <= a)"))
-                        nil))))
+                      (cl:cons (#`ARITH_RULE (parse_term "1 <= i ==> ~(i + a <= a)")) nil))))
               nil))))))
 
 (defparameter PASTECART_FST_SND
@@ -1013,20 +995,19 @@
               (cl:cons sndcart (cl:cons CART_EQ (cl:cons LAMBDA_BETA nil))))))
         THEN (REPEAT #'GEN_TAC)
         THEN COND_CASES_TAC
-        THEN (funcall ASM_REWRITE_TAC nil)
+        THEN (#`ASM_REWRITE_TAC nil)
         THEN
-          (funcall
-            ASM_SIMP_TAC
+          (#`ASM_SIMP_TAC
             (cl:cons
               DIMINDEX_FINITE_SUM
               (cl:cons
                 LAMBDA_BETA
                 (cl:cons
-                  (funcall ARITH_RULE (parse_term "i <= a + b ==> i - a <= b"))
+                  (#`ARITH_RULE (parse_term "i <= a + b ==> i - a <= b"))
                   (cl:cons
-                    (funcall ARITH_RULE (parse_term "~(i <= a) ==> 1 <= i - a"))
+                    (#`ARITH_RULE (parse_term "~(i <= a) ==> 1 <= i - a"))
                     (cl:cons
-                      (funcall ARITH_RULE (parse_term "~(i <= a) ==> ((i - a) + a = i)"))
+                      (#`ARITH_RULE (parse_term "~(i <= a) ==> ((i - a) + a = i)"))
                       nil))))))))))
 
 (defparameter PASTECART_EQ
@@ -1093,21 +1074,17 @@
           (cl:cons
             (holai.runtime:proof (SUBGOAL_THEN
                 (parse_term "i <= dimindex(:(M,N)finite_sum)")
-                (lambdac (th)
-                  (funcall ASM_SIMP_TAC (cl:cons LAMBDA_BETA (cl:cons th nil)))))
+                (lambdac (th) (#`ASM_SIMP_TAC (cl:cons LAMBDA_BETA (cl:cons th nil)))))
               THEN (REWRITE_TAC (cl:cons DIMINDEX_FINITE_SUM nil))
               THEN ASM_ARITH_TAC)
             (cl:cons
-              (holai.runtime:proof (funcall
-                  ASM_SIMP_TAC
+              (holai.runtime:proof (#`ASM_SIMP_TAC
                   (cl:cons
                     LAMBDA_BETA
                     (cl:cons
                       DIMINDEX_FINITE_SUM
                       (cl:cons
-                        (funcall
-                          ARITH_RULE
-                          (parse_term "dimindex(:M) + 1 <= i ==> 1 <= i"))
+                        (#`ARITH_RULE (parse_term "dimindex(:M) + 1 <= i ==> 1 <= i"))
                         nil))))
                 THEN COND_CASES_TAC
                 THEN (REWRITE_TAC nil)
@@ -1127,7 +1104,7 @@
           (parse_term
             "?x. x IN 1..(if dimindex(:B) < dimindex(:A)
                   then dimindex(:A) - dimindex(:B) else 1)")
-          (holai.runtime:proof (funcall EXISTS_TAC (parse_term "1"))
+          (holai.runtime:proof (#`EXISTS_TAC (parse_term "1"))
             THEN (REWRITE_TAC (cl:cons IN_NUMSEG nil))
             THEN ARITH_TAC)))))
     (cl:declare (cl:ignorable th))
@@ -1181,7 +1158,7 @@
       (prove
         (tuple
           (parse_term "?x. x IN 1..(dimindex(:A) * dimindex(:B))")
-          (holai.runtime:proof (funcall EXISTS_TAC (parse_term "1"))
+          (holai.runtime:proof (#`EXISTS_TAC (parse_term "1"))
             THEN (REWRITE_TAC (cl:cons IN_NUMSEG (cl:cons LE_REFL nil)))
             THEN
               (MESON_TAC (cl:cons LE_1 (cl:cons DIMINDEX_GE_1 (cl:cons MULT_EQ_0 nil)))))))))
@@ -1249,7 +1226,7 @@
           #'SUBST1_TAC)
         THENL
           (cl:cons
-            (holai.runtime:proof (funcall CONV_TAC #'SYM_CONV)
+            (holai.runtime:proof (#`CONV_TAC #'SYM_CONV)
               THEN (MATCH_MP_TAC SURJECTIVE_IMAGE_EQ)
               THEN (REWRITE_TAC (cl:cons IN_UNIV nil))
               THEN (MESON_TAC (cl:cons (cases "tybit0") nil)))
@@ -1260,14 +1237,12 @@
                   (W
                     (o
                       (o
-                        (o
-                          #'MP_TAC
-                          (funcall PART_MATCH lhand DIMINDEX_HAS_SIZE_FINITE_SUM))
+                        (o #'MP_TAC (#`PART_MATCH lhand DIMINDEX_HAS_SIZE_FINITE_SUM))
                         lhand)
                       (function-value #'snd 1)))
                 THEN
                   (REWRITE_TAC
-                    (cl:cons DIMINDEX_FINITE_SUM (cl:cons (funcall GSYM MULT_2) nil))))
+                    (cl:cons DIMINDEX_FINITE_SUM (cl:cons (#`GSYM MULT_2) nil))))
               nil))))))
 
 (defparameter HAS_SIZE_TYBIT1
@@ -1279,7 +1254,7 @@
           #'SUBST1_TAC)
         THENL
           (cl:cons
-            (holai.runtime:proof (funcall CONV_TAC #'SYM_CONV)
+            (holai.runtime:proof (#`CONV_TAC #'SYM_CONV)
               THEN (MATCH_MP_TAC SURJECTIVE_IMAGE_EQ)
               THEN (REWRITE_TAC (cl:cons IN_UNIV nil))
               THEN (MESON_TAC (cl:cons (cases "tybit1") nil)))
@@ -1290,16 +1265,14 @@
                   (W
                     (o
                       (o
-                        (o
-                          #'MP_TAC
-                          (funcall PART_MATCH lhand DIMINDEX_HAS_SIZE_FINITE_SUM))
+                        (o #'MP_TAC (#`PART_MATCH lhand DIMINDEX_HAS_SIZE_FINITE_SUM))
                         lhand)
                       (function-value #'snd 1)))
                 THEN
                   (REWRITE_TAC
                     (cl:cons
                       DIMINDEX_FINITE_SUM
-                      (cl:cons DIMINDEX_1 (cl:cons (funcall GSYM MULT_2) nil)))))
+                      (cl:cons DIMINDEX_1 (cl:cons (#`GSYM MULT_2) nil)))))
               nil))))))
 
 (defparameter DIMINDEX_TYBIT0
@@ -1307,14 +1280,14 @@
     (tuple
       (parse_term "dimindex(:(A)tybit0) = 2 * dimindex(:A)")
       (holai.runtime:proof (MATCH_MP_TAC DIMINDEX_UNIQUE)
-        THEN (funcall MATCH_ACCEPT_TAC HAS_SIZE_TYBIT0)))))
+        THEN (#`MATCH_ACCEPT_TAC HAS_SIZE_TYBIT0)))))
 
 (defparameter DIMINDEX_TYBIT1
   (prove
     (tuple
       (parse_term "dimindex(:(A)tybit1) = 2 * dimindex(:A) + 1")
       (holai.runtime:proof (MATCH_MP_TAC DIMINDEX_UNIQUE)
-        THEN (funcall MATCH_ACCEPT_TAC HAS_SIZE_TYBIT1)))))
+        THEN (#`MATCH_ACCEPT_TAC HAS_SIZE_TYBIT1)))))
 
 (defparameter DIMINDEX_CLAUSES
   (prove
@@ -1374,7 +1347,7 @@
               (REWRITE_TAC (cl:cons NUMERAL (cl:cons dimindex nil)))
               (cl:cons #'ALL_TAC nil))
           THEN (REWRITE_TAC (cl:cons DIMINDEX_CLAUSES nil))
-          THEN (funcall CONV_TAC BITS_ELIM_CONV)
+          THEN (#`CONV_TAC BITS_ELIM_CONV)
           THEN ARITH_TAC)))
     ((cl:cons pth_num (cl:cons pth0 (cl:cons pth1 (cl:cons pth_one nil))))
       (let ((nvar (parse_term "n:num")))
@@ -1438,18 +1411,17 @@
         ((tm
           (mk_comb
             (tuple
-              (funcall inst (cl:cons (tuple nty aty) nil) htm)
-              (funcall mk_numeral (dest_finty nty)))))
-          (th1 (funcall conv tm)))
+              (#`inst (cl:cons (tuple nty aty) nil) htm)
+              (#`mk_numeral (dest_finty nty)))))
+          (th1 (#`conv tm)))
         (cl:declare (cl:ignorable tm th1))
         (EQ_MP
           (SYM th1)
-          (funcall
-            CONJ
-            (funcall rule (funcall lhand (rand (concl th1))))
-            (funcall DIMINDEX_CONV (funcall lhand (rand (rand (concl th1)))))))))))
+          (#`CONJ
+            (#`rule (#`lhand (rand (concl th1))))
+            (#`DIMINDEX_CONV (#`lhand (rand (rand (concl th1)))))))))))
 
-(defparameter DIMINDEX_TAC (funcall CONV_TAC (funcall ONCE_DEPTH_CONV DIMINDEX_CONV)))
+(defparameter DIMINDEX_TAC (#`CONV_TAC (#`ONCE_DEPTH_CONV DIMINDEX_CONV)))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Remember cases 2, 3 and 4, which are especially useful for real^N.        *)
@@ -1474,11 +1446,11 @@
       (parse_term "dimindex (:4) = 4")
       (holai.runtime:proof DIMINDEX_TAC THEN #'REFL_TAC))))
 
-(defparameter HAS_SIZE_2 (funcall HAS_SIZE_DIMINDEX_RULE (parse_type "2")))
+(defparameter HAS_SIZE_2 (#`HAS_SIZE_DIMINDEX_RULE (parse_type "2")))
 
-(defparameter HAS_SIZE_3 (funcall HAS_SIZE_DIMINDEX_RULE (parse_type "3")))
+(defparameter HAS_SIZE_3 (#`HAS_SIZE_DIMINDEX_RULE (parse_type "3")))
 
-(defparameter HAS_SIZE_4 (funcall HAS_SIZE_DIMINDEX_RULE (parse_type "4")))
+(defparameter HAS_SIZE_4 (#`HAS_SIZE_DIMINDEX_RULE (parse_type "4")))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Finiteness lemma.                                                         *)
@@ -1501,20 +1473,19 @@
                                  ==> P i (v$i)) /\\
                             (!i. 1 <= i /\\ i <= dimindex(:N) /\\ n < i
                                  ==> v$i = @x. F)}")
-            (o #'MP_TAC (funcall SPEC (parse_term "dimindex(:N)"))))
+            (o #'MP_TAC (#`SPEC (parse_term "dimindex(:N)"))))
         THEN (REWRITE_TAC (cl:cons LE_REFL (cl:cons LET_ANTISYM nil)))
         THEN INDUCT_TAC
         THENL
           (cl:cons
             (holai.runtime:proof (REWRITE_TAC
                 (cl:cons
-                  (funcall ARITH_RULE (parse_term "1 <= i /\\ i <= n /\\ i <= 0 <=> F"))
+                  (#`ARITH_RULE (parse_term "1 <= i /\\ i <= n /\\ i <= 0 <=> F"))
                   nil))
               THEN
                 (SIMP_TAC
                   (cl:cons
-                    (funcall
-                      ARITH_RULE
+                    (#`ARITH_RULE
                       (parse_term "1 <= i /\\ i <= n /\\ 0 < i <=> 1 <= i /\\ i <= n"))
                     nil))
               THEN
@@ -1534,8 +1505,7 @@
         THEN DISCH_TAC
         THEN (MATCH_MP_TAC FINITE_SUBSET)
         THEN
-          (funcall
-            EXISTS_TAC
+          (#`EXISTS_TAC
             (parse_term
               "IMAGE (\\(x:A,v:A^N). (lambda i. if i = SUC n then x else v$i):A^N)
           {x,v | x IN {x:A | P (SUC n) x} /\\
@@ -1548,28 +1518,24 @@
           (cl:cons
             (holai.runtime:proof (MATCH_MP_TAC FINITE_IMAGE)
               THEN
-                (funcall
-                  ASM_SIMP_TAC
+                (#`ASM_SIMP_TAC
                   (cl:cons
                     FINITE_PRODUCT
                     (cl:cons
-                      (funcall ARITH_RULE (parse_term "1 <= SUC n"))
-                      (cl:cons
-                        (funcall ARITH_RULE (parse_term "SUC n <= m ==> n <= m"))
-                        nil)))))
+                      (#`ARITH_RULE (parse_term "1 <= SUC n"))
+                      (cl:cons (#`ARITH_RULE (parse_term "SUC n <= m ==> n <= m")) nil)))))
             (cl:cons #'ALL_TAC nil))
         THEN
           (REWRITE_TAC
             (cl:cons
               SUBSET
               (cl:cons IN_IMAGE (cl:cons IN_ELIM_PAIR_THM (cl:cons EXISTS_PAIR_THM nil)))))
-        THEN (funcall X_GEN_TAC (parse_term "v:A^N"))
+        THEN (#`X_GEN_TAC (parse_term "v:A^N"))
         THEN (REWRITE_TAC (cl:cons IN_ELIM_THM nil))
         THEN #'STRIP_TAC
-        THEN (funcall EXISTS_TAC (parse_term "(v:A^N)$(SUC n)"))
+        THEN (#`EXISTS_TAC (parse_term "(v:A^N)$(SUC n)"))
         THEN
-          (funcall
-            EXISTS_TAC
+          (#`EXISTS_TAC
             (parse_term "(lambda i. if i = SUC n then @x. F else (v:A^N)$i):A^N"))
         THEN
           (SIMP_TAC
@@ -1577,16 +1543,15 @@
               CART_EQ
               (cl:cons
                 LAMBDA_BETA
-                (cl:cons (funcall ARITH_RULE (parse_term "i <= n ==> ~(i = SUC n)")) nil))))
+                (cl:cons (#`ARITH_RULE (parse_term "i <= n ==> ~(i = SUC n)")) nil))))
         THEN
-          (funcall
-            ASM_MESON_TAC
+          (#`ASM_MESON_TAC
             (cl:cons
               LE
               (cl:cons
-                (funcall ARITH_RULE (parse_term "1 <= SUC n"))
+                (#`ARITH_RULE (parse_term "1 <= SUC n"))
                 (cl:cons
-                  (funcall ARITH_RULE (parse_term "n < i /\\ ~(i = SUC n) ==> SUC n < i"))
+                  (#`ARITH_RULE (parse_term "n < i /\\ ~(i = SUC n) ==> SUC n < i"))
                   nil))))))))
 
 ;; (* ------------------------------------------------------------------------- *)
@@ -1605,8 +1570,7 @@
             #'MP_TAC)
         THENL
           (cl:cons
-            (funcall
-              ASM_SIMP_TAC
+            (#`ASM_SIMP_TAC
               (cl:cons HAS_SIZE_FUNSPACE_UNIV (cl:cons HAS_SIZE_FINITE_IMAGE nil)))
             (cl:cons
               (holai.runtime:proof (DISCH_THEN
@@ -1645,7 +1609,7 @@
 
 
 (defparameter vector
-  (funcall new_definition (parse_term "(vector l):A^N = lambda i. EL (i - 1) l")))
+  (#`new_definition (parse_term "(vector l):A^N = lambda i. EL (i - 1) l")))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Convenient set membership elimination theorem.                            *)
@@ -1665,11 +1629,10 @@
               (cl:cons FSTCART_PASTECART (cl:cons SNDCART_PASTECART nil)))))
         THEN (MESON_TAC nil)))))
 
-(funcall parse_as_infix (tuple "PCROSS" (tuple 22 "right")))
+(#`parse_as_infix (tuple "PCROSS" (tuple 22 "right")))
 
 (defparameter PCROSS
-  (funcall
-    new_definition
+  (#`new_definition
     (parse_term "s PCROSS t = {pastecart (x:A^M) (y:A^N) | x IN s /\\ y IN t}")))
 
 (defparameter FORALL_IN_PCROSS
@@ -1699,7 +1662,7 @@
   (prove
     (tuple
       (parse_term "!(s:A^M->bool) (t:A^N->bool). s PCROSS t = {} <=> s = {} \\/ t = {}")
-      (holai.runtime:proof (REWRITE_TAC (cl:cons PCROSS nil)) THEN (funcall SET_TAC nil)))))
+      (holai.runtime:proof (REWRITE_TAC (cl:cons PCROSS nil)) THEN (#`SET_TAC nil)))))
 
 (defparameter PCROSS_EMPTY
   (prove
@@ -1757,8 +1720,8 @@
         s PCROSS t = s' PCROSS t' <=>
         (s = {} \\/ t = {}) /\\ (s' = {} \\/ t' = {}) \\/ s = s' /\\ t = t'")
       (holai.runtime:proof (REWRITE_TAC
-          (cl:cons (funcall GSYM SUBSET_ANTISYM_EQ) (cl:cons SUBSET_PCROSS nil)))
-        THEN (funcall SET_TAC nil)))))
+          (cl:cons (#`GSYM SUBSET_ANTISYM_EQ) (cl:cons SUBSET_PCROSS nil)))
+        THEN (#`SET_TAC nil)))))
 
 (defparameter UNIV_PCROSS_UNIV
   (prove
@@ -1781,9 +1744,8 @@
         THEN (MATCH_MP_TAC EQ_IMP)
         THEN (SPEC_TAC (tuple (parse_term "m * n:num") (parse_term "k:num")))
         THEN (MATCH_MP_TAC BIJECTIONS_HAS_SIZE_EQ)
-        THEN (funcall EXISTS_TAC (parse_term "\\(x:A^M,y:A^N). pastecart x y"))
-        THEN
-          (funcall EXISTS_TAC (parse_term "\\z:A^(M,N)finite_sum. fstcart z,sndcart z"))
+        THEN (#`EXISTS_TAC (parse_term "\\(x:A^M,y:A^N). pastecart x y"))
+        THEN (#`EXISTS_TAC (parse_term "\\z:A^(M,N)finite_sum. fstcart z,sndcart z"))
         THEN (REWRITE_TAC (cl:cons FORALL_IN_GSPEC (cl:cons PASTECART_IN_PCROSS nil)))
         THEN (REWRITE_TAC (cl:cons IN_ELIM_PAIR_THM (cl:cons PASTECART_FST_SND nil)))
         THEN
@@ -1813,24 +1775,21 @@
             (cl:cons
               (parse_term "s:A^M->bool = {}")
               (cl:cons (parse_term "t:A^N->bool = {}") nil)))
-        THEN (funcall ASM_REWRITE_TAC (cl:cons PCROSS_EMPTY (cl:cons FINITE_EMPTY nil)))
+        THEN (#`ASM_REWRITE_TAC (cl:cons PCROSS_EMPTY (cl:cons FINITE_EMPTY nil)))
         THEN #'EQ_TAC
         THEN (SIMP_TAC (cl:cons FINITE_PCROSS nil))
         THEN (REPEAT #'STRIP_TAC)
         THEN (MATCH_MP_TAC FINITE_SUBSET)
         THENL
           (cl:cons
-            (funcall
-              EXISTS_TAC
+            (#`EXISTS_TAC
               (parse_term "IMAGE fstcart ((s PCROSS t):A^(M,N)finite_sum->bool)"))
             (cl:cons
-              (funcall
-                EXISTS_TAC
+              (#`EXISTS_TAC
                 (parse_term "IMAGE sndcart ((s PCROSS t):A^(M,N)finite_sum->bool)"))
               nil))
         THEN
-          (funcall
-            ASM_SIMP_TAC
+          (#`ASM_SIMP_TAC
             (cl:cons
               FINITE_IMAGE
               (cl:cons SUBSET (cl:cons IN_IMAGE (cl:cons EXISTS_PASTECART nil)))))
@@ -1849,7 +1808,7 @@
         IMAGE fstcart (s PCROSS t) = if t = {} then {} else s")
       (holai.runtime:proof (REPEAT #'GEN_TAC)
         THEN COND_CASES_TAC
-        THEN (funcall ASM_REWRITE_TAC (cl:cons PCROSS_EMPTY (cl:cons IMAGE_CLAUSES nil)))
+        THEN (#`ASM_REWRITE_TAC (cl:cons PCROSS_EMPTY (cl:cons IMAGE_CLAUSES nil)))
         THEN (REWRITE_TAC (cl:cons EXTENSION (cl:cons IN_IMAGE nil)))
         THEN (ONCE_REWRITE_TAC (cl:cons CONJ_SYM nil))
         THEN (REWRITE_TAC (cl:cons EXISTS_IN_PCROSS (cl:cons FSTCART_PASTECART nil)))
@@ -1863,7 +1822,7 @@
         IMAGE sndcart (s PCROSS t) = if s = {} then {} else t")
       (holai.runtime:proof (REPEAT #'GEN_TAC)
         THEN COND_CASES_TAC
-        THEN (funcall ASM_REWRITE_TAC (cl:cons PCROSS_EMPTY (cl:cons IMAGE_CLAUSES nil)))
+        THEN (#`ASM_REWRITE_TAC (cl:cons PCROSS_EMPTY (cl:cons IMAGE_CLAUSES nil)))
         THEN (REWRITE_TAC (cl:cons EXTENSION (cl:cons IN_IMAGE nil)))
         THEN (ONCE_REWRITE_TAC (cl:cons CONJ_SYM nil))
         THEN (REWRITE_TAC (cl:cons EXISTS_IN_PCROSS (cl:cons SNDCART_PASTECART nil)))
@@ -1884,7 +1843,7 @@
               FORALL_PASTECART
               (cl:cons IN_INTER (cl:cons PASTECART_IN_PCROSS nil)))))
         THEN (REPEAT #'STRIP_TAC)
-        THEN (funcall CONV_TAC TAUT)))))
+        THEN (#`CONV_TAC TAUT)))))
 
 (defparameter PCROSS_UNION
   (prove
@@ -1901,7 +1860,7 @@
               FORALL_PASTECART
               (cl:cons IN_UNION (cl:cons PASTECART_IN_PCROSS nil)))))
         THEN (REPEAT #'STRIP_TAC)
-        THEN (funcall CONV_TAC TAUT)))))
+        THEN (#`CONV_TAC TAUT)))))
 
 (defparameter PCROSS_DIFF
   (prove
@@ -1916,7 +1875,7 @@
             EXTENSION
             (cl:cons FORALL_PASTECART (cl:cons IN_DIFF (cl:cons PASTECART_IN_PCROSS nil)))))
         THEN (REPEAT #'STRIP_TAC)
-        THEN (funcall CONV_TAC TAUT)))))
+        THEN (#`CONV_TAC TAUT)))))
 
 (defparameter INTER_PCROSS
   (prove
@@ -1930,7 +1889,7 @@
             (cl:cons
               IN_INTER
               (cl:cons FORALL_PASTECART (cl:cons PASTECART_IN_PCROSS nil)))))
-        THEN (funcall CONV_TAC TAUT)))))
+        THEN (#`CONV_TAC TAUT)))))
 
 (defparameter PCROSS_UNIONS nil)
 
@@ -1956,7 +1915,7 @@
               (cl:cons
                 FORALL_PASTECART
                 (cl:cons IN_ELIM_THM (cl:cons PASTECART_IN_PCROSS nil))))))
-        THEN (funcall SET_TAC nil))))
+        THEN (#`SET_TAC nil))))
   ((tuple PCROSS_UNIONS_UNIONS% PCROSS_UNIONS%)
     (setf PCROSS_UNIONS PCROSS_UNIONS% PCROSS_UNIONS_UNIONS PCROSS_UNIONS_UNIONS%)))
 
@@ -1981,8 +1940,7 @@
       (holai.runtime:proof (REPEAT #'STRIP_TAC)
         THEN (REPEAT (holai.runtime:proof COND_CASES_TAC THEN (REWRITE_TAC nil)))
         THEN
-          (funcall
-            ASM_REWRITE_TAC
+          (#`ASM_REWRITE_TAC
             (cl:cons
               INTERS_GSPEC
               (cl:cons

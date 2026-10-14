@@ -509,7 +509,6 @@
     guard
     gcd-num
     function-value
-    funcall
     fst
     fletc
     failwith
@@ -681,23 +680,23 @@
 ;; (* ------------------------------------------------------------------------- *)
 
 
-(defunc curry (f x y) (funcall f (tuple x y)))
+(defunc curry (f x y) (#`f (tuple x y)))
 
-(defunc uncurry (f arg~19) (match arg~19 ((tuple x y) (funcall f x y))))
+(defunc uncurry (f arg~19) (match arg~19 ((tuple x y) (#`f x y))))
 
 (defunc I (x) x)
 
 (defunc K (x y) x)
 
-(defunc C (f x y) (funcall f y x))
+(defunc C (f x y) (#`f y x))
 
-(defunc W (f x) (funcall f x x))
+(defunc W (f x) (#`f x x))
 
-(defunc o (f g x) (funcall f (funcall g x)))
+(defunc o (f g x) (#`f (#`g x)))
 
-(defunc F_F (f g arg~65) (match arg~65 ((tuple x y) (tuple (funcall f x) (funcall g y)))))
+(defunc F_F (f g arg~65) (match arg~65 ((tuple x y) (tuple (#`f x) (#`g y)))))
 
-(defunc %> (x f) (funcall f x))
+(defunc %> (x f) (#`f x))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* List basics.                                                              *)
@@ -715,7 +714,7 @@
       (match l
         (nil nil)
         ((cl:cons x t%)
-          (let ((y (funcall f x))) (cl:declare (cl:ignorable y)) (cl:cons y (mapf% t%)))))))
+          (let ((y (#`f x))) (cl:declare (cl:ignorable y)) (cl:cons y (mapf% t%)))))))
     #'mapf%))
 
 (defunc last (l)
@@ -740,9 +739,7 @@
   (match (tuple l1 l2)
     ((tuple nil nil) nil)
     ((tuple (cl:cons h1 t1) (cl:cons h2 t2))
-      (let ((h (funcall f h1 h2)))
-        (cl:declare (cl:ignorable h))
-        (cl:cons h (map2 f t1 t2))))
+      (let ((h (#`f h1 h2))) (cl:declare (cl:ignorable h)) (cl:cons h (map2 f t1 t2))))
     (_ (failwith "map2: length mismatch"))))
 
 (defunc mapi (f xs)
@@ -751,7 +748,7 @@
       (i% f% arg~262)
       (match arg~262
         (nil nil)
-        ((cl:cons h tl%) (cl:cons (funcall f% i% h) (aux (+ i% 1) f% tl%))))))
+        ((cl:cons h tl%) (cl:cons (#`f% i% h) (aux (+ i% 1) f% tl%))))))
     (aux 0 f xs)))
 
 ;; (* ------------------------------------------------------------------------- *)
@@ -761,23 +758,23 @@
 
 (defunc can (f x)
   (handler-case
-    (progn (funcall f x) cl:t)
+    (progn (#`f x) cl:t)
     (holai.runtime:ocaml-condition
       (exception~290)
       (match exception~290 ((Failure _) cl:nil) (_ (raise exception~290))))))
 
-(defunc check (p x) (if (funcall p x) x (failwith "check")))
+(defunc check (p x) (if (#`p x) x (failwith "check")))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Repetition of a function.                                                 *)
 ;; (* ------------------------------------------------------------------------- *)
 
 
-(defunc funpow (n f x) (if (< n 1) x (funpow (- n 1) f (funcall f x))))
+(defunc funpow (n f x) (if (< n 1) x (funpow (- n 1) f (#`f x))))
 
 (defunc repeat (f x)
   (handler-case
-    (let ((y (funcall f x))) (cl:declare (cl:ignorable y)) (repeat f y))
+    (let ((y (#`f x))) (cl:declare (cl:ignorable y)) (repeat f y))
     (holai.runtime:ocaml-condition
       (exception~330)
       (match exception~330 ((Failure _) x) (_ (raise exception~330))))))
@@ -789,27 +786,26 @@
 ;; (* ------------------------------------------------------------------------- *)
 
 
-(defunc itlist (f l b) (match l (nil b) ((cl:cons h t%) (funcall f h (itlist f t% b)))))
+(defunc itlist (f l b) (match l (nil b) ((cl:cons h t%) (#`f h (itlist f t% b)))))
 
-(defunc rev_itlist (f l b)
-  (match l (nil b) ((cl:cons h t%) (rev_itlist f t% (funcall f h b)))))
+(defunc rev_itlist (f l b) (match l (nil b) ((cl:cons h t%) (rev_itlist f t% (#`f h b)))))
 
 (defunc end_itlist (f l)
   (match l
     (nil (failwith "end_itlist"))
     ((cl:cons x nil) x)
-    ((cl:cons h t%) (funcall f h (end_itlist f t%)))))
+    ((cl:cons h t%) (#`f h (end_itlist f t%)))))
 
 (defunc itlist2 (f l1 l2 b)
   (match (tuple l1 l2)
     ((tuple nil nil) b)
-    ((tuple (cl:cons h1 t1) (cl:cons h2 t2)) (funcall f h1 h2 (itlist2 f t1 t2 b)))
+    ((tuple (cl:cons h1 t1) (cl:cons h2 t2)) (#`f h1 h2 (itlist2 f t1 t2 b)))
     (_ (failwith "itlist2"))))
 
 (defunc rev_itlist2 (f l1 l2 b)
   (match (tuple l1 l2)
     ((tuple nil nil) b)
-    ((tuple (cl:cons h1 t1) (cl:cons h2 t2)) (rev_itlist2 f t1 t2 (funcall f h1 h2 b)))
+    ((tuple (cl:cons h1 t1) (cl:cons h2 t2)) (rev_itlist2 f t1 t2 (#`f h1 h2 b)))
     (_ (failwith "rev_itlist2"))))
 
 ;; (* ------------------------------------------------------------------------- *)
@@ -819,7 +815,7 @@
 
 (defunc splitlist (dest x)
   (handler-case
-    (match (funcall dest x)
+    (match (#`dest x)
       ((tuple l r) (match (splitlist dest r) ((tuple ls res) (tuple (cl:cons l ls) res)))))
     (holai.runtime:ocaml-condition
       (exception~484)
@@ -830,7 +826,7 @@
     ((rsplist
       (ls x)
       (handler-case
-        (match (funcall dest x) ((tuple l r) (rsplist (cl:cons r ls) l)))
+        (match (#`dest x) ((tuple l r) (rsplist (cl:cons r ls) l)))
         (holai.runtime:ocaml-condition
           (exception~519)
           (match exception~519 ((Failure _) (tuple x ls)) (_ (raise exception~519)))))))
@@ -841,7 +837,7 @@
     ((strip
       (x acc)
       (handler-case
-        (match (funcall dest x) ((tuple l r) (strip l (strip r acc))))
+        (match (#`dest x) ((tuple l r) (strip l (strip r acc))))
         (holai.runtime:ocaml-condition
           (exception~551)
           (match exception~551 ((Failure _) (cl:cons x acc)) (_ (raise exception~551)))))))
@@ -855,7 +851,7 @@
 (defunc nsplit (dest clist x)
   (if (= clist nil)
     (tuple nil x)
-    (match (funcall dest x)
+    (match (#`dest x)
       ((tuple l r)
         (match (nsplit dest (tl clist) r) ((tuple ll y) (tuple (cl:cons l ll) y)))))))
 
@@ -873,17 +869,16 @@
 ;; (* ------------------------------------------------------------------------- *)
 
 
-(defunc forall (p l)
-  (match l (nil cl:t) ((cl:cons h t%) (cl:and (funcall p h) (forall p t%)))))
+(defunc forall (p l) (match l (nil cl:t) ((cl:cons h t%) (cl:and (#`p h) (forall p t%)))))
 
 (defunc forall2 (p l1 l2)
   (match (tuple l1 l2)
     ((tuple nil nil) cl:t)
-    ((tuple (cl:cons h1 t1) (cl:cons h2 t2)) (cl:and (funcall p h1 h2) (forall2 p t1 t2)))
+    ((tuple (cl:cons h1 t1) (cl:cons h2 t2)) (cl:and (#`p h1 h2) (forall2 p t1 t2)))
     (_ cl:nil)))
 
 (defunc exists (p l)
-  (match l (nil cl:nil) ((cl:cons h t%) (cl:or (funcall p h) (exists p t%)))))
+  (match l (nil cl:nil) ((cl:cons h t%) (cl:or (#`p h) (exists p t%)))))
 
 (defparameter length
   (labelsc ((len (k% l) (if (= l nil) k% (len (+ k% 1) (tl l))))) (lambdac (l) (len 0 l))))
@@ -894,7 +889,7 @@
     ((cl:cons h t%)
       (let ((t%% (filter p t%)))
         (cl:declare (cl:ignorable t%%))
-        (if (funcall p h) (if (== t%% t%) l (cl:cons h t%%)) t%%)))))
+        (if (#`p h) (if (== t%% t%) l (cl:cons h t%%)) t%%)))))
 
 (defunc partition (p l)
   (match l
@@ -902,7 +897,7 @@
     ((cl:cons h t%)
       (match (partition p t%)
         ((tuple yes no)
-          (if (funcall p h)
+          (if (#`p h)
             (if (== yes t%) (tuple l nil) (tuple (cl:cons h yes) no))
             (if (== no t%) (tuple nil l) (tuple yes (cl:cons h no)))))))))
 
@@ -913,20 +908,20 @@
       (let ((rest (mapfilter f t%)))
         (cl:declare (cl:ignorable rest))
         (handler-case
-          (cl:cons (funcall f h) rest)
+          (cl:cons (#`f h) rest)
           (holai.runtime:ocaml-condition
             (exception~835)
             (match exception~835 ((Failure _) rest) (_ (raise exception~835)))))))))
 
 (defunc find (p l)
-  (match l (nil (failwith "find")) ((cl:cons h t%) (if (funcall p h) h (find p t%)))))
+  (match l (nil (failwith "find")) ((cl:cons h t%) (if (#`p h) h (find p t%)))))
 
 (defunc tryfind (f l)
   (match l
     (nil (failwith "tryfind"))
     ((cl:cons h t%)
       (handler-case
-        (funcall f h)
+        (#`f h)
         (holai.runtime:ocaml-condition
           (exception~880)
           (match exception~880 ((Failure _) (tryfind f t%)) (_ (raise exception~880))))))))
@@ -937,7 +932,7 @@
   (match l
     (nil (failwith "remove"))
     ((cl:cons h t%)
-      (if (funcall p h)
+      (if (#`p h)
         (tuple h t%)
         (match (remove p t%) ((tuple y n) (tuple y (cl:cons h n))))))))
 
@@ -958,7 +953,7 @@
       (n l)
       (match l
         (nil (make-None))
-        ((cl:cons h t%) (if (funcall p h) (make-Some n) (ind (+ n 1) t%))))))
+        ((cl:cons h t%) (if (#`p h) (make-Some n) (ind (+ n 1) t%))))))
     (ind 0)))
 
 (defunc index (x l)
@@ -1032,7 +1027,7 @@
 (defunc shareout (pat all)
   (if (= pat nil)
     nil
-    (match (chop_list (funcall length (hd pat)) all)
+    (match (chop_list (#`length (hd pat)) all)
       ((tuple l r) (cl:cons l (shareout (tl pat) r))))))
 
 ;; (* ------------------------------------------------------------------------- *)
@@ -1041,7 +1036,7 @@
 
 
 (defunc do_list (f l)
-  (match l (nil unit) ((cl:cons h t%) (progn (funcall f h) (do_list f t%)))))
+  (match l (nil unit) ((cl:cons h t%) (progn (#`f h) (do_list f t%)))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Sorting.                                                                  *)
@@ -1052,7 +1047,7 @@
   (match lis
     (nil nil)
     ((cl:cons piv rest)
-      (match (partition (funcall cmp piv) rest)
+      (match (partition (#`cmp piv) rest)
         ((tuple r l) (append (sort cmp l) (cl:cons piv (sort cmp r))))))))
 
 ;; (* ------------------------------------------------------------------------- *)
@@ -1164,7 +1159,7 @@
             (if (= n1 num_0) d0 (string-concat (string_of_num base n1) d0))))))
       (lambdac (b n) (string_of_num (num b) n)))))
 
-(defunc string_of_num_hex (n) (string-concat "0x" (funcall string_of_num_nary 16 n)))
+(defunc string_of_num_hex (n) (string-concat "0x" (#`string_of_num_nary 16 n)))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* All pairs arising from applying a function over two lists.                *)
@@ -1174,7 +1169,7 @@
 (defunc allpairs (f l1 l2)
   (match l1
     ((cl:cons h1 t1)
-      (itlist (lambdac (x a) (cl:cons (funcall f h1 x) a)) l2 (allpairs f t1 l2)))
+      (itlist (lambdac (x a) (cl:cons (#`f h1 x) a)) l2 (allpairs f t1 l2)))
     (nil nil)))
 
 ;; (* ------------------------------------------------------------------------- *)
@@ -1214,11 +1209,11 @@
 
 (defunc time (f x)
   (if (not (deref report_timing))
-    (funcall f x)
+    (#`f x)
     (let ((start_time (cpu-time unit)))
       (cl:declare (cl:ignorable start_time))
       (handler-case
-        (let* ((result (funcall f x)) (finish_time (cpu-time unit)))
+        (let* ((result (#`f x)) (finish_time (cpu-time unit)))
           (cl:declare (cl:ignorable result finish_time))
           (progn
             (report
@@ -1263,7 +1258,7 @@
 (defunc qmap (f l)
   (match l
     ((cl:cons h t%)
-      (let ((h% (funcall f h)) (t%% (qmap f t%)))
+      (let ((h% (#`f h)) (t%% (qmap f t%)))
         (cl:declare (cl:ignorable h% t%%))
         (if (cl:and (== h% h) (== t%% t%)) l (cl:cons h% t%%))))
     (_ l)))
@@ -1280,9 +1275,7 @@
       (match l2
         (nil l1)
         ((cl:cons h2 t2)
-          (if (funcall ord h1 h2)
-            (cl:cons h1 (merge ord t1 l2))
-            (cl:cons h2 (merge ord l1 t2))))))))
+          (if (#`ord h1 h2) (cl:cons h1 (merge ord t1 l2)) (cl:cons h2 (merge ord l1 t2))))))))
 
 (defunc mergesort (ord)
   (labelsc
@@ -1302,9 +1295,9 @@
 ;; (* ------------------------------------------------------------------------- *)
 
 
-(defunc increasing (f x y) (< (compare (funcall f x) (funcall f y)) 0))
+(defunc increasing (f x y) (< (compare (#`f x) (#`f y)) 0))
 
-(defunc decreasing (f x y) (> (compare (funcall f x) (funcall f y)) 0))
+(defunc decreasing (f x y) (> (compare (#`f x) (#`f y)) 0))
 
 (defvariant func (Empty) (Leaf field0 field1) (Branch field0 field1 field2 field3))
 
@@ -1328,20 +1321,17 @@
 
 
 (defparameter mapf
-  (labelsc
-    ((map_list
-      (f l)
+  (holai.runtime:labelsc
+    ((:recursive 0 map_list (f l)
       (match l
         (nil nil)
-        ((cl:cons (tuple x y) t%) (cl:cons (tuple x (funcall f y)) (map_list f t%))))))
-    (labelsc
-      ((mapf%
-        (f t%)
+        ((cl:cons (tuple x y) t%) (cl:cons (tuple x (#`f y)) (map_list f t%)))))
+      (:recursive 1 mapf% (f t%)
         (match t%
           ((Empty) (make-Empty))
           ((Leaf h l) (make-Leaf h (map_list f l)))
           ((Branch p b l r) (make-Branch p b (mapf% f l) (mapf% f r))))))
-      #'mapf%)))
+    #'mapf%))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Operations analogous to "fold" for lists.                                 *)
@@ -1349,44 +1339,37 @@
 
 
 (defparameter foldl
-  (labelsc
-    ((foldl_list
-      (f a l)
-      (match l (nil a) ((cl:cons (tuple x y) t%) (foldl_list f (funcall f a x y) t%)))))
-    (labelsc
-      ((foldl%
-        (f a t%)
+  (holai.runtime:labelsc
+    ((:recursive 0 foldl_list (f a l)
+      (match l (nil a) ((cl:cons (tuple x y) t%) (foldl_list f (#`f a x y) t%))))
+      (:recursive 1 foldl% (f a t%)
         (match t%
           ((Empty) a)
           ((Leaf h l) (foldl_list f a l))
           ((Branch p b l r) (foldl% f (foldl% f a l) r)))))
-      #'foldl%)))
+    #'foldl%))
 
 (defparameter foldr
-  (labelsc
-    ((foldr_list
-      (f l a)
-      (match l (nil a) ((cl:cons (tuple x y) t%) (funcall f x y (foldr_list f t% a))))))
-    (labelsc
-      ((foldr%
-        (f t% a)
+  (holai.runtime:labelsc
+    ((:recursive 0 foldr_list (f l a)
+      (match l (nil a) ((cl:cons (tuple x y) t%) (#`f x y (foldr_list f t% a)))))
+      (:recursive 1 foldr% (f t% a)
         (match t%
           ((Empty) a)
           ((Leaf h l) (foldr_list f l a))
           ((Branch p b l r) (foldr% f l (foldr% f r a))))))
-      #'foldr%)))
+    #'foldr%))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Mapping to sorted-list representation of the graph, domain and range.     *)
 ;; (* ------------------------------------------------------------------------- *)
 
 
-(defunc graph (f)
-  (setify (funcall foldl (lambdac (a x y) (cl:cons (tuple x y) a)) nil f)))
+(defunc graph (f) (setify (#`foldl (lambdac (a x y) (cl:cons (tuple x y) a)) nil f)))
 
-(defunc dom (f) (setify (funcall foldl (lambdac (a x y) (cl:cons x a)) nil f)))
+(defunc dom (f) (setify (#`foldl (lambdac (a x y) (cl:cons x a)) nil f)))
 
-(defunc ran (f) (setify (funcall foldl (lambdac (a x y) (cl:cons y a)) nil f)))
+(defunc ran (f) (setify (#`foldl (lambdac (a x y) (cl:cons y a)) nil f)))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Application.                                                              *)
@@ -1401,8 +1384,8 @@
         ((cl:cons (tuple a b) t%)
           (let ((c% (compare x a)))
             (cl:declare (cl:ignorable c%))
-            (if (= c% 0) b (if (> c% 0) (apply_listd t% d x) (funcall d x)))))
-        (nil (funcall d x)))))
+            (if (= c% 0) b (if (> c% 0) (apply_listd t% d x) (#`d x)))))
+        (nil (#`d x)))))
     (lambdac (f d x)
       (let ((k% (structural-hash x)))
         (cl:declare (cl:ignorable k%))
@@ -1413,12 +1396,12 @@
               ((guard (Leaf h l) (= h k%)) (apply_listd l d x))
               ((guard (Branch p b l r) (= (logand (logxor k% p) (- b 1)) 0))
                 (look (if (= (logand k% b) 0) l r)))
-              (_ (funcall d x)))))
+              (_ (#`d x)))))
           (look f))))))
 
-(defunc apply (f) (funcall applyd f (lambdac (x) (failwith "apply"))))
+(defunc apply (f) (#`applyd f (lambdac (x) (failwith "apply"))))
 
-(defunc tryapplyd (f a d) (funcall applyd f (lambdac (x) d) a))
+(defunc tryapplyd (f a d) (#`applyd f (lambdac (x) d) a))
 
 (defunc defined (f x)
   (handler-case
@@ -1480,15 +1463,12 @@
 (defparameter %-> nil)
 
 (match
-  (fletc
-    ((newbranch
-      (p1 t1 p2 t2)
+  (holai.runtime:labelsc
+    ((:nonrecursive 0 newbranch (p1 t1 p2 t2)
       (let* ((zp (logxor p1 p2)) (b (logand zp (- zp))) (p (logand p1 (- b 1))))
         (cl:declare (cl:ignorable zp b p))
-        (if (= (logand p1 b) 0) (make-Branch p b t1 t2) (make-Branch p b t2 t1)))))
-    (labelsc
-      ((define_list
-        (arg~2487 l)
+        (if (= (logand p1 b) 0) (make-Branch p b t1 t2) (make-Branch p b t2 t1))))
+      (:recursive 1 define_list (arg~2487 l)
         (match arg~2487
           ((cl:and xy (tuple x y))
             (match l
@@ -1499,96 +1479,87 @@
                     (cl:cons xy t%)
                     (if (< c% 0) (cl:cons xy l) (cl:cons ab (define_list xy t%))))))
               (nil (cl:cons xy nil))))))
-        (combine_list
-          (op z l1 l2)
-          (match (tuple l1 l2)
-            ((tuple nil _) l2)
-            ((tuple _ nil) l1)
-            ((tuple
-              (cl:cons (cl:and xy1 (tuple x1 y1)) t1)
-              (cl:cons (cl:and xy2 (tuple x2 y2)) t2))
-              (let ((c% (compare x1 x2)))
-                (cl:declare (cl:ignorable c%))
-                (if (< c% 0)
-                  (cl:cons xy1 (combine_list op z t1 l2))
-                  (if (> c% 0)
-                    (cl:cons xy2 (combine_list op z l1 t2))
-                    (let ((y (funcall op y1 y2)) (l (combine_list op z t1 t2)))
-                      (cl:declare (cl:ignorable y l))
-                      (if (funcall z y) l (cl:cons (tuple x1 y) l))))))))))
-      (fletc
-        ((%->%
-          (x y)
-          (let ((k% (structural-hash x)))
-            (cl:declare (cl:ignorable k%))
-            (labelsc
-              ((upd
-                (t%)
-                (match t%
-                  ((Empty) (make-Leaf k% (cl:cons (tuple x y) nil)))
-                  ((Leaf h l)
-                    (if (= h k%)
-                      (make-Leaf h (define_list (tuple x y) l))
-                      (newbranch h t% k% (make-Leaf k% (cl:cons (tuple x y) nil)))))
-                  ((Branch p b l r)
-                    (if (<> (logand k% (- b 1)) p)
-                      (newbranch p t% k% (make-Leaf k% (cl:cons (tuple x y) nil)))
-                      (if (= (logand k% b) 0)
-                        (make-Branch p b (upd l) r)
-                        (make-Branch p b l (upd r))))))))
-              #'upd))))
-        (labelsc
-          ((combine%
-            (op z t1 t2)
-            (match (tuple t1 t2)
-              ((tuple (Empty) _) t2)
-              ((tuple _ (Empty)) t1)
-              ((tuple (Leaf h1 l1) (Leaf h2 l2))
-                (if (= h1 h2)
-                  (let ((l (combine_list op z l1 l2)))
-                    (cl:declare (cl:ignorable l))
-                    (if (= l nil) (make-Empty) (make-Leaf h1 l)))
-                  (newbranch h1 t1 h2 t2)))
-              ((tuple (cl:and lf (Leaf k% lis)) (cl:and br (Branch p b l r)))
-                (if (= (logand k% (- b 1)) p)
-                  (if (= (logand k% b) 0)
-                    (match (combine% op z lf l) ((Empty) r) (l% (make-Branch p b l% r)))
-                    (match (combine% op z lf r) ((Empty) l) (r% (make-Branch p b l r%))))
-                  (newbranch k% lf p br)))
-              ((tuple (cl:and br (Branch p b l r)) (cl:and lf (Leaf k% lis)))
-                (if (= (logand k% (- b 1)) p)
-                  (if (= (logand k% b) 0)
-                    (match (combine% op z l lf) ((Empty) r) (l% (make-Branch p b l% r)))
-                    (match (combine% op z r lf) ((Empty) l) (r% (make-Branch p b l r%))))
-                  (newbranch p br k% lf)))
-              ((tuple (Branch p1 b1 l1 r1) (Branch p2 b2 l2 r2))
-                (if (< b1 b2)
-                  (if (<> (logand p2 (- b1 1)) p1)
-                    (newbranch p1 t1 p2 t2)
-                    (if (= (logand p2 b1) 0)
-                      (match (combine% op z l1 t2)
-                        ((Empty) r1)
-                        (l (make-Branch p1 b1 l r1)))
-                      (match (combine% op z r1 t2)
-                        ((Empty) l1)
-                        (r (make-Branch p1 b1 l1 r)))))
-                  (if (< b2 b1)
-                    (if (<> (logand p1 (- b2 1)) p2)
-                      (newbranch p1 t1 p2 t2)
-                      (if (= (logand p1 b2) 0)
-                        (match (combine% op z t1 l2)
-                          ((Empty) r2)
-                          (l (make-Branch p2 b2 l r2)))
-                        (match (combine% op z t1 r2)
-                          ((Empty) l2)
-                          (r (make-Branch p2 b2 l2 r)))))
-                    (if (= p1 p2)
-                      (match (tuple (combine% op z l1 l2) (combine% op z r1 r2))
-                        ((tuple (Empty) r) r)
-                        ((tuple l (Empty)) l)
-                        ((tuple l r) (make-Branch p1 b1 l r)))
-                      (newbranch p1 t1 p2 t2))))))))
-          (tuple #'%->% #'combine%)))))
+      (:recursive 1 combine_list (op z l1 l2)
+        (match (tuple l1 l2)
+          ((tuple nil _) l2)
+          ((tuple _ nil) l1)
+          ((tuple
+            (cl:cons (cl:and xy1 (tuple x1 y1)) t1)
+            (cl:cons (cl:and xy2 (tuple x2 y2)) t2))
+            (let ((c% (compare x1 x2)))
+              (cl:declare (cl:ignorable c%))
+              (if (< c% 0)
+                (cl:cons xy1 (combine_list op z t1 l2))
+                (if (> c% 0)
+                  (cl:cons xy2 (combine_list op z l1 t2))
+                  (let ((y (#`op y1 y2)) (l (combine_list op z t1 t2)))
+                    (cl:declare (cl:ignorable y l))
+                    (if (#`z y) l (cl:cons (tuple x1 y) l)))))))))
+      (:nonrecursive 2 %->% (x y)
+        (let ((k% (structural-hash x)))
+          (cl:declare (cl:ignorable k%))
+          (labelsc
+            ((upd
+              (t%)
+              (match t%
+                ((Empty) (make-Leaf k% (cl:cons (tuple x y) nil)))
+                ((Leaf h l)
+                  (if (= h k%)
+                    (make-Leaf h (define_list (tuple x y) l))
+                    (newbranch h t% k% (make-Leaf k% (cl:cons (tuple x y) nil)))))
+                ((Branch p b l r)
+                  (if (<> (logand k% (- b 1)) p)
+                    (newbranch p t% k% (make-Leaf k% (cl:cons (tuple x y) nil)))
+                    (if (= (logand k% b) 0)
+                      (make-Branch p b (upd l) r)
+                      (make-Branch p b l (upd r))))))))
+            #'upd)))
+      (:recursive 3 combine% (op z t1 t2)
+        (match (tuple t1 t2)
+          ((tuple (Empty) _) t2)
+          ((tuple _ (Empty)) t1)
+          ((tuple (Leaf h1 l1) (Leaf h2 l2))
+            (if (= h1 h2)
+              (let ((l (combine_list op z l1 l2)))
+                (cl:declare (cl:ignorable l))
+                (if (= l nil) (make-Empty) (make-Leaf h1 l)))
+              (newbranch h1 t1 h2 t2)))
+          ((tuple (cl:and lf (Leaf k% lis)) (cl:and br (Branch p b l r)))
+            (if (= (logand k% (- b 1)) p)
+              (if (= (logand k% b) 0)
+                (match (combine% op z lf l) ((Empty) r) (l% (make-Branch p b l% r)))
+                (match (combine% op z lf r) ((Empty) l) (r% (make-Branch p b l r%))))
+              (newbranch k% lf p br)))
+          ((tuple (cl:and br (Branch p b l r)) (cl:and lf (Leaf k% lis)))
+            (if (= (logand k% (- b 1)) p)
+              (if (= (logand k% b) 0)
+                (match (combine% op z l lf) ((Empty) r) (l% (make-Branch p b l% r)))
+                (match (combine% op z r lf) ((Empty) l) (r% (make-Branch p b l r%))))
+              (newbranch p br k% lf)))
+          ((tuple (Branch p1 b1 l1 r1) (Branch p2 b2 l2 r2))
+            (if (< b1 b2)
+              (if (<> (logand p2 (- b1 1)) p1)
+                (newbranch p1 t1 p2 t2)
+                (if (= (logand p2 b1) 0)
+                  (match (combine% op z l1 t2) ((Empty) r1) (l (make-Branch p1 b1 l r1)))
+                  (match (combine% op z r1 t2) ((Empty) l1) (r (make-Branch p1 b1 l1 r)))))
+              (if (< b2 b1)
+                (if (<> (logand p1 (- b2 1)) p2)
+                  (newbranch p1 t1 p2 t2)
+                  (if (= (logand p1 b2) 0)
+                    (match (combine% op z t1 l2)
+                      ((Empty) r2)
+                      (l (make-Branch p2 b2 l r2)))
+                    (match (combine% op z t1 r2)
+                      ((Empty) l2)
+                      (r (make-Branch p2 b2 l2 r)))))
+                (if (= p1 p2)
+                  (match (tuple (combine% op z l1 l2) (combine% op z r1 r2))
+                    ((tuple (Empty) r) r)
+                    ((tuple l (Empty)) l)
+                    ((tuple l r) (make-Branch p1 b1 l r)))
+                  (newbranch p1 t1 p2 t2))))))))
+    (tuple #'%->% #'combine%))
   ((tuple %->% combine%) (setf combine combine% %-> %->%)))
 
 ;; (* ------------------------------------------------------------------------- *)
@@ -1596,7 +1567,7 @@
 ;; (* ------------------------------------------------------------------------- *)
 
 
-(defunc %=> (x y) (funcall %-> x y undefined))
+(defunc %=> (x y) (#`%-> x y undefined))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Grab an arbitrary element.                                                *)
@@ -1627,7 +1598,7 @@
   (labelsc
     ((mem%%
       (x lis)
-      (match lis (nil cl:nil) ((cl:cons h t%) (cl:or (funcall eq x h) (mem%% x t%))))))
+      (match lis (nil cl:nil) ((cl:cons h t%) (cl:or (#`eq x h) (mem%% x t%))))))
     #'mem%%))
 
 (defunc insert% (eq x l) (if (mem% eq x l) l (cl:cons x l)))
@@ -1704,16 +1675,16 @@
         (b l)
         (match l
           (nil (failwith "num_of_string: no digits after base indicator"))
-          ((cl:cons h nil) (funcall valof b h))
-          ((cl:cons h t%) (+ (funcall valof b h) (* b (num_of_stringlist b t%)))))))
+          ((cl:cons h nil) (#`valof b h))
+          ((cl:cons h t%) (+ (#`valof b h) (* b (num_of_stringlist b t%)))))))
       (lambdac (s)
         (match (explode s)
           (nil (failwith "num_of_string: no digits"))
           ((cl:cons "0" (cl:cons "x" hexdigits))
-            (num_of_stringlist sixteen (funcall rev hexdigits)))
+            (num_of_stringlist sixteen (#`rev hexdigits)))
           ((cl:cons "0" (cl:cons "b" bindigits))
-            (num_of_stringlist two (funcall rev bindigits)))
-          (decdigits (num_of_stringlist ten (funcall rev decdigits))))))))
+            (num_of_stringlist two (#`rev bindigits)))
+          (decdigits (num_of_stringlist ten (#`rev decdigits))))))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Convenient conversion between files and (lists of) strings.               *)
@@ -1743,7 +1714,7 @@
                 (exception~3401)
                 (match exception~3401 ((End_of_file) nil) (_ (raise exception~3401)))))))
           (cl:declare (cl:ignorable l))
-          (if (= l nil) (funcall rev acc) (suck_lines (cl:cons (hd l) acc))))))
+          (if (= l nil) (#`rev acc) (suck_lines (cl:cons (hd l) acc))))))
       (let ((data (suck_lines nil)))
         (cl:declare (cl:ignorable data))
         (progn (close-channel fd) data)))))

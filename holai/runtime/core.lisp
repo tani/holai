@@ -83,13 +83,39 @@
        ',name)))
 
 (defmacro labelsc (definitions &body body)
-  `(cl:labels
-     ,(mapcar (lambda (definition)
-                (destructuring-bind (name parameters &rest forms) definition
-                  (multiple-value-bind (arguments expression)
-                      (curried-definition parameters forms `(cl:function ,name))
-                    `(,name ,arguments (declare (ignorable ,@parameters)) ,expression)))) definitions)
-     ,@body))
+  ;; The translator's flat staged definitions are presentation-only: recover
+  ;; the exact source scopes before compiling ordinary curried local entries.
+  ;; In particular a nonrecursive stage still uses FLETC's private function
+  ;; cells, and later stages never become visible in an earlier stage's RHS.
+  (if (and definitions
+           (member (caar definitions) '(:nonrecursive :recursive)))
+      (let ((groups nil))
+        (dolist (definition definitions)
+          (destructuring-bind (mode stage name parameters &rest forms) definition
+            (unless (and (member mode '(:nonrecursive :recursive))
+                         (integerp stage) (not (minusp stage)))
+              (error "LABELSC: invalid local function stage: ~S" definition))
+            (if (and groups
+                     (eq mode (caar groups))
+                     (= stage (cadar groups)))
+                (push `(,name ,parameters ,@forms) (caddar groups))
+                (push (list mode stage (list `(,name ,parameters ,@forms))) groups))))
+        (let ((expression `(progn ,@body)))
+          ;; GROUPS is already reversed; its definitions must be restored to
+          ;; source order, including parallel nonrecursive AND bindings.
+          (dolist (group groups expression)
+            (destructuring-bind (mode stage functions) group
+              (declare (ignore stage))
+              (setf expression
+                    `(,(if (eq mode :nonrecursive) 'fletc 'labelsc)
+                      ,(reverse functions) ,expression))))))
+      `(cl:labels
+         ,(mapcar (lambda (definition)
+                    (destructuring-bind (name parameters &rest forms) definition
+                      (multiple-value-bind (arguments expression)
+                          (curried-definition parameters forms `(cl:function ,name))
+                        `(,name ,arguments (declare (ignorable ,@parameters)) ,expression)))) definitions)
+         ,@body)))
 
 (defmacro fletc (definitions &body body)
   ;; Initializers stay outside the new flet scope, as for nonrecursive OCaml RHSs.

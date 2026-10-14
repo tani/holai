@@ -2516,7 +2516,7 @@ TAC_PROOF and interactive e retain their existing algorithms, justification
 checks and kernel. Runtime sources do not reader-reference generated packages,
 so runtime-only compilation/loading remains possible.
 
-#### Authorized handwritten reader shorthand
+#### Authorized sharp-backquote reader
 
 At the user's explicit request, runtime `sharp-backquote-lambda-reader` installs
 `(set-dispatch-macro-character #\# #\` #'sharp-backquote-lambda-reader)` in the
@@ -2533,8 +2533,8 @@ on every invocation, not at construction, and forwards its arguments through
 Thus ``#`holai.tactics:DISCH_TAC`` wraps a value-held tactic, and
 ``#`holai.tactics:ACCEPT_TAC`` wraps its current value when invoked.
 
-This is an optional handwritten reader extension, not a translator change.
-It can appear as an operand, but its lambda form is not a PROOF operator
+The reader supports handwritten wrappers and generated direct value calls
+(§34). It can appear as an operand, but its lambda form is not a PROOF operator
 reference. Bind the wrapper to a lexical value symbol to use it as an operator;
 the value-symbol/exact FUNCTION-symbol grammar above remains unchanged.
 
@@ -2587,7 +2587,7 @@ are part of this translation.
 
 ### 33.4 Verification boundary and current evidence
 
-The completed reader-inclusive PROOF release was validated on aarch64-linux with
+The preceding reader-inclusive PROOF variant was validated on aarch64-linux with
 `nix develop path:. --command make release` using OCaml 4.14.2,
 Camlp5 8.02.01 and SBCL 2.3.9.nixos. All 46 inputs compiled, loaded and
 initialized. The run passed 122 existing native checks, 61 independent PROOF
@@ -2633,3 +2633,190 @@ zero-argument sum, positional decimal calculation, NIL classification, floor
 quotient/remainder and lexical-argument hygiene computations. This runtime-only
 addition leaves the differential fixture count (1,132), inclusive map inventory
 (205,472) and production unit count (51) unchanged.
+
+## 34. Reader-headed value applications
+
+### 34.1 Indentation-driven translation boundary
+
+Generated ordinary function-value application uses ``(#`f arg1 arg2)`` rather
+than `(holai.runtime:funcall f arg1 arg2)`. This is a notation cutover to reduce
+deep indentation, not an algorithm or performance optimization. The reader
+prefix is attached directly to the structurally lowered head, whether an atom
+or a computed expression: ``(#`(if condition left right) argument)``.
+All value-application paths through compiler.call_value use this notation,
+including computed heads and applying excess arguments to the result of a
+foreign call. Translator-added forwarding calls that apply values use the same
+boundary.
+
+Direct calls to resolved named Function bindings remain ordinary named calls.
+Named function references remain `#'`; foreign partial-application adapters
+retain their existing construction. Plain function-value references passed as
+arguments or captured in bindings remain eager references, not reader wrappers:
+the cutover changes application heads, not the meaning of stored function
+values. PROOF recognition, operator grammar and tactical emission (§33) are
+unchanged. Runtime-internal `funcall` expansions and the public
+`holai.runtime:funcall` API remain intact, as do manually authored semantic
+tests of that API.
+
+### 34.2 Intentional late acquisition of the head
+
+In a direct reader-headed call, Common Lisp evaluates arguments left to right,
+then invokes the reader-produced lambda. That lambda evaluates its function
+expression once for that invocation and forwards the already evaluated
+arguments through `CL:APPLY`, preserving multiple returned values. Consequently
+an argument that rebinds a function value changes the function acquired by that
+same call. This late-head timing is intentional; it is not eager acquisition
+of the head as the first argument to `holai.runtime:funcall`. Repeated calls
+re-evaluate a computed head once per call. Ordinary values passed or captured
+without a reader prefix retain eager acquisition at their original expression.
+
+No source algorithm, inlining, loop replacement, ANF conversion or evaluation
+order temporaries are introduced. Existing lowering order, reference and
+function_ref resolution, binding IDs, import handling and recursive-reference
+observers remain the source of symbol identity and allocation order.
+
+The runtime must be compiled/loaded before generated consumer files are read:
+its compile/load/execute installation in the active `*readtable*` supplies
+sharp-backquote dispatch. Readtable copies inherit the extension; a fresh
+standard readtable made from NIL does not. Standard `#'`, `readtable-case`
+and source atom allocation remain unchanged.
+
+### 34.3 Structural rendering and evidence boundary
+
+The dedicated `Sexp.ReaderPrefix of t` node and `reader_prefix` constructor
+apply #` to an annotated atom or list. Rendering places the prefix adjacent to
+the head without an extra parenthesis layer and counts it in flat_length.
+Child Origin spans exclude the prefix; the enclosing application span includes
+the complete call. Fragment remains reserved for PROOF bodies. This is
+structural output, not generated-string postprocessing; Lisp and maps must
+be regenerated together.
+
+The existing native PROOF unit now also checks direct reader-headed lexical
+curried partial/full calls, computed-head evaluation once per invocation after
+argument-time rebinding, exact argument/head traces, and actual floor quotient
+and remainder values. The completed integrated release measured 69 PROOF
+checks. Its marker remains outside the observation stream after std_formatter
+restoration. Existing fixtures already cover value
+partials, returned-function excess calls and formatted foreign applications;
+one added `reader_computed_head` observation covers a structurally computed
+head and its evaluation count without duplicating those rows.
+
+No fixture or production component is added: the 11 fixture and 51 production
+unit boundaries remain. The combined §34/§35 release passed
+`nix develop path:. --command make release`; its final measured inventory is
+recorded in §35.3. §33's 61 checks, 1,132 differential rows, map inventories
+and generated-byte measurements remain historical evidence for that variant.
+No new performance result is claimed.
+
+## 35. Shallow staged local named-function groups
+
+### 35.1 Printed groups, not broadened lexical scope
+
+Alongside §34's shallow value-call heads, adjacent local named-function
+groups print in one shallow `labelsc` definition list. This is a readability
+change, not a claim that sequential source functions are parallel or mutually
+recursive. The staged entry grammar is:
+
+```lisp
+(:nonrecursive stage name (parameters...) body)
+(:recursive stage name (parameters...) body)
+```
+
+The tag and stage precede the function name, so metadata cannot be confused
+with an ordinary function body form. The stage integer starts at zero and
+increases by one per original adjacent source let; members of a source `and`
+group share its stage and mode. The translator emits one body expression per
+entry; the runtime also accepts multiple body forms as the ordinary macros do.
+Nonrecursive members retain FLETC scope, recursive members retain LABELSC
+scope. Ordinary untagged
+`fletc` and `labelsc` continue to mean their existing nonrecursive and recursive
+groups respectively.
+
+For example, this already-lowered nesting (with illustrative resolved names):
+
+```lisp
+(fletc ((f (x) (+ x 1)))
+  (fletc ((g (x) (f x)))
+    (labelsc ((walk (x) (if (zerop x) (g x) (walk (1- x)))))
+      (walk 2))))
+```
+
+prints as:
+
+```lisp
+(labelsc
+  ((:nonrecursive 0 f (x) (+ x 1))
+   (:nonrecursive 1 g (x) (f x))
+   (:recursive 2 walk (x) (if (zerop x) (g x) (walk (1- x)))))
+  (walk 2))
+```
+
+Here g depends on the preceding f; only walk's original recursive stage
+sees its own recursive binding. Macroexpansion groups consecutive entries
+by stage and folds from the last group toward the first, restoring the
+original ordinary FLETC/LABELSC nesting. It must not turn the entire printed
+list into one CL:LABELS scope. Sequential shadowing can reuse an earlier
+emitted symbol: widening visibility would then capture an older reference
+inside a preceding function body. Preserving the stage boundaries prevents
+that capture without renaming source functions or adding a runtime dispatcher.
+
+### 35.2 Structural boundary and provenance
+
+Combine only immediately adjacent already-lowered named-function groups
+under local-let Origins whose output is `fletc` or `labelsc`. Scalar LET
+values, modules, match forms, lambdas and annotations are barriers; do not
+search through them to collect more functions. Lower each group and its
+body in the original order before combining the output. Binding allocation,
+reference observers, imports and resolved source binding identities remain
+unchanged, as do algorithms, direct named calls, `#'` references and adapters.
+
+Retain removed local-let Origins around the combined form, with coincident
+generated spans where needed, and preserve the original function and body
+Origins. This is structural S-expression construction, not text rewriting
+or hand-adjustment of generated Lisp/maps. Source-group provenance does not
+require a separate printed parenthesis layer for each original let.
+
+Stage flattening adds no source evaluation-order change, initialization,
+function-value slots or runtime computation. §34's intentional late acquisition
+of reader-headed function values remains a distinct application-timing rule;
+it must not be attributed to stage flattening. Compile/load the runtime before
+reading generated consumers so both the reader extension and staged macro
+expansion are available.
+
+### 35.3 Evidence boundary
+
+Six added language observations cover function chains, mixed stages, repeated
+shadows and captured function identities, parallel groups, imports and a
+side-effecting closure-initializer barrier evaluated once. Their row names are
+`language_function_chain`, `language_function_mixed`,
+`language_function_shadow`, `language_function_parallel`,
+`language_function_import` and `language_function_barrier`. Together with
+`reader_computed_head`, these seven new rows match OCaml/SBCL exactly.
+
+The final integrated `nix develop path:. --command make release` succeeded
+in 217.72 seconds on aarch64-linux with OCaml 4.14.2, Camlp5 8.02.01 and
+SBCL 2.3.9.nixos. All 46 inputs loaded; 122 existing native, 69 independent
+PROOF, 27 protocol, 84 OPTIONAL, 16 tuple and 46 pattern checks passed.
+All 1,139 differential rows matched (1,132 serialized and seven side-effect
+rows). Initial registries remain 22/303/263/3 with the original three axioms;
+5,519 OCaml/5,517 SBCL initialization rows retain the two known OCaml-only
+messages, not identical raw transcripts.
+
+All 194,839 core/205,818 inclusive source-map entries passed audit. Removed
+scope Origins survive as coincident spans around merged groups; function and
+body Origins remain. Ten rejection checks preserved output, 51 fresh-cache
+production units had zero errors/warnings/style warnings, 94 clean outputs
+were identical, and all 55 retained input hashes were unchanged. Current
+generated core Lisp totals 6,174,070 bytes, an inventory measurement rather
+than a performance claim. See misc/reports/verification.json, clean-build.json
+and compile-diagnostics.json.
+
+Separate actual smokes proved a closed identity theorem with generated core,
+checked all six language-group results, and exercised direct staged macros
+with duplicate names, parallel outer RHS scope, captured partial functions
+and mutual recursion. Staged headers keep tag, stage, name and parameters
+together when they fit the 90-column width (three leading header fields),
+then put the body on a new line. This is a shallow presentation, not broader
+visibility or a claim that every file's maximum indentation decreased.
+Ordinary untagged macro syntax remains necessary for handwritten callers,
+not a compatibility alias. No performance result is claimed.

@@ -186,8 +186,8 @@ readable OCaml-to-Lisp translation, even when argument evaluation order differs.
   across defunc/lambdac/labelsc/fletc; no fixed worker, callc or call-site routing.
   Keep NIL-vs-omitted, primary return, body-once, partial/excess, old-function
   capture and fletc outer-RHS scope. rt:funcall and list tuples remain unchanged.
-- Validated: 122 native, 27 protocol, 84 OPTIONAL, 16 tuple checks; 1124 matching
-  rows and 94 identical clean-generated files. See misc/reports/verification.json.
+  Historical OPTIONAL checkpoint: 122 native, 27 protocol, 84 OPTIONAL,
+  16 tuple checks;1124 matching rows and94 identical clean-generated files.
 - Two-run ABBA startup medians 97.840→81.957s; cumulative allocation50.95% lower,
   peakRSS16.67% higher. OCamlopt13.715s is a separate historical measurement.
   Never equate cumulative allocation with peak RSS or promise a universal speedup.
@@ -266,7 +266,7 @@ readable OCaml-to-Lisp translation, even when argument evaluation order differs.
   newly reserved/renamed; then1_ remains separate. Left folding/right inner
   PROOF preserve the binary call tree; branch lists, justification and kernel
   operations are unchanged.
-- Reader-inclusive PROOF release validated with `nix develop path:. --command make release`:
+- Preceding reader-inclusive PROOF release validated with `nix develop path:. --command make release`:
   46 inputs,122 existing native,61 independent PROOF,46 pattern,27 protocol,
   84 OPTIONAL,16 tuple checks;1132 matching rows(1125 serialized,7 side effects).
   Initial registries22/303/263/3 and exact3source axioms unchanged;5519 OCaml/
@@ -286,9 +286,59 @@ readable OCaml-to-Lisp translation, even when argument evaluation order differs.
   using a gensym rest variable and CL:APPLY. Evaluate the expression each call,
   not at construction; preserve all arguments and multiple values. It is a
   PROOF operand, not a direct operator form; bind it to a value symbol for an
-  operator. Keep PROOF grammar and translator/generated output unchanged.
+  operator. Keep PROOF grammar and tactical emission unchanged; generated value
+  application now follows DESIGN34 below.
   Runtime-only compile/load smoke passed. Completed reader-inclusive release
   measured61 PROOF checks, including13 permanent reader checks with actual
   zeroarg sum, positional decimal calculation, NIL classification, floor
   quotient/remainder and lexicalargs hygiene computations, not mock echoes.
   Differential1132/maps205472/production51 inventories are unaffected.
+- DESIGN34 reader-headed value calls: compiler.call_value and translator-added
+  value forwarding emit (#`<structural-head> args...), including computed heads
+  and foreign excess-result application. Keep direct named Function calls,
+  #' references and foreign partial adapters intact. Do not wrap eager plain
+  function values passed as arguments or captured in bindings.
+  Arguments evaluate left-to-right before the reader lambda acquires its
+  function expression once per invocation. This late-head timing is intentional;
+  do not introduce order temporaries, ANF, source rewrites or optimizations.
+  Runtime must install dispatch before generated consumers are read.
+  Use Sexp.ReaderPrefix/reader_prefix, preserving Origin spans and prefix width;
+  no text postprocessing. Fragment remains PROOF-only. Runtime funcall/API and
+  manually authored semantic funcall tests stay unchanged.
+  Eight added native consumer checks give measured69 PROOF checks; one new
+  tactical computed-head row supplements existing partial/excess coverage.
+  Keep the marker isolated after observation capture/std_formatter restoration
+  and retain11 fixture/51 production components. Combined DESIGN34/35 release
+  succeeded; earlier measurements above remain historical.
+- DESIGN35 staged local named-function display: combine only adjacent
+  already-lowered local-let Origins producing fletc/labelsc into one labelsc
+  list of (:nonrecursive stage name params body) or
+  (:recursive stage name params body) entries. Stage boundaries are original
+  source groups, not permission to make every printed function recursive.
+  Macroexpansion folds stages back into the original FLETC/LABELSC scopes;
+  widening the whole list to LABELS can capture old references under sequential
+  shadowing with reused emitted symbols. Keep ordinary untagged macros intact.
+  LET values/modules/match/lambda/annotations are barriers. Preserve lowering,
+  binder/reference/import order and binding identity; retain removed let
+  Origins with coincident spans and all function/body Origins. No dispatcher,
+  new initialization or evaluation-order change belongs to this flattening.
+  DESIGN34's late reader-head acquisition is separate; direct named calls,
+  #' references and foreign partial adapters remain unchanged. Runtime-first
+  compile/load supplies both the reader and staged macro. Staged headers use
+  three leading fields and keep tag/stage/name/params together when they fit90
+  columns, then place the body on a new line. Untagged macro syntax is still
+  required, not a compatibility alias.
+  Final nix develop path:. --command make release succeeded217.72s:
+  46inputs/122native/69PROOF/27protocol/84OPTIONAL/16tuple/46pattern;
+  1139matching rows(1132serialized+7side effects), including one computed-head
+  and six language-group rows. Audited194839core/205818inclusive maps retain
+  all scope Origins with coincident merged spans;10rejections preserve output.
+  51fresh units zero errors/warnings/style warnings,94clean outputs identical,
+  55pins unchanged. Initial22/303/263/3, original3axioms and5519/5517 rows
+  with the known2message difference remain. Generated core Lisp6174070bytes
+  is an inventory, not a performance claim. Actual smokes cover closed identity,
+  all six language groups and staged duplicate names/parallel outer RHS/
+  captured partials/mutual recursion. Do not claim every maximum indentation
+  decreased. The user authorizes committing and pushing this reader/staged-
+  function indentation cutover to tani/holai main after successful release.
+  Do not claim the push completed before it has actually succeeded.

@@ -105,7 +105,6 @@
     lambdac
     labelsc
     function-value
-    funcall
     fletc
     failwith
     Failure
@@ -202,7 +201,7 @@
                 #'MP_TAC)
             THENL
               (cl:cons
-                (funcall ASM_MESON_TAC nil)
+                (#`ASM_MESON_TAC nil)
                 (cl:cons
                   (holai.runtime:proof (MAP_EVERY
                       (lambdac (t%) (UNDISCH_THEN t% (K #'ALL_TAC)))
@@ -216,11 +215,10 @@
                     THEN #'STRIP_TAC)
                   nil))
             THEN
-              (funcall
-                ASM_REWRITE_TAC
+              (#`ASM_REWRITE_TAC
                 (cl:cons
-                  (funcall num_CONV (parse_term "2"))
-                  (cl:cons (funcall num_CONV (parse_term "1")) nil)))
+                  (#`num_CONV (parse_term "2"))
+                  (cl:cons (#`num_CONV (parse_term "1")) nil)))
             THEN
               (SUBGOAL_THEN
                 (parse_term "!m n:num x:A. pwr x (m + n) :A = mul (pwr x m) (pwr x n)")
@@ -229,7 +227,7 @@
               (cl:cons
                 (holai.runtime:proof #'GEN_TAC
                   THEN INDUCT_TAC
-                  THEN (funcall ASM_REWRITE_TAC (cl:cons ADD_CLAUSES nil)))
+                  THEN (#`ASM_REWRITE_TAC (cl:cons ADD_CLAUSES nil)))
                 (cl:cons #'ALL_TAC nil))
             THEN
               (SUBGOAL_THEN
@@ -240,16 +238,16 @@
                 (holai.runtime:proof #'GEN_TAC
                   THEN #'GEN_TAC
                   THEN INDUCT_TAC
-                  THEN (funcall ASM_REWRITE_TAC nil))
+                  THEN (#`ASM_REWRITE_TAC nil))
                 (cl:cons #'ALL_TAC nil))
             THEN
               (SUBGOAL_THEN
                 (parse_term "!x:A m:num n. pwr (pwr x m) n = pwr x (m * n)")
-                (lambdac (th) (funcall ASM_MESON_TAC (cl:cons th nil))))
+                (lambdac (th) (#`ASM_MESON_TAC (cl:cons th nil))))
             THEN #'GEN_TAC
             THEN #'GEN_TAC
             THEN INDUCT_TAC
-            THEN (funcall ASM_REWRITE_TAC (cl:cons MULT_CLAUSES nil))))))
+            THEN (#`ASM_REWRITE_TAC (cl:cons MULT_CLAUSES nil))))))
       (true_tm (concl TRUTH)))
     (cl:declare (cl:ignorable SEMIRING_PTHS true_tm))
     (lambdac (sth rth arg~114)
@@ -259,7 +257,7 @@
           SEMIRING_ADD_CONV
           SEMIRING_MUL_CONV
           SEMIRING_POW_CONV)
-          (match (funcall CONJUNCTS (MATCH_MP SEMIRING_PTHS sth))
+          (match (#`CONJUNCTS (MATCH_MP SEMIRING_PTHS sth))
             ((cl:cons
               pthm_01
               (cl:cons
@@ -338,11 +336,11 @@
                                                                                         pthm_38
                                                                                         nil))))))))))))))))))))))))))))))))))))))
               (let
-                ((add_tm (rator (rator (funcall lhand (concl pthm_07)))))
-                  (mul_tm (rator (rator (funcall lhand (concl pthm_13)))))
+                ((add_tm (rator (rator (#`lhand (concl pthm_07)))))
+                  (mul_tm (rator (rator (#`lhand (concl pthm_13)))))
                   (pow_tm (rator (rator (rand (concl pthm_32)))))
                   (zero_tm (rand (concl pthm_06)))
-                  (one_tm (rand (funcall lhand (concl pthm_14))))
+                  (one_tm (rand (#`lhand (concl pthm_14))))
                   (ty (type_of (rand (concl pthm_01)))))
                 (cl:declare (cl:ignorable add_tm mul_tm pow_tm zero_tm one_tm ty))
                 (let
@@ -387,9 +385,7 @@
                         (lambdac (tm)
                           (match (dest_binop pow_tm tm)
                             ((tuple l r%)
-                              (if (funcall is_numeral r%)
-                                (tuple l r%)
-                                (failwith "dest_pow"))))))
+                              (if (#`is_numeral r%) (tuple l r%) (failwith "dest_pow"))))))
                       (is_add (is_binop add_tm))
                       (is_mul (is_binop mul_tm)))
                     (cl:declare (cl:ignorable dest_add dest_mul dest_pow is_add is_mul))
@@ -403,15 +399,13 @@
                           (lambdac (t%) (tuple t% t%))
                           (K cl:nil))
                         (let
-                          ((nthm_1 (funcall SPEC x_tm (funcall CONJUNCT1 rth)))
+                          ((nthm_1 (#`SPEC x_tm (#`CONJUNCT1 rth)))
                             (nthm_2
-                              (SPECL
-                                (cl:cons x_tm (cl:cons y_tm nil))
-                                (funcall CONJUNCT2 rth))))
+                              (SPECL (cl:cons x_tm (cl:cons y_tm nil)) (#`CONJUNCT2 rth))))
                           (cl:declare (cl:ignorable nthm_1 nthm_2))
                           (let
-                            ((sub_tm (rator (rator (funcall lhand (concl nthm_2)))))
-                              (neg_tm (rator (funcall lhand (concl nthm_1)))))
+                            ((sub_tm (rator (rator (#`lhand (concl nthm_2)))))
+                              (neg_tm (rator (#`lhand (concl nthm_1)))))
                             (cl:declare (cl:ignorable sub_tm neg_tm))
                             (let
                               ((dest_sub (dest_binop sub_tm)) (is_sub (is_binop sub_tm)))
@@ -419,21 +413,20 @@
                               (tuple nthm_1 nthm_2 sub_tm neg_tm dest_sub is_sub)))))
                       ((tuple nthm_1 nthm_2 sub_tm neg_tm dest_sub is_sub)
                         (lambdac (variable_order)
-                          (fletc
-                            ((POWVAR_MUL_CONV
-                              (tm)
-                              (match (funcall dest_mul tm)
+                          (holai.runtime:labelsc
+                            ((:nonrecursive 0 POWVAR_MUL_CONV (tm)
+                              (match (#`dest_mul tm)
                                 ((tuple l r%)
                                   (if
                                     (cl:and
-                                      (funcall is_semiring_constant l)
-                                      (funcall is_semiring_constant r%))
-                                    (funcall SEMIRING_MUL_CONV tm)
+                                      (#`is_semiring_constant l)
+                                      (#`is_semiring_constant r%))
+                                    (#`SEMIRING_MUL_CONV tm)
                                     (handler-case
-                                      (match (funcall dest_pow l)
+                                      (match (#`dest_pow l)
                                         ((tuple lx ln)
                                           (handler-case
-                                            (match (funcall dest_pow r%)
+                                            (match (#`dest_pow r%)
                                               ((tuple rx rn)
                                                 (let
                                                   ((th1
@@ -449,9 +442,7 @@
                                                     ((tuple tm1 tm2)
                                                       (TRANS
                                                         th1
-                                                        (AP_TERM
-                                                          tm1
-                                                          (funcall NUM_ADD_CONV tm2))))))))
+                                                        (AP_TERM tm1 (#`NUM_ADD_CONV tm2))))))))
                                             (holai.runtime:ocaml-condition
                                               (exception~358)
                                               (match exception~358
@@ -470,14 +461,14 @@
                                                           th1
                                                           (AP_TERM
                                                             tm1
-                                                            (funcall NUM_SUC_CONV tm2)))))))
+                                                            (#`NUM_SUC_CONV tm2)))))))
                                                 (_ (raise exception~358)))))))
                                       (holai.runtime:ocaml-condition
                                         (exception~305)
                                         (match exception~305
                                           ((Failure _)
                                             (handler-case
-                                              (match (funcall dest_pow r%)
+                                              (match (#`dest_pow r%)
                                                 ((tuple rx rn)
                                                   (let
                                                     ((th1
@@ -493,7 +484,7 @@
                                                           th1
                                                           (AP_TERM
                                                             tm1
-                                                            (funcall NUM_SUC_CONV tm2))))))))
+                                                            (#`NUM_SUC_CONV tm2))))))))
                                               (holai.runtime:ocaml-condition
                                                 (exception~308)
                                                 (match exception~308
@@ -502,12 +493,10 @@
                                                       (cl:cons (tuple l x_tm) nil)
                                                       pthm_32))
                                                   (_ (raise exception~308))))))
-                                          (_ (raise exception~305))))))))))
-                            (fletc
-                              ((MONOMIAL_DEONE
-                                (th)
+                                          (_ (raise exception~305)))))))))
+                              (:nonrecursive 1 MONOMIAL_DEONE (th)
                                 (handler-case
-                                  (match (funcall dest_mul (rand (concl th)))
+                                  (match (#`dest_mul (rand (concl th)))
                                     ((tuple l r%)
                                       (if (= l one_tm)
                                         (TRANS
@@ -519,154 +508,278 @@
                                     (match exception~455
                                       ((Failure _) th)
                                       (_ (raise exception~455)))))))
-                              (let*
-                                ((MONOMIAL_POW_CONV
-                                  (labelsc
-                                    ((MONOMIAL_POW
-                                      (tm bod ntm)
-                                      (if (not (is_comb bod))
-                                        (REFL tm)
-                                        (if (funcall is_semiring_constant bod)
-                                          (funcall SEMIRING_POW_CONV tm)
-                                          (match (dest_comb bod)
-                                            ((tuple lop r%)
-                                              (if (not (is_comb lop))
-                                                (REFL tm)
-                                                (match (dest_comb lop)
-                                                  ((tuple op l)
-                                                    (if
-                                                      (cl:and
-                                                        (= op pow_tm)
-                                                        (funcall is_numeral r%))
+                            (let*
+                              ((MONOMIAL_POW_CONV
+                                (labelsc
+                                  ((MONOMIAL_POW
+                                    (tm bod ntm)
+                                    (if (not (is_comb bod))
+                                      (REFL tm)
+                                      (if (#`is_semiring_constant bod)
+                                        (#`SEMIRING_POW_CONV tm)
+                                        (match (dest_comb bod)
+                                          ((tuple lop r%)
+                                            (if (not (is_comb lop))
+                                              (REFL tm)
+                                              (match (dest_comb lop)
+                                                ((tuple op l)
+                                                  (if
+                                                    (cl:and
+                                                      (= op pow_tm)
+                                                      (#`is_numeral r%))
+                                                    (let
+                                                      ((th1
+                                                        (INST%
+                                                          (cl:cons
+                                                            (tuple l x_tm)
+                                                            (cl:cons
+                                                              (tuple r% p_tm)
+                                                              (cl:cons
+                                                                (tuple ntm q_tm)
+                                                                nil)))
+                                                          pthm_34)))
+                                                      (cl:declare (cl:ignorable th1))
+                                                      (match
+                                                        (dest_comb (rand (concl th1)))
+                                                        ((tuple l% r)
+                                                          (TRANS
+                                                            th1
+                                                            (AP_TERM
+                                                              l%
+                                                              (#`NUM_MULT_CONV r))))))
+                                                    (if (= op mul_tm)
                                                       (let
                                                         ((th1
                                                           (INST%
                                                             (cl:cons
                                                               (tuple l x_tm)
                                                               (cl:cons
-                                                                (tuple r% p_tm)
+                                                                (tuple r% y_tm)
                                                                 (cl:cons
                                                                   (tuple ntm q_tm)
                                                                   nil)))
-                                                            pthm_34)))
+                                                            pthm_33)))
                                                         (cl:declare (cl:ignorable th1))
                                                         (match
                                                           (dest_comb (rand (concl th1)))
-                                                          ((tuple l% r)
-                                                            (TRANS
-                                                              th1
-                                                              (AP_TERM
-                                                                l%
-                                                                (funcall NUM_MULT_CONV r))))))
-                                                      (if (= op mul_tm)
-                                                        (let
-                                                          ((th1
-                                                            (INST%
-                                                              (cl:cons
-                                                                (tuple l x_tm)
-                                                                (cl:cons
-                                                                  (tuple r% y_tm)
-                                                                  (cl:cons
-                                                                    (tuple ntm q_tm)
-                                                                    nil)))
-                                                              pthm_33)))
-                                                          (cl:declare (cl:ignorable th1))
-                                                          (match
-                                                            (dest_comb (rand (concl th1)))
-                                                            ((tuple xy z)
-                                                              (match (dest_comb xy)
-                                                                ((tuple x y)
-                                                                  (let
-                                                                    ((thl
+                                                          ((tuple xy z)
+                                                            (match (dest_comb xy)
+                                                              ((tuple x y)
+                                                                (let
+                                                                  ((thl
+                                                                    (MONOMIAL_POW y l ntm))
+                                                                    (thr
                                                                       (MONOMIAL_POW
-                                                                        y
-                                                                        l
-                                                                        ntm))
-                                                                      (thr
-                                                                        (MONOMIAL_POW
-                                                                          z
-                                                                          r%
-                                                                          ntm)))
-                                                                    (cl:declare
-                                                                      (cl:ignorable
-                                                                        thl
-                                                                        thr))
-                                                                    (TRANS
-                                                                      th1
-                                                                      (MK_COMB%
-                                                                        (tuple
-                                                                          (AP_TERM x thl)
-                                                                          thr)))))))))
-                                                        (REFL tm))))))))))))
-                                    (lambdac (tm)
-                                      (match (dest_comb tm)
-                                        ((tuple lop r%)
-                                          (match (dest_comb lop)
-                                            ((tuple op l)
-                                              (if
-                                                (cl:or
-                                                  (<> op pow_tm)
-                                                  (not (funcall is_numeral r%)))
-                                                (failwith "MONOMIAL_POW_CONV")
-                                                (if (= r% zeron_tm)
+                                                                        z
+                                                                        r%
+                                                                        ntm)))
+                                                                  (cl:declare
+                                                                    (cl:ignorable thl thr))
+                                                                  (TRANS
+                                                                    th1
+                                                                    (MK_COMB%
+                                                                      (tuple
+                                                                        (AP_TERM x thl)
+                                                                        thr)))))))))
+                                                      (REFL tm))))))))))))
+                                  (lambdac (tm)
+                                    (match (dest_comb tm)
+                                      ((tuple lop r%)
+                                        (match (dest_comb lop)
+                                          ((tuple op l)
+                                            (if
+                                              (cl:or
+                                                (<> op pow_tm)
+                                                (not (#`is_numeral r%)))
+                                              (failwith "MONOMIAL_POW_CONV")
+                                              (if (= r% zeron_tm)
+                                                (INST%
+                                                  (cl:cons (tuple l x_tm) nil)
+                                                  pthm_35)
+                                                (if (= r% onen_tm)
                                                   (INST%
                                                     (cl:cons (tuple l x_tm) nil)
-                                                    pthm_35)
-                                                  (if (= r% onen_tm)
-                                                    (INST%
-                                                      (cl:cons (tuple l x_tm) nil)
-                                                      pthm_36)
-                                                    (MONOMIAL_DEONE
-                                                      (MONOMIAL_POW tm l r%))))))))))))
-                                  (MONOMIAL_MUL_CONV
-                                    (fletc
-                                      ((powvar
-                                        (tm)
-                                        (if (funcall is_semiring_constant tm)
-                                          one_tm
-                                          (handler-case
-                                            (match (dest_comb tm)
-                                              ((tuple lop r%)
-                                                (match (dest_comb lop)
-                                                  ((tuple op l)
-                                                    (if
-                                                      (cl:and
-                                                        (= op pow_tm)
-                                                        (funcall is_numeral r%))
-                                                      l
-                                                      (failwith ""))))))
-                                            (holai.runtime:ocaml-condition
-                                              (exception~681)
-                                              (match exception~681
-                                                ((Failure _) tm)
-                                                (_ (raise exception~681))))))))
-                                      (fletc
-                                        ((vorder
-                                          (x y)
-                                          (if (= x y)
-                                            0
-                                            (if (= x one_tm)
-                                              (- 1)
-                                              (if (= y one_tm)
-                                                1
-                                                (if (funcall variable_order x y) (- 1) 1))))))
-                                        (labelsc
-                                          ((MONOMIAL_MUL
-                                            (tm l r%)
-                                            (handler-case
-                                              (match (funcall dest_mul l)
-                                                ((tuple lx ly)
-                                                  (let ((vl (powvar lx)))
-                                                    (cl:declare (cl:ignorable vl))
-                                                    (handler-case
-                                                      (match (funcall dest_mul r%)
-                                                        ((tuple rx ry)
-                                                          (let*
-                                                            ((vr (powvar rx))
-                                                              (ord (vorder vl vr)))
+                                                    pthm_36)
+                                                  (MONOMIAL_DEONE (MONOMIAL_POW tm l r%))))))))))))
+                                (MONOMIAL_MUL_CONV
+                                  (holai.runtime:labelsc
+                                    ((:nonrecursive 0 powvar (tm)
+                                      (if (#`is_semiring_constant tm)
+                                        one_tm
+                                        (handler-case
+                                          (match (dest_comb tm)
+                                            ((tuple lop r%)
+                                              (match (dest_comb lop)
+                                                ((tuple op l)
+                                                  (if
+                                                    (cl:and
+                                                      (= op pow_tm)
+                                                      (#`is_numeral r%))
+                                                    l
+                                                    (failwith ""))))))
+                                          (holai.runtime:ocaml-condition
+                                            (exception~681)
+                                            (match exception~681
+                                              ((Failure _) tm)
+                                              (_ (raise exception~681)))))))
+                                      (:nonrecursive 1 vorder (x y)
+                                        (if (= x y)
+                                          0
+                                          (if (= x one_tm)
+                                            (- 1)
+                                            (if (= y one_tm)
+                                              1
+                                              (if (#`variable_order x y) (- 1) 1)))))
+                                      (:recursive 2 MONOMIAL_MUL (tm l r%)
+                                        (handler-case
+                                          (match (#`dest_mul l)
+                                            ((tuple lx ly)
+                                              (let ((vl (powvar lx)))
+                                                (cl:declare (cl:ignorable vl))
+                                                (handler-case
+                                                  (match (#`dest_mul r%)
+                                                    ((tuple rx ry)
+                                                      (let*
+                                                        ((vr (powvar rx))
+                                                          (ord (vorder vl vr)))
+                                                        (cl:declare (cl:ignorable vr ord))
+                                                        (if (= ord 0)
+                                                          (let
+                                                            ((th1
+                                                              (INST%
+                                                                (cl:cons
+                                                                  (tuple lx lx_tm)
+                                                                  (cl:cons
+                                                                    (tuple ly ly_tm)
+                                                                    (cl:cons
+                                                                      (tuple rx rx_tm)
+                                                                      (cl:cons
+                                                                        (tuple ry ry_tm)
+                                                                        nil))))
+                                                                pthm_15)))
                                                             (cl:declare
-                                                              (cl:ignorable vr ord))
-                                                            (if (= ord 0)
+                                                              (cl:ignorable th1))
+                                                            (match
+                                                              (dest_comb
+                                                                (rand (concl th1)))
+                                                              ((tuple tm1 tm2)
+                                                                (match (dest_comb tm1)
+                                                                  ((tuple tm3 tm4)
+                                                                    (let*
+                                                                      ((th2
+                                                                        (AP_THM
+                                                                          (AP_TERM
+                                                                            tm3
+                                                                            (POWVAR_MUL_CONV
+                                                                              tm4))
+                                                                          tm2))
+                                                                        (th3
+                                                                          (TRANS th1 th2)))
+                                                                      (cl:declare
+                                                                        (cl:ignorable
+                                                                          th2
+                                                                          th3))
+                                                                      (match
+                                                                        (dest_comb
+                                                                          (rand
+                                                                            (concl th3)))
+                                                                        ((tuple tm5 tm6)
+                                                                          (match
+                                                                            (dest_comb
+                                                                              tm6)
+                                                                            ((tuple
+                                                                              tm7
+                                                                              tm8)
+                                                                              (let
+                                                                                ((th4
+                                                                                  (MONOMIAL_MUL
+                                                                                    tm6
+                                                                                    (rand
+                                                                                      tm7)
+                                                                                    tm8)))
+                                                                                (cl:declare
+                                                                                  (cl:ignorable
+                                                                                    th4))
+                                                                                (TRANS
+                                                                                  th3
+                                                                                  (AP_TERM
+                                                                                    tm5
+                                                                                    th4)))))))))))))
+                                                          (let*
+                                                            ((th0
+                                                              (if (< ord 0)
+                                                                pthm_16
+                                                                pthm_17))
+                                                              (th1
+                                                                (INST%
+                                                                  (cl:cons
+                                                                    (tuple lx lx_tm)
+                                                                    (cl:cons
+                                                                      (tuple ly ly_tm)
+                                                                      (cl:cons
+                                                                        (tuple rx rx_tm)
+                                                                        (cl:cons
+                                                                          (tuple ry ry_tm)
+                                                                          nil))))
+                                                                  th0)))
+                                                            (cl:declare
+                                                              (cl:ignorable th0 th1))
+                                                            (match
+                                                              (dest_comb
+                                                                (rand (concl th1)))
+                                                              ((tuple tm1 tm2)
+                                                                (match (dest_comb tm2)
+                                                                  ((tuple tm3 tm4)
+                                                                    (TRANS
+                                                                      th1
+                                                                      (AP_TERM
+                                                                        tm1
+                                                                        (MONOMIAL_MUL
+                                                                          tm2
+                                                                          (rand tm3)
+                                                                          tm4))))))))))))
+                                                  (holai.runtime:ocaml-condition
+                                                    (exception~908)
+                                                    (match exception~908
+                                                      ((Failure _)
+                                                        (let*
+                                                          ((vr (powvar r%))
+                                                            (ord (vorder vl vr)))
+                                                          (cl:declare
+                                                            (cl:ignorable vr ord))
+                                                          (if (= ord 0)
+                                                            (let
+                                                              ((th1
+                                                                (INST%
+                                                                  (cl:cons
+                                                                    (tuple lx lx_tm)
+                                                                    (cl:cons
+                                                                      (tuple ly ly_tm)
+                                                                      (cl:cons
+                                                                        (tuple r% rx_tm)
+                                                                        nil)))
+                                                                  pthm_18)))
+                                                              (cl:declare
+                                                                (cl:ignorable th1))
+                                                              (match
+                                                                (dest_comb
+                                                                  (rand (concl th1)))
+                                                                ((tuple tm1 tm2)
+                                                                  (match (dest_comb tm1)
+                                                                    ((tuple tm3 tm4)
+                                                                      (let
+                                                                        ((th2
+                                                                          (AP_THM
+                                                                            (AP_TERM
+                                                                              tm3
+                                                                              (POWVAR_MUL_CONV
+                                                                                tm4))
+                                                                            tm2)))
+                                                                        (cl:declare
+                                                                          (cl:ignorable
+                                                                            th2))
+                                                                        (TRANS th1 th2)))))))
+                                                            (if (< ord 0)
                                                               (let
                                                                 ((th1
                                                                   (INST%
@@ -675,89 +788,11 @@
                                                                       (cl:cons
                                                                         (tuple ly ly_tm)
                                                                         (cl:cons
-                                                                          (tuple rx rx_tm)
-                                                                          (cl:cons
-                                                                            (tuple
-                                                                              ry
-                                                                              ry_tm)
-                                                                            nil))))
-                                                                    pthm_15)))
+                                                                          (tuple r% rx_tm)
+                                                                          nil)))
+                                                                    pthm_19)))
                                                                 (cl:declare
                                                                   (cl:ignorable th1))
-                                                                (match
-                                                                  (dest_comb
-                                                                    (rand (concl th1)))
-                                                                  ((tuple tm1 tm2)
-                                                                    (match (dest_comb tm1)
-                                                                      ((tuple tm3 tm4)
-                                                                        (let*
-                                                                          ((th2
-                                                                            (AP_THM
-                                                                              (AP_TERM
-                                                                                tm3
-                                                                                (POWVAR_MUL_CONV
-                                                                                  tm4))
-                                                                              tm2))
-                                                                            (th3
-                                                                              (TRANS
-                                                                                th1
-                                                                                th2)))
-                                                                          (cl:declare
-                                                                            (cl:ignorable
-                                                                              th2
-                                                                              th3))
-                                                                          (match
-                                                                            (dest_comb
-                                                                              (rand
-                                                                                (concl
-                                                                                  th3)))
-                                                                            ((tuple
-                                                                              tm5
-                                                                              tm6)
-                                                                              (match
-                                                                                (dest_comb
-                                                                                  tm6)
-                                                                                ((tuple
-                                                                                  tm7
-                                                                                  tm8)
-                                                                                  (let
-                                                                                    ((th4
-                                                                                      (MONOMIAL_MUL
-                                                                                        tm6
-                                                                                        (rand
-                                                                                          tm7)
-                                                                                        tm8)))
-                                                                                    (cl:declare
-                                                                                      (cl:ignorable
-                                                                                        th4))
-                                                                                    (TRANS
-                                                                                      th3
-                                                                                      (AP_TERM
-                                                                                        tm5
-                                                                                        th4)))))))))))))
-                                                              (let*
-                                                                ((th0
-                                                                  (if (< ord 0)
-                                                                    pthm_16
-                                                                    pthm_17))
-                                                                  (th1
-                                                                    (INST%
-                                                                      (cl:cons
-                                                                        (tuple lx lx_tm)
-                                                                        (cl:cons
-                                                                          (tuple ly ly_tm)
-                                                                          (cl:cons
-                                                                            (tuple
-                                                                              rx
-                                                                              rx_tm)
-                                                                            (cl:cons
-                                                                              (tuple
-                                                                                ry
-                                                                                ry_tm)
-                                                                              nil))))
-                                                                      th0)))
-                                                                (cl:declare
-                                                                  (cl:ignorable th0 th1))
                                                                 (match
                                                                   (dest_comb
                                                                     (rand (concl th1)))
@@ -771,575 +806,387 @@
                                                                             (MONOMIAL_MUL
                                                                               tm2
                                                                               (rand tm3)
-                                                                              tm4))))))))))))
-                                                      (holai.runtime:ocaml-condition
-                                                        (exception~908)
-                                                        (match exception~908
-                                                          ((Failure _)
-                                                            (let*
-                                                              ((vr (powvar r%))
-                                                                (ord (vorder vl vr)))
-                                                              (cl:declare
-                                                                (cl:ignorable vr ord))
-                                                              (if (= ord 0)
-                                                                (let
-                                                                  ((th1
-                                                                    (INST%
+                                                                              tm4))))))))
+                                                              (INST%
+                                                                (cl:cons
+                                                                  (tuple l lx_tm)
+                                                                  (cl:cons
+                                                                    (tuple r% rx_tm)
+                                                                    nil))
+                                                                pthm_20)))))
+                                                      (_ (raise exception~908))))))))
+                                          (holai.runtime:ocaml-condition
+                                            (exception~746)
+                                            (match exception~746
+                                              ((Failure _)
+                                                (let ((vl (powvar l)))
+                                                  (cl:declare (cl:ignorable vl))
+                                                  (handler-case
+                                                    (match (#`dest_mul r%)
+                                                      ((tuple rx ry)
+                                                        (let*
+                                                          ((vr (powvar rx))
+                                                            (ord (vorder vl vr)))
+                                                          (cl:declare
+                                                            (cl:ignorable vr ord))
+                                                          (if (= ord 0)
+                                                            (let
+                                                              ((th1
+                                                                (INST%
+                                                                  (cl:cons
+                                                                    (tuple l lx_tm)
+                                                                    (cl:cons
+                                                                      (tuple rx rx_tm)
                                                                       (cl:cons
-                                                                        (tuple lx lx_tm)
-                                                                        (cl:cons
-                                                                          (tuple ly ly_tm)
-                                                                          (cl:cons
-                                                                            (tuple
-                                                                              r%
-                                                                              rx_tm)
-                                                                            nil)))
-                                                                      pthm_18)))
-                                                                  (cl:declare
-                                                                    (cl:ignorable th1))
-                                                                  (match
-                                                                    (dest_comb
-                                                                      (rand (concl th1)))
-                                                                    ((tuple tm1 tm2)
-                                                                      (match
-                                                                        (dest_comb tm1)
-                                                                        ((tuple tm3 tm4)
-                                                                          (let
-                                                                            ((th2
-                                                                              (AP_THM
-                                                                                (AP_TERM
-                                                                                  tm3
-                                                                                  (POWVAR_MUL_CONV
-                                                                                    tm4))
-                                                                                tm2)))
-                                                                            (cl:declare
-                                                                              (cl:ignorable
-                                                                                th2))
-                                                                            (TRANS
-                                                                              th1
-                                                                              th2)))))))
-                                                                (if (< ord 0)
-                                                                  (let
-                                                                    ((th1
-                                                                      (INST%
-                                                                        (cl:cons
-                                                                          (tuple lx lx_tm)
-                                                                          (cl:cons
-                                                                            (tuple
-                                                                              ly
-                                                                              ly_tm)
-                                                                            (cl:cons
-                                                                              (tuple
-                                                                                r%
-                                                                                rx_tm)
-                                                                              nil)))
-                                                                        pthm_19)))
-                                                                    (cl:declare
-                                                                      (cl:ignorable th1))
-                                                                    (match
-                                                                      (dest_comb
-                                                                        (rand (concl th1)))
-                                                                      ((tuple tm1 tm2)
-                                                                        (match
-                                                                          (dest_comb tm2)
-                                                                          ((tuple tm3 tm4)
-                                                                            (TRANS
-                                                                              th1
-                                                                              (AP_TERM
-                                                                                tm1
-                                                                                (MONOMIAL_MUL
-                                                                                  tm2
-                                                                                  (rand
-                                                                                    tm3)
-                                                                                  tm4))))))))
+                                                                        (tuple ry ry_tm)
+                                                                        nil)))
+                                                                  pthm_21)))
+                                                              (cl:declare
+                                                                (cl:ignorable th1))
+                                                              (match
+                                                                (dest_comb
+                                                                  (rand (concl th1)))
+                                                                ((tuple tm1 tm2)
+                                                                  (match (dest_comb tm1)
+                                                                    ((tuple tm3 tm4)
+                                                                      (TRANS
+                                                                        th1
+                                                                        (AP_THM
+                                                                          (AP_TERM
+                                                                            tm3
+                                                                            (POWVAR_MUL_CONV
+                                                                              tm4))
+                                                                          tm2)))))))
+                                                            (if (> ord 0)
+                                                              (let
+                                                                ((th1
                                                                   (INST%
                                                                     (cl:cons
                                                                       (tuple l lx_tm)
                                                                       (cl:cons
-                                                                        (tuple r% rx_tm)
-                                                                        nil))
-                                                                    pthm_20)))))
-                                                          (_ (raise exception~908))))))))
-                                              (holai.runtime:ocaml-condition
-                                                (exception~746)
-                                                (match exception~746
-                                                  ((Failure _)
-                                                    (let ((vl (powvar l)))
-                                                      (cl:declare (cl:ignorable vl))
-                                                      (handler-case
-                                                        (match (funcall dest_mul r%)
-                                                          ((tuple rx ry)
-                                                            (let*
-                                                              ((vr (powvar rx))
-                                                                (ord (vorder vl vr)))
-                                                              (cl:declare
-                                                                (cl:ignorable vr ord))
-                                                              (if (= ord 0)
-                                                                (let
-                                                                  ((th1
-                                                                    (INST%
-                                                                      (cl:cons
-                                                                        (tuple l lx_tm)
+                                                                        (tuple rx rx_tm)
                                                                         (cl:cons
-                                                                          (tuple rx rx_tm)
-                                                                          (cl:cons
-                                                                            (tuple
-                                                                              ry
-                                                                              ry_tm)
-                                                                            nil)))
-                                                                      pthm_21)))
-                                                                  (cl:declare
-                                                                    (cl:ignorable th1))
-                                                                  (match
-                                                                    (dest_comb
-                                                                      (rand (concl th1)))
-                                                                    ((tuple tm1 tm2)
-                                                                      (match
-                                                                        (dest_comb tm1)
-                                                                        ((tuple tm3 tm4)
-                                                                          (TRANS
-                                                                            th1
-                                                                            (AP_THM
-                                                                              (AP_TERM
-                                                                                tm3
-                                                                                (POWVAR_MUL_CONV
-                                                                                  tm4))
-                                                                              tm2)))))))
-                                                                (if (> ord 0)
-                                                                  (let
-                                                                    ((th1
-                                                                      (INST%
-                                                                        (cl:cons
-                                                                          (tuple l lx_tm)
-                                                                          (cl:cons
-                                                                            (tuple
-                                                                              rx
-                                                                              rx_tm)
-                                                                            (cl:cons
-                                                                              (tuple
-                                                                                ry
-                                                                                ry_tm)
-                                                                              nil)))
-                                                                        pthm_22)))
-                                                                    (cl:declare
-                                                                      (cl:ignorable th1))
-                                                                    (match
-                                                                      (dest_comb
-                                                                        (rand (concl th1)))
-                                                                      ((tuple tm1 tm2)
-                                                                        (match
-                                                                          (dest_comb tm2)
-                                                                          ((tuple tm3 tm4)
-                                                                            (TRANS
-                                                                              th1
-                                                                              (AP_TERM
-                                                                                tm1
-                                                                                (MONOMIAL_MUL
-                                                                                  tm2
-                                                                                  (rand
-                                                                                    tm3)
-                                                                                  tm4))))))))
-                                                                  (REFL tm))))))
-                                                        (holai.runtime:ocaml-condition
-                                                          (exception~752)
-                                                          (match exception~752
-                                                            ((Failure _)
-                                                              (let*
-                                                                ((vr (powvar r%))
-                                                                  (ord (vorder vl vr)))
+                                                                          (tuple ry ry_tm)
+                                                                          nil)))
+                                                                    pthm_22)))
                                                                 (cl:declare
-                                                                  (cl:ignorable vr ord))
-                                                                (if (= ord 0)
-                                                                  (POWVAR_MUL_CONV tm)
-                                                                  (if (> ord 0)
-                                                                    (INST%
-                                                                      (cl:cons
-                                                                        (tuple l lx_tm)
-                                                                        (cl:cons
-                                                                          (tuple r% rx_tm)
-                                                                          nil))
-                                                                      pthm_20)
-                                                                    (REFL tm)))))
-                                                            (_ (raise exception~752)))))))
-                                                  (_ (raise exception~746)))))))
-                                          (lambdac (tm)
-                                            (match (funcall dest_mul tm)
-                                              ((tuple l r%)
-                                                (MONOMIAL_DEONE (MONOMIAL_MUL tm l r%)))))))))
-                                  (POLYNOMIAL_MONOMIAL_MUL_CONV
-                                    (labelsc
-                                      ((PMM_CONV
-                                        (tm)
-                                        (match (funcall dest_mul tm)
-                                          ((tuple l r%)
-                                            (handler-case
-                                              (match (funcall dest_add r%)
-                                                ((tuple y z)
-                                                  (let
-                                                    ((th1
-                                                      (INST%
-                                                        (cl:cons
-                                                          (tuple l x_tm)
-                                                          (cl:cons
-                                                            (tuple y y_tm)
-                                                            (cl:cons (tuple z z_tm) nil)))
-                                                        pthm_37)))
-                                                    (cl:declare (cl:ignorable th1))
-                                                    (match (dest_comb (rand (concl th1)))
-                                                      ((tuple tm1 tm2)
-                                                        (match (dest_comb tm1)
-                                                          ((tuple tm3 tm4)
-                                                            (let
-                                                              ((th2
-                                                                (MK_COMB%
-                                                                  (tuple
-                                                                    (AP_TERM
-                                                                      tm3
-                                                                      (funcall
-                                                                        MONOMIAL_MUL_CONV
-                                                                        tm4))
-                                                                    (PMM_CONV tm2)))))
-                                                              (cl:declare
-                                                                (cl:ignorable th2))
-                                                              (TRANS th1 th2)))))))))
-                                              (holai.runtime:ocaml-condition
-                                                (exception~1220)
-                                                (match exception~1220
-                                                  ((Failure _)
-                                                    (funcall MONOMIAL_MUL_CONV tm))
-                                                  (_ (raise exception~1220)))))))))
-                                      #'PMM_CONV)))
-                                (cl:declare
-                                  (cl:ignorable
-                                    MONOMIAL_POW_CONV
-                                    MONOMIAL_MUL_CONV
-                                    POLYNOMIAL_MONOMIAL_MUL_CONV))
-                                (fletc
-                                  ((MONOMIAL_ADD_CONV
-                                    (tm)
-                                    (match (funcall dest_add tm)
-                                      ((tuple l r%)
-                                        (if
-                                          (cl:and
-                                            (funcall is_semiring_constant l)
-                                            (funcall is_semiring_constant r%))
-                                          (funcall SEMIRING_ADD_CONV tm)
-                                          (let
-                                            ((th1
-                                              (if
-                                                (cl:and
-                                                  (funcall is_mul l)
-                                                  (funcall
-                                                    is_semiring_constant
-                                                    (funcall lhand l)))
-                                                (if
-                                                  (cl:and
-                                                    (funcall is_mul r%)
-                                                    (funcall
-                                                      is_semiring_constant
-                                                      (funcall lhand r%)))
-                                                  (INST%
-                                                    (cl:cons
-                                                      (tuple (funcall lhand l) a_tm)
-                                                      (cl:cons
-                                                        (tuple (funcall lhand r%) b_tm)
-                                                        (cl:cons
-                                                          (tuple (rand r%) m_tm)
-                                                          nil)))
-                                                    pthm_02)
-                                                  (INST%
-                                                    (cl:cons
-                                                      (tuple (funcall lhand l) a_tm)
-                                                      (cl:cons (tuple r% m_tm) nil))
-                                                    pthm_03))
-                                                (if
-                                                  (cl:and
-                                                    (funcall is_mul r%)
-                                                    (funcall
-                                                      is_semiring_constant
-                                                      (funcall lhand r%)))
-                                                  (INST%
-                                                    (cl:cons
-                                                      (tuple (funcall lhand r%) a_tm)
-                                                      (cl:cons (tuple l m_tm) nil))
-                                                    pthm_04)
-                                                  (INST%
-                                                    (cl:cons (tuple r% m_tm) nil)
-                                                    pthm_05)))))
-                                            (cl:declare (cl:ignorable th1))
-                                            (match (dest_comb (rand (concl th1)))
-                                              ((tuple tm1 tm2)
-                                                (match (dest_comb tm1)
-                                                  ((tuple tm3 tm4)
-                                                    (let*
-                                                      ((th2
-                                                        (AP_TERM
-                                                          tm3
-                                                          (funcall SEMIRING_ADD_CONV tm4)))
-                                                        (th3 (TRANS th1 (AP_THM th2 tm2)))
-                                                        (tm5 (rand (concl th3))))
-                                                      (cl:declare
-                                                        (cl:ignorable th2 th3 tm5))
-                                                      (if (= (funcall lhand tm5) zero_tm)
-                                                        (TRANS
-                                                          th3
-                                                          (INST%
-                                                            (cl:cons
-                                                              (tuple (rand tm5) m_tm)
-                                                              nil)
-                                                            pthm_06))
-                                                        (MONOMIAL_DEONE th3)))))))))))))
-                                  (fletc
-                                    ((powervars
-                                      (tm)
-                                      (let ((ptms (striplist dest_mul tm)))
-                                        (cl:declare (cl:ignorable ptms))
-                                        (if (funcall is_semiring_constant (hd ptms))
-                                          (tl ptms)
-                                          ptms))))
-                                    (fletc
-                                      ((dest_varpow
-                                        (tm)
-                                        (handler-case
-                                          (match (funcall dest_pow tm)
-                                            ((tuple x n)
-                                              (tuple x (funcall dest_numeral n))))
-                                          (holai.runtime:ocaml-condition
-                                            (exception~1449)
-                                            (match exception~1449
-                                              ((Failure _)
-                                                (tuple
-                                                  tm
-                                                  (if (funcall is_semiring_constant tm)
-                                                    num_0
-                                                    num_1)))
-                                              (_ (raise exception~1449)))))))
-                                      (let*
-                                        ((morder
-                                          (labelsc
-                                            ((lexorder
-                                              (l1 l2)
-                                              (match (tuple l1 l2)
-                                                ((tuple nil nil) 0)
-                                                ((tuple vps nil) (- 1))
-                                                ((tuple nil vps) 1)
-                                                ((tuple
-                                                  (cl:cons (tuple x1 n1) vs1)
-                                                  (cl:cons (tuple x2 n2) vs2))
-                                                  (if (funcall variable_order x1 x2)
-                                                    1
-                                                    (if (funcall variable_order x2 x1)
-                                                      (- 1)
-                                                      (if (< n1 n2)
-                                                        (- 1)
-                                                        (if (< n2 n1)
-                                                          1
-                                                          (lexorder vs1 vs2)))))))))
-                                            (lambdac (tm1 tm2)
-                                              (let
-                                                ((vdegs1
-                                                  (map #'dest_varpow (powervars tm1)))
-                                                  (vdegs2
-                                                    (map #'dest_varpow (powervars tm2))))
-                                                (cl:declare (cl:ignorable vdegs1 vdegs2))
-                                                (let
-                                                  ((deg1
-                                                    (itlist
-                                                      (o
-                                                        (function-value #'+ 2)
-                                                        (function-value #'snd 1))
-                                                      vdegs1
-                                                      num_0))
-                                                    (deg2
-                                                      (itlist
-                                                        (o
-                                                          (function-value #'+ 2)
-                                                          (function-value #'snd 1))
-                                                        vdegs2
-                                                        num_0)))
-                                                  (cl:declare (cl:ignorable deg1 deg2))
-                                                  (if (< deg1 deg2)
-                                                    (- 1)
-                                                    (if (> deg1 deg2)
-                                                      1
-                                                      (lexorder vdegs1 vdegs2))))))))
-                                          (POLYNOMIAL_ADD_CONV
-                                            (fletc
-                                              ((DEZERO_RULE
-                                                (th)
-                                                (let ((tm (rand (concl th))))
-                                                  (cl:declare (cl:ignorable tm))
-                                                  (if (not (funcall is_add tm))
-                                                    th
-                                                    (match (dest_comb tm)
-                                                      ((tuple lop r%)
-                                                        (let ((l (rand lop)))
-                                                          (cl:declare (cl:ignorable l))
-                                                          (if (= l zero_tm)
-                                                            (TRANS
-                                                              th
-                                                              (INST%
-                                                                (cl:cons
-                                                                  (tuple r% a_tm)
-                                                                  nil)
-                                                                pthm_07))
-                                                            (if (= r% zero_tm)
-                                                              (TRANS
-                                                                th
+                                                                  (cl:ignorable th1))
+                                                                (match
+                                                                  (dest_comb
+                                                                    (rand (concl th1)))
+                                                                  ((tuple tm1 tm2)
+                                                                    (match (dest_comb tm2)
+                                                                      ((tuple tm3 tm4)
+                                                                        (TRANS
+                                                                          th1
+                                                                          (AP_TERM
+                                                                            tm1
+                                                                            (MONOMIAL_MUL
+                                                                              tm2
+                                                                              (rand tm3)
+                                                                              tm4))))))))
+                                                              (REFL tm))))))
+                                                    (holai.runtime:ocaml-condition
+                                                      (exception~752)
+                                                      (match exception~752
+                                                        ((Failure _)
+                                                          (let*
+                                                            ((vr (powvar r%))
+                                                              (ord (vorder vl vr)))
+                                                            (cl:declare
+                                                              (cl:ignorable vr ord))
+                                                            (if (= ord 0)
+                                                              (POWVAR_MUL_CONV tm)
+                                                              (if (> ord 0)
                                                                 (INST%
                                                                   (cl:cons
-                                                                    (tuple l a_tm)
-                                                                    nil)
-                                                                  pthm_08))
-                                                              th)))))))))
-                                              (labelsc
-                                                ((PADD
-                                                  (tm)
-                                                  (match (funcall dest_add tm)
-                                                    ((tuple l r%)
-                                                      (if (= l zero_tm)
+                                                                    (tuple l lx_tm)
+                                                                    (cl:cons
+                                                                      (tuple r% rx_tm)
+                                                                      nil))
+                                                                  pthm_20)
+                                                                (REFL tm)))))
+                                                        (_ (raise exception~752)))))))
+                                              (_ (raise exception~746)))))))
+                                    (lambdac (tm)
+                                      (match (#`dest_mul tm)
+                                        ((tuple l r%)
+                                          (MONOMIAL_DEONE (MONOMIAL_MUL tm l r%)))))))
+                                (POLYNOMIAL_MONOMIAL_MUL_CONV
+                                  (labelsc
+                                    ((PMM_CONV
+                                      (tm)
+                                      (match (#`dest_mul tm)
+                                        ((tuple l r%)
+                                          (handler-case
+                                            (match (#`dest_add r%)
+                                              ((tuple y z)
+                                                (let
+                                                  ((th1
+                                                    (INST%
+                                                      (cl:cons
+                                                        (tuple l x_tm)
+                                                        (cl:cons
+                                                          (tuple y y_tm)
+                                                          (cl:cons (tuple z z_tm) nil)))
+                                                      pthm_37)))
+                                                  (cl:declare (cl:ignorable th1))
+                                                  (match (dest_comb (rand (concl th1)))
+                                                    ((tuple tm1 tm2)
+                                                      (match (dest_comb tm1)
+                                                        ((tuple tm3 tm4)
+                                                          (let
+                                                            ((th2
+                                                              (MK_COMB%
+                                                                (tuple
+                                                                  (AP_TERM
+                                                                    tm3
+                                                                    (#`MONOMIAL_MUL_CONV
+                                                                      tm4))
+                                                                  (PMM_CONV tm2)))))
+                                                            (cl:declare
+                                                              (cl:ignorable th2))
+                                                            (TRANS th1 th2)))))))))
+                                            (holai.runtime:ocaml-condition
+                                              (exception~1220)
+                                              (match exception~1220
+                                                ((Failure _) (#`MONOMIAL_MUL_CONV tm))
+                                                (_ (raise exception~1220)))))))))
+                                    #'PMM_CONV)))
+                              (cl:declare
+                                (cl:ignorable
+                                  MONOMIAL_POW_CONV
+                                  MONOMIAL_MUL_CONV
+                                  POLYNOMIAL_MONOMIAL_MUL_CONV))
+                              (holai.runtime:labelsc
+                                ((:nonrecursive 0 MONOMIAL_ADD_CONV (tm)
+                                  (match (#`dest_add tm)
+                                    ((tuple l r%)
+                                      (if
+                                        (cl:and
+                                          (#`is_semiring_constant l)
+                                          (#`is_semiring_constant r%))
+                                        (#`SEMIRING_ADD_CONV tm)
+                                        (let
+                                          ((th1
+                                            (if
+                                              (cl:and
+                                                (#`is_mul l)
+                                                (#`is_semiring_constant (#`lhand l)))
+                                              (if
+                                                (cl:and
+                                                  (#`is_mul r%)
+                                                  (#`is_semiring_constant (#`lhand r%)))
+                                                (INST%
+                                                  (cl:cons
+                                                    (tuple (#`lhand l) a_tm)
+                                                    (cl:cons
+                                                      (tuple (#`lhand r%) b_tm)
+                                                      (cl:cons (tuple (rand r%) m_tm) nil)))
+                                                  pthm_02)
+                                                (INST%
+                                                  (cl:cons
+                                                    (tuple (#`lhand l) a_tm)
+                                                    (cl:cons (tuple r% m_tm) nil))
+                                                  pthm_03))
+                                              (if
+                                                (cl:and
+                                                  (#`is_mul r%)
+                                                  (#`is_semiring_constant (#`lhand r%)))
+                                                (INST%
+                                                  (cl:cons
+                                                    (tuple (#`lhand r%) a_tm)
+                                                    (cl:cons (tuple l m_tm) nil))
+                                                  pthm_04)
+                                                (INST%
+                                                  (cl:cons (tuple r% m_tm) nil)
+                                                  pthm_05)))))
+                                          (cl:declare (cl:ignorable th1))
+                                          (match (dest_comb (rand (concl th1)))
+                                            ((tuple tm1 tm2)
+                                              (match (dest_comb tm1)
+                                                ((tuple tm3 tm4)
+                                                  (let*
+                                                    ((th2
+                                                      (AP_TERM
+                                                        tm3
+                                                        (#`SEMIRING_ADD_CONV tm4)))
+                                                      (th3 (TRANS th1 (AP_THM th2 tm2)))
+                                                      (tm5 (rand (concl th3))))
+                                                    (cl:declare
+                                                      (cl:ignorable th2 th3 tm5))
+                                                    (if (= (#`lhand tm5) zero_tm)
+                                                      (TRANS
+                                                        th3
+                                                        (INST%
+                                                          (cl:cons
+                                                            (tuple (rand tm5) m_tm)
+                                                            nil)
+                                                          pthm_06))
+                                                      (MONOMIAL_DEONE th3))))))))))))
+                                  (:nonrecursive 1 powervars (tm)
+                                    (let ((ptms (striplist dest_mul tm)))
+                                      (cl:declare (cl:ignorable ptms))
+                                      (if (#`is_semiring_constant (hd ptms))
+                                        (tl ptms)
+                                        ptms)))
+                                  (:nonrecursive 2 dest_varpow (tm)
+                                    (handler-case
+                                      (match (#`dest_pow tm)
+                                        ((tuple x n) (tuple x (#`dest_numeral n))))
+                                      (holai.runtime:ocaml-condition
+                                        (exception~1449)
+                                        (match exception~1449
+                                          ((Failure _)
+                                            (tuple
+                                              tm
+                                              (if (#`is_semiring_constant tm) num_0 num_1)))
+                                          (_ (raise exception~1449)))))))
+                                (let*
+                                  ((morder
+                                    (labelsc
+                                      ((lexorder
+                                        (l1 l2)
+                                        (match (tuple l1 l2)
+                                          ((tuple nil nil) 0)
+                                          ((tuple vps nil) (- 1))
+                                          ((tuple nil vps) 1)
+                                          ((tuple
+                                            (cl:cons (tuple x1 n1) vs1)
+                                            (cl:cons (tuple x2 n2) vs2))
+                                            (if (#`variable_order x1 x2)
+                                              1
+                                              (if (#`variable_order x2 x1)
+                                                (- 1)
+                                                (if (< n1 n2)
+                                                  (- 1)
+                                                  (if (< n2 n1) 1 (lexorder vs1 vs2)))))))))
+                                      (lambdac (tm1 tm2)
+                                        (let
+                                          ((vdegs1 (map #'dest_varpow (powervars tm1)))
+                                            (vdegs2 (map #'dest_varpow (powervars tm2))))
+                                          (cl:declare (cl:ignorable vdegs1 vdegs2))
+                                          (let
+                                            ((deg1
+                                              (itlist
+                                                (o
+                                                  (function-value #'+ 2)
+                                                  (function-value #'snd 1))
+                                                vdegs1
+                                                num_0))
+                                              (deg2
+                                                (itlist
+                                                  (o
+                                                    (function-value #'+ 2)
+                                                    (function-value #'snd 1))
+                                                  vdegs2
+                                                  num_0)))
+                                            (cl:declare (cl:ignorable deg1 deg2))
+                                            (if (< deg1 deg2)
+                                              (- 1)
+                                              (if (> deg1 deg2)
+                                                1
+                                                (lexorder vdegs1 vdegs2))))))))
+                                    (POLYNOMIAL_ADD_CONV
+                                      (holai.runtime:labelsc
+                                        ((:nonrecursive 0 DEZERO_RULE (th)
+                                          (let ((tm (rand (concl th))))
+                                            (cl:declare (cl:ignorable tm))
+                                            (if (not (#`is_add tm))
+                                              th
+                                              (match (dest_comb tm)
+                                                ((tuple lop r%)
+                                                  (let ((l (rand lop)))
+                                                    (cl:declare (cl:ignorable l))
+                                                    (if (= l zero_tm)
+                                                      (TRANS
+                                                        th
                                                         (INST%
                                                           (cl:cons (tuple r% a_tm) nil)
-                                                          pthm_07)
-                                                        (if (= r% zero_tm)
+                                                          pthm_07))
+                                                      (if (= r% zero_tm)
+                                                        (TRANS
+                                                          th
                                                           (INST%
                                                             (cl:cons (tuple l a_tm) nil)
-                                                            pthm_08)
-                                                          (if (funcall is_add l)
-                                                            (match (funcall dest_add l)
-                                                              ((tuple a% b%)
-                                                                (if (funcall is_add r%)
-                                                                  (match
-                                                                    (funcall dest_add r%)
-                                                                    ((tuple c% d)
-                                                                      (let
-                                                                        ((ord
-                                                                          (funcall
-                                                                            morder
-                                                                            a%
-                                                                            c%)))
-                                                                        (cl:declare
-                                                                          (cl:ignorable
-                                                                            ord))
-                                                                        (if (= ord 0)
-                                                                          (let
-                                                                            ((th1
-                                                                              (INST%
+                                                            pthm_08))
+                                                        th))))))))
+                                          (:recursive 1 PADD (tm)
+                                            (match (#`dest_add tm)
+                                              ((tuple l r%)
+                                                (if (= l zero_tm)
+                                                  (INST%
+                                                    (cl:cons (tuple r% a_tm) nil)
+                                                    pthm_07)
+                                                  (if (= r% zero_tm)
+                                                    (INST%
+                                                      (cl:cons (tuple l a_tm) nil)
+                                                      pthm_08)
+                                                    (if (#`is_add l)
+                                                      (match (#`dest_add l)
+                                                        ((tuple a% b%)
+                                                          (if (#`is_add r%)
+                                                            (match (#`dest_add r%)
+                                                              ((tuple c% d)
+                                                                (let
+                                                                  ((ord (#`morder a% c%)))
+                                                                  (cl:declare
+                                                                    (cl:ignorable ord))
+                                                                  (if (= ord 0)
+                                                                    (let
+                                                                      ((th1
+                                                                        (INST%
+                                                                          (cl:cons
+                                                                            (tuple
+                                                                              a%
+                                                                              a_tm)
+                                                                            (cl:cons
+                                                                              (tuple
+                                                                                b%
+                                                                                b_tm)
+                                                                              (cl:cons
+                                                                                (tuple
+                                                                                  c%
+                                                                                  c_tm)
                                                                                 (cl:cons
                                                                                   (tuple
-                                                                                    a%
-                                                                                    a_tm)
-                                                                                  (cl:cons
-                                                                                    (tuple
-                                                                                      b%
-                                                                                      b_tm)
-                                                                                    (cl:cons
-                                                                                      (tuple
-                                                                                        c%
-                                                                                        c_tm)
-                                                                                      (cl:cons
-                                                                                        (tuple
-                                                                                          d
-                                                                                          d_tm)
-                                                                                        nil))))
-                                                                                pthm_23)))
-                                                                            (cl:declare
-                                                                              (cl:ignorable
-                                                                                th1))
-                                                                            (match
-                                                                              (dest_comb
-                                                                                (rand
-                                                                                  (concl
-                                                                                    th1)))
-                                                                              ((tuple
-                                                                                tm1
-                                                                                tm2)
-                                                                                (match
-                                                                                  (dest_comb
-                                                                                    tm1)
-                                                                                  ((tuple
+                                                                                    d
+                                                                                    d_tm)
+                                                                                  nil))))
+                                                                          pthm_23)))
+                                                                      (cl:declare
+                                                                        (cl:ignorable th1))
+                                                                      (match
+                                                                        (dest_comb
+                                                                          (rand
+                                                                            (concl th1)))
+                                                                        ((tuple tm1 tm2)
+                                                                          (match
+                                                                            (dest_comb
+                                                                              tm1)
+                                                                            ((tuple
+                                                                              tm3
+                                                                              tm4)
+                                                                              (let
+                                                                                ((th2
+                                                                                  (AP_TERM
                                                                                     tm3
-                                                                                    tm4)
-                                                                                    (let
-                                                                                      ((th2
-                                                                                        (AP_TERM
-                                                                                          tm3
-                                                                                          (MONOMIAL_ADD_CONV
-                                                                                            tm4))))
-                                                                                      (cl:declare
-                                                                                        (cl:ignorable
-                                                                                          th2))
-                                                                                      (DEZERO_RULE
-                                                                                        (TRANS
-                                                                                          th1
-                                                                                          (MK_COMB%
-                                                                                            (tuple
-                                                                                              th2
-                                                                                              (PADD
-                                                                                                tm2)))))))))))
-                                                                          (let
-                                                                            ((th1
-                                                                              (if
-                                                                                (> ord 0)
-                                                                                (INST%
-                                                                                  (cl:cons
-                                                                                    (tuple
-                                                                                      a%
-                                                                                      a_tm)
-                                                                                    (cl:cons
-                                                                                      (tuple
-                                                                                        b%
-                                                                                        b_tm)
-                                                                                      (cl:cons
-                                                                                        (tuple
-                                                                                          r%
-                                                                                          c_tm)
-                                                                                        nil)))
-                                                                                  pthm_24)
-                                                                                (INST%
-                                                                                  (cl:cons
-                                                                                    (tuple
-                                                                                      l
-                                                                                      a_tm)
-                                                                                    (cl:cons
-                                                                                      (tuple
-                                                                                        c%
-                                                                                        c_tm)
-                                                                                      (cl:cons
-                                                                                        (tuple
-                                                                                          d
-                                                                                          d_tm)
-                                                                                        nil)))
-                                                                                  pthm_25))))
-                                                                            (cl:declare
-                                                                              (cl:ignorable
-                                                                                th1))
-                                                                            (match
-                                                                              (dest_comb
-                                                                                (rand
-                                                                                  (concl
-                                                                                    th1)))
-                                                                              ((tuple
-                                                                                tm1
-                                                                                tm2)
+                                                                                    (MONOMIAL_ADD_CONV
+                                                                                      tm4))))
+                                                                                (cl:declare
+                                                                                  (cl:ignorable
+                                                                                    th2))
                                                                                 (DEZERO_RULE
                                                                                   (TRANS
                                                                                     th1
-                                                                                    (AP_TERM
-                                                                                      tm1
-                                                                                      (PADD
-                                                                                        tm2)))))))))))
-                                                                  (let
-                                                                    ((ord
-                                                                      (funcall
-                                                                        morder
-                                                                        a%
-                                                                        r%)))
-                                                                    (cl:declare
-                                                                      (cl:ignorable ord))
-                                                                    (if (= ord 0)
-                                                                      (let
-                                                                        ((th1
+                                                                                    (MK_COMB%
+                                                                                      (tuple
+                                                                                        th2
+                                                                                        (PADD
+                                                                                          tm2)))))))))))
+                                                                    (let
+                                                                      ((th1
+                                                                        (if (> ord 0)
                                                                           (INST%
                                                                             (cl:cons
                                                                               (tuple
@@ -1354,98 +1201,7 @@
                                                                                     r%
                                                                                     c_tm)
                                                                                   nil)))
-                                                                            pthm_26)))
-                                                                        (cl:declare
-                                                                          (cl:ignorable
-                                                                            th1))
-                                                                        (match
-                                                                          (dest_comb
-                                                                            (rand
-                                                                              (concl th1)))
-                                                                          ((tuple tm1 tm2)
-                                                                            (match
-                                                                              (dest_comb
-                                                                                tm1)
-                                                                              ((tuple
-                                                                                tm3
-                                                                                tm4)
-                                                                                (let
-                                                                                  ((th2
-                                                                                    (AP_THM
-                                                                                      (AP_TERM
-                                                                                        tm3
-                                                                                        (MONOMIAL_ADD_CONV
-                                                                                          tm4))
-                                                                                      tm2)))
-                                                                                  (cl:declare
-                                                                                    (cl:ignorable
-                                                                                      th2))
-                                                                                  (DEZERO_RULE
-                                                                                    (TRANS
-                                                                                      th1
-                                                                                      th2))))))))
-                                                                      (if (> ord 0)
-                                                                        (let
-                                                                          ((th1
-                                                                            (INST%
-                                                                              (cl:cons
-                                                                                (tuple
-                                                                                  a%
-                                                                                  a_tm)
-                                                                                (cl:cons
-                                                                                  (tuple
-                                                                                    b%
-                                                                                    b_tm)
-                                                                                  (cl:cons
-                                                                                    (tuple
-                                                                                      r%
-                                                                                      c_tm)
-                                                                                    nil)))
-                                                                              pthm_24)))
-                                                                          (cl:declare
-                                                                            (cl:ignorable
-                                                                              th1))
-                                                                          (match
-                                                                            (dest_comb
-                                                                              (rand
-                                                                                (concl
-                                                                                  th1)))
-                                                                            ((tuple
-                                                                              tm1
-                                                                              tm2)
-                                                                              (DEZERO_RULE
-                                                                                (TRANS
-                                                                                  th1
-                                                                                  (AP_TERM
-                                                                                    tm1
-                                                                                    (PADD
-                                                                                      tm2)))))))
-                                                                        (DEZERO_RULE
-                                                                          (INST%
-                                                                            (cl:cons
-                                                                              (tuple
-                                                                                l
-                                                                                a_tm)
-                                                                              (cl:cons
-                                                                                (tuple
-                                                                                  r%
-                                                                                  c_tm)
-                                                                                nil))
-                                                                            pthm_27))))))))
-                                                            (if (funcall is_add r%)
-                                                              (match (funcall dest_add r%)
-                                                                ((tuple c% d)
-                                                                  (let
-                                                                    ((ord
-                                                                      (funcall
-                                                                        morder
-                                                                        l
-                                                                        c%)))
-                                                                    (cl:declare
-                                                                      (cl:ignorable ord))
-                                                                    (if (= ord 0)
-                                                                      (let
-                                                                        ((th1
+                                                                            pthm_24)
                                                                           (INST%
                                                                             (cl:cons
                                                                               (tuple
@@ -1460,380 +1216,428 @@
                                                                                     d
                                                                                     d_tm)
                                                                                   nil)))
-                                                                            pthm_28)))
-                                                                        (cl:declare
-                                                                          (cl:ignorable
-                                                                            th1))
-                                                                        (match
-                                                                          (dest_comb
-                                                                            (rand
-                                                                              (concl th1)))
-                                                                          ((tuple tm1 tm2)
-                                                                            (match
-                                                                              (dest_comb
-                                                                                tm1)
-                                                                              ((tuple
-                                                                                tm3
-                                                                                tm4)
-                                                                                (let
-                                                                                  ((th2
-                                                                                    (AP_THM
-                                                                                      (AP_TERM
-                                                                                        tm3
-                                                                                        (MONOMIAL_ADD_CONV
-                                                                                          tm4))
-                                                                                      tm2)))
-                                                                                  (cl:declare
-                                                                                    (cl:ignorable
-                                                                                      th2))
-                                                                                  (DEZERO_RULE
-                                                                                    (TRANS
-                                                                                      th1
-                                                                                      th2))))))))
-                                                                      (if (> ord 0)
-                                                                        (REFL tm)
-                                                                        (let
-                                                                          ((th1
-                                                                            (INST%
-                                                                              (cl:cons
-                                                                                (tuple
-                                                                                  l
-                                                                                  a_tm)
-                                                                                (cl:cons
-                                                                                  (tuple
-                                                                                    c%
-                                                                                    c_tm)
-                                                                                  (cl:cons
-                                                                                    (tuple
-                                                                                      d
-                                                                                      d_tm)
-                                                                                    nil)))
-                                                                              pthm_25)))
-                                                                          (cl:declare
-                                                                            (cl:ignorable
-                                                                              th1))
-                                                                          (match
-                                                                            (dest_comb
-                                                                              (rand
-                                                                                (concl
-                                                                                  th1)))
-                                                                            ((tuple
+                                                                            pthm_25))))
+                                                                      (cl:declare
+                                                                        (cl:ignorable th1))
+                                                                      (match
+                                                                        (dest_comb
+                                                                          (rand
+                                                                            (concl th1)))
+                                                                        ((tuple tm1 tm2)
+                                                                          (DEZERO_RULE
+                                                                            (TRANS
+                                                                              th1
+                                                                              (AP_TERM
+                                                                                tm1
+                                                                                (PADD tm2)))))))))))
+                                                            (let ((ord (#`morder a% r%)))
+                                                              (cl:declare
+                                                                (cl:ignorable ord))
+                                                              (if (= ord 0)
+                                                                (let
+                                                                  ((th1
+                                                                    (INST%
+                                                                      (cl:cons
+                                                                        (tuple a% a_tm)
+                                                                        (cl:cons
+                                                                          (tuple b% b_tm)
+                                                                          (cl:cons
+                                                                            (tuple
+                                                                              r%
+                                                                              c_tm)
+                                                                            nil)))
+                                                                      pthm_26)))
+                                                                  (cl:declare
+                                                                    (cl:ignorable th1))
+                                                                  (match
+                                                                    (dest_comb
+                                                                      (rand (concl th1)))
+                                                                    ((tuple tm1 tm2)
+                                                                      (match
+                                                                        (dest_comb tm1)
+                                                                        ((tuple tm3 tm4)
+                                                                          (let
+                                                                            ((th2
+                                                                              (AP_THM
+                                                                                (AP_TERM
+                                                                                  tm3
+                                                                                  (MONOMIAL_ADD_CONV
+                                                                                    tm4))
+                                                                                tm2)))
+                                                                            (cl:declare
+                                                                              (cl:ignorable
+                                                                                th2))
+                                                                            (DEZERO_RULE
+                                                                              (TRANS
+                                                                                th1
+                                                                                th2))))))))
+                                                                (if (> ord 0)
+                                                                  (let
+                                                                    ((th1
+                                                                      (INST%
+                                                                        (cl:cons
+                                                                          (tuple a% a_tm)
+                                                                          (cl:cons
+                                                                            (tuple
+                                                                              b%
+                                                                              b_tm)
+                                                                            (cl:cons
+                                                                              (tuple
+                                                                                r%
+                                                                                c_tm)
+                                                                              nil)))
+                                                                        pthm_24)))
+                                                                    (cl:declare
+                                                                      (cl:ignorable th1))
+                                                                    (match
+                                                                      (dest_comb
+                                                                        (rand (concl th1)))
+                                                                      ((tuple tm1 tm2)
+                                                                        (DEZERO_RULE
+                                                                          (TRANS
+                                                                            th1
+                                                                            (AP_TERM
                                                                               tm1
-                                                                              tm2)
-                                                                              (DEZERO_RULE
-                                                                                (TRANS
-                                                                                  th1
-                                                                                  (AP_TERM
-                                                                                    tm1
-                                                                                    (PADD
-                                                                                      tm2))))))))))))
-                                                              (let
-                                                                ((ord
-                                                                  (funcall morder l r%)))
-                                                                (cl:declare
-                                                                  (cl:ignorable ord))
-                                                                (if (= ord 0)
-                                                                  (MONOMIAL_ADD_CONV tm)
-                                                                  (if (> ord 0)
-                                                                    (DEZERO_RULE
-                                                                      (REFL tm))
-                                                                    (DEZERO_RULE
+                                                                              (PADD tm2)))))))
+                                                                  (DEZERO_RULE
+                                                                    (INST%
+                                                                      (cl:cons
+                                                                        (tuple l a_tm)
+                                                                        (cl:cons
+                                                                          (tuple r% c_tm)
+                                                                          nil))
+                                                                      pthm_27))))))))
+                                                      (if (#`is_add r%)
+                                                        (match (#`dest_add r%)
+                                                          ((tuple c% d)
+                                                            (let ((ord (#`morder l c%)))
+                                                              (cl:declare
+                                                                (cl:ignorable ord))
+                                                              (if (= ord 0)
+                                                                (let
+                                                                  ((th1
+                                                                    (INST%
+                                                                      (cl:cons
+                                                                        (tuple l a_tm)
+                                                                        (cl:cons
+                                                                          (tuple c% c_tm)
+                                                                          (cl:cons
+                                                                            (tuple d d_tm)
+                                                                            nil)))
+                                                                      pthm_28)))
+                                                                  (cl:declare
+                                                                    (cl:ignorable th1))
+                                                                  (match
+                                                                    (dest_comb
+                                                                      (rand (concl th1)))
+                                                                    ((tuple tm1 tm2)
+                                                                      (match
+                                                                        (dest_comb tm1)
+                                                                        ((tuple tm3 tm4)
+                                                                          (let
+                                                                            ((th2
+                                                                              (AP_THM
+                                                                                (AP_TERM
+                                                                                  tm3
+                                                                                  (MONOMIAL_ADD_CONV
+                                                                                    tm4))
+                                                                                tm2)))
+                                                                            (cl:declare
+                                                                              (cl:ignorable
+                                                                                th2))
+                                                                            (DEZERO_RULE
+                                                                              (TRANS
+                                                                                th1
+                                                                                th2))))))))
+                                                                (if (> ord 0)
+                                                                  (REFL tm)
+                                                                  (let
+                                                                    ((th1
                                                                       (INST%
                                                                         (cl:cons
                                                                           (tuple l a_tm)
                                                                           (cl:cons
                                                                             (tuple
-                                                                              r%
+                                                                              c%
                                                                               c_tm)
-                                                                            nil))
-                                                                        pthm_27)))))))))))))
-                                                #'PADD)))
-                                          (POLYNOMIAL_MUL_CONV
-                                            (labelsc
-                                              ((PMUL
-                                                (tm)
-                                                (match (funcall dest_mul tm)
-                                                  ((tuple l r%)
-                                                    (if (not (funcall is_add l))
-                                                      (funcall
-                                                        POLYNOMIAL_MONOMIAL_MUL_CONV
-                                                        tm)
-                                                      (if (not (funcall is_add r%))
-                                                        (let
-                                                          ((th1
-                                                            (INST%
-                                                              (cl:cons
-                                                                (tuple l a_tm)
-                                                                (cl:cons
-                                                                  (tuple r% b_tm)
-                                                                  nil))
-                                                              pthm_09)))
-                                                          (cl:declare (cl:ignorable th1))
-                                                          (TRANS
-                                                            th1
-                                                            (funcall
-                                                              POLYNOMIAL_MONOMIAL_MUL_CONV
-                                                              (rand (concl th1)))))
-                                                        (match (funcall dest_add l)
-                                                          ((tuple a% b%)
-                                                            (let
-                                                              ((th1
+                                                                            (cl:cons
+                                                                              (tuple
+                                                                                d
+                                                                                d_tm)
+                                                                              nil)))
+                                                                        pthm_25)))
+                                                                    (cl:declare
+                                                                      (cl:ignorable th1))
+                                                                    (match
+                                                                      (dest_comb
+                                                                        (rand (concl th1)))
+                                                                      ((tuple tm1 tm2)
+                                                                        (DEZERO_RULE
+                                                                          (TRANS
+                                                                            th1
+                                                                            (AP_TERM
+                                                                              tm1
+                                                                              (PADD tm2))))))))))))
+                                                        (let ((ord (#`morder l r%)))
+                                                          (cl:declare (cl:ignorable ord))
+                                                          (if (= ord 0)
+                                                            (MONOMIAL_ADD_CONV tm)
+                                                            (if (> ord 0)
+                                                              (DEZERO_RULE (REFL tm))
+                                                              (DEZERO_RULE
                                                                 (INST%
                                                                   (cl:cons
-                                                                    (tuple a% a_tm)
+                                                                    (tuple l a_tm)
                                                                     (cl:cons
-                                                                      (tuple b% b_tm)
-                                                                      (cl:cons
-                                                                        (tuple r% c_tm)
-                                                                        nil)))
-                                                                  pthm_10)))
-                                                              (cl:declare
-                                                                (cl:ignorable th1))
-                                                              (match
-                                                                (dest_comb
-                                                                  (rand (concl th1)))
-                                                                ((tuple tm1 tm2)
-                                                                  (match (dest_comb tm1)
-                                                                    ((tuple tm3 tm4)
-                                                                      (let*
-                                                                        ((th2
-                                                                          (AP_TERM
-                                                                            tm3
-                                                                            (funcall
-                                                                              POLYNOMIAL_MONOMIAL_MUL_CONV
-                                                                              tm4)))
-                                                                          (th3
-                                                                            (TRANS
-                                                                              th1
-                                                                              (MK_COMB%
-                                                                                (tuple
-                                                                                  th2
-                                                                                  (PMUL
-                                                                                    tm2))))))
-                                                                        (cl:declare
-                                                                          (cl:ignorable
-                                                                            th2
-                                                                            th3))
-                                                                        (TRANS
-                                                                          th3
-                                                                          (funcall
-                                                                            POLYNOMIAL_ADD_CONV
-                                                                            (rand
-                                                                              (concl th3))))))))))))))))))
-                                              (lambdac (tm)
-                                                (match (funcall dest_mul tm)
-                                                  ((tuple l r%)
-                                                    (if (= l zero_tm)
-                                                      (INST%
-                                                        (cl:cons (tuple r% a_tm) nil)
-                                                        pthm_11)
-                                                      (if (= r% zero_tm)
-                                                        (INST%
-                                                          (cl:cons (tuple l a_tm) nil)
-                                                          pthm_12)
-                                                        (if (= l one_tm)
-                                                          (INST%
-                                                            (cl:cons (tuple r% a_tm) nil)
-                                                            pthm_13)
-                                                          (if (= r% one_tm)
-                                                            (INST%
-                                                              (cl:cons (tuple l a_tm) nil)
-                                                              pthm_14)
-                                                            (PMUL tm))))))))))
-                                          (POLYNOMIAL_POW_CONV
-                                            (labelsc
-                                              ((PPOW
-                                                (tm)
-                                                (match (funcall dest_pow tm)
-                                                  ((tuple l n)
-                                                    (if (= n zeron_tm)
-                                                      (INST%
-                                                        (cl:cons (tuple l x_tm) nil)
-                                                        pthm_35)
-                                                      (if (= n onen_tm)
-                                                        (INST%
-                                                          (cl:cons (tuple l x_tm) nil)
-                                                          pthm_36)
-                                                        (let*
-                                                          ((th1 (funcall num_CONV n))
-                                                            (th2
-                                                              (INST%
-                                                                (cl:cons
-                                                                  (tuple l x_tm)
-                                                                  (cl:cons
-                                                                    (tuple
-                                                                      (rand
-                                                                        (rand (concl th1)))
-                                                                      q_tm)
-                                                                    nil))
-                                                                pthm_38)))
-                                                          (cl:declare
-                                                            (cl:ignorable th1 th2))
-                                                          (match
-                                                            (dest_comb (rand (concl th2)))
-                                                            ((tuple tm1 tm2)
-                                                              (let*
-                                                                ((th3
-                                                                  (TRANS
-                                                                    th2
-                                                                    (AP_TERM
-                                                                      tm1
-                                                                      (PPOW tm2))))
-                                                                  (th4
-                                                                    (TRANS
-                                                                      (AP_TERM
-                                                                        (rator tm)
-                                                                        th1)
-                                                                      th3)))
-                                                                (cl:declare
-                                                                  (cl:ignorable th3 th4))
-                                                                (TRANS
-                                                                  th4
-                                                                  (funcall
-                                                                    POLYNOMIAL_MUL_CONV
-                                                                    (rand (concl th4))))))))))))))
-                                              (lambdac (tm)
-                                                (if (funcall is_add (funcall lhand tm))
-                                                  (PPOW tm)
-                                                  (funcall MONOMIAL_POW_CONV tm))))))
-                                        (cl:declare
-                                          (cl:ignorable
-                                            morder
-                                            POLYNOMIAL_ADD_CONV
-                                            POLYNOMIAL_MUL_CONV
-                                            POLYNOMIAL_POW_CONV))
-                                        (fletc
-                                          ((POLYNOMIAL_NEG_CONV
-                                            (tm)
-                                            (match (dest_comb tm)
-                                              ((tuple l r%)
-                                                (if (<> l neg_tm)
-                                                  (failwith "POLYNOMIAL_NEG_CONV")
-                                                  (let
-                                                    ((th1
-                                                      (INST%
-                                                        (cl:cons (tuple r% x_tm) nil)
-                                                        nthm_1)))
-                                                    (cl:declare (cl:ignorable th1))
-                                                    (TRANS
-                                                      th1
-                                                      (funcall
-                                                        POLYNOMIAL_MONOMIAL_MUL_CONV
-                                                        (rand (concl th1))))))))))
-                                          (fletc
-                                            ((POLYNOMIAL_SUB_CONV
-                                              (tm)
-                                              (match (funcall dest_sub tm)
-                                                ((tuple l r%)
+                                                                      (tuple r% c_tm)
+                                                                      nil))
+                                                                  pthm_27)))))))))))))
+                                        #'PADD))
+                                    (POLYNOMIAL_MUL_CONV
+                                      (labelsc
+                                        ((PMUL
+                                          (tm)
+                                          (match (#`dest_mul tm)
+                                            ((tuple l r%)
+                                              (if (not (#`is_add l))
+                                                (#`POLYNOMIAL_MONOMIAL_MUL_CONV tm)
+                                                (if (not (#`is_add r%))
                                                   (let
                                                     ((th1
                                                       (INST%
                                                         (cl:cons
-                                                          (tuple l x_tm)
-                                                          (cl:cons (tuple r% y_tm) nil))
-                                                        nthm_2)))
+                                                          (tuple l a_tm)
+                                                          (cl:cons (tuple r% b_tm) nil))
+                                                        pthm_09)))
                                                     (cl:declare (cl:ignorable th1))
-                                                    (match (dest_comb (rand (concl th1)))
+                                                    (TRANS
+                                                      th1
+                                                      (#`POLYNOMIAL_MONOMIAL_MUL_CONV
+                                                        (rand (concl th1)))))
+                                                  (match (#`dest_add l)
+                                                    ((tuple a% b%)
+                                                      (let
+                                                        ((th1
+                                                          (INST%
+                                                            (cl:cons
+                                                              (tuple a% a_tm)
+                                                              (cl:cons
+                                                                (tuple b% b_tm)
+                                                                (cl:cons
+                                                                  (tuple r% c_tm)
+                                                                  nil)))
+                                                            pthm_10)))
+                                                        (cl:declare (cl:ignorable th1))
+                                                        (match
+                                                          (dest_comb (rand (concl th1)))
+                                                          ((tuple tm1 tm2)
+                                                            (match (dest_comb tm1)
+                                                              ((tuple tm3 tm4)
+                                                                (let*
+                                                                  ((th2
+                                                                    (AP_TERM
+                                                                      tm3
+                                                                      (#`POLYNOMIAL_MONOMIAL_MUL_CONV
+                                                                        tm4)))
+                                                                    (th3
+                                                                      (TRANS
+                                                                        th1
+                                                                        (MK_COMB%
+                                                                          (tuple
+                                                                            th2
+                                                                            (PMUL tm2))))))
+                                                                  (cl:declare
+                                                                    (cl:ignorable th2 th3))
+                                                                  (TRANS
+                                                                    th3
+                                                                    (#`POLYNOMIAL_ADD_CONV
+                                                                      (rand (concl th3))))))))))))))))))
+                                        (lambdac (tm)
+                                          (match (#`dest_mul tm)
+                                            ((tuple l r%)
+                                              (if (= l zero_tm)
+                                                (INST%
+                                                  (cl:cons (tuple r% a_tm) nil)
+                                                  pthm_11)
+                                                (if (= r% zero_tm)
+                                                  (INST%
+                                                    (cl:cons (tuple l a_tm) nil)
+                                                    pthm_12)
+                                                  (if (= l one_tm)
+                                                    (INST%
+                                                      (cl:cons (tuple r% a_tm) nil)
+                                                      pthm_13)
+                                                    (if (= r% one_tm)
+                                                      (INST%
+                                                        (cl:cons (tuple l a_tm) nil)
+                                                        pthm_14)
+                                                      (PMUL tm))))))))))
+                                    (POLYNOMIAL_POW_CONV
+                                      (labelsc
+                                        ((PPOW
+                                          (tm)
+                                          (match (#`dest_pow tm)
+                                            ((tuple l n)
+                                              (if (= n zeron_tm)
+                                                (INST%
+                                                  (cl:cons (tuple l x_tm) nil)
+                                                  pthm_35)
+                                                (if (= n onen_tm)
+                                                  (INST%
+                                                    (cl:cons (tuple l x_tm) nil)
+                                                    pthm_36)
+                                                  (let*
+                                                    ((th1 (#`num_CONV n))
+                                                      (th2
+                                                        (INST%
+                                                          (cl:cons
+                                                            (tuple l x_tm)
+                                                            (cl:cons
+                                                              (tuple
+                                                                (rand (rand (concl th1)))
+                                                                q_tm)
+                                                              nil))
+                                                          pthm_38)))
+                                                    (cl:declare (cl:ignorable th1 th2))
+                                                    (match (dest_comb (rand (concl th2)))
                                                       ((tuple tm1 tm2)
-                                                        (let
-                                                          ((th2
-                                                            (AP_TERM
-                                                              tm1
-                                                              (funcall
-                                                                POLYNOMIAL_MONOMIAL_MUL_CONV
-                                                                tm2))))
-                                                          (cl:declare (cl:ignorable th2))
-                                                          (TRANS
-                                                            th1
+                                                        (let*
+                                                          ((th3
                                                             (TRANS
                                                               th2
-                                                              (funcall
-                                                                POLYNOMIAL_ADD_CONV
-                                                                (rand (concl th2)))))))))))))
-                                            (labelsc
-                                              ((POLYNOMIAL_CONV
-                                                (tm)
-                                                (if
-                                                  (cl:or
-                                                    (not (is_comb tm))
-                                                    (funcall is_semiring_constant tm))
+                                                              (AP_TERM tm1 (PPOW tm2))))
+                                                            (th4
+                                                              (TRANS
+                                                                (AP_TERM (rator tm) th1)
+                                                                th3)))
+                                                          (cl:declare
+                                                            (cl:ignorable th3 th4))
+                                                          (TRANS
+                                                            th4
+                                                            (#`POLYNOMIAL_MUL_CONV
+                                                              (rand (concl th4))))))))))))))
+                                        (lambdac (tm)
+                                          (if (#`is_add (#`lhand tm))
+                                            (PPOW tm)
+                                            (#`MONOMIAL_POW_CONV tm))))))
+                                  (cl:declare
+                                    (cl:ignorable
+                                      morder
+                                      POLYNOMIAL_ADD_CONV
+                                      POLYNOMIAL_MUL_CONV
+                                      POLYNOMIAL_POW_CONV))
+                                  (holai.runtime:labelsc
+                                    ((:nonrecursive 0 POLYNOMIAL_NEG_CONV (tm)
+                                      (match (dest_comb tm)
+                                        ((tuple l r%)
+                                          (if (<> l neg_tm)
+                                            (failwith "POLYNOMIAL_NEG_CONV")
+                                            (let
+                                              ((th1
+                                                (INST%
+                                                  (cl:cons (tuple r% x_tm) nil)
+                                                  nthm_1)))
+                                              (cl:declare (cl:ignorable th1))
+                                              (TRANS
+                                                th1
+                                                (#`POLYNOMIAL_MONOMIAL_MUL_CONV
+                                                  (rand (concl th1)))))))))
+                                      (:nonrecursive 1 POLYNOMIAL_SUB_CONV (tm)
+                                        (match (#`dest_sub tm)
+                                          ((tuple l r%)
+                                            (let
+                                              ((th1
+                                                (INST%
+                                                  (cl:cons
+                                                    (tuple l x_tm)
+                                                    (cl:cons (tuple r% y_tm) nil))
+                                                  nthm_2)))
+                                              (cl:declare (cl:ignorable th1))
+                                              (match (dest_comb (rand (concl th1)))
+                                                ((tuple tm1 tm2)
+                                                  (let
+                                                    ((th2
+                                                      (AP_TERM
+                                                        tm1
+                                                        (#`POLYNOMIAL_MONOMIAL_MUL_CONV
+                                                          tm2))))
+                                                    (cl:declare (cl:ignorable th2))
+                                                    (TRANS
+                                                      th1
+                                                      (TRANS
+                                                        th2
+                                                        (#`POLYNOMIAL_ADD_CONV
+                                                          (rand (concl th2))))))))))))
+                                      (:recursive 2 POLYNOMIAL_CONV (tm)
+                                        (if
+                                          (cl:or
+                                            (not (is_comb tm))
+                                            (#`is_semiring_constant tm))
+                                          (REFL tm)
+                                          (match (dest_comb tm)
+                                            ((tuple lop r%)
+                                              (if (= lop neg_tm)
+                                                (let
+                                                  ((th1
+                                                    (AP_TERM lop (POLYNOMIAL_CONV r%))))
+                                                  (cl:declare (cl:ignorable th1))
+                                                  (TRANS
+                                                    th1
+                                                    (POLYNOMIAL_NEG_CONV
+                                                      (rand (concl th1)))))
+                                                (if (not (is_comb lop))
                                                   (REFL tm)
-                                                  (match (dest_comb tm)
-                                                    ((tuple lop r%)
-                                                      (if (= lop neg_tm)
+                                                  (match (dest_comb lop)
+                                                    ((tuple op l)
+                                                      (if
+                                                        (cl:and
+                                                          (= op pow_tm)
+                                                          (#`is_numeral r%))
                                                         (let
                                                           ((th1
-                                                            (AP_TERM
-                                                              lop
-                                                              (POLYNOMIAL_CONV r%))))
+                                                            (AP_THM
+                                                              (AP_TERM
+                                                                op
+                                                                (POLYNOMIAL_CONV l))
+                                                              r%)))
                                                           (cl:declare (cl:ignorable th1))
                                                           (TRANS
                                                             th1
-                                                            (POLYNOMIAL_NEG_CONV
+                                                            (#`POLYNOMIAL_POW_CONV
                                                               (rand (concl th1)))))
-                                                        (if (not (is_comb lop))
-                                                          (REFL tm)
-                                                          (match (dest_comb lop)
-                                                            ((tuple op l)
-                                                              (if
-                                                                (cl:and
-                                                                  (= op pow_tm)
-                                                                  (funcall is_numeral r%))
-                                                                (let
-                                                                  ((th1
-                                                                    (AP_THM
-                                                                      (AP_TERM
-                                                                        op
-                                                                        (POLYNOMIAL_CONV
-                                                                          l))
-                                                                      r%)))
-                                                                  (cl:declare
-                                                                    (cl:ignorable th1))
-                                                                  (TRANS
-                                                                    th1
-                                                                    (funcall
-                                                                      POLYNOMIAL_POW_CONV
-                                                                      (rand (concl th1)))))
-                                                                (if
-                                                                  (cl:or
-                                                                    (= op add_tm)
-                                                                    (cl:or
-                                                                      (= op mul_tm)
-                                                                      (= op sub_tm)))
-                                                                  (let*
-                                                                    ((th1
-                                                                      (MK_COMB%
-                                                                        (tuple
-                                                                          (AP_TERM
-                                                                            op
-                                                                            (POLYNOMIAL_CONV
-                                                                              l))
-                                                                          (POLYNOMIAL_CONV
-                                                                            r%))))
-                                                                      (fn
-                                                                        (if (= op add_tm)
-                                                                          POLYNOMIAL_ADD_CONV
-                                                                          (if
-                                                                            (= op mul_tm)
-                                                                            POLYNOMIAL_MUL_CONV
-                                                                            #'POLYNOMIAL_SUB_CONV))))
-                                                                    (cl:declare
-                                                                      (cl:ignorable
-                                                                        th1
-                                                                        fn))
-                                                                    (TRANS
-                                                                      th1
-                                                                      (funcall
-                                                                        fn
-                                                                        (rand (concl th1)))))
-                                                                  (REFL tm))))))))))))
-                                              (tuple
-                                                #'POLYNOMIAL_NEG_CONV
-                                                POLYNOMIAL_ADD_CONV
-                                                #'POLYNOMIAL_SUB_CONV
-                                                POLYNOMIAL_MUL_CONV
-                                                POLYNOMIAL_POW_CONV
-                                                #'POLYNOMIAL_CONV))))))))))))))))))))))))
+                                                        (if
+                                                          (cl:or
+                                                            (= op add_tm)
+                                                            (cl:or
+                                                              (= op mul_tm)
+                                                              (= op sub_tm)))
+                                                          (let*
+                                                            ((th1
+                                                              (MK_COMB%
+                                                                (tuple
+                                                                  (AP_TERM
+                                                                    op
+                                                                    (POLYNOMIAL_CONV l))
+                                                                  (POLYNOMIAL_CONV r%))))
+                                                              (fn
+                                                                (if (= op add_tm)
+                                                                  POLYNOMIAL_ADD_CONV
+                                                                  (if (= op mul_tm)
+                                                                    POLYNOMIAL_MUL_CONV
+                                                                    #'POLYNOMIAL_SUB_CONV))))
+                                                            (cl:declare
+                                                              (cl:ignorable th1 fn))
+                                                            (TRANS
+                                                              th1
+                                                              (#`fn (rand (concl th1)))))
+                                                          (REFL tm))))))))))))
+                                    (tuple
+                                      #'POLYNOMIAL_NEG_CONV
+                                      POLYNOMIAL_ADD_CONV
+                                      #'POLYNOMIAL_SUB_CONV
+                                      POLYNOMIAL_MUL_CONV
+                                      POLYNOMIAL_POW_CONV
+                                      #'POLYNOMIAL_CONV)))))))))))))))))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Instantiate it to the natural numbers.                                    *)
@@ -1877,8 +1681,7 @@
         SEMIRING_MUL_CONV
         SEMIRING_POW_CONV))
     (match
-      (funcall
-        SEMIRING_NORMALIZERS_CONV
+      (#`SEMIRING_NORMALIZERS_CONV
         sth
         rth
         (tuple is_semiring_constant SEMIRING_ADD_CONV SEMIRING_MUL_CONV SEMIRING_POW_CONV)

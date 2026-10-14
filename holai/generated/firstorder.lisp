@@ -122,7 +122,7 @@
 (defpackage :holai.firstorder.utils.pair
   (:use :cl)
   (:shadow mapn)
-  (:shadowing-import-from :holai.runtime tuple match funcall defunc)
+  (:shadowing-import-from :holai.runtime tuple match defunc)
   (:export mapn))
 
 (defpackage :holai.firstorder.utils.list
@@ -189,7 +189,6 @@
     labelsc
     guard
     function-value
-    funcall
     fst
     failwith
     defunc
@@ -244,7 +243,7 @@
 (defpackage :holai.firstorder.utils
   (:use :cl)
   (:shadow % %> >>= const)
-  (:shadowing-import-from :holai.runtime Some None match make-None funcall defunc)
+  (:shadowing-import-from :holai.runtime Some None match make-None defunc)
   (:export % %> >>= const))
 
 (defpackage :holai.firstorder.mapping
@@ -329,7 +328,6 @@
     lambdac
     labelsc
     function-value
-    funcall
     fst
     format-printf
     fletc
@@ -375,17 +373,17 @@
 
 (in-package :holai.firstorder.utils)
 
-(defunc %> (f g% x) (funcall g% (funcall f x)))
+(defunc %> (f g% x) (#`g% (#`f x)))
 
-(defunc % (f g% x) (funcall f (funcall g% x)))
+(defunc % (f g% x) (#`f (#`g% x)))
 
 (defunc const (x arg~23) x)
 
-(defunc >>= (x f) (match x ((None) (make-None)) ((Some y) (funcall f y))))
+(defunc >>= (x f) (match x ((None) (make-None)) ((Some y) (#`f y))))
 
 (in-package :holai.firstorder.utils.pair)
 
-(defunc mapn (f arg~42) (match arg~42 ((tuple x y) (tuple (funcall f x) (funcall f y)))))
+(defunc mapn (f arg~42) (match arg~42 ((tuple x y) (tuple (#`f x) (#`f y)))))
 
 (in-package :holai.firstorder.utils)
 
@@ -445,7 +443,7 @@
       (n arg~237)
       (match arg~237
         (nil (raise (make-Not_found)))
-        ((cl:cons h t%) (if (funcall p% n h) (tuple n h) (loop (+ n 1) t%))))))
+        ((cl:cons h t%) (if (#`p% n h) (tuple n h) (loop (+ n 1) t%))))))
     (loop 0 l)))
 
 (defunc concat_map (f l) (list-concat (list-map f l)))
@@ -472,7 +470,7 @@
 (defunc fold_right1 (f arg~348)
   (match arg~348
     ((cl:cons x nil) x)
-    ((cl:cons x xs) (funcall f x (fold_right1 f xs)))
+    ((cl:cons x xs) (#`f x (fold_right1 f xs)))
     (nil (failwith "fold_right1"))))
 
 (defunc fold_left_map (f acc)
@@ -481,7 +479,7 @@
     (lambdac (arg~372 x)
       (match arg~372
         ((tuple acc% ys)
-          (match (funcall f acc% x) ((tuple acc%% y) (tuple acc%% (cl:cons y ys)))))))
+          (match (#`f acc% x) ((tuple acc%% y) (tuple acc%% (cl:cons y ys)))))))
     (tuple acc nil)))
 
 (defunc fold_right_map (f acc xs)
@@ -489,7 +487,7 @@
     (lambdac (x arg~405)
       (match arg~405
         ((tuple acc% ys)
-          (match (funcall f acc% x) ((tuple acc%% y) (tuple acc%% (cl:cons y ys)))))))
+          (match (#`f acc% x) ((tuple acc%% y) (tuple acc%% (cl:cons y ys)))))))
     xs
     (tuple acc nil)))
 
@@ -500,9 +498,7 @@
   (match arg~454
     (nil nil)
     ((cl:cons x xs)
-      (match (funcall f x)
-        ((None) (filter_map f xs))
-        ((Some y) (cl:cons y (filter_map f xs)))))))
+      (match (#`f x) ((None) (filter_map f xs)) ((Some y) (cl:cons y (filter_map f xs)))))))
 
 (defunc exists_unique (p% l)
   (labelsc
@@ -510,7 +506,7 @@
       (acc arg~484)
       (match arg~484
         (nil acc)
-        ((cl:cons x xs) (if (funcall p% x) (if acc cl:nil (go cl:t xs)) (go acc xs))))))
+        ((cl:cons x xs) (if (#`p% x) (if acc cl:nil (go cl:t xs)) (go acc xs))))))
     (go cl:nil l)))
 
 (in-package :holai.firstorder.utils)
@@ -528,57 +524,49 @@
 (match
   (let ((vstore (ref nil)) (gstore (ref nil)) (vcounter (ref 0)))
     (cl:declare (cl:ignorable vstore gstore vcounter))
-    (fletc
-      ((inc_vcounter
-        (arg~533)
+    (holai.runtime:labelsc
+      ((:nonrecursive 0 inc_vcounter (arg~533)
         (match arg~533
           ((cl:type holai.runtime::unit-value)
             (let* ((n (deref vcounter)) (m (+ n 1)))
               (cl:declare (cl:ignorable n m))
-              (progn (assign vcounter m) n))))))
-      (fletc
-        ((reset_vars%
-          (arg~551)
+              (progn (assign vcounter m) n)))))
+        (:nonrecursive 1 reset_vars% (arg~551)
           (match arg~551
             ((cl:type holai.runtime::unit-value)
-              (progn (assign vstore nil) (assign gstore nil) (assign vcounter 0))))))
-        (fletc
-          ((fol_of_var%
-            (v)
-            (handler-case
-              (assoc v (deref vstore))
-              (holai.runtime:ocaml-condition
-                (exception~566)
-                (match exception~566
-                  ((Failure _)
-                    (let ((n (inc_vcounter unit)))
-                      (cl:declare (cl:ignorable n))
-                      (progn
-                        (if (deref copverb)
-                          (funcall
-                            (format-printf "fol_of_var: %s (ty = %s) <- %d
+              (progn (assign vstore nil) (assign gstore nil) (assign vcounter 0)))))
+        (:nonrecursive 2 fol_of_var% (v)
+          (handler-case
+            (assoc v (deref vstore))
+            (holai.runtime:ocaml-condition
+              (exception~566)
+              (match exception~566
+                ((Failure _)
+                  (let ((n (inc_vcounter unit)))
+                    (cl:declare (cl:ignorable n))
+                    (progn
+                      (if (deref copverb)
+                        (#`(format-printf "fol_of_var: %s (ty = %s) <- %d
 %!")
-                            (funcall string_of_term v)
-                            (funcall string_of_type (type_of v))
-                            n)
-                          unit)
-                        (assign vstore (cl:cons (tuple v n) (deref vstore)))
-                        n)))
-                  (_ (raise exception~566)))))))
-          (fletc
-            ((hol_of_var%
-              (v ty)
-              (handler-case
-                (rev_assoc v (deref gstore))
-                (holai.runtime:ocaml-condition
-                  (exception~603)
-                  (match exception~603
-                    ((Failure _)
-                      (let ((gv (funcall genvar ty)))
-                        (cl:declare (cl:ignorable gv))
-                        (progn (assign gstore (cl:cons (tuple gv v) (deref gstore))) gv)))
-                    (_ (raise exception~603)))))))
-            (tuple #'reset_vars% #'fol_of_var% #'hol_of_var%))))))
+                          (#`string_of_term v)
+                          (#`string_of_type (type_of v))
+                          n)
+                        unit)
+                      (assign vstore (cl:cons (tuple v n) (deref vstore)))
+                      n)))
+                (_ (raise exception~566))))))
+        (:nonrecursive 3 hol_of_var% (v ty)
+          (handler-case
+            (rev_assoc v (deref gstore))
+            (holai.runtime:ocaml-condition
+              (exception~603)
+              (match exception~603
+                ((Failure _)
+                  (let ((gv (#`genvar ty)))
+                    (cl:declare (cl:ignorable gv))
+                    (progn (assign gstore (cl:cons (tuple gv v) (deref gstore))) gv)))
+                (_ (raise exception~603)))))))
+      (tuple #'reset_vars% #'fol_of_var% #'hol_of_var%)))
   ((tuple reset_vars% fol_of_var% hol_of_var%)
     (setf fol_of_var fol_of_var% hol_of_var hol_of_var% reset_vars reset_vars%)))
 
@@ -604,21 +592,21 @@
 
 (defunc fol_of_term (env consts tm)
   (if (cl:and (is_var tm) (not (mem tm consts)))
-    (make-Fvar (funcall fol_of_var tm))
-    (match (funcall strip_comb tm)
+    (make-Fvar (#`fol_of_var tm))
+    (match (#`strip_comb tm)
       ((tuple f args)
         (if (mem f env)
           (failwith "fol_of_term: higher order")
-          (let ((ff (funcall fol_of_const f)))
+          (let ((ff (#`fol_of_const f)))
             (cl:declare (cl:ignorable ff))
             (make-Fnapp ff (map (fol_of_term env consts) args))))))))
 
 (defunc fol_of_atom (env consts tm)
-  (match (funcall strip_comb tm)
+  (match (#`strip_comb tm)
     ((tuple f args)
       (if (mem f env)
         (failwith "fol_of_atom: higher order")
-        (let ((ff (funcall fol_of_const f)))
+        (let ((ff (#`fol_of_const f)))
           (cl:declare (cl:ignorable ff))
           (tuple ff (map (fol_of_term env consts) args)))))))
 
@@ -635,10 +623,10 @@
 
 (defunc fol_of_form (env consts tm)
   (handler-case
-    (match (funcall dest_forall tm)
+    (match (#`dest_forall tm)
       ((tuple v bod)
         (let*
-          ((fv (funcall fol_of_var v))
+          ((fv (#`fol_of_var v))
             (fbod (fol_of_form (cl:cons v env) (subtract consts (cl:cons v nil)) bod)))
           (cl:declare (cl:ignorable fv fbod))
           (make-Forallq fv fbod))))
@@ -647,7 +635,7 @@
       (match exception~759
         ((Failure _)
           (handler-case
-            (match (funcall dest_conj tm)
+            (match (#`dest_conj tm)
               ((tuple l r%)
                 (let ((fl (fol_of_form env consts l)) (fr (fol_of_form env consts r%)))
                   (cl:declare (cl:ignorable fl fr))
@@ -657,7 +645,7 @@
               (match exception~762
                 ((Failure _)
                   (handler-case
-                    (match (funcall dest_disj tm)
+                    (match (#`dest_disj tm)
                       ((tuple l r%)
                         (let
                           ((fl (fol_of_form env consts l))
@@ -678,15 +666,12 @@
 
 
 (defunc hol_of_term (ty tm)
-  (match tm
-    ((Fvar v) (funcall hol_of_var v ty))
-    ((Fnapp f args) (hol_of_atom (tuple f args)))))
+  (match tm ((Fvar v) (#`hol_of_var v ty)) ((Fnapp f args) (hol_of_atom (tuple f args)))))
 
 (defunc hol_of_atom (arg~870)
   (match arg~870
     ((tuple f args)
-      (let*
-        ((f% (funcall hol_of_const f)) (tys (fst (splitlist #'dest_fun_ty (type_of f%)))))
+      (let* ((f% (#`hol_of_const f)) (tys (fst (splitlist #'dest_fun_ty (type_of f%)))))
         (cl:declare (cl:ignorable f% tys))
         (progn
           (assert-true (<= (list-length args) (list-length tys)) "firstorder.ml" 217 4)
@@ -698,7 +683,7 @@
   (match arg~910
     ((tuple p% args)
       (if (< p% 0)
-        (funcall mk_neg (hol_of_atom (tuple (- p%) args)))
+        (#`mk_neg (hol_of_atom (tuple (- p%) args)))
         (hol_of_atom (tuple p% args))))))
 
 ;; (* ----------------------------------------------------------------------- *)
@@ -709,17 +694,14 @@
 
 
 (defparameter fol_of_hol_clauses
-  (fletc
-    ((eqt
-      (arg~934 arg~939)
+  (holai.runtime:labelsc
+    ((:nonrecursive 0 eqt (arg~934 arg~939)
       (match arg~934
         ((tuple a1 (tuple b1 c1))
           (match arg~939
             ((tuple a2 (tuple b2 c2))
-              (cl:and (= a1 a2) (cl:and (= b1 b2) (equals_thm c1 c2)))))))))
-    (labelsc
-      ((mk_contraposes
-        (n th used unused sofar)
+              (cl:and (= a1 a2) (cl:and (= b1 b2) (equals_thm c1 c2))))))))
+      (:recursive 1 mk_contraposes (n th used unused sofar)
         (match unused
           (nil sofar)
           ((cl:cons h t%)
@@ -730,56 +712,51 @@
                 th
                 (append used (cl:cons h nil))
                 t%
-                (cl:cons nw sofar)))))))
-      (fletc
-        ((fol_of_hol_clause
-          (th)
-          (let*
-            ((lconsts (freesl (hyp th)))
-              (tm (concl th))
-              (hlits (funcall disjuncts tm))
-              (flits (map (fol_of_literal nil lconsts) hlits))
-              (basics (mk_contraposes 0 th nil flits nil)))
-            (cl:declare (cl:ignorable lconsts tm hlits flits basics))
-            (if
-              (forall (lambdac (arg~1047) (match arg~1047 ((tuple p% _) (< p% 0)))) flits)
-              (cl:cons
-                (tuple (tuple (map #'mk_negated flits) (tuple 1 nil)) (tuple (- 1) th))
-                basics)
-              basics))))
-        (lambdac (thms)
-          (let*
-            ((rawrules (itlist (o (union% #'eqt) #'fol_of_hol_clause) thms nil))
-              (prs
-                (setify
-                  (map
+                (cl:cons nw sofar))))))
+      (:nonrecursive 2 fol_of_hol_clause (th)
+        (let*
+          ((lconsts (freesl (hyp th)))
+            (tm (concl th))
+            (hlits (#`disjuncts tm))
+            (flits (map (fol_of_literal nil lconsts) hlits))
+            (basics (mk_contraposes 0 th nil flits nil)))
+          (cl:declare (cl:ignorable lconsts tm hlits flits basics))
+          (if (forall (lambdac (arg~1047) (match arg~1047 ((tuple p% _) (< p% 0)))) flits)
+            (cl:cons
+              (tuple (tuple (map #'mk_negated flits) (tuple 1 nil)) (tuple (- 1) th))
+              basics)
+            basics))))
+    (lambdac (thms)
+      (let*
+        ((rawrules (itlist (o (union% #'eqt) #'fol_of_hol_clause) thms nil))
+          (prs
+            (setify
+              (map
+                (o
+                  (o (function-value #'fst 1) (function-value #'snd 1))
+                  (function-value #'fst 1))
+                rawrules)))
+          (prules
+            (map
+              (lambdac (t%)
+                (tuple
+                  t%
+                  (filter
                     (o
-                      (o (function-value #'fst 1) (function-value #'snd 1))
+                      (o
+                        (o (partial (function-value #'= 2) t%) (function-value #'fst 1))
+                        (function-value #'snd 1))
                       (function-value #'fst 1))
                     rawrules)))
-              (prules
-                (map
-                  (lambdac (t%)
-                    (tuple
-                      t%
-                      (filter
-                        (o
-                          (o
-                            (o
-                              (partial (function-value #'= 2) t%)
-                              (function-value #'fst 1))
-                            (function-value #'snd 1))
-                          (function-value #'fst 1))
-                        rawrules)))
-                  prs))
-              (srules
-                (sort
-                  (lambdac (arg~1101 arg~1104)
-                    (match arg~1101
-                      ((tuple p% _) (match arg~1104 ((tuple q _) (<= (abs p%) (abs q)))))))
-                  prules)))
-            (cl:declare (cl:ignorable rawrules prs prules srules))
-            srules))))))
+              prs))
+          (srules
+            (sort
+              (lambdac (arg~1101 arg~1104)
+                (match arg~1101
+                  ((tuple p% _) (match arg~1104 ((tuple q _) (<= (abs p%) (abs q)))))))
+              prules)))
+        (cl:declare (cl:ignorable rawrules prs prules srules))
+        srules))))
 
 (in-package :holai.firstorder)
 
