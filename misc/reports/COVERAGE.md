@@ -15,11 +15,11 @@ sbcl: 1146 exact rows + 2 structurally compared initial-registry rows + 1 proper
 These passed runtime-fixtures reports are not full-core verification. Counts below are measured per host; subprocess guards are taken from each report.
 
 - abcl (Armed Bear Common Lisp 1.9.3): profile `runtime-fixtures`, 120s guard; structural_pattern_checks=46, defunc_protocol_checks=28, optional_entry_checks=84, tuple_list_checks=16, standard_random_checks=1816, system_interrupt_deliveries=3, fixture_sources=3, translated_fixture_units=3, star_naming_observations=9, differential_observations=33, exact_differential_observations=33.
-- ecl (ECL 21.2.1): profile `runtime-fixtures`, 120s guard; structural_pattern_checks=45, defunc_protocol_checks=28, optional_entry_checks=84, tuple_list_checks=16, standard_random_checks=1816, system_interrupt_deliveries=3, fixture_sources=3, translated_fixture_units=3, star_naming_observations=9, differential_observations=33, exact_differential_observations=33.
+- ecl (ECL 26.5.5): profile `runtime-fixtures`, 120s guard; structural_pattern_checks=45, defunc_protocol_checks=28, optional_entry_checks=84, tuple_list_checks=16, standard_random_checks=1816, system_interrupt_deliveries=3, fixture_sources=3, translated_fixture_units=3, star_naming_observations=9, differential_observations=33, exact_differential_observations=33.
 - clisp (CLISP 2.49.95+ (2024-11-03) (built on localhost [127.0.0.1])): profile `runtime-fixtures`, 120s guard; structural_pattern_checks=45, defunc_protocol_checks=28, optional_entry_checks=84, tuple_list_checks=16, standard_random_checks=1816, system_interrupt_deliveries=3, fixture_sources=3, translated_fixture_units=3, star_naming_observations=9, differential_observations=33, exact_differential_observations=33.
 
 - ccl: unavailable — Unsupported platform aarch64-linux.
-- mkcl: unavailable — Marked broken; actual allowBroken MKCL1.1.11 build failed: tinycc/lib-arm64.c:17 implicit declaration __arm64_clear_cache.
+- mkcl: unavailable — Package marked broken in pinned nixpkgs.
 - cmucl_binary: unavailable — Package attribute missing or evaluation failed.
 - clasp-common-lisp: unavailable — Unsupported platform aarch64-linux.
 

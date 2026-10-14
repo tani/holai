@@ -10,9 +10,16 @@
 (defun ensure-protocol (test) (incf *protocol-checks*) (unless test (error "Protocol check ~d" *protocol-checks*)))
 (defun protocol-gc ()
   #+sbcl (sb-ext:gc :full t)
-  #+ecl (si::gc t)
+  #+ecl
+  (progn
+    ;; SI:GC does not clear conservative roots in returned C stack frames.
+    (ffi:c-inline () () :void
+      "{ extern void *GC_clear_stack(void *); GC_clear_stack(NULL); }")
+    (si::gc t))
   #+(or abcl clisp) (ext:gc)
   #-(or sbcl ecl abcl clisp) (error "No GC test adapter for ~A" (lisp-implementation-type)))
+;; C-INLINE must run in native code, not the bytecode interpreter.
+#+ecl (compile 'protocol-gc)
 (defun protocol-weak-pointer (value)
   #+sbcl (sb-ext:make-weak-pointer value)
   #+ecl (ext:make-weak-pointer value)
@@ -91,8 +98,10 @@
     (vector (protocol-weak-pointer adapter)
             (protocol-weak-pointer fn)
             (protocol-weak-pointer cell))))
-;; Separate top-level forms let the creation frame/registers cease retaining
-;; the otherwise dead adapter before testing collection.
+;; ECL's conservative collector can retain the interpreter's lexical binding
+;; records/registers. Create native closures in a returned native frame instead.
+#+ecl (compile 'dead-native-adapter)
+;; Separate top-level forms leave the creation frame before collection.
 (defparameter *dead-native-pointer* (dead-native-adapter))
 (protocol-gc)
 (protocol-gc)

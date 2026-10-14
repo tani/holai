@@ -9,6 +9,9 @@ no old-name compatibility aliases are retained.
 
 - DESIGN.md, AGENTS.md, translator/runtime sources, Makefile, root holai.asd
   and maintained holai/all.lisp inferred entry.
+- flake.nix/flake.lock: one NixOS 26.05 source, with explicit compatible
+  Camlp5/Num source overrides. .github/workflows/ci.yml: SHA-pinned, read-only
+  aarch64-linux/aarch64-darwin/x86_64-linux CI, with platform-specific artifacts.
 - Generated Lisp: source comparison and debugging are core project goals.
 - Generated inventory/package-systems.sexp: readable supported scope and complete
   package-provider mapping. Runtime/predecessor/external imports infer load order.
@@ -66,14 +69,29 @@ counts and digest-matched logs. That status never establishes full-core
 verification. `make test-full-core` explicitly opts selected hosts into complete
 tests and cold diagnostics, recorded in `implementation-full-core-matrix.json`;
 ECL/ABCL/CLISP full-core processes retain the approved 3600-second guard.
-Current reports record SBCL full-core and ECL/ABCL/CLISP runtime-fixture passes,
-with source fingerprints and digest-matched logs. Each additional host passed
+Retained previous-distribution reports record SBCL full-core and ECL/ABCL/CLISP
+runtime-fixture passes, with source fingerprints and digest-matched logs. Each additional host passed
 three runtime fixtures and 33 exact rows; its full core remains unverified.
 Fixture fingerprints cover Lisp/maps/provider/inventory only, not compiled
 FASLs; compiled FASLs are not shipped. The final `make release` exited 0 in
 269.03 seconds, including SBCL-backed inventory, fresh 94-output identical clean
 generation and 55 unchanged input pins. The archive producer reported 427
 payload files. The preceding inventory failure is historical, not a pending gate.
+The current NixOS 26.05 profile separately passed local ARM64 Linux flake
+checks, a forced fresh compiler build and ordinary release with all four hosts;
+the combined flake-check/release invocation took 293.62 seconds. Current reports
+retain 94 identical clean-generated outputs and 55 unchanged input pins; the
+archive producer reported 428 payload files before final documentation edits.
+CI now runs `nix flake check` plus ordinary `make release` independently on
+each platform, always retaining separate artifacts; no platform's evidence is
+merged into another's reports. The shell selects only implemented host adapters
+whose pinned packages are usable, requiring SBCL. Packaging verifies actual
+host versions and executable bindings against exported pinned-shell metadata.
+All three platform flake evaluations (`--all-systems --no-build`) and
+actionlint 1.7.12 passed locally. Flake checks cover ASDF startup only, while
+release exercises the production runtime. Three-platform CI is configured;
+hosted Actions and Darwin/x86 runtime results remain unobserved. Current
+runtime evidence is local ARM64 Linux only.
 
 The proof readability policy applies to **software development code** throughout
 the maintained translator-generated and handwritten sources, not just end-user

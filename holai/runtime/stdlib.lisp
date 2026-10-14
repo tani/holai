@@ -44,8 +44,9 @@
   (if enabled
       (ext:set-signal-handler ext:+sigint+
         (lambda () (raise (make-sys_break))))
-      (unless (ext:catch-signal ext:+sigint+ :default)
-        (error "Cannot restore the default SIGINT disposition")))
+      ;; ECL's compiler declares CATCH-SIGNAL's result NULL. Its :DEFAULT
+      ;; action still installs SIG_DFL; do not test the compiled return value.
+      (ext:catch-signal ext:+sigint+ :default))
   #+abcl
   (if enabled
       (let* ((target (threads:current-thread))

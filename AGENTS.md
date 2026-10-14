@@ -198,6 +198,23 @@ readable OCaml-to-Lisp translation, even when argument evaluation order differs.
   repeating a full initialization unless a new unresolved concern justifies it.
   Include raw observation streams and reproducible canonical comparison streams
   in the package; keep parsed/lowered/compiled/differential-corpus states distinct.
+- Use the single NixOS 26.05 pin in flake.lock for current development/release.
+  Preserve the OCaml 4.14/Camlp5 8.02 grammar contract and explicit Camlp5/Num
+  source overrides, not an old distribution input. Run release inside the
+  pinned shell: host versions and executable bindings must match its exported
+  metadata. Package availability is not an implemented runtime adapter.
+  The current 26.05 profile has passed local ARM64 Linux flake checks, a forced
+  fresh compiler build and ordinary four-host release. All three platform flake
+  evaluations and actionlint passed locally, but hosted Actions and Darwin/x86
+  runtime results remain unobserved. Flake checks cover ASDF startup only;
+  production runtime evidence comes from release. Treat 23.11/25.05 results as
+  historical, never as validation of the current pin or hosted runtime.
+  Only usable SBCL/ECL/ABCL/CLISP packages enter the ordinary matrix; SBCL is
+  mandatory. CI runs nix flake check and ordinary make release independently on
+  aarch64-linux, aarch64-darwin and x86_64-linux, with read-only SHA-pinned
+  actions and always-uploaded platform-specific evidence. Keep the prior
+  distribution's measured reports historical; never claim new-pin/platform
+  correctness before actual validation, or add extra full-core CI profiles.
 - `make test` needs Camlp5 8.02, OCaml Num for the original-execution oracle,
   all selected pinned native hosts (and ECL's C compiler); production runtime has no external pattern-library dependency.
 - Do not publish or push anywhere unless the user requests that destination.

@@ -14,10 +14,10 @@
     "holai/runtime/format.lisp": "1091bf1534296fb412006168400d29f244ab13de1015300f0ec1f6e85c4b478e",
     "holai/runtime/package.lisp": "7b930cb56614b5221ea97782a205f4e65a899193dab61965c00e35e6402f47b0",
     "holai/runtime/pattern.lisp": "58135bbab698826dd5816f7903beaec77799a13cea076058c84f52f62fd85565",
-    "holai/runtime/stdlib.lisp": "0fddd3e79fa89482bbd0a02d3be9d44b884728758618706bb1d9b4abc8185a50",
+    "holai/runtime/stdlib.lisp": "953122637d85106097f0482983f85c251d823ec3fa5fe99e0144fd00da888e7f",
     "holai/tests/compatibility-fixtures.lisp": "cc6cafc5d93eeb16ddf7bfb23d89717c09f6c1a4105169e7285b7e3508fe83f0",
     "holai/tests/compatibility.py": "f1762c8cfa63a887596acbd0996fc00aa0c7e353844a36842293cba888d2c55f",
-    "holai/tests/defunc-protocol.lisp": "59749a1a098b0d7faae8b2762c8ee2aee0e9b2d4f2224f3ead26bbc8edf5c85a",
+    "holai/tests/defunc-protocol.lisp": "3a891d28e896925b2a4d0cf47dfc575258862944a73acddd1c44be7640a72eaf",
     "holai/tests/fixtures/compatibility_observations.ml": "8ebb1386ddca5befd8bf92ecd9c915f1ca4a44e2fd1b3f33c5afe24ef9870455",
     "holai/tests/fixtures/semantics.ml": "d364498982f183b9247fc41863b173333010710fff591f0e1d924e7b6d98995d",
     "holai/tests/fixtures/star_names.ml": "944a8d60fc6180e485527b34bf54361fc8ad7282322875f7add7569a91e0a5ca",
@@ -40,20 +40,20 @@
     "vendor/hol-light/pa_j_4.xx_8.02.ml": "c4eede2c8159ddf42a13536bc9304edbab3272c6ad3b0c29227f880ab51c7397"
   },
   "logs": {
-    "compatibility/defunc-protocol.log": "6050386232abc1dc598b12f95f36393bb245c17f74e01907ed42573087c7a54d",
-    "compatibility/fixtures.log": "ead8de1c84abf8c86e875349c0f8f8a9e501ad0dac110a293399b8556abe1e9a",
-    "compatibility/host.log": "19e1c04d336ea5f72ec0e324dffca4126cdcf1bf052fd447643ba140bb43ca5b",
+    "compatibility/defunc-protocol.log": "29a52e6a2c5b713b9ff1a92feedbbe474cb6064cd3f4eeabc436a8d7700c6603",
+    "compatibility/fixtures.log": "e0752063d1057030459cfcf354b37666e77755bdd56d13259fef9d204f544ccc",
+    "compatibility/host.log": "afa8a2007f5cdaed6ce0b3662bdb0efcc94ca32bdb6c3d7e6711395d4a1b77cd",
     "compatibility/lisp-observations.txt": "1140da07d402c885c02afc34c05a4d9a59290ba9c57984acbf8114bf2f742308",
     "compatibility/ocaml-build.log": "76418c821c11fb2ff89380229a5643aeb4e6df84d85549b1cffed6d46ec30636",
     "compatibility/ocaml-observations.txt": "1140da07d402c885c02afc34c05a4d9a59290ba9c57984acbf8114bf2f742308",
     "compatibility/ocaml-run.log": "1140da07d402c885c02afc34c05a4d9a59290ba9c57984acbf8114bf2f742308",
-    "compatibility/optional-entry.log": "95ff66e8bd31113067adf7828e4dc11e2f67c62feea125d12ebdae6b22241f58",
-    "compatibility/pattern-stale.log": "4dc778626dc4cd58c46bda116c11a9d76991ef2906f6f891a7ef99cd42ec263c",
-    "compatibility/pattern.log": "eacdbcb0cf7bea3b49a26ad2f961e15422de73148ebabb048fbb43385296ec9c",
-    "compatibility/random.log": "481df10ea66481e9eba93c6b9a1e8107fbc95ea1da75bc4acbf00147015f563f",
-    "compatibility/system-interrupt.log": "804ceedbe9926a72e68420e61d5f14f5de3c998572fdfadb4d3fc9670f825961",
+    "compatibility/optional-entry.log": "108c0b3b99b0e6104f327ef88c7bc72a2dd3c0806d2f31c7674379c744f5842f",
+    "compatibility/pattern-stale.log": "fc4ba52a146926e2a27386e652b97092de165aae473b15aa98f774e217f5ff7f",
+    "compatibility/pattern.log": "a4d20f82acc12df21d739dfbc99885c24cef393ad86bff5d0db475e3aa2a7f35",
+    "compatibility/random.log": "2354f2ebd0ad732cf29abec5d4e04220420b716dd91ec6dceda20bf4318d83a3",
+    "compatibility/system-interrupt.log": "d0014991c945b6c711c444bc5bd34ae548b7274a772f55b6c32421c35d100b18",
     "compatibility/translate.log": "9186135fb89d4d503f46a923fb9fc50a03fedcb80be1c1d788459e4225bd481f",
-    "compatibility/tuple-list.log": "e1bfbcdf19f8dfc1552d7684401e4a97d24b1d2c2926035b73b573e25bfd59d0"
+    "compatibility/tuple-list.log": "4305b9b756d6941ea9a0bb86da38a65b3d85610575ad1f215aed9507a341884b"
   },
   "counts": {
     "structural_pattern_checks": 45,
@@ -83,7 +83,7 @@
       "expected_exit_code": 0,
       "exit_code": 0,
       "log": "compatibility/host.log",
-      "elapsed_seconds": 0.4636301421560347
+      "elapsed_seconds": 0.4826315022073686
     },
     {
       "command": [
@@ -99,7 +99,7 @@
       "expected_exit_code": 0,
       "exit_code": 0,
       "log": "compatibility/pattern.log",
-      "elapsed_seconds": 0.6360931280069053
+      "elapsed_seconds": 0.7259961408562958
     },
     {
       "command": [
@@ -115,7 +115,7 @@
       "expected_exit_code": 17,
       "exit_code": 17,
       "log": "compatibility/pattern-stale.log",
-      "elapsed_seconds": 0.5991047360002995
+      "elapsed_seconds": 0.6098713497631252
     },
     {
       "command": [
@@ -131,7 +131,7 @@
       "expected_exit_code": 0,
       "exit_code": 0,
       "log": "compatibility/defunc-protocol.log",
-      "elapsed_seconds": 0.6371104218997061
+      "elapsed_seconds": 0.658071440178901
     },
     {
       "command": [
@@ -147,7 +147,7 @@
       "expected_exit_code": 0,
       "exit_code": 0,
       "log": "compatibility/optional-entry.log",
-      "elapsed_seconds": 0.5990546210668981
+      "elapsed_seconds": 0.6182883242145181
     },
     {
       "command": [
@@ -163,7 +163,7 @@
       "expected_exit_code": 0,
       "exit_code": 0,
       "log": "compatibility/tuple-list.log",
-      "elapsed_seconds": 0.5982223320752382
+      "elapsed_seconds": 0.6090681408531964
     },
     {
       "command": [
@@ -179,7 +179,7 @@
       "expected_exit_code": 0,
       "exit_code": 0,
       "log": "compatibility/random.log",
-      "elapsed_seconds": 0.6031328779645264
+      "elapsed_seconds": 0.6101411296986043
     },
     {
       "command": [
@@ -195,7 +195,7 @@
       "expected_exit_code": -2,
       "exit_code": -2,
       "log": "compatibility/system-interrupt.log",
-      "elapsed_seconds": 0.6092658881098032
+      "elapsed_seconds": 0.6141568720340729
     },
     {
       "command": [
@@ -212,7 +212,7 @@
       "expected_exit_code": 0,
       "exit_code": 0,
       "log": "compatibility/translate.log",
-      "elapsed_seconds": 0.06411288678646088
+      "elapsed_seconds": 0.06101311882957816
     },
     {
       "command": [
@@ -220,7 +220,7 @@
         "-w",
         "-a",
         "-pp",
-        "camlp5r -I /nix/store/miwkyg90bzq10dn9bzzmfb6yqpwsn2sp-ocaml4.14.2-camlp5-8.02.01/lib/ocaml/4.14.2/site-lib/camlp5 -I /home/tani/ghq/github.com/tani/holai/_build pa_j.cmo",
+        "camlp5r -I /nix/store/gh58mllyw2l09vqw7lrnkh80cwb0vil4-ocaml4.14.4-camlp5-8.02.01/lib/ocaml/4.14.4/site-lib/camlp5 -I /home/tani/ghq/github.com/tani/holai/_build pa_j.cmo",
         "/home/tani/ghq/github.com/tani/holai/_build/compatibility/clisp/original.ml",
         "-o",
         "/home/tani/ghq/github.com/tani/holai/_build/compatibility/clisp/original"
@@ -229,7 +229,7 @@
       "expected_exit_code": 0,
       "exit_code": 0,
       "log": "compatibility/ocaml-build.log",
-      "elapsed_seconds": 0.08106420887634158
+      "elapsed_seconds": 0.05240162322297692
     },
     {
       "command": [
@@ -240,7 +240,7 @@
       "expected_exit_code": 0,
       "exit_code": 0,
       "log": "compatibility/ocaml-run.log",
-      "elapsed_seconds": 0.0016455529257655144
+      "elapsed_seconds": 0.001373673789203167
     },
     {
       "command": [
@@ -256,7 +256,7 @@
       "expected_exit_code": 0,
       "exit_code": 0,
       "log": "compatibility/fixtures.log",
-      "elapsed_seconds": 0.948550074826926
+      "elapsed_seconds": 0.9573039822280407
     }
   ],
   "native_nan_eql": {
@@ -271,7 +271,7 @@
     "marker": "Pattern stale FASL rejected: Separate",
     "consumer_fasl": "_build/pattern-stale-consumer.fas",
     "log": "compatibility/pattern-stale.log",
-    "log_sha256": "4dc778626dc4cd58c46bda116c11a9d76991ef2906f6f891a7ef99cd42ec263c"
+    "log_sha256": "fc4ba52a146926e2a27386e652b97092de165aae473b15aa98f774e217f5ff7f"
   },
   "translated_sha256": {
     "_build/compatibility/clisp/translated/compatibility_observations.lisp": "06ffdce0fa4fd8e34edfd1d0887aa262963fbdcf7fdf73c196c1a788717f3bd3",
@@ -284,8 +284,8 @@
     "_build/compatibility/clisp/translated/star_names.map.json": "ccfd6ff5743611df7295a9e787999cb3373d746d67bdab018336e95a892608d6"
   },
   "tool_artifact_sha256": {
-    "bin/ml2cl": "efef3231969e6798f04a0dadb91bffe56ad8b6cfd7dff051a484182e97563d62",
-    "_build/pa_j.cmo": "057c9ab5d06d5a26e75c1155f4c6cc4605c12e9c9e20d016dbdd37ff8883a4ed"
+    "bin/ml2cl": "e4c04b6c3ffbf9193c9bad2ca479d345cd52b94d30825a064ee512dde018b758",
+    "_build/pa_j.cmo": "054f98c4ec18cd737e4ab37e0f9bc512f03647e8fcd6784ba870130b0fa72652"
   },
   "oracle_source_sha256": "a2e149601a7f80095e35d9ea32a9094870e10dbe12ad5396cb195ff46df46640",
   "raw_observation_streams_equal": true,

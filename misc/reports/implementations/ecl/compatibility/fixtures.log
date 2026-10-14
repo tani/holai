@@ -1,5 +1,5 @@
-;;; Loading #P"/nix/store/li8033azc46v0ilvb1hxbbg4x7wdkdfz-ecl-21.2.1/lib/ecl-21.2.1/asdf.fas"
-;;; Loading "/home/tani/ghq/github.com/tani/holai/holai/tests/compatibility-fixtures.lisp"
+;;; Loading #P"/nix/store/57zcf17cf7kcb5i7dl1hvnwr0xg9fzfs-ecl-26.5.5/lib/ecl-26.5.5/asdf.fas"
+;;; Loading #P"/home/tani/ghq/github.com/tani/holai/holai/tests/compatibility-fixtures.lisp"
 ;;; Style warning:
 ;;;   in file semantics.lisp, position 7887
 ;;;   at (DEFUNC ADD ...)
@@ -110,6 +110,13 @@
 ;;;   at (DEFUNC PARENT_BEFORE ...)
 ;;;   ! The argument 1 of function APPLY has type
 ;;; NUMBER
+;;; instead of expected
+;;; FUNCTION-DESIGNATOR
+;;; Style warning:
+;;;   in file compatibility_observations.lisp, position 3622
+;;;   at (DEFUNC COMPATIBILITY_OBSERVATIONS ...)
+;;;   ! The argument 1 of function APPLY has type
+;;; (OR (EQL true) (EQL false))
 ;;; instead of expected
 ;;; FUNCTION-DESIGNATOR
 ;;; Style warning:

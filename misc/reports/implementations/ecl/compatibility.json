@@ -6,7 +6,7 @@
   "host": {
     "implementation": "ecl",
     "implementation_type": "ECL",
-    "version": "21.2.1",
+    "version": "26.5.5",
     "executable": "ecl"
   },
   "code_sha256": {
@@ -14,10 +14,10 @@
     "holai/runtime/format.lisp": "1091bf1534296fb412006168400d29f244ab13de1015300f0ec1f6e85c4b478e",
     "holai/runtime/package.lisp": "7b930cb56614b5221ea97782a205f4e65a899193dab61965c00e35e6402f47b0",
     "holai/runtime/pattern.lisp": "58135bbab698826dd5816f7903beaec77799a13cea076058c84f52f62fd85565",
-    "holai/runtime/stdlib.lisp": "0fddd3e79fa89482bbd0a02d3be9d44b884728758618706bb1d9b4abc8185a50",
+    "holai/runtime/stdlib.lisp": "953122637d85106097f0482983f85c251d823ec3fa5fe99e0144fd00da888e7f",
     "holai/tests/compatibility-fixtures.lisp": "cc6cafc5d93eeb16ddf7bfb23d89717c09f6c1a4105169e7285b7e3508fe83f0",
     "holai/tests/compatibility.py": "f1762c8cfa63a887596acbd0996fc00aa0c7e353844a36842293cba888d2c55f",
-    "holai/tests/defunc-protocol.lisp": "59749a1a098b0d7faae8b2762c8ee2aee0e9b2d4f2224f3ead26bbc8edf5c85a",
+    "holai/tests/defunc-protocol.lisp": "3a891d28e896925b2a4d0cf47dfc575258862944a73acddd1c44be7640a72eaf",
     "holai/tests/fixtures/compatibility_observations.ml": "8ebb1386ddca5befd8bf92ecd9c915f1ca4a44e2fd1b3f33c5afe24ef9870455",
     "holai/tests/fixtures/semantics.ml": "d364498982f183b9247fc41863b173333010710fff591f0e1d924e7b6d98995d",
     "holai/tests/fixtures/star_names.ml": "944a8d60fc6180e485527b34bf54361fc8ad7282322875f7add7569a91e0a5ca",
@@ -40,20 +40,20 @@
     "vendor/hol-light/pa_j_4.xx_8.02.ml": "c4eede2c8159ddf42a13536bc9304edbab3272c6ad3b0c29227f880ab51c7397"
   },
   "logs": {
-    "compatibility/defunc-protocol.log": "b6309f9ff6f34cf26d4d526376aeacd8be68ac661994ed255e6cd9ea96d0eacc",
-    "compatibility/fixtures.log": "4c4cfd83358dd8941e5b14c0a868e0adb45bf94651f8981da34b09f238280bcf",
-    "compatibility/host.log": "c6aa055c2b763586704d98f9457c5b1f27ed2bc6fcd74fe6c56886d6b5801222",
+    "compatibility/defunc-protocol.log": "3e58c88730460b2e26cb87a482b2622bab705ce16c700491055d782af46e042b",
+    "compatibility/fixtures.log": "48dca3bae979cfe92c3c528c8b9663d5e49a9cbae7a1989d3d4a85159f9e41e1",
+    "compatibility/host.log": "0df4f2de2484f32868fa2fa5c2ea97e0f6e4651a89cff857dc807fb1400cc702",
     "compatibility/lisp-observations.txt": "1140da07d402c885c02afc34c05a4d9a59290ba9c57984acbf8114bf2f742308",
     "compatibility/ocaml-build.log": "76418c821c11fb2ff89380229a5643aeb4e6df84d85549b1cffed6d46ec30636",
     "compatibility/ocaml-observations.txt": "1140da07d402c885c02afc34c05a4d9a59290ba9c57984acbf8114bf2f742308",
     "compatibility/ocaml-run.log": "1140da07d402c885c02afc34c05a4d9a59290ba9c57984acbf8114bf2f742308",
-    "compatibility/optional-entry.log": "5ea4d9cd416f2062962b01c45966eedcb0e10ec406abfac4dfb51bbce419bd0c",
-    "compatibility/pattern-stale.log": "b176fb9176ce6c077d2a1a044df25e161e90f1cd5acc22353209cc31d9a8502a",
-    "compatibility/pattern.log": "6bc5e056a28779fb7f889d9d21ccc66cb2e4803a8359af3a2e639cc3945b804d",
-    "compatibility/random.log": "4d04d14479ea3f0d39fc891a57ba7c6ed6f807452c98c5a0445e447e43765217",
-    "compatibility/system-interrupt.log": "e210db014be8bf3894f00425b11c1052b1425a1b33a84675b0cca0f3e44a8768",
+    "compatibility/optional-entry.log": "33a387ae66351074d436dbfb9ac82094eac585e2b190988053c4b24f557bca5a",
+    "compatibility/pattern-stale.log": "447b1b36f8ba527217af45c01367fb0db1ff7253e63c19d6a7a4e6c4fc443940",
+    "compatibility/pattern.log": "e6ae4ebaf7d06ac3a359d1b27b6da0fb5dcdfb5f017d61d2aadb3e6228681d28",
+    "compatibility/random.log": "6857c4d14c05cde705aa5398637da16a626596cbca73dd39cd232279f14ad2a7",
+    "compatibility/system-interrupt.log": "47b4439837c0387dda4f5958dd24ad58094eb1abeabca36493e82e8762508e03",
     "compatibility/translate.log": "4e4af9361dbd4d67697e01188df805387cb05bae0d4f8b5e25651fafd33cb6dd",
-    "compatibility/tuple-list.log": "e04e1f494e3e8a45a6d5c64fb1e301880f60f8206f5a3cf8d3c26a1c09d3b533"
+    "compatibility/tuple-list.log": "09582a16048248abd1b937d17eb530003ace9694975ef7161244c338d7c20247"
   },
   "counts": {
     "structural_pattern_checks": 45,
@@ -88,7 +88,7 @@
       "expected_exit_code": 0,
       "exit_code": 0,
       "log": "compatibility/host.log",
-      "elapsed_seconds": 0.20944102806970477
+      "elapsed_seconds": 0.2738016019575298
     },
     {
       "command": [
@@ -109,7 +109,7 @@
       "expected_exit_code": 0,
       "exit_code": 0,
       "log": "compatibility/pattern.log",
-      "elapsed_seconds": 0.838710097130388
+      "elapsed_seconds": 0.9985422007739544
     },
     {
       "command": [
@@ -130,7 +130,7 @@
       "expected_exit_code": 17,
       "exit_code": 17,
       "log": "compatibility/pattern-stale.log",
-      "elapsed_seconds": 0.23233195394277573
+      "elapsed_seconds": 0.29801875771954656
     },
     {
       "command": [
@@ -151,7 +151,7 @@
       "expected_exit_code": 0,
       "exit_code": 0,
       "log": "compatibility/defunc-protocol.log",
-      "elapsed_seconds": 0.25180630199611187
+      "elapsed_seconds": 0.5682501038536429
     },
     {
       "command": [
@@ -172,7 +172,7 @@
       "expected_exit_code": 0,
       "exit_code": 0,
       "log": "compatibility/optional-entry.log",
-      "elapsed_seconds": 0.23370272293686867
+      "elapsed_seconds": 0.27664722176268697
     },
     {
       "command": [
@@ -193,7 +193,7 @@
       "expected_exit_code": 0,
       "exit_code": 0,
       "log": "compatibility/tuple-list.log",
-      "elapsed_seconds": 0.23754338128492236
+      "elapsed_seconds": 0.2690862319432199
     },
     {
       "command": [
@@ -214,7 +214,7 @@
       "expected_exit_code": 0,
       "exit_code": 0,
       "log": "compatibility/random.log",
-      "elapsed_seconds": 0.23336606612429023
+      "elapsed_seconds": 0.26664957171306014
     },
     {
       "command": [
@@ -235,7 +235,7 @@
       "expected_exit_code": -2,
       "exit_code": -2,
       "log": "compatibility/system-interrupt.log",
-      "elapsed_seconds": 0.2684325040318072
+      "elapsed_seconds": 0.27527289325371385
     },
     {
       "command": [
@@ -252,7 +252,7 @@
       "expected_exit_code": 0,
       "exit_code": 0,
       "log": "compatibility/translate.log",
-      "elapsed_seconds": 0.06328471191227436
+      "elapsed_seconds": 0.0750746070407331
     },
     {
       "command": [
@@ -260,7 +260,7 @@
         "-w",
         "-a",
         "-pp",
-        "camlp5r -I /nix/store/miwkyg90bzq10dn9bzzmfb6yqpwsn2sp-ocaml4.14.2-camlp5-8.02.01/lib/ocaml/4.14.2/site-lib/camlp5 -I /home/tani/ghq/github.com/tani/holai/_build pa_j.cmo",
+        "camlp5r -I /nix/store/gh58mllyw2l09vqw7lrnkh80cwb0vil4-ocaml4.14.4-camlp5-8.02.01/lib/ocaml/4.14.4/site-lib/camlp5 -I /home/tani/ghq/github.com/tani/holai/_build pa_j.cmo",
         "/home/tani/ghq/github.com/tani/holai/_build/compatibility/ecl/original.ml",
         "-o",
         "/home/tani/ghq/github.com/tani/holai/_build/compatibility/ecl/original"
@@ -269,7 +269,7 @@
       "expected_exit_code": 0,
       "exit_code": 0,
       "log": "compatibility/ocaml-build.log",
-      "elapsed_seconds": 0.08010619413107634
+      "elapsed_seconds": 0.05244632391259074
     },
     {
       "command": [
@@ -280,7 +280,7 @@
       "expected_exit_code": 0,
       "exit_code": 0,
       "log": "compatibility/ocaml-run.log",
-      "elapsed_seconds": 0.0022384491749107838
+      "elapsed_seconds": 0.001598169095814228
     },
     {
       "command": [
@@ -301,7 +301,7 @@
       "expected_exit_code": 0,
       "exit_code": 0,
       "log": "compatibility/fixtures.log",
-      "elapsed_seconds": 1.5728303380310535
+      "elapsed_seconds": 1.7529444620013237
     }
   ],
   "native_nan_eql": {
@@ -316,7 +316,7 @@
     "marker": "Pattern stale FASL rejected: Separate",
     "consumer_fasl": "_build/pattern-stale-consumer.fas",
     "log": "compatibility/pattern-stale.log",
-    "log_sha256": "b176fb9176ce6c077d2a1a044df25e161e90f1cd5acc22353209cc31d9a8502a"
+    "log_sha256": "447b1b36f8ba527217af45c01367fb0db1ff7253e63c19d6a7a4e6c4fc443940"
   },
   "translated_sha256": {
     "_build/compatibility/ecl/translated/compatibility_observations.lisp": "06ffdce0fa4fd8e34edfd1d0887aa262963fbdcf7fdf73c196c1a788717f3bd3",
@@ -329,8 +329,8 @@
     "_build/compatibility/ecl/translated/star_names.map.json": "ccfd6ff5743611df7295a9e787999cb3373d746d67bdab018336e95a892608d6"
   },
   "tool_artifact_sha256": {
-    "bin/ml2cl": "efef3231969e6798f04a0dadb91bffe56ad8b6cfd7dff051a484182e97563d62",
-    "_build/pa_j.cmo": "057c9ab5d06d5a26e75c1155f4c6cc4605c12e9c9e20d016dbdd37ff8883a4ed"
+    "bin/ml2cl": "e4c04b6c3ffbf9193c9bad2ca479d345cd52b94d30825a064ee512dde018b758",
+    "_build/pa_j.cmo": "054f98c4ec18cd737e4ab37e0f9bc512f03647e8fcd6784ba870130b0fa72652"
   },
   "oracle_source_sha256": "a2e149601a7f80095e35d9ea32a9094870e10dbe12ad5396cb195ff46df46640",
   "raw_observation_streams_equal": true,

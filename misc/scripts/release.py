@@ -2,12 +2,40 @@
 from pathlib import Path
 import hashlib
 import json
+import os
+import shutil
 import zipfile
 from lisp_host import HOST_TYPES, NATIVE_NAN_LIMITATIONS, full_core_timeout, selected_implementations
 
 root = Path(__file__).resolve().parents[2]
 version = "1.0.0-percent-names"
 IMPLEMENTATIONS = selected_implementations()
+assert all(name in os.environ for name in ("HOLAI_LISP_VERSIONS", "HOLAI_LISP_EXECUTABLES")), \
+    "Run make release inside the pinned nix develop shell"
+pinned_versions = json.loads(os.environ["HOLAI_LISP_VERSIONS"])
+pinned_executables = json.loads(os.environ["HOLAI_LISP_EXECUTABLES"])
+assert set(IMPLEMENTATIONS) <= pinned_versions.keys() & pinned_executables.keys(), \
+    "Run make release inside the pinned nix develop shell"
+
+
+def verify_pinned_host(identity):
+    host = identity["implementation"]
+    expected = pinned_versions[host]
+    actual = identity["version"]
+    if host == "sbcl":
+        # nixpkgs uses this suffix when constructing a missing upstream version file.
+        actual = actual.removesuffix(".nixos")
+    if host == "clisp":
+        # CLISP reports its source version plus build details, not nixpkgs' snapshot date.
+        assert actual.partition("+")[0] == expected.partition("-unstable-")[0], \
+            f"{host} version {actual!r} differs from pinned package {expected!r}"
+    else:
+        assert actual == expected, f"{host} version {actual!r} differs from pinned {expected!r}"
+    executable = shutil.which(identity["executable"])
+    assert executable and Path(executable).resolve() == Path(pinned_executables[host]).resolve(), \
+        f"{host} executable differs from the pinned Nix package"
+
+
 matrix = json.loads((root / "misc/reports/implementation-matrix.json").read_text())
 assert matrix["selected"] == list(IMPLEMENTATIONS)
 assert "sbcl" in IMPLEMENTATIONS, "SBCL full-core evidence is mandatory"
@@ -34,7 +62,7 @@ for host in IMPLEMENTATIONS:
             assert hashlib.sha256((root / expected_report).read_bytes()).hexdigest() == phase_evidence["report_sha256"]
 core = [Path(name).stem for name in json.loads((root / "vendor/CORE_FILES.json").read_text())]
 required = ["DESIGN.md", "AGENTS.md", "README.md", "docs/RELEASE-NOTES.md", "Makefile", "holai.asd", "holai/all.lisp",
-            "flake.nix", "flake.lock",
+            "flake.nix", "flake.lock", ".github/workflows/ci.yml",
             "ml2cl/sexp.ml", "ml2cl/scope.ml", "ml2cl/compiler.ml", "ml2cl/frontend.ml", "ml2cl/cli.ml",
             "holai/runtime/package.lisp", "holai/runtime/core.lisp", "holai/runtime/format.lisp", "holai/runtime/stdlib.lisp",
             "holai/tests/run.py", "holai/tests/lisp-tests.lisp", "holai/tests/bootstrap.lisp", "holai/tests/profile-core.lisp", "holai/tests/system-interrupt.lisp",
@@ -116,8 +144,7 @@ for host in IMPLEMENTATIONS:
     identity = compatibility["host"]
     assert identity["implementation"] == host and identity["implementation_type"].lower() == HOST_TYPES[host]
     assert identity["version"] and identity["executable"], f"Missing exact {host} identity"
-    if host == "ecl":
-        assert identity["version"] == "21.2.1", "Release ECL must match the pinned 21.2.1 profile"
+    verify_pinned_host(identity)
     assert compatibility["code_sha256"] == compatibility_fingerprints, f"Stale or incomplete {host} source fingerprints"
     counts = compatibility["counts"]
     for name, count in {"defunc_protocol_checks": 28, "optional_entry_checks": 84,
@@ -207,6 +234,7 @@ for host in ("sbcl",):
     assert verification["status"] == "passed", f"Incomplete or failed {host} native verification"
     assert diagnostics["host"]["implementation"] == verification["host"]["implementation"] == host
     assert diagnostics["host"]["version"] == verification["host"]["version"]
+    verify_pinned_host(verification["host"])
     assert diagnostics["fresh_asdf_cache"] and diagnostics["audit_complete"] and diagnostics["exit_code"] == 0
     assert not diagnostics["timed_out"] and diagnostics["timeout_seconds"] == full_core_timeout(host)
     assert verification["full_core_process_timeout_seconds"] == full_core_timeout(host)

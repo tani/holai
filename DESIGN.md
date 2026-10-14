@@ -94,31 +94,54 @@ HOL Light `pa_j_4.xx_8.02.ml` grammar. Do not silently select a different gramma
 when upgrading Camlp5. The CLI must reject an incompatible parser profile or
 require an explicit, tested update to the build configuration.
 
-The development environment is declared in `flake.nix`, with its nixpkgs input
-pinned by `flake.lock`. The nixpkgs `nixos-23.11` shell supplies OCaml 4.14.2,
-Camlp5 8.02.01, camlp-streams 5.0.1, SBCL, Python and GNU Make, with Num
-pinned separately to upstream 1.5.
-This is a separate development profile from the historical OCaml 4.14.1/
-Num 1.5 environment. `make build` remains the translator build entry point.
+The development environment is declared in `flake.nix`, with one NixOS 26.05
+nixpkgs input pinned by `flake.lock` for compiler tools and every Lisp candidate.
+The OCaml 4.14 package scope is retained; Camlp5 is explicitly source-pinned to
+8.02.01 for the vendored grammar and Num to 1.5. These overrides do not retain
+an old NixOS package set. `HOLAI_TOOLCHAIN_VERSIONS` exports actual package
+versions. `make build` remains the translator build entry point.
 The shell exports `CAMLPLIB` and `STREAMLIB`; compiler wrappers add Num's include
 directory to support existing direct `ocamlc nums.cma` calls without migrating
 callers to `ocamlfind`. `CAML_LD_LIBRARY_PATH` exposes Num's runtime stub.
-The aarch64-linux shell passed a forced translator build, bytecode/native Num
-and SBCL execution, and `make release`: 46 inputs, 1,124 differential rows,
-51 production files with zero diagnostics, and 94 identical clean-generated
-files. SBCL is 2.3.9. The other three declared platforms were evaluated only.
-These checks do not remeasure the historical timing results elsewhere here.
+The previous nixos-23.11 profile supplied OCaml 4.14.2/Camlp5 8.02.01 and
+passed aarch64-linux translator, Num and SBCL execution plus `make release`:
+46 inputs, 1,124 differential rows, 51 production files with zero diagnostics,
+and 94 identical clean-generated files. Its SBCL was 2.3.9; other platforms
+were evaluated only. Those measurements and the previous 25.05 host measurements
+remain historical; they do not remeasure the timing results elsewhere here.
+The current 26.05 profile separately passed local ARM64 Linux flake checks,
+a forced fresh translator build and ordinary release (293.62 seconds for the
+combined flake-check/release invocation). Its packages are OCaml 4.14.4,
+Camlp5 8.02.01, Num 1.5, camlp-streams 5.0.1, SBCL 2.6.4, ECL 26.5.5,
+ABCL 1.9.3 and CLISP 2.49.95.
 
-The current portability matrix keeps that compiler/SBCL/ECL package source and
-adds the reference nix-common-lisp nixpkgs revision independently. Candidate
-availability is filtered by package evaluation, architecture and broken status
-and recorded explicitly, separately from full compatibility verification.
+The current portability matrix uses the same 26.05 package source throughout.
+Candidate availability is filtered by package evaluation, architecture, broken
+status and implemented runtime adapter, with explicit exclusion reasons.
+Only SBCL/ECL/ABCL/CLISP adapters are implemented; package availability alone
+does not select CCL/MKCL/CMUCL/Clasp. Every shell requires usable SBCL.
 `HOLAI_LISPS` selects hosts, with SBCL mandatory for full-core verification.
 Ordinary matrix phases run the full SBCL suite and the additional hosts'
 120-second-per-process runtime/translated-fixture compatibility profiles.
 All selected profiles gate release, but compatibility is not a full-core claim.
 Only SBCL supplies full oracle/registry/PROOF and cold 52-unit inferred-ASDF
 evidence by default; additional-host full-core runs are explicitly optional.
+Release packaging compares observed host versions and resolved executables with
+`HOLAI_LISP_VERSIONS`/`HOLAI_LISP_EXECUTABLES` exported by the pinned shell;
+the CLISP source-version prefix excludes its separately recorded build details.
+This replaces the obsolete ECL 21.2.1-only version gate without accepting
+arbitrary host versions. Run `make release` inside `nix develop`.
+
+The SHA-pinned, read-only GitHub Actions workflow runs `nix flake check` and
+ordinary `make release` independently on aarch64-linux, aarch64-darwin and
+x86_64-linux. Each job retains its own report/log/source-archive artifact even
+on failure; reports from different platforms are never merged. Additional-host
+full-core work remains opt-in, not CI. Local all-three-platform evaluation
+(`--all-systems --no-build`) and actionlint 1.7.12 passed; this is configuration
+evidence, not hosted execution. Runtime validation of the current pin is local
+ARM64 Linux only; Darwin/x86 runtime and all hosted Actions results remain
+unobserved. Flake checks exercise ASDF startup only, not the production runtime;
+ordinary release exercises the actual runtime.
 
 Use Camlp5's **MLast AST**, not a regular-expression approximation and not an
 OCaml parser that cannot recognize HOL Light syntax. Separate:
@@ -3198,9 +3221,9 @@ claim. Documentation-only repackaging does not require repeating initialization.
 
 ## 38. Common Lisp host portability
 
-The currently available hosts are SBCL, nixpkgs-locked ECL 21.2.1, ABCL and
-CLISP. Their ordinary correctness profiles deliberately differ: SBCL runs the
-full 46-file native/OCaml differential suite and release's cold diagnostics;
+The implemented hosts are SBCL, ECL, ABCL and CLISP, selected when their package
+is usable on the target platform. Their ordinary correctness profiles differ:
+SBCL runs the full 46-file native/OCaml differential suite and release's cold diagnostics;
 every selected additional host runs runtime plus translated-fixture compatibility.
 Compatibility is not full HOL Light initialization or a full-core verified claim.
 Production algorithms use ANSI Common Lisp/UIOP; the only host adapters are
@@ -3243,6 +3266,13 @@ No full-core theorem/registry/PROOF count is inferred from these checks.
 For SIGINT, two signals must actually become Sys.Break across disabling and
 re-enabling catch-break; after disabling it again, the third must terminate
 through restored OS SIG_DFL with exit code -2. Readiness alone is insufficient.
+ECL 26.5.5's weak-storage regression uses a native-compiled creator and native
+`GC_clear_stack` before the fixed pair of `SI:GC` calls, preserving all 28
+assertions rather than adding retries or weakening collection checks.
+Its source proclaims `EXT:CATCH-SIGNAL` to return NULL, although the C
+implementation returns T. Default restoration therefore uses its side effect
+only, restoring real SIG_DFL without consuming that contradictory return value.
+The current ECL run observed both catches, re-enable and third-signal OS exit -2.
 SBCL's cold cache must compile/load all 52 unique production pathnames in
 manifest order, with 47 genuine inferred components. Compiler instrumentation
 scopes diagnostics to actual ASDF COMPILE-OP boundaries. Load/initialization
@@ -3290,9 +3320,9 @@ SBCL-only scratch aid and is never a release prerequisite.
 
 ### Measured ordinary profiles
 
-Current implementation-tagged reports record passing SBCL full-core and
-ECL/ABCL/CLISP runtime-fixture profiles. SBCL executed all 46 inputs and eleven
-fixtures, passing 128 native checks, 69 PROOF checks, 46 structural pattern
+The retained previous-distribution implementation-tagged reports record passing
+SBCL full-core and ECL/ABCL/CLISP runtime-fixture profiles. SBCL executed all 46
+inputs and eleven fixtures, passing 128 native checks, 69 PROOF checks, 46 structural pattern
 checks, 28 defunc protocol checks, 84 OPTIONAL checks, 16 tuple-list checks and
 1,816 standard Random checks. Its 1,149 differential rows comprise 1,146
 literal-exact comparisons, two generated-name structural registry comparisons

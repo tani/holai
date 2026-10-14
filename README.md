@@ -26,19 +26,37 @@ make release           # Add SBCL cold diagnostics, validation and source ZIP
 ```
 
 For a one-shot release: `nix develop path:. --command make release`.
-The shell pins OCaml 4.14.2, Camlp5 8.02.01, camlp-streams 5.0.1 and Num 1.5.
-`flake.lock` pins the original nixos-23.11 SBCL/ECL source and the additional
-nix-common-lisp nixos-25.05 source.
+`flake.lock` pins one [NixOS 26.05](https://nixos.org/download/) package set for
+the compiler and all Lisp hosts. The OCaml 4.14 profile retains explicit
+Camlp5 8.02.01 and Num 1.5 source pins for the vendored HOL Light grammar.
+`HOLAI_TOOLCHAIN_VERSIONS` reports the exact compiler/library package versions.
 
-On ARM64 Linux, the runnable packages are **SBCL, ECL, ABCL and CLISP**.
-`HOLAI_LISPS` selects hosts; `HOLAI_LISP_AVAILABILITY` records all eight
-candidates and exclusion reasons. SBCL is mandatory for the full 46-file/OCaml
-differential suite and release's 52-unit cold diagnostics. Every selected
-additional host must pass the **runtime-fixtures** compatibility profile, with
-120 seconds per process. Compatibility does **not** verify its full HOL core.
-Measured profiles passed: SBCL full core and ECL/ABCL/CLISP runtime fixtures.
+The shell selects **SBCL** plus available **ECL, ABCL and CLISP** packages for
+each platform. `HOLAI_LISPS` selects hosts; `HOLAI_LISP_AVAILABILITY` records
+all eight candidates and package/platform/broken/unsupported-adapter exclusions.
+SBCL is mandatory for the full 46-file/OCaml differential suite and release's
+52-unit cold diagnostics. Every selected additional host must pass the
+**runtime-fixtures** compatibility profile, with 120 seconds per process.
+Compatibility does **not** verify its full HOL core. Release packaging checks
+observed versions and executable bindings against `HOLAI_LISP_VERSIONS` and
+`HOLAI_LISP_EXECUTABLES` exported by the pinned shell, not arbitrary host tools.
+The current NixOS 26.05 profile passed locally on ARM64 Linux: flake checks,
+a forced fresh translator compiler build and ordinary `make release`, including
+SBCL full-core verification and ECL/ABCL/CLISP runtime-fixture compatibility.
+The shell supplies OCaml 4.14.4, Camlp5 8.02.01, Num 1.5, camlp-streams 5.0.1,
+SBCL 2.6.4, ECL 26.5.5, ABCL 1.9.3 and CLISP 2.49.95.
 See [DESIGN §38](DESIGN.md#38-common-lisp-host-portability) for exact coverage,
 host limitations and retained timeout evidence.
+
+GitHub Actions runs `nix flake check` and ordinary `make release` on
+**aarch64-linux, aarch64-darwin and x86_64-linux**, using each platform's selected
+hosts. Actions are commit-SHA pinned, repository permissions are read-only,
+and platform-specific reports/logs/source ZIPs are uploaded even on failure.
+No additional-host full-core run is part of CI. All three platform flake
+evaluations (`--all-systems --no-build`) and actionlint 1.7.12 passed locally.
+Flake checks test ASDF startup only, not the production runtime; release
+exercises the actual runtime. Hosted Actions results remain unobserved,
+including Darwin/x86 runtime correctness; local runtime evidence is ARM64 Linux only.
 
 Expensive additional-host full-core tests and cold diagnostics are opt-in:
 `HOLAI_LISPS=ecl,abcl,clisp make test-full-core` (3600 seconds per full-core

@@ -1,43 +1,55 @@
 {
   description = "Holai OCaml/Camlp5 and Common Lisp development shell";
 
-  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-23.11";
-  inputs.lispPkgs.url = "github:NixOS/nixpkgs/cd2812de55cf87df88a9e09bf3be1ce63d50c1a6";
+  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
 
-  outputs = { self, nixpkgs, lispPkgs, ... }:
+  outputs = { self, nixpkgs, ... }:
     let
       systems = [
         "x86_64-linux"
         "aarch64-linux"
-        "x86_64-darwin"
         "aarch64-darwin"
       ];
     in
     {
       devShells = nixpkgs.lib.genAttrs systems (system:
         let
-          pkgs = nixpkgs.legacyPackages.${system};
+          # Allow metadata inspection of broken packages, never their selection.
+          pkgs = import nixpkgs { inherit system; config.allowBroken = true; };
           ocamlPackages = pkgs.ocaml-ng.ocamlPackages_4_14;
-          # Inspect broken-package metadata without making those packages runnable.
-          newer = import lispPkgs { inherit system; config.allowBroken = true; };
           candidates = [ "abcl" "sbcl" "ecl" "ccl" "mkcl" "clisp" "cmucl_binary" "clasp-common-lisp" ];
-          source = id: if builtins.elem id [ "sbcl" "ecl" ] then pkgs else newer;
+          adapters = [ "sbcl" "ecl" "abcl" "clisp" ];
           status = id:
-            let attempt = builtins.tryEval ((source id).${id});
+            let attempt = builtins.tryEval pkgs.${id};
             in if !attempt.success then { available = false; reason = "Package attribute missing or evaluation failed"; }
             else if !(pkgs.lib.meta.availableOn pkgs.stdenv.hostPlatform attempt.value)
               then { available = false; reason = "Unsupported platform ${system}"; }
             else if attempt.value.meta.broken or false
-              then { available = false; reason = if id == "mkcl" && system == "aarch64-linux"
-                then "Marked broken; actual allowBroken MKCL1.1.11 build failed: tinycc/lib-arm64.c:17 implicit declaration __arm64_clear_cache"
-                else "Package marked broken in pinned nixpkgs"; }
+              then { available = false; reason = "Package marked broken in pinned nixpkgs"; }
+            else if !(builtins.elem id adapters)
+              then { available = false; reason = "Package available; no implemented runtime adapter"; }
             else { available = true; reason = null; };
           available = builtins.filter (id: (status id).available) candidates;
-          inherit (ocamlPackages) ocaml camlp5;
+          inherit (ocamlPackages) ocaml;
           streams = ocamlPackages.camlp-streams;
+          # pa_j_4.xx_8.02.ml requires this parser API, not nixpkgs' newer Camlp5.
+          camlp5 = ocamlPackages.camlp5.overrideAttrs (_: {
+            version = "8.02.01";
+            src = pkgs.fetchFromGitHub {
+              owner = "camlp5";
+              repo = "camlp5";
+              rev = "8.02.01";
+              hash = "sha256-qSA2559vqWLU+0ns7LPUGI2K5f8sfu+QQ0sCH8sR6To=";
+            };
+            propagatedBuildInputs = [ streams ];
+            preConfigure = ''
+              configureFlagsArray=(--strict --libdir $out/lib/ocaml/${ocaml.version}/site-lib)
+              patchShebangs ./config/find_stuffversion.pl etc/META.pl
+            '';
+            postInstall = "";
+          });
 
-          # nixpkgs ships Num 1.1; keep the project's Num 1.5 prerequisite.
-          # Its modern installation target replaces the old nixpkgs patch.
+          # Keep the project's Num 1.5 prerequisite and modern installation target.
           num = ocamlPackages.num.overrideAttrs (_: {
             version = "1.5";
             src = pkgs.fetchFromGitHub {
@@ -47,6 +59,7 @@
               hash = "sha256-60yT7BN+E93LJWKlO3v55Lbb11pNLPzdf1wrNXkLtmk=";
             };
             patches = [ ];
+            postPatch = "";
             installTargets = [ "findlib-install" ];
           });
 
@@ -67,7 +80,7 @@
           };
         in
         {
-          default = pkgs.mkShell {
+          default = assert (status "sbcl").available; pkgs.mkShell {
             packages = [
               compiler
               ocamlPackages.findlib
@@ -83,7 +96,7 @@
               })
               pkgs.python3
               pkgs.gnumake
-            ] ++ map (id: (source id).${id}) available;
+            ] ++ map (id: pkgs.${id}) available;
 
             CAMLPLIB = "${siteLib camlp5}/camlp5";
             STREAMLIB = "${siteLib streams}/camlp-streams";
@@ -92,6 +105,18 @@
             HOLAI_LISP_AVAILABILITY = builtins.toJSON (builtins.listToAttrs (map (id: {
               name = id; value = status id;
             }) candidates));
+            HOLAI_LISP_VERSIONS = builtins.toJSON (builtins.listToAttrs (map (id: {
+              name = id; value = pkgs.${id}.version;
+            }) available));
+            HOLAI_LISP_EXECUTABLES = builtins.toJSON (builtins.listToAttrs (map (id: {
+              name = id; value = "${pkgs.${id}}/bin/${id}";
+            }) available));
+            HOLAI_TOOLCHAIN_VERSIONS = builtins.toJSON {
+              ocaml = ocaml.version;
+              camlp5 = camlp5.version;
+              camlp-streams = streams.version;
+              num = num.version;
+            };
 
             # Direct bytecode execution needs Num's dynamically loaded stub.
             # Keep the wrapped compiler ahead of transitively supplied raw OCaml.
@@ -125,14 +150,13 @@
       checks = nixpkgs.lib.genAttrs systems (system:
         let
           pkgs = nixpkgs.legacyPackages.${system};
-          newer = lispPkgs.legacyPackages.${system};
           ids = nixpkgs.lib.splitString "," self.devShells.${system}.default.HOLAI_LISPS;
           binaries = { cmucl_binary = "lisp"; clasp-common-lisp = "clasp"; };
           evalFlags = { clisp = "-x"; cmucl_binary = "-eval"; mkcl = "-eval"; };
         in builtins.listToAttrs (map (id: {
           name = "asdf-${id}";
           value = pkgs.runCommand "holai-asdf-${id}" { nativeBuildInputs = [
-            (if builtins.elem id [ "sbcl" "ecl" ] then pkgs.${id} else newer.${id})
+            pkgs.${id}
           ]; } ''
             export HOME=$TMPDIR
             ${binaries.${id} or id} ${evalFlags.${id} or "--eval"} \

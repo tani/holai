@@ -35,7 +35,7 @@
     },
     "mkcl": {
       "available": false,
-      "reason": "Marked broken; actual allowBroken MKCL1.1.11 build failed: tinycc/lib-arm64.c:17 implicit declaration __arm64_clear_cache"
+      "reason": "Package marked broken in pinned nixpkgs"
     },
     "sbcl": {
       "available": true,
@@ -51,7 +51,7 @@
         "log": "misc/reports/implementations/abcl/compatibility-runner.log",
         "log_sha256": "9e95ecd01a6e4827f09d9608f2ab27f5c1a554f450c7d1cab827c7e1be0497e9",
         "report": "misc/reports/implementations/abcl/compatibility.json",
-        "report_sha256": "126cb21d9dfcd288ad217d67e13f7693901ad90a9d3ac6ef9da8f0572b80218f"
+        "report_sha256": "962bc3d3e245ba5990afcbca90848de32044e68ea0574a5a61815d79ae18843a"
       },
       "compatibility_passed": true,
       "status": "compatibility_passed"
@@ -81,7 +81,7 @@
         "log": "misc/reports/implementations/ecl/compatibility-runner.log",
         "log_sha256": "fb091d5c5747e074ba6780d776f5656f42eb172307a9fc634b877582c5ce91cc",
         "report": "misc/reports/implementations/ecl/compatibility.json",
-        "report_sha256": "5363125da4eb6a888849c3ff7d67e11f2e5b4672be1b8be01c5a38b127cc74b6"
+        "report_sha256": "cffd8b4d562a0aa5e2557781de014c9c31eaf5868ce7cbc07b1d37c6bd59142b"
       },
       "compatibility_passed": true,
       "status": "compatibility_passed"
@@ -93,7 +93,7 @@
     },
     "mkcl": {
       "status": "unavailable",
-      "reason": "Marked broken; actual allowBroken MKCL1.1.11 build failed: tinycc/lib-arm64.c:17 implicit declaration __arm64_clear_cache",
+      "reason": "Package marked broken in pinned nixpkgs",
       "full_core_verified": false
     },
     "clisp": {
@@ -104,7 +104,7 @@
         "log": "misc/reports/implementations/clisp/compatibility-runner.log",
         "log_sha256": "f96755e3965ff6c1e8200ae3dcb5a8d07e272f5f775c1489adfc5765580ceeef",
         "report": "misc/reports/implementations/clisp/compatibility.json",
-        "report_sha256": "f51d5a57298216b888f6716a797ad67d6d7a318653e12cce1b0c71bea791e87b"
+        "report_sha256": "0bc2d53f030e71799898c9a25ef822cb520aaab1e4de1c4a4c5845bbe5ef6cc5"
       },
       "compatibility_passed": true,
       "status": "compatibility_passed"

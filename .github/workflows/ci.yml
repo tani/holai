@@ -1,0 +1,69 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  release:
+    name: Release and Lisp compatibility (${{ matrix.platform }})
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: aarch64-linux
+            runner: ubuntu-24.04-arm
+          - platform: aarch64-darwin
+            runner: macos-15
+          - platform: x86_64-linux
+            runner: ubuntu-24.04
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 45
+    steps:
+      - name: Check out sources
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+
+      - name: Install Nix
+        uses: cachix/install-nix-action@448cde739abec1eaf0646249e3d25bb8d9bc7702 # v31
+        with:
+          extra_nix_config: |
+            experimental-features = nix-command flakes
+
+      - name: Verify runner architecture
+        env:
+          EXPECTED_NIX_SYSTEM: ${{ matrix.platform }}
+        run: |
+          actual_system="$(nix eval --raw --impure --expr builtins.currentSystem)"
+          if [ "$actual_system" != "$EXPECTED_NIX_SYSTEM" ]; then
+            echo "Expected $EXPECTED_NIX_SYSTEM, got $actual_system" >&2
+            exit 1
+          fi
+
+      - name: Check flake
+        run: nix flake check path:.
+
+      - name: Build and verify release
+        run: nix develop path:. --command make release
+
+      - name: Upload release evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: release-evidence-${{ matrix.platform }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            misc/reports/implementation-matrix.json
+            misc/reports/implementations/
+            misc/reports/clean-build.json
+            dist/*.zip
+          retention-days: 7
+          if-no-files-found: warn

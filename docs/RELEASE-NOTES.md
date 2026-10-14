@@ -1,12 +1,57 @@
 # Holai 1.0.0-percent-names
 
-## Native implementation matrix (measured profile passes)
+## NixOS 26.05 and platform CI
 
-The original compiler and SBCL/ECL pins are retained. A separately pinned
-nix-common-lisp reference source supplies additional candidates ABCL, CLISP,
-CCL, MKCL, CMUCL and Clasp. Packages are filtered by evaluability, platform and
-broken metadata with explicit exclusion reasons. The current aarch64-linux
-default matrix is SBCL/ECL/ABCL/CLISP, with measured profile passes as below.
+The development shell now uses one locked NixOS 26.05 nixpkgs input for all
+compiler tools and Lisp packages, removing the old 23.11/25.05 split. The
+OCaml 4.14 scope is retained with explicit Camlp5 8.02.01 and Num 1.5 source
+overrides for the existing grammar/compiler contract; pinned HOL inputs,
+the 52 production paths, 94 generated outputs and corpus boundaries are unchanged.
+Exact toolchain versions and host package versions/executable bindings are
+exported by the shell. Release validation compares actual host identities
+against those pins rather than hardcoding the previous ECL 21.2.1 version.
+
+The default host set is SBCL plus usable ECL/ABCL/CLISP packages on each target;
+the other four candidates remain explicitly excluded if no runtime adapter is
+implemented, even when a package exists. SBCL full-core verification remains
+mandatory, while each selected additional host uses the bounded 120-second
+runtime-fixture profile, never an implied full-core pass.
+
+GitHub Actions uses SHA-pinned actions and read-only repository permissions.
+Independent aarch64-linux, aarch64-darwin and x86_64-linux jobs run
+`nix flake check` and ordinary `make release`; platform-specific logs, reports
+and source archives are uploaded even when a job fails. Additional-host
+full-core runs are not added to CI. The current 26.05 profile passed locally on
+ARM64 Linux: flake checks, a forced fresh translator compiler build, and
+ordinary release with all four selected hosts (293.62 seconds for the combined
+flake-check/release invocation). Packages were OCaml 4.14.4, Camlp5 8.02.01,
+Num 1.5, camlp-streams 5.0.1, SBCL 2.6.4, ECL 26.5.5, ABCL 1.9.3 and
+CLISP 2.49.95. All three platform evaluations (`--all-systems --no-build`)
+and actionlint 1.7.12 passed locally. Flake checks test ASDF startup only;
+release tests the production runtime. Three-platform CI is configured, but
+hosted Actions results and Darwin/x86 runtime results remain unobserved.
+
+The current implementation-tagged reports under `misc/reports/implementations/`
+record 128 SBCL native checks, 69 PROOF DSL checks and 1,149 differential
+observations, with 94 identical clean-generated outputs and 55
+unchanged input pins. The source archive contained 428 payload files before
+these final documentation edits; no fixed archive byte size is asserted.
+
+ECL 26.5.5 weak-GC coverage retains all 28 assertions: a native-compiled
+creator and native `GC_clear_stack` precede the fixed two `SI:GC` calls.
+`EXT:CATCH-SIGNAL` is proclaimed NULL in ECL source while its C implementation
+returns T; restoration now relies only on its side effect to restore real
+SIG_DFL, not that contradictory return value. The actual interrupt test observed
+two catches across re-enable and third-signal OS-default termination (exit -2).
+The 23.11/25.05 results below remain historical, not current-platform evidence.
+
+## Previous distribution: native implementation matrix (measured profile passes)
+
+The previous compiler and SBCL/ECL pins were retained for that measured run.
+A separately pinned nix-common-lisp reference source supplied additional
+candidates ABCL, CLISP, CCL, MKCL, CMUCL and Clasp. Package selection checked
+evaluability, platform and broken metadata with explicit exclusion reasons.
+Its aarch64-linux matrix was SBCL/ECL/ABCL/CLISP, with measured passes below.
 `HOLAI_LISPS` selects hosts; only SBCL is required for the full-core profile.
 Every selected additional host must pass the bounded `runtime-fixtures`
 compatibility profile, with a 120-second guard per process. Its independently
@@ -68,7 +113,7 @@ corpus has 1,149 rows: 1,146 literal-exact, two structural registry comparisons
 and one Random property row; raw streams are unequal. Historical seeded
 SBCL/OCaml reports remain unchanged.
 
-Current SBCL full-core verification passed 128 native and 69 PROOF checks,
+The previous-distribution SBCL full-core verification passed 128 native and 69 PROOF checks,
 with unchanged initial registries 22/303/263/3 and the original three axioms.
 Initialization has 5,519 OCaml / 5,517 SBCL rows with only the two existing
 OCaml-only messages. Map audits cover 194,839 core / 207,058 fixture-inclusive

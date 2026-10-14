@@ -1,3 +1,3 @@
-;;; Loading #P"/nix/store/li8033azc46v0ilvb1hxbbg4x7wdkdfz-ecl-21.2.1/lib/ecl-21.2.1/asdf.fas"
-HOLAI_HOST_VERSION 21.2.1
+;;; Loading #P"/nix/store/57zcf17cf7kcb5i7dl1hvnwr0xg9fzfs-ecl-26.5.5/lib/ecl-26.5.5/asdf.fas"
+HOLAI_HOST_VERSION 26.5.5
 HOLAI_HOST_TYPE ECL
