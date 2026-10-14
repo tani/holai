@@ -2263,7 +2263,6 @@
     lambdac
     labelsc
     function-value
-    fletc
     failwith
     defunc
     =)
@@ -6809,15 +6808,15 @@
         (rconv_0 (GEN_REWRITE_CONV #'I (cl:cons (#`CONJUNCT1 pth) nil)))
         (rconv_1 (GEN_REWRITE_CONV #'I (cl:cons (#`CONJUNCT2 pth) nil))))
       (cl:declare (cl:ignorable qconv_0 qconv_1 rconv_0 rconv_1))
-      (holai.runtime:labelsc
-        ((:recursive 0 EXISTS_HAS_SIZE_AND_CONV (tm)
+      (labelsc
+        ((EXISTS_HAS_SIZE_AND_CONV (tm)
           (ORELSEC
             qconv_0
             (THENC
               (THENC (BINDER_CONV (#`LAND_CONV (RAND_CONV num_CONV))) qconv_1)
               (BINDER_CONV #'EXISTS_HAS_SIZE_AND_CONV))
             tm))
-          (:recursive 1 NOT_IN_INSERT_CONV (tm)
+          (NOT_IN_INSERT_CONV (tm)
             (ORELSEC
               (ORELSEC
                 (THENC rconv_0 #'NOT_IN_INSERT_CONV)
@@ -12656,12 +12655,11 @@
 
 
 (defparameter new_inductive_set
-  (fletc ((const_of_var (v) (mk_mconst (tuple (name_of v) (type_of v)))))
+  (labelsc ((const_of_var (v) (mk_mconst (tuple (name_of v) (type_of v)))))
     (let*
       ((comb_all
         (labelsc
-          ((f
-            (n tm arg~18097)
+          ((f (n tm arg~18097)
             (match arg~18097
               (nil tm)
               ((cl:cons ty tys)
@@ -12678,9 +12676,9 @@
               (f 0 tm tys)))))
         (mk_eqin (o (#`REWR_CONV (#`GSYM IN)) comb_all)))
       (cl:declare (cl:ignorable comb_all mk_eqin))
-      (holai.runtime:labelsc
-        ((:nonrecursive 0 transf (conv) (o (o rhs #'concl) conv))
-          (:nonrecursive 1 remove_in_conv (ptm)
+      (labelsc
+        ((transf (conv) (o (o rhs #'concl) conv))
+          (remove_in_conv (ptm)
             (let ((rconv (#`REWR_CONV (SYM (#`mk_eqin ptm)))))
               (cl:declare (cl:ignorable rconv))
               (lambdac (tm)
@@ -12696,9 +12694,8 @@
               (o (o #'transf ONCE_DEPTH_CONV) FIRST_CONV)
               (holai.lib:map #'remove_in_conv))))
           (cl:declare (cl:ignorable remove_in_transf))
-          (fletc
-            ((rule_head
-              (tm)
+          (labelsc
+            ((rule_head (tm)
               (let*
                 ((tm% (holai.runtime:snd (#`strip_forall tm)))
                   (tm

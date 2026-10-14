@@ -344,7 +344,6 @@
     guard
     function-value
     fst
-    fletc
     failwith
     Failure
     deref
@@ -553,8 +552,7 @@
 
 (defparameter variables
   (labelsc
-    ((vars
-      (arg~253)
+    ((vars (arg~253)
       (match arg~253
         ((tuple acc tm)
           (if (is_var tm)
@@ -573,8 +571,7 @@
 
 (defparameter subst
   (labelsc
-    ((ssubst
-      (ilist tm)
+    ((ssubst (ilist tm)
       (if (= ilist nil)
         tm
         (handler-case
@@ -751,8 +748,7 @@
 
 (defparameter find_terms
   (labelsc
-    ((accum
-      (tl% p tm)
+    ((accum (tl% p tm)
       (let ((tl%% (if (#`p tm) (insert tm tl%) tl%)))
         (cl:declare (cl:ignorable tl%%))
         (if (is_abs tm)
@@ -882,8 +878,7 @@
 
 (defparameter dest_numeral
   (labelsc
-    ((dest_num
-      (tm)
+    ((dest_num (tm)
       (if
         (handler-case
           (= (fst (dest_const tm)) "_0")
@@ -938,16 +933,16 @@
 (defparameter is_gabs (can dest_gabs))
 
 (defparameter mk_gabs
-  (holai.runtime:labelsc
-    ((:nonrecursive 0 mk_forall (arg~1213)
+  (labelsc
+    ((mk_forall (arg~1213)
       (match arg~1213
         ((tuple v t%)
           (let ((cop (mk_const (tuple "!" (cl:cons (tuple (type_of v) aty) nil)))))
             (cl:declare (cl:ignorable cop))
             (mk_comb (tuple cop (mk_abs (tuple v t%))))))))
-      (:nonrecursive 1 list_mk_forall (arg~1239)
+      (list_mk_forall (arg~1239)
         (match arg~1239 ((tuple vars bod) (itlist (curry #'mk_forall) vars bod))))
-      (:nonrecursive 2 mk_geq (arg~1252)
+      (mk_geq (arg~1252)
         (match arg~1252
           ((tuple t1 t2)
             (let ((p (mk_const (tuple "GEQ" (cl:cons (tuple (type_of t1) aty) nil)))))
@@ -1034,8 +1029,7 @@
 
 (defparameter mk_finty
   (labelsc
-    ((finty
-      (n)
+    ((finty (n)
       (if (= n num_1)
         (mk_type (tuple "1" nil))
         (mk_type
@@ -1059,8 +1053,7 @@
 
 (defparameter make_args
   (labelsc
-    ((margs
-      (n s avoid tys)
+    ((margs (n s avoid tys)
       (if (= tys nil)
         nil
         (let
@@ -1080,8 +1073,7 @@
 
 (defparameter find_path
   (labelsc
-    ((find_path%
-      (p tm)
+    ((find_path% (p tm)
       (if (#`p tm)
         nil
         (if (is_abs tm)
@@ -1097,8 +1089,7 @@
 
 (defparameter follow_path
   (labelsc
-    ((follow_path%
-      (s tm)
+    ((follow_path% (s tm)
       (match s
         (nil tm)
         ((cl:cons "l" t%) (follow_path% t% (rator tm)))
@@ -1113,8 +1104,7 @@
 
 (defparameter atoms
   (labelsc
-    ((atoms%
-      (acc tm)
+    ((atoms% (acc tm)
       (match tm
         ((cl:or
           (cl:or

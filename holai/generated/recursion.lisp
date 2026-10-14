@@ -121,10 +121,10 @@
     raise
     match
     lambdac
+    labelsc
     ignore-value
     function-value
     fst
-    fletc
     Failure
     deref
     assign
@@ -143,8 +143,8 @@
 
 
 (defparameter prove_recursive_functions_exist
-  (holai.runtime:labelsc
-    ((:nonrecursive 0 prove_raw_recursive_functions_exist (ax tm)
+  (labelsc
+    ((prove_raw_recursive_functions_exist (ax tm)
       (let*
         ((rawcls (#`conjuncts tm))
           (spcls (map (o (function-value #'snd 1) strip_forall) rawcls))
@@ -207,7 +207,7 @@
                         (rixth (itlist #'SIMPLE_EXISTS ufns (end_itlist CONJ rixths))))
                       (cl:declare (cl:ignorable ixtm ixths rixths rixth))
                       (PROVE_HYP ixth (itlist #'SIMPLE_CHOOSE urfns rixth)))))))))))
-      (:nonrecursive 1 canonize (t%)
+      (canonize (t%)
         (match (#`strip_forall t%)
           ((tuple avs bod)
             (match (dest_eq bod)
@@ -227,7 +227,7 @@
                                 (list_mk_forall (tuple fvs (#`mk_eq (tuple l% r%%)))))))
                           (cl:declare (cl:ignorable fvs def))
                           (#`GENL avs (#`RIGHT_BETAS vargs (SPECL fvs def)))))))))))))
-      (:nonrecursive 2 prove_canon_recursive_functions_exist (ax tm)
+      (prove_canon_recursive_functions_exist (ax tm)
         (let*
           ((ths (map #'canonize (#`conjuncts tm)))
             (atm (#`list_mk_conj (map (o #'hd #'hyp) ths)))
@@ -237,7 +237,7 @@
             (evs (fst (#`strip_exists (concl eth)))))
           (cl:declare (cl:ignorable ths atm aths rth eth evs))
           (PROVE_HYP eth (itlist #'SIMPLE_CHOOSE evs (itlist #'SIMPLE_EXISTS evs rth)))))
-      (:nonrecursive 3 reshuffle (fn args acc)
+      (reshuffle (fn args acc)
         (let ((args% (uncurry (C (function-value #'append 2)) (partition #'is_var args))))
           (cl:declare (cl:ignorable args%))
           (if (= args args%)
@@ -259,7 +259,7 @@
                     (tuple fn (list_mk_abs (tuple gvs (list_mk_comb (tuple fn% gvs%))))))))
               (cl:declare (cl:ignorable gvs gvs% lty fn% def))
               (cl:cons (ASSUME def) acc)))))
-      (:nonrecursive 3 scrub_def (t% th)
+      (scrub_def (t% th)
         (match (dest_eq t%)
           ((tuple l r%)
             (#`MP (INST% (cl:cons (tuple r% l) nil) (#`DISCH t% th)) (REFL r%))))))
@@ -290,9 +290,8 @@
 (defparameter new_recursive_definition
   (let ((the_recursive_definitions (ref nil)))
     (cl:declare (cl:ignorable the_recursive_definitions))
-    (fletc
-      ((find_redefinition
-        (tm th)
+    (labelsc
+      ((find_redefinition (tm th)
         (let ((th% (#`PART_MATCH #'I th tm)))
           (cl:declare (cl:ignorable th%))
           (progn (ignore-value (#`PART_MATCH #'I th% (concl th))) th%))))

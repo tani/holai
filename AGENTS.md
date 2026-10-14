@@ -310,35 +310,67 @@ readable OCaml-to-Lisp translation, even when argument evaluation order differs.
   Keep the marker isolated after observation capture/std_formatter restoration
   and retain11 fixture/51 production components. Combined DESIGN34/35 release
   succeeded; earlier measurements above remain historical.
-- DESIGN35 staged local named-function display: combine only adjacent
-  already-lowered local-let Origins producing fletc/labelsc into one labelsc
-  list of (:nonrecursive stage name params body) or
-  (:recursive stage name params body) entries. Stage boundaries are original
-  source groups, not permission to make every printed function recursive.
-  Macroexpansion folds stages back into the original FLETC/LABELSC scopes;
-  widening the whole list to LABELS can capture old references under sequential
-  shadowing with reused emitted symbols. Keep ordinary untagged macros intact.
-  LET values/modules/match/lambda/annotations are barriers. Preserve lowering,
-  binder/reference/import order and binding identity; retain removed let
-  Origins with coincident spans and all function/body Origins. No dispatcher,
-  new initialization or evaluation-order change belongs to this flattening.
-  DESIGN34's late reader-head acquisition is separate; direct named calls,
-  #' references and foreign partial adapters remain unchanged. Runtime-first
-  compile/load supplies both the reader and staged macro. Staged headers use
-  three leading fields and keep tag/stage/name/params together when they fit90
-  columns, then place the body on a new line. Untagged macro syntax is still
-  required, not a compatibility alias.
-  Final nix develop path:. --command make release succeeded217.72s:
-  46inputs/122native/69PROOF/27protocol/84OPTIONAL/16tuple/46pattern;
-  1139matching rows(1132serialized+7side effects), including one computed-head
-  and six language-group rows. Audited194839core/205818inclusive maps retain
-  all scope Origins with coincident merged spans;10rejections preserve output.
-  51fresh units zero errors/warnings/style warnings,94clean outputs identical,
-  55pins unchanged. Initial22/303/263/3, original3axioms and5519/5517 rows
-  with the known2message difference remain. Generated core Lisp6174070bytes
-  is an inventory, not a performance claim. Actual smokes cover closed identity,
-  all six language groups and staged duplicate names/parallel outer RHS/
-  captured partials/mutual recursion. Do not claim every maximum indentation
-  decreased. The user authorizes committing and pushing this reader/staged-
-  function indentation cutover to tani/holai main after successful release.
-  Do not claim the push completed before it has actually succeeded.
+- DESIGN36 plain local named-function groups supersede DESIGN35's historical
+  display. Emit every generated local function group, isolated or adjacent,
+  nonrecursive or recursive, as ordinary labelsc (name (params) body) entries.
+  Combine adjacent source groups into one genuine CL:LABELS scope; no mode
+  keywords/group numbers, decoder, reconstructed nesting or compatibility shim.
+  Handwritten fletc retains its ordinary nonrecursive outer-RHS API.
+  Allocate unique normalized function targets across the whole combined chain,
+  including earlier names hidden by shadows and case collisions. Reserve all
+  visible target logicals at chain entry until chain exit, plus every allocated
+  member. A later binding must not capture an earlier RHS's outer reference.
+  Use scoped allocator reservations, never fake source environment bindings;
+  apply the existing local percent suffix allocator without changing source
+  spellings or binding IDs. Lower in source order with original RHS environments:
+  preceding env for nonrecursive/parallel RHSs, own recursive group for rec RHSs.
+  Never give earlier RHSs the union of the combined chain's source bindings.
+  Scalar LET values/modules/match/lambda/annotations are barriers. Preserve
+  lowering, binder/reference/import order, recursive observers and source IDs;
+  retain all let Origins with coincident spans and all function/body Origins.
+  Keep once-only initialization, captures, partials and physical function identity.
+  No dispatcher, new initialization, algorithm or evaluation-order rewrite.
+  DESIGN34's late reader-head acquisition is separate and unchanged; retain
+  direct named calls, standard #' references and foreign partial adapters.
+  Runtime-first compile/load still supplies the reader and ordinary macros.
+  Plain entries keep name/params together when they fit90 columns, body next.
+  Final module-inclusive DESIGN36 release succeeded218.79s via
+  nix develop path:. --command make release with OCaml4.14.2/Camlp5 8.02.01/
+  SBCL2.3.9.nixos:46inputs/122native/69PROOF/27protocol/84OPTIONAL/16tuple/
+  46pattern;1142matching rows(1135serialized+7actual side effects).
+  Existing six language-group observations remain unchanged; the three new
+  entry-reservation/repeated-shadow, case-sensitive hidden-shadow and
+  module-scope rows matched. Audited194839core/206245inclusive maps;
+  10rejections preserved output;51fresh units zero errors/warnings/style warnings;
+  94clean outputs identical,55pins unchanged,304release ZIP members verified.
+  Initial22/303/263/3, original3axioms and5519OCaml/5517SBCL initialization rows
+  with known2OCaml-only message differences remain unchanged. Generated core
+  5727348bytes after final header formatting is an inventory, not a performance
+  claim. DESIGN33/34/35 measurements and staged metadata examples remain
+  historical, not the current API or evidence for this cutover.
+  The full-release gate is satisfied; the user authorizes commit/push to
+  tani/holai main. Never claim a push before it succeeds.
+- DESIGN36 lexical-module named function declarations also use ordinary LABELSC.
+  Only immediately adjacent named declarations inside one structure combine;
+  module declarations/aliases/includes, value or mixed slots, effects and the
+  external continuation remain barriers, even when an alias has no runtime
+  output. The module combiner peels only local-module-binding Origins. RHS
+  environment snapshots and original right-fold wrapper compilation order stay
+  unchanged. Lexical global allocation reserves entry-visible names, including
+  qualified module public exports, and previously allocated targets; percent
+  collision suffixes avoid future ordinary prefixed/versioned names. Alias
+  public environments are visited once; functor captured environments are not
+  traversed. Top-level global allocation is unchanged. This prevents a new
+  local module M.f from capturing a resolved reference to an older M.f.
+  No generated FLETC calls remain; handwritten FLETC is retained. Plain local
+  definition headers keep name/parameter list together when it fits90 columns,
+  using a context-specific renderer without stage markers.
+  One added language_module_function_scope observation exercises escaped
+  closures/partials, repeated module names, sequential and parallel dependencies,
+  case shadowing, imports, aliases and once-only initialization. Together with
+  entry/case rows this gives three new matched rows and measured1142 total.
+  Separate fresh-core smoke proved an actual closed identity, passed69PROOF/
+  8ordinary function-scope cases and ran the escaped/rebound module closure/
+  partial and once-only initialization case twice with exact expected results.
+  Static search found zero generated FLETC calls or stage tags.
+  Validation and authorization are not evidence of publication.

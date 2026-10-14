@@ -2309,7 +2309,6 @@
     guard
     function-value
     fst
-    fletc
     failwith
     Failure
     defunc
@@ -3477,7 +3476,7 @@
 (defparameter mk_intconst
   (let ((cast_tm (parse_term "int_of_num")) (neg_tm (parse_term "int_neg")))
     (cl:declare (cl:ignorable cast_tm neg_tm))
-    (fletc ((mk_numconst (n) (mk_comb (tuple cast_tm (#`mk_numeral n)))))
+    (labelsc ((mk_numconst (n) (mk_comb (tuple cast_tm (#`mk_numeral n)))))
       (lambdac (x)
         (if (< x num_0) (mk_comb (tuple neg_tm (mk_numconst (- x)))) (mk_numconst x))))))
 
@@ -3535,15 +3534,15 @@
                                       (cl:cons int_pow_th (cl:cons cond_th nil))))))))))))))))))
         (REW_RULE (GEN_REWRITE_RULE DEPTH_CONV thlist)))
       (cl:declare (cl:ignorable thlist REW_RULE))
-      (holai.runtime:labelsc
-        ((:nonrecursive 0 int_tm_of_real_var (v)
+      (labelsc
+        ((int_tm_of_real_var (v)
           (match (dest_var v)
             ((tuple s ty)
               (if (= ty real_ty) (mk_comb (tuple dest (mk_var (tuple s int_ty)))) v))))
-          (:nonrecursive 1 int_of_real_var (v)
+          (int_of_real_var (v)
             (match (dest_var v)
               ((tuple s ty) (if (= ty real_ty) (mk_var (tuple s int_ty)) v))))
-          (:nonrecursive 2 INT_OF_REAL_THM1 (th)
+          (INT_OF_REAL_THM1 (th)
             (let ((newavs (subtract (frees (concl th)) (freesl (hyp th)))))
               (cl:declare (cl:ignorable newavs))
               (match (#`strip_forall (concl th))
@@ -3554,7 +3553,7 @@
                       (avs%% (map #'int_of_real_var avs)))
                     (cl:declare (cl:ignorable allavs avs% avs%%))
                     (#`GENL avs%% (#`REW_RULE (SPECL avs% (#`GENL newavs th)))))))))
-          (:recursive 3 INT_OF_REAL_THM% (th)
+          (INT_OF_REAL_THM% (th)
             (if (#`is_conj (concl th))
               (#`CONJ
                 (INT_OF_REAL_THM% (#`CONJUNCT1 th))
@@ -5340,9 +5339,8 @@
       (ISOLATE_VARIABLE
         (let ((pth (#`INT_ARITH~1 (parse_term "!a x. a = &0 <=> x = x + a"))))
           (cl:declare (cl:ignorable pth))
-          (fletc
-            ((is_defined
-              (v t%)
+          (labelsc
+            ((is_defined (v t%)
               (let ((mons (striplist (dest_binary "int_add") t%)))
                 (cl:declare (cl:ignorable mons))
                 (cl:and
@@ -5376,9 +5374,8 @@
                       (cl:declare (cl:ignorable th2))
                       (CONV_RULE (RAND_CONV (RAND_CONV INT_POLY_CONV)) th2))))))))))
     (cl:declare (cl:ignorable int_ty INT_POLYEQ_CONV ISOLATE_VARIABLE))
-    (fletc
-      ((UNWIND_POLYS_CONV
-        (tm)
+    (labelsc
+      ((UNWIND_POLYS_CONV (tm)
         (match (#`strip_exists tm)
           ((tuple vars bod)
             (let*
@@ -5393,9 +5390,8 @@
                 (th4
                   (CONV_RULE (RAND_CONV (#`REWR_CONV UNWIND_THM2)) (#`MK_EXISTS v th3))))
               (cl:declare (cl:ignorable cjs th1 eq bod% th2 th3 v vars% th4))
-              (fletc
-                ((IMP_RULE
-                  (v% v%%)
+              (labelsc
+                ((IMP_RULE (v% v%%)
                   (DISCH_ALL
                     (itlist #'SIMPLE_CHOOSE v% (itlist #'SIMPLE_EXISTS v%% (ASSUME bod))))))
                 (let
@@ -5417,13 +5413,13 @@
                   (mk_mul (mk_binop mul_tm))
                   (mk_add (mk_binop add_tm)))
                 (cl:declare (cl:ignorable dest_mul dest_add mk_mul mk_add))
-                (holai.runtime:labelsc
-                  ((:nonrecursive 0 scrub_var (v m)
+                (labelsc
+                  ((scrub_var (v m)
                     (let*
                       ((ps (striplist dest_mul m)) (ps% (subtract ps (cl:cons v nil))))
                       (cl:declare (cl:ignorable ps ps%))
                       (if (= ps% nil) one_tm (end_itlist mk_mul ps%))))
-                    (:nonrecursive 1 find_multipliers (v mons)
+                    (find_multipliers (v mons)
                       (let*
                         ((mons1 (filter (lambdac (m) (free_in v m)) mons))
                           (mons2 (map (scrub_var v) mons1)))
@@ -5444,8 +5440,8 @@
                           (cl:declare (cl:ignorable cofactors cnc))
                           (tuple cofactors cnc))))))))))
           (cl:declare (cl:ignorable isolate_monomials))
-          (holai.runtime:labelsc
-            ((:nonrecursive 0 isolate_variables (evs ps eq)
+          (labelsc
+            ((isolate_variables (evs ps eq)
               (let ((vars (filter (lambdac (v) (vfree_in v eq)) evs)))
                 (cl:declare (cl:ignorable vars))
                 (match (#`isolate_monomials vars eq)
@@ -5455,9 +5451,8 @@
                         (rs% (#`int_ideal_cofactors rs p%)))
                       (cl:declare (cl:ignorable rs rs%))
                       (tuple eq (zip (fst (chop_list (#`length qs) rs%)) vars)))))))
-              (:nonrecursive 1 subst_in_poly (i% p%)
-                (#`rhs (concl (#`INT_POLY_CONV (#`vsubst i% p%)))))
-              (:recursive 2 solve_idealism (evs ps eqs)
+              (subst_in_poly (i% p%) (#`rhs (concl (#`INT_POLY_CONV (#`vsubst i% p%)))))
+              (solve_idealism (evs ps eqs)
                 (if (= evs nil)
                   nil
                   (match (tryfind (isolate_variables evs ps) eqs)
@@ -5467,7 +5462,7 @@
                           (eqs% (map (subst_in_poly cfs) (subtract eqs (cl:cons eq nil)))))
                         (cl:declare (cl:ignorable evs% eqs%))
                         (append cfs (solve_idealism evs% ps eqs%)))))))
-              (:recursive 3 GENVAR_EXISTS_CONV (tm)
+              (GENVAR_EXISTS_CONV (tm)
                 (if (not (#`is_exists tm))
                   (REFL tm)
                   (match (#`dest_exists tm)
@@ -5475,7 +5470,7 @@
                       (let ((gv (#`genvar (type_of ev))))
                         (cl:declare (cl:ignorable gv))
                         (THENC (GEN_ALPHA_CONV gv) (BINDER_CONV #'GENVAR_EXISTS_CONV) tm))))))
-              (:nonrecursive 4 EXISTS_POLY_TAC (arg~5203)
+              (EXISTS_POLY_TAC (arg~5203)
                 (match arg~5203
                   ((cl:and gl (tuple asl w%))
                     (match
@@ -6590,13 +6585,13 @@
       (dtm (parse_term "(div)"))
       (mtm (parse_term "(rem)")))
     (cl:declare (cl:ignorable pth m n q r% dtm mtm))
-    (holai.runtime:labelsc
-      ((:nonrecursive 0 emod_num (x y)
+    (labelsc
+      ((emod_num (x y)
         (let ((r (mod-num x y)))
           (cl:declare (cl:ignorable r))
           (if (< r (num 0)) (+ r (abs-num y)) r)))
-        (:nonrecursive 1 equo_num (x y) (quo-num (- x (emod_num x y)) y))
-        (:nonrecursive 2 INT_DIVMOD_CONV (x y)
+        (equo_num (x y) (quo-num (- x (emod_num x y)) y))
+        (INT_DIVMOD_CONV (x y)
           (let ((k% (equo_num x y)) (l (emod_num x y)))
             (cl:declare (cl:ignorable k% l))
             (let*
@@ -7120,9 +7115,8 @@
     ((GCD_ELIM_TAC
       (let ((gcd_tm (parse_term "gcd:int#int->int")))
         (cl:declare (cl:ignorable gcd_tm))
-        (fletc
-          ((dest_gcd
-            (tm)
+        (labelsc
+          ((dest_gcd (tm)
             (match (dest_comb tm)
               ((tuple l r%) (if (= l gcd_tm) (#`dest_pair r%) (failwith "dest_gcd"))))))
           (holai.runtime:proof (REPEAT #'GEN_TAC)
@@ -7447,8 +7441,7 @@
                 (pth_pow (SPECL (cl:cons x_tm (cl:cons n_tm nil)) INT_POW_LE)))
               (cl:declare (cl:ignorable pth_pos pth_add pth_mul pth_pow))
               (labelsc
-                ((rule
-                  (tm)
+                ((rule (tm)
                   (match tm
                     ((Comb (Const "int_of_num" _) rtm)
                       (INST% (cl:cons (tuple rtm n_tm) nil) pth_pos))
@@ -7560,8 +7553,8 @@
                     (cl:declare (cl:ignorable is_div is_rem))
                     (lambdac (tm) (cl:or (#`is_div tm) (#`is_rem tm))))))
                 (cl:declare (cl:ignorable is_divrem))
-                (holai.runtime:labelsc
-                  ((:recursive 0 conv (tm)
+                (labelsc
+                  ((conv (tm)
                     (handler-case
                       (let*
                         ((t%
@@ -7639,7 +7632,7 @@
                         (match exception~9465
                           ((Failure _) (REFL tm))
                           (_ (raise exception~9465))))))
-                    (:recursive 1 topconv (tm)
+                    (topconv (tm)
                       (if (cl:or (#`is_forall tm) (#`is_exists tm))
                         (BINDER_CONV #'topconv tm)
                         (conv tm))))
@@ -8081,8 +8074,7 @@
   (let ((conva (GEN_REWRITE_CONV #'TRY_CONV (cl:cons (#`GSYM DIVIDES_ANTISYM) nil))))
     (cl:declare (cl:ignorable conva))
     (labelsc
-      ((antisym_conv
-        (tm)
+      ((antisym_conv (tm)
         (if (cl:or (#`is_forall tm) (#`is_exists tm))
           (BINDER_CONV #'antisym_conv tm)
           (if (cl:or (#`is_conj tm) (#`is_disj tm))

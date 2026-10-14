@@ -114,52 +114,126 @@ Eight added native consumer checks bring the measured `proof_dsl_checks` count
 to 69 in the completed combined DESIGN34/35 release. One new
 `reader_computed_head` observation checks a computed head and evaluation count
 without duplicating existing partial/excess paths. No fixture/load component
-is added (11/51). Final integrated inventories are below; the earlier results
-remain historical. No new performance result is claimed.
+is added (11/51). The completed DESIGN §36 release retains these checks;
+historical integrated inventories are below. No new performance result is claimed.
 See DESIGN §34.
 
-## Shallow staged local named-function groups
+## Plain local named-function groups
 
-DESIGN §35 adds one shallow `labelsc` definition list for adjacent lowered
-FLETC/LABELSC groups. Entries are
-`(:nonrecursive stage name params body)` or
-`(:recursive stage name params body)`; stages preserve original source groups.
-Thus a later g can depend on an earlier f without making f see g, and a
-recursive member sees only its original recursive stage and preceding scopes.
-Macroexpansion folds the stages back into the original ordinary nesting.
-This parallel-looking display is not a parallel/mutually recursive scope:
-that would capture old references when sequential shadows reuse symbols.
-Untagged macros retain their existing behavior.
+DESIGN §36 replaces the historical §35 representation with ordinary entries
+in one shallow `labelsc` definition list:
 
-LET values, modules, match, lambda and annotations stop grouping. Removed
-let Origins remain with coincident output spans; function/body origins,
-lowering/import/reference order and source binding identity are retained.
-No source algorithm, direct call, `#'` reference, adapter, initialization or
-evaluation order changes because of stage flattening. The separate DESIGN34
-reader-headed call cutover intentionally acquires heads after arguments.
-Runtime-first compile/load supports both mechanisms.
+```lisp
+(labelsc
+  ((f (x) (+ x 1))
+   (g (x) (f x))
+   (walk (x) (if (zerop x) (g x) (walk (1- x)))))
+  (walk 2))
+```
 
-The combined DESIGN34/35 `nix develop path:. --command make release` succeeded
+All generated local named-function groups use this syntax, including isolated
+nonrecursive and recursive groups. Adjacent source groups share one genuine
+CL:LABELS scope. Source references remain resolved in their original RHS
+environments: nonrecursive and parallel RHSs see the preceding environment;
+recursive RHSs see their own original recursive group, not later groups.
+The compiler/runtime metadata-decoding path is removed without a shim.
+Handwritten `fletc` retains its existing nonrecursive outer-RHS behavior.
+
+Every function target stays unique throughout the combined chain, including
+hidden earlier shadows and case collisions. All entry-visible logical targets
+remain reserved through chain exit, as does every newly allocated member.
+Scoped reservations use the existing local percent suffix allocator, without
+fake environment bindings, changed source lookup or altered source spellings.
+This prevents a later local definition from capturing an earlier RHS's
+reference to an outer function even after repeated shadows.
+
+Scalar LET values, modules, match, lambda and annotations stop grouping.
+Initializers retain their position and execute once; captures, partials and
+physical function identities retain their source bindings. All local-let
+Origins survive with coincident output spans, together with function/body
+Origins, binding IDs and lowering/import/reference order. No algorithms,
+direct named calls, standard `#'` references or foreign adapters change.
+DESIGN §34's late reader-head acquisition is separate and unchanged.
+Ordinary entries keep name/parameters together when they fit 90 columns,
+then place the body on a new line.
+
+Lexical-module named function declarations also use ordinary `LABELSC`.
+Only immediately adjacent named declarations inside one structure combine;
+module declarations, aliases and includes, value or mixed slots, effects and
+the external continuation remain barriers, even when an alias has no runtime
+output. The module combiner peels only local-module-binding Origins. RHS
+environment snapshots and original right-fold wrapper compilation order stay
+unchanged.
+
+Lexical global allocation reserves entry-visible names, including qualified
+module public exports, and previously allocated targets; percent collision
+suffixes avoid future ordinary prefixed/versioned names. Alias public
+environments are visited once; functor captured environments are not traversed.
+Top-level global allocation is unchanged. This prevents a new local module
+`M.f` from capturing a resolved reference to an older `M.f`. No generated
+`FLETC` calls remain; handwritten `FLETC` is retained. Plain local definition
+headers keep the name/parameter list together when it fits 90 columns, using
+a context-specific renderer without stage markers.
+
+Final module-inclusive full-release validation of the plain-entry cutover passed.
+The six existing `language_function_*` rows remain unchanged. Three added
+behavioral cases produced these matching OCaml/SBCL rows:
+
+```text
+language_function_entry_shadow=142,142,284,284,42,42,42,42:true:true:true:true:true:true:true
+language_function_case_shadow=42,42,42,42:true:true
+language_module_function_scope=42,42,42,142,284,42,42,42,42,42,42,1,285,42,1:42,42,42,142,284,42,42,42,42,42,42,1,285,42,1
+```
+
+They cover an outer local function separated by a scalar LET from repeated
+inner shadows, full function/partial captures across all four inner shadows,
+stable and distinct function identities, and hidden case-sensitive names.
+The added `language_module_function_scope` observation exercises escaped
+closures/partials, repeated module names, sequential and parallel dependencies,
+case shadowing, imports, aliases and once-only initialization. Together with
+the entry/case rows this gives 1,142 matched rows (1,135 serialized observations
+and seven actual side-effect rows).
+
+`nix develop path:. --command make release` succeeded in 218.79 seconds with
+OCaml 4.14.2, Camlp5 8.02.01 and SBCL 2.3.9.nixos. All 46 inputs loaded;
+122 native, 69 independent PROOF, 27 calling-protocol, 84 OPTIONAL-entry,
+16 tuple and 46 structural-pattern checks passed. All 194,839 core/206,245
+inclusive map entries passed audit; ten rejections preserved output.
+51 fresh-cache production units had zero errors/warnings/style warnings,
+94 clean outputs were identical and 55 retained input pins unchanged.
+Initial registries remain 22/303/263/3 and exactly the three original axioms;
+5,519 OCaml/5,517 SBCL initialization rows retain the two known OCaml-only
+message differences. The release ZIP's 305 members (304 payload files plus
+RELEASE-MANIFEST.json) were verified. Generated
+core Lisp totals 5,727,348 bytes after final header formatting, an inventory
+measurement rather than a performance result.
+
+Separate fresh-core smoke proved a closed identity theorem, passed 69 PROOF
+checks and eight ordinary function-scope cases, and ran the escaped/rebound
+module closure/partial and once-only initialization case twice with exact
+expected results. Static search found zero generated FLETC calls or stage tags.
+The full-release gate is satisfied; the user authorizes commit/push to
+`tani/holai` main. This is not a publication claim. No new performance result
+is claimed.
+
+### Historical DESIGN §§34–35 validation
+
+The previous combined `nix develop path:. --command make release` succeeded
 in 217.72 seconds with OCaml 4.14.2, Camlp5 8.02.01 and SBCL 2.3.9.nixos.
 All 46 inputs loaded; 122 existing native and 69 independent PROOF checks
 passed. All 1,139 differential rows matched (1,132 serialized, seven side
-effects), including the computed-head row and six new language-group rows
-covering chains, mixed stages, shadows/captured identities, parallel groups,
-imports and a once-only closure-initializer barrier.
+effects), including the computed-head row and six language-group rows
+covering chains, mixed nonrecursive/recursive groups, shadows/captured
+identities, parallel groups, imports and a once-only initializer barrier.
 All 194,839 core/205,818 inclusive maps passed audit, retaining all scope
 Origins as coincident merged spans. Ten rejections preserved output;
 51 fresh-cache units had zero errors/warnings/style warnings, 94 clean outputs
 were identical and 55 input pins unchanged. Initial registries22/303/263/3,
 the original axioms and the two known initialization-message differences
-remain unchanged. Generated core Lisp totals 6,174,070 bytes, not a speed claim.
-
-Separate actual smokes proved a closed identity with generated core, checked
-all six language-group results and direct staged duplicate-name, parallel
-outer-RHS, captured-partial and mutual-recursion cases. Staged headers retain
-tag/stage/name/parameters on one line when they fit 90 columns, with the body
-on a new line. Ordinary untagged macro syntax remains necessary, not a
-compatibility alias. No universal indentation reduction or performance
-claim is made. See DESIGN §35.3 and the current release reports.
+remained unchanged. That variant's generated core totals 6,174,070 bytes.
+Separate actual smokes proved a closed identity, checked the six language
+rows and the former metadata-based macros. DESIGN §35 retains their original
+contract and results as history, not the current runtime API or §36 evidence.
 
 ## Pending discussion
 

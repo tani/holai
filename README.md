@@ -155,13 +155,13 @@ translator, design, generated Lisp/maps, reports and matching streams.
 No PROOF timing result is claimed; the version remains 1.0.0-percent-names.
 The reader's runtime-only compile/load smoke passed (per-call evaluation,
 dynamic rebinding, argument/multiple-value forwarding, hygiene and unchanged
-`#'`). The current measured 69 PROOF checks include thirteen permanent reader
+`#'`). The previous DESIGN §§34–35 release's measured 69 PROOF checks include thirteen permanent reader
 checks with actual computations, including zero-argument sum, positional decimal
 calculation, NIL classification, floor quotient/remainder and lexical-argument
 hygiene, plus eight direct reader-headed consumer checks.
 One new tactical observation adds computed-head/evaluation-count coverage
-beside existing partial/excess paths. Six new language observations cover
-staged function groups. All seven new rows match OCaml/SBCL exactly.
+beside existing partial/excess paths. Six language observations covered
+local function groups. All seven added rows matched OCaml/SBCL exactly in that release.
 The existing 11 fixture components and 51 production units are unchanged.
 
 ### Shallow generated calls and local functions
@@ -173,35 +173,70 @@ distinct from the local-definition display change below. Direct named calls,
 `#'` references, foreign partial adapters and source binding identities remain
 unchanged. Load the runtime before reading generated consumers.
 
-Adjacent local named-function groups now share one shallow `labelsc` list:
+Adjacent local named-function groups share one shallow `labelsc` list, and
+isolated nonrecursive/recursive groups use the same plain entry syntax:
 
 ```lisp
 (labelsc
-  ((:nonrecursive 0 f (x) (+ x 1))
-   (:nonrecursive 1 g (x) (f x))
-   (:recursive 2 walk (x) (if (zerop x) (g x) (walk (1- x)))))
+  ((f (x) (+ x 1))
+   (g (x) (f x))
+   (walk (x) (if (zerop x) (g x) (walk (1- x)))))
   (walk 2))
 ```
 
-This replaces nested FLETC/FLETC/LABELSC forms, not their lexical stages:
-g sees the preceding f, and walk retains its own recursive scope.
-Macroexpansion restores the original nesting; the printed list is not one
-mutually recursive group. Ordinary untagged `fletc`/`labelsc` are unchanged.
+Expansion creates one genuine CL:LABELS scope. Source RHSs still resolve in
+their original environments: g sees the preceding f; walk sees its recursive
+group. Nonrecursive parallel members do not see one another. Targets are
+unique throughout the combined list, including hidden shadows and case
+collisions. All entry-visible targets stay reserved until the chain ends,
+so a later shadow cannot capture an earlier reference to an outer function.
+Renames use the existing deterministic local percent suffixes.
+
 Scalar LET bindings, modules, match, lambda and annotations stop grouping.
-Stage flattening changes neither source evaluation order nor algorithms;
-coincident source-map spans retain the removed nesting's provenance.
-See DESIGN §§34–35 for the exact boundaries and capture reasoning.
-The combined variant passed the full release and separate actual closed-identity,
-six language-group and direct staged-macro smokes. All scope Origins survive
-merged groups as coincident spans in the 194,839 core map entries.
-Generated core Lisp totals 6,174,070 bytes; this is a readability/inventory
-result, not a performance claim or a promise of lower indentation in every file.
-Staged headers keep tag, stage, name and parameters together when they fit
-90 columns, then place the body on a new line.
+Initializers execute once in their original positions; captured functions,
+partials and physical function identities retain their source bindings.
+Coincident source-map spans preserve all combined local-let Origins.
+Handwritten `fletc` retains its nonrecursive outer-RHS semantics.
+Direct named calls, `#'` references and foreign partial adapters are unchanged.
+Ordinary entries keep name and parameters together when they fit 90 columns,
+then place the body on a new line. See DESIGN §§34 and 36.
+
+Lexical-module named function declarations also use ordinary `LABELSC`.
+Only immediately adjacent named declarations inside one structure combine;
+module declarations, aliases and includes, value or mixed slots, effects and
+the external continuation remain barriers, even when an alias has no runtime
+output. The module combiner peels only local-module-binding Origins. RHS
+environment snapshots and original right-fold wrapper compilation order stay
+unchanged.
+
+Lexical global allocation reserves entry-visible names, including qualified
+module public exports, and previously allocated targets; percent collision
+suffixes avoid future ordinary prefixed/versioned names. Alias public
+environments are visited once; functor captured environments are not traversed.
+Top-level global allocation is unchanged. This prevents a new local module
+`M.f` from capturing a resolved reference to an older `M.f`. No generated
+`FLETC` calls remain; handwritten `FLETC` is retained. Plain local definition
+headers keep the name/parameter list together when it fits 90 columns, using
+a context-specific renderer without stage markers.
+
+The final module-inclusive plain-entry cutover passed full-release validation.
+The six existing language rows are unchanged; three new matched observations
+exercise entry-environment reservation across a scalar barrier/repeated
+shadows, case-sensitive hidden shadows and `language_module_function_scope`.
+The module row exercises escaped closures/partials, repeated module names,
+sequential and parallel dependencies, case shadowing, imports, aliases and
+once-only initialization. The measured total is 1,142 matching rows.
+Separate fresh-core smoke proved a closed identity theorem, passed 69 PROOF
+checks and eight ordinary function-scope cases, and ran the escaped/rebound
+module closure/partial and once-only initialization case twice with exact
+expected results. Static search found zero generated FLETC calls or stage tags.
+DESIGN §35 preserves the previous implementation and its measured results as
+history, not the current API. No performance claim is made.
 
 ## Current implementation and validation
 
-Source functions use `defunc`, `lambdac`, `labelsc` and `fletc`. Their shared
+Generated source functions use `defunc`, `lambdac` and plain-entry `labelsc`;
+handwritten `fletc` remains available. Their shared
 OPTIONAL/supplied-p entry supports complete, partial and excess application.
 Function values capture their original definitions; global named calls retain
 runtime redefinition. Tuples keep their original argument list.
@@ -210,19 +245,23 @@ IR at macro expansion time and standard Common Lisp control/binding forms.
 Constructor/record descriptors are resolved before execution; guards and OR
 binding joins preserve clause order. See [PATTERN-MATCH.md](misc/reports/PATTERN-MATCH.md).
 
-The current combined DESIGN §§34–35 variant passed `nix develop path:. --command make release`
-in 217.72 seconds on aarch64-linux with OCaml 4.14.2, Camlp5 8.02.01 and SBCL 2.3.9.nixos:
+The current DESIGN §36 variant passed `nix develop path:. --command make release`
+in 218.79 seconds on aarch64-linux with OCaml 4.14.2, Camlp5 8.02.01 and SBCL 2.3.9.nixos.
 122 existing native checks, 69 independent PROOF checks, 27 calling-protocol,
 84 OPTIONAL-entry, 16 tuple and 46 structural-pattern checks passed.
-All 1,139 OCaml/SBCL output rows matched (1,132 serialized observations and
+All 1,142 OCaml/SBCL output rows matched (1,135 serialized observations and
 seven actual side-effect rows). All 46 inputs initialized with 22 types,
 303 constants, 263 definitions and exactly the three original source axioms.
 The 5,519 OCaml/5,517 SBCL initialization rows retain the documented exact
 two OCaml-only messages; raw initialization transcripts are not identical.
-All 194,839 core/205,818 fixture-inclusive map entries passed audit, and ten
+All 194,839 core/206,245 fixture-inclusive map entries passed audit, and ten
 rejection checks kept output unchanged. Fresh-cache compilation of 51
 production units had zero errors, warnings or style warnings; all 94 clean
 outputs were identical and all 55 retained input hashes unchanged.
+The release ZIP's 305 members (304 payload files plus RELEASE-MANIFEST.json)
+were verified. Generated core Lisp totals
+5,727,348 bytes after final header formatting; this is an inventory, not a
+performance measurement.
 See [verification.json](misc/reports/verification.json),
 [clean-build.json](misc/reports/clean-build.json),
 [compile-diagnostics.json](misc/reports/compile-diagnostics.json) and

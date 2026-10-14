@@ -2710,6 +2710,10 @@ No new performance result is claimed.
 
 ## 35. Shallow staged local named-function groups
 
+Historical implementation and measurements only. Section 36 supersedes this
+entry grammar, decoder and nested expansion; the results in §35.3 describe
+the previous variant, not validation of the plain-entry cutover.
+
 ### 35.1 Printed groups, not broadened lexical scope
 
 Alongside §34's shallow value-call heads, adjacent local named-function
@@ -2806,7 +2810,7 @@ All 194,839 core/205,818 inclusive source-map entries passed audit. Removed
 scope Origins survive as coincident spans around merged groups; function and
 body Origins remain. Ten rejection checks preserved output, 51 fresh-cache
 production units had zero errors/warnings/style warnings, 94 clean outputs
-were identical, and all 55 retained input hashes were unchanged. Current
+were identical, and all 55 retained input hashes were unchanged. That variant's
 generated core Lisp totals 6,174,070 bytes, an inventory measurement rather
 than a performance claim. See misc/reports/verification.json, clean-build.json
 and compile-diagnostics.json.
@@ -2820,3 +2824,151 @@ then put the body on a new line. This is a shallow presentation, not broader
 visibility or a claim that every file's maximum indentation decreased.
 Ordinary untagged macro syntax remains necessary for handwritten callers,
 not a compatibility alias. No performance result is claimed.
+
+## 36. Plain local named-function groups
+
+### 36.1 One resolved CL:LABELS scope
+
+All generated local named-function groups, including isolated nonrecursive
+and recursive groups, use ordinary `labelsc` entries:
+
+```lisp
+(labelsc
+  ((f (x) (+ x 1))
+   (g (x) (f x))
+   (walk (x) (if (zerop x) (g x) (walk (1- x)))))
+  (walk 2))
+```
+
+Adjacent source groups share this one definition list, without mode keywords
+or group numbers. Expansion creates one genuine CL:LABELS scope, not nested
+scopes reconstructed from metadata. The translator resolves each source
+reference before emission, so the broader target scope does not make later
+source bindings visible to earlier RHSs. Nonrecursive RHSs retain the
+preceding environment; members of a nonrecursive parallel `and` group do not
+see one another. Recursive RHSs see their own original recursive group and
+the preceding environment, not later groups in the combined list.
+
+Every function target in the combined list must be distinct under the CL
+reader's logical-symbol normalization, including earlier targets hidden by
+later source shadows and names differing only in case. At chain entry, reserve
+the logical targets of **all visible bindings** for the entire chain; also
+reserve each newly allocated member until the chain ends. A later member must
+never reuse an entry-visible target merely because its source binding has
+since been shadowed. Otherwise an earlier RHS referring to that outer target
+would be captured by the later CL:LABELS definition.
+
+These are scoped allocator reservations, not fake environment bindings.
+Reservations must not alter source lookup, RHS environments, binding IDs,
+reference observers or imports. Use the existing deterministic local percent
+suffix allocator when a target collides; preserve original source spellings.
+Resolve and lower groups in source order, retaining the original nonrecursive,
+parallel and recursive environments. Do not compile RHSs in the union of the
+combined group's source bindings.
+Allocate and lower each original group and its function bodies before allocating
+the continuation's binders or lowering its RHSs. Reservation is not permission
+to preallocate future bindings. Preserve original lowering and binding-ID order
+except necessary target suffix changes.
+
+The translator no longer emits local `fletc` groups or the §35 metadata
+grammar. The old compiler helpers, runtime metadata-decoding branch and
+metadata-only formatter rules are removed, without a compatibility shim.
+Handwritten `fletc` retains its ordinary nonrecursive
+outer-RHS API; ordinary handwritten `labelsc` remains recursive.
+
+### 36.2 Barriers, observations and provenance
+
+Collect only immediately adjacent source local named-function groups.
+Scalar LET bindings, local modules, match, lambda and annotations stop the
+chain. In particular, do not cross a scalar initializer to collect more
+functions. Side-effecting initializers retain their original position and
+execute once. This change introduces no function-value slots, dispatcher,
+initialization or source algorithm/evaluation-order rewrite.
+
+Captured function values and partial functions continue to refer to their
+resolved original definitions; repeated acquisition of the same named function
+retains physical identity, and distinct shadowed definitions remain distinct.
+Direct named calls, standard `#'` references and foreign partial adapters
+remain unchanged. Section 34's intentional late acquisition of reader-headed
+values is separate and unchanged.
+
+Retain every source local-let Origin around the combined output, allowing
+coincident spans, and retain the existing function/body Origins and reference
+marks. Resolved target renaming does not change source identities or spellings.
+Construct the output structurally and regenerate Lisp/maps together; do not
+rewrite emitted strings or repair map offsets by hand. Ordinary entries keep
+name and parameters together when they fit the 90-column width, with the body
+on a new line.
+
+Lexical-module named function declarations also use ordinary `LABELSC`.
+Only immediately adjacent named declarations inside one structure combine;
+module declarations, aliases and includes, value or mixed slots, effects and
+the external continuation remain barriers, even when an alias has no runtime
+output. The module combiner peels only local-module-binding Origins. RHS
+environment snapshots and original right-fold wrapper compilation order stay
+unchanged.
+
+Lexical global allocation reserves entry-visible names, including qualified
+module public exports, and previously allocated targets; percent collision
+suffixes avoid future ordinary prefixed/versioned names. Alias public
+environments are visited once; functor captured environments are not traversed.
+Top-level global allocation is unchanged. This prevents a new local module
+`M.f` from capturing a resolved reference to an older `M.f`. No generated
+`FLETC` calls remain; handwritten `FLETC` is retained. Plain local definition
+headers keep the name/parameter list together when it fits 90 columns, using
+a context-specific renderer without stage markers.
+
+### 36.3 Evidence boundary
+
+The final module-inclusive plain-entry cutover passed
+`nix develop path:. --command make release` in 218.79 seconds on aarch64-linux
+with OCaml 4.14.2, Camlp5 8.02.01 and SBCL 2.3.9.nixos.
+Section 35.3 preserves the previous release's measurements as history, not
+the current runtime API. No new performance result is claimed.
+
+The six existing `language_function_*` observations remain unchanged. Three
+additional behavioral observations use the existing curried functions and
+unmodified serializers. All three rows matched in the completed full release:
+
+```text
+language_function_entry_shadow=142,142,284,284,42,42,42,42:true:true:true:true:true:true:true
+language_function_case_shadow=42,42,42,42:true:true
+language_module_function_scope=42,42,42,142,284,42,42,42,42,42,42,1,285,42,1:42,42,42,142,284,42,42,42,42,42,42,1,285,42,1
+```
+
+The first separates an outer local `f` from an inner chain with a scalar LET,
+then shadows `f` repeatedly. Its first inner RHS calls the outer function;
+full function captures and partial applications across all four inner shadows
+must retain the old results and full-function identities.
+The second hides an earlier `K` before introducing `k` and further `K`
+shadows, exercising source case sensitivity despite CL reader normalization.
+Existing observations retain parallel RHS, mutual recursion, import, physical
+identity and once-only barrier coverage; no duplicate native unit is added.
+One added `language_module_function_scope` observation exercises escaped
+closures/partials, repeated module names, sequential and parallel dependencies,
+case shadowing, imports, aliases and once-only initialization. Together with
+the entry/case rows this gives 1,142 matching OCaml/SBCL rows: 1,135 serialized
+observations and seven actual side-effect rows. No native counter is added.
+
+All 46 inputs loaded; 122 native, 69 independent PROOF, 27 calling-protocol,
+84 OPTIONAL-entry, 16 tuple and 46 structural-pattern checks passed.
+Initial registries remain 22 types/303 constants/263 definitions/3 axioms,
+with exactly the original three source axioms. The 5,519 OCaml/5,517 SBCL
+initialization rows retain the exact two known OCaml-only message differences.
+All 194,839 core/206,245 inclusive map entries passed audit. Ten rejection
+checks preserved output; 51 fresh-cache production units had zero errors,
+warnings or style warnings; 94 clean-generated outputs were identical and
+all 55 retained input hashes were unchanged. The release ZIP's 305 members
+(304 payload files plus RELEASE-MANIFEST.json) were verified. Generated core
+Lisp totals 5,727,348 bytes after final header formatting, an inventory
+measurement rather than a performance claim.
+See misc/reports/verification.json, clean-build.json and compile-diagnostics.json.
+
+Separate fresh-core smoke proved an actual closed identity theorem, ran all
+69 PROOF checks and eight ordinary function-scope cases, and ran the escaped/
+rebound module closure/partial and once-only initialization case twice with
+the exact expected results. Static search found zero generated FLETC calls
+or stage tags.
+The full-release gate is satisfied. The user authorizes committing and pushing
+this cutover to `tani/holai` main; authorization and validation are not evidence
+that a push occurred.

@@ -262,7 +262,6 @@
     labelsc
     function-value
     fst
-    fletc
     failwith
     Failure
     deref
@@ -323,8 +322,7 @@
 
 (defparameter strip_ncomb
   (labelsc
-    ((strip
-      (arg~3)
+    ((strip (arg~3)
       (match arg~3
         ((tuple n tm acc)
           (if (< n 1)
@@ -401,9 +399,8 @@
                 (PROVE_HYP (#`DISJ2 l (ASSUME r%)) th))))))
       (HALF_BETA_EXPAND (lambdac (args th) (#`GENL args (#`RIGHT_BETAS args th)))))
     (cl:declare (cl:ignorable getconcl CONJ_ACI_RULE SIMPLE_DISJ_PAIR HALF_BETA_EXPAND))
-    (fletc
-      ((AND_IMPS_CONV
-        (tm)
+    (labelsc
+      ((AND_IMPS_CONV (tm)
         (let*
           ((ths (#`CONJUNCTS (ASSUME tm)))
             (avs (fst (#`strip_forall (concl (hd ths)))))
@@ -416,9 +413,8 @@
           (cl:declare (cl:ignorable ths avs thl th1 tm1 th2 tm2 th3))
           (match (nsplit SIMPLE_DISJ_PAIR (tl ths) th3)
             ((tuple thts tht)
-              (fletc
-                ((proc_fn
-                  (th)
+              (labelsc
+                ((proc_fn (th)
                   (let ((t% (hd (hyp th))))
                     (cl:declare (cl:ignorable t%))
                     (#`GENL avs (#`DISCH t% (UNDISCH th))))))
@@ -429,8 +425,7 @@
         ((t_tm (parse_term "T"))
           (calculate_simp_sequence
             (labelsc
-              ((getequs
-                (arg~293)
+              ((getequs (arg~293)
                 (match arg~293
                   ((tuple avs plis)
                     (if (= plis nil)
@@ -471,8 +466,8 @@
                     (cl:declare (cl:ignorable th1 th2 tm2 th3 th4 ant th5 th6))
                     (#`IMP_ANTISYM_RULE (DISCH_ALL th3) (DISCH_ALL th6))))))))
         (cl:declare (cl:ignorable t_tm calculate_simp_sequence FORALL_IMPS_CONV))
-        (holai.runtime:labelsc
-          ((:nonrecursive 0 canonicalize_clause (cls args)
+        (labelsc
+          ((canonicalize_clause (cls args)
             (match (#`strip_forall cls)
               ((tuple avs bimp)
                 (match
@@ -647,7 +642,7 @@
                                 (TRANS
                                   eth
                                   (itlist MK_FORALL args (#`FORALL_IMPS_CONV ftm))))))))))))))
-            (:nonrecursive 1 canonicalize_clauses (clauses)
+            (canonicalize_clauses (clauses)
               (let*
                 ((concls (map getconcl clauses))
                   (uncs (map strip_comb concls))
@@ -680,9 +675,8 @@
                     cargs
                     cthms
                     pclauses))
-                (fletc
-                  ((collectclauses
-                    (tm)
+                (labelsc
+                  ((collectclauses (tm)
                     (mapfilter
                       (lambdac (t%) (if (= (fst t%) tm) (snd t%) (fail unit)))
                       (zip (map (function-value #'fst 1) uncs) pclauses))))
@@ -699,7 +693,7 @@
                       (TRANS
                         pth
                         (end_itlist holai.drule:MK_CONJ (map #'AND_IMPS_CONV cclausel))))))))
-            (:nonrecursive 1 derive_canon_inductive_relations (clauses)
+            (derive_canon_inductive_relations (clauses)
               (let*
                 ((closed (#`list_mk_conj clauses))
                   (clauses% (#`holai.basics:conjuncts closed)))
@@ -717,9 +711,8 @@
                             (closed% (#`prime_fn closed)))
                           (cl:declare
                             (cl:ignorable rels avoids rels% crels prime_fn closed%))
-                          (fletc
-                            ((mk_def
-                              (arg con)
+                          (labelsc
+                            ((mk_def (arg con)
                               (#`mk_eq
                                 (tuple
                                   (holai.lib:repeat #'rator con)
@@ -735,9 +728,8 @@
                                 (defthms
                                   (map2 HALF_BETA_EXPAND vargs (map #'ASSUME deftms))))
                               (cl:declare (cl:ignorable deftms defthms))
-                              (fletc
-                                ((mk_ind
-                                  (args th)
+                              (labelsc
+                                ((mk_ind (args th)
                                   (let*
                                     ((th1 (fst (#`EQ_IMP_RULE (SPEC_ALL th))))
                                       (ant (#`lhand (concl th1)))
@@ -784,9 +776,8 @@
                                       closthm
                                       monothms
                                       closthms))
-                                  (fletc
-                                    ((prove_rule
-                                      (mth arg~1043)
+                                  (labelsc
+                                    ((prove_rule (mth arg~1043)
                                       (match arg~1043
                                         ((tuple cth dth)
                                           (match (#`strip_forall (concl mth))
@@ -814,9 +805,8 @@
                                         (double_fn (#`subst (zip dtms rels))))
                                       (cl:declare
                                         (cl:ignorable rulethms rulethm dtms double_fn))
-                                      (fletc
-                                        ((mk_unbetas
-                                          (tm dtm)
+                                      (labelsc
+                                        ((mk_unbetas (tm dtm)
                                           (match (#`strip_forall tm)
                                             ((tuple avs bod)
                                               (match (dest_comb bod)
@@ -894,9 +884,8 @@
                                               imrth
                                               ifthm
                                               fthm))
-                                          (fletc
-                                            ((mk_case
-                                              (th1 th2)
+                                          (labelsc
+                                            ((mk_case (th1 th2)
                                               (let
                                                 ((avs (fst (#`strip_forall (concl th1)))))
                                                 (cl:declare (cl:ignorable avs))
@@ -959,9 +948,8 @@
 (defparameter MONO_TAC
   (let ((imp (parse_term "(==>)")) (IMP_REFL (ITAUT (parse_term "!p. p ==> p"))))
     (cl:declare (cl:ignorable imp IMP_REFL))
-    (fletc
-      ((BACKCHAIN_TAC
-        (th)
+    (labelsc
+      ((BACKCHAIN_TAC (th)
         (let ((match_fn (#`PART_MATCH (o (function-value #'snd 1) dest_imp) th)))
           (cl:declare (cl:ignorable match_fn))
           (lambdac (arg~1412)
@@ -977,8 +965,7 @@
                         (lambdac (i% arg~1428)
                           (match arg~1428
                             ((cl:cons t% nil) (MATCH_MP (#`INSTANTIATE% i% th1) t%)))))))))))))
-        (MONO_ABS_TAC
-          (arg~1454)
+        (MONO_ABS_TAC (arg~1454)
           (match arg~1454
             ((tuple asl w%)
               (match (#`dest_imp w%)
@@ -994,8 +981,7 @@
                           (let ((th3 (MK_COMB% (tuple (AP_TERM imp th1) th2))))
                             (cl:declare (cl:ignorable th3))
                             (#`CONV_TAC (#`REWR_CONV th3) (tuple asl w%))))))))))))
-        (APPLY_MONOTAC
-          (tacs arg~1527)
+        (APPLY_MONOTAC (tacs arg~1527)
           (match arg~1527
             ((tuple asl w%)
               (match (#`dest_imp w%)
@@ -1059,7 +1045,7 @@
         THEN (REPEAT #'CONJ_TAC)
         THEN MONO_TAC)))
     (cl:declare (cl:ignorable tac))
-    (fletc ((prove_mth (t%) (prove (tuple t% tac))))
+    (labelsc ((prove_mth (t%) (prove (tuple t% tac))))
       (lambdac (th)
         (let
           ((mths
@@ -1079,18 +1065,17 @@
 (defparameter prove_inductive_relations_exist nil)
 
 (match
-  (holai.runtime:labelsc
-    ((:recursive 0 pare_comb (qvs tm)
+  (labelsc
+    ((pare_comb (qvs tm)
       (if
         (cl:and
           (= (intersect (frees tm) qvs) nil)
           (forall #'is_var (snd (#`strip_comb tm))))
         tm
         (pare_comb qvs (rator tm))))
-      (:nonrecursive 1 generalize_schematic_variables (gflag vs)
-        (fletc
-          ((generalize_def
-            (tm th)
+      (generalize_schematic_variables (gflag vs)
+        (labelsc
+          ((generalize_def (tm th)
             (match (dest_eq tm)
               ((tuple l r%)
                 (match (dest_var l)
@@ -1124,18 +1109,18 @@
                       (cl:declare (cl:ignorable others%))
                       (#`GENL vs (itlist #'PROVE_HYP others% th1)))
                     th1)))))))
-      (:nonrecursive 1 derive_existence (th)
+      (derive_existence (th)
         (let ((defs (filter #'is_eq (hyp th))))
           (cl:declare (cl:ignorable defs))
           (itlist EXISTS_EQUATION defs th)))
-      (:nonrecursive 1 make_definitions (th)
+      (make_definitions (th)
         (let*
           ((defs (filter #'is_eq (hyp th)))
             (dths (map #'new_definition defs))
             (insts (zip (map (o lhs #'concl) dths) (map lhs defs))))
           (cl:declare (cl:ignorable defs dths insts))
           (rev_itlist (C MP) dths (INST% insts (itlist DISCH defs th)))))
-      (:nonrecursive 1 unschematize_clauses (clauses)
+      (unschematize_clauses (clauses)
         (let*
           ((schem
             (map
@@ -1164,9 +1149,8 @@
               (failwith "Schematic variables not used consistently")
               (let ((avoids (#`variables (#`list_mk_conj clauses))))
                 (cl:declare (cl:ignorable avoids))
-                (fletc
-                  ((hack_fn
-                    (tm)
+                (labelsc
+                  ((hack_fn (tm)
                     (mk_var
                       (tuple (fst (dest_var (holai.lib:repeat #'rator tm))) (type_of tm)))))
                   (let*
@@ -1175,10 +1159,10 @@
                       (clauses% (map (#`subst crels) clauses)))
                     (cl:declare (cl:ignorable grels crels clauses%))
                     (tuple clauses% (snd (#`strip_comb (hd schems)))))))))))
-      (:nonrecursive 2 find_redefinition (tm arg~1968)
+      (find_redefinition (tm arg~1968)
         (match arg~1968
           ((cl:and trip (tuple rth ith cth)) (tuple trip (#`PART_MATCH #'I rth tm)))))
-      (:nonrecursive 3 prove_inductive_properties (tm)
+      (prove_inductive_properties (tm)
         (let ((clauses (#`holai.basics:conjuncts tm)))
           (cl:declare (cl:ignorable clauses))
           (match (unschematize_clauses clauses)
@@ -1188,13 +1172,13 @@
                   (#`derive_nonschematic_inductive_relations (#`list_mk_conj clauses%))))
                 (cl:declare (cl:ignorable th))
                 (tuple fvs (#`prove_monotonicity_hyps th)))))))
-      (:nonrecursive 4 prove_inductive_relations_exist% (tm)
+      (prove_inductive_relations_exist% (tm)
         (match (prove_inductive_properties tm)
           ((tuple fvs th1)
             (let ((th2 (generalize_schematic_variables cl:t fvs th1)))
               (cl:declare (cl:ignorable th2))
               (derive_existence th2)))))
-      (:nonrecursive 4 new_inductive_definition% (tm)
+      (new_inductive_definition% (tm)
         (handler-case
           (let ((tm% (snd (#`strip_forall tm))))
             (cl:declare (cl:ignorable tm%))
@@ -1240,15 +1224,15 @@
 
 
 (defparameter derive_strong_induction
-  (holai.runtime:labelsc
-    ((:nonrecursive 0 dest_ibod (tm)
+  (labelsc
+    ((dest_ibod (tm)
       (match (#`strip_forall tm)
         ((tuple avs ibod)
           (let* ((n (#`length avs)) (prator (funpow n #'rator)))
             (cl:declare (cl:ignorable n prator))
             (match (#`dest_imp ibod)
               ((tuple ant con) (tuple n (tuple (#`prator ant) (#`prator con)))))))))
-      (:recursive 1 prove_triv (tm)
+      (prove_triv (tm)
         (if (#`is_conj tm)
           (#`CONJ (prove_triv (#`lhand tm)) (prove_triv (rand tm)))
           (match (#`strip_forall tm)
@@ -1260,7 +1244,7 @@
                       (th (find (o (aconv c%) #'concl) ths)))
                     (cl:declare (cl:ignorable ths th))
                     (#`GENL avs (#`DISCH a% th)))))))))
-      (:recursive 2 weaken_triv (th)
+      (weaken_triv (th)
         (if (#`is_conj (concl th))
           (#`CONJ (weaken_triv (#`CONJUNCT1 th)) (weaken_triv (#`CONJUNCT2 th)))
           (match (#`strip_forall (concl th))
@@ -1314,9 +1298,8 @@
                                             ns
                                             prrs)))
                                       (cl:declare (cl:ignorable gimps prs))
-                                      (fletc
-                                        ((modify_rule
-                                          (rcl itm)
+                                      (labelsc
+                                        ((modify_rule (rcl itm)
                                           (match (#`strip_forall itm)
                                             ((tuple avs bod)
                                               (if (#`is_imp bod)

@@ -305,7 +305,6 @@
     guard
     function-value
     fst
-    fletc
     failwith
     Failure
     deref
@@ -455,25 +454,23 @@
 (defparameter comment_token (ref (make-Resword "//")))
 
 (defparameter lex
-  (holai.runtime:labelsc
-    ((:nonrecursive 0 collect (arg~357)
+  (labelsc
+    ((collect (arg~357)
       (match arg~357
         ((tuple h t%) (end_itlist (function-value #'string-concat 2) (cl:cons h t%)))))
-      (:nonrecursive 1 reserve (arg~370)
+      (reserve (arg~370)
         (match arg~370
           ((cl:and tok (Ident n)) (if (#`is_reserved_word n) (make-Resword n) tok))
           (t% t%)))
-      (:nonrecursive 2 stringof (p)
-        (>> (atleast 1 p) (end_itlist (function-value #'string-concat 2)))))
+      (stringof (p) (>> (atleast 1 p) (end_itlist (function-value #'string-concat 2)))))
     (let*
       ((simple_ident (%%% (stringof (some isalnum)) (stringof (some issymb))))
         (undertail (>> (++ (stringof (a "_")) (possibly simple_ident)) #'collect))
         (ident% (>> (++ (%%% undertail simple_ident) (many undertail)) #'collect))
         (septok (stringof (some issep))))
       (cl:declare (cl:ignorable simple_ident undertail ident% septok))
-      (fletc
-        ((escapecode
-          (i%)
+      (labelsc
+        ((escapecode (i%)
           (match i%
             ((cl:cons "\\" rst) (tuple "\\" rst))
             ((cl:cons "\"" rst) (tuple "\"" rst))
@@ -521,8 +518,7 @@
                 (o #'reserve (function-value #'snd 1)))))
           (cl:declare (cl:ignorable stringchar string rawtoken simptoken))
           (labelsc
-            ((tokens
-              (i%)
+            ((tokens (i%)
               (handler-case
                 (match (#`simptoken i%)
                   ((tuple t% rst)
@@ -590,8 +586,7 @@
   (let
     ((mk_prefinty
       (labelsc
-        ((prefinty
-          (n)
+        ((prefinty (n)
           (if (= n num_1)
             (make-Ptycon "1" nil)
             (let ((c% (if (= (mod-num n num_2) num_0) "tybit0" "tybit1")))
@@ -602,14 +597,14 @@
             (failwith "mk_prefinty")
             (prefinty n))))))
     (cl:declare (cl:ignorable mk_prefinty))
-    (holai.runtime:labelsc
-      ((:nonrecursive 0 btyop (n n% x y) (make-Ptycon n (cl:cons x (cl:cons y nil))))
-        (:nonrecursive 0 mk_apptype (arg~750)
+    (labelsc
+      ((btyop (n n% x y) (make-Ptycon n (cl:cons x (cl:cons y nil))))
+        (mk_apptype (arg~750)
           (match arg~750
             ((tuple (cl:cons s nil) nil) s)
             ((tuple tys (cl:cons c% nil)) (make-Ptycon c% tys))
             (_ (failwith "Bad type construction"))))
-        (:nonrecursive 0 type_atom (input)
+        (type_atom (input)
           (match input
             ((cl:cons (Ident s) rest)
               (tuple
@@ -639,7 +634,7 @@
                       (_ (raise exception~779)))))
                 rest))
             (_ (raise (make-Noparse)))))
-        (:nonrecursive 0 type_constructor (input)
+        (type_constructor (input)
           (match input
             ((cl:cons (Ident s) rest)
               (if
@@ -651,49 +646,49 @@
                 (tuple s rest)
                 (raise (make-Noparse))))
             (_ (raise (make-Noparse)))))
-        (:recursive 1 pretype (i%)
+        (pretype (i%)
           (rightbin
             #'sumtype
             (a (make-Resword "->"))
             (btyop "fun")
             "proper use of type operator (->)"
             i%))
-        (:recursive 1 sumtype (i%)
+        (sumtype (i%)
           (rightbin
             #'prodtype
             (a (make-Ident "+"))
             (btyop "sum")
             "proper use of type operator (+)"
             i%))
-        (:recursive 1 prodtype (i%)
+        (prodtype (i%)
           (rightbin
             #'carttype
             (a (make-Ident "#"))
             (btyop "prod")
             "proper use of type operator (#)"
             i%))
-        (:recursive 1 carttype (i%)
+        (carttype (i%)
           (leftbin
             #'apptype
             (a (make-Ident "^"))
             (btyop "cart")
             "proper use of type operator (^)"
             i%))
-        (:recursive 1 apptype (i%)
+        (apptype (i%)
           (>>
             (++
               #'atomictypes
               (%%% (>> #'type_constructor (lambdac (x) (cl:cons x nil))) #'nothing))
             #'mk_apptype
             i%))
-        (:recursive 1 atomictypes (i%)
+        (atomictypes (i%)
           (%%%
             (>>
               (++ (++ (a (make-Resword "(")) #'typelist) (a (make-Resword ")")))
               (o (function-value #'snd 1) (function-value #'fst 1)))
             (>> #'type_atom (lambdac (x) (cl:cons x nil)))
             i%))
-        (:recursive 1 typelist (i%)
+        (typelist (i%)
           (listof
             #'pretype
             (a (make-Ident ","))
@@ -716,8 +711,7 @@
 
 (match
   (labelsc
-    ((try_parsers
-      (ps i%)
+    ((try_parsers (ps i%)
       (if (= ps nil)
         (raise (make-Noparse))
         (handler-case
@@ -791,10 +785,10 @@
 
 
 (defparameter parse_preterm
-  (holai.runtime:labelsc
-    ((:recursive 0 pairwise (r l)
+  (labelsc
+    ((pairwise (r l)
       (match l (nil cl:t) ((cl:cons h t%) (cl:and (forall (#`r h) t%) (pairwise r t%)))))
-      (:recursive 1 pfrees (ptm)
+      (pfrees (ptm)
         (match ptm
           ((Varp v pty)
             (if (cl:and (= v "") (= pty dpty))
@@ -813,9 +807,9 @@
           ((Combp p1 p2) (union (pfrees p1) (pfrees p2)))
           ((Absp p1 p2) (subtract (pfrees p2) (pfrees p1)))
           ((Typing p _) (pfrees p))))
-      (:nonrecursive 2 pdest_eq (arg~1126)
+      (pdest_eq (arg~1126)
         (match arg~1126 ((Combp (Combp (Varp (cl:or "=" "<=>") _) l) r) (tuple l r))))
-      (:nonrecursive 3 pmk_let (arg~1143)
+      (pmk_let (arg~1143)
         (match arg~1143
           ((tuple letbindings body%)
             (match (unzip (map #'pdest_eq letbindings))
@@ -834,16 +828,16 @@
                         (labs (make-Combp (make-Varp "LET" dpty) abs%%)))
                       (cl:declare (cl:ignorable lend abs%% labs))
                       (rev_itlist (lambdac (x f) (make-Combp f x)) tms labs)))))))))
-      (:nonrecursive 4 pmk_vbinder (arg~1212)
+      (pmk_vbinder (arg~1212)
         (match arg~1212
           ((tuple n v bod)
             (if (= n "\\")
               (make-Absp v bod)
               (make-Combp (make-Varp n dpty) (make-Absp v bod))))))
-      (:nonrecursive 5 pmk_binder (arg~1236)
+      (pmk_binder (arg~1236)
         (match arg~1236
           ((tuple n vs bod) (itlist (lambdac (v b) (pmk_vbinder (tuple n v b))) vs bod))))
-      (:nonrecursive 6 pmk_set_enum (ptms)
+      (pmk_set_enum (ptms)
         (itlist
           (lambdac (x t%) (make-Combp (make-Combp (make-Varp "INSERT" dpty) x) t%))
           ptms
@@ -861,11 +855,11 @@
                     (assign gcounter (+ count 1))
                     (make-Varp (string-concat "GEN%PVAR%" (string-of-int count)) dpty)))))))))
       (cl:declare (cl:ignorable pgenvar))
-      (holai.runtime:labelsc
-        ((:nonrecursive 0 pmk_exists (arg~1299)
+      (labelsc
+        ((pmk_exists (arg~1299)
           (match arg~1299
             ((tuple v ptm) (make-Combp (make-Varp "?" dpty) (make-Absp v ptm)))))
-          (:nonrecursive 1 pmk_list (els)
+          (pmk_list (els)
             (itlist
               (lambdac (x y) (make-Combp (make-Combp (make-Varp "CONS" dpty) x) y))
               els
@@ -876,8 +870,8 @@
               (cl:declare (cl:ignorable tt ff))
               (lambdac (b) (if b tt ff)))))
           (cl:declare (cl:ignorable pmk_bool))
-          (holai.runtime:labelsc
-            ((:nonrecursive 0 pmk_char (c%)
+          (labelsc
+            ((pmk_char (c%)
               (let
                 ((lis
                   (map
@@ -886,7 +880,7 @@
                     (-- 0 7))))
                 (cl:declare (cl:ignorable lis))
                 (itlist (lambdac (x y) (make-Combp y x)) lis (make-Varp "ASCII" dpty))))
-              (:nonrecursive 1 pmk_string (s)
+              (pmk_string (s)
                 (let
                   ((ns
                     (map
@@ -894,7 +888,7 @@
                       (-- 0 (- (string-length s) 1)))))
                   (cl:declare (cl:ignorable ns))
                   (pmk_list (map #'pmk_char ns))))
-              (:nonrecursive 2 pmk_setcompr (arg~1399)
+              (pmk_setcompr (arg~1399)
                 (match arg~1399
                   ((tuple fabs bvs babs)
                     (let*
@@ -908,7 +902,7 @@
                               fabs))))
                       (cl:declare (cl:ignorable v bod))
                       (make-Combp (make-Varp "GSPEC" dpty) (make-Absp v bod))))))
-              (:nonrecursive 3 pmk_setabs (arg~1435)
+              (pmk_setabs (arg~1435)
                 (match arg~1435
                   ((tuple fabs babs)
                     (let
@@ -920,7 +914,7 @@
                             (intersect fvs bvs)))))
                       (cl:declare (cl:ignorable evs))
                       (pmk_setcompr (tuple fabs evs babs))))))
-              (:recursive 4 mk_precedence (infxs prs inp)
+              (mk_precedence (infxs prs inp)
                 (match infxs
                   ((cl:cons (tuple s (tuple p at)) _)
                     (match
@@ -944,9 +938,8 @@
                           "term after binary operator"
                           inp))))
                   (_ (#`prs inp))))
-              (:nonrecursive 5 pmk_geq (s t%)
-                (make-Combp (make-Combp (make-Varp "GEQ" dpty) s) t%))
-              (:nonrecursive 6 pmk_pattern (arg~1561)
+              (pmk_geq (s t%) (make-Combp (make-Combp (make-Varp "GEQ" dpty) s) t%))
+              (pmk_pattern (arg~1561)
                 (match arg~1561
                   ((tuple (tuple pat guards) res)
                     (let ((x (#`pgenvar unit)) (y (#`pgenvar unit)))
@@ -1095,8 +1088,7 @@
                   pre_fix))
               (labelsc
                 ((preterm (i%) (mk_precedence (#`infixes unit) #'typed_appl_preterm i%))
-                  (nocommapreterm
-                    (i%)
+                  (nocommapreterm (i%)
                     (let
                       ((infs
                         (filter
@@ -1104,8 +1096,7 @@
                           (#`infixes unit))))
                       (cl:declare (cl:ignorable infs))
                       (mk_precedence infs #'typed_appl_preterm i%)))
-                  (typed_appl_preterm
-                    (i%)
+                  (typed_appl_preterm (i%)
                     (>>
                       (++
                         #'appl_preterm
@@ -1115,8 +1106,7 @@
                             (function-value #'snd 1))))
                       lmk_typed
                       i%))
-                  (appl_preterm
-                    (i%)
+                  (appl_preterm (i%)
                     (%%%
                       (>>
                         (++ pre_fix #'appl_preterm)
@@ -1129,8 +1119,7 @@
                             ((tuple h t%)
                               (itlist (lambdac (x y) (make-Combp y x)) (#`rev t%) h)))))
                       i%))
-                  (binder_preterm
-                    (i%)
+                  (binder_preterm (i%)
                     (%%%
                       (%%%
                         (>>
@@ -1155,8 +1144,7 @@
                           lmk_binder))
                       #'atomic_preterm
                       i%))
-                  (typed_apreterm
-                    (i%)
+                  (typed_apreterm (i%)
                     (>>
                       (++
                         #'atomic_preterm
@@ -1166,8 +1154,7 @@
                             (function-value #'snd 1))))
                       lmk_typed
                       i%))
-                  (atomic_preterm
-                    (i%)
+                  (atomic_preterm (i%)
                     (%%%
                       (%%%
                         (%%%
@@ -1397,8 +1384,7 @@
                             (failwith "malformed numerical # identifier"))))
                       (>> identifier (lambdac (s) (make-Varp s dpty)))
                       i%))
-                  (pattern
-                    (i%)
+                  (pattern (i%)
                     (++
                       #'preterm
                       (possibly
@@ -1406,8 +1392,7 @@
                           (++ (a (make-Resword "when")) #'preterm)
                           (function-value #'snd 1)))
                       i%))
-                  (clause
-                    (i%)
+                  (clause (i%)
                     (>>
                       (++
                         #'pattern
@@ -1416,8 +1401,7 @@
                           (function-value #'snd 1)))
                       #'pmk_pattern
                       i%))
-                  (clauses
-                    (i%)
+                  (clauses (i%)
                     (>>
                       (>>
                         (++

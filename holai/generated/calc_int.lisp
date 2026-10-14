@@ -235,9 +235,9 @@
     match
     make-Some
     lambdac
+    labelsc
     gcd-num
     fst
-    fletc
     failwith
     Failure
     defunc
@@ -345,7 +345,7 @@
 (defparameter mk_realintconst
   (let ((cast_tm (parse_term "real_of_num")) (neg_tm (parse_term "(--)")))
     (cl:declare (cl:ignorable cast_tm neg_tm))
-    (fletc ((mk_numconst (n) (mk_comb (tuple cast_tm (#`mk_numeral n)))))
+    (labelsc ((mk_numconst (n) (mk_comb (tuple cast_tm (#`mk_numeral n)))))
       (lambdac (x)
         (if (< x num_0) (mk_comb (tuple neg_tm (mk_numconst (- x)))) (mk_numconst x))))))
 

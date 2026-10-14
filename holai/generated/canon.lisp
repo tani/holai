@@ -311,7 +311,6 @@
     guard
     function-value
     fst
-    fletc
     failwith
     Failure
     defunc
@@ -430,15 +429,13 @@
 
 (defparameter CONJ_ACI_RULE
   (labelsc
-    ((mk_fun
-      (th fn)
+    ((mk_fun (th fn)
       (let ((tm (concl th)))
         (cl:declare (cl:ignorable tm))
         (if (#`is_conj tm)
           (match (CONJ_PAIR th) ((tuple th1 th2) (mk_fun th1 (mk_fun th2 fn))))
           (#`%-> tm th fn))))
-      (use_fun
-        (fn tm)
+      (use_fun (fn tm)
         (if (#`is_conj tm)
           (match (#`dest_conj tm) ((tuple l r%) (#`CONJ (use_fun fn l) (use_fun fn r%))))
           (apply fn tm))))
@@ -462,8 +459,8 @@
       (a_tm (parse_term "a:bool"))
       (b_tm (parse_term "b:bool")))
     (cl:declare (cl:ignorable pth_left pth_right pth pth_neg a_tm b_tm))
-    (holai.runtime:labelsc
-      ((:nonrecursive 0 NOT_DISJ_PAIR (th)
+    (labelsc
+      ((NOT_DISJ_PAIR (th)
         (match (#`dest_disj (rand (concl th)))
           ((tuple p% q)
             (let ((ilist (cl:cons (tuple p% a_tm) (cl:cons (tuple q b_tm) nil))))
@@ -471,7 +468,7 @@
               (tuple
                 (PROVE_HYP th (INST% ilist pth_left))
                 (PROVE_HYP th (INST% ilist pth_right)))))))
-        (:nonrecursive 0 NOT_DISJ (th1 th2)
+        (NOT_DISJ (th1 th2)
           (let
             ((th3
               (INST%
@@ -481,13 +478,13 @@
                 pth)))
             (cl:declare (cl:ignorable th3))
             (PROVE_HYP th1 (PROVE_HYP th2 th3))))
-        (:recursive 1 mk_fun (th fn)
+        (mk_fun (th fn)
           (let ((tm (rand (concl th))))
             (cl:declare (cl:ignorable tm))
             (if (#`is_disj tm)
               (match (NOT_DISJ_PAIR th) ((tuple th1 th2) (mk_fun th1 (mk_fun th2 fn))))
               (#`%-> tm th fn))))
-        (:recursive 1 use_fun (fn tm)
+        (use_fun (fn tm)
           (if (#`is_disj tm)
             (match (#`dest_disj tm)
               ((tuple l r%) (NOT_DISJ (use_fun fn l) (use_fun fn r%))))
@@ -610,8 +607,8 @@
       pth_exu
       p_tm
       q_tm)
-      (holai.runtime:labelsc
-        ((:recursive 0 NNF_DCONV (cf baseconvs tm)
+      (labelsc
+        ((NNF_DCONV (cf baseconvs tm)
           (match tm
             ((Comb (Comb (Const "/\\" _) l) r%)
               (match (tuple (NNF_DCONV cf baseconvs l) (NNF_DCONV cf baseconvs r%))
@@ -816,7 +813,7 @@
                   (match exception~1062
                     ((Failure _) (tuple (REFL tm) (REFL (#`mk_neg tm))))
                     (_ (raise exception~1062))))))))
-          (:recursive 1 NNF_CONV% (cf arg~1079 tm)
+          (NNF_CONV% (cf arg~1079 tm)
             (match arg~1079
               ((cl:and baseconvs (tuple base1 base2))
                 (match tm
@@ -938,7 +935,7 @@
                         (match exception~1474
                           ((Failure _) (REFL tm))
                           (_ (raise exception~1474))))))))))
-          (:recursive 1 NNF_CONV%% (cf arg~1490 tm)
+          (NNF_CONV%% (cf arg~1490 tm)
             (match arg~1490
               ((cl:and baseconvs (tuple base1 base2))
                 (match tm
@@ -1186,8 +1183,7 @@
       (c_tm (parse_term "c:bool")))
     (cl:declare (cl:ignorable pth1 pth2 a_tm b_tm c_tm))
     (labelsc
-      ((distribute
-        (tm)
+      ((distribute (tm)
         (match tm
           ((Comb (Comb (Const "/\\" _) a%) (Comb (Comb (Const "\\/" _) b%) c%))
             (let
@@ -1217,8 +1213,7 @@
             #'DISJ_CANON_CONV)))
         (cl:declare (cl:ignorable strengthen))
         (labelsc
-          ((weakdnf
-            (tm)
+          ((weakdnf (tm)
             (match tm
               ((cl:or (Comb (Const "!" _) (Abs _ _)) (Comb (Const "?" _) (Abs _ _)))
                 (BINDER_CONV #'weakdnf tm))
@@ -1228,8 +1223,7 @@
                   (cl:declare (cl:ignorable th))
                   (TRANS th (distribute (rand (concl th))))))
               (_ (REFL tm))))
-            (substrongdnf
-              (tm)
+            (substrongdnf (tm)
               (match tm
                 ((cl:or (Comb (Const "!" _) (Abs _ _)) (Comb (Const "?" _) (Abs _ _)))
                   (BINDER_CONV #'strongdnf tm))
@@ -1241,8 +1235,7 @@
                     (cl:declare (cl:ignorable th))
                     (TRANS th (distribute (rand (concl th))))))
                 (_ (REFL tm))))
-            (strongdnf
-              (tm)
+            (strongdnf (tm)
               (let ((th (substrongdnf tm)))
                 (cl:declare (cl:ignorable th))
                 (TRANS th (#`strengthen (rand (concl th)))))))
@@ -1268,8 +1261,7 @@
       (c_tm (parse_term "c:bool")))
     (cl:declare (cl:ignorable pth1 pth2 a_tm b_tm c_tm))
     (labelsc
-      ((distribute
-        (tm)
+      ((distribute (tm)
         (match tm
           ((Comb (Comb (Const "\\/" _) a%) (Comb (Comb (Const "/\\" _) b%) c%))
             (let
@@ -1299,8 +1291,7 @@
             #'CONJ_CANON_CONV)))
         (cl:declare (cl:ignorable strengthen))
         (labelsc
-          ((weakcnf
-            (tm)
+          ((weakcnf (tm)
             (match tm
               ((cl:or (Comb (Const "!" _) (Abs _ _)) (Comb (Const "?" _) (Abs _ _)))
                 (BINDER_CONV #'weakcnf tm))
@@ -1310,8 +1301,7 @@
                   (cl:declare (cl:ignorable th))
                   (TRANS th (distribute (rand (concl th))))))
               (_ (REFL tm))))
-            (substrongcnf
-              (tm)
+            (substrongcnf (tm)
               (match tm
                 ((cl:or (Comb (Const "!" _) (Abs _ _)) (Comb (Const "?" _) (Abs _ _)))
                   (BINDER_CONV #'strongcnf tm))
@@ -1323,8 +1313,7 @@
                     (cl:declare (cl:ignorable th))
                     (TRANS th (distribute (rand (concl th))))))
                 (_ (REFL tm))))
-            (strongcnf
-              (tm)
+            (strongcnf (tm)
               (let ((th (substrongcnf tm)))
                 (cl:declare (cl:ignorable th))
                 (TRANS th (#`strengthen (rand (concl th)))))))
@@ -1346,8 +1335,8 @@
           ((tuple op x)
             (let ((y (#`lhand yopz)) (z (rand yopz)))
               (cl:declare (cl:ignorable y z))
-              (holai.runtime:labelsc
-                ((:recursive 0 distrib (tm)
+              (labelsc
+                ((distrib (tm)
                   (match tm
                     ((guard
                       (Comb (Comb op% (Comb (Comb op%% p%) q)) r%)
@@ -1368,7 +1357,7 @@
                               (cl:declare (cl:ignorable th2 th3))
                               (TRANS th1 (TRANS th2 th3)))))))
                     (_ (REFL tm))))
-                  (:recursive 1 assoc% (tm)
+                  (assoc% (tm)
                     (match tm
                       ((guard (Comb (cl:and l (Comb op% p%)) q) (= op% op))
                         (let ((th%% (AP_TERM l (assoc% q))))
@@ -1434,8 +1423,8 @@
                         (#`GENL fvs th2))
                       (failwith "SELECT_AX_THM: not a select-term"))))))))
           (cl:declare (cl:ignorable SELECT_AX_THM))
-          (holai.runtime:labelsc
-            ((:nonrecursive 0 SELECT_ELIM_ICONV (tm)
+          (labelsc
+            ((SELECT_ELIM_ICONV (tm)
               (let*
                 ((t% (find_term is_select tm))
                   (th1 (#`SELECT_AX_THM t%))
@@ -1457,7 +1446,7 @@
                   (#`MP
                     (INST% (cl:cons (tuple atm fn) nil) (#`DISCH rawdef th5))
                     (REFL atm)))))
-              (:recursive 1 SELECT_ELIMS_ICONV (tm)
+              (SELECT_ELIMS_ICONV (tm)
                 (handler-case
                   (let* ((th (SELECT_ELIM_ICONV tm)) (tm% (#`lhand (concl th))))
                     (cl:declare (cl:ignorable th tm%))
@@ -1488,8 +1477,7 @@
               (REWRITE_TAC (cl:cons FUN_EQ_THM nil))))))
         (cl:declare (cl:ignorable pth))
         (labelsc
-          ((conv
-            (vs tm)
+          ((conv (vs tm)
             (if (= vs nil)
               (REFL tm)
               (THENC
@@ -1498,8 +1486,8 @@
                 tm))))
           #'conv))))
     (cl:declare (cl:ignorable HALF_MK_ABS_CONV))
-    (holai.runtime:labelsc
-      ((:recursive 0 find_lambda (tm)
+    (labelsc
+      ((find_lambda (tm)
         (if (is_abs tm)
           tm
           (if (cl:or (is_var tm) (is_const tm))
@@ -1517,7 +1505,7 @@
                         (match exception~3205
                           ((Failure _) (find_lambda r%))
                           (_ (raise exception~3205))))))))))))
-        (:recursive 1 ELIM_LAMBDA (conv tm)
+        (ELIM_LAMBDA (conv tm)
           (handler-case
             (#`conv tm)
             (holai.runtime:ocaml-condition
@@ -1547,8 +1535,8 @@
             (cl:declare (cl:ignorable pth))
             (MATCH_MP pth))))
         (cl:declare (cl:ignorable APPLY_PTH))
-        (holai.runtime:labelsc
-          ((:nonrecursive 0 LAMB1_CONV (tm)
+        (labelsc
+          ((LAMB1_CONV (tm)
             (let ((atm (find_lambda tm)))
               (cl:declare (cl:ignorable atm))
               (match (dest_abs atm)
@@ -1566,7 +1554,7 @@
                     (CONV_RULE
                       (RAND_CONV (BINDER_CONV (#`LAND_CONV (#`HALF_MK_ABS_CONV vs%))))
                       th3))))))
-            (:recursive 1 conv (tm)
+            (conv (tm)
               (handler-case
                 (THENC #'LAMB1_CONV #'conv tm)
                 (holai.runtime:ocaml-condition
@@ -1618,8 +1606,8 @@
             (cl:declare (cl:ignorable cnv))
             (THENC (BINOP_CONV cnv) cnv))))
       (cl:declare (cl:ignorable match_th match_th% propsimp_conv proptsimp_conv))
-      (holai.runtime:labelsc
-        ((:recursive 0 find_conditional (fvs tm)
+      (labelsc
+        ((find_conditional (fvs tm)
           (match tm
             ((Comb s t%)
               (if (cl:and (is_cond tm) (= (intersect (frees (#`lhand s)) fvs) nil))
@@ -1633,7 +1621,7 @@
                       (_ (raise exception~3464)))))))
             ((Abs x t%) (find_conditional (cl:cons x fvs) t%))
             (_ (failwith "find_conditional"))))
-          (:recursive 1 CONDS_ELIM_CONV% (dfl tm)
+          (CONDS_ELIM_CONV% (dfl tm)
             (handler-case
               (let*
                 ((t% (find_conditional nil tm))
@@ -1692,8 +1680,8 @@
 
 
 (defparameter ASM_FOL_TAC
-  (holai.runtime:labelsc
-    ((:recursive 0 get_heads (lconsts tm arg~3658)
+  (labelsc
+    ((get_heads (lconsts tm arg~3658)
       (match arg~3658
         ((cl:and sofar (tuple cheads vheads))
           (handler-case
@@ -1744,8 +1732,7 @@
                                 (_ (raise exception~3669))))))
                         (_ (raise exception~3666))))))
                 (_ (raise exception~3663))))))))
-      (:nonrecursive 1 get_thm_heads (th sofar)
-        (get_heads (freesl (hyp th)) (concl th) sofar)))
+      (get_thm_heads (th sofar) (get_heads (freesl (hyp th)) (concl th) sofar)))
     (let
       ((APP_CONV
         (let
@@ -1757,12 +1744,12 @@
           (cl:declare (cl:ignorable th))
           (#`REWR_CONV th))))
       (cl:declare (cl:ignorable APP_CONV))
-      (holai.runtime:labelsc
-        ((:recursive 0 APP_N_CONV (n tm)
+      (labelsc
+        ((APP_N_CONV (n tm)
           (if (= n 1)
             (#`APP_CONV tm)
             (THENC (RATOR_CONV (APP_N_CONV (- n 1))) APP_CONV tm)))
-          (:recursive 1 FOL_CONV (hddata tm)
+          (FOL_CONV (hddata tm)
             (if (#`is_forall tm)
               (BINDER_CONV (FOL_CONV hddata) tm)
               (if (cl:or (#`is_conj tm) (#`is_disj tm))
@@ -1786,7 +1773,7 @@
                                 (_ (raise exception~3831)))))))
                       (cl:declare (cl:ignorable th tm% n))
                       (if (= n 0) th (TRANS th (APP_N_CONV n tm%)))))))))
-          (:nonrecursive 2 GEN_FOL_CONV (arg~3879)
+          (GEN_FOL_CONV (arg~3879)
             (match arg~3879
               ((tuple cheads vheads)
                 (let
@@ -1794,9 +1781,8 @@
                     (if (= vheads nil)
                       (let ((hops (setify (map (function-value #'fst 1) cheads))))
                         (cl:declare (cl:ignorable hops))
-                        (fletc
-                          ((getmin
-                            (h)
+                        (labelsc
+                          ((getmin (h)
                             (let
                               ((ns
                                 (mapfilter

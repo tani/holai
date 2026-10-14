@@ -2063,8 +2063,7 @@
       (n_tm (parse_term "n:num")))
     (cl:declare (cl:ignorable pth_0 pth_1 pth_2 ns_tm m_tm n_tm))
     (labelsc
-      ((NUMSEG_CONV%
-        (tm)
+      ((NUMSEG_CONV% (tm)
         (match (dest_comb tm)
           ((tuple nstm nt)
             (match (dest_comb nstm)
@@ -5564,8 +5563,7 @@
       (parse_term "n:num"))
     ((tuple (cl:cons pth_0 (cl:cons pth_1 (cl:cons pth_2 nil))) ns_tm f_tm m_tm n_tm)
       (labelsc
-        ((conv
-          (tm)
+        ((conv (tm)
           (match (dest_comb tm)
             ((tuple smn ftm)
               (match (dest_comb smn)
@@ -7134,8 +7132,7 @@
       (parse_term "n:num"))
     ((tuple (cl:cons pth_0 (cl:cons pth_1 (cl:cons pth_2 nil))) ns_tm f_tm m_tm n_tm)
       (labelsc
-        ((conv
-          (tm)
+        ((conv (tm)
           (match (dest_comb tm)
             ((tuple smn ftm)
               (match (dest_comb smn)

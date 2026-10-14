@@ -364,7 +364,6 @@
     guard
     function-value
     fst
-    fletc
     failwith
     Failure
     deref
@@ -437,8 +436,7 @@
   (let*
     ((morder_lt
       (labelsc
-        ((lexorder
-          (l1 l2)
+        ((lexorder (l1 l2)
           (match (tuple l1 l2)
             ((tuple nil nil) cl:nil)
             ((tuple (cl:cons x1 o1) (cl:cons x2 o2))
@@ -452,8 +450,8 @@
             (cl:or (< n1 n2) (cl:and (= n1 n2) (lexorder m1 m2)))))))
       (grob_neg (map (lambdac (arg~70) (match arg~70 ((tuple c% m) (tuple (- c%) m)))))))
     (cl:declare (cl:ignorable morder_lt grob_neg))
-    (holai.runtime:labelsc
-      ((:recursive 0 grob_add (l1 l2)
+    (labelsc
+      ((grob_add (l1 l2)
         (match (tuple l1 l2)
           ((tuple nil l2%) l2%)
           ((tuple l1% nil) l1%)
@@ -465,38 +463,38 @@
               (if (#`morder_lt m2 m1)
                 (cl:cons (tuple c1 m1) (grob_add o1 l2))
                 (cl:cons (tuple c2 m2) (grob_add l1 o2)))))))
-        (:nonrecursive 1 grob_sub (l1 l2) (grob_add l1 (#`grob_neg l2)))
-        (:nonrecursive 2 grob_mmul (arg~166 arg~170)
+        (grob_sub (l1 l2) (grob_add l1 (#`grob_neg l2)))
+        (grob_mmul (arg~166 arg~170)
           (match arg~166
             ((tuple c1 m1)
               (match arg~170
                 ((tuple c2 m2) (tuple (* c1 c2) (map2 (function-value #'+ 2) m1 m2)))))))
-        (:recursive 3 grob_cmul (cm pol) (map (grob_mmul cm) pol))
-        (:recursive 4 grob_mul (l1 l2)
+        (grob_cmul (cm pol) (map (grob_mmul cm) pol))
+        (grob_mul (l1 l2)
           (match l1
             (nil nil)
             ((cl:cons h1 t1) (grob_add (grob_cmul h1 l2) (grob_mul t1 l2)))))
-        (:nonrecursive 5 grob_inv (l)
+        (grob_inv (l)
           (match l
             ((guard (cl:cons (tuple c% vs) nil) (forall (lambdac (x) (= x 0)) vs))
               (if (= c% num_0)
                 (failwith "grob_inv: division by zero")
                 (cl:cons (tuple (/ num_1 c%) vs) nil)))
             (_ (failwith "grob_inv: non-constant divisor polynomial"))))
-        (:nonrecursive 6 grob_div (l1 l2)
+        (grob_div (l1 l2)
           (match l2
             ((guard (cl:cons (tuple c% l) nil) (forall (lambdac (x) (= x 0)) l))
               (if (= c% num_0)
                 (failwith "grob_div: division by zero")
                 (grob_cmul (tuple (/ num_1 c%) l) l1)))
             (_ (failwith "grob_div: non-constant divisor polynomial"))))
-        (:recursive 7 grob_pow (vars l n)
+        (grob_pow (vars l n)
           (if (< n 0)
             (failwith "grob_pow: negative power")
             (if (= n 0)
               (cl:cons (tuple num_1 (map (lambdac (v) 0) vars)) nil)
               (grob_mul l (grob_pow vars l (- n 1))))))
-        (:nonrecursive 8 mdiv (arg~315 arg~319)
+        (mdiv (arg~315 arg~319)
           (match arg~315
             ((tuple c1 m1)
               (match arg~319
@@ -507,12 +505,12 @@
                       (lambdac (n1 n2) (if (< n1 n2) (failwith "mdiv") (- n1 n2)))
                       m1
                       m2)))))))
-        (:nonrecursive 9 mlcm (arg~349 arg~353)
+        (mlcm (arg~349 arg~353)
           (match arg~349
             ((tuple c1 m1)
               (match arg~353
                 ((tuple c2 m2) (tuple num_1 (map2 (function-value #'max 2) m1 m2)))))))
-        (:nonrecursive 10 reduce1 (cm arg~371)
+        (reduce1 (cm arg~371)
           (match arg~371
             ((tuple pol hpol)
               (match pol
@@ -529,9 +527,8 @@
                       (match exception~383
                         ((Failure _) (failwith "reduce1"))
                         (_ (raise exception~383))))))))))
-        (:nonrecursive 11 reduceb (cm basis)
-          (tryfind (lambdac (p%) (reduce1 cm p%)) basis))
-        (:recursive 12 reduce (basis arg~428)
+        (reduceb (cm basis) (tryfind (lambdac (p%) (reduce1 cm p%)) basis))
+        (reduce (basis arg~428)
           (match arg~428
             ((tuple pol hist)
               (match pol
@@ -548,9 +545,8 @@
                           (match (reduce basis (tuple ptl hist))
                             ((tuple q hist%) (tuple (cl:cons cm q) hist%))))
                         (_ (raise exception~441))))))))))
-        (:nonrecursive 13 orthogonal (l p1 p2)
-          (= (snd l) (snd (grob_mmul (hd p1) (hd p2)))))
-        (:nonrecursive 14 spoly (cm ph1 ph2)
+        (orthogonal (l p1 p2) (= (snd l) (snd (grob_mmul (hd p1) (hd p2)))))
+        (spoly (cm ph1 ph2)
           (match (tuple ph1 ph2)
             ((tuple (tuple nil h) p%) (tuple nil h))
             ((tuple p% (tuple nil h)) (tuple nil h))
@@ -560,7 +556,7 @@
                 (make-Add
                   (make-Mmul (mdiv cm cm1) his1)
                   (make-Mmul (mdiv (tuple (- (fst cm)) (snd cm)) cm2) his2))))))
-        (:nonrecursive 15 monic (arg~571)
+        (monic (arg~571)
           (match arg~571
             ((tuple pol hist)
               (if (= pol nil)
@@ -573,11 +569,11 @@
                           (match arg~577 ((tuple c%% m) (tuple (/ c%% c%) m))))
                         pol)
                       (make-Mmul (tuple (/ num_1 c%) (map (K 0) m%)) hist))))))))
-        (:nonrecursive 16 forder (arg~620 arg~624)
+        (forder (arg~620 arg~624)
           (match arg~620
             ((tuple (tuple c1 m1) _)
               (match arg~624 ((tuple (tuple c2 m2) _) (#`morder_lt m1 m2))))))
-        (:recursive 17 poly_lt (p% q)
+        (poly_lt (p% q)
           (match (tuple p% q)
             ((tuple p nil) cl:nil)
             ((tuple nil q%) cl:t)
@@ -585,13 +581,13 @@
               (cl:or
                 (< c1 c2)
                 (cl:and (= c1 c2) (cl:or (< m1 m2) (cl:and (= m1 m2) (poly_lt o1 o2))))))))
-        (:nonrecursive 18 align (arg~695)
+        (align (arg~695)
           (match arg~695
             ((tuple (tuple p% hp) (tuple q hq))
               (if (poly_lt p% q)
                 (tuple (tuple p% hp) (tuple q hq))
                 (tuple (tuple q hq) (tuple p% hp))))))
-        (:nonrecursive 19 poly_eq (p1 p2)
+        (poly_eq (p1 p2)
           (forall2
             (lambdac (arg~729 arg~733)
               (match arg~729
@@ -599,7 +595,7 @@
                   (match arg~733 ((tuple c2 m2) (cl:and (= c1 c2) (= m1 m2)))))))
             p1
             p2))
-        (:nonrecursive 20 memx (arg~755 ppairs)
+        (memx (arg~755 ppairs)
           (match arg~755
             ((tuple (tuple p1 h1) (tuple p2 h2))
               (not
@@ -609,7 +605,7 @@
                       ((tuple (tuple q1 _) (tuple q2 _))
                         (cl:and (poly_eq p1 q1) (poly_eq p2 q2)))))
                   ppairs)))))
-        (:nonrecursive 21 criterion2 (basis arg~793 opairs)
+        (criterion2 (basis arg~793 opairs)
           (match arg~793
             ((tuple lcm (tuple (tuple p1 h1) (tuple p2 h2)))
               (exists
@@ -630,11 +626,11 @@
                               (align (tuple g% (tuple p2 h2)))
                               (map (function-value #'snd 1) opairs))))))))
                 basis))))
-        (:nonrecursive 22 constant_poly (p%)
+        (constant_poly (p%)
           (cl:and
             (= (#`length p%) 1)
             (forall (partial (function-value #'= 2) 0) (snd (hd p%)))))
-        (:recursive 23 grobner_basis (basis pairs)
+        (grobner_basis (basis pairs)
           (progn
             (print-string
               (string-concat
@@ -672,7 +668,7 @@
                           (grobner_basis
                             (cl:cons sph basis)
                             (merge #'forder opairs (mergesort #'forder newcps))))))))))))
-        (:recursive 24 grobner_interreduce (rpols ipols)
+        (grobner_interreduce (rpols ipols)
           (match ipols
             (nil (map #'monic (#`rev rpols)))
             ((cl:cons p% ps)
@@ -681,7 +677,7 @@
                 (if (= (fst p%%) nil)
                   (grobner_interreduce rpols ps)
                   (grobner_interreduce (cl:cons p%% rpols) ps))))))
-        (:nonrecursive 25 grobner (pols)
+        (grobner (pols)
           (let*
             ((npols
               (map2
@@ -714,7 +710,7 @@
                   prs2)))
             (cl:declare (cl:ignorable npols phists bas prs0 prs1 prs2 prs3))
             (grobner_basis bas (mergesort #'forder prs3))))
-        (:nonrecursive 26 grobner_refute (pols)
+        (grobner_refute (pols)
           (let ((gb (grobner pols)))
             (cl:declare (cl:ignorable gb))
             (snd
@@ -726,7 +722,7 @@
                         (= (#`length p%) 1)
                         (forall (partial (function-value #'= 2) 0) (snd (hd p%)))))))
                 gb))))
-        (:recursive 27 resolve_proof (vars prf)
+        (resolve_proof (vars prf)
           (match prf
             ((Start -1) nil)
             ((Start m)
@@ -770,7 +766,7 @@
                         (cl:declare (cl:ignorable a% b%))
                         (tuple n (grob_add a% b%))))
                     dom%))))))
-        (:nonrecursive 28 grobner_weak (vars pols)
+        (grobner_weak (vars pols)
           (let*
             ((cert (resolve_proof vars (grobner_refute pols)))
               (l
@@ -794,13 +790,13 @@
                             (match arg~1300 ((tuple d m) (tuple (* l d) m))))
                           p%)))))
                 cert))))
-        (:nonrecursive 29 grobner_ideal (vars pols pol)
+        (grobner_ideal (vars pols pol)
           (match (reduce (grobner pols) (tuple (#`grob_neg pol) (make-Start (- 1))))
             ((tuple pol% h)
               (if (<> pol% nil)
                 (failwith "grobner_ideal: not in the ideal")
                 (resolve_proof vars h)))))
-        (:nonrecursive 30 grobner_strong (vars pols pol)
+        (grobner_strong (vars pols pol)
           (if (= pol nil)
             (tuple 1 num_1 nil)
             (let*
@@ -831,14 +827,14 @@
                             cert
                             0)))
                         (cl:declare (cl:ignorable d))
-                        (holai.runtime:labelsc
-                          ((:nonrecursive 0 transform_monomial (arg~1429)
+                        (labelsc
+                          ((transform_monomial (arg~1429)
                             (match arg~1429
                               ((tuple c% m)
                                 (grob_cmul
                                   (tuple c% (tl m))
                                   (grob_pow vars pol (- d (hd m)))))))
-                            (:nonrecursive 1 transform_polynomial (q)
+                            (transform_polynomial (q)
                               (itlist (o #'grob_add #'transform_monomial) q nil)))
                           (let
                             ((cert%
@@ -891,8 +887,7 @@
           (false_tm (parse_term "F")))
         (cl:declare (cl:ignorable pth_step FINAL_RULE false_tm))
         (labelsc
-          ((refute_disj
-            (rfn tm)
+          ((refute_disj (rfn tm)
             (match tm
               ((Comb (Comb (Const "\\/" _) l) r%)
                 (#`DISJ_CASES (ASSUME tm) (refute_disj rfn l) (refute_disj rfn r%)))
@@ -979,8 +974,8 @@
                       ring_dest_div
                       ring_dest_pow
                       ring_mk_pow))
-                  (holai.runtime:labelsc
-                    ((:recursive 0 grobvars (tm acc)
+                  (labelsc
+                    ((grobvars (tm acc)
                       (if (can ring_dest_const tm)
                         acc
                         (if (can ring_dest_neg tm)
@@ -1003,7 +998,7 @@
                                     (cl:declare (cl:ignorable lvs gvs))
                                     (if (= gvs nil) lvs (cl:cons tm acc)))
                                   (cl:cons tm acc))))))))
-                      (:recursive 1 grobify_term (vars tm)
+                      (grobify_term (vars tm)
                         (handler-case
                           (if (not (mem tm vars))
                             (failwith "")
@@ -1141,11 +1136,11 @@
                                               (_ (raise exception~1815))))))
                                       (_ (raise exception~1812))))))
                               (_ (raise exception~1809))))))
-                      (:nonrecursive 2 grobify_equation (vars tm)
+                      (grobify_equation (vars tm)
                         (match (dest_eq tm)
                           ((tuple l r%)
                             (grob_sub (grobify_term vars l) (grobify_term vars r%)))))
-                      (:nonrecursive 3 grobify_equations (tm)
+                      (grobify_equations (tm)
                         (let*
                           ((cjs (#`conjuncts tm))
                             (rawvars
@@ -1159,12 +1154,12 @@
                           (tuple vars (map (grobify_equation vars) cjs)))))
                     (let
                       ((holify_polynomial
-                        (holai.runtime:labelsc
-                          ((:nonrecursive 0 holify_varpow (arg~2029)
+                        (labelsc
+                          ((holify_varpow (arg~2029)
                             (match arg~2029
                               ((tuple v n)
                                 (if (= n 1) v (#`ring_mk_pow v (mk_small_numeral n))))))
-                            (:nonrecursive 1 holify_monomial (vars arg~2047)
+                            (holify_monomial (vars arg~2047)
                               (match arg~2047
                                 ((tuple c% m)
                                   (let
@@ -1179,7 +1174,7 @@
                                     (end_itlist
                                       ring_mk_mul
                                       (cl:cons (#`ring_mk_const c%) xps))))))
-                            (:nonrecursive 2 holify_polynomial (vars p%)
+                            (holify_polynomial (vars p%)
                               (if (= p% nil)
                                 (#`ring_mk_const num_0)
                                 (end_itlist ring_mk_add (map (holify_monomial vars) p%)))))
@@ -1189,9 +1184,8 @@
                         ((tuple pth_idom pth_ine)
                           (let ((IDOM_RULE (CONV_RULE (#`REWR_CONV pth_idom))))
                             (cl:declare (cl:ignorable IDOM_RULE))
-                            (fletc
-                              ((PROVE_NZ
-                                (n)
+                            (labelsc
+                              ((PROVE_NZ (n)
                                 (#`EQF_ELIM
                                   (#`RING_EQ_CONV
                                     (#`mk_eq
@@ -1205,8 +1199,8 @@
                                     (lambdac (th1 th2)
                                       (MK_COMB% (tuple (AP_TERM ring_add_tm th1) th2)))))
                                 (cl:declare (cl:ignorable NOT_EQ_01 INE_RULE MK_ADD))
-                                (holai.runtime:labelsc
-                                  ((:nonrecursive 0 execute_proof (vars eths prf)
+                                (labelsc
+                                  ((execute_proof (vars eths prf)
                                     (match
                                       (SPEC_VAR (#`CONJUNCT1 (#`CONJUNCT2 RING_INTEGRAL)))
                                       ((tuple x th1)
@@ -1239,16 +1233,15 @@
                                                         eths)))
                                                   (cl:declare
                                                     (cl:ignorable SUB_EQ_RULE initpols))
-                                                  (holai.runtime:labelsc
-                                                    ((:nonrecursive 0 ADD_RULE (th1% th2%)
+                                                  (labelsc
+                                                    ((ADD_RULE (th1% th2%)
                                                       (CONV_RULE
                                                         (BINOP_CONV RING_NORMALIZE_CONV)
                                                         (MK_COMB%
                                                           (tuple
                                                             (AP_TERM ring_add_tm th1%)
                                                             th2%))))
-                                                      (:nonrecursive 0 MUL_RULE
-                                                        (vars% m th)
+                                                      (MUL_RULE (vars% m th)
                                                         (CONV_RULE
                                                           (BINOP_CONV RING_NORMALIZE_CONV)
                                                           (AP_TERM
@@ -1259,7 +1252,7 @@
                                                                   vars%
                                                                   (cl:cons m nil))))
                                                             th)))
-                                                      (:recursive 1 assoceq (a% l)
+                                                      (assoceq (a% l)
                                                         (match l
                                                           (nil (failwith "assoceq"))
                                                           ((cl:cons (tuple x% y%) t%)
@@ -1280,9 +1273,8 @@
                                                             (let ((execache (ref nil)))
                                                               (cl:declare
                                                                 (cl:ignorable execache))
-                                                              (holai.runtime:labelsc
-                                                                ((:nonrecursive 0 memoize
-                                                                  (prf% x%)
+                                                              (labelsc
+                                                                ((memoize (prf% x%)
                                                                   (progn
                                                                     (assign
                                                                       execache
@@ -1290,8 +1282,7 @@
                                                                         (tuple prf% x%)
                                                                         (deref execache)))
                                                                     x%))
-                                                                  (:recursive 1 run_proof
-                                                                    (vars% prf%)
+                                                                  (run_proof (vars% prf%)
                                                                     (handler-case
                                                                       (assoceq
                                                                         prf%
@@ -1353,9 +1344,8 @@
                                                                 (execache (ref nil)))
                                                               (cl:declare
                                                                 (cl:ignorable km execache))
-                                                              (holai.runtime:labelsc
-                                                                ((:nonrecursive 0 memoize
-                                                                  (prf% x%)
+                                                              (labelsc
+                                                                ((memoize (prf% x%)
                                                                   (progn
                                                                     (assign
                                                                       execache
@@ -1363,8 +1353,7 @@
                                                                         (tuple prf% x%)
                                                                         (deref execache)))
                                                                     x%))
-                                                                  (:recursive 1
-                                                                    run_scaled_proof
+                                                                  (run_scaled_proof
                                                                     (vars% prf%)
                                                                     (handler-case
                                                                       (assoceq
@@ -1478,7 +1467,7 @@
                                                       (cl:declare
                                                         (cl:ignorable run_proof th))
                                                       (CONV_RULE RING_EQ_CONV th)))))))))))
-                                    (:nonrecursive 1 REFUTE (tm)
+                                    (REFUTE (tm)
                                       (if (= tm false_tm)
                                         (ASSUME tm)
                                         (match
@@ -1656,9 +1645,8 @@
                                                               (cl:ignorable
                                                                 herts_pos
                                                                 herts_neg))
-                                                            (fletc
-                                                              ((thm_fn
-                                                                (pols)
+                                                            (labelsc
+                                                              ((thm_fn (pols)
                                                                 (if (= pols nil)
                                                                   (REFL
                                                                     (#`ring_mk_const
@@ -1709,9 +1697,8 @@
                                         (dest_fun_ty
                                           (snd (dest_fun_ty (type_of ring_add_tm)))))))
                                     (cl:declare (cl:ignorable ring_ty))
-                                    (fletc
-                                      ((RING%
-                                        (tm)
+                                    (labelsc
+                                      ((RING% (tm)
                                         (let*
                                           ((avs
                                             (filter
@@ -1743,8 +1730,7 @@
                                                     (cl:ignorable th1a boda th2a th2b th2))
                                                   (match
                                                     (labelsc
-                                                      ((CHOOSES
-                                                        (evs% arg~2934)
+                                                      ((CHOOSES (evs% arg~2934)
                                                         (match arg~2934
                                                           ((tuple etm th)
                                                             (match evs%
@@ -1775,8 +1761,7 @@
                                                           (#`FINAL_RULE
                                                             (#`DISCH finbod th3))
                                                           th1))))))))))
-                                        (ideal
-                                          (tms tm)
+                                        (ideal (tms tm)
                                           (let*
                                             ((rawvars
                                               (itlist #'grobvars (cl:cons tm tms) nil))
@@ -1869,8 +1854,7 @@
           DIVMOD_ELIM_THM%%
           pth_evenodd))
       (labelsc
-        ((NUM_MULTIPLY_CONV
-          (pos tm)
+        ((NUM_MULTIPLY_CONV (pos tm)
           (if (cl:or (#`is_forall tm) (cl:or (#`is_exists tm) (#`is_uexists tm)))
             (BINDER_CONV (NUM_MULTIPLY_CONV pos) tm)
             (if (cl:and (#`is_imp tm) (#`contains_quantifier tm))

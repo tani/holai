@@ -510,7 +510,6 @@
     gcd-num
     function-value
     fst
-    fletc
     failwith
     Failure
     exception-string
@@ -709,8 +708,7 @@
 
 (defunc map (f)
   (labelsc
-    ((mapf%
-      (l)
+    ((mapf% (l)
       (match l
         (nil nil)
         ((cl:cons x t%)
@@ -730,8 +728,7 @@
 
 (defparameter rev
   (labelsc
-    ((rev_append
-      (acc l)
+    ((rev_append (acc l)
       (match l (nil acc) ((cl:cons h t%) (rev_append (cl:cons h acc) t%)))))
     (lambdac (l) (rev_append nil l))))
 
@@ -744,8 +741,7 @@
 
 (defunc mapi (f xs)
   (labelsc
-    ((aux
-      (i% f% arg~262)
+    ((aux (i% f% arg~262)
       (match arg~262
         (nil nil)
         ((cl:cons h tl%) (cl:cons (#`f% i% h) (aux (+ i% 1) f% tl%))))))
@@ -823,8 +819,7 @@
 
 (defunc rev_splitlist (dest)
   (labelsc
-    ((rsplist
-      (ls x)
+    ((rsplist (ls x)
       (handler-case
         (match (#`dest x) ((tuple l r) (rsplist (cl:cons r ls) l)))
         (holai.runtime:ocaml-condition
@@ -834,8 +829,7 @@
 
 (defunc striplist (dest)
   (labelsc
-    ((strip
-      (x acc)
+    ((strip (x acc)
       (handler-case
         (match (#`dest x) ((tuple l r) (strip l (strip r acc))))
         (holai.runtime:ocaml-condition
@@ -949,8 +943,7 @@
 
 (defunc find_index (p)
   (labelsc
-    ((ind
-      (n l)
+    ((ind (n l)
       (match l
         (nil (make-None))
         ((cl:cons h t%) (if (#`p h) (make-Some n) (ind (+ n 1) t%))))))
@@ -1150,8 +1143,7 @@
                               (cl:cons "c" (cl:cons "d" (cl:cons "e" (cl:cons "f" nil))))))))))))))))))
     (cl:declare (cl:ignorable digits))
     (labelsc
-      ((string_of_num
-        (base n)
+      ((string_of_num (base n)
         (let ((n0 (mod-num n base)) (n1 (quo-num n base)))
           (cl:declare (cl:ignorable n0 n1))
           (let ((d0 (el (int-of-num n0) digits)))
@@ -1279,8 +1271,7 @@
 
 (defunc mergesort (ord)
   (labelsc
-    ((mergepairs
-      (l1 l2)
+    ((mergepairs (l1 l2)
       (match (tuple l1 l2)
         ((tuple (cl:cons s nil) nil) s)
         ((tuple l nil) (mergepairs nil l))
@@ -1321,12 +1312,12 @@
 
 
 (defparameter mapf
-  (holai.runtime:labelsc
-    ((:recursive 0 map_list (f l)
+  (labelsc
+    ((map_list (f l)
       (match l
         (nil nil)
         ((cl:cons (tuple x y) t%) (cl:cons (tuple x (#`f y)) (map_list f t%)))))
-      (:recursive 1 mapf% (f t%)
+      (mapf% (f t%)
         (match t%
           ((Empty) (make-Empty))
           ((Leaf h l) (make-Leaf h (map_list f l)))
@@ -1339,10 +1330,10 @@
 
 
 (defparameter foldl
-  (holai.runtime:labelsc
-    ((:recursive 0 foldl_list (f a l)
+  (labelsc
+    ((foldl_list (f a l)
       (match l (nil a) ((cl:cons (tuple x y) t%) (foldl_list f (#`f a x y) t%))))
-      (:recursive 1 foldl% (f a t%)
+      (foldl% (f a t%)
         (match t%
           ((Empty) a)
           ((Leaf h l) (foldl_list f a l))
@@ -1350,10 +1341,10 @@
     #'foldl%))
 
 (defparameter foldr
-  (holai.runtime:labelsc
-    ((:recursive 0 foldr_list (f l a)
+  (labelsc
+    ((foldr_list (f l a)
       (match l (nil a) ((cl:cons (tuple x y) t%) (#`f x y (foldr_list f t% a)))))
-      (:recursive 1 foldr% (f t% a)
+      (foldr% (f t% a)
         (match t%
           ((Empty) a)
           ((Leaf h l) (foldr_list f l a))
@@ -1378,8 +1369,7 @@
 
 (defparameter applyd
   (labelsc
-    ((apply_listd
-      (l d x)
+    ((apply_listd (l d x)
       (match l
         ((cl:cons (tuple a b) t%)
           (let ((c% (compare x a)))
@@ -1390,8 +1380,7 @@
       (let ((k% (structural-hash x)))
         (cl:declare (cl:ignorable k%))
         (labelsc
-          ((look
-            (t%)
+          ((look (t%)
             (match t%
               ((guard (Leaf h l) (= h k%)) (apply_listd l d x))
               ((guard (Branch p b l r) (= (logand (logxor k% p) (- b 1)) 0))
@@ -1417,8 +1406,7 @@
 
 (defparameter undefine
   (labelsc
-    ((undefine_list
-      (x l)
+    ((undefine_list (x l)
       (match l
         ((cl:cons (cl:and ab (tuple a b)) t%)
           (let ((c% (compare x a)))
@@ -1435,8 +1423,7 @@
       (let ((k% (structural-hash x)))
         (cl:declare (cl:ignorable k%))
         (labelsc
-          ((und
-            (t%)
+          ((und (t%)
             (match t%
               ((guard (Leaf h l) (= h k%))
                 (let ((l% (undefine_list x l)))
@@ -1463,12 +1450,12 @@
 (defparameter %-> nil)
 
 (match
-  (holai.runtime:labelsc
-    ((:nonrecursive 0 newbranch (p1 t1 p2 t2)
+  (labelsc
+    ((newbranch (p1 t1 p2 t2)
       (let* ((zp (logxor p1 p2)) (b (logand zp (- zp))) (p (logand p1 (- b 1))))
         (cl:declare (cl:ignorable zp b p))
         (if (= (logand p1 b) 0) (make-Branch p b t1 t2) (make-Branch p b t2 t1))))
-      (:recursive 1 define_list (arg~2487 l)
+      (define_list (arg~2487 l)
         (match arg~2487
           ((cl:and xy (tuple x y))
             (match l
@@ -1479,7 +1466,7 @@
                     (cl:cons xy t%)
                     (if (< c% 0) (cl:cons xy l) (cl:cons ab (define_list xy t%))))))
               (nil (cl:cons xy nil))))))
-      (:recursive 1 combine_list (op z l1 l2)
+      (combine_list (op z l1 l2)
         (match (tuple l1 l2)
           ((tuple nil _) l2)
           ((tuple _ nil) l1)
@@ -1495,12 +1482,11 @@
                   (let ((y (#`op y1 y2)) (l (combine_list op z t1 t2)))
                     (cl:declare (cl:ignorable y l))
                     (if (#`z y) l (cl:cons (tuple x1 y) l)))))))))
-      (:nonrecursive 2 %->% (x y)
+      (%->% (x y)
         (let ((k% (structural-hash x)))
           (cl:declare (cl:ignorable k%))
           (labelsc
-            ((upd
-              (t%)
+            ((upd (t%)
               (match t%
                 ((Empty) (make-Leaf k% (cl:cons (tuple x y) nil)))
                 ((Leaf h l)
@@ -1514,7 +1500,7 @@
                       (make-Branch p b (upd l) r)
                       (make-Branch p b l (upd r))))))))
             #'upd)))
-      (:recursive 3 combine% (op z t1 t2)
+      (combine% (op z t1 t2)
         (match (tuple t1 t2)
           ((tuple (Empty) _) t2)
           ((tuple _ (Empty)) t1)
@@ -1596,8 +1582,7 @@
 
 (defunc mem% (eq)
   (labelsc
-    ((mem%%
-      (x lis)
+    ((mem%% (x lis)
       (match lis (nil cl:nil) ((cl:cons h t%) (cl:or (#`eq x h) (mem%% x t%))))))
     #'mem%%))
 
@@ -1671,8 +1656,7 @@
       (sixteen (num 16)))
     (cl:declare (cl:ignorable values valof two ten sixteen))
     (labelsc
-      ((num_of_stringlist
-        (b l)
+      ((num_of_stringlist (b l)
         (match l
           (nil (failwith "num_of_string: no digits after base indicator"))
           ((cl:cons h nil) (#`valof b h))
@@ -1704,8 +1688,7 @@
             (_ (raise exception~3388)))))))
     (cl:declare (cl:ignorable fd))
     (labelsc
-      ((suck_lines
-        (acc)
+      ((suck_lines (acc)
         (let
           ((l
             (handler-case

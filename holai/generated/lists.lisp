@@ -609,7 +609,6 @@
     int-div
     guard
     function-value
-    fletc
     failwith
     Failure
     deref
@@ -2259,8 +2258,7 @@
                 (cl:cons h_tm (cl:cons n_tm (cl:cons t_tm nil)))
                 (cl:cons pth_init (cl:cons pth_base (cl:cons pth_step nil))))
                 (labelsc
-                  ((conv
-                    (th)
+                  ((conv (th)
                     (match (dest_comb (rand (concl th)))
                       ((tuple altm ntm)
                         (let ((ltm% (rand (rand altm))))
@@ -2322,8 +2320,7 @@
                 (cl:cons h_tm (cl:cons m_tm (cl:cons n_tm (cl:cons t_tm nil))))
                 (cl:cons pth_base (cl:cons pth_step nil)))
                 (labelsc
-                  ((conv
-                    (th)
+                  ((conv (th)
                     (match (dest_comb (rand (concl th)))
                       ((tuple entm ltm%)
                         (match (#`dest_cons ltm%)
@@ -2395,8 +2392,7 @@
                 (cl:cons h_tm (cl:cons l_tm (cl:cons t_tm nil)))
                 (cl:cons pth_init (cl:cons pth_base (cl:cons pth_step nil))))
                 (labelsc
-                  ((conv
-                    (th)
+                  ((conv (th)
                     (match (dest_comb (rand (concl th)))
                       ((tuple ahtm ltm%)
                         (let ((httm (rand (rand ahtm))))
@@ -2460,8 +2456,7 @@
                 (cl:cons pth_init (cl:cons pth_base (cl:cons pth_step nil)))
                 bflag)
                 (labelsc
-                  ((conv
-                    (th)
+                  ((conv (th)
                     (match (dest_comb (rand (concl th)))
                       ((tuple nftm ltm)
                         (match (dest_comb (rand nftm))
@@ -2545,10 +2540,10 @@
 (defparameter mk_string nil)
 
 (match
-  (holai.runtime:labelsc
-    ((:nonrecursive 0 bool_of_term (t%)
+  (labelsc
+    ((bool_of_term (t%)
       (match t% ((Const "T" _) cl:t) ((Const "F" _) cl:nil) (_ (failwith "bool_of_term"))))
-      (:nonrecursive 1 code_of_term (t%)
+      (code_of_term (t%)
         (match (#`strip_comb t%)
           ((tuple f tms)
             (if
@@ -2562,8 +2557,8 @@
                 0))))))
     (let ((char_of_term (o (function-value #'char-chr 1) #'code_of_term)))
       (cl:declare (cl:ignorable char_of_term))
-      (holai.runtime:labelsc
-        ((:nonrecursive 0 dest_string% (tm)
+      (labelsc
+        ((dest_string% (tm)
           (handler-case
             (let ((tms (dest_list tm)))
               (cl:declare (cl:ignorable tms))
@@ -2585,16 +2580,15 @@
               (match exception~3495
                 ((Failure _) (failwith "dest_string"))
                 (_ (raise exception~3495))))))
-          (:nonrecursive 1 mk_bool (b%)
+          (mk_bool (b%)
             (match (tuple (parse_term "T") (parse_term "F"))
               ((tuple true_tm false_tm) (if b% true_tm false_tm)))))
         (let*
           ((mk_code
             (let ((ascii_tm (parse_term "ASCII")))
               (cl:declare (cl:ignorable ascii_tm))
-              (fletc
-                ((mk_code
-                  (c%)
+              (labelsc
+                ((mk_code (c%)
                   (let
                     ((lis
                       (holai.lib:map
@@ -2608,9 +2602,8 @@
                   (lambdac (c%) (array-get codes c%))))))
             (mk_char% (o mk_code (function-value #'char-code 1))))
           (cl:declare (cl:ignorable mk_code mk_char%))
-          (fletc
-            ((mk_string%
-              (s)
+          (labelsc
+            ((mk_string% (s)
               (let
                 ((ns
                   (holai.lib:map
@@ -2688,14 +2681,14 @@
                             (cl:declare (cl:ignorable ilist f))
                             (holai.lib:map f ASCII_NEQS_FT))))
                       (cl:declare (cl:ignorable ASCII_NEQS_FT ASCII_NEQS_TF))
-                      (holai.runtime:labelsc
-                        ((:recursive 0 prefix (n l)
+                      (labelsc
+                        ((prefix (n l)
                           (if (= n 0)
                             nil
                             (match l
                               ((cl:cons h t%) (cl:cons h (prefix (- n 1) t%)))
                               (_ l))))
-                          (:recursive 1 findneq (n prefix% a% b%)
+                          (findneq (n prefix% a% b%)
                             (match (tuple a% b%)
                               ((tuple (cl:cons b1 a) (cl:cons b2 b))
                                 (if (<> b1 b2)
@@ -2754,8 +2747,7 @@
                           (tuple CONS_EQ_THM CONS_NEQ_THM)
                           (tuple NIL_NEQ_CONS CONS_NEQ_NIL))
                           (labelsc
-                            ((STRING_DISTINCTNESS
-                              (s1 s2)
+                            ((STRING_DISTINCTNESS (s1 s2)
                               (if (= s1 niltm)
                                 (if (= s2 niltm)
                                   NIL_EQ_THM
@@ -2803,16 +2795,14 @@
                                               (#`MP itm (#`CHAR_DISTINCTNESS c1 c2))))))))))))
                             #'STRING_DISTINCTNESS)))))))
               (cl:declare (cl:ignorable CHAR_DISTINCTNESS STRING_DISTINCTNESS))
-              (fletc
-                ((CHAR_EQ_CONV%
-                  (tm)
+              (labelsc
+                ((CHAR_EQ_CONV% (tm)
                   (match (dest_eq tm)
                     ((tuple c1 c2)
                       (if (= (compare c1 c2) 0)
                         (#`EQT_INTRO (REFL c1))
                         (#`CHAR_DISTINCTNESS c1 c2)))))
-                  (STRING_EQ_CONV%
-                    (tm)
+                  (STRING_EQ_CONV% (tm)
                     (match (dest_eq tm)
                       ((tuple ltm rtm)
                         (if (= (compare ltm rtm) 0)

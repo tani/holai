@@ -483,7 +483,6 @@
     int-div
     function-value
     fst
-    fletc
     failwith
     Failure
     deref
@@ -776,8 +775,7 @@
 
 (defunc qpartition (p% m)
   (labelsc
-    ((qpartition%
-      (l)
+    ((qpartition% (l)
       (if (== l m)
         (raise (make-Unchanged))
         (match l
@@ -813,8 +811,8 @@
 (match
   (let ((vstore (ref nil)) (gstore (ref nil)) (vcounter (ref 0)))
     (cl:declare (cl:ignorable vstore gstore vcounter))
-    (holai.runtime:labelsc
-      ((:nonrecursive 0 inc_vcounter (arg~154)
+    (labelsc
+      ((inc_vcounter (arg~154)
         (match arg~154
           ((cl:type holai.runtime::unit-value)
             (let* ((n (deref vcounter)) (m (+ n 1)))
@@ -822,11 +820,11 @@
               (if (>= m offinc)
                 (failwith "inc_vcounter: too many variables")
                 (progn (assign vcounter m) n))))))
-        (:nonrecursive 1 reset_vars% (arg~178)
+        (reset_vars% (arg~178)
           (match arg~178
             ((cl:type holai.runtime::unit-value)
               (progn (assign vstore nil) (assign gstore nil) (assign vcounter 0)))))
-        (:nonrecursive 2 fol_of_var% (v)
+        (fol_of_var% (v)
           (let ((currentvars (deref vstore)))
             (cl:declare (cl:ignorable currentvars))
             (handler-case
@@ -839,7 +837,7 @@
                       (cl:declare (cl:ignorable n))
                       (progn (assign vstore (cl:cons (tuple v n) currentvars)) n)))
                   (_ (raise exception~196)))))))
-        (:nonrecursive 3 hol_of_var% (v)
+        (hol_of_var% (v)
           (handler-case
             (rev_assoc v (deref vstore))
             (holai.runtime:ocaml-condition
@@ -847,7 +845,7 @@
               (match exception~219
                 ((Failure _) (rev_assoc v (deref gstore)))
                 (_ (raise exception~219))))))
-        (:nonrecursive 4 hol_of_bumped_var (v)
+        (hol_of_bumped_var (v)
           (handler-case
             (hol_of_var% v)
             (holai.runtime:ocaml-condition
@@ -874,12 +872,12 @@
 (match
   (let* ((false_tm (parse_term "F")) (cstore (ref nil)) (ccounter (ref 2)))
     (cl:declare (cl:ignorable false_tm cstore ccounter))
-    (holai.runtime:labelsc
-      ((:nonrecursive 0 reset_consts% (arg~298)
+    (labelsc
+      ((reset_consts% (arg~298)
         (match arg~298
           ((cl:type holai.runtime::unit-value)
             (progn (assign cstore (cl:cons (tuple false_tm 1) nil)) (assign ccounter 2)))))
-        (:nonrecursive 1 fol_of_const% (c%)
+        (fol_of_const% (c%)
           (let ((currentconsts (deref cstore)))
             (cl:declare (cl:ignorable currentconsts))
             (handler-case
@@ -895,7 +893,7 @@
                         (assign cstore (cl:cons (tuple c% n) currentconsts))
                         n)))
                   (_ (raise exception~317)))))))
-        (:nonrecursive 2 hol_of_const% (c%) (rev_assoc c% (deref cstore))))
+        (hol_of_const% (c%) (rev_assoc c% (deref cstore))))
       (tuple #'reset_consts% #'fol_of_const% #'hol_of_const%)))
   ((tuple reset_consts% fol_of_const% hol_of_const%)
     (setf
@@ -1275,9 +1273,8 @@
             (cl:declare (cl:ignorable allins))
             (match (separate_insts offset insts allins)
               ((tuple locin globin)
-                (fletc
-                  ((mk_ihyp
-                    (h)
+                (labelsc
+                  ((mk_ihyp (h)
                     (let ((h% (fol_inst_bump offset locin h)))
                       (cl:declare (cl:ignorable h%))
                       (tuple h% (checkan insts h% ancestors)))))
@@ -1345,8 +1342,7 @@
 
 (defunc expand_goal (rules)
   (labelsc
-    ((expand_goal%
-      (depth arg~1525 cont)
+    ((expand_goal% (depth arg~1525 cont)
       (match arg~1525
         ((cl:and state (tuple (tuple g% _) (tuple insts offset size)))
           (if (< depth 0)
@@ -1385,8 +1381,7 @@
                                             ((Cut) (failwith "expand_goal"))
                                             ((Failure _) (failwith "expand_goal"))
                                             (_ (raise exception~1559))))))))))))))))))))))
-      (expand_goals
-        (depth arg~1641 cont)
+      (expand_goals (depth arg~1641 cont)
         (match arg~1641
           ((tuple gl (cl:and tup (tuple insts offset size)))
             (match gl
@@ -1473,8 +1468,7 @@
 
 (defunc solve_goal (rules incdepth min% max% incsize)
   (labelsc
-    ((solve
-      (n g%)
+    ((solve (n g%)
       (progn
         (if (> n max%)
           (failwith "solve_goal: Too deep")
@@ -1531,14 +1525,14 @@
 
 
 (defparameter fol_of_hol_clauses
-  (holai.runtime:labelsc
-    ((:nonrecursive 0 eqt (arg~2013 arg~2018)
+  (labelsc
+    ((eqt (arg~2013 arg~2018)
       (match arg~2013
         ((tuple a1 (tuple b1 c1))
           (match arg~2018
             ((tuple a2 (tuple b2 c2))
               (cl:and (= a1 a2) (cl:and (= b1 b2) (equals_thm c1 c2))))))))
-      (:recursive 1 mk_contraposes (n th used unused sofar)
+      (mk_contraposes (n th used unused sofar)
         (match unused
           (nil sofar)
           ((cl:cons h t%)
@@ -1550,7 +1544,7 @@
                 (append used (cl:cons h nil))
                 t%
                 (cl:cons nw sofar))))))
-      (:nonrecursive 2 fol_of_hol_clause (th)
+      (fol_of_hol_clause (th)
         (let*
           ((lconsts (freesl (hyp th)))
             (tm (concl th))
@@ -1601,9 +1595,8 @@
 
 
 (defparameter optimize_rules
-  (fletc
-    ((optimize_clause_order
-      (cls)
+  (labelsc
+    ((optimize_clause_order (cls)
       (sort
         (lambdac (arg~2213 arg~2216)
           (match arg~2213
@@ -1641,10 +1634,10 @@
     (cl:declare (cl:ignorable DISJ_AC imp_CONV push_CONV pull_CONV imf_CONV))
     (let ((memory (ref nil)))
       (cl:declare (cl:ignorable memory))
-      (holai.runtime:labelsc
-        ((:nonrecursive 0 clear_contrapos_cache% (arg~2298)
+      (labelsc
+        ((clear_contrapos_cache% (arg~2298)
           (match arg~2298 ((cl:type holai.runtime::unit-value) (assign memory nil))))
-          (:nonrecursive 1 make_hol_contrapos% (arg~2305)
+          (make_hol_contrapos% (arg~2305)
             (match arg~2305
               ((tuple n th)
                 (let* ((tm (concl th)) (key (tuple n tm)))
@@ -1707,16 +1700,16 @@
 
 
 (defparameter meson_to_hol
-  (holai.runtime:labelsc
-    ((:nonrecursive 0 hol_negate (tm)
+  (labelsc
+    ((hol_negate (tm)
       (handler-case
         (dest_neg tm)
         (holai.runtime:ocaml-condition
           (exception~2422)
           (match exception~2422 ((Failure _) (#`mk_neg tm)) (_ (raise exception~2422))))))
-      (:nonrecursive 1 merge_inst (arg~2431 current)
+      (merge_inst (arg~2431 current)
         (match arg~2431 ((tuple t% x) (cl:cons (tuple (fol_subst current t%) x) current))))
-      (:recursive 2 meson_to_hol% (insts arg~2448)
+      (meson_to_hol% (insts arg~2448)
         (match arg~2448
           ((Subgoal g% gs (tuple n th) offset locin)
             (let*
@@ -1759,20 +1752,20 @@
       (eq_elim_RULE (MATCH_MP (#`TAUT (parse_term "(a <=> b) ==> b \\/ ~a"))))
       (veq_tm (rator (rator (concl (hd eq_thms))))))
     (cl:declare (cl:ignorable eq_thms imp_elim_CONV eq_elim_RULE veq_tm))
-    (holai.runtime:labelsc
-      ((:nonrecursive 0 create_equivalence_axioms (arg~2563)
+    (labelsc
+      ((create_equivalence_axioms (arg~2563)
         (match arg~2563
           ((tuple eq _)
             (let ((tyins (type_match (type_of veq_tm) (type_of eq) nil)))
               (cl:declare (cl:ignorable tyins))
               (map (INST_TYPE tyins) eq_thms)))))
-        (:recursive 1 tm_consts (tm acc)
+        (tm_consts (tm acc)
           (match (#`strip_comb tm)
             ((tuple fn args)
               (if (= args nil)
                 acc
                 (itlist #'tm_consts args (insert (tuple fn (#`length args)) acc))))))
-        (:recursive 2 fm_consts (tm arg~2608)
+        (fm_consts (tm arg~2608)
           (match arg~2608
             ((cl:and acc (tuple preds funs))
               (handler-case
@@ -1856,7 +1849,7 @@
                                     (_ (raise exception~2619))))))
                             (_ (raise exception~2616))))))
                     (_ (raise exception~2613))))))))
-        (:nonrecursive 3 create_congruence_axiom (pflag arg~2745)
+        (create_congruence_axiom (pflag arg~2745)
           (match arg~2745
             ((tuple tm len)
               (match
@@ -1930,14 +1923,12 @@
 
 (defparameter perform_brand_modification
   (labelsc
-    ((subterms_irrefl
-      (lconsts tm acc)
+    ((subterms_irrefl (lconsts tm acc)
       (if (cl:or (is_var tm) (is_const tm))
         acc
         (match (#`strip_comb tm)
           ((tuple fn args) (itlist (subterms_refl lconsts) args acc)))))
-      (subterms_refl
-        (lconsts tm acc)
+      (subterms_refl (lconsts tm acc)
         (if (is_var tm)
           (if (mem tm lconsts) (insert tm acc) acc)
           (if (is_const tm)
@@ -1947,8 +1938,8 @@
     (let
       ((CLAUSIFY (CONV_RULE (#`REWR_CONV (#`TAUT (parse_term "a ==> b <=> ~a \\/ b"))))))
       (cl:declare (cl:ignorable CLAUSIFY))
-      (holai.runtime:labelsc
-        ((:recursive 0 BRAND (tms th)
+      (labelsc
+        ((BRAND (tms th)
           (if (= tms nil)
             th
             (let*
@@ -1959,7 +1950,7 @@
                 (tms% (map (#`subst (cl:cons (tuple gv tm) nil)) (tl tms))))
               (cl:declare (cl:ignorable tm gv eq th% tms%))
               (BRAND tms% th%))))
-          (:nonrecursive 1 BRAND_CONGS (th)
+          (BRAND_CONGS (th)
             (let*
               ((lconsts (freesl (hyp th)))
                 (lits (#`disjuncts (concl th)))
@@ -2001,7 +1992,7 @@
                       (sts (sort (lambdac (s t%) (not (free_in s t%))) uts)))
                     (cl:declare (cl:ignorable acc uts sts))
                     (BRAND sts th))))))
-          (:nonrecursive 2 BRANDE (th)
+          (BRANDE (th)
             (let ((tm (concl th)))
               (cl:declare (cl:ignorable tm))
               (match (dest_eq tm)
@@ -2009,13 +2000,12 @@
                   (let* ((gv (#`genvar (type_of l))) (eq (#`mk_eq (tuple r% gv))))
                     (cl:declare (cl:ignorable gv eq))
                     (#`CLAUSIFY (#`DISCH eq (EQ_MP (AP_TERM (rator tm) (ASSUME eq)) th))))))))
-          (:nonrecursive 3 LDISJ_CASES (th lth rth)
+          (LDISJ_CASES (th lth rth)
             (#`DISJ_CASES th (#`DISJ1 lth (concl rth)) (#`DISJ2 (concl lth) rth))))
         (let ((ASSOCIATE (CONV_RULE (#`REWR_CONV (#`GSYM DISJ_ASSOC)))))
           (cl:declare (cl:ignorable ASSOCIATE))
           (labelsc
-            ((BRAND_TRANS
-              (th)
+            ((BRAND_TRANS (th)
               (let ((tm (concl th)))
                 (cl:declare (cl:ignorable tm))
                 (handler-case
@@ -2054,9 +2044,8 @@
                           ((Failure _) cl:nil)
                           (_ (raise exception~3275)))))))))
               (cl:declare (cl:ignorable find_eqs))
-              (fletc
-                ((REFLEXATE
-                  (ths)
+              (labelsc
+                ((REFLEXATE (ths)
                   (let*
                     ((eqs (itlist (o (o #'union find_eqs) #'concl) ths nil))
                       (tys
@@ -2085,16 +2074,16 @@
 
 
 (defparameter POLY_ASSUME_TAC
-  (holai.runtime:labelsc
-    ((:recursive 0 uniq% (eq l)
+  (labelsc
+    ((uniq% (eq l)
       (match l
         ((cl:cons x (cl:and t% (cl:cons y _)))
           (let ((t%% (uniq% eq t%)))
             (cl:declare (cl:ignorable t%%))
             (if (#`eq x y) t%% (if (== t%% t%) l (cl:cons x t%%)))))
         (_ l)))
-      (:nonrecursive 1 setify% (le eq s) (uniq% eq (sort le s)))
-      (:recursive 2 grab_constants (tm acc)
+      (setify% (le eq s) (uniq% eq (sort le s)))
+      (grab_constants (tm acc)
         (if (cl:or (#`is_forall tm) (#`is_exists tm))
           (grab_constants (body (rand tm)) acc)
           (if
@@ -2105,13 +2094,13 @@
             (if (is_neg tm)
               (grab_constants (rand tm) acc)
               (union (#`find_terms #'is_const tm) acc)))))
-      (:nonrecursive 3 match_consts (arg~3456)
+      (match_consts (arg~3456)
         (match arg~3456
           ((tuple tm1 tm2)
             (match (tuple (dest_const tm1) (dest_const tm2))
               ((tuple (tuple s1 ty1) (tuple s2 ty2))
                 (if (= s1 s2) (type_match ty1 ty2 nil) (failwith "match_consts")))))))
-      (:nonrecursive 4 polymorph (mconsts th)
+      (polymorph (mconsts th)
         (let
           ((tvs
             (subtract
@@ -2137,7 +2126,7 @@
                   (warn cl:t "No useful-looking instantiations of lemma")
                   (cl:cons th nil))
                 ths%)))))
-      (:recursive 5 polymorph_all (mconsts ths acc)
+      (polymorph_all (mconsts ths acc)
         (if (= ths nil)
           acc
           (let*

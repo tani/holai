@@ -394,7 +394,6 @@
     gcd-num
     function-value
     fst
-    fletc
     failwith
     Failure
     defunc
@@ -692,9 +691,8 @@
       (dest_le (dest_binop (parse_term "(<=)")))
       (dest_div (dest_binop (parse_term "(/)"))))
     (cl:declare (cl:ignorable pth x1 x2 y1 y2 dest_le dest_div))
-    (fletc
-      ((RAW_REAL_RAT_LE_CONV
-        (tm)
+    (labelsc
+      ((RAW_REAL_RAT_LE_CONV (tm)
         (match (#`dest_le tm)
           ((tuple l r%)
             (match (tuple (#`dest_div l) (#`dest_div r%))
@@ -741,9 +739,8 @@
       (dest_lt (dest_binop (parse_term "(<)")))
       (dest_div (dest_binop (parse_term "(/)"))))
     (cl:declare (cl:ignorable pth x1 x2 y1 y2 dest_lt dest_div))
-    (fletc
-      ((RAW_REAL_RAT_LT_CONV
-        (tm)
+    (labelsc
+      ((RAW_REAL_RAT_LT_CONV (tm)
         (match (#`dest_lt tm)
           ((tuple l r%)
             (match (tuple (#`dest_div l) (#`dest_div r%))
@@ -788,9 +785,8 @@
       (dest_eq% (dest_binop (parse_term "(=) :real->real->bool")))
       (dest_div (dest_binop (parse_term "(/)"))))
     (cl:declare (cl:ignorable pth x1 x2 y1 y2 dest_eq% dest_div))
-    (fletc
-      ((RAW_REAL_RAT_EQ_CONV
-        (tm)
+    (labelsc
+      ((RAW_REAL_RAT_EQ_CONV (tm)
         (match (#`dest_eq% tm)
           ((tuple l r%)
             (match (tuple (#`dest_div l) (#`dest_div r%))
@@ -996,9 +992,8 @@
       (y2 (parse_term "y2:real"))
       (y3 (parse_term "y3:real")))
     (cl:declare (cl:ignorable pth dest_divop dest_addop x1 x2 x3 y1 y2 y3))
-    (fletc
-      ((RAW_REAL_RAT_ADD_CONV
-        (tm)
+    (labelsc
+      ((RAW_REAL_RAT_ADD_CONV (tm)
         (match (#`dest_addop tm)
           ((tuple r1 r2)
             (match (tuple (#`dest_divop r1) (#`dest_divop r2))
@@ -1139,9 +1134,8 @@
         v2
         d1
         d2))
-    (fletc
-      ((RAW_REAL_RAT_MUL_CONV
-        (tm)
+    (labelsc
+      ((RAW_REAL_RAT_MUL_CONV (tm)
         (match (#`dest_mulop tm)
           ((tuple r1 r2)
             (match (tuple (#`dest_divop r1) (#`dest_divop r2))
@@ -1415,8 +1409,7 @@
         min_tm
         div_conv))
     (labelsc
-      ((REAL_POLY_CONV%
-        (tm)
+      ((REAL_POLY_CONV% (tm)
         (if (cl:or (not (is_comb tm)) (is_ratconst tm))
           (REFL tm)
           (match (dest_comb tm)
@@ -1714,10 +1707,9 @@
                 (cl:or (#`is_div tm) (cl:and (is_comb tm) (= (rator tm) inv_tm)))
                 (not (is_ratconst (rand tm))))))))
       (cl:declare (cl:ignorable prenex_conv% setup_conv core_rule is_inv))
-      (fletc
-        ((BASIC_REAL_FIELD
-          (tm)
-          (fletc ((is_freeinv (t%) (cl:and (#`is_inv t%) (free_in t% tm))))
+      (labelsc
+        ((BASIC_REAL_FIELD (tm)
+          (labelsc ((is_freeinv (t%) (cl:and (#`is_inv t%) (free_in t% tm))))
             (let*
               ((itms (setify (map #'rand (#`find_terms #'is_freeinv tm))))
                 (hyps

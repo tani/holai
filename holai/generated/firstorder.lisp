@@ -330,7 +330,6 @@
     function-value
     fst
     format-printf
-    fletc
     failwith
     Failure
     deref
@@ -393,8 +392,7 @@
 
 (defunc list_rest (l)
   (labelsc
-    ((go
-      (acc arg~67)
+    ((go (acc arg~67)
       (match arg~67
         ((cl:cons x xs) (cl:cons (tuple x (tuple acc xs)) (go (cl:cons x acc) xs)))
         (nil nil))))
@@ -407,8 +405,7 @@
 
 (defunc nth_rest (n)
   (labelsc
-    ((go
-      (acc i% arg~97)
+    ((go (acc i% arg~97)
       (match arg~97
         ((guard (cl:cons x xs) (> i% 0)) (go (cl:cons x acc) (- i% 1) xs))
         ((guard (cl:cons x xs) (= i% 0)) (tuple x (tuple (list-rev acc) xs)))
@@ -417,8 +414,7 @@
 
 (defunc insert_at (i% elem l)
   (labelsc
-    ((go
-      (acc arg~143)
+    ((go (acc arg~143)
       (match arg~143
         ((tuple 0 xs) (list-rev-append acc (cl:cons elem xs)))
         ((tuple n nil) (failwith "insert_at"))
@@ -427,8 +423,7 @@
 
 (defunc take_drop (n)
   (labelsc
-    ((go
-      (acc i% arg~189)
+    ((go (acc i% arg~189)
       (match arg~189
         ((guard nil (> i% 0)) (failwith "take_drop"))
         ((guard (cl:cons x xs) (> i% 0)) (go (cl:cons x acc) (- i% 1) xs))
@@ -439,8 +434,7 @@
 
 (defunc findi (p% l)
   (labelsc
-    ((loop
-      (n arg~237)
+    ((loop (n arg~237)
       (match arg~237
         (nil (raise (make-Not_found)))
         ((cl:cons h t%) (if (#`p% n h) (tuple n h) (loop (+ n 1) t%))))))
@@ -502,8 +496,7 @@
 
 (defunc exists_unique (p% l)
   (labelsc
-    ((go
-      (acc arg~484)
+    ((go (acc arg~484)
       (match arg~484
         (nil acc)
         ((cl:cons x xs) (if (#`p% x) (if acc cl:nil (go cl:t xs)) (go acc xs))))))
@@ -524,18 +517,18 @@
 (match
   (let ((vstore (ref nil)) (gstore (ref nil)) (vcounter (ref 0)))
     (cl:declare (cl:ignorable vstore gstore vcounter))
-    (holai.runtime:labelsc
-      ((:nonrecursive 0 inc_vcounter (arg~533)
+    (labelsc
+      ((inc_vcounter (arg~533)
         (match arg~533
           ((cl:type holai.runtime::unit-value)
             (let* ((n (deref vcounter)) (m (+ n 1)))
               (cl:declare (cl:ignorable n m))
               (progn (assign vcounter m) n)))))
-        (:nonrecursive 1 reset_vars% (arg~551)
+        (reset_vars% (arg~551)
           (match arg~551
             ((cl:type holai.runtime::unit-value)
               (progn (assign vstore nil) (assign gstore nil) (assign vcounter 0)))))
-        (:nonrecursive 2 fol_of_var% (v)
+        (fol_of_var% (v)
           (handler-case
             (assoc v (deref vstore))
             (holai.runtime:ocaml-condition
@@ -555,7 +548,7 @@
                       (assign vstore (cl:cons (tuple v n) (deref vstore)))
                       n)))
                 (_ (raise exception~566))))))
-        (:nonrecursive 3 hol_of_var% (v ty)
+        (hol_of_var% (v ty)
           (handler-case
             (rev_assoc v (deref gstore))
             (holai.runtime:ocaml-condition
@@ -694,14 +687,14 @@
 
 
 (defparameter fol_of_hol_clauses
-  (holai.runtime:labelsc
-    ((:nonrecursive 0 eqt (arg~934 arg~939)
+  (labelsc
+    ((eqt (arg~934 arg~939)
       (match arg~934
         ((tuple a1 (tuple b1 c1))
           (match arg~939
             ((tuple a2 (tuple b2 c2))
               (cl:and (= a1 a2) (cl:and (= b1 b2) (equals_thm c1 c2))))))))
-      (:recursive 1 mk_contraposes (n th used unused sofar)
+      (mk_contraposes (n th used unused sofar)
         (match unused
           (nil sofar)
           ((cl:cons h t%)
@@ -713,7 +706,7 @@
                 (append used (cl:cons h nil))
                 t%
                 (cl:cons nw sofar))))))
-      (:nonrecursive 2 fol_of_hol_clause (th)
+      (fol_of_hol_clause (th)
         (let*
           ((lconsts (freesl (hyp th)))
             (tm (concl th))

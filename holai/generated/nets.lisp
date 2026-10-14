@@ -429,7 +429,6 @@
     labelsc
     Invalid_argument
     fst
-    fletc
     failwith
     Failure
     defvariant
@@ -995,8 +994,8 @@
 
 
 (defparameter enter
-  (holai.runtime:labelsc
-    ((:nonrecursive 0 label_to_store (lconsts tm)
+  (labelsc
+    ((label_to_store (lconsts tm)
       (match (#`strip_comb tm)
         ((tuple op args)
           (if (is_const op)
@@ -1014,7 +1013,7 @@
               (if (mem op lconsts)
                 (tuple (make-Lcnet (tuple (fst (dest_var op)) (#`length args))) args)
                 (tuple (make-Vnet) nil)))))))
-      (:nonrecursive 1 canon_eq (x y)
+      (canon_eq (x y)
         (handler-case
           (= (compare x y) 0)
           (holai.runtime:ocaml-condition
@@ -1022,7 +1021,7 @@
             (match exception~2556
               ((Invalid_argument _) cl:nil)
               (_ (raise exception~2556))))))
-      (:nonrecursive 1 canon_lt (x y)
+      (canon_lt (x y)
         (handler-case
           (< (compare x y) 0)
           (holai.runtime:ocaml-condition
@@ -1030,7 +1029,7 @@
             (match exception~2568
               ((Invalid_argument _) cl:nil)
               (_ (raise exception~2568))))))
-      (:recursive 2 sinsert (x l)
+      (sinsert (x l)
         (if (= l nil)
           (cl:cons x nil)
           (let ((h (hd l)))
@@ -1038,13 +1037,13 @@
             (if (canon_eq h x)
               (failwith "sinsert")
               (if (canon_lt x h) (cl:cons x l) (cl:cons h (sinsert x (tl l))))))))
-      (:nonrecursive 3 set_insert (x l)
+      (set_insert (x l)
         (handler-case
           (sinsert x l)
           (holai.runtime:ocaml-condition
             (exception~2614)
             (match exception~2614 ((Failure "sinsert") l) (_ (raise exception~2614))))))
-      (:nonrecursive 4 update_si (k% upd m)
+      (update_si (k% upd m)
         (let
           ((child0
             (handler-case
@@ -1054,7 +1053,7 @@
                 (match exception~2627 ((Not_found) empty_net) (_ (raise exception~2627)))))))
           (cl:declare (cl:ignorable child0))
           (add k% (#`upd child0) m)))
-      (:nonrecursive 5 update_int (k% upd m)
+      (update_int (k% upd m)
         (let
           ((child0
             (handler-case
@@ -1064,7 +1063,7 @@
                 (match exception~2645 ((Not_found) empty_net) (_ (raise exception~2645)))))))
           (cl:declare (cl:ignorable child0))
           (holai.nets.i_map:add k% (#`upd child0) m)))
-      (:recursive 6 net_update (lconsts elem tms net)
+      (net_update (lconsts elem tms net)
         (match net
           ((Netnode r)
             (match tms
@@ -1074,7 +1073,7 @@
               ((cl:cons tm rtms)
                 (match (label_to_store lconsts tm)
                   ((tuple label ntms)
-                    (fletc
+                    (labelsc
                       ((upd (child) (net_update lconsts elem (append ntms rtms) child)))
                       (match label
                         ((Vnet)
@@ -1113,8 +1112,8 @@
 
 
 (defparameter lookup
-  (holai.runtime:labelsc
-    ((:nonrecursive 0 label_for_lookup (tm)
+  (labelsc
+    ((label_for_lookup (tm)
       (match (#`strip_comb tm)
         ((tuple op args)
           (if (is_const op)
@@ -1122,7 +1121,7 @@
             (if (is_abs op)
               (tuple (make-Lnet (#`length args)) (cl:cons (body op) args))
               (tuple (make-Lcnet (tuple (fst (dest_var op)) (#`length args))) args))))))
-      (:recursive 1 follow (tms net)
+      (follow (tms net)
         (match net
           ((Netnode r)
             (match tms
@@ -1176,14 +1175,14 @@
 
 
 (defparameter merge_nets
-  (holai.runtime:labelsc
-    ((:nonrecursive 0 canon_eq (x y)
+  (labelsc
+    ((canon_eq (x y)
       (handler-case
         (= (compare x y) 0)
         (holai.runtime:ocaml-condition
           (exception~2931)
           (match exception~2931 ((Invalid_argument _) cl:nil) (_ (raise exception~2931))))))
-      (:nonrecursive 0 canon_lt (x y)
+      (canon_lt (x y)
         (handler-case
           (< (compare x y) 0)
           (holai.runtime:ocaml-condition
@@ -1191,7 +1190,7 @@
             (match exception~2943
               ((Invalid_argument _) cl:nil)
               (_ (raise exception~2943))))))
-      (:recursive 1 set_merge (l1 l2)
+      (set_merge (l1 l2)
         (if (= l1 nil)
           l2
           (if (= l2 nil)
@@ -1203,14 +1202,13 @@
                 (if (canon_lt h1 h2)
                   (cl:cons h1 (set_merge t1 l2))
                   (cl:cons h2 (set_merge l1 t2))))))))
-      (:recursive 2 merge_nets% (arg~3003)
+      (merge_nets% (arg~3003)
         (match arg~3003
           ((tuple n1 n2)
             (match (tuple n1 n2)
               ((tuple (Netnode r1) (Netnode r2))
-                (fletc
-                  ((merge_opt
-                    (a b)
+                (labelsc
+                  ((merge_opt (a b)
                     (match (tuple a b)
                       ((tuple (Some x) (Some y)) (make-Some (merge_nets% (tuple x y))))
                       ((tuple (Some _) (None)) a)

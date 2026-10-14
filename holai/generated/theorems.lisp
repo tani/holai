@@ -348,7 +348,6 @@
     guard
     function-value
     fst
-    fletc
     failwith
     Failure
     defunc
@@ -1097,8 +1096,7 @@
             (cl:ignorable SWAP_FORALL_CONV AND_FORALL_CONV RIGHT_IMP_FORALL_CONV))
           (lambdac (s)
             (labelsc
-              ((PULL_FORALL
-                (tm)
+              ((PULL_FORALL (tm)
                 (if (#`is_forall tm)
                   (if (= (name_of (fst (#`dest_forall tm))) s)
                     (REFL tm)
@@ -1117,9 +1115,8 @@
         CONJ_LIST_TAC
         NUM_DISJ_TAC
         NAME_PULL_FORALL_CONV))
-    (fletc
-      ((pa_ident
-        (p% arg~989)
+    (labelsc
+      ((pa_ident (p% arg~989)
         (match arg~989
           ((guard (cl:cons (Ident s) rest) (#`p% s)) (tuple s rest))
           (_ (raise (make-Noparse))))))
@@ -1127,13 +1124,11 @@
         (cl:declare (cl:ignorable pa_label pa_var))
         (let
           ((fix_tac%
-            (fletc
-              ((fix_var
-                (v)
+            (labelsc
+              ((fix_var (v)
                 (holai.runtime:proof (#`CONV_TAC (#`NAME_PULL_FORALL_CONV v))
                   THEN PURE_GEN_TAC))
-                (fix_rename
-                  (arg~1021)
+                (fix_rename (arg~1021)
                   (match arg~1021
                     ((tuple u (cl:cons v nil))
                       (holai.runtime:proof (#`CONV_TAC (#`NAME_PULL_FORALL_CONV v))
@@ -1174,19 +1169,16 @@
                 (cl:declare (cl:ignorable OBTAINL_THEN))
                 (labelsc
                   ((destruct (inp) (disj inp))
-                    (disj
-                      (inp)
+                    (disj (inp)
                       (let ((DISJ_CASES_LIST (end_itlist #'DISJ_CASES_THEN2)))
                         (cl:declare (cl:ignorable DISJ_CASES_LIST))
                         (>>
                           (listof #'conj% (a (make-Resword "|")) "Disjunction")
                           DISJ_CASES_LIST
                           inp)))
-                    (conj%
-                      (inp)
+                    (conj% (inp)
                       (>> (atleast 1 #'atom) (end_itlist #'CONJUNCTS_THEN2) inp))
-                    (obtain
-                      (inp)
+                    (obtain (inp)
                       (let
                         ((obtain_prfx
                           (let ((var_list (atleast 1 pa_var)))
@@ -1200,8 +1192,7 @@
                               (function-value #'fst 1)))))
                         (cl:declare (cl:ignorable obtain_prfx))
                         (>> (++ obtain_prfx #'destruct) (uncurry OBTAINL_THEN) inp)))
-                    (atom
-                      (inp)
+                    (atom (inp)
                       (let
                         ((label
                           (lambdac (arg~1176)
@@ -1252,8 +1243,7 @@
                       "Prefix intro pattern")))
                   (cl:declare (cl:ignorable pa_prefix))
                   (labelsc
-                    ((pa_intro
-                      (toks)
+                    ((pa_intro (toks)
                       (>>
                         (>>
                           (++ pa_prefix (possibly #'pa_postfix))
@@ -1261,8 +1251,7 @@
                         #'EVERY
                         toks))
                       (pa_postfix (toks) (%%% #'pa_conj #'pa_disj toks))
-                      (pa_conj
-                        (toks)
+                      (pa_conj (toks)
                         (let
                           ((conjs
                             (>>
@@ -1277,8 +1266,7 @@
                               (a (make-Resword "}")))
                             (function-value #'fst 1)
                             toks)))
-                      (pa_disj
-                        (toks)
+                      (pa_disj (toks)
                         (let ((disj (>> number NUM_DISJ_TAC)))
                           (cl:declare (cl:ignorable disj))
                           (>>
@@ -1289,11 +1277,10 @@
                             toks))))
                     #'pa_intro)))))
             (cl:declare (cl:ignorable intro_tac%))
-            (holai.runtime:labelsc
-              ((:nonrecursive 0 hyp_tac% (rule)
-                (fletc
-                  ((pa_action
-                    (arg~1353)
+            (labelsc
+              ((hyp_tac% (rule)
+                (labelsc
+                  ((pa_action (arg~1353)
                     (match arg~1353
                       ((cl:cons (Resword ":") rest) (tuple #'REMOVE_THEN rest))
                       ((cl:cons (Resword "->") rest) (tuple #'USE_THEN rest))
@@ -1305,19 +1292,19 @@
                         ((tuple lbl (cl:cons (tuple action tac) nil))
                           (#`action lbl (o tac rule)))
                         ((tuple lbl _) (REMOVE_THEN lbl (o (LABEL_TAC lbl) rule))))))))
-                (:nonrecursive 1 DESTRUCT_TAC%% (s)
+                (DESTRUCT_TAC%% (s)
                   (match (o (o (fix "Destruct pattern" destruct_tac%) lex) #'explode s)
                     ((tuple tac rest)
                       (if (= rest nil) tac (failwith "Garbage after destruct pattern")))))
-                (:nonrecursive 1 INTRO_TAC%% (s)
+                (INTRO_TAC%% (s)
                   (match (o (o (fix "Introduction pattern" intro_tac%) lex) #'explode s)
                     ((tuple tac rest)
                       (if (= rest nil) tac (failwith "Garbage after intro pattern")))))
-                (:nonrecursive 1 FIX_TAC%% (s)
+                (FIX_TAC%% (s)
                   (match (o (o fix_tac% lex) #'explode s)
                     ((tuple tac rest)
                       (if (= rest nil) tac (failwith "FIX_TAC: invalid pattern")))))
-                (:nonrecursive 1 HYP_TAC%% (s rule)
+                (HYP_TAC%% (s rule)
                   (match (o (o (hyp_tac% rule) lex) #'explode s)
                     ((tuple tac rest)
                       (if (= rest nil) tac (failwith "HYP_TAC: invalid pattern"))))))

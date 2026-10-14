@@ -465,7 +465,6 @@
     format-printf
     format-fprintf
     format-asprintf
-    fletc
     failwith
     Failure
     deref
@@ -615,7 +614,7 @@
 (defparameter issymb nil)
 
 (match
-  (fletc ((charcode (s) (char-code (string-get s 0))))
+  (labelsc ((charcode (s) (char-code (string-get s 0))))
     (let
       ((spaces " 	
 ")
@@ -643,7 +642,7 @@
           (do_list (lambdac (c%) (array-set ctable (charcode c%) 8)) (explode symbs))
           (do_list (lambdac (c%) (array-set ctable (charcode c%) 16)) (explode alphas))
           (do_list (lambdac (c%) (array-set ctable (charcode c%) 32)) (explode nums))
-          (fletc
+          (labelsc
             ((isspace% (c%) (= (array-get ctable (charcode c%)) 1))
               (issep% (c%) (= (array-get ctable (charcode c%)) 2))
               (isbra% (c%) (= (array-get ctable (charcode c%)) 4))
@@ -822,9 +821,8 @@
 (defparameter unparse_as_infix nil)
 
 (match
-  (fletc
-    ((cmp
-      (arg~427 arg~432)
+  (labelsc
+    ((cmp (arg~427 arg~432)
       (match arg~427
         ((tuple s (tuple x a))
           (match arg~432
@@ -1052,15 +1050,15 @@
 (defparameter pp_print_type nil)
 
 (match
-  (holai.runtime:labelsc
-    ((:nonrecursive 0 soc (sep flag ss)
+  (labelsc
+    ((soc (sep flag ss)
       (if (= ss nil)
         ""
         (let
           ((s (end_itlist (lambdac (s1 s2) (string-concat s1 (string-concat sep s2))) ss)))
           (cl:declare (cl:ignorable s))
           (if flag (string-concat "(" (string-concat s ")")) s))))
-      (:recursive 1 sot (pr ty)
+      (sot (pr ty)
         (handler-case
           (dest_vartype ty)
           (holai.runtime:ocaml-condition
@@ -1118,10 +1116,9 @@
 (defparameter pp_print_colored_type nil)
 
 (match
-  (holai.runtime:labelsc
-    ((:nonrecursive 0 color_print_str (fmt s)
-      (pp_print_colored_string (deref printer_color_type) fmt s))
-      (:nonrecursive 1 soc (sep flag ss fmt)
+  (labelsc
+    ((color_print_str (fmt s) (pp_print_colored_string (deref printer_color_type) fmt s))
+      (soc (sep flag ss fmt)
         (if (= ss nil)
           unit
           (match (if flag (color_print_str fmt "(") unit)
@@ -1136,7 +1133,7 @@
                 (match (#`tuple_printer fmt)
                   ((cl:type holai.runtime::unit-value)
                     (if flag (color_print_str fmt ")") unit))))))))
-      (:recursive 2 sot (pr ty fmt)
+      (sot (pr ty fmt)
         (handler-case
           (#`pp_print_colored_tyvar fmt (dest_vartype ty))
           (holai.runtime:ocaml-condition
@@ -1268,8 +1265,8 @@
 (defparameter pp_print_term nil)
 
 (match
-  (holai.runtime:labelsc
-    ((:nonrecursive 0 reverse_interface (arg~1304)
+  (labelsc
+    ((reverse_interface (arg~1304)
       (match arg~1304
         ((tuple s0 ty0)
           (if (not (deref reverse_interface_mapping))
@@ -1285,7 +1282,7 @@
               (holai.runtime:ocaml-condition
                 (exception~1308)
                 (match exception~1308 ((Failure _) s0) (_ (raise exception~1308)))))))))
-      (:nonrecursive 1 DEST_BINARY% (c% tm)
+      (DEST_BINARY% (c% tm)
         (handler-case
           (match (dest_comb tm)
             ((tuple il r)
@@ -1308,18 +1305,17 @@
             (match exception~1349
               ((Failure _) (failwith "DEST_BINARY"))
               (_ (raise exception~1349))))))
-      (:nonrecursive 1 ARIGHT (s)
-        (match (snd (#`get_infix_status s)) ("right" cl:t) (_ cl:nil)))
-      (:recursive 2 powerof10 (n)
+      (ARIGHT (s) (match (snd (#`get_infix_status s)) ("right" cl:t) (_ cl:nil)))
+      (powerof10 (n)
         (if (< (abs-num n) (num 1))
           cl:nil
           (if (= n (num 1)) cl:t (powerof10 (/ n (num 10))))))
-      (:nonrecursive 3 bool_of_term (t%)
+      (bool_of_term (t%)
         (match t%
           ((Const "T" _) cl:t)
           ((Const "F" _) cl:nil)
           (_ (failwith "bool_of_term"))))
-      (:nonrecursive 4 code_of_term (t%)
+      (code_of_term (t%)
         (match (#`strip_comb t%)
           ((tuple f tms)
             (if
@@ -1331,7 +1327,7 @@
                 (lambdac (b f%) (if b (+ 1 (* 2 f%)) (* 2 f%)))
                 (map #'bool_of_term (#`rev tms))
                 0)))))
-      (:recursive 5 dest_clause (tm)
+      (dest_clause (tm)
         (let ((pbod (snd (#`strip_exists (body (body tm))))))
           (cl:declare (cl:ignorable pbod))
           (match (#`strip_comb pbod)
@@ -1347,21 +1343,20 @@
                       (hd (tl args))
                       (cl:cons (rand (rator (hd (tl (tl args))))) nil)))
                   (failwith "dest_clause")))))))
-      (:recursive 6 dest_clauses (tm)
+      (dest_clauses (tm)
         (match (#`strip_comb tm)
           ((tuple s args)
             (if (cl:and (= (name_of s) "_SEQPATTERN") (= (#`length args) 2))
               (cl:cons (dest_clause (hd args)) (dest_clauses (hd (tl args))))
               (cl:cons (dest_clause tm) nil)))))
-      (:nonrecursive 7 pdest_cond (tm)
+      (pdest_cond (tm)
         (match tm
           ((Comb (Comb (Comb (Const "COND" _) i%) t%) e) (tuple (tuple i% t%) e))
           (_ (failwith "pdest_cond"))))
-      (:nonrecursive 8 print_colored_term (use_color fmt)
-        (holai.runtime:labelsc
-          ((:nonrecursive 0 color_switch (pp)
-            (if use_color pp (function-value #'pp-print-string 2)))
-            (:nonrecursive 1 try_user_printers (tm)
+      (print_colored_term (use_color fmt)
+        (labelsc
+          ((color_switch (pp) (if use_color pp (function-value #'pp-print-string 2)))
+            (try_user_printers (tm)
               (if use_color
                 (handler-case
                   (#`try_user_color_printer fmt tm)
@@ -1371,9 +1366,8 @@
                       (_ (#`try_user_printer fmt tm))
                       (_ (raise exception~1623)))))
                 (#`try_user_printer fmt tm)))
-            (:nonrecursive 2 print_numeral (tm)
-              (pp-print-string fmt (string-of-num (#`dest_numeral tm))))
-            (:recursive 3 print_term% (prec tm)
+            (print_numeral (tm) (pp-print-string fmt (string-of-num (#`dest_numeral tm))))
+            (print_term% (prec tm)
               (handler-case
                 (try_user_printers tm)
                 (holai.runtime:ocaml-condition
@@ -1570,7 +1564,7 @@
                                     (_ (raise exception~1669))))))
                             (_ (raise exception~1666))))))
                     (_ (raise exception~1663))))))
-            (:recursive 3 print_string_or_list (tm)
+            (print_string_or_list (tm)
               (let ((tms (dest_list tm)))
                 (cl:declare (cl:ignorable tms))
                 (handler-case
@@ -1604,11 +1598,11 @@
                           (pp-print-string fmt "]")
                           (pp-close-box fmt unit)))
                       (_ (raise exception~1820)))))))
-            (:recursive 3 print_empty_set (s tm args)
+            (print_empty_set (s tm args)
               (if (cl:and (= s "EMPTY") (cl:and (is_const tm) (= args nil)))
                 (pp-print-string fmt "{}")
                 (fail unit)))
-            (:recursive 3 print_universal_set (s tm args)
+            (print_universal_set (s tm args)
               (if
                 (cl:and
                   (= s "UNIV")
@@ -1622,7 +1616,7 @@
                     (#`pp_print_type fmt ty)
                     (pp-print-string fmt ")")))
                 (fail unit)))
-            (:recursive 3 print_finite_set (s tm)
+            (print_finite_set (s tm)
               (if (<> s "INSERT")
                 (fail unit)
                 (match (splitlist (dest_binary "INSERT") tm)
@@ -1637,7 +1631,7 @@
                         (pp-print-string fmt "}")
                         (pp-close-box fmt unit))
                       (fail unit))))))
-            (:recursive 3 print_set_comprehension (s tm)
+            (print_set_comprehension (s tm)
               (if (<> s "GSPEC")
                 (fail unit)
                 (match (#`strip_exists (body (rand tm)))
@@ -1670,7 +1664,7 @@
                                       (pp-print-string fmt " | "))))
                                 (print_term% 0 babs)
                                 (pp-print-string fmt "}")))))))))))
-            (:recursive 3 print_let_term (s prec tm)
+            (print_let_term (s prec tm)
               (if (<> s "LET")
                 (fail unit)
                 (match (dest_let tm)
@@ -1695,7 +1689,7 @@
                       (print_term% 0 bod)
                       (if (= prec 0) unit (pp-print-string fmt ")"))
                       (pp-close-box fmt unit))))))
-            (:recursive 3 print_decimal (s args)
+            (print_decimal (s args)
               (if (<> s "DECIMAL")
                 (fail unit)
                 (let
@@ -1717,7 +1711,7 @@
                           (string-concat
                             s_num
                             (string-concat (if (= n_den (num 1)) "" ".") s_den)))))))))
-            (:recursive 3 print_match (s prec args)
+            (print_match (s prec args)
               (if (cl:or (<> s "_MATCH") (<> (#`length args) 2))
                 (fail unit)
                 (let ((cls (dest_clauses (hd (tl args)))))
@@ -1732,7 +1726,7 @@
                     (print_clauses cls)
                     (pp-close-box fmt unit)
                     (if (= prec 0) unit (pp-print-string fmt ")"))))))
-            (:recursive 3 print_function (s prec args)
+            (print_function (s prec args)
               (if (cl:or (<> s "_FUNCTION") (<> (#`length args) 1))
                 (fail unit)
                 (let ((cls (dest_clauses (hd args))))
@@ -1745,7 +1739,7 @@
                     (print_clauses cls)
                     (pp-close-box fmt unit)
                     (if (= prec 0) unit (pp-print-string fmt ")"))))))
-            (:recursive 3 print_cond (s prec tm args)
+            (print_cond (s prec tm args)
               (if (cl:or (<> s "COND") (<> (#`length args) 3))
                 (fail unit)
                 (progn
@@ -1787,7 +1781,7 @@
                           (print_term% 0 ecl)))))
                   (pp-close-box fmt unit)
                   (if (= prec 0) unit (pp-print-string fmt ")")))))
-            (:recursive 3 print_prefix_app (s prec args)
+            (print_prefix_app (s prec args)
               (if (not (cl:and (#`is_prefix s) (= (#`length args) 1)))
                 (fail unit)
                 (progn
@@ -1823,7 +1817,7 @@
                     unit)
                   (print_term% 999 (hd args))
                   (if (= prec 1000) (pp-print-string fmt ")") unit))))
-            (:recursive 3 print_binder_app (s prec tm args)
+            (print_binder_app (s prec tm args)
               (if
                 (not
                   (cl:and
@@ -1831,7 +1825,7 @@
                     (cl:and (= (#`length args) 1) (#`is_gabs (hd args)))))
                 (fail unit)
                 (print_binder prec tm)))
-            (:recursive 3 print_infix_app (s prec tm hop args)
+            (print_infix_app (s prec tm hop args)
               (if (cl:or (<> (#`length args) 2) (not (can get_infix_status s)))
                 (fail unit)
                 (let*
@@ -1866,7 +1860,7 @@
                       (tl bargs))
                     (if (<= newprec prec) (pp-print-string fmt ")") unit)
                     (pp-close-box fmt unit)))))
-            (:recursive 3 print_atom (hop s)
+            (print_atom (hop s)
               (let
                 ((s%
                   (if
@@ -1877,8 +1871,7 @@
                     s)))
                 (cl:declare (cl:ignorable s%))
                 (labelsc
-                  ((has_invented_typevar
-                    (ty)
+                  ((has_invented_typevar (ty)
                     (if (#`is_vartype ty)
                       (= (string-get (dest_vartype ty) 0) (cl:code-char 63))
                       (list-exists #'has_invented_typevar (snd (dest_type ty))))))
@@ -1909,7 +1902,7 @@
                     (if (is_const hop)
                       (color_switch pp_print_colored_const fmt s%)
                       (pp-print-string fmt s%))))))
-            (:recursive 3 print_generic_app (prec tm)
+            (print_generic_app (prec tm)
               (match (dest_comb tm)
                 ((tuple l r)
                   (progn
@@ -1931,7 +1924,7 @@
                     (print_term% 1000 r)
                     (if (= prec 1000) (pp-print-string fmt ")") unit)
                     (pp-close-box fmt unit)))))
-            (:recursive 3 print_term_sequence (break sep prec tms)
+            (print_term_sequence (break sep prec tms)
               (if (= tms nil)
                 unit
                 (progn
@@ -1944,7 +1937,7 @@
                         (pp-print-string fmt sep)
                         (if break (pp-print-space fmt unit) unit)
                         (print_term_sequence break sep prec ttms)))))))
-            (:recursive 3 print_binder (prec tm)
+            (print_binder (prec tm)
               (let ((absf (#`is_gabs tm)))
                 (cl:declare (cl:ignorable absf))
                 (match
@@ -1955,8 +1948,7 @@
                       (tuple sn (reverse_interface (tuple sn (type_of bt))))))
                   ((tuple s s%)
                     (labelsc
-                      ((collectvs
-                        (tm%)
+                      ((collectvs (tm%)
                         (if absf
                           (if (is_abs tm%)
                             (match (dest_abs tm%)
@@ -2012,7 +2004,7 @@
                             (print_term% 0 bod)
                             (if (= prec 0) unit (pp-print-string fmt ")"))
                             (pp-close-box fmt unit)))))))))
-            (:recursive 3 print_clauses (cls)
+            (print_clauses (cls)
               (match cls
                 ((cl:cons c% nil) (print_clause c%))
                 ((cl:cons c% cs)
@@ -2021,7 +2013,7 @@
                     (pp-print-break fmt 1 0)
                     (pp-print-string fmt "| ")
                     (print_clauses cs)))))
-            (:recursive 3 print_clause (cl)
+            (print_clause (cl)
               (match cl
                 ((cl:cons p (cl:cons g (cl:cons r nil)))
                   (progn
@@ -2047,9 +2039,8 @@
 (defparameter pp_print_qterm nil)
 
 (match
-  (fletc
-    ((fn
-      (use_color fmt tm)
+  (labelsc
+    ((fn (use_color fmt tm)
       (progn
         (pp-print-string fmt "`")
         (#`(if use_color pp_print_colored_term pp_print_term) fmt tm)
@@ -2068,9 +2059,8 @@
 (defparameter pp_print_thm nil)
 
 (match
-  (fletc
-    ((fn
-      (use_color fmt th)
+  (labelsc
+    ((fn (use_color fmt th)
       (match (dest_thm th)
         ((tuple asl tm)
           (progn

@@ -636,7 +636,6 @@
     guard
     function-value
     fst
-    fletc
     failwith
     Failure
     deref
@@ -922,15 +921,14 @@
 (defparameter THENL nil)
 
 (match
-  (holai.runtime:labelsc
-    ((:nonrecursive 0 propagate_empty (i% arg~329) (match arg~329 (nil nil)))
-      (:nonrecursive 0 propagate_thm (th i% arg~335)
-        (match arg~335 (nil (INSTANTIATE_ALL i% th))))
-      (:nonrecursive 1 compose_justs (n just1 just2 insts2 i% ths)
+  (labelsc
+    ((propagate_empty (i% arg~329) (match arg~329 (nil nil)))
+      (propagate_thm (th i% arg~335) (match arg~335 (nil (INSTANTIATE_ALL i% th))))
+      (compose_justs (n just1 just2 insts2 i% ths)
         (match (chop_list n ths)
           ((tuple ths1 ths2)
             (cl:cons (#`just1 (compose_insts insts2 i%) ths1) (#`just2 i% ths2)))))
-      (:recursive 2 seqapply (l1 l2)
+      (seqapply (l1 l2)
         (match (tuple l1 l2)
           ((tuple nil nil) (tuple null_meta nil #'propagate_empty))
           ((tuple (cl:cons tac tacs) (cl:cons goal goals))
@@ -945,9 +943,9 @@
                         (append (map (inst_goal insts2) gls1) gls2)
                         (compose_justs (#`length gls1) just1 just2 insts2))))))))
           ((tuple _ _) (failwith "seqapply: Length mismatch"))))
-      (:nonrecursive 3 justsequence (just1 just2 insts2 i% ths)
+      (justsequence (just1 just2 insts2 i% ths)
         (#`just1 (compose_insts insts2 i%) (#`just2 i% ths)))
-      (:nonrecursive 4 tacsequence (arg~465 tacl)
+      (tacsequence (arg~465 tacl)
         (match arg~465
           ((tuple (tuple mvs1 insts1) gls1 just1)
             (match (seqapply tacl gls1)
@@ -960,11 +958,11 @@
                     (tuple (union mvs1 mvs2) (compose_insts insts1 insts2))
                     gls2
                     just)))))))
-      (:nonrecursive 5 THEN% (tac1 tac2 g%)
+      (THEN% (tac1 tac2 g%)
         (match (#`tac1 g%)
           ((cl:and gstate (tuple _ gls _))
             (tacsequence gstate (replicate tac2 (#`length gls))))))
-      (:nonrecursive 5 THENL% (tac1 tac2l g%)
+      (THENL% (tac1 tac2l g%)
         (match (#`tac1 g%)
           ((cl:and gstate (tuple _ gls _))
             (if (= gls nil) (tacsequence gstate nil) (tacsequence gstate tac2l))))))
@@ -1032,8 +1030,7 @@
 
 (defparameter REPEAT_GTCL
   (labelsc
-    ((REPEAT_GTCL%
-      (ttcl ttac th g%)
+    ((REPEAT_GTCL% (ttcl ttac th g%)
       (handler-case
         (#`ttcl (REPEAT_GTCL% ttcl ttac) th g%)
         (holai.runtime:ocaml-condition
@@ -1156,12 +1153,12 @@
     ((tuple asl g%)
       (let ((idx (ref 0)))
         (cl:declare (cl:ignorable idx))
-        (holai.runtime:labelsc
-          ((:nonrecursive 0 has (name)
+        (labelsc
+          ((has (name)
             (exists
               (lambdac (arg~1099) (match arg~1099 ((tuple name% _) (= name name%))))
               asl))
-            (:recursive 1 next_hyp_name (arg~1112)
+            (next_hyp_name (arg~1112)
               (match arg~1112
                 ((cl:type holai.runtime::unit-value)
                   (let ((n (string-concat "H" (string-of-int (deref idx)))))
@@ -1193,17 +1190,15 @@
       (#`tltac (append (map (function-value #'snd 1) asl) ths) g%))))
 
 (defparameter HYP
-  (fletc
-    ((ident%
-      (arg~1192)
+  (labelsc
+    ((ident% (arg~1192)
       (match arg~1192
         ((guard (cl:cons (Ident s) rest) (#`isalnum s)) (tuple s rest))
         (_ (raise (make-Noparse))))))
     (let ((parse_using (many #'ident%)))
       (cl:declare (cl:ignorable parse_using))
-      (fletc
-        ((HYP_LIST
-          (tac l)
+      (labelsc
+        ((HYP_LIST (tac l)
           (rev_itlist
             (lambdac (s k% l%) (USE_THEN s (lambdac (th) (#`k% (cl:cons th l%)))))
             l
@@ -1219,7 +1214,8 @@
 
 
 (defparameter ACCEPT_TAC
-  (fletc ((propagate_thm (th i% arg~1263) (match arg~1263 (nil (INSTANTIATE_ALL i% th)))))
+  (labelsc
+    ((propagate_thm (th i% arg~1263) (match arg~1263 (nil (INSTANTIATE_ALL i% th)))))
     (lambdac (th arg~1270)
       (match arg~1270
         ((tuple asl w%)
@@ -1535,8 +1531,8 @@
 (defparameter X_GEN_TAC nil)
 
 (match
-  (holai.runtime:labelsc
-    ((:nonrecursive 0 tactic_type_compatibility_check (pfx e% g%)
+  (labelsc
+    ((tactic_type_compatibility_check (pfx e% g%)
       (let ((et (type_of e%)) (gt (type_of g%)))
         (cl:declare (cl:ignorable et gt))
         (if (= et gt)
@@ -1549,7 +1545,7 @@
                 (string-concat
                   (#`string_of_type et)
                   (string-concat " but got :" (#`string_of_type gt)))))))))
-      (:nonrecursive 1 X_GEN_TAC% (x%)
+      (X_GEN_TAC% (x%)
         (if (not (is_var x%))
           (failwith "X_GEN_TAC: not a variable")
           (lambdac (arg~2061)
@@ -1585,7 +1581,7 @@
                                 (lambdac (i% arg~2094)
                                   (match arg~2094
                                     ((cl:cons th nil) (#`afn (#`GEN x% th))))))))))))))))))
-      (:nonrecursive 1 X_CHOOSE_TAC% (x% xth)
+      (X_CHOOSE_TAC% (x% xth)
         (let ((xtm (concl xth)))
           (cl:declare (cl:ignorable xtm))
           (match
@@ -1623,7 +1619,7 @@
                                   (match arg~2190
                                     ((cl:cons th nil)
                                       (#`CHOOSE (tuple x% (INSTANTIATE_ALL i% xth)) th)))))))))))))))))
-      (:nonrecursive 1 EXISTS_TAC% (t% arg~2238)
+      (EXISTS_TAC% (t% arg~2238)
         (match arg~2238
           ((tuple asl w%)
             (match
@@ -1768,7 +1764,8 @@
         (_ (raise exception~2528))))))
 
 (defparameter CONTR_TAC
-  (fletc ((propagate_thm (th i% arg~2602) (match arg~2602 (nil (INSTANTIATE_ALL i% th)))))
+  (labelsc
+    ((propagate_thm (th i% arg~2602) (match arg~2602 (nil (INSTANTIATE_ALL i% th)))))
     (lambdac (cth arg~2609)
       (match arg~2609
         ((tuple asl w%)
@@ -1783,10 +1780,9 @@
                 (_ (raise exception~2613))))))))))
 
 (defparameter MATCH_ACCEPT_TAC
-  (holai.runtime:labelsc
-    ((:nonrecursive 0 propagate_thm (th i% arg~2639)
-      (match arg~2639 (nil (INSTANTIATE_ALL i% th))))
-      (:nonrecursive 1 rawtac (th arg~2647)
+  (labelsc
+    ((propagate_thm (th i% arg~2639) (match arg~2639 (nil (INSTANTIATE_ALL i% th))))
+      (rawtac (th arg~2647)
         (match arg~2647
           ((tuple asl w%)
             (handler-case
@@ -1881,9 +1877,8 @@
       (lambdac (gl)
         (match (#`THEN (#`ttac1 (ASSUME c1)) (#`ttac2 (ASSUME c2)) gl)
           ((tuple ti gls jfn)
-            (fletc
-              ((jfn%
-                (i% ths)
+            (labelsc
+              ((jfn% (i% ths)
                 (match (CONJ_PAIR (INSTANTIATE_ALL i% cth))
                   ((tuple th1 th2) (PROVE_HYP th1 (PROVE_HYP th2 (#`jfn i% ths)))))))
               (tuple ti gls #'jfn%))))))))
@@ -1927,9 +1922,8 @@
         (if (= tacs nil) (failwith "IMP_RES_THEN") (EVERY tacs))))))
 
 (defparameter STRIP_ASSUME_TAC
-  (fletc
-    ((DISCARD_TAC
-      (th)
+  (labelsc
+    ((DISCARD_TAC (th)
       (let ((tm (concl th)))
         (cl:declare (cl:ignorable tm))
         (lambdac (arg~3072)
@@ -2111,15 +2105,14 @@
 (defparameter pp_print_goal nil)
 
 (match
-  (fletc
-    ((with_color
-      (color_flag)
-      (holai.runtime:labelsc
-        ((:nonrecursive 0 string_of_int3 (n)
+  (labelsc
+    ((with_color (color_flag)
+      (labelsc
+        ((string_of_int3 (n)
           (if (< n 10)
             (string-concat "  " (string-of-int n))
             (if (< n 100) (string-concat " " (string-of-int n)) (string-of-int n))))
-          (:nonrecursive 1 print_hyp (fmt n arg~3566)
+          (print_hyp (fmt n arg~3566)
             (match arg~3566
               ((tuple s th)
                 (progn
@@ -2144,7 +2137,7 @@
                         unit)
                       (pp-close-box fmt unit)
                       (pp-print-newline fmt unit)))))))
-          (:recursive 2 print_hyps (fmt n asl)
+          (print_hyps (fmt n asl)
             (if (= asl nil)
               unit
               (progn (print_hyp fmt n (hd asl)) (print_hyps fmt (+ n 1) (tl asl))))))
@@ -2167,8 +2160,8 @@
 (defparameter pp_print_goalstack nil)
 
 (match
-  (holai.runtime:labelsc
-    ((:nonrecursive 0 print_goalstate (color_flag fmt k% gs)
+  (labelsc
+    ((print_goalstate (color_flag fmt k% gs)
       (match gs
         ((tuple _ gl _)
           (let*
@@ -2194,7 +2187,7 @@
                     (#`(if color_flag pp_print_colored_goal pp_print_goal) fmt)
                     (C #'el gl))
                   (#`rev (-- 0 (- k% 1))))))))))
-      (:nonrecursive 1 fn (color_flag fmt l)
+      (fn (color_flag fmt l)
         (if (= l nil)
           (pp-print-string fmt "Empty goalstack")
           (if (= (tl l) nil)
@@ -2245,9 +2238,8 @@
                   (inst%%% (compose_insts inst%% newinst))
                   (gls% (append subgls (map (inst_goal newinst) ogls))))
                 (cl:declare (cl:ignorable n mvs% inst%%% gls%))
-                (fletc
-                  ((just%
-                    (i% ths)
+                (labelsc
+                  ((just% (i% ths)
                     (let ((i%% (compose_insts inst%%% i%)))
                       (cl:declare (cl:ignorable i%%))
                       (match (chop_list n ths)
@@ -2263,29 +2255,25 @@
 
 
 (defparameter rotate
-  (fletc
-    ((rotate_p
-      (arg~4003)
+  (labelsc
+    ((rotate_p (arg~4003)
       (match arg~4003
         ((tuple meta sgs just)
           (let ((sgs% (append (tl sgs) (cl:cons (hd sgs) nil))))
             (cl:declare (cl:ignorable sgs%))
-            (fletc
-              ((just%
-                (i% ths)
+            (labelsc
+              ((just% (i% ths)
                 (let ((ths% (cl:cons (last ths) (butlast ths))))
                   (cl:declare (cl:ignorable ths%))
                   (#`just i% ths%))))
               (tuple meta sgs% #'just%))))))
-      (rotate_n
-        (arg~4039)
+      (rotate_n (arg~4039)
         (match arg~4039
           ((tuple meta sgs just)
             (let ((sgs% (cl:cons (last sgs) (butlast sgs))))
               (cl:declare (cl:ignorable sgs%))
-              (fletc
-                ((just%
-                  (i% ths)
+              (labelsc
+                ((just% (i% ths)
                   (let ((ths% (append (tl ths) (cl:cons (hd ths) nil))))
                     (cl:declare (cl:ignorable ths%))
                     (#`just i% ths%))))

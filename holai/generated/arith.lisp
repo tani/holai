@@ -4654,8 +4654,7 @@
 
 (defparameter NUM_CANCEL_CONV
   (labelsc
-    ((minter
-      (i% l1% l2% l1 l2)
+    ((minter (i% l1% l2% l1 l2)
       (if (= l1 nil)
         (tuple i% l1% (append l2% l2))
         (if (= l2 nil)
@@ -4926,8 +4925,7 @@
       (tuple (parse_term "m:num") (parse_term "n:num")))
     ((tuple NUMERAL_pth ZERO_pth (tuple BIT0_pth BIT1_pth) (tuple mvar nvar))
       (labelsc
-        ((BITS_ELIM_CONV%
-          (tm)
+        ((BITS_ELIM_CONV% (tm)
           (match tm
             ((Const "_0" _) ZERO_pth)
             ((cl:or (Var _) (Const _)) (REFL tm))

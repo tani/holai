@@ -408,7 +408,6 @@
     guard
     function-value
     fst
-    fletc
     failwith
     Failure
     compare
@@ -987,8 +986,7 @@
                                                         (cl:cons (tuple p_tm p_tm) nil)))))))))))))))))))))
                   (cl:declare (cl:ignorable ilist))
                   (labelsc
-                    ((replace
-                      (tm)
+                    ((replace (tm)
                       (match tm
                         ((cl:or (Var _ _) (Const _ _)) (rev_assocd tm ilist tm))
                         ((Comb s t%) (mk_comb (tuple (replace s) (replace t%))))
@@ -1000,12 +998,11 @@
                 (REFL_bit0 (#`STANDARDIZE (REFL BIT0_tm)))
                 (REFL_bit1 (#`STANDARDIZE (REFL BIT1_tm))))
               (cl:declare (cl:ignorable STANDARDIZE REFL_bit0 REFL_bit1))
-              (holai.runtime:labelsc
-                ((:nonrecursive 0 AP_BIT0 (th) (MK_COMB% (tuple REFL_bit0 th)))
-                  (:nonrecursive 0 AP_BIT1 (th) (MK_COMB% (tuple REFL_bit1 th)))
-                  (:nonrecursive 0 QUICK_PROVE_HYP (ath bth)
-                    (EQ_MP (DEDUCT_ANTISYM_RULE ath bth) ath))
-                  (:recursive 1 dest_raw_numeral (tm)
+              (labelsc
+                ((AP_BIT0 (th) (MK_COMB% (tuple REFL_bit0 th)))
+                  (AP_BIT1 (th) (MK_COMB% (tuple REFL_bit1 th)))
+                  (QUICK_PROVE_HYP (ath bth) (EQ_MP (DEDUCT_ANTISYM_RULE ath bth) ath))
+                  (dest_raw_numeral (tm)
                     (match tm
                       ((Comb (Const "BIT1" _) t%)
                         (+ (* num_2% (dest_raw_numeral t%)) num_1%))
@@ -1014,8 +1011,7 @@
                 (let
                   ((bitcounts
                     (labelsc
-                      ((bctr
-                        (w% z tm)
+                      ((bctr (w% z tm)
                         (match tm
                           ((Const "_0" _) (tuple w% z))
                           ((Comb (Const "BIT0" _) t%) (bctr w% (+ z 1) t%))
@@ -1023,14 +1019,14 @@
                           (_ (failwith "malformed numeral")))))
                       (bctr 0 0))))
                   (cl:declare (cl:ignorable bitcounts))
-                  (holai.runtime:labelsc
-                    ((:recursive 0 wellformed (tm)
+                  (labelsc
+                    ((wellformed (tm)
                       (match tm
                         ((Const "_0" _) cl:t)
                         ((cl:or (Comb (Const "BIT0" _) t%) (Comb (Const "BIT1" _) t%))
                           (wellformed t%))
                         (_ cl:nil)))
-                      (:recursive 1 orderrelation (mtm ntm)
+                      (orderrelation (mtm ntm)
                         (if (== mtm ntm)
                           (if (wellformed mtm) 0 (failwith "orderrelation"))
                           (match (tuple mtm ntm)
@@ -1051,9 +1047,8 @@
                               (if (> (orderrelation mt nt) 0) 1 (- 1)))
                             ((tuple (Comb (Const "BIT1" _) mt) (Comb (Const "BIT0" _) nt))
                               (if (< (orderrelation mt nt) 0) (- 1) 1)))))
-                      (:nonrecursive 2 doublebn (tm)
-                        (if (= tm zero_tm) tm (mk_comb (tuple BIT0_tm tm))))
-                      (:recursive 3 subbn (mtm ntm)
+                      (doublebn (tm) (if (= tm zero_tm) tm (mk_comb (tuple BIT0_tm tm))))
+                      (subbn (mtm ntm)
                         (match (tuple mtm ntm)
                           ((tuple _ (Const "_0" _)) mtm)
                           ((tuple (Comb (Const "BIT0" _) mt) (Comb (Const "BIT0" _) nt))
@@ -1065,7 +1060,7 @@
                           ((tuple (Comb (Const "BIT0" _) mt) (Comb (Const "BIT1" _) nt))
                             (mk_comb (tuple BIT1_tm (sbcbn mt nt))))
                           (_ (failwith "malformed numeral or wrong relation"))))
-                      (:recursive 3 sbcbn (mtm ntm)
+                      (sbcbn (mtm ntm)
                         (match (tuple mtm ntm)
                           ((tuple (Comb (Const "BIT0" _) mt) (Const "_0" _))
                             (mk_comb (tuple BIT1_tm (sbcbn mt ntm))))
@@ -1080,7 +1075,7 @@
                           ((tuple (Comb (Const "BIT0" _) mt) (Comb (Const "BIT1" _) nt))
                             (doublebn (sbcbn mt nt)))
                           (_ (failwith "malformed numeral or wrong relation"))))
-                      (:nonrecursive 4 topsplit (tm)
+                      (topsplit (tm)
                         (match tm
                           ((Const "_0" _) (tuple 0 zero_tm))
                           ((Comb (Const "BIT1" _) (Const "_0" _)) (tuple 1 zero_tm))
@@ -1202,8 +1197,8 @@
                             (tuple 15 n))
                           (_ (failwith "malformed numeral")))))
                     (match
-                      (holai.runtime:labelsc
-                        ((:recursive 0 mk_compnumeral (k% base)
+                      (labelsc
+                        ((mk_compnumeral (k% base)
                           (if (= k% 0)
                             base
                             (let ((t% (mk_compnumeral (int-div k% 2) base)))
@@ -1211,7 +1206,7 @@
                               (if (= (int-mod k% 2) 1)
                                 (mk_comb (tuple BIT1_tm t%))
                                 (mk_comb (tuple BIT0_tm t%))))))
-                          (:nonrecursive 1 bases (v)
+                          (bases (v)
                             (let*
                               ((part2
                                 (map (lambdac (k%) (mk_compnumeral k% v)) (-- 8 15)))
@@ -1268,9 +1263,8 @@
                                       (parse_term "SUC n"))
                                     nil)))))
                           (cl:declare (cl:ignorable starts BITS_INJ ARITH_0 patadj))
-                          (fletc
-                            ((mkclauses
-                              (sucflag t%)
+                          (labelsc
+                            ((mkclauses (sucflag t%)
                               (let*
                                 ((tm (if sucflag (mk_comb (tuple suc_tm t%)) t%))
                                   (th1
@@ -1321,8 +1315,7 @@
                                         (array-of-list l2))))
                                   ((tuple adc_clauses adc_flags)
                                     (labelsc
-                                      ((NUM_ADD_RULE
-                                        (mtm ntm)
+                                      ((NUM_ADD_RULE (mtm ntm)
                                         (match (tuple (topsplit mtm) (topsplit ntm))
                                           ((tuple (tuple m_lo m_hi) (tuple n_lo n_hi))
                                             (let
@@ -1383,8 +1376,7 @@
                                                             (cl:declare
                                                               (cl:ignorable th3))
                                                             (EQ_MP th3 th2))))))))))))
-                                        (NUM_ADC_RULE
-                                          (mtm ntm)
+                                        (NUM_ADC_RULE (mtm ntm)
                                           (match (tuple (topsplit mtm) (topsplit ntm))
                                             ((tuple (tuple m_lo m_hi) (tuple n_lo n_hi))
                                               (let
@@ -1733,8 +1725,7 @@
                                   pths_1
                                   pths_0))
                               (labelsc
-                                ((NUM_SHIFT_CONV
-                                  (k% tm)
+                                ((NUM_SHIFT_CONV (k% tm)
                                   (if (<= k% 0)
                                     (INST% (cl:cons (tuple tm n_tm) nil) pth_base)
                                     (match tm
@@ -2055,8 +2046,7 @@
                                         (-- 0 255)))))
                                   (cl:declare (cl:ignorable puths_2))
                                   (labelsc
-                                    ((NUM_UNSHIFT_CONV
-                                      (tm)
+                                    ((NUM_UNSHIFT_CONV (tm)
                                       (match tm
                                         ((Comb
                                           (Comb (Const "+" _) atm)
@@ -2736,9 +2726,8 @@
                                       NUM_UNSHIFT2_CONV
                                       NUM_UNSHIFT3_CONV
                                       NUM_UNSHIFT4_CONV))
-                                  (fletc
-                                    ((BINOP2_CONV%
-                                      (conv1 conv2)
+                                  (labelsc
+                                    ((BINOP2_CONV% (conv1 conv2)
                                       (COMB2_CONV (RAND_CONV conv1) conv2)))
                                     (let
                                       ((TOOM3_CONV
@@ -2747,8 +2736,7 @@
                                           NUM_UNSHIFT4_CONV)))
                                       (cl:declare (cl:ignorable TOOM3_CONV))
                                       (labelsc
-                                        ((GEN_NUM_SQUARE_RULE
-                                          (w% z tm)
+                                        ((GEN_NUM_SQUARE_RULE (w% z tm)
                                           (match tm
                                             ((Const "_0" _) pth_0)
                                             ((Comb (Const "BIT0" _) mtm)
@@ -3158,8 +3146,7 @@
                                                                                       (cl:cons
                                                                                         th5
                                                                                         nil))))))))))))))))))))))))
-                                          (NUM_SQUARE_RULE
-                                            (tm)
+                                          (NUM_SQUARE_RULE (tm)
                                             (match (#`bitcounts tm)
                                               ((tuple w% z) (GEN_NUM_SQUARE_RULE w% z tm)))))
                                         #'NUM_SQUARE_RULE))))))
@@ -3354,8 +3341,7 @@
                                         pth_recodel
                                         pth_recoder))
                                     (labelsc
-                                      ((NUM_MUL_RULE
-                                        (k% l tm tm%)
+                                      ((NUM_MUL_RULE (k% l tm tm%)
                                         (match (tuple tm tm%)
                                           ((tuple (Const "_0" _) _)
                                             (INST% (cl:cons (tuple tm% n_tm) nil) pth_0l))
@@ -3847,8 +3833,7 @@
                                 (let ((tconv (GEN_REWRITE_CONV #'I (cl:cons tth nil))))
                                   (cl:declare (cl:ignorable tconv))
                                   (labelsc
-                                    ((NUM_EXP_CONV%
-                                      (l r%)
+                                    ((NUM_EXP_CONV% (l r%)
                                       (if (= r% zero_tm)
                                         (INST% (cl:cons (tuple l m_tm) nil) pth)
                                         (match (dest_comb r%)
@@ -4342,9 +4327,8 @@
       (dtm (parse_term "(DIV)"))
       (mtm (parse_term "(MOD)")))
     (cl:declare (cl:ignorable pth pth0 m n q r% dtm mtm))
-    (fletc
-      ((NUM_DIVMOD_CONV
-        (x y)
+    (labelsc
+      ((NUM_DIVMOD_CONV (x y)
         (if (= y num_0)
           (#`SPEC (#`mk_numeral x) pth0)
           (let ((k% (quo-num x y)) (l (mod-num x y)))
@@ -4406,12 +4390,12 @@
         (y (parse_term "y:num"))
         (z (parse_term "z:num")))
       (cl:declare (cl:ignorable pth_0 pth_suc w% x y z))
-      (holai.runtime:labelsc
-        ((:nonrecursive 0 mksuc (n)
+      (labelsc
+        ((mksuc (n)
           (let ((n% (- n (num 1))))
             (cl:declare (cl:ignorable n%))
             (#`NUM_SUC_CONV (mk_comb (tuple suc (#`mk_numeral n%))))))
-          (:recursive 1 NUM_FACT_CONV% (n)
+          (NUM_FACT_CONV% (n)
             (if (= n (num 0))
               pth_0
               (let*
@@ -4635,8 +4619,7 @@
           (conv_odd (GEN_REWRITE_CONV #'I (cl:cons pth_odd nil))))
         (cl:declare (cl:ignorable conv_zero conv_0 conv_even conv_odd))
         (labelsc
-          ((conv
-            (tm)
+          ((conv (tm)
             (ORELSEC
               (ORELSEC
                 (THENC conv_0 NUM_MOD_CONV)

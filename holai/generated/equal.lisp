@@ -266,7 +266,6 @@
     function-value
     fst
     format-printf
-    fletc
     failwith
     Failure
     deref
@@ -343,8 +342,7 @@
 
 (defparameter mk_primed_var
   (labelsc
-    ((svariant
-      (avoid s)
+    ((svariant (avoid s)
       (if (cl:or (mem s avoid) (cl:and (can #'get_const_type s) (not (#`is_hidden s))))
         (svariant avoid (string-concat s "'"))
         s)))
@@ -566,8 +564,8 @@
 (defparameter TOP_SWEEP_CONV nil)
 
 (match
-  (holai.runtime:labelsc
-    ((:nonrecursive 0 THENQC (conv1 conv2 tm)
+  (labelsc
+    ((THENQC (conv1 conv2 tm)
       (handler-case
         (let ((th1 (#`conv1 tm)))
           (cl:declare (cl:ignorable th1))
@@ -581,7 +579,7 @@
         (holai.runtime:ocaml-condition
           (exception~610)
           (match exception~610 ((Failure _) (#`conv2 tm)) (_ (raise exception~610))))))
-      (:nonrecursive 0 THENCQC (conv1 conv2 tm)
+      (THENCQC (conv1 conv2 tm)
         (let ((th1 (#`conv1 tm)))
           (cl:declare (cl:ignorable th1))
           (handler-case
@@ -591,7 +589,7 @@
             (holai.runtime:ocaml-condition
               (exception~640)
               (match exception~640 ((Failure _) th1) (_ (raise exception~640)))))))
-      (:nonrecursive 0 COMB_QCONV (conv tm)
+      (COMB_QCONV (conv tm)
         (match tm
           ((Comb l r)
             (handler-case
@@ -612,23 +610,21 @@
                   ((Failure _) (AP_TERM l (#`conv r)))
                   (_ (raise exception~662))))))
           (_ (failwith "COMB_QCONV: Not a combination"))))
-      (:recursive 1 REPEATQC (conv tm) (THENCQC conv (REPEATQC conv) tm))
-      (:nonrecursive 2 SUB_QCONV (conv tm)
+      (REPEATQC (conv tm) (THENCQC conv (REPEATQC conv) tm))
+      (SUB_QCONV (conv tm)
         (match tm ((Abs _ _) (ABS_CONV conv tm)) (_ (COMB_QCONV conv tm))))
-      (:recursive 3 ONCE_DEPTH_QCONV (conv tm)
-        (ORELSEC conv (SUB_QCONV (ONCE_DEPTH_QCONV conv)) tm))
-      (:recursive 3 DEPTH_QCONV (conv tm)
-        (THENQC (SUB_QCONV (DEPTH_QCONV conv)) (REPEATQC conv) tm))
-      (:recursive 3 REDEPTH_QCONV (conv tm)
+      (ONCE_DEPTH_QCONV (conv tm) (ORELSEC conv (SUB_QCONV (ONCE_DEPTH_QCONV conv)) tm))
+      (DEPTH_QCONV (conv tm) (THENQC (SUB_QCONV (DEPTH_QCONV conv)) (REPEATQC conv) tm))
+      (REDEPTH_QCONV (conv tm)
         (THENQC (SUB_QCONV (REDEPTH_QCONV conv)) (THENCQC conv (REDEPTH_QCONV conv)) tm))
-      (:recursive 3 TOP_DEPTH_QCONV (conv tm)
+      (TOP_DEPTH_QCONV (conv tm)
         (THENQC
           (REPEATQC conv)
           (THENCQC
             (SUB_QCONV (TOP_DEPTH_QCONV conv))
             (THENCQC conv (TOP_DEPTH_QCONV conv)))
           tm))
-      (:recursive 3 TOP_SWEEP_QCONV (conv tm)
+      (TOP_SWEEP_QCONV (conv tm)
         (THENQC (REPEATQC conv) (SUB_QCONV (TOP_SWEEP_QCONV conv)) tm)))
     (tuple
       (lambdac (c%) (TRY_CONV (ONCE_DEPTH_QCONV c%)))
@@ -671,8 +667,7 @@
 
 (defparameter PATH_CONV
   (labelsc
-    ((path_conv%
-      (s cnv)
+    ((path_conv% (s cnv)
       (match s
         (nil cnv)
         ((cl:cons "l" t%) (RATOR_CONV (path_conv% t% cnv)))
@@ -687,8 +682,7 @@
 
 (defparameter PAT_CONV
   (labelsc
-    ((PCONV
-      (xs pat conv)
+    ((PCONV (xs pat conv)
       (if (mem pat xs)
         conv
         (if (not (exists (lambdac (x) (free_in x pat)) xs))
@@ -764,9 +758,8 @@
 
 
 (defparameter CACHE_CONV
-  (fletc
-    ((ALPHA_HACK
-      (th)
+  (labelsc
+    ((ALPHA_HACK (th)
       (let ((tm% (#`lhand (concl th))))
         (cl:declare (cl:ignorable tm%))
         (lambdac (tm) (if (= tm% tm) th (TRANS (ALPHA tm tm%) th))))))

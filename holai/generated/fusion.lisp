@@ -872,8 +872,7 @@
 
 (defparameter vsubst
   (labelsc
-    ((vsubst%
-      (ilist tm)
+    ((vsubst% (ilist tm)
       (match tm
         ((Var _ _) (rev_assocd tm ilist tm))
         ((Const _ _) tm)
@@ -919,8 +918,7 @@
 
 (defparameter inst
   (labelsc
-    ((inst%%
-      (env tyin tm)
+    ((inst%% (env tyin tm)
       (match tm
         ((Var n ty)
           (let* ((ty% (type_subst tyin ty)) (tm% (if (== ty% ty) tm (make-Var n ty%))))

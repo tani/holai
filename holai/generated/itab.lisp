@@ -83,7 +83,6 @@
     lambdac
     labelsc
     fst
-    fletc
     failwith
     defunc
     <=)
@@ -193,10 +192,10 @@
 
 
 (defparameter ITAUT_TAC
-  (holai.runtime:labelsc
-    ((:nonrecursive 0 CONJUNCTS_THEN% (ttac cth)
+  (labelsc
+    ((CONJUNCTS_THEN% (ttac cth)
       (holai.runtime:proof (#`ttac (#`CONJUNCT1 cth)) THEN (#`ttac (#`CONJUNCT2 cth))))
-      (:nonrecursive 1 IMPLICATE (t%)
+      (IMPLICATE (t%)
         (let ((th1 (AP_THM NOT_DEF (dest_neg t%))))
           (cl:declare (cl:ignorable th1))
           (CONV_RULE (RAND_CONV #'BETA_CONV) th1))))
@@ -222,8 +221,8 @@
                         (o (o (CONJUNCTS_THEN% #'MP_TAC) (uncurry CONJ)) EQ_IMP_RULE)
                         nil)))))))))
       (cl:declare (cl:ignorable RIGHT_REVERSIBLE_TAC LEFT_REVERSIBLE_TAC))
-      (holai.runtime:labelsc
-        ((:recursive 0 ITAUT_TAC% (mvs n gl)
+      (labelsc
+        ((ITAUT_TAC% (mvs n gl)
           (if (<= n 0)
             (failwith "ITAUT_TAC: Too deep")
             (ORELSE
@@ -267,7 +266,7 @@
                     THEN (ITAUT_TAC% mvs (- n 1))
                     THEN NO_TAC)))
               gl)))
-          (:recursive 1 ITAUT_ITERDEEP_TAC (n gl)
+          (ITAUT_ITERDEEP_TAC (n gl)
             (progn
               (remark (string-concat "Searching with limit " (string-of-int n)))
               (ORELSE

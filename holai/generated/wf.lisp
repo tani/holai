@@ -1074,8 +1074,7 @@
           (#`REWR_CONV pth))))
     (cl:declare (cl:ignorable qqconv eqconv))
     (labelsc
-      ((qqconvs
-        (tm)
+      ((qqconvs (tm)
         (handler-case
           (THENC qqconv (BINDER_CONV #'qqconvs) tm)
           (holai.runtime:ocaml-condition

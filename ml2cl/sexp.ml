@@ -44,8 +44,8 @@ let render ?(width=90) ?(prefix="") forms =
   let put s = Buffer.add_string b s;
     (match String.rindex_opt s '\n' with None -> col:= !col+String.length s | Some n -> col:=String.length s-n-1) in
   let newline n = put ("\n" ^ String.make n ' ') in
-  let rec emit indent x = match x with
-    | Origin (o,x) -> let first=Buffer.length b in emit indent x;
+  let rec emit ?leading_override indent x = match x with
+    | Origin (o,x) -> let first=Buffer.length b in emit ?leading_override indent x;
       maps:={origin=o;output_first=first;output_last=Buffer.length b}:: !maps
     | Atom s -> put s
     | ReaderPrefix x -> put "#`"; emit indent x
@@ -60,13 +60,22 @@ let render ?(width=90) ?(prefix="") forms =
     | List (h::xs) ->
       put "("; emit indent h;
       let head=match unwrap h with Atom "cl:lambda" -> "lambda" | Atom s -> s | _ -> "" in
-      let leading=match head with
-        | ":nonrecursive" | ":recursive" -> 3
+      let leading=match leading_override with Some n -> n | None -> match head with
         | "defun" | "defunc" -> 2 | "lambda" | "lambdac" | "labelsc" | "fletc" | "let" | "let*" | "labels" | "match" | "if" | "defvariant" | "define-exception" -> 1
         | "defparameter" | "defpackage" | "in-package" -> 1 | _ -> 0 in
       List.iteri (fun i x ->
         if i<leading && flat_length x + !col+1<=width then put " " else newline (indent+2);
-        emit (indent+2) x) xs; put ")"
+        if i=0 && (head="labelsc" || head="holai.runtime:labelsc") then emit_definitions (indent+2) x
+        else emit (indent+2) x) xs; put ")"
+  and emit_definitions indent x = match x with
+    | List definitions when flat_length x + !col > width ->
+      put "(";
+      List.iteri (fun i definition ->
+        let depth=if i=0 then indent else indent+2 in
+        if i>0 then newline depth;
+        emit ~leading_override:1 depth definition) definitions;
+      put ")"
+    | _ -> emit indent x
   and emit_fragment indent broken x = match x with
     | Origin (o,x) ->
       let first=Buffer.length b in emit_fragment indent broken x;

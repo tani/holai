@@ -431,7 +431,6 @@
     guard
     function-value
     fst
-    fletc
     failwith
     Failure
     deref
@@ -597,8 +596,8 @@
 
 
 (defparameter term_order
-  (holai.runtime:labelsc
-    ((:recursive 0 lexify (ord l1 l2)
+  (labelsc
+    ((lexify (ord l1 l2)
       (if (= l1 nil)
         cl:nil
         (if (= l2 nil)
@@ -606,7 +605,7 @@
           (let ((h1 (hd l1)) (h2 (hd l2)))
             (cl:declare (cl:ignorable h1 h2))
             (cl:or (#`ord h1 h2) (cl:and (= h1 h2) (lexify ord (tl l1) (tl l2))))))))
-      (:recursive 1 dyn_order (top tm1 tm2)
+      (dyn_order (top tm1 tm2)
         (match (tuple (#`strip_comb tm1) (#`strip_comb tm2))
           ((tuple (tuple f1 args1) (tuple f2 args2))
             (if (= f1 f2)
@@ -634,9 +633,8 @@
       ((guard
         (Comb (Comb (Const "=" _) (cl:and l (Abs x (Comb (cl:and v (Var s ty)) x%)))) v%)
         (cl:and (= x% x) (cl:and (= v% v) (not (= x v)))))
-        (fletc
-          ((conv
-            (tm%)
+        (labelsc
+          ((conv (tm%)
             (match tm%
               ((guard (Abs y (Comb t% y%)) (cl:and (= y y%) (not (free_in y t%))))
                 (#`INSTANTIATE% (#`term_match nil v t%) th))
@@ -704,8 +702,8 @@
           (cl:declare (cl:ignorable cnv))
           (lambdac (v th) (CONV_RULE cnv (#`GEN v th))))))
     (cl:declare (cl:ignorable IMP_CONJ_CONV IMP_EXISTS_RULE))
-    (holai.runtime:labelsc
-      ((:nonrecursive 0 collect_condition (oldhyps th)
+    (labelsc
+      ((collect_condition (oldhyps th)
         (let ((conds (subtract (hyp th) oldhyps)))
           (cl:declare (cl:ignorable conds))
           (if (= conds nil)
@@ -721,7 +719,7 @@
                       (subtract (subtract (frees cond%) (frees eqn)) (freesl oldhyps))))
                     (cl:declare (cl:ignorable fvs))
                     (itlist IMP_EXISTS_RULE fvs kth))))))))
-        (:recursive 1 split_rewrites (oldhyps cf th sofar)
+        (split_rewrites (oldhyps cf th sofar)
           (let ((tm (concl th)))
             (cl:declare (cl:ignorable tm))
             (if (#`is_forall tm)
@@ -765,8 +763,7 @@
 
 (defunc mk_prover (applicator augmentor)
   (labelsc
-    ((mk_prover%
-      (state)
+    ((mk_prover% (state)
       (let
         ((apply% (#`applicator state))
           (augment% (lambdac (thms) (mk_prover% (#`augmentor state thms)))))
@@ -880,8 +877,8 @@
 (defparameter TOP_SWEEP_SQCONV nil)
 
 (match
-  (holai.runtime:labelsc
-    ((:nonrecursive 0 IMP_REWRITES_CONV (strat arg~933 lev pconvs tm)
+  (labelsc
+    ((IMP_REWRITES_CONV (strat arg~933 lev pconvs tm)
       (match arg~933
         ((cl:and ss (Simpset net prover% provers rewmaker))
           (tryfind
@@ -900,7 +897,7 @@
                             (cl:declare (cl:ignorable cth))
                             (#`MP th cth)))))))))
             pconvs))))
-      (:recursive 1 RUN_SUB_CONV (strat ss lev triv th)
+      (RUN_SUB_CONV (strat ss lev triv th)
         (let ((tm (concl th)))
           (cl:declare (cl:ignorable tm))
           (if (#`is_imp tm)
@@ -942,7 +939,7 @@
                             (cl:declare (cl:ignorable eth% th% th%%))
                             (RUN_SUB_CONV strat ss lev triv% th%%)))))))))
             (if triv (fail unit) th))))
-      (:nonrecursive 2 GEN_SUB_CONV (strat ss lev pconvs tm)
+      (GEN_SUB_CONV (strat ss lev pconvs tm)
         (handler-case
           (tryfind
             (lambdac (arg~1256)
@@ -1010,7 +1007,7 @@
                                 (_ (raise exception~1138))))))))
                     (failwith "GEN_SUB_CONV"))))
               (_ (raise exception~1126))))))
-      (:recursive 3 ONCE_DEPTH_SQCONV% (arg~1284 lev tm)
+      (ONCE_DEPTH_SQCONV% (arg~1284 lev tm)
         (match arg~1284
           ((cl:and ss (Simpset net prover% provers rewmaker))
             (let ((pconvs (#`lookup tm net)))
@@ -1022,7 +1019,7 @@
                   (match exception~1297
                     ((Failure _) (GEN_SUB_CONV #'ONCE_DEPTH_SQCONV% ss lev pconvs tm))
                     (_ (raise exception~1297)))))))))
-      (:recursive 4 DEPTH_SQCONV% (arg~1322 lev tm)
+      (DEPTH_SQCONV% (arg~1322 lev tm)
         (match arg~1322
           ((cl:and ss (Simpset net prover% provers rewmaker))
             (let ((pconvs (#`lookup tm net)))
@@ -1043,7 +1040,7 @@
                   (match exception~1335
                     ((Failure _) (IMP_REWRITES_CONV #'DEPTH_SQCONV% ss lev pconvs tm))
                     (_ (raise exception~1335)))))))))
-      (:recursive 5 REDEPTH_SQCONV% (arg~1385 lev tm)
+      (REDEPTH_SQCONV% (arg~1385 lev tm)
         (match arg~1385
           ((cl:and ss (Simpset net prover% provers rewmaker))
             (let*
@@ -1078,7 +1075,7 @@
                 (holai.runtime:ocaml-condition
                   (exception~1440)
                   (match exception~1440 ((Failure _) th) (_ (raise exception~1440)))))))))
-      (:recursive 6 TOP_DEPTH_SQCONV% (arg~1466 lev tm)
+      (TOP_DEPTH_SQCONV% (arg~1466 lev tm)
         (match arg~1466
           ((cl:and ss (Simpset net prover% provers rewmaker))
             (let*
@@ -1099,7 +1096,7 @@
                 (holai.runtime:ocaml-condition
                   (exception~1496)
                   (match exception~1496 ((Failure _) th1) (_ (raise exception~1496)))))))))
-      (:recursive 7 TOP_SWEEP_SQCONV% (arg~1522 lev tm)
+      (TOP_SWEEP_SQCONV% (arg~1522 lev tm)
         (match arg~1522
           ((cl:and ss (Simpset net prover% provers rewmaker))
             (let ((pconvs (#`lookup tm net)))
@@ -1165,8 +1162,8 @@
 (match
   (let ((rewrites (ref nil)) (conversions (ref nil)) (conv_net (ref empty_net)))
     (cl:declare (cl:ignorable rewrites conversions conv_net))
-    (holai.runtime:labelsc
-      ((:nonrecursive 0 rehash_convnet (arg~1634)
+    (labelsc
+      ((rehash_convnet (arg~1634)
         (match arg~1634
           ((cl:type holai.runtime::unit-value)
             (assign
@@ -1179,21 +1176,20 @@
                     (match arg~1640 ((tuple _ (tuple pat cnv)) (net_of_conv pat cnv))))
                   (deref conversions)
                   empty_net))))))
-        (:nonrecursive 1 set_basic_rewrites% (thl)
+        (set_basic_rewrites% (thl)
           (let ((canon_thl (itlist (#`mk_rewrites cl:nil) thl nil)))
             (cl:declare (cl:ignorable canon_thl))
             (progn (assign rewrites canon_thl) (rehash_convnet unit))))
-        (:nonrecursive 1 extend_basic_rewrites% (thl)
+        (extend_basic_rewrites% (thl)
           (let ((canon_thl (itlist (#`mk_rewrites cl:nil) thl nil)))
             (cl:declare (cl:ignorable canon_thl))
             (progn
               (assign rewrites (append canon_thl (deref rewrites)))
               (rehash_convnet unit))))
-        (:nonrecursive 1 basic_rewrites% (arg~1699)
+        (basic_rewrites% (arg~1699)
           (match arg~1699 ((cl:type holai.runtime::unit-value) (deref rewrites))))
-        (:nonrecursive 1 set_basic_convs% (cnvs)
-          (progn (assign conversions cnvs) (rehash_convnet unit)))
-        (:nonrecursive 1 extend_basic_convs% (arg~1711)
+        (set_basic_convs% (cnvs) (progn (assign conversions cnvs) (rehash_convnet unit)))
+        (extend_basic_convs% (arg~1711)
           (match arg~1711
             ((tuple name patcong)
               (progn
@@ -1206,9 +1202,9 @@
                         (match arg~1718 ((tuple name% _) (<> name name%))))
                       (deref conversions))))
                 (rehash_convnet unit)))))
-        (:nonrecursive 1 basic_convs% (arg~1740)
+        (basic_convs% (arg~1740)
           (match arg~1740 ((cl:type holai.runtime::unit-value) (deref conversions))))
-        (:nonrecursive 1 basic_net% (arg~1745)
+        (basic_net% (arg~1745)
           (match arg~1745 ((cl:type holai.runtime::unit-value) (deref conv_net)))))
       (tuple
         #'set_basic_rewrites%

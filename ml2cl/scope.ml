@@ -102,14 +102,33 @@ let fresh c stem = incr c.next; stem^"~"^string_of_int !(c.next)
 let spelling c s =
  match SM.find_opt s c.spellings with Some spelling -> spelling | None ->
  let printed=Sexp.symbol (source_spelling s) in printed,String.uppercase_ascii printed
-let global c source_name kind =
+let global ?(reserved_targets=SS.empty) c source_name kind =
  let n=1+Option.value (SM.find_opt source_name c.occurrences) ~default:0 in
  c.occurrences<-SM.add source_name n c.occurrences;
  let total=Option.value (SM.find_opt source_name c.totals) ~default:1 in
  let base,_=spelling c source_name in
  let printed=if n<total then base^"~"^string_of_int n else base in
  let printed=match c.lexical_prefix with None -> printed | Some prefix -> Sexp.symbol prefix^"."^printed in
- let logical=String.uppercase_ascii printed in
+ let printed,logical=match c.lexical_prefix with
+ | None -> printed,String.uppercase_ascii printed
+ | Some prefix ->
+   let occupied logical = SS.mem logical reserved_targets || SS.mem logical c.local_symbols in
+   let printed,logical=
+     if not (occupied (String.uppercase_ascii printed)) then printed,String.uppercase_ascii printed
+     else (
+       (* A reused local-module prefix must not capture an inherited entry.
+          Also reserve future declarations' ordinary prefixed/versioned names,
+          so a collision suffix cannot steal a later source binding's target. *)
+       let planned=SM.fold (fun source total targets ->
+         let base,_=spelling c source in
+         let rec versions n targets =
+           if n>total then targets else
+           let version=if n<total then base^"~"^string_of_int n else base in
+           versions (n+1) (SS.add (String.uppercase_ascii (Sexp.symbol prefix^"."^version)) targets) in
+         versions 1 targets) c.totals SS.empty in
+       allocate_suffix (fun logical -> occupied logical || SS.mem logical planned) printed) in
+   c.local_symbols<-SS.add logical c.local_symbols;
+   printed,logical in
  incr c.next;
  let proof_combinator =
    c.package="holai.tactics" && c.source="tactics.ml" && c.lexical_prefix=None && n=1 &&
@@ -118,9 +137,10 @@ let global c source_name kind =
     | _ -> false) in
  let b={id= !(c.next);source_name;package=(if c.lexical_prefix=None then c.package else "");printed;logical;kind;labels=[];proof_combinator} in
  (match kind with Value -> c.globals<-SS.add logical c.globals | _ -> ()); b
-let local c env source_name kind =
+let local ?(reserved_targets=SS.empty) c env source_name kind =
  let printed,logical=spelling c source_name in
  let forbidden logical =
+   SS.mem logical reserved_targets ||
    List.mem logical control_names || SS.mem logical c.globals || SM.mem logical c.imports ||
    SM.exists (fun _ (b:binding) -> b.logical=logical) env.values ||
    List.exists (fun source -> snd (spelling c source)=logical) c.own in

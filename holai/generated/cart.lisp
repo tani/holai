@@ -1353,8 +1353,7 @@
       (let ((nvar (parse_term "n:num")))
         (cl:declare (cl:ignorable nvar))
         (labelsc
-          ((calc_dimindex
-            (ty)
+          ((calc_dimindex (ty)
             (match ty
               ((Tyapp "1" _) pth_one)
               ((Tyapp "tybit0" (cl:cons ty% _))

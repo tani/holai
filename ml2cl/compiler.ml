@@ -4,45 +4,43 @@ open Sexp
 let let_form head bindings bodies =
  let names=List.map (function List (name::_) -> name | _ -> assert false) bindings in
  form head (l bindings :: form "cl:declare" [form "cl:ignorable" names] :: bodies)
-let local_function_mode = function
- | "fletc" | "holai.runtime:fletc" -> Some ":nonrecursive"
- | "labelsc" | "holai.runtime:labelsc" -> Some ":recursive"
- | _ -> None
-let staged_function_groups definitions =
- let rec collect groups = function
- | [] -> Some (List.rev groups)
- | List (Atom (":nonrecursive"|":recursive" as mode)::Atom stage::definition)::rest ->
-   (match groups with
-   | (old_mode,old_stage,functions)::groups when old_mode=mode && old_stage=stage ->
-     collect ((mode,stage,l definition::functions)::groups) rest
-   | _ -> collect ((mode,stage,[l definition])::groups) rest)
- | _ -> None in
- Option.map (List.map (fun (mode,_,functions) -> mode,List.rev functions)) (collect [] definitions)
 let rec local_function_groups = function
  | Origin (origin,node) when origin.rule="let" ->
    Option.map (fun (groups,body,origins) -> groups,body,origin::origins) (local_function_groups node)
  | List [Atom head;List definitions;body] ->
-   (match local_function_mode head with
-   | None -> None
-   | Some mode ->
-     let groups=match definitions with
-     | List (Atom (":nonrecursive"|":recursive")::_)::_ -> staged_function_groups definitions
-     | _ -> Some [mode,definitions] in
-     Option.map (fun groups -> groups,body,[]) groups)
+   if head="labelsc" || head="holai.runtime:labelsc"
+   then Some (definitions,body,[]) else None
  | _ -> None
 let combine_local_functions head functions body =
  match local_function_groups body with
  | None -> form head [l functions;body]
  | Some (inner,body,origins) ->
-   let groups=(Option.get (local_function_mode head),functions)::inner in
-   let definitions=List.mapi (fun stage (mode,functions) ->
-     List.map (function List definition -> l (a mode::a (string_of_int stage)::definition)
-       | _ -> assert false) functions) groups |> List.concat in
-   (* Stages preserve the original lexical macro expansions, including reused
-      target symbols and FLETC's private curried function cells. Only the
-      surface is flattened; every source let Origin still maps to that form. *)
-   let combined=form "holai.runtime:labelsc" [l definitions;body] in
+   let combined=form head [l (functions@inner);body] in
+   (* Flatten only named-function let scopes; every original let retains its
+      Origin on the combined form, and all annotated function bodies survive. *)
    List.fold_right (fun origin form -> Origin (origin,form)) origins combined
+let rec module_function_group = function
+ | Origin (origin,node) when origin.rule="local-module-binding" ->
+   Option.map (fun (definitions,body,origins) -> definitions,body,origin::origins)
+     (module_function_group node)
+ | List [Atom "holai.runtime:labelsc";List definitions;body] ->
+   Some (definitions,body,[])
+ | _ -> None
+let combine_module_functions head functions body =
+ match module_function_group body with
+ | None -> form head [l functions;body]
+ | Some (inner,body,origins) ->
+   let combined=form head [l (functions@inner);body] in
+   List.fold_right (fun origin form -> Origin (origin,form)) origins combined
+let lexical_targets env =
+ let visited=ref [] in
+ let rec collect env targets =
+   if List.exists (fun previous -> previous==env) !visited then targets else (
+     visited:=env:: !visited;
+     let targets=SM.fold (fun _ (b:binding) targets ->
+       if b.package="" then SS.add b.logical targets else targets) env.values targets in
+     SM.fold (fun _ m targets -> collect m.public targets) env.modules targets) in
+ collect env SS.empty
 let rec expression_spine = function
  | ExApp (_,f,x) -> let h,xs=expression_spine f in h,xs@[x]
  | e -> e,[]
@@ -64,6 +62,8 @@ let rec split_function = function
  | ExTyc (_,e,_) -> split_function e
  | e -> [],Expression e
 let arity e = List.length (fst (split_function e))
+let named_function_bindings bindings =
+ List.for_all (fun (p,e,_) -> match strip_pattern p with PaLid _ -> arity e>0 | _ -> false) bindings
 let rec closure_initializer = function
  | ExFun _ -> true | ExLet (_,_,_,body) | ExTyc (_,body,_) -> closure_initializer body
  | _ -> false
@@ -449,18 +449,14 @@ and emit_initializer c env recursive group e =
      error (MLast.loc_of_expr e) ("Recursive value initializer references its group: "^b.source_name));
  Fun.protect ~finally:(fun () -> c.reference_observer:=previous) (fun () -> emit c env e)
 and emit_let c env loc recursive bindings body =
- let named_functions=List.for_all (fun (p,e,_) -> match strip_pattern p with PaLid _ -> arity e>0 | _ -> false) bindings in
+ let named_functions=named_function_bindings bindings in
  if recursive then check_recursive_patterns loc bindings;
- if named_functions then (
-   let named,_=List.fold_left (fun (definitions,reserved) (p,e,_) ->
-     let name=Option.get (patt_id (strip_pattern p)) in
-     let b=labelled_binding (local c reserved name (Function (arity e))) e in
-     definitions@[name,e,b],add reserved name b) ([],env) bindings in
-   let body_env=List.fold_left (fun env (s,_,b) -> add env s b) env named in
-   let rhs_env=if recursive then body_env else env in
-   let functions=List.map (fun (_,e,b) -> let ps,body=split_function e in let args,body=compile_function c rhs_env ps body in l [a b.printed;l args;body]) named in
-   combine_local_functions (runtime c (if recursive then "labelsc" else "fletc")) functions (emit c body_env body)
- ) else (
+ if named_functions then
+   (* Entry names must remain unavailable after their source binding is
+      shadowed: an earlier nonrecursive RHS may still refer to that target. *)
+   let reserved_targets=SM.fold (fun _ (b:binding) targets -> SS.add b.logical targets) env.values SS.empty in
+   emit_named_functions c env reserved_targets recursive bindings body
+ else (
    let body_env=List.fold_left (fun env (p,_,_) -> bind_pattern c env p) env bindings in
    let simple=List.for_all (fun (p,_,_) -> match strip_pattern p with PaLid _ -> true | _ -> false) bindings in
    if simple then (
@@ -482,6 +478,27 @@ and emit_let c env loc recursive bindings body =
    ) else form (runtime c "match") [form (runtime c "tuple") (List.map (fun (_,e,_) -> emit c env e) bindings);
        l [form (runtime c "tuple") (List.map (fun (p,_,_) -> emit_pattern c body_env p) bindings);emit c body_env body]]
  )
+and emit_named_functions c env reserved_targets recursive bindings body =
+ let named,_,reserved_targets=List.fold_left (fun (definitions,reserved,targets) (p,e,_) ->
+   let name=Option.get (patt_id (strip_pattern p)) in
+   let b=labelled_binding (local ~reserved_targets:targets c reserved name (Function (arity e))) e in
+   definitions@[name,e,b],add reserved name b,SS.add b.logical targets) ([],env,reserved_targets) bindings in
+ let body_env=List.fold_left (fun env (s,_,b) -> add env s b) env named in
+ let rhs_env=if recursive then body_env else env in
+ let functions=List.map (fun (_,e,b) ->
+   let ps,body=split_function e in
+   let args,body=compile_function c rhs_env ps body in
+   l [a b.printed;l args;body]) named in
+ (* Reserve only this consecutive chain, without installing historical bindings
+    in the source environment or lowering future groups before these bodies. *)
+ let body=match body with
+ | ExLet (loc,r,bs,continuation) when named_function_bindings (v bs) ->
+   let recursive=v r and bindings=v bs in
+   if recursive then check_recursive_patterns loc bindings;
+   let node=emit_named_functions c body_env reserved_targets recursive bindings continuation in
+   mark c loc "let" node
+ | _ -> emit c body_env body in
+ combine_local_functions (runtime c "labelsc") functions body
 
 let read_signature env mt =
  let rec read = function
@@ -557,6 +574,7 @@ let rec structure c initial signature items =
    let comment=String.trim (Ploc.comment loc) in
    if String.contains comment '(' then forms:= !forms @ [Comment comment];
    let bs=v bs and oldenv= !env in
+   let reserved_targets=if c.lexical_prefix=None then SS.empty else lexical_targets oldenv in
    if v recursive then check_recursive_patterns loc bs;
    let lexical_slots=c.lexical_prefix<>None && not (List.for_all (fun (p,e,_) ->
      match strip_pattern p with PaLid _ -> arity e>0 | _ -> false) bs) in
@@ -564,18 +582,20 @@ let rec structure c initial signature items =
      if v attrs<>[] then error loc "Binding attributes are unsupported";
      match strip_pattern p with
      | PaLid (_,name) -> let name=v name in let n=arity e in
-       p,e,[name,labelled_binding (global c name (if n>0 && not lexical_slots then Function n else Value)) e]
-     | p -> p,e,List.map (fun name -> name,global c name Value) (List.sort_uniq String.compare (pattern_names p))) bs in
+       p,e,[name,labelled_binding (global ~reserved_targets c name (if n>0 && not lexical_slots then Function n else Value)) e]
+     | p -> p,e,List.map (fun name -> name,global ~reserved_targets c name Value) (List.sort_uniq String.compare (pattern_names p))) bs in
    let newenv=List.fold_left (fun env (_,_,ns) -> List.fold_left (fun env (s,b) -> add env s b) env ns) oldenv defs in
    let rhsenv=if v recursive then newenv else oldenv in
    let group=List.concat_map (fun (_,_,ns) -> List.map snd ns) defs in
    if c.lexical_prefix<>None then (
-     let wrap body =
-       let named=List.for_all (fun (p,_,ns) -> match strip_pattern p,ns with PaLid _,[_,{kind=Function _;_}] -> true | _ -> false) defs in
+     let named=List.for_all (fun (p,_,ns) -> match strip_pattern p,ns with PaLid _,[_,{kind=Function _;_}] -> true | _ -> false) defs in
+     let wrap adjacent body =
        let node=if named then
-         form (runtime c (if v recursive then "labelsc" else "fletc")) [l (List.map (fun (_,e,ns) ->
+         let functions=List.map (fun (_,e,ns) ->
            let b=snd (List.hd ns) in let ps,fnbody=split_function e in
-           let args,fnbody=compile_function c rhsenv ps fnbody in l [a b.printed;l args;fnbody]) defs);body]
+           let args,fnbody=compile_function c rhsenv ps fnbody in l [a b.printed;l args;fnbody]) defs in
+         let head=runtime c "labelsc" in
+         if adjacent then combine_module_functions head functions body else form head [l functions;body]
        else if List.for_all (fun (p,_,_) -> match strip_pattern p with PaLid _ -> true | _ -> false) defs then
          let binds=List.map (fun (_,e,ns) -> l [a (snd (List.hd ns)).printed;emit_initializer c rhsenv (v recursive) group e]) defs in
          if v recursive then
@@ -590,7 +610,7 @@ let rec structure c initial signature items =
          let input,pattern=match expressions,patterns with [e],[p] -> e,p | _ -> form (runtime c "tuple") expressions,form (runtime c "tuple") patterns in
          form (runtime c "match") [input;l [pattern;let_form "let" binds [body]]]) in
        mark c loc "local-module-binding" node in
-     wrappers:= !wrappers@[wrap]
+     wrappers:= !wrappers@[named,wrap]
    ) else (
    if v recursive then (
      let values=List.filter (fun (b:binding) -> b.kind=Value) group in
@@ -671,7 +691,7 @@ let rec structure c initial signature items =
      let name=match v name with Some s -> v s | None -> error loc "Anonymous module" in
      let m,wrap,ps=resolve_module c !env name me in
      children:= !children@ps;
-     if c.lexical_prefix<>None then wrappers:= !wrappers@[wrap]
+     if c.lexical_prefix<>None then wrappers:= !wrappers@[false,(fun _ body -> wrap body)]
      else (match ps with [] -> () | _ ->
        let owner=List.hd (List.rev ps) in
        forms:= !forms@[form "in-package" [a (":"^m.package)]] @
@@ -680,7 +700,7 @@ let rec structure c initial signature items =
  | StInc (_,me,_) ->
    let m,wrap,ps=resolve_module c !env (fresh c "include") me in
    children:= !children@ps;
-   if c.lexical_prefix<>None then wrappers:= !wrappers@[wrap]
+   if c.lexical_prefix<>None then wrappers:= !wrappers@[false,(fun _ body -> wrap body)]
    else (match ps with [] -> () | _ ->
      let owner=List.hd (List.rev ps) in
      forms:= !forms@[form "in-package" [a (":"^m.package)]]@
@@ -696,13 +716,17 @@ let rec structure c initial signature items =
    (match ident (fst (expression_spine e)),snd (expression_spine e) with
     | Some "needs",[ExStr (_,file)] -> c.dependencies<-c.dependencies@[decode_string loc (v file)]
     | _ -> if c.lexical_prefix=None then push loc "toplevel-expression" (emit c !env e)
-      else let effect=emit c !env e in wrappers:= !wrappers@[fun body -> form "progn" [effect;body]])
+      else let effect=emit c !env e in wrappers:= !wrappers@[false,(fun _ body -> form "progn" [effect;body])])
  | StDcl (_,items) -> error loc "Nested declaration block needs an explicit lowering rule"
  | StDir _ -> error loc "Toplevel directives are not executed by the translator"
  | _ -> error loc "Unsupported structure item (functor, external, object, extension or include form)"
  ) items;
  let public={ !env with values=c.exports;modules= !members;records= !record_members} in
- {environment= !env;public;wrap=(fun body -> List.fold_right (fun wrap body -> wrap body) !wrappers body);
+ {environment= !env;public;wrap=(fun body ->
+    (* Only adjacent function declarations merge: even an erased module alias
+       is a barrier, and the continuation is not part of this structure. *)
+    fst (List.fold_right (fun (named,wrap) (body,adjacent) ->
+      wrap adjacent body,named) !wrappers (body,false)));
   packages= !children @ [{ctx=c;forms= !forms}]}
 and resolve_module c env name me : modul * (Sexp.t -> Sexp.t) * package_result list =
  let loc=MLast.loc_of_module_expr me in

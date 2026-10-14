@@ -386,7 +386,6 @@
     guard
     function-value
     fst
-    fletc
     failwith
     Failure
     defvariant
@@ -885,9 +884,8 @@
             absconv1
             absconv2
             prover%)
-            (fletc
-              ((REAL_INEQ_CONV
-                (pth% tm)
+            (labelsc
+              ((REAL_INEQ_CONV (pth% tm)
                 (match (dest_comb tm)
                   ((tuple lop r%)
                     (let
@@ -1044,14 +1042,12 @@
                             ADD_RULE
                             EMUL_RULE
                             SQUARE_RULE))
-                        (fletc
-                          ((hol_of_positivstellensatz
-                            (arg~989)
+                        (labelsc
+                          ((hol_of_positivstellensatz (arg~989)
                             (match arg~989
                               ((tuple eqs les lts)
                                 (labelsc
-                                  ((translate
-                                    (prf)
+                                  ((translate (prf)
                                     (match prf
                                       ((Axiom_eq n) (el n eqs))
                                       ((Axiom_le n) (el n les))
@@ -1113,8 +1109,7 @@
                                 WEAK_DNF_CONV)))
                             (cl:declare (cl:ignorable init_conv))
                             (labelsc
-                              ((overall
-                                (dun ths)
+                              ((overall (dun ths)
                                 (match ths
                                   (nil
                                     (match (partition (o is_req #'concl) dun)
@@ -1156,8 +1151,7 @@
                                         (lambdac (t%) (failwith ""))))))
                                   (cl:declare (cl:ignorable NNF_NORM_CONV%))
                                   (labelsc
-                                    ((absremover
-                                      (t%)
+                                    ((absremover (t%)
                                       (THENC
                                         (#`TOP_DEPTH_CONV
                                           (THENC
@@ -1228,14 +1222,14 @@
       (linear_cmul (lambdac (c%) (#`mapf (lambdac (x) (* c% x)))))
       (one_tm (parse_term "&1")))
     (cl:declare (cl:ignorable linear_add linear_cmul one_tm))
-    (holai.runtime:labelsc
-      ((:nonrecursive 0 contradictory (p% arg~1477)
+    (labelsc
+      ((contradictory (p% arg~1477)
         (match arg~1477
           ((tuple e% _)
             (cl:or
               (cl:and (is_undefined e%) (not (#`p% num_0)))
               (cl:and (= (dom e%) (cl:cons one_tm nil)) (not (#`p% (apply e% one_tm))))))))
-        (:recursive 1 linear_ineqs (vars arg~1504)
+        (linear_ineqs (vars arg~1504)
           (match arg~1504
             ((tuple les lts)
               (handler-case
@@ -1254,9 +1248,8 @@
                                 (failwith "linear_ineqs: no contradiction")
                                 (let ((ineqs (append les lts)))
                                   (cl:declare (cl:ignorable ineqs))
-                                  (fletc
-                                    ((blowup
-                                      (v)
+                                  (labelsc
+                                    ((blowup (v)
                                       (*
                                         (#`length
                                           (filter
@@ -1286,9 +1279,8 @@
                                                 (lambdac (v) (tuple v (blowup v)))
                                                 vars))))))
                                       (cl:declare (cl:ignorable v))
-                                      (fletc
-                                        ((addup
-                                          (arg~1582 arg~1586 acc)
+                                      (labelsc
+                                        ((addup (arg~1582 arg~1586 acc)
                                           (match arg~1582
                                             ((tuple e1 p1)
                                               (match arg~1586
@@ -1380,7 +1372,7 @@
                                                     (tuple les% lts%)))))))))))))
                             (_ (raise exception~1511))))))
                     (_ (raise exception~1508))))))))
-        (:recursive 2 linear_eqs (arg~1803)
+        (linear_eqs (arg~1803)
           (match arg~1803
             ((tuple eqs les lts)
               (handler-case
@@ -1406,9 +1398,8 @@
                             (linear_eqs (tuple es les lts))
                             (match (choose (#`undefine one_tm e%))
                               ((tuple x c%)
-                                (fletc
-                                  ((xform
-                                    (arg~1844)
+                                (labelsc
+                                  ((xform (arg~1844)
                                     (match arg~1844
                                       ((cl:and inp (tuple t% q))
                                         (let ((d (tryapplyd t% x num_0)))
@@ -1435,7 +1426,7 @@
                                       (map #'xform les)
                                       (map #'xform lts))))))))))
                     (_ (raise exception~1808))))))))
-        (:nonrecursive 3 linear_prover (arg~1946)
+        (linear_prover (arg~1946)
           (match arg~1946
             ((tuple eq le% lt%)
               (let
@@ -1465,8 +1456,7 @@
               (mul_tm (parse_term "(*):real->real->real")))
             (cl:declare (cl:ignorable one_tm% zero_tm add_tm mul_tm))
             (labelsc
-              ((lin_of_hol
-                (tm)
+              ((lin_of_hol (tm)
                 (if (= tm zero_tm)
                   undefined
                   (if (not (is_comb tm))
@@ -1486,16 +1476,16 @@
                                     (%=> tm (num 1))))))))))))))
               #'lin_of_hol))))
         (cl:declare (cl:ignorable lin_of_hol))
-        (holai.runtime:labelsc
-          ((:nonrecursive 0 is_alien (tm)
+        (labelsc
+          ((is_alien (tm)
             (match tm
               ((guard (Comb (Const "real_of_num" _) n) (not (#`is_numeral n))) cl:t)
               (_ cl:nil)))
-            (:nonrecursive 1 is_suc_alien (tm)
+            (is_suc_alien (tm)
               (match tm
                 ((Comb (Const "real_of_num" _) (Comb (Const "SUC" _) _)) cl:t)
                 (_ cl:nil)))
-            (:nonrecursive 2 dest_suc_alien (tm)
+            (dest_suc_alien (tm)
               (match tm
                 ((Comb (Const "real_of_num" _) (Comb (Const "SUC" _) n)) n)
                 (_ (failwith "")))))
@@ -1734,9 +1724,8 @@
               (is_min (is_binop (parse_term "real_min")))
               (is_abs% (lambdac (t%) (cl:and (is_comb t%) (= (rator t%) abs_tm)))))
             (cl:declare (cl:ignorable is_max is_min is_abs%))
-            (fletc
-              ((eliminate_construct
-                (p% c% tm)
+            (labelsc
+              ((eliminate_construct (p% c% tm)
                 (let*
                   ((t% (find_term (lambdac (t%) (cl:and (#`p% t%) (free_in t% tm))) tm))
                     (v (#`genvar (type_of t%)))

@@ -860,9 +860,9 @@
     pp-close-box
     match
     lambdac
+    labelsc
     int-mod
     int-div
-    fletc
     defunc
     char-chr
     >
@@ -1166,7 +1166,6 @@
     lambdac
     labelsc
     fst
-    fletc
     failwith
     Failure
     defunc
@@ -1743,7 +1742,6 @@
     function-value
     fst
     format-printf
-    fletc
     failwith
     deref
     defunc
@@ -1882,10 +1880,10 @@
     list-concat
     list-assoc
     lambdac
+    labelsc
     function-value
     fst
     format-printf
-    fletc
     failwith
     Failure
     deref
@@ -2120,8 +2118,7 @@
 
 (defunc iter (f l)
   (labelsc
-    ((iter%
-      (arg~236)
+    ((iter% (arg~236)
       (match arg~236
         ((cl:type holai.runtime::unit-value)
           (let ((x (#`l unit)))
@@ -2179,8 +2176,7 @@
   (let ((last% (ref #'nil%)))
     (cl:declare (cl:ignorable last%))
     (labelsc
-      ((concat%
-        (arg~375)
+      ((concat% (arg~375)
         (match arg~375
           ((cl:type holai.runtime::unit-value)
             (handler-case
@@ -2196,8 +2192,7 @@
   (let ((last% (ref #'nil%)))
     (cl:declare (cl:ignorable last%))
     (labelsc
-      ((concat_map%
-        (arg~403)
+      ((concat_map% (arg~403)
         (match arg~403
           ((cl:type holai.runtime::unit-value)
             (handler-case
@@ -2304,9 +2299,8 @@
 (defunc pp_iter (sep) (pp_interleave (lambdac (f) (pp-print-string f sep))))
 
 (defunc pp_iter_sp (sep fn)
-  (fletc
-    ((sep%
-      (f)
+  (labelsc
+    ((sep% (f)
       (progn
         (pp-print-char f (cl:code-char 32))
         (pp-print-string f sep)
@@ -2824,20 +2818,20 @@
       (eq_elim_RULE (MATCH_MP (#`TAUT (parse_term "(a <=> b) ==> b \\/ ~a"))))
       (veq_tm (rator (rator (concl (hd eq_thms))))))
     (cl:declare (cl:ignorable eq_thms imp_elim_CONV eq_elim_RULE veq_tm))
-    (holai.runtime:labelsc
-      ((:nonrecursive 0 create_equivalence_axioms (arg~2425)
+    (labelsc
+      ((create_equivalence_axioms (arg~2425)
         (match arg~2425
           ((tuple eq _)
             (let ((tyins (type_match (type_of veq_tm) (type_of eq) nil)))
               (cl:declare (cl:ignorable tyins))
               (map (INST_TYPE tyins) eq_thms)))))
-        (:recursive 1 tm_consts (tm acc)
+        (tm_consts (tm acc)
           (match (#`strip_comb tm)
             ((tuple fn args)
               (if (= args nil)
                 acc
                 (itlist #'tm_consts args (insert (tuple fn (#`length args)) acc))))))
-        (:recursive 2 fm_consts (tm arg~2470)
+        (fm_consts (tm arg~2470)
           (match arg~2470
             ((cl:and acc (tuple preds funs))
               (handler-case
@@ -2921,7 +2915,7 @@
                                     (_ (raise exception~2481))))))
                             (_ (raise exception~2478))))))
                     (_ (raise exception~2475))))))))
-        (:nonrecursive 3 create_congruence_axiom (pflag arg~2607)
+        (create_congruence_axiom (pflag arg~2607)
           (match arg~2607
             ((tuple tm len)
               (match
@@ -3720,8 +3714,7 @@
 
 (defunc pick (f l)
   (labelsc
-    ((go
-      (acc arg~4992)
+    ((go (acc arg~4992)
       (match arg~4992
         ((cl:cons x xs)
           (match (#`f x)
@@ -3750,9 +3743,8 @@
         (assert-true (= (list-length pi%) k%) "thecops.ml" 1133 2)
         (match (pick (nth_clause i%) mi)
           ((tuple (tuple (tuple (tuple i%% k1) v1) cla1) miAB)
-            (fletc
-              ((alt1
-                (arg~5117)
+            (labelsc
+              ((alt1 (arg~5117)
                 (match arg~5117
                   ((cl:type holai.runtime::unit-value)
                     (match lmext
@@ -3787,17 +3779,15 @@
                                                   (#`claDE
                                                     (make-Mat% (tuple (tuple j% k1) mi3)))))))))))))))))
                       (_ #'nil%)))))
-                (alt2
-                  (arg~5220)
+                (alt2 (arg~5220)
                   (match arg~5220
                     ((cl:type holai.runtime::unit-value)
                       (if (cl:and (list-mem (tuple i%% k1) pi%) (= v nil))
                         #'nil%
                         (match (claBC_of_litmat_ext lmext)
                           ((tuple claB claC)
-                            (fletc
-                              ((index%
-                                (cla)
+                            (labelsc
+                              ((index% (cla)
                                 (tuple (tuple (tuple i%% k%) v) (copy_clause k% cla))))
                               (cons
                                 (tuple
@@ -4196,7 +4186,7 @@
       (make-recon_data :problem problem :mapping (matrix_index_mapping mat%%) :sub sub))))
 
 (defunc prefix_problem (data)
-  (fletc ((rel (i%) (list-assoc i% (record-field data :mapping))))
+  (labelsc ((rel (i%) (list-assoc i% (record-field data :mapping))))
     (partial
       (function-value #'list-fold-left 3)
       (lambdac (th arg~6249)

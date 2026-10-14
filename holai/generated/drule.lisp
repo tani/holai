@@ -268,7 +268,6 @@
     labelsc
     function-value
     fst
-    fletc
     failwith
     Failure
     defunc
@@ -371,8 +370,8 @@
 
 
 (defparameter instantiate
-  (holai.runtime:labelsc
-    ((:nonrecursive 0 betas (n tm)
+  (labelsc
+    ((betas (n tm)
       (match
         (funpow
           n
@@ -385,7 +384,7 @@
               (match (dest_abs l) ((tuple v b) (#`vsubst (cl:cons (tuple a% v) nil) b))))
             args
             lam))))
-      (:recursive 1 ho_betas (bcs pat tm)
+      (ho_betas (bcs pat tm)
         (if (cl:or (is_var pat) (is_const pat))
           (fail unit)
           (handler-case
@@ -449,12 +448,12 @@
                       (match exception~342 ((Failure _) ttm) (_ (raise exception~342))))))))))))))
 
 (defparameter INSTANTIATE%
-  (holai.runtime:labelsc
-    ((:recursive 0 BETAS_CONV% (n tm)
+  (labelsc
+    ((BETAS_CONV% (n tm)
       (if (= n 1)
         (TRY_CONV #'BETA_CONV tm)
         (THENC (RATOR_CONV (BETAS_CONV% (- n 1))) (TRY_CONV #'BETA_CONV) tm)))
-      (:recursive 1 HO_BETAS (bcs pat tm)
+      (HO_BETAS (bcs pat tm)
         (if (cl:or (is_var pat) (is_const pat))
           (fail unit)
           (handler-case
@@ -575,8 +574,8 @@
 
 
 (defparameter term_match
-  (holai.runtime:labelsc
-    ((:nonrecursive 0 safe_inserta (arg~695 l)
+  (labelsc
+    ((safe_inserta (arg~695 l)
       (match arg~695
         ((cl:and n (tuple y x))
           (handler-case
@@ -588,7 +587,7 @@
               (match exception~701
                 ((Failure "find") (cl:cons n l))
                 (_ (raise exception~701))))))))
-      (:nonrecursive 1 safe_insert (arg~726 l)
+      (safe_insert (arg~726 l)
         (match arg~726
           ((cl:and n (tuple y x))
             (handler-case
@@ -606,8 +605,8 @@
           (cl:declare (cl:ignorable name))
           (lambdac (ty) (mk_var (tuple name ty))))))
       (cl:declare (cl:ignorable mk_dummy))
-      (holai.runtime:labelsc
-        ((:recursive 0 term_pmatch (lconsts env vtm ctm arg~776)
+      (labelsc
+        ((term_pmatch (lconsts env vtm ctm arg~776)
           (match arg~776
             ((cl:and sofar (tuple insts homs))
               (match (tuple vtm ctm)
@@ -669,13 +668,13 @@
                           (let ((sofar% (term_pmatch lconsts env lv lc sofar)))
                             (cl:declare (cl:ignorable sofar%))
                             (term_pmatch lconsts env rv rc sofar%)))))))))))
-          (:nonrecursive 1 get_type_insts (insts)
+          (get_type_insts (insts)
             (itlist
               (lambdac (arg~986)
                 (match arg~986
                   ((tuple t% x) (type_match (snd (dest_var x)) (type_of t%)))))
               insts))
-          (:nonrecursive 2 separate_insts (insts)
+          (separate_insts (insts)
             (match (partition (o #'is_var (function-value #'snd 1)) insts)
               ((tuple realinsts patterns)
                 (let*
@@ -719,7 +718,7 @@
                               (if (= (compare t% x%) 0) (fail unit) (tuple t% x%))))))
                       realinsts)
                     tyins)))))
-          (:recursive 3 term_homatch (lconsts tyins arg~1104)
+          (term_homatch (lconsts tyins arg~1104)
             (match arg~1104
               ((tuple insts homs)
                 (if (= homs nil)
@@ -841,8 +840,8 @@
 
 
 (defparameter term_unify
-  (holai.runtime:labelsc
-    ((:nonrecursive 0 augment1 (sofar arg~1393)
+  (labelsc
+    ((augment1 (sofar arg~1393)
       (match arg~1393
         ((tuple s x)
           (let ((s% (#`subst sofar s)))
@@ -850,9 +849,8 @@
             (if (cl:and (vfree_in x s%) (not (= s x)))
               (failwith "term_unify: augment1")
               (tuple s% x))))))
-      (:nonrecursive 1 raw_augment_insts (p insts)
-        (cl:cons p (map (augment1 (cl:cons p nil)) insts)))
-      (:nonrecursive 2 augment_insts (arg~1431 insts)
+      (raw_augment_insts (p insts) (cl:cons p (map (augment1 (cl:cons p nil)) insts)))
+      (augment_insts (arg~1431 insts)
         (match arg~1431
           ((tuple t% v)
             (let ((t%% (#`vsubst insts t%)))
@@ -862,7 +860,7 @@
                 (if (vfree_in v t%%)
                   (failwith "augment_insts")
                   (raw_augment_insts (tuple t%% v) insts)))))))
-      (:recursive 3 unify (vars tm1 tm2 sofar)
+      (unify (vars tm1 tm2 sofar)
         (if (= tm1 tm2)
           sofar
           (if (cl:and (is_var tm1) (mem tm1 vars))
@@ -903,8 +901,8 @@
 
 
 (defparameter type_unify
-  (holai.runtime:labelsc
-    ((:nonrecursive 0 augment1 (sofar arg~1589)
+  (labelsc
+    ((augment1 (sofar arg~1589)
       (match arg~1589
         ((tuple s x)
           (let ((s% (type_subst sofar s)))
@@ -912,9 +910,8 @@
             (if (cl:and (occurs_in x s%) (not (= s x)))
               (failwith "type_unify: augment1")
               (tuple s% x))))))
-      (:nonrecursive 1 raw_augment_insts (p insts)
-        (cl:cons p (map (augment1 (cl:cons p nil)) insts)))
-      (:nonrecursive 2 augment_insts (arg~1627 insts)
+      (raw_augment_insts (p insts) (cl:cons p (map (augment1 (cl:cons p nil)) insts)))
+      (augment_insts (arg~1627 insts)
         (match arg~1627
           ((tuple ty v)
             (let ((ty% (type_subst insts ty)))
@@ -924,7 +921,7 @@
                 (if (occurs_in v ty%)
                   (failwith "type_unify: augment_insts")
                   (raw_augment_insts (tuple ty% v) insts)))))))
-      (:recursive 3 unify (ty1 ty2 sofar)
+      (unify (ty1 ty2 sofar)
         (if (= ty1 ty2)
           sofar
           (if (#`is_vartype ty1)
@@ -958,8 +955,8 @@
 
 
 (defparameter term_type_unify
-  (holai.runtime:labelsc
-    ((:nonrecursive 0 augment_tyinsts (arg~1741 tyinsts)
+  (labelsc
+    ((augment_tyinsts (arg~1741 tyinsts)
       (match arg~1741
         ((tuple s t%)
           (let ((sty (type_of (#`inst tyinsts s))) (tty (type_of (#`inst tyinsts t%))))
@@ -972,7 +969,7 @@
                   (lambdac (arg~1762)
                     (match arg~1762 ((tuple ty v) (tuple (type_subst tyinsts% ty) v))))
                   tyinsts)))))))
-      (:nonrecursive 1 augment1 (sofar arg~1785)
+      (augment1 (sofar arg~1785)
         (match arg~1785
           ((tuple s x)
             (let ((s% (#`subst sofar s)))
@@ -980,11 +977,11 @@
               (if (cl:and (vfree_in x s%) (not (= s x)))
                 (failwith "term_unify: augment1")
                 (tuple s% x))))))
-      (:nonrecursive 2 raw_augment_insts (p arg~1813)
+      (raw_augment_insts (p arg~1813)
         (match arg~1813
           ((tuple tminsts tyinsts)
             (tuple (cl:cons p (map (augment1 (cl:cons p nil)) tminsts)) tyinsts))))
-      (:nonrecursive 3 augment_insts (arg~1831 arg~1835)
+      (augment_insts (arg~1831 arg~1835)
         (match arg~1831
           ((tuple t% v)
             (match arg~1835
@@ -1006,7 +1003,7 @@
                     (if (vfree_in v% t%%)
                       (failwith "term_unify: augment_insts")
                       (raw_augment_insts (tuple t%% v%) sofar%)))))))))
-      (:recursive 4 unify (tm1 tm2 arg~1900)
+      (unify (tm1 tm2 arg~1900)
         (match arg~1900
           ((cl:and sofar (tuple tminsts tyinsts))
             (if (= tm1 tm2)
@@ -1065,8 +1062,8 @@
 
 
 (defparameter deep_alpha
-  (holai.runtime:labelsc
-    ((:nonrecursive 0 tryalpha (v tm)
+  (labelsc
+    ((tryalpha (v tm)
       (handler-case
         (alpha v tm)
         (holai.runtime:ocaml-condition
@@ -1081,7 +1078,7 @@
                   (exception~2072)
                   (match exception~2072 ((Failure _) tm) (_ (raise exception~2072))))))
             (_ (raise exception~2069))))))
-      (:recursive 1 deep_alpha% (env tm)
+      (deep_alpha% (env tm)
         (if (= env nil)
           tm
           (handler-case
@@ -1129,8 +1126,8 @@
 (defparameter PART_MATCH nil)
 
 (match
-  (holai.runtime:labelsc
-    ((:recursive 0 match_bvs (t1 t2 acc)
+  (labelsc
+    ((match_bvs (t1 t2 acc)
       (handler-case
         (match (tuple (dest_abs t1) (dest_abs t2))
           ((tuple (tuple v1 b1) (tuple v2 b2))
@@ -1151,7 +1148,7 @@
                   (exception~2214)
                   (match exception~2214 ((Failure _) acc) (_ (raise exception~2214))))))
             (_ (raise exception~2211))))))
-      (:nonrecursive 1 PART_MATCH% (partfn th)
+      (PART_MATCH% (partfn th)
         (let*
           ((sth (SPEC_ALL th))
             (bod (concl sth))
@@ -1179,7 +1176,7 @@
                         (match exception~2333
                           ((Failure _) (failwith "PART_MATCH: Sanity check failure"))
                           (_ (raise exception~2333))))))))))))
-      (:nonrecursive 1 GEN_PART_MATCH% (partfn th)
+      (GEN_PART_MATCH% (partfn th)
         (let*
           ((sth (SPEC_ALL th))
             (bod (concl sth))
@@ -1261,12 +1258,12 @@
 (defparameter HIGHER_REWRITE_CONV
   (let
     ((BETA_VAR
-      (holai.runtime:labelsc
-        ((:recursive 0 BETA_CONVS (n)
+      (labelsc
+        ((BETA_CONVS (n)
           (if (= n 1)
             (TRY_CONV #'BETA_CONV)
             (THENC (RATOR_CONV (BETA_CONVS (- n 1))) (TRY_CONV #'BETA_CONV))))
-          (:recursive 1 free_beta (v tm)
+          (free_beta (v tm)
             (if (is_abs tm)
               (match (dest_abs tm)
                 ((tuple bv bod)
@@ -1298,9 +1295,8 @@
                                 (_ (raise exception~2601))))))))))))))
         #'free_beta)))
     (cl:declare (cl:ignorable BETA_VAR))
-    (fletc
-      ((GINST
-        (th)
+    (labelsc
+      ((GINST (th)
         (let*
           ((fvs (subtract (frees (concl th)) (freesl (hyp th))))
             (gvs (map (o genvar #'type_of) fvs)))
@@ -1320,14 +1316,13 @@
                   (mnet
                     (itlist (lambdac (p n) (#`enter nil (tuple p p) n)) pats empty_net)))
                 (cl:declare (cl:ignorable beta_fns ass_list mnet))
-                (fletc
-                  ((look_fn
-                    (t%)
+                (labelsc
+                  ((look_fn (t%)
                     (mapfilter
                       (lambdac (p) (if (can (#`term_match nil p) t%) p (fail unit)))
                       (#`lookup t% mnet))))
                   (lambdac (top tm)
-                    (fletc
+                    (labelsc
                       ((pred (t%) (cl:and (not (= (look_fn t%) nil)) (free_in t% tm))))
                       (let*
                         ((stm

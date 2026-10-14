@@ -292,9 +292,9 @@
     raise
     match
     lambdac
+    labelsc
     function-value
     fst
-    fletc
     failwith
     Failure
     deref
@@ -563,9 +563,8 @@
     (cl:declare (cl:ignorable P% pth))
     (lambdac (tm)
       (handler-case
-        (fletc
-          ((is_epsok
-            (t%)
+        (labelsc
+          ((is_epsok (t%)
             (cl:and
               (#`is_select t%)
               (match (#`dest_select t%)
@@ -711,14 +710,12 @@
 (defparameter TAUT~1
   (let ((PROP_REWRITE_TAC (REWRITE_TAC nil)))
     (cl:declare (cl:ignorable PROP_REWRITE_TAC))
-    (fletc
-      ((RTAUT_TAC
-        (arg~557)
+    (labelsc
+      ((RTAUT_TAC (arg~557)
         (match arg~557
           ((tuple asl w%)
-            (fletc
-              ((ok
-                (t%)
+            (labelsc
+              ((ok (t%)
                 (cl:and
                   (= (type_of t%) bool_ty)
                   (cl:and (can (find_term #'is_var) t%) (free_in t% w%)))))
@@ -1088,14 +1085,12 @@
 (defparameter TAUT
   (let ((PROP_REWRITE_TAC (REWRITE_TAC nil)))
     (cl:declare (cl:ignorable PROP_REWRITE_TAC))
-    (fletc
-      ((RTAUT_TAC
-        (arg~1230)
+    (labelsc
+      ((RTAUT_TAC (arg~1230)
         (match arg~1230
           ((tuple asl w%)
-            (fletc
-              ((ok
-                (t%)
+            (labelsc
+              ((ok (t%)
                 (cl:and
                   (= (type_of t%) bool_ty)
                   (cl:and (can (find_term #'is_var) t%) (free_in t% w%)))))

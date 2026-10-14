@@ -274,7 +274,6 @@
     guard
     function-value
     fst
-    fletc
     failwith
     Failure
     deref
@@ -476,14 +475,14 @@
 (match
   (let ((the_type_abbreviations (ref nil)))
     (cl:declare (cl:ignorable the_type_abbreviations))
-    (holai.runtime:labelsc
-      ((:nonrecursive 0 remove_type_abbrev% (s)
+    (labelsc
+      ((remove_type_abbrev% (s)
         (assign
           the_type_abbreviations
           (filter
             (lambdac (arg~270) (match arg~270 ((tuple s% _) (<> s% s))))
             (deref the_type_abbreviations))))
-        (:nonrecursive 1 new_type_abbrev% (arg~286)
+        (new_type_abbrev% (arg~286)
           (match arg~286
             ((tuple s ty)
               (progn
@@ -494,7 +493,7 @@
                     (function-value #'< 2)
                     (cl:cons (tuple s ty) nil)
                     (deref the_type_abbreviations)))))))
-        (:nonrecursive 2 type_abbrevs% (arg~308)
+        (type_abbrevs% (arg~308)
           (match arg~308
             ((cl:type holai.runtime::unit-value) (deref the_type_abbreviations)))))
       (tuple #'new_type_abbrev% #'remove_type_abbrev% #'type_abbrevs%)))
@@ -521,7 +520,7 @@
 (match
   (let ((hcs (ref nil)))
     (cl:declare (cl:ignorable hcs))
-    (fletc
+    (labelsc
       ((hide_constant% (c%) (assign hcs (union (cl:cons c% nil) (deref hcs))))
         (unhide_constant% (c%) (assign hcs (subtract (deref hcs) (cl:cons c% nil))))
         (is_hidden% (c%) (mem c% (deref hcs))))
@@ -612,14 +611,14 @@
 (match
   (let ((tyv_num (ref 0)))
     (cl:declare (cl:ignorable tyv_num))
-    (holai.runtime:labelsc
-      ((:nonrecursive 0 new_type_var (arg~489)
+    (labelsc
+      ((new_type_var (arg~489)
         (match arg~489
           ((cl:type holai.runtime::unit-value)
             (let ((n (deref tyv_num)))
               (cl:declare (cl:ignorable n))
               (progn (assign tyv_num (+ n 1)) (make-Stv n))))))
-        (:nonrecursive 1 pmk_cv (arg~505)
+        (pmk_cv (arg~505)
           (match arg~505
             ((tuple s pty)
               (if (can #'get_const_type s) (make-Constp s pty) (make-Varp s pty))))))
@@ -642,8 +641,7 @@
               (t_0 (make-Constp "_0" num_pty)))
             (cl:declare (cl:ignorable num_pty NUMERAL BIT0 BIT1 t_0))
             (labelsc
-              ((pmk_numeral
-                (n)
+              ((pmk_numeral (n)
                 (if (= n num_0)
                   t_0
                   (let ((m (quo-num n num_2)) (b (mod-num n num_2)))
@@ -653,19 +651,19 @@
                       (make-Combp op (pmk_numeral m)))))))
               (lambdac (n) (make-Combp NUMERAL (pmk_numeral n)))))))
         (cl:declare (cl:ignorable pmk_numeral))
-        (holai.runtime:labelsc
-          ((:recursive 0 pretype_subst (th ty)
+        (labelsc
+          ((pretype_subst (th ty)
             (match ty
               ((Ptycon tycon args) (make-Ptycon tycon (map (pretype_subst th) args)))
               ((Utv v) (rev_assocd ty th ty))
               (_ (failwith "pretype_subst: Unexpected form of pretype"))))
-            (:nonrecursive 1 pretype_instance (ty)
+            (pretype_instance (ty)
               (let ((gty (pretype_of_type ty)) (tyvs (map #'pretype_of_type (tyvars ty))))
                 (cl:declare (cl:ignorable gty tyvs))
                 (let ((subs (map (lambdac (tv) (tuple (new_type_var unit) tv)) tyvs)))
                   (cl:declare (cl:ignorable subs))
                   (pretype_subst subs gty))))
-            (:nonrecursive 2 get_generic_type (cname)
+            (get_generic_type (cname)
               (match
                 (filter
                   (o (partial (function-value #'= 2) cname) (function-value #'fst 1))
@@ -673,9 +671,8 @@
                 ((cl:cons (tuple _ (tuple c% ty)) nil) ty)
                 ((cl:cons _ (cl:cons _ _)) (assoc cname (deref the_overload_skeletons)))
                 (nil (get_const_type cname))))
-            (:nonrecursive 3 get_var_type (vname)
-              (assoc vname (deref the_implicit_types)))
-            (:recursive 4 solve (env pty)
+            (get_var_type (vname) (assoc vname (deref the_implicit_types)))
+            (solve (env pty)
               (match pty
                 ((Ptycon f args) (make-Ptycon f (map (solve env) args)))
                 ((Stv i%) (if (defined env i%) (solve env (apply env i%)) pty))
@@ -683,20 +680,17 @@
           (let
             ((free_stvs
               (labelsc
-                ((free_stvs
-                  (arg~719)
+                ((free_stvs (arg~719)
                   (match arg~719
                     ((Stv n) (cl:cons n nil))
                     ((Utv _) nil)
                     ((Ptycon _ args) (flat (map #'free_stvs args))))))
                 (o #'setify #'free_stvs))))
             (cl:declare (cl:ignorable free_stvs))
-            (fletc
-              ((string_of_pretype
-                (stvs)
+            (labelsc
+              ((string_of_pretype (stvs)
                 (labelsc
-                  ((type_of_pretype%
-                    (ns arg~746)
+                  ((type_of_pretype% (ns arg~746)
                     (match arg~746
                       ((Stv n)
                         (mk_vartype
@@ -708,8 +702,7 @@
               (let
                 ((string_of_preterm
                   (labelsc
-                    ((untyped_t_of_pt
-                      (arg~785)
+                    ((untyped_t_of_pt (arg~785)
                       (match arg~785
                         ((Varp s pty) (mk_var (tuple s aty)))
                         ((Constp s pty) (mk_mconst (tuple s (get_const_type s))))
@@ -720,8 +713,8 @@
                         ((Typing ptm pty) (untyped_t_of_pt ptm)))))
                     (o string_of_term #'untyped_t_of_pt))))
                 (cl:declare (cl:ignorable string_of_preterm))
-                (holai.runtime:labelsc
-                  ((:nonrecursive 0 string_of_ty_error (env arg~841)
+                (labelsc
+                  ((string_of_ty_error (env arg~841)
                     (match arg~841
                       ((None)
                         (string-concat
@@ -734,9 +727,8 @@
                             ((sty1 (string_of_pretype (#`free_stvs ty2%) ty1%))
                               (sty2 (string_of_pretype (#`free_stvs ty1%) ty2%)))
                             (cl:declare (cl:ignorable sty1 sty2))
-                            (fletc
-                              ((default_msg
-                                (s)
+                            (labelsc
+                              ((default_msg (s)
                                 (string-concat
                                   " "
                                   (string-concat
@@ -765,7 +757,7 @@
                                               sty2)))))))
                                 ((Varp s _) (default_msg s))
                                 (t%% (default_msg (#`string_of_preterm t%%))))))))))
-                    (:recursive 1 istrivial (ptm env x arg~928)
+                    (istrivial (ptm env x arg~928)
                       (match arg~928
                         ((Stv y)
                           (cl:or
@@ -774,10 +766,9 @@
                         ((guard (Ptycon f args) (exists (istrivial ptm env x) args))
                           (failwith (string_of_ty_error env ptm)))
                         ((cl:or (Ptycon _) (Utv _)) cl:nil)))
-                    (:nonrecursive 2 unify (ptm env ty1 ty2)
+                    (unify (ptm env ty1 ty2)
                       (labelsc
-                        ((unify
-                          (env% arg~975)
+                        ((unify (env% arg~975)
                           (match arg~975
                             (nil env%)
                             ((guard (cl:cons (tuple ty1% ty2% _) oth) (= ty1% ty2%))
@@ -810,7 +801,7 @@
                                 ((None) (make-None))
                                 ((Some t%) (make-Some (tuple t% ty1 ty2)))))
                             nil))))
-                    (:recursive 3 varstruct_consts (ptm)
+                    (varstruct_consts (ptm)
                       (match ptm
                         ((Varp s _)
                           (if (cl:and (not (#`is_hidden s)) (can #'get_generic_type s))
@@ -820,7 +811,7 @@
                         ((Combp (Combp (Varp "," _) l) r)
                           (union (varstruct_consts l) (varstruct_consts r)))
                         (_ nil)))
-                    (:recursive 4 typify (ty arg~1172)
+                    (typify (ty arg~1172)
                       (match arg~1172
                         ((tuple ptm venv uenv)
                           (match ptm
@@ -912,7 +903,7 @@
                                           ((tuple bod% venv2 uenv2)
                                             (tuple (make-Absp v% bod%) venv2 uenv2)))))))))
                             (_ (failwith "typify: unexpected constant at this stage"))))))
-                    (:recursive 5 resolve_interface (ptm cont env)
+                    (resolve_interface (ptm cont env)
                       (match ptm
                         ((Combp f x) (resolve_interface f (resolve_interface x cont) env))
                         ((Absp v bod)
@@ -936,7 +927,7 @@
                                         (cl:declare (cl:ignorable ty%%))
                                         (#`cont (unify (make-Some ptm) env ty%% ty))))))
                                 maps))))))
-                    (:recursive 6 solve_preterm (env ptm)
+                    (solve_preterm (env ptm)
                       (match ptm
                         ((Varp s ty) (make-Varp s (solve env ty)))
                         ((Combp f x)
@@ -964,7 +955,7 @@
                                 (match exception~1627
                                   ((Failure _) (make-Constp s tys))
                                   (_ (raise exception~1627)))))))))
-                    (:recursive 7 type_of_pretype_base (ty)
+                    (type_of_pretype_base (ty)
                       (match ty
                         ((Stv n)
                           (let ((s (string-concat "?" (string-of-int n))))
@@ -982,14 +973,13 @@
                                     translated)))
                                 (cl:declare (cl:ignorable translated%))
                                 (tuple (mk_type (tuple con args%)) translated%)))))))
-                    (:nonrecursive 8 type_of_pretype% (ty)
-                      (fst (type_of_pretype_base ty))))
+                    (type_of_pretype% (ty) (fst (type_of_pretype_base ty))))
                   (let
                     ((term_of_preterm%
                       (let ((stvs_translated_terms (ref nil)))
                         (cl:declare (cl:ignorable stvs_translated_terms))
-                        (holai.runtime:labelsc
-                          ((:recursive 0 term_of_preterm% (ptm)
+                        (labelsc
+                          ((term_of_preterm% (ptm)
                             (match ptm
                               ((Varp s pty)
                                 (match (type_of_pretype_base pty)
@@ -1034,7 +1024,7 @@
                                 (#`mk_gabs
                                   (tuple (term_of_preterm% v) (term_of_preterm% bod))))
                               ((Typing ptm% pty) (term_of_preterm% ptm%))))
-                            (:nonrecursive 1 report_type_invention (arg~1849)
+                            (report_type_invention (arg~1849)
                               (match arg~1849
                                 ((cl:type holai.runtime::unit-value)
                                   (if (<> (deref stvs_translated_terms) nil)
@@ -1054,9 +1044,8 @@
                                 (cl:declare (cl:ignorable tm))
                                 (progn (report_type_invention unit) tm))))))))
                     (cl:declare (cl:ignorable term_of_preterm%))
-                    (fletc
-                      ((retypecheck%
-                        (venv ptm)
+                    (labelsc
+                      ((retypecheck% (venv ptm)
                         (let ((ty (new_type_var unit)))
                           (cl:declare (cl:ignorable ty))
                           (match

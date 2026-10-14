@@ -417,7 +417,6 @@
     guard
     function-value
     fst
-    fletc
     failwith
     Failure
     deref
@@ -1429,9 +1428,8 @@
                         DEPTH_CONV
                         (cl:cons AND_CLAUSES (cl:cons OR_CLAUSES nil))))))
                 (cl:declare (cl:ignorable net RECTYPE_ARITH_EQ_CONV))
-                (fletc
-                  ((SIMPLIFY_CASE_DISTINCTNESS_CLAUSE
-                    (tm%)
+                (labelsc
+                  ((SIMPLIFY_CASE_DISTINCTNESS_CLAUSE (tm%)
                     (match (#`strip_forall tm%)
                       ((tuple avs bod)
                         (match (#`dest_imp bod)
@@ -1489,8 +1487,7 @@
             (pushcnv (GEN_REWRITE_CONV #'I (cl:cons SWAP_EXISTS_THM nil))))
           (cl:declare (cl:ignorable pth basecnv pushcnv))
           (labelsc
-            ((EXISTS_PAT_CONV
-              (tm)
+            ((EXISTS_PAT_CONV (tm)
               (ORELSEC (THENC pushcnv (BINDER_CONV #'EXISTS_PAT_CONV)) basecnv tm)))
             (lambdac (tm)
               (if (#`is_exists tm) (EXISTS_PAT_CONV tm) (failwith "EXISTS_PAT_CONV")))))))
@@ -1534,12 +1531,11 @@
                   THEN AP_TERM_TAC
                   THEN (REWRITE_TAC (cl:cons FUN_EQ_THM (cl:cons FORALL_PAIR_THM nil))))))))
         (cl:declare (cl:ignorable elemma0 elemma1))
-        (fletc
-          ((HACK_PROFORMA
-            (n th)
+        (labelsc
+          ((HACK_PROFORMA (n th)
             (if (<= n 1)
               th
-              (fletc ((mkname (i%) (string-concat "_P" (string-of-int i%))))
+              (labelsc ((mkname (i%) (string-concat "_P" (string-of-int i%))))
                 (let
                   ((ty
                     (end_itlist
@@ -1547,9 +1543,8 @@
                         (mk_type (tuple "prod" (cl:cons s (cl:cons t% nil)))))
                       (map (o #'mk_vartype #'mkname) (-- 1 n)))))
                   (cl:declare (cl:ignorable ty))
-                  (fletc
-                    ((conv
-                      (i%)
+                  (labelsc
+                    ((conv (i%)
                       (let*
                         ((name (string-concat "x" (string-of-int i%)))
                           (cnv
@@ -1566,11 +1561,10 @@
                         (th3 (REWRITE_RULE (cl:cons elemma0 (cl:cons elemma1 nil)) th2)))
                       (cl:declare (cl:ignorable convs th1 th2 th3))
                       (CONV_RULE (#`REDEPTH_CONV convs) th3)))))))
-            (EACK_PROFORMA
-              (n th)
+            (EACK_PROFORMA (n th)
               (if (<= n 1)
                 th
-                (fletc ((mkname (i%) (string-concat "_Q" (string-of-int i%))))
+                (labelsc ((mkname (i%) (string-concat "_Q" (string-of-int i%))))
                   (let
                     ((ty
                       (end_itlist
@@ -1578,9 +1572,8 @@
                           (mk_type (tuple "prod" (cl:cons s (cl:cons t% nil)))))
                         (map (o #'mk_vartype #'mkname) (-- 1 n)))))
                     (cl:declare (cl:ignorable ty))
-                    (fletc
-                      ((conv
-                        (i%)
+                    (labelsc
+                      ((conv (i%)
                         (let*
                           ((name (string-concat "t" (string-of-int i%)))
                             (cnv
@@ -1600,8 +1593,8 @@
                         (CONV_RULE (#`REDEPTH_CONV convs) th4))))))))
           (tuple #'HACK_PROFORMA #'EACK_PROFORMA)))
       ((tuple HACK_PROFORMA EACK_PROFORMA)
-        (holai.runtime:labelsc
-          ((:nonrecursive 0 APPLY_PROFORMA_TAC (th arg~1456)
+        (labelsc
+          ((APPLY_PROFORMA_TAC (th arg~1456)
             (match arg~1456
               ((cl:and gl (tuple asl w%))
                 (let*
@@ -1609,7 +1602,7 @@
                     (n (+ 1 (#`length (fst (splitlist dest_pair vs))))))
                   (cl:declare (cl:ignorable vs n))
                   (#`THEN (MATCH_MP_TAC (#`HACK_PROFORMA n th)) BETA_TAC gl)))))
-            (:nonrecursive 1 is_pattern (p% n tm)
+            (is_pattern (p% n tm)
               (handler-case
                 (match (#`strip_comb (snd (#`strip_exists (body (body tm)))))
                   ((tuple f args)
@@ -1648,14 +1641,14 @@
                             OR_CLAUSES
                             (cl:cons EQ_CLAUSES (cl:cons NOT_CLAUSES nil))))))))))
             (cl:declare (cl:ignorable SIMPLIFY_MATCH_WELLDEFINED_TAC))
-            (holai.runtime:labelsc
-              ((:recursive 0 headonly (f tm)
+            (labelsc
+              ((headonly (f tm)
                 (match tm
                   ((Comb s t%)
                     (cl:and (headonly f s) (cl:and (headonly f t%) (not (= t% f)))))
                   ((Abs x t%) (headonly f t%))
                   (_ cl:t)))
-                (:nonrecursive 1 MAIN_ADMISS_TAC (arg~1592)
+                (MAIN_ADMISS_TAC (arg~1592)
                   (match arg~1592
                     ((cl:and gl (tuple asl w%))
                       (match (#`strip_comb w%)
@@ -1799,8 +1792,7 @@
                             (let ((conv0 (#`REWR_CONV pth0)) (conv1 (#`REWR_CONV pth1)))
                               (cl:declare (cl:ignorable conv0 conv1))
                               (labelsc
-                                ((conv
-                                  (tm)
+                                ((conv (tm)
                                   (handler-case
                                     (#`conv0 tm)
                                     (holai.runtime:ocaml-condition
@@ -1853,8 +1845,7 @@
                                 (cl:cons (#`GSYM FORALL_PAIR_THM) nil))))
                             (cl:declare (cl:ignorable rule))
                             (labelsc
-                              ((depair
-                                (l t%)
+                              ((depair (l t%)
                                 (match l
                                   ((cl:cons v nil) (REFL t%))
                                   ((cl:cons v vs) (#`rule (BINDER_CONV (depair vs) t%))))))
@@ -1884,8 +1875,8 @@
                                   (cl:cons (#`GSYM CONJ_ASSOC) (cl:cons AND_CLAUSES nil)))))
                             (#`TOP_DEPTH_CONV GEN_BETA_CONV))))
                         (cl:declare (cl:ignorable ELIM_LISTOPS_CONV))
-                        (holai.runtime:labelsc
-                          ((:nonrecursive 0 tuple_function_existence (tm)
+                        (labelsc
+                          ((tuple_function_existence (tm)
                             (match (#`dest_exists tm)
                               ((tuple f def)
                                 (match (splitlist #'dest_fun_ty (type_of f))
@@ -1974,7 +1965,7 @@
                                                     (PROVE_HYP
                                                       (UNDISCH (snd (#`EQ_IMP_RULE th2)))
                                                       th1))))))))))))))
-                            (:nonrecursive 1 pinstantiate_casewise_recursion (def)
+                            (pinstantiate_casewise_recursion (def)
                               (handler-case
                                 (#`PART_MATCH #'I EXISTS_REFL def)
                                 (holai.runtime:ocaml-condition
@@ -2203,9 +2194,8 @@
                               (cl:declare (cl:ignorable eth dtm dth))
                               (PROVE_HYP dth eth)))))))
                   (pure_prove_recursive_function_exists%
-                    (fletc
-                      ((break_down_admissibility
-                        (th1)
+                    (labelsc
+                      ((break_down_admissibility (th1)
                         (if (= (hyp th1) nil)
                           th1
                           (let ((def (concl th1)))
@@ -2363,9 +2353,8 @@
                                         ((tuple avs bod)
                                           (match (#`dest_exists bod)
                                             ((tuple ev cbod)
-                                              (fletc
-                                                ((process_clause
-                                                  (k% t%)
+                                              (labelsc
+                                                ((process_clause (k% t%)
                                                   (match (#`strip_forall t%)
                                                     ((tuple avs% eq)
                                                       (match (dest_eq eq)
@@ -2415,9 +2404,8 @@
                                                     sth
                                                     (#`list_mk_conj def)))))))))))))))))
                       (cl:declare (cl:ignorable prove_depth_measure_exists))
-                      (fletc
-                        ((INDUCTIVE_MEASURE_THEN
-                          (tac arg~2908)
+                      (labelsc
+                        ((INDUCTIVE_MEASURE_THEN (tac arg~2908)
                           (match arg~2908
                             ((tuple asl w%)
                               (match (#`dest_exists w%)
@@ -2462,9 +2450,8 @@
                                             tac
                                             (tuple asl w%)))))))))))
                           (cl:declare (cl:ignorable CONSTANT_MEASURE_THEN))
-                          (fletc
-                            ((GUESS_MEASURE_THEN
-                              (tac)
+                          (labelsc
+                            ((GUESS_MEASURE_THEN (tac)
                               (holai.runtime:proof (#`EXISTS_TAC
                                   (parse_term "\\n. n + 1"))
                                 THEN tac
@@ -2535,8 +2522,7 @@
                               (cl:declare
                                 (cl:ignorable pth_lexleft pth_lexright pth_measure))
                               (labelsc
-                                ((GUESS_WF_THEN
-                                  (tac arg~3099)
+                                ((GUESS_WF_THEN (tac arg~3099)
                                   (match arg~3099
                                     ((tuple asl w%)
                                       (ORELSE
@@ -2639,8 +2625,8 @@
 
 
 (defparameter define
-  (holai.runtime:labelsc
-    ((:nonrecursive 0 close_definition_clauses (tm)
+  (labelsc
+    ((close_definition_clauses (tm)
       (match (#`strip_forall tm)
         ((tuple avs bod)
           (let*
@@ -2664,9 +2650,8 @@
                 (cl:declare (cl:ignorable f))
                 (if (holai.lib:mem f avs)
                   (failwith "close_definition_clauses: fn quantified")
-                  (fletc
-                    ((do_clause
-                      (t%)
+                  (labelsc
+                    ((do_clause (t%)
                       (match (#`strip_forall t%)
                         ((tuple lvs bod%)
                           (let ((fvs (subtract (frees (#`lhs bod%)) (cl:cons f lvs))))
@@ -2683,7 +2668,7 @@
                           GEN
                           avs
                           (itlist #'PROVE_HYP (#`CONJUNCTS th) (end_itlist CONJ ths)))))))))))))
-      (:nonrecursive 1 type_instantiate_defining_const (t%)
+      (type_instantiate_defining_const (t%)
         (let*
           ((cjs (#`holai.basics:conjuncts t%))
             (fs

@@ -105,7 +105,6 @@
     lambdac
     labelsc
     function-value
-    fletc
     failwith
     Failure
     >
@@ -413,8 +412,8 @@
                               (tuple nthm_1 nthm_2 sub_tm neg_tm dest_sub is_sub)))))
                       ((tuple nthm_1 nthm_2 sub_tm neg_tm dest_sub is_sub)
                         (lambdac (variable_order)
-                          (holai.runtime:labelsc
-                            ((:nonrecursive 0 POWVAR_MUL_CONV (tm)
+                          (labelsc
+                            ((POWVAR_MUL_CONV (tm)
                               (match (#`dest_mul tm)
                                 ((tuple l r%)
                                   (if
@@ -494,7 +493,7 @@
                                                       pthm_32))
                                                   (_ (raise exception~308))))))
                                           (_ (raise exception~305)))))))))
-                              (:nonrecursive 1 MONOMIAL_DEONE (th)
+                              (MONOMIAL_DEONE (th)
                                 (handler-case
                                   (match (#`dest_mul (rand (concl th)))
                                     ((tuple l r%)
@@ -511,8 +510,7 @@
                             (let*
                               ((MONOMIAL_POW_CONV
                                 (labelsc
-                                  ((MONOMIAL_POW
-                                    (tm bod ntm)
+                                  ((MONOMIAL_POW (tm bod ntm)
                                     (if (not (is_comb bod))
                                       (REFL tm)
                                       (if (#`is_semiring_constant bod)
@@ -602,8 +600,8 @@
                                                     pthm_36)
                                                   (MONOMIAL_DEONE (MONOMIAL_POW tm l r%))))))))))))
                                 (MONOMIAL_MUL_CONV
-                                  (holai.runtime:labelsc
-                                    ((:nonrecursive 0 powvar (tm)
+                                  (labelsc
+                                    ((powvar (tm)
                                       (if (#`is_semiring_constant tm)
                                         one_tm
                                         (handler-case
@@ -622,7 +620,7 @@
                                             (match exception~681
                                               ((Failure _) tm)
                                               (_ (raise exception~681)))))))
-                                      (:nonrecursive 1 vorder (x y)
+                                      (vorder (x y)
                                         (if (= x y)
                                           0
                                           (if (= x one_tm)
@@ -630,7 +628,7 @@
                                             (if (= y one_tm)
                                               1
                                               (if (#`variable_order x y) (- 1) 1)))))
-                                      (:recursive 2 MONOMIAL_MUL (tm l r%)
+                                      (MONOMIAL_MUL (tm l r%)
                                         (handler-case
                                           (match (#`dest_mul l)
                                             ((tuple lx ly)
@@ -914,8 +912,7 @@
                                           (MONOMIAL_DEONE (MONOMIAL_MUL tm l r%)))))))
                                 (POLYNOMIAL_MONOMIAL_MUL_CONV
                                   (labelsc
-                                    ((PMM_CONV
-                                      (tm)
+                                    ((PMM_CONV (tm)
                                       (match (#`dest_mul tm)
                                         ((tuple l r%)
                                           (handler-case
@@ -958,8 +955,8 @@
                                   MONOMIAL_POW_CONV
                                   MONOMIAL_MUL_CONV
                                   POLYNOMIAL_MONOMIAL_MUL_CONV))
-                              (holai.runtime:labelsc
-                                ((:nonrecursive 0 MONOMIAL_ADD_CONV (tm)
+                              (labelsc
+                                ((MONOMIAL_ADD_CONV (tm)
                                   (match (#`dest_add tm)
                                     ((tuple l r%)
                                       (if
@@ -1024,13 +1021,13 @@
                                                             nil)
                                                           pthm_06))
                                                       (MONOMIAL_DEONE th3))))))))))))
-                                  (:nonrecursive 1 powervars (tm)
+                                  (powervars (tm)
                                     (let ((ptms (striplist dest_mul tm)))
                                       (cl:declare (cl:ignorable ptms))
                                       (if (#`is_semiring_constant (hd ptms))
                                         (tl ptms)
                                         ptms)))
-                                  (:nonrecursive 2 dest_varpow (tm)
+                                  (dest_varpow (tm)
                                     (handler-case
                                       (match (#`dest_pow tm)
                                         ((tuple x n) (tuple x (#`dest_numeral n))))
@@ -1045,8 +1042,7 @@
                                 (let*
                                   ((morder
                                     (labelsc
-                                      ((lexorder
-                                        (l1 l2)
+                                      ((lexorder (l1 l2)
                                         (match (tuple l1 l2)
                                           ((tuple nil nil) 0)
                                           ((tuple vps nil) (- 1))
@@ -1088,8 +1084,8 @@
                                                 1
                                                 (lexorder vdegs1 vdegs2))))))))
                                     (POLYNOMIAL_ADD_CONV
-                                      (holai.runtime:labelsc
-                                        ((:nonrecursive 0 DEZERO_RULE (th)
+                                      (labelsc
+                                        ((DEZERO_RULE (th)
                                           (let ((tm (rand (concl th))))
                                             (cl:declare (cl:ignorable tm))
                                             (if (not (#`is_add tm))
@@ -1111,7 +1107,7 @@
                                                             (cl:cons (tuple l a_tm) nil)
                                                             pthm_08))
                                                         th))))))))
-                                          (:recursive 1 PADD (tm)
+                                          (PADD (tm)
                                             (match (#`dest_add tm)
                                               ((tuple l r%)
                                                 (if (= l zero_tm)
@@ -1395,8 +1391,7 @@
                                         #'PADD))
                                     (POLYNOMIAL_MUL_CONV
                                       (labelsc
-                                        ((PMUL
-                                          (tm)
+                                        ((PMUL (tm)
                                           (match (#`dest_mul tm)
                                             ((tuple l r%)
                                               (if (not (#`is_add l))
@@ -1474,8 +1469,7 @@
                                                       (PMUL tm))))))))))
                                     (POLYNOMIAL_POW_CONV
                                       (labelsc
-                                        ((PPOW
-                                          (tm)
+                                        ((PPOW (tm)
                                           (match (#`dest_pow tm)
                                             ((tuple l n)
                                               (if (= n zeron_tm)
@@ -1526,8 +1520,8 @@
                                       POLYNOMIAL_ADD_CONV
                                       POLYNOMIAL_MUL_CONV
                                       POLYNOMIAL_POW_CONV))
-                                  (holai.runtime:labelsc
-                                    ((:nonrecursive 0 POLYNOMIAL_NEG_CONV (tm)
+                                  (labelsc
+                                    ((POLYNOMIAL_NEG_CONV (tm)
                                       (match (dest_comb tm)
                                         ((tuple l r%)
                                           (if (<> l neg_tm)
@@ -1542,7 +1536,7 @@
                                                 th1
                                                 (#`POLYNOMIAL_MONOMIAL_MUL_CONV
                                                   (rand (concl th1)))))))))
-                                      (:nonrecursive 1 POLYNOMIAL_SUB_CONV (tm)
+                                      (POLYNOMIAL_SUB_CONV (tm)
                                         (match (#`dest_sub tm)
                                           ((tuple l r%)
                                             (let
@@ -1568,7 +1562,7 @@
                                                         th2
                                                         (#`POLYNOMIAL_ADD_CONV
                                                           (rand (concl th2))))))))))))
-                                      (:recursive 2 POLYNOMIAL_CONV (tm)
+                                      (POLYNOMIAL_CONV (tm)
                                         (if
                                           (cl:or
                                             (not (is_comb tm))

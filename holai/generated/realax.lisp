@@ -888,9 +888,9 @@
     snd
     match
     lambdac
+    labelsc
     function-value
     fst
-    fletc
     defunc)
   (:shadowing-import-from
     :holai.simp
@@ -3793,9 +3793,8 @@
   (prove
     (tuple
       (parse_term "!x y. x === y ==> inv(x) === inv(y)")
-      (fletc
-        ((TAC
-          (tm ths)
+      (labelsc
+        ((TAC (tm ths)
           (holai.runtime:proof (MATCH_MP_TAC NADD_EQ_TRANS)
             THEN (#`EXISTS_TAC tm)
             THEN #'CONJ_TAC

@@ -230,7 +230,6 @@
     int-of-num
     function-value
     fst
-    fletc
     failwith
     Failure
     deref
@@ -685,9 +684,9 @@
       (BIT1_tm (mk_const (tuple "BIT1" nil)))
       (NUMERAL_tm (mk_const (tuple "NUMERAL" nil))))
     (cl:declare (cl:ignorable pow24 num_0% zero_tm BIT0_tm BIT1_tm NUMERAL_tm))
-    (holai.runtime:labelsc
-      ((:recursive 0 stripzeros (l) (match l ((cl:cons cl:nil t%) (stripzeros t%)) (_ l)))
-        (:recursive 1 raw_list_of_num (l n)
+    (labelsc
+      ((stripzeros (l) (match l ((cl:cons cl:nil t%) (stripzeros t%)) (_ l)))
+        (raw_list_of_num (l n)
           (if (= n num_0%)
             (stripzeros l)
             (let ((h (int-of-num (mod-num n pow24))))
@@ -743,13 +742,12 @@
                                                                 (<> (logand h 1) 0)
                                                                 l))))))))))))))))))))))))
                 (quo-num n pow24)))))
-        (:recursive 2 numeral_of_list (t% l)
+        (numeral_of_list (t% l)
           (match l
             (nil t%)
             ((cl:cons b% r%)
               (numeral_of_list (mk_comb (tuple (if b% BIT1_tm BIT0_tm) t%)) r%))))
-        (:nonrecursive 3 mk_raw_numeral (n)
-          (numeral_of_list zero_tm (raw_list_of_num nil n))))
+        (mk_raw_numeral (n) (numeral_of_list zero_tm (raw_list_of_num nil n))))
       (lambdac (n)
         (if (< n num_0%)
           (failwith "mk_numeral: negative argument")
@@ -775,11 +773,10 @@
 (defparameter the_specifications (ref nil))
 
 (defparameter new_specification
-  (holai.runtime:labelsc
-    ((:nonrecursive 0 code (c%) (mk_small_numeral (char-code (string-get c% 0))))
-      (:nonrecursive 1 mk_code (name)
-        (end_itlist (curry mk_pair) (map #'code (explode name))))
-      (:nonrecursive 2 check_distinct (l)
+  (labelsc
+    ((code (c%) (mk_small_numeral (char-code (string-get c% 0))))
+      (mk_code (name) (end_itlist (curry mk_pair) (map #'code (explode name))))
+      (check_distinct (l)
         (handler-case
           (progn
             (itlist
@@ -790,7 +787,7 @@
           (holai.runtime:ocaml-condition
             (exception~992)
             (match exception~992 ((Failure _) cl:nil) (_ (raise exception~992))))))
-      (:nonrecursive 3 specify (name th)
+      (specify (name th)
         (let*
           ((ntm (mk_code name))
             (gv (#`genvar (type_of ntm)))
@@ -809,7 +806,7 @@
                   ONCE_DEPTH_CONV
                   (cl:cons (#`GSYM th2) nil)
                   (#`SPEC ntm (CONV_RULE #'BETA_CONV th1))))))))
-      (:recursive 4 specifies (names th)
+      (specifies (names th)
         (match names
           (nil th)
           ((cl:cons name onames)

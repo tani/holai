@@ -484,7 +484,6 @@
     labelsc
     function-value
     fst
-    fletc
     failwith
     deref
     defvariant
@@ -582,7 +581,7 @@
 (defunc MK_comb (th)
   (match (dest_comb (#`rhs (concl th)))
     ((tuple rator% rand%)
-      (fletc ((mka (th1 th2) (TRANS th (MK_COMB% (tuple th1 th2)))))
+      (labelsc ((mka (th1 th2) (TRANS th (MK_COMB% (tuple th1 th2)))))
         (tuple (REFL rator%) (REFL rand%) #'mka)))))
 
 (defunc MK_abs (th)
@@ -684,8 +683,7 @@
 
 (defunc repeat_on_conj (f thm)
   (labelsc
-    ((iter
-      (th)
+    ((iter (th)
       (handler-case
         (iter (#`f th))
         (holai.runtime:ocaml-condition
@@ -709,8 +707,7 @@
 
 (defunc check_arg_form (trm)
   (labelsc
-    ((chk
-      (t% stk free)
+    ((chk (t% stk free)
       (if (is_comb t%)
         (match (dest_comb t%)
           ((tuple rator% rand%)
@@ -767,8 +764,7 @@
     ((tuple nil v) v)
     ((tuple tysub v)
       (labelsc
-        ((tyi_dt
-          (arg~536)
+        ((tyi_dt (arg~536)
           (match arg~536
             ((Cst c% dbsk) (make-Cst (#`inst tysub c%) dbsk))
             ((App h l) (make-App (tyi_dt h) (map #'tyi_dt l)))
@@ -868,8 +864,7 @@
   (match arg~899
     ((tuple rws% env t%)
       (labelsc
-        ((down
-          (arg~906)
+        ((down (arg~906)
           (match arg~906
             ((tuple env% t%% c%)
               (match t%%
@@ -888,8 +883,7 @@
                   (down (tuple env% rator% (make-Zrator (tuple env% rand%) c%))))
                 ((holai.fusion.hol:Abs bvar body%)
                   (down (tuple (cl:cons bvar env%) body% (make-Zabs unit c%))))))))
-          (up
-            (arg~969)
+          (up (arg~969)
             (match arg~969
               ((tuple dt (Ztop)) dt)
               ((tuple dt (Zrator (tuple env% arg) c%))
@@ -991,8 +985,7 @@
             nil)))
         (cl:declare (cl:ignorable dblist))
         (labelsc
-          ((get_actions
-            (db)
+          ((get_actions (db)
             (match db
               ((End_db) nil)
               ((Need_arg db%) (get_actions db%))
@@ -1000,10 +993,9 @@
                 (cl:cons (tuple hcst rws%) (get_actions tail))))))
           (let ((actionlist (list-concat (list-map #'get_actions dblist))))
             (cl:declare (cl:ignorable actionlist))
-            (holai.runtime:labelsc
-              ((:nonrecursive 0 dest (arg~1268)
-                (match arg~1268 ((Rw (rewrite_rec :thm thm)) thm)))
-                (:nonrecursive 1 dest_action (arg~1276)
+            (labelsc
+              ((dest (arg~1268) (match arg~1268 ((Rw (rewrite_rec :thm thm)) thm)))
+                (dest_action (arg~1276)
                   (match arg~1276
                     ((tuple hcst (Rewrite rws%)) (tuple hcst (map #'dest rws%)))
                     ((tuple hcst (Conv _)) (tuple hcst nil)))))
@@ -1034,8 +1026,7 @@
             nil)))
         (cl:declare (cl:ignorable dblist))
         (labelsc
-          ((get_actions
-            (db)
+          ((get_actions (db)
             (match db
               ((End_db) nil)
               ((Need_arg db%) (get_actions db%))
@@ -1048,10 +1039,9 @@
                   (match arg~1361 ((tuple s db) (tuple s (get_actions db)))))
                 dblist)))
             (cl:declare (cl:ignorable actionlist))
-            (holai.runtime:labelsc
-              ((:nonrecursive 0 dest (arg~1376)
-                (match arg~1376 ((Rw (rewrite_rec :thm thm)) thm)))
-                (:nonrecursive 1 dest_action (arg~1384)
+            (labelsc
+              ((dest (arg~1376) (match arg~1376 ((Rw (rewrite_rec :thm thm)) thm)))
+                (dest_action (arg~1384)
                   (match arg~1384
                     ((Rewrite rws%) (make-Rrules (map #'dest rws%)))
                     ((Conv ecnv) (make-Conversion ecnv)))))
@@ -1128,8 +1118,7 @@
 
 (defunc try_rwn (ibds lt)
   (labelsc
-    ((try_rec%
-      (arg~1601)
+    ((try_rec% (arg~1601)
       (match arg~1601
         (nil (raise (make-No_match)))
         ((cl:cons (cl:and rw% (Rw (rewrite_rec :lhs lhs% :npv npv))) rwn)

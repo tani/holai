@@ -384,7 +384,6 @@
     labelsc
     ignore-value
     function-value
-    fletc
     failwith
     Failure
     deref
@@ -749,8 +748,7 @@
   (let
     ((depair
       (labelsc
-        ((depair
-          (gv arg)
+        ((depair (gv arg)
           (handler-case
             (match (#`dest_pair arg)
               ((tuple l r%)
@@ -861,9 +859,8 @@
 (defparameter GEN_BETA_CONV
   (let ((projection_cache (ref nil)))
     (cl:declare (cl:ignorable projection_cache))
-    (fletc
-      ((create_projections
-        (conname)
+    (labelsc
+      ((create_projections (conname)
         (handler-case
           (assoc conname (deref projection_cache))
           (holai.runtime:ocaml-condition
@@ -976,9 +973,8 @@
                                                 eth
                                                 fth
                                                 zty))
-                                            (fletc
-                                              ((mk_projector
-                                                (a%)
+                                            (labelsc
+                                              ((mk_projector (a%)
                                                 (let*
                                                   ((ity (type_of a%))
                                                     (th
@@ -1018,8 +1014,8 @@
               (cl:declare (cl:ignorable pth))
               (MATCH_MP pth))))
           (cl:declare (cl:ignorable GABS_RULE))
-          (holai.runtime:labelsc
-            ((:recursive 0 create_iterated_projections (tm)
+          (labelsc
+            ((create_iterated_projections (tm)
               (if (= (frees tm) nil)
                 nil
                 (if (is_var tm)
@@ -1045,7 +1041,7 @@
                               arths)))
                         (cl:declare (cl:ignorable prjths atm instn arths ths))
                         (unions% #'equals_thm ths)))))))
-              (:nonrecursive 1 GEN_BETA_CONV% (tm)
+              (GEN_BETA_CONV% (tm)
                 (handler-case
                   (BETA_CONV tm)
                   (holai.runtime:ocaml-condition
@@ -1371,8 +1367,7 @@
       (lete_CONV (#`REWR_CONV LET_END_DEF)))
     (cl:declare (cl:ignorable let1_CONV lete_CONV))
     (labelsc
-      ((EXPAND_BETAS_CONV
-        (tm)
+      ((EXPAND_BETAS_CONV (tm)
         (let ((tm% (rator tm)))
           (cl:declare (cl:ignorable tm%))
           (handler-case
@@ -1505,8 +1500,7 @@
 
 (defunc SUBLET_CONV (conv)
   (labelsc
-    ((largconv
-      (tm)
+    ((largconv (tm)
       (match tm
         ((Comb (Const "LET" _) _) (REFL tm))
         ((Comb l r%) (COMB2_CONV #'largconv conv tm))

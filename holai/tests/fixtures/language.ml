@@ -98,7 +98,7 @@ let language_containers () =
    bool_string (Language_set.for_all (fun n -> n > 0) union);
    bool_string (Language_map.exists (fun _ v -> v > 100) m);
    string_of_int (Language_set.compare inter diff)];;
-(* Adjacent named-function stages must retain their original lexical scopes. *)
+(* Adjacent named-function groups must retain their original lexical scopes. *)
 let language_function_chain () =
   let add x y = x+y in
   let increment n = add 1 n in
@@ -147,11 +147,90 @@ let language_function_barrier () =
   let next n = middle n in
   let before n = n+100 in
   int_list_string [next 40; before 1; !calls];;
+(* Entry-visible names stay reserved even after repeated inner shadows. *)
+let language_function_entry_shadow () =
+  let f x y = x+y in
+  let boundary = 100 in
+  let f x y = f x y + boundary in
+  let first () = f in
+  let first_partial () = f 20 in
+  let f x y = f x y * 2 in
+  let second () = f in
+  let second_partial () = f 20 in
+  let f x y = x-y in
+  let third () = f in
+  let third_partial () = f 46 in
+  let f x y = x+2*y in
+  let fourth () = f in
+  let fourth_partial () = f 22 in
+  int_list_string [first () 20 22; first_partial () 22;
+                   second () 20 22; second_partial () 22;
+                   third () 46 4; third_partial () 4;
+                   fourth () 22 10; fourth_partial () 10] ^ ":" ^
+  bool_string (first () == first ()) ^ ":" ^
+  bool_string (second () == second ()) ^ ":" ^
+  bool_string (third () == third ()) ^ ":" ^
+  bool_string (fourth () == fourth ()) ^ ":" ^
+  bool_string (not (first () == second ())) ^ ":" ^
+  bool_string (not (second () == third ())) ^ ":" ^
+  bool_string (not (third () == fourth ()));;
+let language_function_case_shadow () =
+  let K x y = x+y in
+  let saved () = K in
+  let K x y = x*y in
+  let k x y = x-y in
+  let current () = K in
+  let K x y = x+2*y in
+  int_list_string [saved () 20 22; current () 14 3; k 46 4; K 22 10] ^ ":" ^
+  bool_string (saved () == saved ()) ^ ":" ^
+  bool_string (not (saved () == current ()));;
+(* Escaped module functions retain declaration-time entries across flat groups,
+   value initialization, aliases, case collisions, and a reused module name. *)
+let language_module_function_escape () =
+  let calls = ref 0 in
+  let combine x y = x+y in
+  let module Local = struct
+    let add x y = combine x y
+    let increment n = add 1 n
+    let capture () = add 20
+    let apply fn n = fn n
+    let combine x y = combine x y + 100
+    and previous x y = combine x y
+    let saved () = combine 20
+    let combine x y = combine x y * 2
+    let middle () = combine 20
+    let K x y = x+y
+    let snapshot () = K 20
+    let K x y = x*y
+    let k x y = x-y
+    let current () = K 14
+    let initialized =
+      (incr calls; let first = capture () in fun n -> first n + !calls)
+    let bridge n = initialized n
+    let ahead n = bridge n
+    let add x y = x*y
+    module Alias = Language_import
+    let imported n = Alias.combine n 22
+    let observe n =
+      [increment n; apply (capture ()) 22; previous 20 22;
+       saved () 22; middle () 22; snapshot () 22; current () 3;
+       k 46 4; ahead 21; add 14 3; imported 20; !calls]
+  end in
+  let escaped = Local.observe in
+  let module Local = struct
+    let combine x y = Local.combine x y + 1
+    let capture n = Local.capture () n
+    let observe () = escaped 41
+  end in
+  let partial = Local.combine 20 in
+  fun () ->
+    int_list_string (Local.observe () @ [partial 22; Local.capture 22; !calls]);;
 let language_observations () =
   let a1 = Language_a.tick () in let a2 = Language_alias.tick () in
   let b1 = Language_b.tick () in
   let local_a = language_local 10 in let local_b = language_local 30 in
   let la1 = local_a 3 in let la2 = local_a 3 in let lb1 = local_b 3 in
+  let module_functions = language_module_function_escape () in
   let loop_sum,loop_count = language_loops () in
   let table = Hashtbl.create 1 in
   Hashtbl.add table (1,2) 4; Hashtbl.add table (1,2) 5;
@@ -177,6 +256,9 @@ let language_observations () =
    "language_function_parallel=" ^ language_function_parallel ();
    "language_function_import=" ^ language_function_import ();
    "language_function_barrier=" ^ language_function_barrier ();
+   "language_function_entry_shadow=" ^ language_function_entry_shadow ();
+   "language_function_case_shadow=" ^ language_function_case_shadow ();
+   "language_module_function_scope=" ^ module_functions () ^ ":" ^ module_functions ();
    "language_loops=" ^ int_list_string [loop_sum;loop_count];
    "language_lazy=" ^ language_lazy ();
    "language_hash=" ^ int_list_string [first;replaced] ^ ":" ^
