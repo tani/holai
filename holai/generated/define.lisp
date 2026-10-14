@@ -273,7 +273,6 @@
   (:import-from :holai.basics)
   (:import-from :holai.bool)
   (:import-from :holai.calc_num)
-  (:import-from :holai.cart)
   (:import-from :holai.class)
   (:import-from :holai.drule)
   (:import-from :holai.equal)
@@ -290,7 +289,9 @@
   (:import-from :holai.parser)
   (:import-from :holai.printer)
   (:import-from :holai.recursion)
-  (:import-from :holai.runtime)
+  (:import-from :holai.runtime.core)
+  (:import-from :holai.runtime.data)
+  (:import-from :holai.runtime.pattern)
   (:import-from :holai.simp)
   (:import-from :holai.tactics)
   (:import-from :holai.theorems)
@@ -363,7 +364,9 @@
     :holai.parser
     :holai.printer
     :holai.recursion
-    :holai.runtime
+    :holai.runtime.core
+    :holai.runtime.data
+    :holai.runtime.pattern
     :holai.simp
     :holai.tactics
     :holai.theorems
@@ -848,26 +851,20 @@
     prove_recursive_functions_exist
     new_recursive_definition)
   (:shadowing-import-from
-    :holai.runtime
-    tuple
+    :holai.runtime.core
     string-of-int
     string-concat
-    snd
-    raise
     proof
-    match
     lambdac
     labelsc
-    guard
     function-value
-    fst
     failwith
     Failure
-    deref
-    assign
     =
     <>
     <=)
+  (:shadowing-import-from :holai.runtime.data tuple snd raise fst deref assign)
+  (:shadowing-import-from :holai.runtime.pattern match guard)
   (:shadowing-import-from
     :holai.simp
     SIMP_TAC
@@ -1886,13 +1883,13 @@
                                 (cth
                                   (handler-case
                                     (#`simp1 bth)
-                                    (holai.runtime:ocaml-condition
+                                    (holai.runtime.data:ocaml-condition
                                       (exception~1272)
                                       (match exception~1272
                                         ((Failure _)
                                           (handler-case
                                             (#`simp2 bth)
-                                            (holai.runtime:ocaml-condition
+                                            (holai.runtime.data:ocaml-condition
                                               (exception~1275)
                                               (match exception~1275
                                                 ((Failure _) (#`simp3 bth))
@@ -2045,7 +2042,7 @@
                     (cl:and
                       (is_const f)
                       (cl:and (= (name_of f) p%) (= (#`length args) n)))))
-                (holai.runtime:ocaml-condition
+                (holai.runtime.data:ocaml-condition
                   (exception~1493)
                   (match exception~1493 ((Failure _) cl:nil) (_ (raise exception~1493)))))))
           (let
@@ -2228,7 +2225,7 @@
                                 ((conv (tm)
                                   (handler-case
                                     (#`conv0 tm)
-                                    (holai.runtime:ocaml-condition
+                                    (holai.runtime.data:ocaml-condition
                                       (exception~1873)
                                       (match exception~1873
                                         ((Failure _)
@@ -2401,7 +2398,7 @@
                             (pinstantiate_casewise_recursion (def)
                               (handler-case
                                 (#`PART_MATCH #'I EXISTS_REFL def)
-                                (holai.runtime:ocaml-condition
+                                (holai.runtime.data:ocaml-condition
                                   (exception~2215)
                                   (match exception~2215
                                     ((Failure _)
@@ -3022,7 +3019,7 @@
                                                     THEN GUESS_ORDERING_TAC)))))
                                           (cl:declare (cl:ignorable wtm wth))
                                           (PROVE_HYP wth th))
-                                        (holai.runtime:ocaml-condition
+                                        (holai.runtime.data:ocaml-condition
                                           (exception~3200)
                                           (match exception~3200
                                             ((Failure _) th)
@@ -3068,7 +3065,7 @@
                       (o (o (holai.lib:repeat #'rator) lhs) (function-value #'snd 1))
                       strip_forall)
                     cjs)
-                  (holai.runtime:ocaml-condition
+                  (holai.runtime.data:ocaml-condition
                     (exception~3548)
                     (match exception~3548
                       ((Failure _) (failwith "close_definition_clauses: non-equation"))
@@ -3137,7 +3134,7 @@
                 (if (can (#`PART_MATCH #'I th%) (concl th))
                   (progn (warn cl:t "Benign redefinition") th%)
                   (failwith "")))))
-          (holai.runtime:ocaml-condition
+          (holai.runtime.data:ocaml-condition
             (exception~3711)
             (match exception~3711
               ((Failure _)

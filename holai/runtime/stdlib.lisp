@@ -1,4 +1,27 @@
-(in-package :holai.runtime)
+(uiop:define-package :holai.runtime.stdlib
+  (:use :cl)
+  (:shadow :list-length)
+  (:import-from :holai.runtime.data
+    :unit :tuple :fst :snd :assign :deref :ocaml-condition :raise)
+  (:import-from :holai.runtime.core
+    :defrecord :record-update :record-field :invalid-arg :define-exception
+    :failwith :None :make-Not_found :structural-hash)
+  (:shadowing-import-from :holai.runtime.core :funcall := :Some)
+  (:import-from :holai.runtime.pattern :match)
+  ;; The terminal runtime includes the initialized standard formatter.
+  (:import-from :holai.runtime.format)
+  (:export :array-fold-left :array-of-list :array-map :gc-control :make-gc-control
+    :gc-get :gc-set :catch-break :sys_break :make-sys_break :table-remove :table-fold
+    :lazy-create :lazy-force :lazy-undefined :make-lazy-undefined :ocaml-max-int
+    :assert_failure :make-assert_failure :assert-true :ref-incr :ref-decr :print-endline
+    :ignore-value :int-lsl :int-lsr :int-asr :float-of-int :int-of-float :float-floor
+    :table-create :table-clear :table-add :table-replace :table-find
+    :random-init :random-bits :random-int :list-length :list-hd :list-tl :list-nth
+    :list-rev :list-rev-append :list-map :list-map2 :list-mapi :list-rev-map :list-iter
+    :list-concat :list-fold-left2 :list-fold-right2 :list-fold-right :list-for-all
+    :list-for-all2 :list-mem :list-mem-assoc :list-assoc :list-find :list-filter
+    :list-filter-map :list-partition :list-sort))
+(in-package :holai.runtime.stdlib)
 
 ;; Required OCaml 4.14.1 library boundary. These functions do not change the
 ;; translated HOL algorithms. List.sort preserves values/stability, but does

@@ -313,7 +313,10 @@
   (:import-from :holai.parser)
   (:import-from :holai.preterm)
   (:import-from :holai.recursion)
-  (:import-from :holai.runtime)
+  (:import-from :holai.runtime.core)
+  (:import-from :holai.runtime.data)
+  (:import-from :holai.runtime.pattern)
+  (:import-from :holai.runtime.stdlib)
   (:import-from :holai.simp)
   (:import-from :holai.tactics)
   (:import-from :holai.theorems)
@@ -489,7 +492,10 @@
     :holai.parser
     :holai.preterm
     :holai.recursion
-    :holai.runtime
+    :holai.runtime.core
+    :holai.runtime.data
+    :holai.runtime.pattern
+    :holai.runtime.stdlib
     :holai.simp
     :holai.tactics
     :holai.theorems
@@ -877,38 +883,30 @@
   (:shadowing-import-from :holai.preterm new_type_abbrev)
   (:shadowing-import-from :holai.recursion new_recursive_definition)
   (:shadowing-import-from
-    :holai.runtime
-    unit
-    tuple
+    :holai.runtime.core
     string-make
     string-length
     string-get
     string-escaped
-    snd
-    raise
     proof
     partial
-    match
     lambdac
     labelsc
     int-mod
-    int-lsl
     int-div
-    guard
     function-value
     failwith
     Failure
-    deref
     defunc
     compare
     char-chr
-    assign
-    array-of-list
-    array-map
     array-get
     =
     <>
     <)
+  (:shadowing-import-from :holai.runtime.data unit tuple snd raise deref assign)
+  (:shadowing-import-from :holai.runtime.pattern match guard)
+  (:shadowing-import-from :holai.runtime.stdlib int-lsl array-of-list array-map)
   (:shadowing-import-from
     :holai.simp
     SIMP_TAC
@@ -2430,7 +2428,7 @@
     (let ((cons (mk_const (tuple "CONS" (cl:cons (tuple (type_of h) aty) nil)))))
       (cl:declare (cl:ignorable cons))
       (mk_comb (tuple (mk_comb (tuple cons h)) t%)))
-    (holai.runtime:ocaml-condition
+    (holai.runtime.data:ocaml-condition
       (exception~2460)
       (match exception~2460 ((Failure _) (failwith "mk_cons")) (_ (raise exception~2460))))))
 
@@ -2445,7 +2443,7 @@
             (let ((cons (mk_const (tuple "CONS" (cl:cons (tuple ty aty) nil)))))
               (cl:declare (cl:ignorable cons))
               (holai.lib:itlist (mk_binop cons) tms nil%))))
-        (holai.runtime:ocaml-condition
+        (holai.runtime.data:ocaml-condition
           (exception~2490)
           (match exception~2490
             ((Failure _) (failwith "mk_list"))
@@ -2454,7 +2452,7 @@
 (defunc mk_flist (tms)
   (handler-case
     (mk_list (tuple tms (type_of (holai.lib:hd tms))))
-    (holai.runtime:ocaml-condition
+    (holai.runtime.data:ocaml-condition
       (exception~2532)
       (match exception~2532
         ((Failure _) (failwith "mk_flist"))
@@ -2501,7 +2499,9 @@
 (defunc LIST_CONV (conv tm)
   (if (#`is_cons tm)
     (COMB2_CONV (RAND_CONV conv) (LIST_CONV conv) tm)
-    (if (= (holai.runtime:fst (dest_const tm)) "NIL") (REFL tm) (failwith "LIST_CONV"))))
+    (if (= (holai.runtime.data:fst (dest_const tm)) "NIL")
+      (REFL tm)
+      (failwith "LIST_CONV"))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Some relatively efficient and tail-recursive (though very long and        *)
@@ -2565,7 +2565,7 @@
                             (TRANS th (INST% (cl:cons (tuple ntm n_tm) nil) pth_base))))))))
                   (handler-case
                     (conv (INST% (cl:cons (tuple (rand tm) t_tm) nil) pth_init))
-                    (holai.runtime:ocaml-condition
+                    (holai.runtime.data:ocaml-condition
                       (exception~2763)
                       (match exception~2763
                         ((Failure _) (failwith "LENGTH_CONV"))
@@ -2633,7 +2633,7 @@
                                       (conv th3))))))))))))
                   (handler-case
                     (conv (REFL tm))
-                    (holai.runtime:ocaml-condition
+                    (holai.runtime.data:ocaml-condition
                       (exception~2951)
                       (match exception~2951
                         ((Failure _) (failwith "EL_CONV"))
@@ -2693,7 +2693,7 @@
                             (TRANS th (INST% (cl:cons (tuple ltm% l_tm) nil) pth_base))))))))
                   (handler-case
                     (conv (INST% (cl:cons (tuple tm l_tm) nil) pth_init))
-                    (holai.runtime:ocaml-condition
+                    (holai.runtime.data:ocaml-condition
                       (exception~3103)
                       (match exception~3103
                         ((Failure _) (failwith "REVERSE_CONV"))
@@ -2783,7 +2783,7 @@
                                   (conv th4))))))))))
                   (handler-case
                     (conv (INST% (cl:cons (tuple tm l_tm) nil) pth_init))
-                    (holai.runtime:ocaml-condition
+                    (holai.runtime.data:ocaml-condition
                       (exception~3331)
                       (match exception~3331
                         ((Failure _) (failwith "LIST_OF_SEQ_CONV"))
@@ -2827,7 +2827,10 @@
           ((tuple f tms)
             (if
               (cl:or
-                (not (cl:and (is_const f) (= (holai.runtime:fst (dest_const f)) "ASCII")))
+                (not
+                  (cl:and
+                    (is_const f)
+                    (= (holai.runtime.data:fst (dest_const f)) "ASCII")))
                 (not (= (#`holai.lib:length tms) 8)))
               (failwith "code_of_term")
               (holai.lib:itlist
@@ -2843,7 +2846,7 @@
               (cl:declare (cl:ignorable tms))
               (if
                 (<>
-                  (holai.runtime:fst
+                  (holai.runtime.data:fst
                     (dest_type (holai.lib:hd (snd (dest_type (type_of tm))))))
                   "char")
                 (fail unit)
@@ -2854,7 +2857,7 @@
                       tms)))
                   (cl:declare (cl:ignorable ccs))
                   (string-escaped (implode ccs)))))
-            (holai.runtime:ocaml-condition
+            (holai.runtime.data:ocaml-condition
               (exception~3495)
               (match exception~3495
                 ((Failure _) (failwith "dest_string"))

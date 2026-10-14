@@ -1,6 +1,30 @@
-(in-package :holai.runtime)
+(uiop:define-package :holai.runtime.core
+  (:use :cl)
+  (:shadow :funcall :compare :partial := :< :> :<= :>= :Some)
+  (:import-from :holai.runtime.data
+    :tuple :tuple-items :unit :ocaml-condition :raise :ref :deref :assign
+    :tuple-value :tuple-value-p :ref-cell :ref-cell-p :unit-value-p)
+  (:import-from :holai.runtime.pattern-registry
+    :*pattern-descriptions* :register-pattern-family)
+  ;; Keep the compiler phase available before declaration macros are loaded.
+  (:import-from :holai.runtime.pattern)
+  (:export :defunc :lambdac :labelsc :fletc :proof :function-value :funcall :partial
+    :define-exception :defvariant :variant-value :variant-tag :variant-fields :variant-type
+    := :<> :== :!= :compare :< :> :<= :>=
+    :failure :invalid_argument :end_of_file :sys_error :failwith
+    :make-failure :make-invalid_argument :make-sys_error :make-end_of_file
+    :Some :None :make-Some :make-None :invalid-arg
+    :int-div :int-mod :string-concat :string-length :string-sub :string-join :string-get
+    :num :numdom :gcd-num :abs-num :power-num :quo-num :mod-num :int-of-num
+    :string-of-num :string-of-int :string-of-float :cpu-time :exception-string :structural-hash
+    :open-in :open-in-bin :open-out :input-line :close-channel :output-string :channel-length
+    :really-input-string :char-chr :string-make :string-escaped :int-of-string
+    :array-make :array-get :array-set :list-fold-left :list-exists :bool-or :bool-and
+    :defrecord :record-field :record-update :record-assign :Not_found :make-Not_found
+    :record-value :record-value-p :record-value-type :record-value-fields :record-fields
+    :*record-descriptions* :variant-value-constant-p))
+(in-package :holai.runtime.core)
 
-(defparameter std-formatter *standard-output*)
 
 ;; Curried source functions receive their known prefix as optional parameters.
 ;; Only excess arguments need a rest list; supplied-p distinguishes NIL/omission.
@@ -29,7 +53,7 @@
               do (setf result
                        (cond
                          ((operator-symbol-p operator)
-                          `(holai.runtime:funcall ,operator ,result ,operand))
+                          `(holai.runtime.core:funcall ,operator ,result ,operand))
                          ((and (consp operator)
                                (eq (car operator) 'cl:function)
                                (consp (cdr operator))
@@ -143,27 +167,6 @@
     (or (gethash function table)
         (setf (gethash function table) (make-native-adapter function arity)))))
 
-(defstruct (unit-value (:constructor make-unit-value ())))
-(defparameter unit (make-unit-value))
-(defstruct (tuple-value (:constructor make-tuple-value (items)))
-  (items nil :type list :read-only t))
-(defun tuple (&rest items) (make-tuple-value items))
-(defun tuple-items (tuple) (tuple-value-items tuple))
-(defun tuple-ref (tuple i)
-  (let ((items (tuple-items tuple)))
-    (unless (and (integerp i) (cl:<= 0 i) (cl:< i (length items)))
-      (error 'type-error :datum i :expected-type `(integer 0 (,(length items)))))
-    (nth i items)))
-(defun fst (tuple) (tuple-ref tuple 0))
-(defun snd (tuple) (tuple-ref tuple 1))
-
-(defstruct (ref-cell (:constructor ref (value))) value)
-(defun deref (cell) (ref-cell-value cell))
-(defun assign (cell value) (setf (ref-cell-value cell) value) unit)
-(define-condition ocaml-condition (error) ())
-(define-condition match-failure (ocaml-condition) ())
-(defun match-failure () (error 'match-failure))
-(defun raise (condition) (error condition))
 
 (defmacro define-exception (name &rest slots)
   (let* ((package (symbol-package name))
@@ -351,9 +354,6 @@
 (defun string-join (separator strings)
   (format nil "~{~a~}" (loop for s in strings for first = t then nil
                              unless first collect separator collect s)))
-(defun print-string (s) (pp-print-string std-formatter s))
-(defun print-newline (u) (declare (ignore u))
-  (pp-print-string std-formatter (string #\Newline)) (pp-print-flush std-formatter unit))
 (defun cpu-time (u) (declare (ignore u))
   (coerce (cl:/ (get-internal-run-time) internal-time-units-per-second) 'double-float))
 (defun exception-string (e)

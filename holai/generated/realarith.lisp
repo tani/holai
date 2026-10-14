@@ -330,7 +330,9 @@
   (:import-from :holai.nums)
   (:import-from :holai.parser)
   (:import-from :holai.realax)
-  (:import-from :holai.runtime)
+  (:import-from :holai.runtime.core)
+  (:import-from :holai.runtime.data)
+  (:import-from :holai.runtime.pattern)
   (:import-from :holai.simp)
   (:import-from :holai.tactics)
   (:export
@@ -409,7 +411,9 @@
     :holai.nums
     :holai.parser
     :holai.realax
-    :holai.runtime
+    :holai.runtime.core
+    :holai.runtime.data
+    :holai.runtime.pattern
     :holai.simp
     :holai.tactics)
   (:shadow
@@ -876,16 +880,11 @@
     REAL_ADD_LDISTRIB
     real_abs)
   (:shadowing-import-from
-    :holai.runtime
-    tuple
-    raise
+    :holai.runtime.core
     num
-    match
     lambdac
     labelsc
-    guard
     function-value
-    fst
     failwith
     Failure
     defvariant
@@ -894,6 +893,8 @@
     >
     =
     <)
+  (:shadowing-import-from :holai.runtime.data tuple raise fst)
+  (:shadowing-import-from :holai.runtime.pattern match guard)
   (:shadowing-import-from
     :holai.simp
     SIMP_TAC
@@ -984,13 +985,15 @@
   (prove
     (tuple
       (parse_term "!x y. x < y \\/ y <= x")
-      (holai.runtime:proof (REWRITE_TAC (cl:cons real_lt nil)) THEN (#`CONV_TAC TAUT)))))
+      (holai.runtime.core:proof (REWRITE_TAC (cl:cons real_lt nil))
+        THEN (#`CONV_TAC TAUT)))))
 
 (defparameter REAL_LET_TOTAL
   (prove
     (tuple
       (parse_term "!x y. x <= y \\/ y < x")
-      (holai.runtime:proof (REWRITE_TAC (cl:cons real_lt nil)) THEN (#`CONV_TAC TAUT)))))
+      (holai.runtime.core:proof (REWRITE_TAC (cl:cons real_lt nil))
+        THEN (#`CONV_TAC TAUT)))))
 
 (defparameter REAL_LT_IMP_LE
   (prove
@@ -1038,7 +1041,7 @@
   (prove
     (tuple
       (parse_term "!x y. --(x - y) = y - x")
-      (holai.runtime:proof (REWRITE_TAC
+      (holai.runtime.core:proof (REWRITE_TAC
           (cl:cons real_sub (cl:cons REAL_NEG_ADD (cl:cons REAL_NEG_NEG nil))))
         THEN (REWRITE_TAC (cl:cons REAL_ADD_AC nil))))))
 
@@ -1046,14 +1049,14 @@
   (prove
     (tuple
       (parse_term "!x y. x <= y <=> x < y \\/ (x = y)")
-      (holai.runtime:proof (REWRITE_TAC (cl:cons real_lt nil))
+      (holai.runtime.core:proof (REWRITE_TAC (cl:cons real_lt nil))
         THEN (MESON_TAC (cl:cons REAL_LE_ANTISYM (cl:cons REAL_LE_TOTAL nil)))))))
 
 (defparameter REAL_SUB_LT
   (prove
     (tuple
       (parse_term "!x y. &0 < (x - y) <=> y < x")
-      (holai.runtime:proof (REWRITE_TAC (cl:cons real_lt nil))
+      (holai.runtime.core:proof (REWRITE_TAC (cl:cons real_lt nil))
         THEN (ONCE_REWRITE_TAC (cl:cons (#`GSYM REAL_NEG_SUB) nil))
         THEN
           (REWRITE_TAC
@@ -1067,7 +1070,7 @@
   (prove
     (tuple
       (parse_term "!x y. (x - y = &0) <=> (x = y)")
-      (holai.runtime:proof (REPEAT #'GEN_TAC)
+      (holai.runtime.core:proof (REPEAT #'GEN_TAC)
         THEN (REWRITE_TAC (cl:cons (#`GSYM REAL_LE_ANTISYM) nil))
         THEN (GEN_REWRITE_TAC (o LAND_CONV LAND_CONV) (cl:cons (#`GSYM REAL_NOT_LT) nil))
         THEN (REWRITE_TAC (cl:cons REAL_SUB_LE (cl:cons REAL_SUB_LT nil)))
@@ -1108,7 +1111,7 @@
   (prove
     (tuple
       (parse_term "!x y. (x * y = &0) <=> (x = &0) \\/ (y = &0)")
-      (holai.runtime:proof (REPEAT #'GEN_TAC)
+      (holai.runtime.core:proof (REPEAT #'GEN_TAC)
         THEN #'EQ_TAC
         THEN #'STRIP_TAC
         THEN (#`ASM_REWRITE_TAC (cl:cons REAL_MUL_LZERO (cl:cons REAL_MUL_RZERO nil)))
@@ -1132,7 +1135,7 @@
   (prove
     (tuple
       (parse_term "!x. &0 <= x * x")
-      (holai.runtime:proof #'GEN_TAC
+      (holai.runtime.core:proof #'GEN_TAC
         THEN (DISJ_CASES_TAC (#`SPEC (parse_term "x:real") REAL_LE_NEGTOTAL))
         THEN (POP_ASSUM (lambdac (th) (MP_TAC (MATCH_MP REAL_LE_MUL (#`CONJ th th)))))
         THEN
@@ -1149,7 +1152,7 @@
   (prove
     (tuple
       (parse_term "!x. x pow 2 = x * x")
-      (holai.runtime:proof (REWRITE_TAC
+      (holai.runtime.core:proof (REWRITE_TAC
           (cl:cons
             (#`num_CONV (parse_term "2"))
             (cl:cons (#`num_CONV (parse_term "1")) nil)))
@@ -1169,7 +1172,7 @@
    (!x y z. x * (y + z) = x * y + x * z) /\\
    (!x. x pow 0 = &1) /\\
    (!x n. x pow (SUC n) = x * x pow n)")
-      (holai.runtime:proof (REWRITE_TAC
+      (holai.runtime.core:proof (REWRITE_TAC
           (cl:cons real_pow (cl:cons REAL_ADD_LDISTRIB (cl:cons REAL_MUL_LZERO nil))))
         THEN
           (REWRITE_TAC
@@ -1194,7 +1197,7 @@
   (prove
     (tuple
       (parse_term "!n. ~(&n = &0) <=> (&0 < &n)")
-      (holai.runtime:proof #'GEN_TAC
+      (holai.runtime.core:proof #'GEN_TAC
         THEN (REWRITE_TAC (cl:cons REAL_LT_LE nil))
         THEN (#`CONV_TAC (RAND_CONV (#`ONCE_DEPTH_CONV #'SYM_CONV)))
         THEN (ASM_CASES_TAC (parse_term "&n = &0"))
@@ -1204,7 +1207,7 @@
   (prove
     (tuple
       (parse_term "!n. &0 < &(SUC n)")
-      (holai.runtime:proof #'GEN_TAC
+      (holai.runtime.core:proof #'GEN_TAC
         THEN
           (REWRITE_TAC
             (cl:cons
@@ -1248,7 +1251,7 @@
      (~(x > y) <=> y - x >= &0) /\\
      (~(x >= y) <=> y - x > &0) /\\
      (~(x = y) <=> x - y > &0 \\/ --(x - y) > &0)")
-          (holai.runtime:proof (REWRITE_TAC
+          (holai.runtime.core:proof (REWRITE_TAC
               (cl:cons
                 real_gt
                 (cl:cons
@@ -1270,7 +1273,7 @@
      (x > &0 /\\ (y = &0) ==> x + y > &0) /\\
      (x > &0 /\\ y >= &0 ==> x + y > &0) /\\
      (x > &0 /\\ y > &0 ==> x + y > &0)")
-            (holai.runtime:proof (SIMP_TAC
+            (holai.runtime.core:proof (SIMP_TAC
                 (cl:cons
                   REAL_ADD_LID
                   (cl:cons REAL_ADD_RID (cl:cons real_ge (cl:cons real_gt nil)))))
@@ -1291,7 +1294,7 @@
      (x > &0 /\\ (y = &0) ==> (x * y = &0)) /\\
      (x > &0 /\\ y >= &0 ==> x * y >= &0) /\\
      (x > &0 /\\ y > &0 ==> x * y > &0)")
-            (holai.runtime:proof (SIMP_TAC
+            (holai.runtime.core:proof (SIMP_TAC
                 (cl:cons
                   REAL_MUL_LZERO
                   (cl:cons REAL_MUL_RZERO (cl:cons real_ge (cl:cons real_gt nil)))))
@@ -1734,13 +1737,13 @@
             ((tuple les lts)
               (handler-case
                 (find (contradictory (lambdac (x) (> x num_0))) lts)
-                (holai.runtime:ocaml-condition
+                (holai.runtime.data:ocaml-condition
                   (exception~1508)
                   (match exception~1508
                     ((Failure _)
                       (handler-case
                         (find (contradictory (lambdac (x) (>= x num_0))) les)
-                        (holai.runtime:ocaml-condition
+                        (holai.runtime.data:ocaml-condition
                           (exception~1511)
                           (match exception~1511
                             ((Failure _)
@@ -1877,7 +1880,7 @@
             ((tuple eqs les lts)
               (handler-case
                 (find (contradictory (lambdac (x) (= x num_0))) eqs)
-                (holai.runtime:ocaml-condition
+                (holai.runtime.data:ocaml-condition
                   (exception~1808)
                   (match exception~1808
                     ((Failure _)
@@ -2194,7 +2197,7 @@
             (prove
               (tuple
                 (parse_term "P(abs x) <=> (x >= &0 /\\ P x) \\/ (&0 > x /\\ P (--x))")
-                (holai.runtime:proof (REWRITE_TAC
+                (holai.runtime.core:proof (REWRITE_TAC
                     (cl:cons real_abs (cl:cons real_gt (cl:cons real_ge nil))))
                   THEN COND_CASES_TAC
                   THEN (#`ASM_REWRITE_TAC (cl:cons real_lt nil))))))
@@ -2202,7 +2205,7 @@
               (prove
                 (tuple
                   (parse_term "P(max x y) <=> (y >= x /\\ P y) \\/ (x > y /\\ P x)")
-                  (holai.runtime:proof (REWRITE_TAC
+                  (holai.runtime.core:proof (REWRITE_TAC
                       (cl:cons real_max (cl:cons real_gt (cl:cons real_ge nil))))
                     THEN COND_CASES_TAC
                     THEN (#`ASM_REWRITE_TAC (cl:cons real_lt nil))))))
@@ -2210,7 +2213,7 @@
               (prove
                 (tuple
                   (parse_term "P(min x y) <=> (y >= x /\\ P x) \\/ (x > y /\\ P y)")
-                  (holai.runtime:proof (REWRITE_TAC
+                  (holai.runtime.core:proof (REWRITE_TAC
                       (cl:cons real_min (cl:cons real_gt (cl:cons real_ge nil))))
                     THEN COND_CASES_TAC
                     THEN (#`ASM_REWRITE_TAC (cl:cons real_lt nil))))))

@@ -61,10 +61,10 @@ for host in IMPLEMENTATIONS:
             assert phase_evidence["report"] == expected_report
             assert hashlib.sha256((root / expected_report).read_bytes()).hexdigest() == phase_evidence["report_sha256"]
 core = [Path(name).stem for name in json.loads((root / "vendor/CORE_FILES.json").read_text())]
-required = ["DESIGN.md", "AGENTS.md", "README.md", "docs/RELEASE-NOTES.md", "Makefile", "holai.asd", "holai/all.lisp",
+required = ["DESIGN.md", "AGENTS.md", "README.md", "docs/RELEASE-NOTES.md", "Makefile", "holai.asd",
             "flake.nix", "flake.lock", ".github/workflows/ci.yml",
             "ml2cl/sexp.ml", "ml2cl/scope.ml", "ml2cl/compiler.ml", "ml2cl/frontend.ml", "ml2cl/cli.ml",
-            "holai/runtime/package.lisp", "holai/runtime/core.lisp", "holai/runtime/format.lisp", "holai/runtime/stdlib.lisp",
+            "holai/runtime/data.lisp", "holai/runtime/pattern-registry.lisp", "holai/runtime/core.lisp", "holai/runtime/format.lisp", "holai/runtime/stdlib.lisp",
             "holai/tests/run.py", "holai/tests/lisp-tests.lisp", "holai/tests/bootstrap.lisp", "holai/tests/profile-core.lisp", "holai/tests/system-interrupt.lisp",
             "holai/tests/proof-dsl.lisp",
             "holai/tests/fixtures/semantics.ml", "holai/tests/fixtures/differential.ml", "holai/tests/fixtures/extended.ml", "holai/tests/fixtures/logic.ml",
@@ -88,7 +88,7 @@ required = ["DESIGN.md", "AGENTS.md", "README.md", "docs/RELEASE-NOTES.md", "Mak
             "misc/reports/history/peak-memory-baseline.txt", "misc/reports/history/peak-memory-defunc.txt",
             "misc/reports/ocaml-observations.txt", "misc/reports/sbcl-observations.txt",
             "misc/reports/ocaml-initialization.txt", "misc/reports/sbcl-initialization.txt",
-            "holai/generated/inventory.json", "holai/generated/package-systems.sexp",
+            "holai/generated/inventory.json",
             "LICENSE", "THIRD-PARTY-NOTICES.md"]
 required += ["misc/scripts/measure-tuple-list.py", "holai/tests/tuple-list.lisp", "misc/reports/history/TUPLE-LIST.md", "misc/reports/history/tuple-list-startup.json", "misc/reports/history/tuple-list-startup.txt", "misc/reports/history/tuple-list-checks.txt", "holai/tests/profile-performance.lisp", "holai/tests/profile-sets.lisp", "holai/tests/probe-tuple.lisp",
              "misc/reports/history/NEXT-BOTTLENECKS.md", "misc/reports/history/next-bottlenecks.json",
@@ -125,9 +125,9 @@ for name in required:
     assert (root / name).is_file(), f"Required release file missing: {name}"
 for name, digest in pins.items():
     assert hashlib.sha256((root / name).read_bytes()).hexdigest() == digest, f"Pinned source changed: {name}"
-runtime_units = [f"holai/runtime/{name}.lisp" for name in ["package", "pattern", "core", "format", "stdlib"]]
-expected_units = runtime_units + [f"holai/generated/{name}.lisp" for name in core] + ["holai/all.lisp"]
-expected_fingerprints = {"holai.asd", "holai/generated/package-systems.sexp", *expected_units,
+runtime_units = [f"holai/runtime/{name}.lisp" for name in ["data", "pattern-registry", "pattern", "core", "format", "stdlib"]]
+expected_units = runtime_units + [f"holai/generated/{name}.lisp" for name in core]
+expected_fingerprints = {"holai.asd", *expected_units,
                          *(str(p.relative_to(root)) for p in (root / "ml2cl").glob("*.ml"))}
 import sys
 sys.path.insert(0, str(root / "holai/tests"))
@@ -196,7 +196,7 @@ for host in IMPLEMENTATIONS:
                    "reason": limitation["reason"] if limitation else None, "execution": "native-compiled"}
     rejection = compatibility["pattern_stale_fasl_rejection"]
     assert rejection["checked"] is True and rejection["exit_code"] == 17
-    assert rejection["condition"] == "holai.runtime::pattern-declaration-changed"
+    assert rejection["condition"] == "holai.runtime.pattern-registry::pattern-declaration-changed"
     assert rejection["marker"] == "Pattern stale FASL rejected: Separate"
     assert rejection["log"] == "compatibility/pattern-stale.log"
     assert rejection["log_sha256"] == logs[rejection["log"]]
@@ -219,7 +219,7 @@ for host in IMPLEMENTATIONS:
         assert hashlib.sha256((root / name).read_bytes()).hexdigest() == digest, f"Stale {host} tool artifact: {name}"
     translated_prefix = f"_build/compatibility/{host}/translated/"
     translated_expected = {translated_prefix + name + suffix for name in FIXTURES for suffix in (".lisp", ".map.json")}
-    translated_expected |= {translated_prefix + name for name in ("inventory.json", "package-systems.sexp")}
+    translated_expected.add(translated_prefix + "inventory.json")
     assert set(compatibility["translated_sha256"]) == translated_expected
     for name, digest in compatibility["translated_sha256"].items():
         assert hashlib.sha256((root / name).read_bytes()).hexdigest() == digest, f"Stale {host} translated fixture: {name}"
@@ -244,8 +244,7 @@ for host in ("sbcl",):
     assert not diagnostics["active_operations"]
     assert diagnostics["compiled_unit_count"] == 52
     assert diagnostics["compiled_units"] == expected_units and len(set(diagnostics["compiled_units"])) == 52
-    assert diagnostics["loaded_units"] == expected_units and diagnostics["inferred_load_order_matches_manifest"]
-    assert diagnostics["inferred_units"] == expected_units[5:]
+    assert diagnostics["loaded_units"] == expected_units and diagnostics["load_order_matches_manifest"]
     assert set(diagnostics["code_sha256"]) == expected_fingerprints, "Diagnostic fingerprint coverage differs"
     assert all(diagnostics[k] == 0 for k in [
         "compiler_errors", "compiler_warnings", "compiler_style_warnings",
@@ -261,7 +260,7 @@ for host in ("sbcl",):
     assert nan["execution"] == "native-compiled"
     rejection = verification["pattern_stale_fasl_rejection"]
     assert rejection["checked"] is True and rejection["exit_code"] == 17
-    assert rejection["condition"] == "holai.runtime::pattern-declaration-changed"
+    assert rejection["condition"] == "holai.runtime.pattern-registry::pattern-declaration-changed"
     assert rejection["marker"] == "Pattern stale FASL rejected: Separate"
     assert rejection["log"] == "pattern-stale.log"
     consumer = Path(rejection["consumer_fasl"])
@@ -318,7 +317,7 @@ for host in ("sbcl",):
     assert hashlib.sha256(lisp_init).hexdigest() == verification["initialization_lisp_sha256"]
 clean_build = json.loads((root / "misc/reports/clean-build.json").read_text())
 assert clean_build["build_from_sources"] and clean_build["identical_output"] and clean_build["source_pins_unchanged"]
-assert clean_build["compared_generated_files"] == 2 * len(core) + 2
+assert clean_build["compared_generated_files"] == 2 * len(core) + 1 == 93
 # Preserve and verify the preceding SBCL raw baseline independently of current
 # per-host evidence. Its source fingerprints are historical, not current code.
 baseline = json.loads((root / "misc/reports/verification.json").read_text())

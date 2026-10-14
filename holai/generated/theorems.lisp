@@ -193,7 +193,9 @@
   (:import-from :holai.lib)
   (:import-from :holai.parser)
   (:import-from :holai.printer)
-  (:import-from :holai.runtime)
+  (:import-from :holai.runtime.core)
+  (:import-from :holai.runtime.data)
+  (:import-from :holai.runtime.pattern)
   (:import-from :holai.simp)
   (:import-from :holai.tactics)
   (:export
@@ -283,7 +285,9 @@
     :holai.lib
     :holai.parser
     :holai.printer
-    :holai.runtime
+    :holai.runtime.core
+    :holai.runtime.data
+    :holai.runtime.pattern
     :holai.simp
     :holai.tactics)
   (:shadow
@@ -515,25 +519,20 @@
     %%%)
   (:shadowing-import-from :holai.printer name_of isalpha isalnum)
   (:shadowing-import-from
-    :holai.runtime
-    unit
-    tuple
-    snd
-    raise
+    :holai.runtime.core
     proof
     partial
-    match
     lambdac
     labelsc
     int-of-string
-    guard
     function-value
-    fst
     failwith
     Failure
     defunc
     =
     <=)
+  (:shadowing-import-from :holai.runtime.data unit tuple snd raise fst)
+  (:shadowing-import-from :holai.runtime.pattern match guard)
   (:shadowing-import-from
     :holai.simp
     SIMP_TAC
@@ -1220,7 +1219,7 @@
                       (frees w%))))
                 (cl:declare (cl:ignorable x avoids))
                 (if (mem x avoids) (fail unit) (#`X_GEN_TAC x (tuple asl w%))))
-              (holai.runtime:ocaml-condition
+              (holai.runtime.data:ocaml-condition
                 (exception~822)
                 (match exception~822
                   ((Failure _) (failwith "PURE_GEN_TAC"))
@@ -1395,7 +1394,7 @@
                           (tuple
                             (check (partial (function-value #'<= 2) 1) (int-of-string s))
                             rest)
-                          (holai.runtime:ocaml-condition
+                          (holai.runtime.data:ocaml-condition
                             (exception~1246)
                             (match exception~1246
                               ((Failure _) (raise (make-Noparse)))

@@ -394,7 +394,9 @@
   (:import-from :holai.real)
   (:import-from :holai.realarith)
   (:import-from :holai.realax)
-  (:import-from :holai.runtime)
+  (:import-from :holai.runtime.core)
+  (:import-from :holai.runtime.data)
+  (:import-from :holai.runtime.pattern)
   (:import-from :holai.sets)
   (:import-from :holai.simp)
   (:import-from :holai.tactics)
@@ -762,7 +764,9 @@
     :holai.real
     :holai.realarith
     :holai.realax
-    :holai.runtime
+    :holai.runtime.core
+    :holai.runtime.data
+    :holai.runtime.pattern
     :holai.sets
     :holai.simp
     :holai.tactics
@@ -1329,20 +1333,17 @@
     prioritize_real
     prioritize_num)
   (:shadowing-import-from
-    :holai.runtime
-    unit
-    tuple
-    snd
+    :holai.runtime.core
     proof
-    match
     lambdac
     labelsc
     function-value
-    fst
     failwith
     =
     <>
     <)
+  (:shadowing-import-from :holai.runtime.data unit tuple snd fst)
+  (:shadowing-import-from :holai.runtime.pattern match)
   (:shadowing-import-from
     :holai.sets
     UNIV_GSPEC

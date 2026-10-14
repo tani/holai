@@ -229,7 +229,9 @@
   (:import-from :holai.fusion)
   (:import-from :holai.fusion.hol)
   (:import-from :holai.lib)
-  (:import-from :holai.runtime)
+  (:import-from :holai.runtime.core)
+  (:import-from :holai.runtime.data)
+  (:import-from :holai.runtime.pattern)
   (:export
     alpha
     atoms
@@ -305,7 +307,14 @@
 (uiop:define-package
   :holai.basics
   (:use :cl)
-  (:mix :cl :holai.fusion :holai.fusion.hol :holai.lib :holai.runtime)
+  (:mix
+    :cl
+    :holai.fusion
+    :holai.fusion.hol
+    :holai.lib
+    :holai.runtime.core
+    :holai.runtime.data
+    :holai.runtime.pattern)
   (:shadow
     A
     AARGS
@@ -589,32 +598,24 @@
     C
     %->)
   (:shadowing-import-from
-    :holai.runtime
-    unit
-    tuple
+    :holai.runtime.core
     string-of-int
     string-concat
-    snd
-    ref
-    raise
     quo-num
     mod-num
-    match
     lambdac
     labelsc
-    guard
     function-value
-    fst
     failwith
     Failure
-    deref
     defunc
     compare
-    assign
     ==
     =
     <>
     <)
+  (:shadowing-import-from :holai.runtime.data unit tuple snd ref raise fst deref assign)
+  (:shadowing-import-from :holai.runtime.pattern match guard)
   (:export
     alpha
     atoms
@@ -722,7 +723,7 @@
 (defunc tysubst (alist ty)
   (handler-case
     (rev_assoc ty alist)
-    (holai.runtime:ocaml-condition
+    (holai.runtime.data:ocaml-condition
       (exception~66)
       (match exception~66
         ((Failure _)
@@ -741,7 +742,7 @@
 (defunc bndvar (tm)
   (handler-case
     (fst (dest_abs tm))
-    (holai.runtime:ocaml-condition
+    (holai.runtime.data:ocaml-condition
       (exception~95)
       (match exception~95
         ((Failure _) (failwith "bndvar: Not an abstraction"))
@@ -750,7 +751,7 @@
 (defunc body (tm)
   (handler-case
     (snd (dest_abs tm))
-    (holai.runtime:ocaml-condition
+    (holai.runtime.data:ocaml-condition
       (exception~107)
       (match exception~107
         ((Failure _) (failwith "body: Not an abstraction"))
@@ -788,7 +789,7 @@
         ((tuple l r)
           (handler-case
             (mk_comb (tuple (mk_comb (tuple c% l)) r))
-            (holai.runtime:ocaml-condition
+            (holai.runtime.data:ocaml-condition
               (exception~209)
               (match exception~209
                 ((Failure _) (failwith "mk_binary"))
@@ -837,7 +838,7 @@
         tm
         (handler-case
           (fst (find (o (aconv tm) (function-value #'snd 1)) ilist))
-          (holai.runtime:ocaml-condition
+          (holai.runtime.data:ocaml-condition
             (exception~314)
             (match exception~314
               ((Failure _)
@@ -885,7 +886,7 @@
   (match
     (handler-case
       (dest_abs tm)
-      (holai.runtime:ocaml-condition
+      (holai.runtime.data:ocaml-condition
         (exception~483)
         (match exception~483
           ((Failure _) (failwith "alpha: Not an abstraction"))
@@ -906,7 +907,7 @@
   (if (#`is_vartype vty)
     (handler-case
       (if (= (rev_assoc vty sofar) cty) sofar (failwith "type_match"))
-      (holai.runtime:ocaml-condition
+      (holai.runtime.data:ocaml-condition
         (exception~523)
         (match exception~523
           ((Failure "find") (cl:cons (tuple cty vty) sofar))
@@ -930,7 +931,7 @@
             (con (mk_const (tuple c% mat))))
           (cl:declare (cl:ignorable uty mat con))
           (if (= (type_of con) ty) con (fail unit)))
-        (holai.runtime:ocaml-condition
+        (holai.runtime.data:ocaml-condition
           (exception~550)
           (match exception~550
             ((Failure _) (failwith "mk_const: generic type cannot be instantiated"))
@@ -1000,7 +1001,7 @@
           ((tuple l r)
             (handler-case
               (find_term p l)
-              (holai.runtime:ocaml-condition
+              (holai.runtime.data:ocaml-condition
                 (exception~724)
                 (match exception~724
                   ((Failure _) (find_term p r))
@@ -1099,14 +1100,14 @@
 (defunc is_neg (tm)
   (handler-case
     (= (fst (dest_const (rator tm))) "~")
-    (holai.runtime:ocaml-condition
+    (holai.runtime.data:ocaml-condition
       (exception~995)
       (match exception~995 ((Failure _) cl:nil) (_ (raise exception~995))))))
 
 (defunc dest_neg (tm)
   (handler-case
     (match (dest_comb tm) ((tuple n p) (if (= (fst (dest_const n)) "~") p (fail unit))))
-    (holai.runtime:ocaml-condition
+    (holai.runtime.data:ocaml-condition
       (exception~1009)
       (match exception~1009
         ((Failure _) (failwith "dest_neg"))
@@ -1124,7 +1125,7 @@
   (handler-case
     (match (splitlist dest_cons tm)
       ((tuple tms nil%) (if (= (fst (dest_const nil%)) "NIL") tms (fail unit))))
-    (holai.runtime:ocaml-condition
+    (holai.runtime.data:ocaml-condition
       (exception~1051)
       (match exception~1051
         ((Failure _) (failwith "dest_list"))
@@ -1143,7 +1144,7 @@
       (if
         (handler-case
           (= (fst (dest_const tm)) "_0")
-          (holai.runtime:ocaml-condition
+          (holai.runtime.data:ocaml-condition
             (exception~1117)
             (match exception~1117 ((Failure _) cl:nil) (_ (raise exception~1117)))))
         num_0
@@ -1156,7 +1157,7 @@
       (handler-case
         (match (dest_comb tm)
           ((tuple l r) (if (= (fst (dest_const l)) "NUMERAL") (dest_num r) (fail unit))))
-        (holai.runtime:ocaml-condition
+        (holai.runtime.data:ocaml-condition
           (exception~1129)
           (match exception~1129
             ((Failure _) (failwith "dest_numeral"))
@@ -1185,7 +1186,7 @@
                 (fail unit)
                 (match (#`dest_geq (snd (#`strip_forall (body r))))
                   ((tuple ltm rtm) (tuple (rand ltm) rtm)))))))
-        (holai.runtime:ocaml-condition
+        (holai.runtime.data:ocaml-condition
           (exception~1161)
           (match exception~1161
             ((Failure _) (failwith "dest_gabs: Not a generalized abstraction"))
@@ -1251,7 +1252,7 @@
                 (match (dest_comb lebod)
                   ((tuple le bod)
                     (if (= (fst (dest_const le)) "LET_END") (tuple eqs bod) (fail unit))))))))))
-    (holai.runtime:ocaml-condition
+    (holai.runtime.data:ocaml-condition
       (exception~1365)
       (match exception~1365
         ((Failure _) (failwith "dest_let: not a let-term"))
@@ -1341,7 +1342,7 @@
           (cl:cons "b" (find_path% p (body tm)))
           (handler-case
             (cl:cons "r" (find_path% p (rand tm)))
-            (holai.runtime:ocaml-condition
+            (holai.runtime.data:ocaml-condition
               (exception~1631)
               (match exception~1631
                 ((Failure _) (cl:cons "l" (find_path% p (rator tm))))

@@ -35,7 +35,6 @@
   (:import-from :holai.class)
   (:import-from :holai.drule)
   (:import-from :holai.equal)
-  (:import-from :holai.firstorder)
   (:import-from :holai.firstorder.utils.list)
   (:import-from :holai.fusion)
   (:import-from :holai.fusion.hol)
@@ -44,7 +43,11 @@
   (:import-from :holai.parser)
   (:import-from :holai.preterm)
   (:import-from :holai.printer)
-  (:import-from :holai.runtime)
+  (:import-from :holai.runtime.core)
+  (:import-from :holai.runtime.data)
+  (:import-from :holai.runtime.format)
+  (:import-from :holai.runtime.pattern)
+  (:import-from :holai.runtime.stdlib)
   (:import-from :holai.simp)
   (:import-from :holai.tactics)
   (:import-from :holai.theorems)
@@ -8959,7 +8962,12 @@
 (uiop:define-package
   :holai.metis.metis_prover.word
   (:use :cl)
-  (:mix :cl :holai.runtime)
+  (:mix
+    :cl
+    :holai.runtime.core
+    :holai.runtime.data
+    :holai.runtime.pattern
+    :holai.runtime.stdlib)
   (:shadow
     ARG~13
     ARG~25
@@ -8980,13 +8988,22 @@
     toInt
     xorb)
   (:shadowing-import-from :cl logxor lognot logior logand -)
-  (:shadowing-import-from :holai.runtime tuple match int-lsr int-lsl defunc)
+  (:shadowing-import-from :holai.runtime.core defunc)
+  (:shadowing-import-from :holai.runtime.data tuple)
+  (:shadowing-import-from :holai.runtime.pattern match)
+  (:shadowing-import-from :holai.runtime.stdlib int-lsr int-lsl)
   (:export andb compare fromInt minus notb orb shiftLeft shiftRight toInt xorb))
 
 (uiop:define-package
   :holai.metis.metis_prover.mlist
   (:use :cl)
-  (:mix :cl :holai.lib :holai.runtime)
+  (:mix
+    :cl
+    :holai.lib
+    :holai.runtime.core
+    :holai.runtime.data
+    :holai.runtime.pattern
+    :holai.runtime.stdlib)
   (:shadow
     A%
     ACC
@@ -9035,41 +9052,42 @@
   (:shadowing-import-from :cl - +)
   (:shadowing-import-from :holai.lib mapi)
   (:shadowing-import-from
-    :holai.runtime
-    tuple
-    snd
-    raise
+    :holai.runtime.core
     Not_found
     None
-    match
     make-Some
     make-None
-    list-sort
-    list-rev-append
-    list-map
-    list-fold-right
     list-fold-left
-    list-find
     lambdac
     labelsc
     invalid-arg
     function-value
     defunc
     ==)
+  (:shadowing-import-from :holai.runtime.data tuple snd raise)
+  (:shadowing-import-from :holai.runtime.pattern match)
+  (:shadowing-import-from
+    :holai.runtime.stdlib
+    list-sort
+    list-rev-append
+    list-map
+    list-fold-right
+    list-find)
   (:export enumerate find first foldl foldr null revDivide sortMap tabulate updateNth))
 
 (uiop:define-package
   :holai.metis.metis_prover.option
   (:use :cl)
-  (:mix :cl :holai.runtime)
+  (:mix :cl :holai.runtime.core :holai.runtime.pattern)
   (:shadow ARG~336 DEFAULT F OPT X bind is_some value)
-  (:shadowing-import-from :holai.runtime Some None match make-None defunc)
+  (:shadowing-import-from :holai.runtime.core Some None make-None defunc)
+  (:shadowing-import-from :holai.runtime.pattern match)
   (:export bind is_some value))
 
 (uiop:define-package
   :holai.metis.metis_prover.useful
   (:use :cl)
-  (:mix :cl :holai.lib :holai.runtime)
+  (:mix :cl :holai.lib :holai.runtime.core :holai.runtime.data :holai.runtime.pattern)
   (:shadow
     A%
     ARG~441
@@ -9133,31 +9151,26 @@
   (:shadowing-import-from :cl abs - +)
   (:shadowing-import-from :holai.lib curry)
   (:shadowing-import-from
-    :holai.runtime
-    unit
-    tuple
+    :holai.runtime.core
     string-sub
     string-length
     string-get
     string-concat
-    ref
-    raise
-    match
     make-Some
     make-None
     labelsc
     int-mod
     int-div
     Failure
-    deref
     defunc
     define-exception
     compare
-    assign
     =
     <>
     <=
     <)
+  (:shadowing-import-from :holai.runtime.data unit tuple ref raise deref assign)
+  (:shadowing-import-from :holai.runtime.pattern match)
   (:export
     Bug
     boolCompare
@@ -9183,7 +9196,13 @@
 (uiop:define-package
   :holai.metis.metis_prover.pmap
   (:use :cl)
-  (:mix :cl :holai.lib :holai.runtime)
+  (:mix
+    :cl
+    :holai.lib
+    :holai.runtime.core
+    :holai.runtime.data
+    :holai.runtime.pattern
+    :holai.runtime.stdlib)
   (:shadow
     ACC
     ARG~1105
@@ -9471,17 +9490,11 @@
   (:shadowing-import-from :holai.metis.metis_prover.option is_some)
   (:shadowing-import-from :holai.metis.metis_prover.useful make-Bug intCompare)
   (:shadowing-import-from
-    :holai.runtime
-    unit
-    tuple
+    :holai.runtime.core
     string-of-int
     string-concat
     Some
-    random-int
-    random-bits
-    raise
     None
-    match
     make-Some
     make-None
     lambdac
@@ -9496,6 +9509,9 @@
     <>
     <=
     <)
+  (:shadowing-import-from :holai.runtime.data unit tuple raise)
+  (:shadowing-import-from :holai.runtime.pattern match)
+  (:shadowing-import-from :holai.runtime.stdlib random-int random-bits)
   (:export
     Empty
     Left_to_right_iterator
@@ -9642,7 +9658,12 @@
 (uiop:define-package
   :holai.metis.metis_prover.pset
   (:use :cl)
-  (:mix :cl :holai.runtime)
+  (:mix
+    :cl
+    :holai.runtime.core
+    :holai.runtime.data
+    :holai.runtime.pattern
+    :holai.runtime.stdlib)
   (:shadow
     ACC
     ARG~3816
@@ -9810,21 +9831,20 @@
     disjointDomain
     differenceDomain)
   (:shadowing-import-from
-    :holai.runtime
-    unit
-    tuple
+    :holai.runtime.core
     string-of-int
     string-concat
     Some
     None
-    match
     make-Some
     make-None
-    list-map
     lambdac
     labelsc
     defvariant
     defunc)
+  (:shadowing-import-from :holai.runtime.data unit tuple)
+  (:shadowing-import-from :holai.runtime.pattern match)
+  (:shadowing-import-from :holai.runtime.stdlib list-map)
   (:export
     Set
     add
@@ -9887,15 +9907,20 @@
 (uiop:define-package
   :holai.metis.metis_prover.intmap.ordered
   (:use :cl)
-  (:mix :cl :holai.runtime)
+  (:mix :cl :holai.runtime.core)
   (:shadow compare)
-  (:shadowing-import-from :holai.runtime function-value)
+  (:shadowing-import-from :holai.runtime.core function-value)
   (:export compare))
 
 (uiop:define-package
   :holai.metis.metis_prover.intmap.include~4681.ma
   (:use :cl)
-  (:mix :cl :holai.runtime)
+  (:mix
+    :cl
+    :holai.runtime.core
+    :holai.runtime.data
+    :holai.runtime.pattern
+    :holai.runtime.stdlib)
   (:shadow
     ACCU
     ARG~4686
@@ -10011,25 +10036,23 @@
   (:shadowing-import-from :cl +)
   (:shadowing-import-from :holai.metis.metis_prover.intmap.ordered compare)
   (:shadowing-import-from
-    :holai.runtime
-    tuple
+    :holai.runtime.core
     Some
-    raise
     None
-    match
     make-Some
     make-Not_found
     make-None
     invalid-arg
-    guard
     defvariant
     defunc
-    assert-true
     >=
     >
     ==
     =
     <)
+  (:shadowing-import-from :holai.runtime.data tuple raise)
+  (:shadowing-import-from :holai.runtime.pattern match guard)
+  (:shadowing-import-from :holai.runtime.stdlib assert-true)
   (:export
     add
     bindings
@@ -10050,7 +10073,12 @@
 (uiop:define-package
   :holai.metis.metis_prover.intmap.include~4681
   (:use :cl)
-  (:mix :cl :holai.runtime)
+  (:mix
+    :cl
+    :holai.runtime.core
+    :holai.runtime.data
+    :holai.runtime.pattern
+    :holai.runtime.stdlib)
   (:shadow
     ACC
     ARG~5894
@@ -10107,21 +10135,20 @@
     bindings
     add)
   (:shadowing-import-from
-    :holai.runtime
-    tuple
+    :holai.runtime.core
     Some
-    raise
     Not_found
     None
-    match
     make-Some
     make-None
-    list-fold-right
     list-fold-left
     lambdac
     labelsc
     failwith
     defunc)
+  (:shadowing-import-from :holai.runtime.data tuple raise)
+  (:shadowing-import-from :holai.runtime.pattern match)
+  (:shadowing-import-from :holai.runtime.stdlib list-fold-right)
   (:export
     delete
     exists
@@ -10188,15 +10215,20 @@
 (uiop:define-package
   :holai.metis.metis_prover.stringmap.ordered
   (:use :cl)
-  (:mix :cl :holai.runtime)
+  (:mix :cl :holai.runtime.core)
   (:shadow compare)
-  (:shadowing-import-from :holai.runtime function-value)
+  (:shadowing-import-from :holai.runtime.core function-value)
   (:export compare))
 
 (uiop:define-package
   :holai.metis.metis_prover.stringmap.include~6119.ma
   (:use :cl)
-  (:mix :cl :holai.runtime)
+  (:mix
+    :cl
+    :holai.runtime.core
+    :holai.runtime.data
+    :holai.runtime.pattern
+    :holai.runtime.stdlib)
   (:shadow
     ACCU
     ARG~6124
@@ -10312,25 +10344,23 @@
   (:shadowing-import-from :cl +)
   (:shadowing-import-from :holai.metis.metis_prover.stringmap.ordered compare)
   (:shadowing-import-from
-    :holai.runtime
-    tuple
+    :holai.runtime.core
     Some
-    raise
     None
-    match
     make-Some
     make-Not_found
     make-None
     invalid-arg
-    guard
     defvariant
     defunc
-    assert-true
     >=
     >
     ==
     =
     <)
+  (:shadowing-import-from :holai.runtime.data tuple raise)
+  (:shadowing-import-from :holai.runtime.pattern match guard)
+  (:shadowing-import-from :holai.runtime.stdlib assert-true)
   (:export
     add
     bindings
@@ -10351,7 +10381,12 @@
 (uiop:define-package
   :holai.metis.metis_prover.stringmap.include~6119
   (:use :cl)
-  (:mix :cl :holai.runtime)
+  (:mix
+    :cl
+    :holai.runtime.core
+    :holai.runtime.data
+    :holai.runtime.pattern
+    :holai.runtime.stdlib)
   (:shadow
     ACC
     ARG~7332
@@ -10408,21 +10443,20 @@
     bindings
     add)
   (:shadowing-import-from
-    :holai.runtime
-    tuple
+    :holai.runtime.core
     Some
-    raise
     Not_found
     None
-    match
     make-Some
     make-None
-    list-fold-right
     list-fold-left
     lambdac
     labelsc
     failwith
     defunc)
+  (:shadowing-import-from :holai.runtime.data tuple raise)
+  (:shadowing-import-from :holai.runtime.pattern match)
+  (:shadowing-import-from :holai.runtime.stdlib list-fold-right)
   (:export
     delete
     exists
@@ -10491,15 +10525,15 @@
 (uiop:define-package
   :holai.metis.metis_prover.intset.ordered
   (:use :cl)
-  (:mix :cl :holai.runtime)
+  (:mix :cl :holai.runtime.core)
   (:shadow compare)
-  (:shadowing-import-from :holai.runtime function-value)
+  (:shadowing-import-from :holai.runtime.core function-value)
   (:export compare))
 
 (uiop:define-package
   :holai.metis.metis_prover.intset.include~7557.se
   (:use :cl)
-  (:mix :cl :holai.runtime)
+  (:mix :cl :holai.runtime.core :holai.runtime.data :holai.runtime.pattern)
   (:shadow
     ACCU
     ARG~7562
@@ -10610,10 +10644,7 @@
     union)
   (:shadowing-import-from :cl +)
   (:shadowing-import-from
-    :holai.runtime
-    tuple
-    raise
-    match
+    :holai.runtime.core
     make-Not_found
     invalid-arg
     defvariant
@@ -10624,6 +10655,8 @@
     =
     <>
     <)
+  (:shadowing-import-from :holai.runtime.data tuple raise)
+  (:shadowing-import-from :holai.runtime.pattern match)
   (:export
     add
     cardinal
@@ -10647,7 +10680,12 @@
 (uiop:define-package
   :holai.metis.metis_prover.intset.include~7557
   (:use :cl)
-  (:mix :cl :holai.runtime)
+  (:mix
+    :cl
+    :holai.runtime.core
+    :holai.runtime.data
+    :holai.runtime.pattern
+    :holai.runtime.stdlib)
   (:shadow
     A%
     ACC
@@ -10703,17 +10741,17 @@
     choose
     cardinal)
   (:shadowing-import-from
-    :holai.runtime
-    tuple
+    :holai.runtime.core
     Some
     None
-    match
     make-Some
     make-None
-    list-fold-right
     lambdac
     labelsc
     defunc)
+  (:shadowing-import-from :holai.runtime.data tuple)
+  (:shadowing-import-from :holai.runtime.pattern match)
+  (:shadowing-import-from :holai.runtime.stdlib list-fold-right)
   (:export
     add
     all
@@ -10801,7 +10839,7 @@
 (uiop:define-package
   :holai.metis.metis_prover.heap
   (:use :cl)
-  (:mix :cl :holai.runtime)
+  (:mix :cl :holai.runtime.core :holai.runtime.data :holai.runtime.pattern)
   (:shadow
     A%
     A1
@@ -10856,13 +10894,9 @@
     top)
   (:shadowing-import-from :cl - +)
   (:shadowing-import-from
-    :holai.runtime
-    unit
-    tuple
+    :holai.runtime.core
     string-of-int
     string-concat
-    raise
-    match
     lambdac
     labelsc
     defvariant
@@ -10871,6 +10905,8 @@
     >=
     >
     =)
+  (:shadowing-import-from :holai.runtime.data unit tuple raise)
+  (:shadowing-import-from :holai.runtime.pattern match)
   (:export
     Em
     Empty
@@ -10902,7 +10938,12 @@
 (uiop:define-package
   :holai.metis.metis_prover.name.map.ma
   (:use :cl)
-  (:mix :cl :holai.runtime)
+  (:mix
+    :cl
+    :holai.runtime.core
+    :holai.runtime.data
+    :holai.runtime.pattern
+    :holai.runtime.stdlib)
   (:shadow
     ACCU
     ARG~10102
@@ -11018,25 +11059,23 @@
   (:shadowing-import-from :cl +)
   (:shadowing-import-from :holai.metis.metis_prover.name.ordered compare)
   (:shadowing-import-from
-    :holai.runtime
-    tuple
+    :holai.runtime.core
     Some
-    raise
     None
-    match
     make-Some
     make-Not_found
     make-None
     invalid-arg
-    guard
     defvariant
     defunc
-    assert-true
     >=
     >
     ==
     =
     <)
+  (:shadowing-import-from :holai.runtime.data tuple raise)
+  (:shadowing-import-from :holai.runtime.pattern match guard)
+  (:shadowing-import-from :holai.runtime.stdlib assert-true)
   (:export
     add
     bindings
@@ -11057,7 +11096,12 @@
 (uiop:define-package
   :holai.metis.metis_prover.name.map
   (:use :cl)
-  (:mix :cl :holai.runtime)
+  (:mix
+    :cl
+    :holai.runtime.core
+    :holai.runtime.data
+    :holai.runtime.pattern
+    :holai.runtime.stdlib)
   (:shadow
     ACC
     ARG~10504
@@ -11114,21 +11158,20 @@
     bindings
     add)
   (:shadowing-import-from
-    :holai.runtime
-    tuple
+    :holai.runtime.core
     Some
-    raise
     Not_found
     None
-    match
     make-Some
     make-None
-    list-fold-right
     list-fold-left
     lambdac
     labelsc
     failwith
     defunc)
+  (:shadowing-import-from :holai.runtime.data tuple raise)
+  (:shadowing-import-from :holai.runtime.pattern match)
+  (:shadowing-import-from :holai.runtime.stdlib list-fold-right)
   (:export
     delete
     exists
@@ -11152,7 +11195,7 @@
 (uiop:define-package
   :holai.metis.metis_prover.name.set.se
   (:use :cl)
-  (:mix :cl :holai.runtime)
+  (:mix :cl :holai.runtime.core :holai.runtime.data :holai.runtime.pattern)
   (:shadow
     ACCU
     ARG~10730
@@ -11263,10 +11306,7 @@
     union)
   (:shadowing-import-from :cl +)
   (:shadowing-import-from
-    :holai.runtime
-    tuple
-    raise
-    match
+    :holai.runtime.core
     make-Not_found
     invalid-arg
     defvariant
@@ -11277,6 +11317,8 @@
     =
     <>
     <)
+  (:shadowing-import-from :holai.runtime.data tuple raise)
+  (:shadowing-import-from :holai.runtime.pattern match)
   (:export
     add
     cardinal
@@ -11300,7 +11342,12 @@
 (uiop:define-package
   :holai.metis.metis_prover.name.set
   (:use :cl)
-  (:mix :cl :holai.runtime)
+  (:mix
+    :cl
+    :holai.runtime.core
+    :holai.runtime.data
+    :holai.runtime.pattern
+    :holai.runtime.stdlib)
   (:shadow
     A%
     ACC
@@ -11356,17 +11403,17 @@
     choose
     cardinal)
   (:shadowing-import-from
-    :holai.runtime
-    tuple
+    :holai.runtime.core
     Some
     None
-    match
     make-Some
     make-None
-    list-fold-right
     lambdac
     labelsc
     defunc)
+  (:shadowing-import-from :holai.runtime.data tuple)
+  (:shadowing-import-from :holai.runtime.pattern match)
+  (:shadowing-import-from :holai.runtime.stdlib list-fold-right)
   (:export
     add
     all
@@ -11397,7 +11444,12 @@
 (uiop:define-package
   :holai.metis.metis_prover.name
   (:use :cl)
-  (:mix :cl :holai.runtime)
+  (:mix
+    :cl
+    :holai.runtime.core
+    :holai.runtime.data
+    :holai.runtime.pattern
+    :holai.runtime.stdlib)
   (:shadow
     ARG~9210
     AVOID
@@ -11432,16 +11484,16 @@
     mkPrefix
     isDigit)
   (:shadowing-import-from
-    :holai.runtime
-    unit
+    :holai.runtime.core
     string-of-int
     string-concat
-    match
-    list-map
     labelsc
     function-value
     defunc
     =)
+  (:shadowing-import-from :holai.runtime.data unit)
+  (:shadowing-import-from :holai.runtime.pattern match)
+  (:shadowing-import-from :holai.runtime.stdlib list-map)
   (:export
     compare
     equal
@@ -11463,7 +11515,12 @@
 (uiop:define-package
   :holai.metis.metis_prover.name_arity.map.include~12152.ma
   (:use :cl)
-  (:mix :cl :holai.runtime)
+  (:mix
+    :cl
+    :holai.runtime.core
+    :holai.runtime.data
+    :holai.runtime.pattern
+    :holai.runtime.stdlib)
   (:shadow
     ACCU
     ARG~12157
@@ -11579,25 +11636,23 @@
   (:shadowing-import-from :cl +)
   (:shadowing-import-from :holai.metis.metis_prover.name_arity.ordered compare)
   (:shadowing-import-from
-    :holai.runtime
-    tuple
+    :holai.runtime.core
     Some
-    raise
     None
-    match
     make-Some
     make-Not_found
     make-None
     invalid-arg
-    guard
     defvariant
     defunc
-    assert-true
     >=
     >
     ==
     =
     <)
+  (:shadowing-import-from :holai.runtime.data tuple raise)
+  (:shadowing-import-from :holai.runtime.pattern match guard)
+  (:shadowing-import-from :holai.runtime.stdlib assert-true)
   (:export
     add
     bindings
@@ -11618,7 +11673,12 @@
 (uiop:define-package
   :holai.metis.metis_prover.name_arity.map.include~12152
   (:use :cl)
-  (:mix :cl :holai.runtime)
+  (:mix
+    :cl
+    :holai.runtime.core
+    :holai.runtime.data
+    :holai.runtime.pattern
+    :holai.runtime.stdlib)
   (:shadow
     ACC
     ARG~13365
@@ -11675,21 +11735,20 @@
     bindings
     add)
   (:shadowing-import-from
-    :holai.runtime
-    tuple
+    :holai.runtime.core
     Some
-    raise
     Not_found
     None
-    match
     make-Some
     make-None
-    list-fold-right
     list-fold-left
     lambdac
     labelsc
     failwith
     defunc)
+  (:shadowing-import-from :holai.runtime.data tuple raise)
+  (:shadowing-import-from :holai.runtime.pattern match)
+  (:shadowing-import-from :holai.runtime.stdlib list-fold-right)
   (:export
     delete
     exists
@@ -11713,7 +11772,7 @@
 (uiop:define-package
   :holai.metis.metis_prover.name_arity.map
   (:use :cl)
-  (:mix :cl :holai.runtime)
+  (:mix :cl :holai.runtime.core :holai.runtime.data :holai.runtime.pattern)
   (:shadow A% ARG~13591 M1 M2 N PK compose pk)
   (:shadowing-import-from
     :holai.metis.metis_prover.name_arity.map.include~12152
@@ -11735,7 +11794,9 @@
     filter
     exists
     delete)
-  (:shadowing-import-from :holai.runtime tuple match labelsc defunc)
+  (:shadowing-import-from :holai.runtime.core labelsc defunc)
+  (:shadowing-import-from :holai.runtime.data tuple)
+  (:shadowing-import-from :holai.runtime.pattern match)
   (:export
     compose
     delete
@@ -11760,7 +11821,7 @@
 (uiop:define-package
   :holai.metis.metis_prover.name_arity.set.include~13610.se
   (:use :cl)
-  (:mix :cl :holai.runtime)
+  (:mix :cl :holai.runtime.core :holai.runtime.data :holai.runtime.pattern)
   (:shadow
     ACCU
     ARG~13615
@@ -11871,10 +11932,7 @@
     union)
   (:shadowing-import-from :cl +)
   (:shadowing-import-from
-    :holai.runtime
-    tuple
-    raise
-    match
+    :holai.runtime.core
     make-Not_found
     invalid-arg
     defvariant
@@ -11885,6 +11943,8 @@
     =
     <>
     <)
+  (:shadowing-import-from :holai.runtime.data tuple raise)
+  (:shadowing-import-from :holai.runtime.pattern match)
   (:export
     add
     cardinal
@@ -11908,7 +11968,12 @@
 (uiop:define-package
   :holai.metis.metis_prover.name_arity.set.include~13610
   (:use :cl)
-  (:mix :cl :holai.runtime)
+  (:mix
+    :cl
+    :holai.runtime.core
+    :holai.runtime.data
+    :holai.runtime.pattern
+    :holai.runtime.stdlib)
   (:shadow
     A%
     ACC
@@ -11964,17 +12029,17 @@
     choose
     cardinal)
   (:shadowing-import-from
-    :holai.runtime
-    tuple
+    :holai.runtime.core
     Some
     None
-    match
     make-Some
     make-None
-    list-fold-right
     lambdac
     labelsc
     defunc)
+  (:shadowing-import-from :holai.runtime.data tuple)
+  (:shadowing-import-from :holai.runtime.pattern match)
+  (:shadowing-import-from :holai.runtime.stdlib list-fold-right)
   (:export
     add
     all
@@ -12065,7 +12130,7 @@
 (uiop:define-package
   :holai.metis.metis_prover.name_arity
   (:use :cl)
-  (:mix :cl :holai.runtime)
+  (:mix :cl :holai.runtime.core :holai.runtime.data :holai.runtime.pattern)
   (:shadow
     ARG~12056
     ARG~12065
@@ -12091,7 +12156,9 @@
     ternary
     unary)
   (:shadowing-import-from :holai.metis.metis_prover.useful intCompare)
-  (:shadowing-import-from :holai.runtime tuple match defunc = <>)
+  (:shadowing-import-from :holai.runtime.core defunc = <>)
+  (:shadowing-import-from :holai.runtime.data tuple)
+  (:shadowing-import-from :holai.runtime.pattern match)
   (:export arity binary compare equal name nary nullary ternary unary))
 
 (uiop:define-package
@@ -12103,7 +12170,12 @@
 (uiop:define-package
   :holai.metis.metis_prover.term.map
   (:use :cl)
-  (:mix :cl :holai.runtime)
+  (:mix
+    :cl
+    :holai.runtime.core
+    :holai.runtime.data
+    :holai.runtime.pattern
+    :holai.runtime.stdlib)
   (:shadow
     ACCU
     ARG~16145
@@ -12219,25 +12291,23 @@
   (:shadowing-import-from :cl +)
   (:shadowing-import-from :holai.metis.metis_prover.term.ordered compare)
   (:shadowing-import-from
-    :holai.runtime
-    tuple
+    :holai.runtime.core
     Some
-    raise
     None
-    match
     make-Some
     make-Not_found
     make-None
     invalid-arg
-    guard
     defvariant
     defunc
-    assert-true
     >=
     >
     ==
     =
     <)
+  (:shadowing-import-from :holai.runtime.data tuple raise)
+  (:shadowing-import-from :holai.runtime.pattern match guard)
+  (:shadowing-import-from :holai.runtime.stdlib assert-true)
   (:export
     add
     bindings
@@ -12258,7 +12328,7 @@
 (uiop:define-package
   :holai.metis.metis_prover.term.set
   (:use :cl)
-  (:mix :cl :holai.runtime)
+  (:mix :cl :holai.runtime.core :holai.runtime.data :holai.runtime.pattern)
   (:shadow
     ACCU
     ARG~17356
@@ -12369,10 +12439,7 @@
     union)
   (:shadowing-import-from :cl +)
   (:shadowing-import-from
-    :holai.runtime
-    tuple
-    raise
-    match
+    :holai.runtime.core
     make-Not_found
     invalid-arg
     defvariant
@@ -12383,6 +12450,8 @@
     =
     <>
     <)
+  (:shadowing-import-from :holai.runtime.data tuple raise)
+  (:shadowing-import-from :holai.runtime.pattern match)
   (:export
     add
     cardinal
@@ -12406,7 +12475,13 @@
 (uiop:define-package
   :holai.metis.metis_prover.term
   (:use :cl)
-  (:mix :cl :holai.lib :holai.runtime)
+  (:mix
+    :cl
+    :holai.lib
+    :holai.runtime.core
+    :holai.runtime.data
+    :holai.runtime.pattern
+    :holai.runtime.stdlib)
   (:shadow
     A%
     A1
@@ -12564,26 +12639,16 @@
     add)
   (:shadowing-import-from :holai.metis.metis_prover.useful total make-Bug intCompare)
   (:shadowing-import-from
-    :holai.runtime
-    unit
-    tuple
+    :holai.runtime.core
     string-join
     string-concat
     Some
-    snd
-    raise
     None
-    match
     make-Some
     make-None
-    list-rev
-    list-nth
-    list-map
-    list-length
     list-fold-left
     lambdac
     labelsc
-    fst
     failwith
     defvariant
     defunc
@@ -12591,6 +12656,9 @@
     ==
     =
     <>)
+  (:shadowing-import-from :holai.runtime.data unit tuple snd raise fst)
+  (:shadowing-import-from :holai.runtime.pattern match)
+  (:shadowing-import-from :holai.runtime.stdlib list-rev list-nth list-map list-length)
   (:export
     Fn
     Var
@@ -12652,7 +12720,13 @@
 (uiop:define-package
   :holai.metis.metis_prover.substitute
   (:use :cl)
-  (:mix :cl :holai.lib :holai.runtime)
+  (:mix
+    :cl
+    :holai.lib
+    :holai.runtime.core
+    :holai.runtime.data
+    :holai.runtime.pattern
+    :holai.runtime.stdlib)
   (:shadow
     ADD
     ARGS
@@ -12776,14 +12850,10 @@
     equalVar
     equal)
   (:shadowing-import-from
-    :holai.runtime
-    unit
-    tuple
+    :holai.runtime.core
     Some
     None
-    match
     make-Some
-    list-map
     lambdac
     labelsc
     failwith
@@ -12791,6 +12861,9 @@
     defunc
     ==
     =)
+  (:shadowing-import-from :holai.runtime.data unit tuple)
+  (:shadowing-import-from :holai.runtime.pattern match)
+  (:shadowing-import-from :holai.runtime.stdlib list-map)
   (:export
     Subst%
     compose
@@ -12829,7 +12902,12 @@
 (uiop:define-package
   :holai.metis.metis_prover.atom.map.ma
   (:use :cl)
-  (:mix :cl :holai.runtime)
+  (:mix
+    :cl
+    :holai.runtime.core
+    :holai.runtime.data
+    :holai.runtime.pattern
+    :holai.runtime.stdlib)
   (:shadow
     ACCU
     ARG~19939
@@ -12945,25 +13023,23 @@
   (:shadowing-import-from :cl +)
   (:shadowing-import-from :holai.metis.metis_prover.atom.ordered compare)
   (:shadowing-import-from
-    :holai.runtime
-    tuple
+    :holai.runtime.core
     Some
-    raise
     None
-    match
     make-Some
     make-Not_found
     make-None
     invalid-arg
-    guard
     defvariant
     defunc
-    assert-true
     >=
     >
     ==
     =
     <)
+  (:shadowing-import-from :holai.runtime.data tuple raise)
+  (:shadowing-import-from :holai.runtime.pattern match guard)
+  (:shadowing-import-from :holai.runtime.stdlib assert-true)
   (:export
     add
     bindings
@@ -12984,7 +13060,12 @@
 (uiop:define-package
   :holai.metis.metis_prover.atom.map
   (:use :cl)
-  (:mix :cl :holai.runtime)
+  (:mix
+    :cl
+    :holai.runtime.core
+    :holai.runtime.data
+    :holai.runtime.pattern
+    :holai.runtime.stdlib)
   (:shadow
     ACC
     ARG~21147
@@ -13041,21 +13122,20 @@
     bindings
     add)
   (:shadowing-import-from
-    :holai.runtime
-    tuple
+    :holai.runtime.core
     Some
-    raise
     Not_found
     None
-    match
     make-Some
     make-None
-    list-fold-right
     list-fold-left
     lambdac
     labelsc
     failwith
     defunc)
+  (:shadowing-import-from :holai.runtime.data tuple raise)
+  (:shadowing-import-from :holai.runtime.pattern match)
+  (:shadowing-import-from :holai.runtime.stdlib list-fold-right)
   (:export
     delete
     exists
@@ -13079,7 +13159,7 @@
 (uiop:define-package
   :holai.metis.metis_prover.atom.set.se
   (:use :cl)
-  (:mix :cl :holai.runtime)
+  (:mix :cl :holai.runtime.core :holai.runtime.data :holai.runtime.pattern)
   (:shadow
     ACCU
     ARG~21373
@@ -13190,10 +13270,7 @@
     union)
   (:shadowing-import-from :cl +)
   (:shadowing-import-from
-    :holai.runtime
-    tuple
-    raise
-    match
+    :holai.runtime.core
     make-Not_found
     invalid-arg
     defvariant
@@ -13204,6 +13281,8 @@
     =
     <>
     <)
+  (:shadowing-import-from :holai.runtime.data tuple raise)
+  (:shadowing-import-from :holai.runtime.pattern match)
   (:export
     add
     cardinal
@@ -13227,7 +13306,12 @@
 (uiop:define-package
   :holai.metis.metis_prover.atom.set
   (:use :cl)
-  (:mix :cl :holai.runtime)
+  (:mix
+    :cl
+    :holai.runtime.core
+    :holai.runtime.data
+    :holai.runtime.pattern
+    :holai.runtime.stdlib)
   (:shadow
     A%
     ACC
@@ -13283,17 +13367,17 @@
     choose
     cardinal)
   (:shadowing-import-from
-    :holai.runtime
-    tuple
+    :holai.runtime.core
     Some
     None
-    match
     make-Some
     make-None
-    list-fold-right
     lambdac
     labelsc
     defunc)
+  (:shadowing-import-from :holai.runtime.data tuple)
+  (:shadowing-import-from :holai.runtime.pattern match)
+  (:shadowing-import-from :holai.runtime.stdlib list-fold-right)
   (:export
     add
     all
@@ -13324,7 +13408,13 @@
 (uiop:define-package
   :holai.metis.metis_prover.atom
   (:use :cl)
-  (:mix :cl :holai.lib :holai.runtime)
+  (:mix
+    :cl
+    :holai.lib
+    :holai.runtime.core
+    :holai.runtime.data
+    :holai.runtime.pattern
+    :holai.runtime.stdlib)
   (:shadow
     A%
     ACC
@@ -13452,27 +13542,23 @@
   (:shadowing-import-from :holai.metis.metis_prover.substitute matchTerms)
   (:shadowing-import-from :holai.metis.metis_prover.useful make-Bug lexCompare)
   (:shadowing-import-from
-    :holai.runtime
-    tuple
+    :holai.runtime.core
     Some
-    snd
-    raise
     None
-    match
     make-Some
     make-None
-    list-nth
-    list-map
     list-exists
     lambdac
     labelsc
-    fst
     failwith
     defunc
     >=
     ==
     =
     <>)
+  (:shadowing-import-from :holai.runtime.data tuple snd raise fst)
+  (:shadowing-import-from :holai.runtime.pattern match)
+  (:shadowing-import-from :holai.runtime.stdlib list-nth list-map)
   (:export
     arguments
     arity
@@ -13519,7 +13605,12 @@
 (uiop:define-package
   :holai.metis.metis_prover.formula.map.ma
   (:use :cl)
-  (:mix :cl :holai.runtime)
+  (:mix
+    :cl
+    :holai.runtime.core
+    :holai.runtime.data
+    :holai.runtime.pattern
+    :holai.runtime.stdlib)
   (:shadow
     ACCU
     ARG~25472
@@ -13635,25 +13726,23 @@
   (:shadowing-import-from :cl +)
   (:shadowing-import-from :holai.metis.metis_prover.formula.ordered compare)
   (:shadowing-import-from
-    :holai.runtime
-    tuple
+    :holai.runtime.core
     Some
-    raise
     None
-    match
     make-Some
     make-Not_found
     make-None
     invalid-arg
-    guard
     defvariant
     defunc
-    assert-true
     >=
     >
     ==
     =
     <)
+  (:shadowing-import-from :holai.runtime.data tuple raise)
+  (:shadowing-import-from :holai.runtime.pattern match guard)
+  (:shadowing-import-from :holai.runtime.stdlib assert-true)
   (:export
     add
     bindings
@@ -13674,7 +13763,12 @@
 (uiop:define-package
   :holai.metis.metis_prover.formula.map
   (:use :cl)
-  (:mix :cl :holai.runtime)
+  (:mix
+    :cl
+    :holai.runtime.core
+    :holai.runtime.data
+    :holai.runtime.pattern
+    :holai.runtime.stdlib)
   (:shadow
     ACC
     ARG~26680
@@ -13731,21 +13825,20 @@
     bindings
     add)
   (:shadowing-import-from
-    :holai.runtime
-    tuple
+    :holai.runtime.core
     Some
-    raise
     Not_found
     None
-    match
     make-Some
     make-None
-    list-fold-right
     list-fold-left
     lambdac
     labelsc
     failwith
     defunc)
+  (:shadowing-import-from :holai.runtime.data tuple raise)
+  (:shadowing-import-from :holai.runtime.pattern match)
+  (:shadowing-import-from :holai.runtime.stdlib list-fold-right)
   (:export
     delete
     exists
@@ -13769,7 +13862,7 @@
 (uiop:define-package
   :holai.metis.metis_prover.formula.set.se
   (:use :cl)
-  (:mix :cl :holai.runtime)
+  (:mix :cl :holai.runtime.core :holai.runtime.data :holai.runtime.pattern)
   (:shadow
     ACCU
     ARG~26906
@@ -13880,10 +13973,7 @@
     union)
   (:shadowing-import-from :cl +)
   (:shadowing-import-from
-    :holai.runtime
-    tuple
-    raise
-    match
+    :holai.runtime.core
     make-Not_found
     invalid-arg
     defvariant
@@ -13894,6 +13984,8 @@
     =
     <>
     <)
+  (:shadowing-import-from :holai.runtime.data tuple raise)
+  (:shadowing-import-from :holai.runtime.pattern match)
   (:export
     add
     cardinal
@@ -13917,7 +14009,12 @@
 (uiop:define-package
   :holai.metis.metis_prover.formula.set
   (:use :cl)
-  (:mix :cl :holai.runtime)
+  (:mix
+    :cl
+    :holai.runtime.core
+    :holai.runtime.data
+    :holai.runtime.pattern
+    :holai.runtime.stdlib)
   (:shadow
     A%
     ACC
@@ -13973,17 +14070,17 @@
     choose
     cardinal)
   (:shadowing-import-from
-    :holai.runtime
-    tuple
+    :holai.runtime.core
     Some
     None
-    match
     make-Some
     make-None
-    list-fold-right
     lambdac
     labelsc
     defunc)
+  (:shadowing-import-from :holai.runtime.data tuple)
+  (:shadowing-import-from :holai.runtime.pattern match)
+  (:shadowing-import-from :holai.runtime.stdlib list-fold-right)
   (:export
     add
     all
@@ -14014,7 +14111,13 @@
 (uiop:define-package
   :holai.metis.metis_prover.formula
   (:use :cl)
-  (:mix :cl :holai.lib :holai.runtime)
+  (:mix
+    :cl
+    :holai.lib
+    :holai.runtime.core
+    :holai.runtime.data
+    :holai.runtime.pattern
+    :holai.runtime.stdlib)
   (:shadow
     ACC
     ARG~22710
@@ -14238,23 +14341,20 @@
   (:shadowing-import-from :holai.metis.metis_prover.substitute remove peek null insert)
   (:shadowing-import-from :holai.metis.metis_prover.term variantPrime make-Var make-Fn)
   (:shadowing-import-from
-    :holai.runtime
-    tuple
+    :holai.runtime.core
     Some
-    snd
     None
-    match
-    list-rev
-    list-map
     lambdac
     labelsc
-    fst
     failwith
     defvariant
     defunc
     ==
     =
     <>)
+  (:shadowing-import-from :holai.runtime.data tuple snd fst)
+  (:shadowing-import-from :holai.runtime.pattern match)
+  (:shadowing-import-from :holai.runtime.stdlib list-rev list-map)
   (:export
     And
     Atom
@@ -14359,7 +14459,12 @@
 (uiop:define-package
   :holai.metis.metis_prover.literal.map.ma
   (:use :cl)
-  (:mix :cl :holai.runtime)
+  (:mix
+    :cl
+    :holai.runtime.core
+    :holai.runtime.data
+    :holai.runtime.pattern
+    :holai.runtime.stdlib)
   (:shadow
     ACCU
     ARG~28742
@@ -14475,25 +14580,23 @@
   (:shadowing-import-from :cl +)
   (:shadowing-import-from :holai.metis.metis_prover.literal.ordered compare)
   (:shadowing-import-from
-    :holai.runtime
-    tuple
+    :holai.runtime.core
     Some
-    raise
     None
-    match
     make-Some
     make-Not_found
     make-None
     invalid-arg
-    guard
     defvariant
     defunc
-    assert-true
     >=
     >
     ==
     =
     <)
+  (:shadowing-import-from :holai.runtime.data tuple raise)
+  (:shadowing-import-from :holai.runtime.pattern match guard)
+  (:shadowing-import-from :holai.runtime.stdlib assert-true)
   (:export
     add
     bindings
@@ -14514,7 +14617,12 @@
 (uiop:define-package
   :holai.metis.metis_prover.literal.map
   (:use :cl)
-  (:mix :cl :holai.runtime)
+  (:mix
+    :cl
+    :holai.runtime.core
+    :holai.runtime.data
+    :holai.runtime.pattern
+    :holai.runtime.stdlib)
   (:shadow
     ACC
     ARG~29950
@@ -14571,21 +14679,20 @@
     bindings
     add)
   (:shadowing-import-from
-    :holai.runtime
-    tuple
+    :holai.runtime.core
     Some
-    raise
     Not_found
     None
-    match
     make-Some
     make-None
-    list-fold-right
     list-fold-left
     lambdac
     labelsc
     failwith
     defunc)
+  (:shadowing-import-from :holai.runtime.data tuple raise)
+  (:shadowing-import-from :holai.runtime.pattern match)
+  (:shadowing-import-from :holai.runtime.stdlib list-fold-right)
   (:export
     delete
     exists
@@ -14609,7 +14716,7 @@
 (uiop:define-package
   :holai.metis.metis_prover.literal.set.include~30172.se
   (:use :cl)
-  (:mix :cl :holai.runtime)
+  (:mix :cl :holai.runtime.core :holai.runtime.data :holai.runtime.pattern)
   (:shadow
     ACCU
     ARG~30177
@@ -14720,10 +14827,7 @@
     union)
   (:shadowing-import-from :cl +)
   (:shadowing-import-from
-    :holai.runtime
-    tuple
-    raise
-    match
+    :holai.runtime.core
     make-Not_found
     invalid-arg
     defvariant
@@ -14734,6 +14838,8 @@
     =
     <>
     <)
+  (:shadowing-import-from :holai.runtime.data tuple raise)
+  (:shadowing-import-from :holai.runtime.pattern match)
   (:export
     add
     cardinal
@@ -14757,7 +14863,12 @@
 (uiop:define-package
   :holai.metis.metis_prover.literal.set.include~30172
   (:use :cl)
-  (:mix :cl :holai.runtime)
+  (:mix
+    :cl
+    :holai.runtime.core
+    :holai.runtime.data
+    :holai.runtime.pattern
+    :holai.runtime.stdlib)
   (:shadow
     A%
     ACC
@@ -14813,17 +14924,17 @@
     choose
     cardinal)
   (:shadowing-import-from
-    :holai.runtime
-    tuple
+    :holai.runtime.core
     Some
     None
-    match
     make-Some
     make-None
-    list-fold-right
     lambdac
     labelsc
     defunc)
+  (:shadowing-import-from :holai.runtime.data tuple)
+  (:shadowing-import-from :holai.runtime.pattern match)
+  (:shadowing-import-from :holai.runtime.stdlib list-fold-right)
   (:export
     add
     all
@@ -14854,7 +14965,12 @@
 (uiop:define-package
   :holai.metis.metis_prover.literal.set
   (:use :cl)
-  (:mix :cl :holai.runtime)
+  (:mix
+    :cl
+    :holai.runtime.core
+    :holai.runtime.data
+    :holai.runtime.pattern
+    :holai.runtime.stdlib)
   (:shadow
     ARG~31512
     ARG~31530
@@ -14922,16 +15038,10 @@
     compare
     all
     add)
-  (:shadowing-import-from
-    :holai.runtime
-    tuple
-    string-join
-    string-concat
-    match
-    list-map
-    labelsc
-    defunc
-    ==)
+  (:shadowing-import-from :holai.runtime.core string-join string-concat labelsc defunc ==)
+  (:shadowing-import-from :holai.runtime.data tuple)
+  (:shadowing-import-from :holai.runtime.pattern match)
+  (:shadowing-import-from :holai.runtime.stdlib list-map)
   (:export
     add
     all
@@ -14981,7 +15091,12 @@
 (uiop:define-package
   :holai.metis.metis_prover.literal.set_map.ma
   (:use :cl)
-  (:mix :cl :holai.runtime)
+  (:mix
+    :cl
+    :holai.runtime.core
+    :holai.runtime.data
+    :holai.runtime.pattern
+    :holai.runtime.stdlib)
   (:shadow
     ACCU
     ARG~31727
@@ -15097,25 +15212,23 @@
   (:shadowing-import-from :cl +)
   (:shadowing-import-from :holai.metis.metis_prover.literal.set_ordered compare)
   (:shadowing-import-from
-    :holai.runtime
-    tuple
+    :holai.runtime.core
     Some
-    raise
     None
-    match
     make-Some
     make-Not_found
     make-None
     invalid-arg
-    guard
     defvariant
     defunc
-    assert-true
     >=
     >
     ==
     =
     <)
+  (:shadowing-import-from :holai.runtime.data tuple raise)
+  (:shadowing-import-from :holai.runtime.pattern match guard)
+  (:shadowing-import-from :holai.runtime.stdlib assert-true)
   (:export
     add
     bindings
@@ -15136,7 +15249,12 @@
 (uiop:define-package
   :holai.metis.metis_prover.literal.set_map
   (:use :cl)
-  (:mix :cl :holai.runtime)
+  (:mix
+    :cl
+    :holai.runtime.core
+    :holai.runtime.data
+    :holai.runtime.pattern
+    :holai.runtime.stdlib)
   (:shadow
     ACC
     ARG~32935
@@ -15193,21 +15311,20 @@
     bindings
     add)
   (:shadowing-import-from
-    :holai.runtime
-    tuple
+    :holai.runtime.core
     Some
-    raise
     Not_found
     None
-    match
     make-Some
     make-None
-    list-fold-right
     list-fold-left
     lambdac
     labelsc
     failwith
     defunc)
+  (:shadowing-import-from :holai.runtime.data tuple raise)
+  (:shadowing-import-from :holai.runtime.pattern match)
+  (:shadowing-import-from :holai.runtime.stdlib list-fold-right)
   (:export
     delete
     exists
@@ -15231,7 +15348,7 @@
 (uiop:define-package
   :holai.metis.metis_prover.literal.set_set.se
   (:use :cl)
-  (:mix :cl :holai.runtime)
+  (:mix :cl :holai.runtime.core :holai.runtime.data :holai.runtime.pattern)
   (:shadow
     ACCU
     ARG~33161
@@ -15342,10 +15459,7 @@
     union)
   (:shadowing-import-from :cl +)
   (:shadowing-import-from
-    :holai.runtime
-    tuple
-    raise
-    match
+    :holai.runtime.core
     make-Not_found
     invalid-arg
     defvariant
@@ -15356,6 +15470,8 @@
     =
     <>
     <)
+  (:shadowing-import-from :holai.runtime.data tuple raise)
+  (:shadowing-import-from :holai.runtime.pattern match)
   (:export
     add
     cardinal
@@ -15379,7 +15495,12 @@
 (uiop:define-package
   :holai.metis.metis_prover.literal.set_set
   (:use :cl)
-  (:mix :cl :holai.runtime)
+  (:mix
+    :cl
+    :holai.runtime.core
+    :holai.runtime.data
+    :holai.runtime.pattern
+    :holai.runtime.stdlib)
   (:shadow
     A%
     ACC
@@ -15435,17 +15556,17 @@
     choose
     cardinal)
   (:shadowing-import-from
-    :holai.runtime
-    tuple
+    :holai.runtime.core
     Some
     None
-    match
     make-Some
     make-None
-    list-fold-right
     lambdac
     labelsc
     defunc)
+  (:shadowing-import-from :holai.runtime.data tuple)
+  (:shadowing-import-from :holai.runtime.pattern match)
+  (:shadowing-import-from :holai.runtime.stdlib list-fold-right)
   (:export
     add
     all
@@ -15476,7 +15597,7 @@
 (uiop:define-package
   :holai.metis.metis_prover.literal
   (:use :cl)
-  (:mix :cl :holai.lib :holai.runtime)
+  (:mix :cl :holai.lib :holai.runtime.core :holai.runtime.data :holai.runtime.pattern)
   (:shadow
     A%
     ARG~28232
@@ -15573,7 +15694,9 @@
   (:shadowing-import-from :holai.metis.metis_prover.atom matchAtoms)
   (:shadowing-import-from :holai.metis.metis_prover.formula make-Not)
   (:shadowing-import-from :holai.metis.metis_prover.useful prodCompare boolCompare)
-  (:shadowing-import-from :holai.runtime tuple match failwith defunc == =)
+  (:shadowing-import-from :holai.runtime.core failwith defunc == =)
+  (:shadowing-import-from :holai.runtime.data tuple)
+  (:shadowing-import-from :holai.runtime.pattern match)
   (:export
     arguments
     arity
@@ -15624,7 +15747,14 @@
 (uiop:define-package
   :holai.metis.metis_prover.thm
   (:use :cl)
-  (:mix :cl :holai.lib :holai.runtime)
+  (:mix
+    :cl
+    :holai.lib
+    :holai.runtime.core
+    :holai.runtime.data
+    :holai.runtime.format
+    :holai.runtime.pattern
+    :holai.runtime.stdlib)
   (:shadow
     ARG~34497
     ARG~34506
@@ -15726,26 +15856,27 @@
     foldl
     delete)
   (:shadowing-import-from
-    :holai.runtime
-    unit
-    tuple
+    :holai.runtime.core
     string-concat
     Some
-    print-string
-    print-break
-    open-vbox
     None
-    match
     make-Some
     make-None
-    list-iter
     labelsc
     failwith
     defvariant
     defunc
-    close-box
     ==
     =)
+  (:shadowing-import-from :holai.runtime.data unit tuple)
+  (:shadowing-import-from
+    :holai.runtime.format
+    print-string
+    print-break
+    open-vbox
+    close-box)
+  (:shadowing-import-from :holai.runtime.pattern match)
+  (:shadowing-import-from :holai.runtime.stdlib list-iter)
   (:export
     Assume%
     Axiom%
@@ -15790,7 +15921,13 @@
 (uiop:define-package
   :holai.metis.metis_prover.proof
   (:use :cl)
-  (:mix :cl :holai.lib :holai.runtime)
+  (:mix
+    :cl
+    :holai.lib
+    :holai.runtime.core
+    :holai.runtime.data
+    :holai.runtime.pattern
+    :holai.runtime.stdlib)
   (:shadow
     A%
     A%%
@@ -15944,20 +16081,12 @@
     Assume%)
   (:shadowing-import-from :holai.metis.metis_prover.useful total make-Bug)
   (:shadowing-import-from
-    :holai.runtime
-    unit
-    tuple
+    :holai.runtime.core
     Some
-    snd
-    raise
     partial
     None
-    match
     make-Some
     make-None
-    list-rev
-    list-partition
-    list-filter
     list-exists
     lambdac
     labelsc
@@ -15965,6 +16094,9 @@
     defvariant
     defunc
     =)
+  (:shadowing-import-from :holai.runtime.data unit tuple snd raise)
+  (:shadowing-import-from :holai.runtime.pattern match)
+  (:shadowing-import-from :holai.runtime.stdlib list-rev list-partition list-filter)
   (:export
     Assume
     Axiom
@@ -15992,7 +16124,13 @@
 (uiop:define-package
   :holai.metis.metis_prover.rule
   (:use :cl)
-  (:mix :cl :holai.lib :holai.runtime)
+  (:mix
+    :cl
+    :holai.lib
+    :holai.runtime.core
+    :holai.runtime.data
+    :holai.runtime.pattern
+    :holai.runtime.stdlib)
   (:shadow
     A%
     ACC
@@ -16258,21 +16396,15 @@
     assume)
   (:shadowing-import-from :holai.metis.metis_prover.useful total make-Bug interval)
   (:shadowing-import-from
-    :holai.runtime
-    tuple
+    :holai.runtime.core
     string-of-int
     string-concat
     Some
-    snd
-    raise
     None
-    match
     make-Some
     make-None
-    list-map
     lambdac
     labelsc
-    fst
     failwith
     Failure
     defvariant
@@ -16280,6 +16412,9 @@
     ==
     =
     <>)
+  (:shadowing-import-from :holai.runtime.data tuple snd raise fst)
+  (:shadowing-import-from :holai.runtime.pattern match)
+  (:shadowing-import-from :holai.runtime.stdlib list-map)
   (:export
     Apart
     Factor_edge
@@ -16380,7 +16515,13 @@
 (uiop:define-package
   :holai.metis.metis_prover.model
   (:use :cl)
-  (:mix :cl :holai.lib :holai.runtime)
+  (:mix
+    :cl
+    :holai.lib
+    :holai.runtime.core
+    :holai.runtime.data
+    :holai.runtime.pattern
+    :holai.runtime.stdlib)
   (:shadow
     A%
     ACC
@@ -16837,38 +16978,21 @@
     fromInt
     andb)
   (:shadowing-import-from
-    :holai.runtime
-    unit
-    tuple
+    :holai.runtime.core
     string-of-int
     string-concat
     Some
-    ref
-    random-int
-    raise
-    ocaml-max-int
     None
-    match
     make-Some
     make-None
-    list-rev-append
-    list-nth
-    list-mem
-    list-map
     lambdac
     labelsc
-    int-of-float
     int-mod
     int-div
-    fst
-    float-of-int
-    float-floor
     failwith
-    deref
     defvariant
     defunc
     defrecord
-    assign
     array-set
     array-make
     array-get
@@ -16878,6 +17002,19 @@
     <>
     <=
     <)
+  (:shadowing-import-from :holai.runtime.data unit tuple ref raise fst deref assign)
+  (:shadowing-import-from :holai.runtime.pattern match)
+  (:shadowing-import-from
+    :holai.runtime.stdlib
+    random-int
+    ocaml-max-int
+    list-rev-append
+    list-nth
+    list-mem
+    list-map
+    int-of-float
+    float-of-int
+    float-floor)
   (:export
     Array_table
     Forgetful_table
@@ -17087,7 +17224,13 @@
 (uiop:define-package
   :holai.metis.metis_prover.term_net
   (:use :cl)
-  (:mix :cl :holai.lib :holai.runtime)
+  (:mix
+    :cl
+    :holai.lib
+    :holai.runtime.core
+    :holai.runtime.data
+    :holai.runtime.pattern
+    :holai.runtime.stdlib)
   (:shadow
     A
     A%
@@ -17285,21 +17428,13 @@
   (:shadowing-import-from :holai.metis.metis_prover.option is_some bind)
   (:shadowing-import-from :holai.metis.metis_prover.useful total make-Bug intCompare)
   (:shadowing-import-from
-    :holai.runtime
-    unit
-    tuple
+    :holai.runtime.core
     string-of-int
     string-concat
     Some
-    snd
-    raise
     None
-    match
     make-Some
     make-None
-    list-sort
-    list-map
-    list-filter
     lambdac
     labelsc
     function-value
@@ -17311,6 +17446,9 @@
     ==
     =
     <>)
+  (:shadowing-import-from :holai.runtime.data unit tuple snd raise)
+  (:shadowing-import-from :holai.runtime.pattern match)
+  (:shadowing-import-from :holai.runtime.stdlib list-sort list-map list-filter)
   (:export
     Fn
     Multiple
@@ -17384,7 +17522,7 @@
 (uiop:define-package
   :holai.metis.metis_prover.atom_net
   (:use :cl)
-  (:mix :cl :holai.runtime)
+  (:mix :cl :holai.runtime.core :holai.runtime.data :holai.runtime.pattern)
   (:shadow
     A%
     ARG~43900
@@ -17411,15 +17549,9 @@
   (:shadowing-import-from :holai.metis.metis_prover.mlist foldl)
   (:shadowing-import-from :holai.metis.metis_prover.term Var make-Fn Fn)
   (:shadowing-import-from :holai.metis.metis_prover.useful make-Bug)
-  (:shadowing-import-from
-    :holai.runtime
-    tuple
-    string-of-int
-    string-concat
-    raise
-    match
-    lambdac
-    defunc)
+  (:shadowing-import-from :holai.runtime.core string-of-int string-concat lambdac defunc)
+  (:shadowing-import-from :holai.runtime.data tuple raise)
+  (:shadowing-import-from :holai.runtime.pattern match)
   (:export
     atomToTerm
     filter
@@ -17436,7 +17568,7 @@
 (uiop:define-package
   :holai.metis.metis_prover.literal_net
   (:use :cl)
-  (:mix :cl :holai.runtime)
+  (:mix :cl :holai.runtime.core :holai.runtime.data :holai.runtime.pattern)
   (:shadow
     A%
     ARG~44001
@@ -17476,14 +17608,14 @@
   (:shadowing-import-from :cl +)
   (:shadowing-import-from :holai.metis.metis_prover.mlist foldl)
   (:shadowing-import-from
-    :holai.runtime
-    tuple
+    :holai.runtime.core
     string-of-int
     string-concat
-    match
     lambdac
     defunc
     defrecord)
+  (:shadowing-import-from :holai.runtime.data tuple)
+  (:shadowing-import-from :holai.runtime.pattern match)
   (:export
     filter
     fromList
@@ -17502,7 +17634,13 @@
 (uiop:define-package
   :holai.metis.metis_prover.subsume
   (:use :cl)
-  (:mix :cl :holai.lib :holai.runtime)
+  (:mix
+    :cl
+    :holai.lib
+    :holai.runtime.core
+    :holai.runtime.data
+    :holai.runtime.pattern
+    :holai.runtime.stdlib)
   (:shadow
     A%
     ACC
@@ -17655,19 +17793,13 @@
   (:shadowing-import-from :holai.metis.metis_prover.term_net make-parameters)
   (:shadowing-import-from :holai.metis.metis_prover.useful total revCompare intCompare)
   (:shadowing-import-from
-    :holai.runtime
-    unit
-    tuple
+    :holai.runtime.core
     string-of-int
     string-concat
     Some
-    snd
     None
-    match
     make-Some
     make-None
-    list-rev-append
-    list-filter
     list-exists
     lambdac
     labelsc
@@ -17677,6 +17809,9 @@
     =
     <>
     <=)
+  (:shadowing-import-from :holai.runtime.data unit tuple snd)
+  (:shadowing-import-from :holai.runtime.pattern match)
+  (:shadowing-import-from :holai.runtime.stdlib list-rev-append list-filter)
   (:export
     addSym
     clauseStrictlySubsumes
@@ -17713,7 +17848,7 @@
 (uiop:define-package
   :holai.metis.metis_prover.knuth_bendix_order
   (:use :cl)
-  (:mix :cl :holai.lib :holai.runtime)
+  (:mix :cl :holai.lib :holai.runtime.core :holai.runtime.data :holai.runtime.pattern)
   (:shadow
     A%
     A1
@@ -17806,13 +17941,9 @@
   (:shadowing-import-from :holai.metis.metis_prover.term Var Fn equal)
   (:shadowing-import-from :holai.metis.metis_prover.useful make-Bug intCompare)
   (:shadowing-import-from
-    :holai.runtime
-    unit
-    tuple
+    :holai.runtime.core
     Some
-    raise
     None
-    match
     make-Some
     make-None
     lambdac
@@ -17824,6 +17955,8 @@
     =
     <>
     <)
+  (:shadowing-import-from :holai.runtime.data unit tuple raise)
+  (:shadowing-import-from :holai.runtime.pattern match)
   (:export
     Weight
     add
@@ -17848,7 +17981,13 @@
 (uiop:define-package
   :holai.metis.metis_prover.rewrite
   (:use :cl)
-  (:mix :cl :holai.lib :holai.runtime)
+  (:mix
+    :cl
+    :holai.lib
+    :holai.runtime.core
+    :holai.runtime.data
+    :holai.runtime.pattern
+    :holai.runtime.stdlib)
   (:shadow
     ACC
     ADD%
@@ -18141,20 +18280,14 @@
     assume)
   (:shadowing-import-from :holai.metis.metis_prover.useful total intCompare)
   (:shadowing-import-from
-    :holai.runtime
-    unit
-    tuple
+    :holai.runtime.core
     Some
     None
-    match
     make-Some
     make-None
-    list-sort
     list-exists
     lambdac
     labelsc
-    guard
-    fst
     failwith
     defvariant
     defunc
@@ -18163,6 +18296,9 @@
     =
     <>
     <)
+  (:shadowing-import-from :holai.runtime.data unit tuple fst)
+  (:shadowing-import-from :holai.runtime.pattern match guard)
+  (:shadowing-import-from :holai.runtime.stdlib list-sort)
   (:export
     Left_to_right
     Neq_convs
@@ -18240,7 +18376,7 @@
 (uiop:define-package
   :holai.metis.metis_prover.units
   (:use :cl)
-  (:mix :cl :holai.runtime)
+  (:mix :cl :holai.runtime.core :holai.runtime.data :holai.runtime.pattern)
   (:shadow
     ARG~47693
     ARG~47712
@@ -18301,25 +18437,31 @@
   (:shadowing-import-from :holai.metis.metis_prover.thm subst resolve refl clause)
   (:shadowing-import-from :holai.metis.metis_prover.useful total)
   (:shadowing-import-from
-    :holai.runtime
-    tuple
+    :holai.runtime.core
     string-of-int
     string-concat
     Some
     None
-    match
     make-Some
     make-None
     lambdac
     labelsc
     defvariant
     defunc)
+  (:shadowing-import-from :holai.runtime.data tuple)
+  (:shadowing-import-from :holai.runtime.pattern match)
   (:export Units add addList empty make-Units matchUnits reduce size toString))
 
 (uiop:define-package
   :holai.metis.metis_prover.clause
   (:use :cl)
-  (:mix :cl :holai.lib :holai.runtime)
+  (:mix
+    :cl
+    :holai.lib
+    :holai.runtime.core
+    :holai.runtime.data
+    :holai.runtime.pattern
+    :holai.runtime.stdlib)
   (:shadow
     ACC
     ACC%
@@ -18499,30 +18641,24 @@
   (:shadowing-import-from :holai.metis.metis_prover.thm subst equal)
   (:shadowing-import-from :holai.metis.metis_prover.useful total critical)
   (:shadowing-import-from
-    :holai.runtime
-    unit
-    tuple
+    :holai.runtime.core
     Some
-    ref
     None
-    match
     make-Some
     make-None
-    list-map
-    list-for-all
     list-exists
     lambdac
     labelsc
-    guard
     failwith
-    deref
     defvariant
     defunc
     defrecord
-    assign
     =
     <>
     <)
+  (:shadowing-import-from :holai.runtime.data unit tuple ref deref assign)
+  (:shadowing-import-from :holai.runtime.pattern match guard)
+  (:shadowing-import-from :holai.runtime.stdlib list-map list-for-all)
   (:export
     Clause
     No_literal_order
@@ -18570,15 +18706,21 @@
 (uiop:define-package
   :holai.metis.metis_prover.ax_cj
   (:use :cl)
-  (:mix :cl :holai.runtime)
+  (:mix :cl :holai.runtime.core)
   (:shadow ax_cj_cl ax_cj_thm make-ax_cj_cl make-ax_cj_thm)
-  (:shadowing-import-from :holai.runtime defrecord)
+  (:shadowing-import-from :holai.runtime.core defrecord)
   (:export ax_cj_cl ax_cj_thm make-ax_cj_cl make-ax_cj_thm))
 
 (uiop:define-package
   :holai.metis.metis_prover.active
   (:use :cl)
-  (:mix :cl :holai.lib :holai.runtime)
+  (:mix
+    :cl
+    :holai.lib
+    :holai.runtime.core
+    :holai.runtime.data
+    :holai.runtime.pattern
+    :holai.runtime.stdlib)
   (:shadow
     ACC
     ACC%
@@ -18811,26 +18953,23 @@
   (:shadowing-import-from :holai.metis.metis_prover.thm isUnitEq destUnitEq destUnit)
   (:shadowing-import-from :holai.metis.metis_prover.useful total intCompare)
   (:shadowing-import-from
-    :holai.runtime
-    unit
-    tuple
+    :holai.runtime.core
     string-of-int
     string-concat
     Some
     None
-    match
     make-Some
     make-None
-    list-rev
-    list-map
     lambdac
     labelsc
-    fst
     defvariant
     defunc
     defrecord
     =
     <=)
+  (:shadowing-import-from :holai.runtime.data unit tuple fst)
+  (:shadowing-import-from :holai.runtime.pattern match)
+  (:shadowing-import-from :holai.runtime.stdlib list-rev list-map)
   (:export
     Active
     active_t
@@ -18887,7 +19026,13 @@
 (uiop:define-package
   :holai.metis.metis_prover.waiting
   (:use :cl)
-  (:mix :cl :holai.lib :holai.runtime)
+  (:mix
+    :cl
+    :holai.lib
+    :holai.runtime.core
+    :holai.runtime.data
+    :holai.runtime.pattern
+    :holai.runtime.stdlib)
   (:shadow
     ACC
     ADDCL
@@ -19007,25 +19152,22 @@
     interpretClause
     check)
   (:shadowing-import-from
-    :holai.runtime
-    unit
-    tuple
+    :holai.runtime.core
     string-of-int
     string-concat
     partial
-    match
     make-Some
     make-None
-    list-map
-    list-iter
     lambdac
     labelsc
     function-value
-    float-of-int
     defvariant
     defunc
     defrecord
     compare)
+  (:shadowing-import-from :holai.runtime.data unit tuple)
+  (:shadowing-import-from :holai.runtime.pattern match)
+  (:shadowing-import-from :holai.runtime.stdlib list-map list-iter float-of-int)
   (:export
     Waiting
     add
@@ -19060,7 +19202,12 @@
 (uiop:define-package
   :holai.metis.metis_prover.resolution
   (:use :cl)
-  (:mix :cl :holai.runtime)
+  (:mix
+    :cl
+    :holai.runtime.core
+    :holai.runtime.data
+    :holai.runtime.pattern
+    :holai.runtime.stdlib)
   (:shadow
     A%
     ACTIVE%
@@ -19104,16 +19251,10 @@
   (:shadowing-import-from :holai.metis.metis_prover.active saturation newActive)
   (:shadowing-import-from :holai.metis.metis_prover.clause thm isContradiction)
   (:shadowing-import-from :holai.metis.metis_prover.waiting remove newWaiting add)
-  (:shadowing-import-from
-    :holai.runtime
-    tuple
-    Some
-    None
-    match
-    list-map
-    defvariant
-    defunc
-    defrecord)
+  (:shadowing-import-from :holai.runtime.core Some None defvariant defunc defrecord)
+  (:shadowing-import-from :holai.runtime.data tuple)
+  (:shadowing-import-from :holai.runtime.pattern match)
+  (:shadowing-import-from :holai.runtime.stdlib list-map)
   (:export
     Contradiction
     Decided
@@ -19139,7 +19280,7 @@
 (uiop:define-package
   :holai.metis.metis_prover.loop
   (:use :cl)
-  (:mix :cl :holai.runtime)
+  (:mix :cl :holai.runtime.core :holai.runtime.pattern)
   (:shadow DEC RES RES% RULES THM THS loop run)
   (:shadowing-import-from :holai.metis.metis_prover.ax_cj make-ax_cj_thm)
   (:shadowing-import-from
@@ -19151,7 +19292,8 @@
     default
     Decided
     Contradiction)
-  (:shadowing-import-from :holai.runtime Some None match make-Some failwith defunc)
+  (:shadowing-import-from :holai.runtime.core Some None make-Some failwith defunc)
+  (:shadowing-import-from :holai.runtime.pattern match)
   (:export loop run))
 
 (uiop:define-package :holai.metis.metis_prover (:use :cl) (:export))
@@ -19159,7 +19301,16 @@
 (uiop:define-package
   :holai.metis.metis_debug
   (:use :cl)
-  (:mix :cl :holai.basics :holai.fusion.hol :holai.lib :holai.printer :holai.runtime)
+  (:mix
+    :cl
+    :holai.basics
+    :holai.fusion.hol
+    :holai.lib
+    :holai.printer
+    :holai.runtime.core
+    :holai.runtime.data
+    :holai.runtime.format
+    :holai.runtime.pattern)
   (:shadow
     ARGS
     ARG~51230
@@ -19185,24 +19336,31 @@
     install_user_printer
     delete_user_printer)
   (:shadowing-import-from
-    :holai.runtime
-    unit
-    tuple
+    :holai.runtime.core
     string-concat
-    raise
-    pp-print-string
-    match
     lambdac
     failwith
     Failure
     defunc
     =)
+  (:shadowing-import-from :holai.runtime.data unit tuple raise)
+  (:shadowing-import-from :holai.runtime.format pp-print-string)
+  (:shadowing-import-from :holai.runtime.pattern match)
   (:export hide_types print_varandtype show_types))
 
 (uiop:define-package
   :holai.metis.preterm
   (:use :cl)
-  (:mix :cl :holai.fusion.hol :holai.lib :holai.parser :holai.preterm :holai.runtime)
+  (:mix
+    :cl
+    :holai.fusion.hol
+    :holai.lib
+    :holai.parser
+    :holai.preterm
+    :holai.runtime.core
+    :holai.runtime.data
+    :holai.runtime.pattern
+    :holai.runtime.stdlib)
   (:shadow
     ACC
     ARG~51263
@@ -19250,18 +19408,16 @@
     Constp
     Combp)
   (:shadowing-import-from
-    :holai.runtime
-    tuple
+    :holai.runtime.core
     partial
-    match
-    list-map
-    list-concat
     lambdac
     function-value
     failwith
     defunc
-    assert-true
     =)
+  (:shadowing-import-from :holai.runtime.data tuple)
+  (:shadowing-import-from :holai.runtime.pattern match)
+  (:shadowing-import-from :holai.runtime.stdlib list-map list-concat assert-true)
   (:export
     env_of_preterm
     env_of_th
@@ -19284,7 +19440,10 @@
     :holai.lib
     :holai.meson.meson
     :holai.preterm
-    :holai.runtime)
+    :holai.runtime.core
+    :holai.runtime.data
+    :holai.runtime.pattern
+    :holai.runtime.stdlib)
   (:shadow
     ARGS
     ARG~51507
@@ -19348,14 +19507,14 @@
     make-Constp
     dpty)
   (:shadowing-import-from
-    :holai.runtime
-    tuple
+    :holai.runtime.core
     string-concat
-    match
-    list-map
     int-of-string
     function-value
     defunc)
+  (:shadowing-import-from :holai.runtime.data tuple)
+  (:shadowing-import-from :holai.runtime.pattern match)
+  (:shadowing-import-from :holai.runtime.stdlib list-map)
   (:export
     fol_of_const
     hol_of_atom
@@ -19378,7 +19537,13 @@
 (uiop:define-package
   :holai.metis.metis_path
   (:use :cl)
-  (:mix :cl :holai.lib :holai.runtime)
+  (:mix
+    :cl
+    :holai.lib
+    :holai.runtime.core
+    :holai.runtime.data
+    :holai.runtime.pattern
+    :holai.runtime.stdlib)
   (:shadow
     ARGS
     ARG~51737
@@ -19401,23 +19566,26 @@
   (:shadowing-import-from :cl -)
   (:shadowing-import-from :holai.lib length)
   (:shadowing-import-from :holai.metis.metis_prover.term make-Fn Fn)
-  (:shadowing-import-from
-    :holai.runtime
-    tuple
-    string-make
-    string-concat
-    match
-    list-nth
-    failwith
-    defunc
-    assert-true
-    <)
+  (:shadowing-import-from :holai.runtime.core string-make string-concat failwith defunc <)
+  (:shadowing-import-from :holai.runtime.data tuple)
+  (:shadowing-import-from :holai.runtime.pattern match)
+  (:shadowing-import-from :holai.runtime.stdlib list-nth assert-true)
   (:export hol_of_atom_path hol_of_literal_path hol_of_term_path))
 
 (uiop:define-package
   :holai.metis.metis_unify
   (:use :cl)
-  (:mix :cl :holai.basics :holai.fusion.hol :holai.lib :holai.printer :holai.runtime)
+  (:mix
+    :cl
+    :holai.basics
+    :holai.fusion.hol
+    :holai.lib
+    :holai.printer
+    :holai.runtime.core
+    :holai.runtime.data
+    :holai.runtime.format
+    :holai.runtime.pattern
+    :holai.runtime.stdlib)
   (:shadow
     ARGS
     ARG~51925
@@ -19455,24 +19623,21 @@
   (:shadowing-import-from :holai.metis.metis_prover.term Var toString make-Fn Fn)
   (:shadowing-import-from :holai.printer string_of_term)
   (:shadowing-import-from
-    :holai.runtime
-    unit
-    tuple
-    ref
-    raise
-    match
+    :holai.runtime.core
+    int-of-string
+    Failure
+    defunc
+    define-exception
+    =)
+  (:shadowing-import-from :holai.runtime.data unit tuple ref raise deref)
+  (:shadowing-import-from :holai.runtime.format format-printf)
+  (:shadowing-import-from :holai.runtime.pattern match guard)
+  (:shadowing-import-from
+    :holai.runtime.stdlib
     list-mem-assoc
     list-mem
     list-assoc
-    int-of-string
-    guard
-    format-printf
-    Failure
-    deref
-    defunc
-    define-exception
-    assert-true
-    =)
+    assert-true)
   (:export Unify make-Unify unify_fo_ho_atom unify_fo_ho_literal unify_fo_ho_term verb))
 
 (uiop:define-package
@@ -19488,7 +19653,10 @@
     :holai.fusion.hol
     :holai.lib
     :holai.parser
-    :holai.runtime
+    :holai.runtime.core
+    :holai.runtime.data
+    :holai.runtime.pattern
+    :holai.runtime.stdlib
     :holai.simp)
   (:shadow
     ARG~52075
@@ -19537,17 +19705,10 @@
   (:shadowing-import-from :holai.fusion.hol concl)
   (:shadowing-import-from :holai.lib partition)
   (:shadowing-import-from :holai.parser parse_term)
-  (:shadowing-import-from
-    :holai.runtime
-    tuple
-    raise
-    match
-    list-fold-right
-    lambdac
-    failwith
-    Failure
-    defunc
-    =)
+  (:shadowing-import-from :holai.runtime.core lambdac failwith Failure defunc =)
+  (:shadowing-import-from :holai.runtime.data tuple raise)
+  (:shadowing-import-from :holai.runtime.pattern match)
+  (:shadowing-import-from :holai.runtime.stdlib list-fold-right)
   (:shadowing-import-from :holai.simp PURE_ONCE_REWRITE_RULE)
   (:export DISCH_DISJ DISCH_DISJS FRONT RESOLVE RESOLVE_N))
 
@@ -19568,7 +19729,11 @@
     :holai.lib
     :holai.preterm
     :holai.printer
-    :holai.runtime
+    :holai.runtime.core
+    :holai.runtime.data
+    :holai.runtime.format
+    :holai.runtime.pattern
+    :holai.runtime.stdlib
     :holai.simp)
   (:shadow
     ARG~52241
@@ -19721,18 +19886,28 @@
     string_of_term
     name_of)
   (:shadowing-import-from
-    :holai.runtime
-    unit
-    tuple
+    :holai.runtime.core
     string-join
     string-concat
     Some
-    raise
     partial
     None
-    match
     make-Some
     make-None
+    lambdac
+    function-value
+    failwith
+    Failure
+    defunc
+    >
+    =
+    <>
+    !=)
+  (:shadowing-import-from :holai.runtime.data unit tuple raise deref)
+  (:shadowing-import-from :holai.runtime.format format-printf)
+  (:shadowing-import-from :holai.runtime.pattern match)
+  (:shadowing-import-from
+    :holai.runtime.stdlib
     list-mem
     list-map
     list-length
@@ -19741,18 +19916,7 @@
     list-for-all
     list-filter
     list-concat
-    lambdac
-    function-value
-    format-printf
-    failwith
-    Failure
-    deref
-    defunc
-    assert-true
-    >
-    =
-    <>
-    !=)
+    assert-true)
   (:shadowing-import-from :holai.simp PURE_ONCE_REWRITE_CONV)
   (:export
     hol_of_thm
@@ -19767,7 +19931,16 @@
 (uiop:define-package
   :holai.metis.metis_generate
   (:use :cl)
-  (:mix :cl :holai.basics :holai.fusion.hol :holai.lib :holai.meson.meson :holai.runtime)
+  (:mix
+    :cl
+    :holai.basics
+    :holai.fusion.hol
+    :holai.lib
+    :holai.meson.meson
+    :holai.runtime.core
+    :holai.runtime.data
+    :holai.runtime.pattern
+    :holai.runtime.stdlib)
   (:shadow
     ARGS
     CONSTS
@@ -19804,16 +19977,15 @@
   (:shadowing-import-from :holai.metis.metis_prover.term make-Var make-Fn)
   (:shadowing-import-from :holai.metis.metis_prover.thm axiom)
   (:shadowing-import-from
-    :holai.runtime
-    tuple
+    :holai.runtime.core
     string-of-int
-    raise
-    match
-    list-mem
     function-value
     failwith
     Failure
     defunc)
+  (:shadowing-import-from :holai.runtime.data tuple raise)
+  (:shadowing-import-from :holai.runtime.pattern match)
+  (:shadowing-import-from :holai.runtime.stdlib list-mem)
   (:export
     metis_name
     metis_of_atom
@@ -19838,7 +20010,11 @@
     :holai.parser
     :holai.preterm
     :holai.printer
-    :holai.runtime
+    :holai.runtime.core
+    :holai.runtime.data
+    :holai.runtime.format
+    :holai.runtime.pattern
+    :holai.runtime.stdlib
     :holai.tactics
     :holai.theorems)
   (:shadow
@@ -19910,30 +20086,19 @@
   (:shadowing-import-from :holai.parser parse_term)
   (:shadowing-import-from :holai.preterm type_invention_warning)
   (:shadowing-import-from :holai.printer string_of_thm print_thm)
+  (:shadowing-import-from :holai.runtime.core lambdac labelsc function-value defunc =)
+  (:shadowing-import-from :holai.runtime.data unit tuple snd ref raise fst deref assign)
+  (:shadowing-import-from :holai.runtime.format format-printf)
+  (:shadowing-import-from :holai.runtime.pattern match)
   (:shadowing-import-from
-    :holai.runtime
-    unit
-    tuple
-    snd
-    ref
+    :holai.runtime.stdlib
     random-init
-    raise
     print-endline
-    match
     list-mem
     list-map
     list-iter
     list-concat
-    lambdac
-    labelsc
-    function-value
-    fst
-    format-printf
-    deref
-    defunc
-    assign
-    assert-true
-    =)
+    assert-true)
   (:shadowing-import-from
     :holai.tactics
     UNDISCH_TAC
@@ -19968,11 +20133,12 @@
 (uiop:define-package
   :holai.metis
   (:use :cl)
-  (:mix :cl :holai.lib :holai.runtime :holai.tactics)
+  (:mix :cl :holai.lib :holai.runtime.core :holai.runtime.data :holai.tactics)
   (:shadow ASM_METIS_TAC METIS METIS_TAC THS TM metisverb)
   (:shadowing-import-from :holai.lib K)
   (:shadowing-import-from :holai.metis.metis GEN_METIS_TAC)
-  (:shadowing-import-from :holai.runtime tuple ref proof defunc)
+  (:shadowing-import-from :holai.runtime.core proof defunc)
+  (:shadowing-import-from :holai.runtime.data tuple ref)
   (:shadowing-import-from :holai.tactics THEN prove POP_ASSUM_LIST ALL_TAC)
   (:export ASM_METIS_TAC METIS METIS_TAC metisverb))
 
@@ -19984,7 +20150,7 @@
 
 (in-package :holai.metis.metis_prover.word)
 
-(defunc compare (x y) (holai.runtime:compare x y))
+(defunc compare (x y) (holai.runtime.core:compare x y))
 
 (defunc shiftLeft (arg~13) (match arg~13 ((tuple x y) (int-lsl x y))))
 
@@ -20025,7 +20191,7 @@
 (defunc find (p% l)
   (handler-case
     (make-Some (list-find p% l))
-    (holai.runtime:ocaml-condition
+    (holai.runtime.data:ocaml-condition
       (exception~164)
       (match exception~164 ((Not_found) (make-None)) (_ (raise exception~164))))))
 
@@ -20099,7 +20265,7 @@
 (defunc total (f x)
   (handler-case
     (make-Some (#`f x))
-    (holai.runtime:ocaml-condition
+    (holai.runtime.data:ocaml-condition
       (exception~388)
       (match exception~388 ((Failure _) (make-None)) (_ (raise exception~388))))))
 
@@ -20186,20 +20352,20 @@
 
 (defunc newIntThunk (arg~637)
   (match arg~637
-    ((cl:type holai.runtime::unit-value)
+    ((cl:type holai.runtime.data:unit-value)
       (let ((n (deref generator)))
         (cl:declare (cl:ignorable n))
         (progn (assign generator (+ n 1)) n)))))
 
 (defunc newIntsThunk (k% arg~654)
   (match arg~654
-    ((cl:type holai.runtime::unit-value)
+    ((cl:type holai.runtime.data:unit-value)
       (let ((n (deref generator)))
         (cl:declare (cl:ignorable n))
         (progn (assign generator (+ n k%)) (interval n k%))))))
 
 (defunc newInt (arg~672)
-  (match arg~672 ((cl:type holai.runtime::unit-value) (newIntThunk unit))))
+  (match arg~672 ((cl:type holai.runtime.data:unit-value) (newIntThunk unit))))
 
 (defunc newInts (k%) (if (<= k% 0) nil (newIntsThunk k% unit)))
 
@@ -20310,7 +20476,7 @@
 
 
 (defunc treeNew (arg~729)
-  (match arg~729 ((cl:type holai.runtime::unit-value) (make-Empty))))
+  (match arg~729 ((cl:type holai.runtime.data:unit-value) (make-Empty))))
 
 (defunc nodeSize (arg~735) (match arg~735 ((node :size x) x)))
 
@@ -21389,7 +21555,8 @@
   (foldl
     (lambdac (arg~3379)
       (match arg~3379
-        ((tuple key value (cl:type holai.runtime::unit-value)) (#`f (tuple key value)))))
+        ((tuple key value (cl:type holai.runtime.data:unit-value))
+          (#`f (tuple key value)))))
     unit
     m))
 
@@ -21581,14 +21748,14 @@
 (defunc mapPartial (f)
   (labelsc
     ((mf (arg~3826)
-      (match arg~3826 ((tuple elt (cl:type holai.runtime::unit-value)) (#`f elt)))))
+      (match arg~3826 ((tuple elt (cl:type holai.runtime.data:unit-value)) (#`f elt)))))
     (lambdac (arg~3834)
       (match arg~3834 ((Set m) (holai.metis.metis_prover.pmap:mapPartial #'mf m))))))
 
 (defunc map (f)
   (labelsc
     ((mf (arg~3848)
-      (match arg~3848 ((tuple elt (cl:type holai.runtime::unit-value)) (#`f elt)))))
+      (match arg~3848 ((tuple elt (cl:type holai.runtime.data:unit-value)) (#`f elt)))))
     (lambdac (arg~3856)
       (match arg~3856 ((Set m) (holai.metis.metis_prover.pmap:map #'mf m))))))
 
@@ -21623,7 +21790,7 @@
   (match arg~3912
     ((Set m)
       (match (peekKey m elt)
-        ((Some (tuple elt% (cl:type holai.runtime::unit-value))) (make-Some elt%))
+        ((Some (tuple elt% (cl:type holai.runtime.data:unit-value))) (make-Some elt%))
         ((None) (make-None))))))
 
 (defunc member (elt arg~3934) (match arg~3934 ((Set m) (inDomain elt m))))
@@ -21679,21 +21846,21 @@
   (match arg~4056
     ((Set m)
       (match (holai.metis.metis_prover.pmap:deletePick m)
-        ((tuple (tuple elt (cl:type holai.runtime::unit-value)) m%)
+        ((tuple (tuple elt (cl:type holai.runtime.data:unit-value)) m%)
           (tuple elt (make-Set m%)))))))
 
 (defunc deleteNth (arg~4077 n)
   (match arg~4077
     ((Set m)
       (match (holai.metis.metis_prover.pmap:deleteNth m n)
-        ((tuple (tuple elt (cl:type holai.runtime::unit-value)) m%)
+        ((tuple (tuple elt (cl:type holai.runtime.data:unit-value)) m%)
           (tuple elt (make-Set m%)))))))
 
 (defunc deleteRandom (arg~4100)
   (match arg~4100
     ((Set m)
       (match (holai.metis.metis_prover.pmap:deleteRandom m)
-        ((tuple (tuple elt (cl:type holai.runtime::unit-value)) m%)
+        ((tuple (tuple elt (cl:type holai.runtime.data:unit-value)) m%)
           (tuple elt (make-Set m%)))))))
 
 ;; (* ------------------------------------------------------------------------- *)
@@ -21734,7 +21901,7 @@
 (defunc filter (pred)
   (labelsc
     ((mpred (arg~4209)
-      (match arg~4209 ((tuple elt (cl:type holai.runtime::unit-value)) (#`pred elt)))))
+      (match arg~4209 ((tuple elt (cl:type holai.runtime.data:unit-value)) (#`pred elt)))))
     (lambdac (arg~4217)
       (match arg~4217
         ((Set m) (make-Set (holai.metis.metis_prover.pmap:filter #'mpred m)))))))
@@ -21742,7 +21909,7 @@
 (defunc partition (pred)
   (labelsc
     ((mpred (arg~4232)
-      (match arg~4232 ((tuple elt (cl:type holai.runtime::unit-value)) (#`pred elt)))))
+      (match arg~4232 ((tuple elt (cl:type holai.runtime.data:unit-value)) (#`pred elt)))))
     (lambdac (arg~4240)
       (match arg~4240
         ((Set m)
@@ -21752,7 +21919,7 @@
 (defunc app (f)
   (labelsc
     ((mf (arg~4265)
-      (match arg~4265 ((tuple elt (cl:type holai.runtime::unit-value)) (#`f elt)))))
+      (match arg~4265 ((tuple elt (cl:type holai.runtime.data:unit-value)) (#`f elt)))))
     (lambdac (arg~4273)
       (match arg~4273 ((Set m) (holai.metis.metis_prover.pmap:app #'mf m))))))
 
@@ -21760,7 +21927,7 @@
   (labelsc
     ((mf (arg~4287)
       (match arg~4287
-        ((tuple elt (cl:type holai.runtime::unit-value) acc) (#`f (tuple elt acc))))))
+        ((tuple elt (cl:type holai.runtime.data:unit-value) acc) (#`f (tuple elt acc))))))
     (lambdac (acc arg~4300)
       (match arg~4300 ((Set m) (holai.metis.metis_prover.pmap:foldl #'mf acc m))))))
 
@@ -21768,7 +21935,7 @@
   (labelsc
     ((mf (arg~4315)
       (match arg~4315
-        ((tuple elt (cl:type holai.runtime::unit-value) acc) (#`f (tuple elt acc))))))
+        ((tuple elt (cl:type holai.runtime.data:unit-value) acc) (#`f (tuple elt acc))))))
     (lambdac (acc arg~4328)
       (match arg~4328 ((Set m) (holai.metis.metis_prover.pmap:foldr #'mf acc m))))))
 
@@ -21780,57 +21947,57 @@
 (defunc findl (p%)
   (labelsc
     ((mp% (arg~4343)
-      (match arg~4343 ((tuple elt (cl:type holai.runtime::unit-value)) (#`p% elt)))))
+      (match arg~4343 ((tuple elt (cl:type holai.runtime.data:unit-value)) (#`p% elt)))))
     (lambdac (arg~4351)
       (match arg~4351
         ((Set m)
           (match (holai.metis.metis_prover.pmap:findl #'mp% m)
-            ((Some (tuple elt (cl:type holai.runtime::unit-value))) (make-Some elt))
+            ((Some (tuple elt (cl:type holai.runtime.data:unit-value))) (make-Some elt))
             ((None) (make-None))))))))
 
 (defunc findr (p%)
   (labelsc
     ((mp% (arg~4375)
-      (match arg~4375 ((tuple elt (cl:type holai.runtime::unit-value)) (#`p% elt)))))
+      (match arg~4375 ((tuple elt (cl:type holai.runtime.data:unit-value)) (#`p% elt)))))
     (lambdac (arg~4383)
       (match arg~4383
         ((Set m)
           (match (holai.metis.metis_prover.pmap:findr #'mp% m)
-            ((Some (tuple elt (cl:type holai.runtime::unit-value))) (make-Some elt))
+            ((Some (tuple elt (cl:type holai.runtime.data:unit-value))) (make-Some elt))
             ((None) (make-None))))))))
 
 (defunc firstl (f)
   (labelsc
     ((mf (arg~4407)
-      (match arg~4407 ((tuple elt (cl:type holai.runtime::unit-value)) (#`f elt)))))
+      (match arg~4407 ((tuple elt (cl:type holai.runtime.data:unit-value)) (#`f elt)))))
     (lambdac (arg~4415)
       (match arg~4415 ((Set m) (holai.metis.metis_prover.pmap:firstl #'mf m))))))
 
 (defunc firstr (f)
   (labelsc
     ((mf (arg~4429)
-      (match arg~4429 ((tuple elt (cl:type holai.runtime::unit-value)) (#`f elt)))))
+      (match arg~4429 ((tuple elt (cl:type holai.runtime.data:unit-value)) (#`f elt)))))
     (lambdac (arg~4437)
       (match arg~4437 ((Set m) (holai.metis.metis_prover.pmap:firstr #'mf m))))))
 
 (defunc exists (p%)
   (labelsc
     ((mp% (arg~4451)
-      (match arg~4451 ((tuple elt (cl:type holai.runtime::unit-value)) (#`p% elt)))))
+      (match arg~4451 ((tuple elt (cl:type holai.runtime.data:unit-value)) (#`p% elt)))))
     (lambdac (arg~4459)
       (match arg~4459 ((Set m) (holai.metis.metis_prover.pmap:exists #'mp% m))))))
 
 (defunc all (p%)
   (labelsc
     ((mp% (arg~4473)
-      (match arg~4473 ((tuple elt (cl:type holai.runtime::unit-value)) (#`p% elt)))))
+      (match arg~4473 ((tuple elt (cl:type holai.runtime.data:unit-value)) (#`p% elt)))))
     (lambdac (arg~4481)
       (match arg~4481 ((Set m) (holai.metis.metis_prover.pmap:all #'mp% m))))))
 
 (defunc count (p%)
   (labelsc
     ((mp% (arg~4495)
-      (match arg~4495 ((tuple elt (cl:type holai.runtime::unit-value)) (#`p% elt)))))
+      (match arg~4495 ((tuple elt (cl:type holai.runtime.data:unit-value)) (#`p% elt)))))
     (lambdac (arg~4503)
       (match arg~4503 ((Set m) (holai.metis.metis_prover.pmap:count #'mp% m))))))
 
@@ -21841,13 +22008,13 @@
 
 (defunc compareValue (arg~4515 arg~4517)
   (match arg~4515
-    ((cl:type holai.runtime::unit-value)
-      (match arg~4517 ((cl:type holai.runtime::unit-value) 0)))))
+    ((cl:type holai.runtime.data:unit-value)
+      (match arg~4517 ((cl:type holai.runtime.data:unit-value) 0)))))
 
 (defunc equalValue (arg~4524 arg~4526)
   (match arg~4524
-    ((cl:type holai.runtime::unit-value)
-      (match arg~4526 ((cl:type holai.runtime::unit-value) cl:t)))))
+    ((cl:type holai.runtime.data:unit-value)
+      (match arg~4526 ((cl:type holai.runtime.data:unit-value) cl:t)))))
 
 (defunc compare (arg~4533 arg~4536)
   (match arg~4533
@@ -21895,7 +22062,7 @@
 
 (defunc readIterator (iter)
   (match (holai.metis.metis_prover.pmap:readIterator iter)
-    ((tuple elt (cl:type holai.runtime::unit-value)) elt)))
+    ((tuple elt (cl:type holai.runtime.data:unit-value)) elt)))
 
 (defunc advanceIterator (iter) (holai.metis.metis_prover.pmap:advanceIterator iter))
 
@@ -21909,7 +22076,7 @@
 
 (in-package :holai.metis.metis_prover.intmap.ordered)
 
-(defparameter compare (function-value #'holai.runtime:compare 2))
+(defparameter compare (function-value #'holai.runtime.core:compare 2))
 
 (in-package :holai.metis.metis_prover.intmap)
 
@@ -22159,7 +22326,8 @@
 
 (in-package :holai.metis.metis_prover.intmap.include~4681)
 
-(defunc newMap (arg~5894) (match arg~5894 ((cl:type holai.runtime::unit-value) empty)))
+(defunc newMap (arg~5894)
+  (match arg~5894 ((cl:type holai.runtime.data:unit-value) empty)))
 
 (defparameter null #'is_empty)
 
@@ -22172,7 +22340,7 @@
 (defunc get (m k%)
   (handler-case
     (find k% m)
-    (holai.runtime:ocaml-condition
+    (holai.runtime.data:ocaml-condition
       (exception~5920)
       (match exception~5920
         ((Not_found) (failwith "Mmap.get: element not found"))
@@ -22181,7 +22349,7 @@
 (defunc peek (m k%)
   (handler-case
     (make-Some (find k% m))
-    (holai.runtime:ocaml-condition
+    (holai.runtime.data:ocaml-condition
       (exception~5932)
       (match exception~5932 ((Not_found) (make-None)) (_ (raise exception~5932))))))
 
@@ -22241,7 +22409,7 @@
 
 (in-package :holai.metis.metis_prover.stringmap.ordered)
 
-(defparameter compare (function-value #'holai.runtime:compare 2))
+(defparameter compare (function-value #'holai.runtime.core:compare 2))
 
 (in-package :holai.metis.metis_prover.stringmap)
 
@@ -22491,7 +22659,8 @@
 
 (in-package :holai.metis.metis_prover.stringmap.include~6119)
 
-(defunc newMap (arg~7332) (match arg~7332 ((cl:type holai.runtime::unit-value) empty)))
+(defunc newMap (arg~7332)
+  (match arg~7332 ((cl:type holai.runtime.data:unit-value) empty)))
 
 (defparameter null #'is_empty)
 
@@ -22504,7 +22673,7 @@
 (defunc get (m k%)
   (handler-case
     (find k% m)
-    (holai.runtime:ocaml-condition
+    (holai.runtime.data:ocaml-condition
       (exception~7358)
       (match exception~7358
         ((Not_found) (failwith "Mmap.get: element not found"))
@@ -22513,7 +22682,7 @@
 (defunc peek (m k%)
   (handler-case
     (make-Some (find k% m))
-    (holai.runtime:ocaml-condition
+    (holai.runtime.data:ocaml-condition
       (exception~7370)
       (match exception~7370 ((Not_found) (make-None)) (_ (raise exception~7370))))))
 
@@ -22577,7 +22746,7 @@
 
 (in-package :holai.metis.metis_prover.intset.ordered)
 
-(defparameter compare (function-value #'holai.runtime:compare 2))
+(defparameter compare (function-value #'holai.runtime.core:compare 2))
 
 (in-package :holai.metis.metis_prover.intset)
 
@@ -23021,7 +23190,7 @@
 ;; (* ------------------------------------------------------------------------- *)
 
 
-(defparameter compare (function-value #'holai.runtime:compare 2))
+(defparameter compare (function-value #'holai.runtime.core:compare 2))
 
 (defunc equal (n1 n2) (= n1 n2))
 
@@ -23035,7 +23204,7 @@
 (defunc numName (i%) (mkPrefix prefix (string-of-int i%)))
 
 (defunc newName (arg~9210)
-  (match arg~9210 ((cl:type holai.runtime::unit-value) (numName (newInt unit)))))
+  (match arg~9210 ((cl:type holai.runtime.data:unit-value) (numName (newInt unit)))))
 
 (defunc newNames (n) (list-map #'numName (newInts n)))
 
@@ -23317,7 +23486,8 @@
 
 (in-package :holai.metis.metis_prover.name.map)
 
-(defunc newMap (arg~10504) (match arg~10504 ((cl:type holai.runtime::unit-value) empty)))
+(defunc newMap (arg~10504)
+  (match arg~10504 ((cl:type holai.runtime.data:unit-value) empty)))
 
 (defparameter null #'is_empty)
 
@@ -23329,7 +23499,7 @@
 (defunc get (m k%)
   (handler-case
     (find k% m)
-    (holai.runtime:ocaml-condition
+    (holai.runtime.data:ocaml-condition
       (exception~10530)
       (match exception~10530
         ((Not_found) (failwith "Mmap.get: element not found"))
@@ -23338,7 +23508,7 @@
 (defunc peek (m k%)
   (handler-case
     (make-Some (find k% m))
-    (holai.runtime:ocaml-condition
+    (holai.runtime.data:ocaml-condition
       (exception~10542)
       (match exception~10542 ((Not_found) (make-None)) (_ (raise exception~10542))))))
 
@@ -24053,7 +24223,8 @@
 
 (in-package :holai.metis.metis_prover.name_arity.map.include~12152)
 
-(defunc newMap (arg~13365) (match arg~13365 ((cl:type holai.runtime::unit-value) empty)))
+(defunc newMap (arg~13365)
+  (match arg~13365 ((cl:type holai.runtime.data:unit-value) empty)))
 
 (defparameter null #'is_empty)
 
@@ -24067,7 +24238,7 @@
 (defunc get (m k%)
   (handler-case
     (find k% m)
-    (holai.runtime:ocaml-condition
+    (holai.runtime.data:ocaml-condition
       (exception~13391)
       (match exception~13391
         ((Not_found) (failwith "Mmap.get: element not found"))
@@ -24076,7 +24247,7 @@
 (defunc peek (m k%)
   (handler-case
     (make-Some (find k% m))
-    (holai.runtime:ocaml-condition
+    (holai.runtime.data:ocaml-condition
       (exception~13403)
       (match exception~13403 ((Not_found) (make-None)) (_ (raise exception~13403))))))
 
@@ -24737,7 +24908,7 @@
 
 
 (defunc newVar (arg~15695)
-  (match arg~15695 ((cl:type holai.runtime::unit-value) (make-Var (newName unit)))))
+  (match arg~15695 ((cl:type holai.runtime.data:unit-value) (make-Var (newName unit)))))
 
 (defunc newVars (n) (list-map (lambdac (x) (make-Var x)) (newNames n)))
 
@@ -26241,7 +26412,8 @@
 
 (in-package :holai.metis.metis_prover.atom.map)
 
-(defunc newMap (arg~21147) (match arg~21147 ((cl:type holai.runtime::unit-value) empty)))
+(defunc newMap (arg~21147)
+  (match arg~21147 ((cl:type holai.runtime.data:unit-value) empty)))
 
 (defparameter null #'is_empty)
 
@@ -26253,7 +26425,7 @@
 (defunc get (m k%)
   (handler-case
     (find k% m)
-    (holai.runtime:ocaml-condition
+    (holai.runtime.data:ocaml-condition
       (exception~21173)
       (match exception~21173
         ((Not_found) (failwith "Mmap.get: element not found"))
@@ -26262,7 +26434,7 @@
 (defunc peek (m k%)
   (handler-case
     (make-Some (find k% m))
-    (holai.runtime:ocaml-condition
+    (holai.runtime.data:ocaml-condition
       (exception~21185)
       (match exception~21185 ((Not_found) (make-None)) (_ (raise exception~21185))))))
 
@@ -27578,7 +27750,8 @@
 
 (in-package :holai.metis.metis_prover.formula.map)
 
-(defunc newMap (arg~26680) (match arg~26680 ((cl:type holai.runtime::unit-value) empty)))
+(defunc newMap (arg~26680)
+  (match arg~26680 ((cl:type holai.runtime.data:unit-value) empty)))
 
 (defparameter null #'is_empty)
 
@@ -27591,7 +27764,7 @@
 (defunc get (m k%)
   (handler-case
     (find k% m)
-    (holai.runtime:ocaml-condition
+    (holai.runtime.data:ocaml-condition
       (exception~26706)
       (match exception~26706
         ((Not_found) (failwith "Mmap.get: element not found"))
@@ -27600,7 +27773,7 @@
 (defunc peek (m k%)
   (handler-case
     (make-Some (find k% m))
-    (holai.runtime:ocaml-condition
+    (holai.runtime.data:ocaml-condition
       (exception~26718)
       (match exception~26718 ((Not_found) (make-None)) (_ (raise exception~26718))))))
 
@@ -28487,7 +28660,8 @@
 
 (in-package :holai.metis.metis_prover.literal.map)
 
-(defunc newMap (arg~29950) (match arg~29950 ((cl:type holai.runtime::unit-value) empty)))
+(defunc newMap (arg~29950)
+  (match arg~29950 ((cl:type holai.runtime.data:unit-value) empty)))
 
 (defparameter null #'is_empty)
 
@@ -28500,7 +28674,7 @@
 (defunc get (m k%)
   (handler-case
     (find k% m)
-    (holai.runtime:ocaml-condition
+    (holai.runtime.data:ocaml-condition
       (exception~29976)
       (match exception~29976
         ((Not_found) (failwith "Mmap.get: element not found"))
@@ -28509,7 +28683,7 @@
 (defunc peek (m k%)
   (handler-case
     (make-Some (find k% m))
-    (holai.runtime:ocaml-condition
+    (holai.runtime.data:ocaml-condition
       (exception~29988)
       (match exception~29988 ((Not_found) (make-None)) (_ (raise exception~29988))))))
 
@@ -29271,7 +29445,8 @@
 
 (in-package :holai.metis.metis_prover.literal.set_map)
 
-(defunc newMap (arg~32935) (match arg~32935 ((cl:type holai.runtime::unit-value) empty)))
+(defunc newMap (arg~32935)
+  (match arg~32935 ((cl:type holai.runtime.data:unit-value) empty)))
 
 (defparameter null #'is_empty)
 
@@ -29284,7 +29459,7 @@
 (defunc get (m k%)
   (handler-case
     (find k% m)
-    (holai.runtime:ocaml-condition
+    (holai.runtime.data:ocaml-condition
       (exception~32961)
       (match exception~32961
         ((Not_found) (failwith "Mmap.get: element not found"))
@@ -29293,7 +29468,7 @@
 (defunc peek (m k%)
   (handler-case
     (make-Some (find k% m))
-    (holai.runtime:ocaml-condition
+    (holai.runtime.data:ocaml-condition
       (exception~32973)
       (match exception~32973 ((Not_found) (make-None)) (_ (raise exception~32973))))))
 
@@ -30394,7 +30569,7 @@
 (defunc orelseConv (conv1 conv2 tm)
   (handler-case
     (#`conv1 tm)
-    (holai.runtime:ocaml-condition
+    (holai.runtime.data:ocaml-condition
       (exception~36181)
       (match exception~36181 ((Failure _) (#`conv2 tm)) (_ (raise exception~36181))))))
 
@@ -30511,7 +30686,7 @@
 (defunc orelseLiterule (literule1 literule2 lit)
   (handler-case
     (#`literule1 lit)
-    (holai.runtime:ocaml-condition
+    (holai.runtime.data:ocaml-condition
       (exception~36564)
       (match exception~36564 ((Failure _) (#`literule2 lit)) (_ (raise exception~36564))))))
 
@@ -30584,7 +30759,7 @@
 (defunc orelseRule (rule1 rule2 th)
   (handler-case
     (#`rule1 th)
-    (holai.runtime:ocaml-condition
+    (holai.runtime.data:ocaml-condition
       (exception~36797)
       (match exception~36797 ((Failure _) (#`rule2 th)) (_ (raise exception~36797))))))
 
@@ -31762,7 +31937,7 @@
           r%
           (let ((r (randomResult vR)))
             (cl:declare (cl:ignorable r))
-            (match (array-set a% i% r) ((cl:type holai.runtime::unit-value) r))))))))
+            (match (array-set a% i% r) ((cl:type holai.runtime.data:unit-value) r))))))))
 
 (defunc updateTable (n table arg~40427)
   (match arg~40427
@@ -31772,7 +31947,7 @@
         ((Array_table a%)
           (let ((i% (elementListIndex (make-size :size n) elts)))
             (cl:declare (cl:ignorable i%))
-            (match (array-set a% i% r%) ((cl:type holai.runtime::unit-value) unit))))))))
+            (match (array-set a% i% r%) ((cl:type holai.runtime.data:unit-value) unit))))))))
 
 (defrecord tables #:domainSize #:rangeSize #:tableMap)
 
@@ -31791,7 +31966,7 @@
               ((tuple _ a%)
                 (let* ((t% (newTable n a%)) (m% (insert m (tuple n_a t%))))
                   (cl:declare (cl:ignorable t% m%))
-                  (match (assign tm m%) ((cl:type holai.runtime::unit-value) t%)))))))))))
+                  (match (assign tm m%) ((cl:type holai.runtime.data:unit-value) t%)))))))))))
 
 (defunc lookupTables (tables% arg~40518)
   (match arg~40518
@@ -32029,7 +32204,7 @@
   (match vM
     ((model :randomFunctions rndFns)
       (match (updateTables rndFns func_elts_elt)
-        ((cl:type holai.runtime::unit-value) unit)))))
+        ((cl:type holai.runtime.data:unit-value) unit)))))
 
 (defunc updateRelation (vM arg~41209)
   (match arg~41209
@@ -32037,7 +32212,7 @@
       (match vM
         ((model :randomRelations rndRels)
           (match (updateTables rndRels (tuple rel_elts (boolToInt pol)))
-            ((cl:type holai.runtime::unit-value) unit)))))))
+            ((cl:type holai.runtime.data:unit-value) unit)))))))
 
 (defvariant modelTerm (Model_var) (Model_fn #:field0 #:field1 #:field2))
 
@@ -32351,7 +32526,7 @@
         ((tuple tm a%)
           (handler-case
             (make-Net p% (+ k% 1) (ins (tuple k% a%) (termToQterm tm) (pre n)))
-            (holai.runtime:ocaml-condition
+            (holai.runtime.data:ocaml-condition
               (exception~42510)
               (match exception~42510
                 ((Failure _) (raise (make-Bug "Term_net.insert: should never fail")))
@@ -32397,7 +32572,7 @@
         (match arg~42642
           ((cl:and net% (Net _ _ (None))) net%)
           ((Net p% k% (Some (tuple _ n))) (make-Net p% k% (netSize (filt n))))))
-      (holai.runtime:ocaml-condition
+      (holai.runtime.data:ocaml-condition
         (exception~42636)
         (match exception~42636
           ((Failure _) (raise (make-Bug "Term_net.filter: should never fail")))
@@ -32570,7 +32745,7 @@
     ((tuple (Net p% _ (Some (tuple _ n))) tm)
       (handler-case
         (finally p% (mat~1 nil (cl:cons (tuple n (cl:cons tm nil)) nil)))
-        (holai.runtime:ocaml-condition
+        (holai.runtime.data:ocaml-condition
           (exception~43414)
           (match exception~43414
             ((Failure _) (raise (make-Bug "Term_net.match: should never fail")))
@@ -32636,7 +32811,7 @@
                 net%
                 (cl:cons tm nil))
               nil)))
-        (holai.runtime:ocaml-condition
+        (holai.runtime.data:ocaml-condition
           (exception~43643)
           (match exception~43643
             ((Failure _) (raise (make-Bug "Term_net.matched: should never fail")))
@@ -32701,7 +32876,7 @@
                 net%
                 (cl:cons tm nil))
               nil)))
-        (holai.runtime:ocaml-condition
+        (holai.runtime.data:ocaml-condition
           (exception~43871)
           (match exception~43871
             ((Failure _) (raise (make-Bug "Term_net.unify: should never fail")))
@@ -32919,7 +33094,7 @@
 
 (defunc newSubsume (arg~44355)
   (match arg~44355
-    ((cl:type holai.runtime::unit-value)
+    ((cl:type holai.runtime.data:unit-value)
       (make-subsume
         :empty
         nil
@@ -33224,7 +33399,7 @@
   (let ((lits% (sortClause cl%)) (lits (clauseSym (#`toList cl))))
     (cl:declare (cl:ignorable lits% lits))
     (match (genClauseSubsumes (K cl:t) cl% lits% lits unit)
-      ((Some (tuple _ sub (cl:type holai.runtime::unit-value))) (make-Some sub))
+      ((Some (tuple _ sub (cl:type holai.runtime.data:unit-value))) (make-Some sub))
       ((None) (make-None)))))
 
 (defunc clauseStrictlySubsumes (cl% cl)
@@ -34374,12 +34549,12 @@
     (labelsc
       ((newI (arg~47943)
         (match arg~47943
-          ((cl:type holai.runtime::unit-value)
+          ((cl:type holai.runtime.data:unit-value)
             (let ((n (deref r%)))
               (cl:declare (cl:ignorable n))
-              (match (assign r% (+ n 1)) ((cl:type holai.runtime::unit-value) n)))))))
+              (match (assign r% (+ n 1)) ((cl:type holai.runtime.data:unit-value) n)))))))
       (lambdac (arg~47958)
-        (match arg~47958 ((cl:type holai.runtime::unit-value) (critical #'newI unit)))))))
+        (match arg~47958 ((cl:type holai.runtime.data:unit-value) (critical #'newI unit)))))))
 
 (defvariant literalOrder
   (No_literal_order)
@@ -35651,7 +35826,7 @@
                   (holai.metis.metis_prover.model:perturbClause vM vV cl))))))
           (perturbClauses (arg~50533)
             (match arg~50533
-              ((cl:type holai.runtime::unit-value) (list-iter #'perturbClause cls)))))
+              ((cl:type holai.runtime.data:unit-value) (list-iter #'perturbClause cls)))))
         (lambdac (n) (funpow n #'perturbClauses unit))))))
 
 (defunc initialModel (axioms% conjecture parm)
@@ -35660,9 +35835,9 @@
       (let ((m (newModel model)))
         (cl:declare (cl:ignorable m))
         (match (perturbModel m conjecture initialPerturbations)
-          ((cl:type holai.runtime::unit-value)
+          ((cl:type holai.runtime.data:unit-value)
             (match (perturbModel m axioms% initialPerturbations)
-              ((cl:type holai.runtime::unit-value) m))))))))
+              ((cl:type holai.runtime.data:unit-value) m))))))))
 
 (defunc checkModels (parms models arg~50586)
   (match arg~50586
@@ -35756,7 +35931,7 @@
               (let ((clauses% (foldl #'addCl clauses (zip mcls cls))))
                 (cl:declare (cl:ignorable clauses%))
                 (match (perturbModels modelParameters% models mcls)
-                  ((cl:type holai.runtime::unit-value)
+                  ((cl:type holai.runtime.data:unit-value)
                     (make-Waiting
                       (make-waiting_t
                         :parameters
@@ -35974,14 +36149,14 @@
   (tuple
     (lambdac (arg~51230)
       (match arg~51230
-        ((cl:type holai.runtime::unit-value)
+        ((cl:type holai.runtime.data:unit-value)
           (#`install_user_printer (tuple "Show Types" #'print_varandtype)))))
     (lambdac (arg~51238)
       (match arg~51238
-        ((cl:type holai.runtime::unit-value)
+        ((cl:type holai.runtime.data:unit-value)
           (handler-case
             (#`delete_user_printer "Show Types")
-            (holai.runtime:ocaml-condition
+            (holai.runtime.data:ocaml-condition
               (exception~51240)
               (match exception~51240
                 ((Failure _)
@@ -36215,7 +36390,7 @@
           (match
             (handler-case
               (#`strip_comb tm)
-              (holai.runtime:ocaml-condition
+              (holai.runtime.data:ocaml-condition
                 (exception~51909)
                 (match exception~51909
                   ((Failure _) (raise (make-Unify)))
@@ -36242,7 +36417,7 @@
           (match (dest_eq htm)
             ((tuple hl hr)
               (itlist2 (unify_fo_ho_term vars) args (cl:cons hl (cl:cons hr nil)) m)))
-          (holai.runtime:ocaml-condition
+          (holai.runtime.data:ocaml-condition
             (exception~51939)
             (match exception~51939
               ((Failure _) (raise (make-Unify)))
@@ -36258,7 +36433,7 @@
             htm
             (handler-case
               (dest_neg htm)
-              (holai.runtime:ocaml-condition
+              (holai.runtime.data:ocaml-condition
                 (exception~51980)
                 (match exception~51980
                   ((Failure _) (raise (make-Unify)))
@@ -36324,7 +36499,7 @@
         (let ((res (#`RESOLVE_N atom% (tuple r1 r2))))
           (cl:declare (cl:ignorable res))
           (#`MP (#`MP res th1%) th2%))))
-    (holai.runtime:ocaml-condition
+    (holai.runtime.data:ocaml-condition
       (exception~52130)
       (match exception~52130
         ((Failure _) (failwith "resolve"))
@@ -36345,7 +36520,7 @@
           (#`DISCH tm th)
           (handler-case
             (tuple (dest_neg tm) IMPL_NOT_L)
-            (holai.runtime:ocaml-condition
+            (holai.runtime.data:ocaml-condition
               (exception~52203)
               (match exception~52203
                 ((Failure _) (tuple tm IMPL_NOT_R))
@@ -36384,7 +36559,7 @@
                 tminsts))
             unit)
           (if (= tminsts nil) (make-Some tyinsts%) (make-None)))))
-    (holai.runtime:ocaml-condition
+    (holai.runtime.data:ocaml-condition
       (exception~52230)
       (match exception~52230 ((Failure _) (make-None)) (_ (raise exception~52230))))))
 
@@ -36411,7 +36586,7 @@
     (lambdac (ft ht m)
       (handler-case
         (make-Some (unify_fo_ho_literal vars ft ht m))
-        (holai.runtime:ocaml-condition
+        (holai.runtime.data:ocaml-condition
           (exception~52337)
           (match exception~52337 ((Unify) (make-None)) (_ (raise exception~52337))))))
     nil))
@@ -36737,7 +36912,7 @@
                                   unit)
                                 (handler-case
                                   (DISCH_DISJS (cl:cons heq (cl:cons hlit% nil)) hlit%%)
-                                  (holai.runtime:ocaml-condition
+                                  (holai.runtime.data:ocaml-condition
                                     (exception~53033)
                                     (match exception~53033
                                       ((Failure _) (failwith "equality"))
@@ -36789,7 +36964,7 @@
         (let ((l% (metis_of_term env consts l)) (r%% (metis_of_term env consts r%)))
           (cl:declare (cl:ignorable l% r%%))
           (#`mkEq (tuple l% r%%)))))
-    (holai.runtime:ocaml-condition
+    (holai.runtime.data:ocaml-condition
       (exception~53165)
       (match exception~53165
         ((Failure _)
@@ -36806,7 +36981,7 @@
   (match
     (handler-case
       (tuple cl:nil (dest_neg tm))
-      (holai.runtime:ocaml-condition
+      (holai.runtime.data:ocaml-condition
         (exception~53234)
         (match exception~53234 ((Failure _) (tuple cl:t tm)) (_ (raise exception~53234)))))
     ((tuple pol tm%) (tuple pol (metis_of_atom env consts tm%)))))
@@ -36851,7 +37026,7 @@
 
 
 (defunc FOL_PREPARE_TAC (ths)
-  (holai.runtime:proof (#`REFUTE_THEN ASSUME_TAC)
+  (holai.runtime.core:proof (#`REFUTE_THEN ASSUME_TAC)
     THEN (#`POLY_ASSUME_TAC (map #'GEN_ALL ths))
     THEN
       (W
@@ -36871,7 +37046,7 @@
             (THENC (THENC PRESIMP_CONV (#`TOP_DEPTH_CONV #'BETA_CONV)) LAMBDA_ELIM_CONV)
             CONDS_CELIM_CONV)
           QUANT_BOOL_CONV))
-    THEN (REPEAT (holai.runtime:proof #'GEN_TAC #'ORELSE DISCH_TAC))
+    THEN (REPEAT (holai.runtime.core:proof #'GEN_TAC #'ORELSE DISCH_TAC))
     THEN (#`REFUTE_THEN ASSUME_TAC)
     THEN (RULE_ASSUM_TAC (CONV_RULE (THENC NNF_CONV SKOLEM_CONV)))
     THEN (REPEAT (FIRST_X_ASSUM #'CHOOSE_TAC))
@@ -36896,12 +37071,12 @@
     (labelsc
       ((reset (arg~53413)
         (match arg~53413
-          ((cl:type holai.runtime::unit-value) (assign type_invention_warning tiv)))))
+          ((cl:type holai.runtime.data:unit-value) (assign type_invention_warning tiv)))))
       (progn
         (assign type_invention_warning cl:nil)
         (handler-case
           (let ((y (#`f unit))) (cl:declare (cl:ignorable y)) (progn (reset unit) y))
-          (holai.runtime:ocaml-condition
+          (holai.runtime.data:ocaml-condition
             (exception~53422)
             (match exception~53422
               (e% (progn (reset unit) (raise e%)))
@@ -36931,7 +37106,7 @@
                   (without_warnings
                     (lambdac (arg~53480)
                       (match arg~53480
-                        ((cl:type holai.runtime::unit-value) (hol_of_thm ths% res)))))))
+                        ((cl:type holai.runtime.data:unit-value) (hol_of_thm ths% res)))))))
               (cl:declare (cl:ignorable ths% proof))
               (progn
                 (if (deref metisverb)
@@ -36972,7 +37147,7 @@
       g%)))
 
 (defunc GEN_METIS_TAC (ths)
-  (holai.runtime:proof (FOL_PREPARE_TAC ths) THEN #'PURE_METIS_TAC))
+  (holai.runtime.core:proof (FOL_PREPARE_TAC ths) THEN #'PURE_METIS_TAC))
 
 (in-package :holai.metis)
 

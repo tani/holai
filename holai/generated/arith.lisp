@@ -353,7 +353,9 @@
   (:import-from :holai.parser)
   (:import-from :holai.printer)
   (:import-from :holai.recursion)
-  (:import-from :holai.runtime)
+  (:import-from :holai.runtime.core)
+  (:import-from :holai.runtime.data)
+  (:import-from :holai.runtime.pattern)
   (:import-from :holai.simp)
   (:import-from :holai.tactics)
   (:import-from :holai.theorems)
@@ -650,7 +652,9 @@
     :holai.parser
     :holai.printer
     :holai.recursion
-    :holai.runtime
+    :holai.runtime.core
+    :holai.runtime.data
+    :holai.runtime.pattern
     :holai.simp
     :holai.tactics
     :holai.theorems)
@@ -1061,19 +1065,9 @@
     :holai.recursion
     prove_recursive_functions_exist
     new_recursive_definition)
-  (:shadowing-import-from
-    :holai.runtime
-    tuple
-    snd
-    proof
-    match
-    lambdac
-    labelsc
-    function-value
-    fst
-    =
-    <=
-    <)
+  (:shadowing-import-from :holai.runtime.core proof lambdac labelsc function-value = <= <)
+  (:shadowing-import-from :holai.runtime.data tuple snd fst)
+  (:shadowing-import-from :holai.runtime.pattern match)
   (:shadowing-import-from
     :holai.simp
     SIMP_TAC

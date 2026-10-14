@@ -191,7 +191,9 @@
   (:import-from :holai.parser)
   (:import-from :holai.preterm)
   (:import-from :holai.printer)
-  (:import-from :holai.runtime)
+  (:import-from :holai.runtime.core)
+  (:import-from :holai.runtime.data)
+  (:import-from :holai.runtime.pattern)
   (:export
     ADD_ASSUM
     AND_DEF
@@ -274,7 +276,9 @@
     :holai.parser
     :holai.preterm
     :holai.printer
-    :holai.runtime)
+    :holai.runtime.core
+    :holai.runtime.data
+    :holai.runtime.pattern)
   (:shadow
     A%
     ABS%%
@@ -527,20 +531,16 @@
     parse_as_infix
     parse_as_binder)
   (:shadowing-import-from
-    :holai.runtime
-    unit
-    tuple
-    snd
-    raise
-    match
+    :holai.runtime.core
     lambdac
     function-value
-    fst
     failwith
     Failure
     defunc
     =
     <>)
+  (:shadowing-import-from :holai.runtime.data unit tuple snd raise fst)
+  (:shadowing-import-from :holai.runtime.pattern match)
   (:export
     ADD_ASSUM
     AND_DEF
@@ -672,7 +672,7 @@
     (lambdac (th)
       (handler-case
         (#`iterm_fn (#`itype_fn th))
-        (holai.runtime:ocaml-condition
+        (holai.runtime.data:ocaml-condition
           (exception~146)
           (match exception~146 ((Failure _) (failwith "PINST")) (_ (raise exception~146))))))))
 
@@ -699,7 +699,7 @@
 (defunc EQT_ELIM (th)
   (handler-case
     (EQ_MP (SYM th) TRUTH)
-    (holai.runtime:ocaml-condition
+    (holai.runtime.data:ocaml-condition
       (exception~190)
       (match exception~190 ((Failure _) (failwith "EQT_ELIM")) (_ (raise exception~190))))))
 
@@ -784,7 +784,7 @@
                   th
                   (INST% (cl:cons (tuple l P) (cl:cons (tuple r Q) nil)) pth))
                 th)))
-          (holai.runtime:ocaml-condition
+          (holai.runtime.data:ocaml-condition
             (exception~400)
             (match exception~400
               ((Failure _) (failwith "CONJUNCT1"))
@@ -811,7 +811,7 @@
                   th
                   (INST% (cl:cons (tuple l P) (cl:cons (tuple r Q) nil)) pth))
                 th)))
-          (holai.runtime:ocaml-condition
+          (holai.runtime.data:ocaml-condition
             (exception~474)
             (match exception~474
               ((Failure _) (failwith "CONJUNCT2"))
@@ -820,7 +820,7 @@
 (defunc CONJ_PAIR (th)
   (handler-case
     (tuple (#`CONJUNCT1 th) (#`CONJUNCT2 th))
-    (holai.runtime:ocaml-condition
+    (holai.runtime.data:ocaml-condition
       (exception~510)
       (match exception~510
         ((Failure _) (failwith "CONJ_PAIR: Not a conjunction"))
@@ -887,14 +887,14 @@
 (defunc DISCH_ALL (th)
   (handler-case
     (DISCH_ALL (#`DISCH (hd (hyp th)) th))
-    (holai.runtime:ocaml-condition
+    (holai.runtime.data:ocaml-condition
       (exception~695)
       (match exception~695 ((Failure _) th) (_ (raise exception~695))))))
 
 (defunc UNDISCH (th)
   (handler-case
     (#`MP th (ASSUME (rand (rator (concl th)))))
-    (holai.runtime:ocaml-condition
+    (holai.runtime.data:ocaml-condition
       (exception~709)
       (match exception~709 ((Failure _) (failwith "UNDISCH")) (_ (raise exception~709))))))
 
@@ -1011,7 +1011,7 @@
                   (cl:cons (tuple abs%% P) (cl:cons (tuple tm x) nil))
                   pth)
                 th)))
-          (holai.runtime:ocaml-condition
+          (holai.runtime.data:ocaml-condition
             (exception~1068)
             (match exception~1068
               ((Failure _) (failwith "SPEC"))
@@ -1020,7 +1020,7 @@
 (defunc SPECL (tms th)
   (handler-case
     (rev_itlist SPEC tms th)
-    (holai.runtime:ocaml-condition
+    (holai.runtime.data:ocaml-condition
       (exception~1109)
       (match exception~1109 ((Failure _) (failwith "SPECL")) (_ (raise exception~1109))))))
 
@@ -1035,7 +1035,7 @@
   (match
     (handler-case
       (#`dest_forall (concl th))
-      (holai.runtime:ocaml-condition
+      (holai.runtime.data:ocaml-condition
         (exception~1182)
         (match exception~1182
           ((Failure _) (failwith "ISPEC: input theorem not universally quantified"))
@@ -1045,7 +1045,7 @@
         ((tyins
           (handler-case
             (type_match (snd (dest_var x)) (type_of t%) nil)
-            (holai.runtime:ocaml-condition
+            (holai.runtime.data:ocaml-condition
               (exception~1154)
               (match exception~1154
                 ((Failure _) (failwith "ISPEC can't type-instantiate input theorem"))
@@ -1053,7 +1053,7 @@
         (cl:declare (cl:ignorable tyins))
         (handler-case
           (#`SPEC t% (INST_TYPE tyins th))
-          (holai.runtime:ocaml-condition
+          (holai.runtime.data:ocaml-condition
             (exception~1167)
             (match exception~1167
               ((Failure _) (failwith "ISPEC: type variable(s) free in assumptions"))
@@ -1073,7 +1073,7 @@
               nil)))
         (cl:declare (cl:ignorable avs tyins))
         (SPECL tms (INST_TYPE tyins th))))
-    (holai.runtime:ocaml-condition
+    (holai.runtime.data:ocaml-condition
       (exception~1196)
       (match exception~1196 ((Failure _) (failwith "ISPECL")) (_ (raise exception~1196))))))
 
@@ -1148,7 +1148,7 @@
                           pth)))
                     (cl:declare (cl:ignorable bth cth))
                     (PROVE_HYP (EQ_MP (SYM bth) th) cth))))
-              (holai.runtime:ocaml-condition
+              (holai.runtime.data:ocaml-condition
                 (exception~1386)
                 (match exception~1386
                   ((Failure _) (failwith "EXISTS"))
@@ -1187,7 +1187,7 @@
                             pth)))
                       (cl:declare (cl:ignorable cmb pat th3 th4 th5))
                       (#`MP (#`MP th5 th4) th1)))))
-              (holai.runtime:ocaml-condition
+              (holai.runtime.data:ocaml-condition
                 (exception~1488)
                 (match exception~1488
                   ((Failure _) (failwith "CHOOSE"))
@@ -1231,7 +1231,7 @@
               th
               (INST% (cl:cons (tuple (concl th) P) (cl:cons (tuple tm Q) nil)) pth))
             th)
-          (holai.runtime:ocaml-condition
+          (holai.runtime.data:ocaml-condition
             (exception~1654)
             (match exception~1654
               ((Failure _) (failwith "DISJ1"))
@@ -1260,7 +1260,7 @@
               th
               (INST% (cl:cons (tuple tm P) (cl:cons (tuple (concl th) Q) nil)) pth))
             th)
-          (holai.runtime:ocaml-condition
+          (holai.runtime.data:ocaml-condition
             (exception~1733)
             (match exception~1733
               ((Failure _) (failwith "DISJ2"))
@@ -1298,7 +1298,7 @@
                     (PROVE_HYP
                       (#`DISCH r% th2)
                       (PROVE_HYP (#`DISCH l th1) (EQ_MP (DEDUCT_ANTISYM_RULE th0 th) th0))))))))
-          (holai.runtime:ocaml-condition
+          (holai.runtime.data:ocaml-condition
             (exception~1804)
             (match exception~1804
               ((Failure _) (failwith "DISJ_CASES"))
@@ -1322,7 +1322,7 @@
     (lambdac (tm)
       (handler-case
         (mk_comb (tuple neg_tm tm))
-        (holai.runtime:ocaml-condition
+        (holai.runtime.data:ocaml-condition
           (exception~1898)
           (match exception~1898
             ((Failure _) (failwith "mk_neg"))
@@ -1336,7 +1336,7 @@
     (lambdac (th)
       (handler-case
         (EQ_MP (INST% (cl:cons (tuple (rand (concl th)) P) nil) pth) th)
-        (holai.runtime:ocaml-condition
+        (holai.runtime.data:ocaml-condition
           (exception~1923)
           (match exception~1923
             ((Failure _) (failwith "NOT_ELIM"))
@@ -1350,7 +1350,7 @@
     (lambdac (th)
       (handler-case
         (EQ_MP (INST% (cl:cons (tuple (rand (rator (concl th))) P) nil) pth) th)
-        (holai.runtime:ocaml-condition
+        (holai.runtime.data:ocaml-condition
           (exception~1957)
           (match exception~1957
             ((Failure _) (failwith "NOT_INTRO"))
@@ -1372,7 +1372,7 @@
     (lambdac (th)
       (handler-case
         (#`MP (INST% (cl:cons (tuple (rand (concl th)) P) nil) pth) th)
-        (holai.runtime:ocaml-condition
+        (holai.runtime.data:ocaml-condition
           (exception~2006)
           (match exception~2006
             ((Failure _) (failwith "EQF_INTRO"))
@@ -1391,7 +1391,7 @@
     (lambdac (th)
       (handler-case
         (#`MP (INST% (cl:cons (tuple (rand (rator (concl th))) P) nil) pth) th)
-        (holai.runtime:ocaml-condition
+        (holai.runtime.data:ocaml-condition
           (exception~2055)
           (match exception~2055
             ((Failure _) (failwith "EQF_ELIM"))
@@ -1433,7 +1433,7 @@
         (let* ((abs%% (rand (concl th))) (ty (snd (dest_var (bndvar abs%%)))))
           (cl:declare (cl:ignorable abs%% ty))
           (#`MP (PINST (cl:cons (tuple ty aty) nil) (cl:cons (tuple abs%% P) nil) pth) th))
-        (holai.runtime:ocaml-condition
+        (holai.runtime.data:ocaml-condition
           (exception~2148)
           (match exception~2148
             ((Failure _) (failwith "EXISTENCE"))
@@ -1447,7 +1447,7 @@
 
 (defunc set_verbose_symbols (arg~2184)
   (match arg~2184
-    ((cl:type holai.runtime::unit-value)
+    ((cl:type holai.runtime.data:unit-value)
       (progn
         (do_list
           parse_as_binder
@@ -1460,7 +1460,7 @@
 
 (defunc unset_verbose_symbols (arg~2224)
   (match arg~2224
-    ((cl:type holai.runtime::unit-value)
+    ((cl:type holai.runtime.data:unit-value)
       (progn
         (do_list
           unparse_as_binder

@@ -58,8 +58,8 @@ let render ?(width=90) ?(prefix="") forms =
     | List [] -> put "()"
     | List [head;body] when
         (match unwrap head with
-         | Atom ("proof" | "holai.runtime:proof") -> true
-         | DeferredAtom s -> !s="proof" || !s="holai.runtime:proof"
+         | Atom ("proof" | "holai.runtime.core:proof") -> true
+         | DeferredAtom s -> !s="proof" || !s="holai.runtime.core:proof"
          | _ -> false) &&
         (match unwrap body with Fragment _ -> true | _ -> false) ->
       put "("; emit indent head; put " ";
@@ -72,7 +72,7 @@ let render ?(width=90) ?(prefix="") forms =
         | "defparameter" | "defpackage" | "in-package" -> 1 | _ -> 0 in
       List.iteri (fun i x ->
         if i<leading && flat_length x + !col+1<=width then put " " else newline (indent+2);
-        if i=0 && (head="labelsc" || head="holai.runtime:labelsc") then emit_definitions (indent+2) x
+        if i=0 && (head="labelsc" || head="holai.runtime.core:labelsc") then emit_definitions (indent+2) x
         else emit (indent+2) x) xs; put ")"
   and emit_definitions indent x = match x with
     | List definitions when flat_length x + !col > width ->

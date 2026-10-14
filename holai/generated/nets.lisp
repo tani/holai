@@ -120,7 +120,10 @@
   (:import-from :holai.basics)
   (:import-from :holai.fusion.hol)
   (:import-from :holai.lib)
-  (:import-from :holai.runtime)
+  (:import-from :holai.runtime.core)
+  (:import-from :holai.runtime.data)
+  (:import-from :holai.runtime.pattern)
+  (:import-from :holai.runtime.stdlib)
   (:export
     Cnet
     Lcnet
@@ -434,23 +437,30 @@
 (uiop:define-package
   :holai.nets.sikey
   (:use :cl)
-  (:mix :cl :holai.runtime)
+  (:mix :cl :holai.runtime.core :holai.runtime.data :holai.runtime.pattern)
   (:shadow ARG~11 ARG~7 C% I1 I2 S1 S2 compare)
-  (:shadowing-import-from :holai.runtime tuple match defunc <>)
+  (:shadowing-import-from :holai.runtime.core defunc <>)
+  (:shadowing-import-from :holai.runtime.data tuple)
+  (:shadowing-import-from :holai.runtime.pattern match)
   (:export compare))
 
 (uiop:define-package
   :holai.nets.intkey
   (:use :cl)
-  (:mix :cl :holai.runtime)
+  (:mix :cl :holai.runtime.core)
   (:shadow I1 I2 compare)
-  (:shadowing-import-from :holai.runtime defunc)
+  (:shadowing-import-from :holai.runtime.core defunc)
   (:export compare))
 
 (uiop:define-package
   :holai.nets.si_map
   (:use :cl)
-  (:mix :cl :holai.runtime)
+  (:mix
+    :cl
+    :holai.runtime.core
+    :holai.runtime.data
+    :holai.runtime.pattern
+    :holai.runtime.stdlib)
   (:shadow
     ACCU
     ARG~1151
@@ -566,25 +576,23 @@
   (:shadowing-import-from :cl +)
   (:shadowing-import-from :holai.nets.sikey compare)
   (:shadowing-import-from
-    :holai.runtime
-    tuple
+    :holai.runtime.core
     Some
-    raise
     None
-    match
     make-Some
     make-Not_found
     make-None
     invalid-arg
-    guard
     defvariant
     defunc
-    assert-true
     >=
     >
     ==
     =
     <)
+  (:shadowing-import-from :holai.runtime.data tuple raise)
+  (:shadowing-import-from :holai.runtime.pattern match guard)
+  (:shadowing-import-from :holai.runtime.stdlib assert-true)
   (:export
     add
     bindings
@@ -605,7 +613,12 @@
 (uiop:define-package
   :holai.nets.i_map
   (:use :cl)
-  (:mix :cl :holai.runtime)
+  (:mix
+    :cl
+    :holai.runtime.core
+    :holai.runtime.data
+    :holai.runtime.pattern
+    :holai.runtime.stdlib)
   (:shadow
     ACCU
     ARG~1258
@@ -721,25 +734,23 @@
   (:shadowing-import-from :cl +)
   (:shadowing-import-from :holai.nets.intkey compare)
   (:shadowing-import-from
-    :holai.runtime
-    tuple
+    :holai.runtime.core
     Some
-    raise
     None
-    match
     make-Some
     make-Not_found
     make-None
     invalid-arg
-    guard
     defvariant
     defunc
-    assert-true
     >=
     >
     ==
     =
     <)
+  (:shadowing-import-from :holai.runtime.data tuple raise)
+  (:shadowing-import-from :holai.runtime.pattern match guard)
+  (:shadowing-import-from :holai.runtime.stdlib assert-true)
   (:export
     add
     bindings
@@ -760,7 +771,14 @@
 (uiop:define-package
   :holai.nets
   (:use :cl)
-  (:mix :cl :holai.basics :holai.fusion.hol :holai.lib :holai.runtime)
+  (:mix
+    :cl
+    :holai.basics
+    :holai.fusion.hol
+    :holai.lib
+    :holai.runtime.core
+    :holai.runtime.data
+    :holai.runtime.pattern)
   (:shadow
     A
     ARGS
@@ -873,21 +891,17 @@
   (:shadowing-import-from :holai.lib tl mem length hd)
   (:shadowing-import-from :holai.nets.si_map union find empty add)
   (:shadowing-import-from
-    :holai.runtime
-    tuple
+    :holai.runtime.core
     Some
     record-update
     record-field
-    raise
     Not_found
     None
-    match
     make-Some
     make-None
     lambdac
     labelsc
     Invalid_argument
-    fst
     failwith
     Failure
     defvariant
@@ -895,6 +909,8 @@
     compare
     =
     <)
+  (:shadowing-import-from :holai.runtime.data tuple raise fst)
+  (:shadowing-import-from :holai.runtime.pattern match)
   (:export
     Cnet
     Lcnet
@@ -924,15 +940,15 @@
     ((tuple s1 i1)
       (match arg~11
         ((tuple s2 i2)
-          (let ((c% (holai.runtime:compare s1 s2)))
+          (let ((c% (holai.runtime.core:compare s1 s2)))
             (cl:declare (cl:ignorable c%))
-            (if (<> c% 0) c% (holai.runtime:compare i1 i2))))))))
+            (if (<> c% 0) c% (holai.runtime.core:compare i1 i2))))))))
 
 (in-package :holai.nets)
 
 (in-package :holai.nets.intkey)
 
-(defunc compare (i1 i2) (holai.runtime:compare i1 i2))
+(defunc compare (i1 i2) (holai.runtime.core:compare i1 i2))
 
 (in-package :holai.nets)
 
@@ -1475,7 +1491,7 @@
       (canon_eq (x y)
         (handler-case
           (= (compare x y) 0)
-          (holai.runtime:ocaml-condition
+          (holai.runtime.data:ocaml-condition
             (exception~2556)
             (match exception~2556
               ((Invalid_argument _) cl:nil)
@@ -1483,7 +1499,7 @@
       (canon_lt (x y)
         (handler-case
           (< (compare x y) 0)
-          (holai.runtime:ocaml-condition
+          (holai.runtime.data:ocaml-condition
             (exception~2568)
             (match exception~2568
               ((Invalid_argument _) cl:nil)
@@ -1499,7 +1515,7 @@
       (set_insert (x l)
         (handler-case
           (sinsert x l)
-          (holai.runtime:ocaml-condition
+          (holai.runtime.data:ocaml-condition
             (exception~2614)
             (match exception~2614 ((Failure "sinsert") l) (_ (raise exception~2614))))))
       (update_si (k% upd m)
@@ -1507,7 +1523,7 @@
           ((child0
             (handler-case
               (find k% m)
-              (holai.runtime:ocaml-condition
+              (holai.runtime.data:ocaml-condition
                 (exception~2627)
                 (match exception~2627 ((Not_found) empty_net) (_ (raise exception~2627)))))))
           (cl:declare (cl:ignorable child0))
@@ -1517,7 +1533,7 @@
           ((child0
             (handler-case
               (holai.nets.i_map:find k% m)
-              (holai.runtime:ocaml-condition
+              (holai.runtime.data:ocaml-condition
                 (exception~2645)
                 (match exception~2645 ((Not_found) empty_net) (_ (raise exception~2645)))))))
           (cl:declare (cl:ignorable child0))
@@ -1596,7 +1612,7 @@
                               (follow
                                 (append ntms rtms)
                                 (find k% (record-field r :cnets)))
-                              (holai.runtime:ocaml-condition
+                              (holai.runtime.data:ocaml-condition
                                 (exception~2842)
                                 (match exception~2842
                                   ((Not_found) nil)
@@ -1606,7 +1622,7 @@
                               (follow
                                 (append ntms rtms)
                                 (find k% (record-field r :lcnets)))
-                              (holai.runtime:ocaml-condition
+                              (holai.runtime.data:ocaml-condition
                                 (exception~2857)
                                 (match exception~2857
                                   ((Not_found) nil)
@@ -1616,7 +1632,7 @@
                               (follow
                                 (append ntms rtms)
                                 (holai.nets.i_map:find k% (record-field r :lnets)))
-                              (holai.runtime:ocaml-condition
+                              (holai.runtime.data:ocaml-condition
                                 (exception~2872)
                                 (match exception~2872
                                   ((Not_found) nil)
@@ -1638,13 +1654,13 @@
     ((canon_eq (x y)
       (handler-case
         (= (compare x y) 0)
-        (holai.runtime:ocaml-condition
+        (holai.runtime.data:ocaml-condition
           (exception~2931)
           (match exception~2931 ((Invalid_argument _) cl:nil) (_ (raise exception~2931))))))
       (canon_lt (x y)
         (handler-case
           (< (compare x y) 0)
-          (holai.runtime:ocaml-condition
+          (holai.runtime.data:ocaml-condition
             (exception~2943)
             (match exception~2943
               ((Invalid_argument _) cl:nil)

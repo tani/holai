@@ -368,7 +368,8 @@
   (:import-from :holai.parser)
   (:import-from :holai.realarith)
   (:import-from :holai.realax)
-  (:import-from :holai.runtime)
+  (:import-from :holai.runtime.core)
+  (:import-from :holai.runtime.data)
   (:import-from :holai.simp)
   (:import-from :holai.tactics)
   (:import-from :holai.theorems)
@@ -727,7 +728,8 @@
     :holai.parser
     :holai.realarith
     :holai.realax
-    :holai.runtime
+    :holai.runtime.core
+    :holai.runtime.data
     :holai.simp
     :holai.tactics
     :holai.theorems)
@@ -1212,7 +1214,8 @@
     REAL_ADD_LDISTRIB
     REAL_ADD_ASSOC
     real_abs)
-  (:shadowing-import-from :holai.runtime tuple proof lambdac)
+  (:shadowing-import-from :holai.runtime.core proof lambdac)
+  (:shadowing-import-from :holai.runtime.data tuple)
   (:shadowing-import-from
     :holai.simp
     SIMP_TAC

@@ -205,7 +205,9 @@
   (:import-from :holai.meson)
   (:import-from :holai.nums)
   (:import-from :holai.parser)
-  (:import-from :holai.runtime)
+  (:import-from :holai.runtime.core)
+  (:import-from :holai.runtime.data)
+  (:import-from :holai.runtime.pattern)
   (:import-from :holai.simp)
   (:import-from :holai.tactics)
   (:export NUM_NORMALIZE_CONV SEMIRING_NORMALIZERS_CONV))
@@ -226,7 +228,9 @@
     :holai.meson
     :holai.nums
     :holai.parser
-    :holai.runtime
+    :holai.runtime.core
+    :holai.runtime.data
+    :holai.runtime.pattern
     :holai.simp
     :holai.tactics)
   (:shadow
@@ -451,12 +455,8 @@
   (:shadowing-import-from :holai.nums is_numeral INDUCT_TAC)
   (:shadowing-import-from :holai.parser parse_term)
   (:shadowing-import-from
-    :holai.runtime
-    tuple
-    snd
-    raise
+    :holai.runtime.core
     proof
-    match
     lambdac
     labelsc
     function-value
@@ -466,6 +466,8 @@
     =
     <>
     <)
+  (:shadowing-import-from :holai.runtime.data tuple snd raise)
+  (:shadowing-import-from :holai.runtime.pattern match)
   (:shadowing-import-from :holai.simp REWRITE_TAC ASM_REWRITE_TAC)
   (:shadowing-import-from
     :holai.tactics
@@ -797,7 +799,7 @@
                                                       (TRANS
                                                         th1
                                                         (AP_TERM tm1 (#`NUM_ADD_CONV tm2))))))))
-                                            (holai.runtime:ocaml-condition
+                                            (holai.runtime.data:ocaml-condition
                                               (exception~358)
                                               (match exception~358
                                                 ((Failure _)
@@ -817,7 +819,7 @@
                                                             tm1
                                                             (#`NUM_SUC_CONV tm2)))))))
                                                 (_ (raise exception~358)))))))
-                                      (holai.runtime:ocaml-condition
+                                      (holai.runtime.data:ocaml-condition
                                         (exception~305)
                                         (match exception~305
                                           ((Failure _)
@@ -839,7 +841,7 @@
                                                           (AP_TERM
                                                             tm1
                                                             (#`NUM_SUC_CONV tm2))))))))
-                                              (holai.runtime:ocaml-condition
+                                              (holai.runtime.data:ocaml-condition
                                                 (exception~308)
                                                 (match exception~308
                                                   ((Failure _)
@@ -857,7 +859,7 @@
                                           th
                                           (INST% (cl:cons (tuple r% x_tm) nil) pthm_01))
                                         th)))
-                                  (holai.runtime:ocaml-condition
+                                  (holai.runtime.data:ocaml-condition
                                     (exception~455)
                                     (match exception~455
                                       ((Failure _) th)
@@ -970,7 +972,7 @@
                                                       (#`is_numeral r%))
                                                     l
                                                     (failwith ""))))))
-                                          (holai.runtime:ocaml-condition
+                                          (holai.runtime.data:ocaml-condition
                                             (exception~681)
                                             (match exception~681
                                               ((Failure _) tm)
@@ -1091,7 +1093,7 @@
                                                                           tm2
                                                                           (rand tm3)
                                                                           tm4))))))))))))
-                                                  (holai.runtime:ocaml-condition
+                                                  (holai.runtime.data:ocaml-condition
                                                     (exception~908)
                                                     (match exception~908
                                                       ((Failure _)
@@ -1168,7 +1170,7 @@
                                                                     nil))
                                                                 pthm_20)))))
                                                       (_ (raise exception~908))))))))
-                                          (holai.runtime:ocaml-condition
+                                          (holai.runtime.data:ocaml-condition
                                             (exception~746)
                                             (match exception~746
                                               ((Failure _)
@@ -1239,7 +1241,7 @@
                                                                               (rand tm3)
                                                                               tm4))))))))
                                                               (REFL tm))))))
-                                                    (holai.runtime:ocaml-condition
+                                                    (holai.runtime.data:ocaml-condition
                                                       (exception~752)
                                                       (match exception~752
                                                         ((Failure _)
@@ -1299,7 +1301,7 @@
                                                             (cl:declare
                                                               (cl:ignorable th2))
                                                             (TRANS th1 th2)))))))))
-                                            (holai.runtime:ocaml-condition
+                                            (holai.runtime.data:ocaml-condition
                                               (exception~1220)
                                               (match exception~1220
                                                 ((Failure _) (#`MONOMIAL_MUL_CONV tm))
@@ -1386,7 +1388,7 @@
                                     (handler-case
                                       (match (#`dest_pow tm)
                                         ((tuple x n) (tuple x (#`dest_numeral n))))
-                                      (holai.runtime:ocaml-condition
+                                      (holai.runtime.data:ocaml-condition
                                         (exception~1449)
                                         (match exception~1449
                                           ((Failure _)

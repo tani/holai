@@ -76,6 +76,10 @@ def main():
             record["exit_code"] = result.returncode
             (logs / name).write_text(result.stdout + result.stderr)
             if result.returncode != expected:
+                print(f"--- Failed compatibility command: {record['log']} ---", flush=True)
+                print(result.stdout, end="")
+                print(result.stderr, end="")
+                print(f"\n--- end {record['log']} ---", flush=True)
                 raise RuntimeError(f"Command exited {result.returncode}, expected {expected}: {shlex.join(record['command'])}; see {record['log']}")
             return result
         except subprocess.TimeoutExpired as error:
@@ -142,7 +146,7 @@ def main():
         evidence["counts"]["translated_fixture_units"] = len(FIXTURES)
         generated = [translated / (name + suffix)
                      for name in FIXTURES for suffix in (".lisp", ".map.json")]
-        generated += [translated / name for name in ("inventory.json", "package-systems.sexp")]
+        generated += [translated / "inventory.json"]
         evidence["translated_sha256"] = {
             str(path.relative_to(ROOT)): sha256(path)
             for path in sorted(generated)}
@@ -184,6 +188,17 @@ def main():
         evidence["status"] = "passed"
     except Exception as error:
         evidence["error"] = f"{type(error).__name__}: {error}"
+        if os.environ.get("GITHUB_ACTIONS") == "true":
+            message = evidence["error"][:2000]
+            failed = next((record for record in reversed(evidence["subprocesses"])
+                           if record["exit_code"] != record["expected_exit_code"]), None)
+            if failed is not None:
+                try:
+                    message += "\n" + (reports / failed["log"]).read_text(errors="replace")[-7999:]
+                except OSError:
+                    pass
+            message = message.replace("%", "%25").replace("\r", "%0D").replace("\n", "%0A")
+            print(f"::error title=Lisp compatibility failure ({implementation()})::{message}", flush=True)
         raise
     finally:
         save()

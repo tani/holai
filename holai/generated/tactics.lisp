@@ -548,7 +548,10 @@
   (:import-from :holai.lib)
   (:import-from :holai.parser)
   (:import-from :holai.printer)
-  (:import-from :holai.runtime)
+  (:import-from :holai.runtime.core)
+  (:import-from :holai.runtime.data)
+  (:import-from :holai.runtime.format)
+  (:import-from :holai.runtime.pattern)
   (:export
     ABS_TAC
     ACCEPT_TAC
@@ -694,7 +697,10 @@
     :holai.lib
     :holai.parser
     :holai.printer
-    :holai.runtime)
+    :holai.runtime.core
+    :holai.runtime.data
+    :holai.runtime.format
+    :holai.runtime.pattern)
   (:shadow
     A%
     A%%
@@ -1362,17 +1368,28 @@
     pp_print_colored_qterm
     isalnum)
   (:shadowing-import-from
-    :holai.runtime
-    unit
-    tuple
+    :holai.runtime.core
     string-of-int
     string-concat
-    std-formatter
     Some
-    snd
-    ref
-    raise
     proof
+    None
+    make-None
+    lambdac
+    labelsc
+    function-value
+    failwith
+    Failure
+    defunc
+    >
+    =
+    <>
+    <=
+    <)
+  (:shadowing-import-from :holai.runtime.data unit tuple snd ref raise fst deref assign)
+  (:shadowing-import-from
+    :holai.runtime.format
+    std-formatter
     printf-sprintf
     pp-set-max-boxes
     pp-print-string
@@ -1380,25 +1397,8 @@
     pp-open-hvbox
     pp-open-hbox
     pp-get-max-boxes
-    pp-close-box
-    None
-    match
-    make-None
-    lambdac
-    labelsc
-    guard
-    function-value
-    fst
-    failwith
-    Failure
-    deref
-    defunc
-    assign
-    >
-    =
-    <>
-    <=
-    <)
+    pp-close-box)
+  (:shadowing-import-from :holai.runtime.pattern match guard)
   (:export
     ABS_TAC
     ACCEPT_TAC
@@ -1725,7 +1725,7 @@
 (defunc ORELSE (tac1 tac2 g%)
   (handler-case
     (#`tac1 g%)
-    (holai.runtime:ocaml-condition
+    (holai.runtime.data:ocaml-condition
       (exception~587)
       (match exception~587 ((Failure _) (#`tac2 g%)) (_ (raise exception~587))))))
 
@@ -1772,7 +1772,7 @@
 (defunc ORELSE_TCL (ttcl1 ttcl2 ttac th)
   (handler-case
     (#`ttcl1 ttac th)
-    (holai.runtime:ocaml-condition
+    (holai.runtime.data:ocaml-condition
       (exception~744)
       (match exception~744 ((Failure _) (#`ttcl2 ttac th)) (_ (raise exception~744))))))
 
@@ -1784,7 +1784,7 @@
     ((REPEAT_GTCL% (ttcl ttac th g%)
       (handler-case
         (#`ttcl (REPEAT_GTCL% ttcl ttac) th g%)
-        (holai.runtime:ocaml-condition
+        (holai.runtime.data:ocaml-condition
           (exception~774)
           (match exception~774 ((Failure _) (#`ttac th g%)) (_ (raise exception~774)))))))
     #'REPEAT_GTCL%))
@@ -1870,7 +1870,7 @@
         ((th
           (handler-case
             (assoc s asl)
-            (holai.runtime:ocaml-condition
+            (holai.runtime.data:ocaml-condition
               (exception~1020)
               (match exception~1020
                 ((Failure _)
@@ -1886,7 +1886,7 @@
         ((th
           (handler-case
             (assoc s asl)
-            (holai.runtime:ocaml-condition
+            (holai.runtime.data:ocaml-condition
               (exception~1049)
               (match exception~1049
                 ((Failure _)
@@ -1911,7 +1911,7 @@
               asl))
             (next_hyp_name (arg~1112)
               (match arg~1112
-                ((cl:type holai.runtime::unit-value)
+                ((cl:type holai.runtime.data:unit-value)
                   (let ((n (string-concat "H" (string-of-int (deref idx)))))
                     (cl:declare (cl:ignorable n))
                     (progn
@@ -2016,7 +2016,7 @@
     ((cl:and g% (tuple asl w%))
       (handler-case
         (#`ACCEPT_TAC (REFL (rand w%)) g%)
-        (holai.runtime:ocaml-condition
+        (holai.runtime.data:ocaml-condition
           (exception~1378)
           (match exception~1378
             ((Failure _) (failwith "REFL_TAC"))
@@ -2054,7 +2054,7 @@
                           (let ((ath (ABS% v th)))
                             (cl:declare (cl:ignorable ath))
                             (EQ_MP (ALPHA (concl ath) (#`instantiate i% w%)) ath)))))))))))
-        (holai.runtime:ocaml-condition
+        (holai.runtime.data:ocaml-condition
           (exception~1400)
           (match exception~1400
             ((Failure _) (failwith "ABS_TAC"))
@@ -2076,7 +2076,7 @@
                   (lambdac (arg~1524 arg~1526)
                     (match arg~1526
                       ((cl:cons th1 (cl:cons th2 nil)) (MK_COMB% (tuple th1 th2))))))))))
-        (holai.runtime:ocaml-condition
+        (holai.runtime.data:ocaml-condition
           (exception~1497)
           (match exception~1497
             ((Failure _) (failwith "MK_COMB_TAC"))
@@ -2088,7 +2088,7 @@
     (lambdac (gl)
       (handler-case
         (#`tac gl)
-        (holai.runtime:ocaml-condition
+        (holai.runtime.data:ocaml-condition
           (exception~1573)
           (match exception~1573
             ((Failure _) (failwith "AP_TERM_TAC"))
@@ -2100,7 +2100,7 @@
     (lambdac (gl)
       (handler-case
         (#`tac gl)
-        (holai.runtime:ocaml-condition
+        (holai.runtime.data:ocaml-condition
           (exception~1594)
           (match exception~1594
             ((Failure _) (failwith "AP_THM_TAC"))
@@ -2112,7 +2112,7 @@
     (lambdac (gl)
       (handler-case
         (#`tac gl)
-        (holai.runtime:ocaml-condition
+        (holai.runtime.data:ocaml-condition
           (exception~1615)
           (match exception~1615
             ((Failure _) (failwith "AP_THM_TAC"))
@@ -2145,7 +2145,7 @@
                   (if (cl:and (cl:or (is_const r%) (is_var r%)) (not (free_in r% l)))
                     (SUBST_ALL_TAC (SYM th))
                     (fail unit)))))))))
-    (holai.runtime:ocaml-condition
+    (holai.runtime.data:ocaml-condition
       (exception~1652)
       (match exception~1652
         ((Failure _) (failwith "SUBST_VAR_TAC"))
@@ -2173,7 +2173,7 @@
                     (lambdac (i% arg~1784)
                       (match arg~1784
                         ((cl:cons th nil) (#`DISCH (#`instantiate i% ant) th))))))))
-            (holai.runtime:ocaml-condition
+            (holai.runtime.data:ocaml-condition
               (exception~1726)
               (match exception~1726
                 ((Failure _)
@@ -2187,7 +2187,7 @@
                           (match arg~1751
                             ((cl:cons th nil)
                               (#`NOT_INTRO (#`DISCH (#`instantiate i% ant) th)))))))
-                    (holai.runtime:ocaml-condition
+                    (holai.runtime.data:ocaml-condition
                       (exception~1729)
                       (match exception~1729
                         ((Failure _) (failwith "DISCH_TAC"))
@@ -2217,7 +2217,7 @@
               (lambdac (arg~1873 arg~1875)
                 (match arg~1875
                   ((cl:cons th1 (cl:cons th2 nil)) (#`IMP_ANTISYM_RULE th1 th2)))))))
-        (holai.runtime:ocaml-condition
+        (holai.runtime.data:ocaml-condition
           (exception~1850)
           (match exception~1850
             ((Failure _) (failwith "EQ_TAC"))
@@ -2239,7 +2239,7 @@
                 (cl:cons (tuple asl% (#`mk_imp (tuple tm w%))) nil)
                 (lambdac (i% arg~1926)
                   (match arg~1926 ((cl:cons th nil) (#`MP th (INSTANTIATE_ALL i% thm)))))))))
-        (holai.runtime:ocaml-condition
+        (holai.runtime.data:ocaml-condition
           (exception~1906)
           (match exception~1906
             ((Failure _) (failwith "UNDISCH_TAC"))
@@ -2260,7 +2260,7 @@
                 nil)
               (lambdac (i% arg~1992)
                 (match arg~1992 ((cl:cons th nil) (#`SPEC (#`instantiate i% t%) th)))))
-            (holai.runtime:ocaml-condition
+            (holai.runtime.data:ocaml-condition
               (exception~1971)
               (match exception~1971
                 ((Failure _) (failwith "SPEC_TAC"))
@@ -2296,7 +2296,7 @@
                 (match
                   (handler-case
                     (#`dest_forall w%)
-                    (holai.runtime:ocaml-condition
+                    (holai.runtime.data:ocaml-condition
                       (exception~2123)
                       (match exception~2123
                         ((Failure _) (failwith "X_GEN_TAC: Not universally quantified"))
@@ -2329,7 +2329,7 @@
           (match
             (handler-case
               (#`dest_exists xtm)
-              (holai.runtime:ocaml-condition
+              (holai.runtime.data:ocaml-condition
                 (exception~2227)
                 (match exception~2227
                   ((Failure _) (failwith "X_CHOOSE_TAC: not existential"))
@@ -2367,7 +2367,7 @@
             (match
               (handler-case
                 (#`dest_exists w%)
-                (holai.runtime:ocaml-condition
+                (holai.runtime.data:ocaml-condition
                   (exception~2283)
                   (match exception~2283
                     ((Failure _)
@@ -2400,7 +2400,7 @@
             (x% (#`mk_primed_var avoids x)))
           (cl:declare (cl:ignorable x avoids x%))
           (#`X_GEN_TAC x% (tuple asl w%)))
-        (holai.runtime:ocaml-condition
+        (holai.runtime.data:ocaml-condition
           (exception~2307)
           (match exception~2307
             ((Failure _) (failwith "GEN_TAC"))
@@ -2422,7 +2422,7 @@
                 (x% (#`mk_primed_var avoids x)))
               (cl:declare (cl:ignorable avoids x%))
               (#`X_CHOOSE_TAC x% xth (tuple asl w%)))))))
-    (holai.runtime:ocaml-condition
+    (holai.runtime.data:ocaml-condition
       (exception~2345)
       (match exception~2345
         ((Failure _) (failwith "CHOOSE_TAC"))
@@ -2439,7 +2439,7 @@
               (cl:cons (tuple asl l) (cl:cons (tuple asl r%) nil))
               (lambdac (arg~2413 arg~2415)
                 (match arg~2415 ((cl:cons th1 (cl:cons th2 nil)) (#`CONJ th1 th2)))))))
-        (holai.runtime:ocaml-condition
+        (holai.runtime.data:ocaml-condition
           (exception~2396)
           (match exception~2396
             ((Failure _) (failwith "CONJ_TAC"))
@@ -2456,7 +2456,7 @@
               (cl:cons (tuple asl l) nil)
               (lambdac (i% arg~2459)
                 (match arg~2459 ((cl:cons th nil) (#`DISJ1 th (#`instantiate i% r%))))))))
-        (holai.runtime:ocaml-condition
+        (holai.runtime.data:ocaml-condition
           (exception~2445)
           (match exception~2445
             ((Failure _) (failwith "DISJ1_TAC"))
@@ -2473,7 +2473,7 @@
               (cl:cons (tuple asl r%) nil)
               (lambdac (i% arg~2502)
                 (match arg~2502 ((cl:cons th nil) (#`DISJ2 (#`instantiate i% l) th)))))))
-        (holai.runtime:ocaml-condition
+        (holai.runtime.data:ocaml-condition
           (exception~2488)
           (match exception~2488
             ((Failure _) (failwith "DISJ2_TAC"))
@@ -2499,7 +2499,7 @@
                       (match arg~2567
                         ((cl:cons th1 (cl:cons th2 nil))
                           (#`DISJ_CASES (INSTANTIATE_ALL i% dth) th1 th2))))))))))))
-    (holai.runtime:ocaml-condition
+    (holai.runtime.data:ocaml-condition
       (exception~2528)
       (match exception~2528
         ((Failure _) (failwith "DISJ_CASES_TAC"))
@@ -2515,7 +2515,7 @@
             (let ((th (#`CONTR w% cth)))
               (cl:declare (cl:ignorable th))
               (tuple null_meta nil (propagate_thm th)))
-            (holai.runtime:ocaml-condition
+            (holai.runtime.data:ocaml-condition
               (exception~2613)
               (match exception~2613
                 ((Failure _) (failwith "CONTR_TAC"))
@@ -2531,7 +2531,7 @@
               (let ((ith (#`PART_MATCH #'I th w%)))
                 (cl:declare (cl:ignorable ith))
                 (tuple null_meta nil (propagate_thm ith)))
-              (holai.runtime:ocaml-condition
+              (holai.runtime.data:ocaml-condition
                 (exception~2651)
                 (match exception~2651
                   ((Failure _) (failwith "ACCEPT_TAC"))
@@ -2559,7 +2559,7 @@
                       (tm3 (hd (holai.fusion.hol:hyp th3))))
                     (cl:declare (cl:ignorable th1 th2 evs th3 tm3))
                     (#`MP (#`DISCH tm (GEN_ALL (#`DISCH tm3 (UNDISCH th3)))) th)))))))
-        (holai.runtime:ocaml-condition
+        (holai.runtime.data:ocaml-condition
           (exception~2684)
           (match exception~2684
             ((Failure _) (failwith "MATCH_MP_TAC: Bad theorem"))
@@ -2577,7 +2577,7 @@
                 (cl:cons (tuple asl lant) nil)
                 (lambdac (i% arg~2786)
                   (match arg~2786 ((cl:cons th% nil) (#`MP (INSTANTIATE_ALL i% xth) th%))))))
-            (holai.runtime:ocaml-condition
+            (holai.runtime.data:ocaml-condition
               (exception~2766)
               (match exception~2766
                 ((Failure _) (failwith "MATCH_MP_TAC: No match"))
@@ -2694,7 +2694,7 @@
 (defunc STRIP_TAC (g%)
   (handler-case
     (STRIP_GOAL_THEN STRIP_ASSUME_TAC g%)
-    (holai.runtime:ocaml-condition
+    (holai.runtime.data:ocaml-condition
       (exception~3148)
       (match exception~3148
         ((Failure _) (failwith "STRIP_TAC"))
@@ -2763,7 +2763,7 @@
                       (#`holai.bool:EXISTS
                         (tuple (#`instantiate i% w%) (#`instantiate i% t%))
                         th))))))))
-        (holai.runtime:ocaml-condition
+        (holai.runtime.data:ocaml-condition
           (exception~3320)
           (match exception~3320
             ((Failure _) (failwith "X_META_EXISTS_TAC"))
@@ -3057,7 +3057,7 @@
                 th
                 (handler-case
                   (EQ_MP (ALPHA t%% t%) th)
-                  (holai.runtime:ocaml-condition
+                  (holai.runtime.data:ocaml-condition
                     (exception~4170)
                     (match exception~4170
                       ((Failure _)
@@ -3082,7 +3082,7 @@
 
 (defunc flush_goalstack (arg~4238)
   (match arg~4238
-    ((cl:type holai.runtime::unit-value)
+    ((cl:type holai.runtime.data:unit-value)
       (let ((l (deref current_goalstack)))
         (cl:declare (cl:ignorable l))
         (assign current_goalstack (cl:cons (hd l) nil))))))
@@ -3160,7 +3160,7 @@
 
 (defunc b (arg~4433)
   (match arg~4433
-    ((cl:type holai.runtime::unit-value)
+    ((cl:type holai.runtime.data:unit-value)
       (let ((l (deref current_goalstack)))
         (cl:declare (cl:ignorable l))
         (progn
@@ -3170,22 +3170,22 @@
           (deref current_goalstack))))))
 
 (defunc p (arg~4456)
-  (match arg~4456 ((cl:type holai.runtime::unit-value) (deref current_goalstack))))
+  (match arg~4456 ((cl:type holai.runtime.data:unit-value) (deref current_goalstack))))
 
 (defunc top_realgoal (arg~4463)
   (match arg~4463
-    ((cl:type holai.runtime::unit-value)
+    ((cl:type holai.runtime.data:unit-value)
       (match (deref current_goalstack)
         ((cl:cons (tuple _ (cl:cons (tuple asl w%) _) _) _) (tuple asl w%))))))
 
 (defunc top_goal (arg~4486)
   (match arg~4486
-    ((cl:type holai.runtime::unit-value)
+    ((cl:type holai.runtime.data:unit-value)
       (match (top_realgoal unit)
         ((tuple asl w%) (tuple (map (o #'concl (function-value #'snd 1)) asl) w%))))))
 
 (defunc top_thm (arg~4506)
   (match arg~4506
-    ((cl:type holai.runtime::unit-value)
+    ((cl:type holai.runtime.data:unit-value)
       (match (deref current_goalstack) ((cl:cons (tuple _ nil f) _) (#`f null_inst nil))))))
 

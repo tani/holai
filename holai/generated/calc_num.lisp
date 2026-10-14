@@ -336,11 +336,13 @@
   (:import-from :holai.meson)
   (:import-from :holai.nums)
   (:import-from :holai.parser)
-  (:import-from :holai.runtime)
+  (:import-from :holai.runtime.core)
+  (:import-from :holai.runtime.data)
+  (:import-from :holai.runtime.pattern)
+  (:import-from :holai.runtime.stdlib)
   (:import-from :holai.simp)
   (:import-from :holai.tactics)
   (:import-from :holai.theorems)
-  (:import-from :holai.wf)
   (:export
     ARITH
     ARITH_ADD
@@ -408,7 +410,10 @@
     :holai.meson
     :holai.nums
     :holai.parser
-    :holai.runtime
+    :holai.runtime.core
+    :holai.runtime.data
+    :holai.runtime.pattern
+    :holai.runtime.stdlib
     :holai.simp
     :holai.tactics
     :holai.theorems)
@@ -892,28 +897,20 @@
     INDUCT_TAC)
   (:shadowing-import-from :holai.parser parse_term)
   (:shadowing-import-from
-    :holai.runtime
-    unit
-    tuple
-    snd
-    raise
+    :holai.runtime.core
     quo-num
     proof
     num
     mod-num
-    match
     make-Some
     lambdac
     labelsc
     int-mod
     int-div
-    guard
     function-value
-    fst
     failwith
     Failure
     compare
-    array-of-list
     array-get
     >=
     >
@@ -921,6 +918,9 @@
     =
     <=
     <)
+  (:shadowing-import-from :holai.runtime.data unit tuple snd raise fst)
+  (:shadowing-import-from :holai.runtime.pattern match guard)
+  (:shadowing-import-from :holai.runtime.stdlib array-of-list)
   (:shadowing-import-from
     :holai.simp
     SIMP_TAC
@@ -4404,7 +4404,7 @@
                                                         (INST%
                                                           (cl:cons (tuple tm% m_tm) nil)
                                                           fth)))))))))
-                                        (holai.runtime:ocaml-condition
+                                        (holai.runtime.data:ocaml-condition
                                           (exception~5904)
                                           (match exception~5904
                                             ((Failure _) (failwith "NUM_EXP_CONV"))
@@ -4733,7 +4733,7 @@
                       (#`MP
                         (INST% (cl:cons (tuple tm% m) (cl:cons (tuple r% n) nil)) pth)
                         th1)))))))
-          (holai.runtime:ocaml-condition
+          (holai.runtime.data:ocaml-condition
             (exception~7174)
             (match exception~7174
               ((Failure _) (failwith "NUM_PRE_CONV"))
@@ -4781,7 +4781,7 @@
                     (th0 (#`NUM_ADD_CONV (mk_binop plus k% r%))))
                   (cl:declare (cl:ignorable kn k% pth th0))
                   (#`MP pth th0))))))
-        (holai.runtime:ocaml-condition
+        (holai.runtime.data:ocaml-condition
           (exception~7281)
           (match exception~7281
             ((Failure _) (failwith "NUM_SUB_CONV"))
@@ -4839,7 +4839,7 @@
             (match (dest_binop dtm tm)
               ((tuple xt yt)
                 (#`CONJUNCT1 (NUM_DIVMOD_CONV (#`dest_numeral xt) (#`dest_numeral yt)))))
-            (holai.runtime:ocaml-condition
+            (holai.runtime.data:ocaml-condition
               (exception~7489)
               (match exception~7489
                 ((Failure _) (failwith "NUM_DIV_CONV"))
@@ -4849,7 +4849,7 @@
             (match (dest_binop mtm tm)
               ((tuple xt yt)
                 (#`CONJUNCT2 (NUM_DIVMOD_CONV (#`dest_numeral xt) (#`dest_numeral yt)))))
-            (holai.runtime:ocaml-condition
+            (holai.runtime.data:ocaml-condition
               (exception~7512)
               (match exception~7512
                 ((Failure _) (failwith "NUM_MOD_CONV"))
@@ -4906,7 +4906,7 @@
                 (if (= (fst (dest_const l)) "FACT")
                   (NUM_FACT_CONV% (#`dest_numeral r%))
                   (fail unit))))
-            (holai.runtime:ocaml-condition
+            (holai.runtime.data:ocaml-condition
               (exception~7671)
               (match exception~7671
                 ((Failure _) (failwith "NUM_FACT_CONV"))
@@ -5015,7 +5015,8 @@
     (lambdac (compset)
       (itlist
         (lambdac (newc arg~7905)
-          (match arg~7905 ((cl:type holai.runtime::unit-value) (add_conv newc compset))))
+          (match arg~7905
+            ((cl:type holai.runtime.data:unit-value) (add_conv newc compset))))
         convlist
         unit))))
 

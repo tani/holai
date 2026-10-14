@@ -1,7 +1,7 @@
 {
   "build_from_sources": true,
-  "compared_generated_files": 94,
+  "compared_generated_files": 93,
   "identical_output": true,
-  "wall_seconds": 6.447,
+  "wall_seconds": 6.417,
   "source_pins_unchanged": true
 }

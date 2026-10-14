@@ -145,7 +145,9 @@
   (:import-from :holai.nums)
   (:import-from :holai.parser)
   (:import-from :holai.realax)
-  (:import-from :holai.runtime)
+  (:import-from :holai.runtime.core)
+  (:import-from :holai.runtime.data)
+  (:import-from :holai.runtime.pattern)
   (:import-from :holai.simp)
   (:import-from :holai.tactics)
   (:import-from :holai.theorems)
@@ -211,7 +213,9 @@
     :holai.nums
     :holai.parser
     :holai.realax
-    :holai.runtime
+    :holai.runtime.core
+    :holai.runtime.data
+    :holai.runtime.pattern
     :holai.simp
     :holai.tactics
     :holai.theorems)
@@ -413,18 +417,13 @@
     REAL_ADD_ASSOC
     real_abs)
   (:shadowing-import-from
-    :holai.runtime
-    unit
-    tuple
-    raise
+    :holai.runtime.core
     proof
     numdom
-    match
     make-Some
     lambdac
     labelsc
     gcd-num
-    fst
     failwith
     Failure
     defunc
@@ -433,6 +432,8 @@
     <>
     <=
     <)
+  (:shadowing-import-from :holai.runtime.data unit tuple raise fst)
+  (:shadowing-import-from :holai.runtime.pattern match)
   (:shadowing-import-from
     :holai.simp
     REWRITE_TAC
@@ -1205,7 +1206,7 @@
                               (th2 (AP_TERM amp_tm (#`NUM_ADD_CONV tm1))))
                             (cl:declare (cl:ignorable th1 tm1 th2))
                             (TRANS th1 th2)))))))
-                (holai.runtime:ocaml-condition
+                (holai.runtime.data:ocaml-condition
                   (exception~1159)
                   (match exception~1159
                     ((Failure _) (failwith "REAL_INT_ADD_CONV"))
@@ -1308,7 +1309,8 @@
     (lambdac (compset)
       (itlist
         (lambdac (newc arg~1755)
-          (match arg~1755 ((cl:type holai.runtime::unit-value) (add_conv newc compset))))
+          (match arg~1755
+            ((cl:type holai.runtime.data:unit-value) (add_conv newc compset))))
         convlist
         unit))))
 

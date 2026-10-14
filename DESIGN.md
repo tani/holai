@@ -43,9 +43,8 @@ holai/
   Makefile                  build, regeneration, test, release
   ml2cl/                    five OCaml translator modules, flattened
   holai/runtime/            Common Lisp compatibility layer
-  holai.asd                 single root ASDF definition and provider registry
-  holai/all.lisp            inferred terminal-core entry
-  holai/generated/          generated Lisp, maps and package-systems.sexp
+  holai.asd                 handwritten explicit serial ASDF systems
+  holai/generated/          generated Lisp, maps and inventory
   holai/tests/fixtures/     small source regression examples
   holai/tests/              compiler, runtime and differential tests
   misc/scripts/             reusable build, release and measurement scripts
@@ -59,14 +58,17 @@ runtime source, pinned source inputs, or regression fixtures are absent.
 Generated files are never hand-edited. Repair the translator and regenerate.
 Temporary compiler outputs and dependency checkout histories are not releases.
 
-Current user-authorized API contract: CLI `bin/ml2cl`, runtime package
-`holai.runtime`, generated packages `holai.<input-stem>` and their nested module
-packages, ASDF systems `holai`, `holai/runtime` and inferred
-`holai/generated/<input-stem>` systems. No compatibility aliases or `rt`
-nickname are introduced. This supersedes the earlier AGENTS
-retain-hol2cl rule and section 28's organization-only API policy. Algorithms,
-data representations, vendor input bytes/digests and source identities do not
-change. Generated Lisp and maps must be regenerated together for new names.
+Current user-authorized API contract: CLI `bin/ml2cl`, definition package
+`holai.define`, dot-separated runtime packages `holai.runtime.<unit>`, generated
+roots `holai.<input-stem>` (not `holai.generated.*`) and static
+children separated by dots. Root `holai.asd` handwrites ordinary serial systems
+`holai/runtime` (runtime only) and `holai` (full core); there are no inferred
+per-source systems, provider registries, load-order S-expression data, empty
+entry files, compatibility aliases or shared runtime reexports.
+Algorithms, binding IDs, lexical dotted prefixes, constructor family identities,
+vendor input bytes/digests and source scopes remain unchanged. Generated Lisp
+and maps must be regenerated together. The explicit-ASDF cutover passed local
+release in 287.53 seconds; retained earlier measurements below remain historical.
 Root `_build/`, `bin/`, `dist/`, build files, licensing and vendor inputs remain.
 The historical sections below retain old names, paths, archive names and measured
 results as facts about their original revisions; raw evidence is relocated, not
@@ -124,7 +126,7 @@ does not select CCL/MKCL/CMUCL/Clasp. Every shell requires usable SBCL.
 Ordinary matrix phases run the full SBCL suite and the additional hosts'
 120-second-per-process runtime/translated-fixture compatibility profiles.
 All selected profiles gate release, but compatibility is not a full-core claim.
-Only SBCL supplies full oracle/registry/PROOF and cold 52-unit inferred-ASDF
+Only SBCL supplies full oracle/registry/PROOF and cold 52-unit explicit-ASDF
 evidence by default; additional-host full-core runs are explicitly optional.
 Release packaging compares observed host versions and resolved executables with
 `HOLAI_LISP_VERSIONS`/`HOLAI_LISP_EXECUTABLES` exported by the pinned shell;
@@ -132,16 +134,25 @@ the CLISP source-version prefix excludes its separately recorded build details.
 This replaces the obsolete ECL 21.2.1-only version gate without accepting
 arbitrary host versions. Run `make release` inside `nix develop`.
 
-The SHA-pinned, read-only GitHub Actions workflow runs `nix flake check` and
-ordinary `make release` independently on aarch64-linux, aarch64-darwin and
-x86_64-linux. Each job retains its own report/log/source-archive artifact even
-on failure; reports from different platforms are never merged. Additional-host
-full-core work remains opt-in, not CI. Local all-three-platform evaluation
-(`--all-systems --no-build`) and actionlint 1.7.12 passed; this is configuration
-evidence, not hosted execution. Runtime validation of the current pin is local
-ARM64 Linux only; Darwin/x86 runtime and all hosted Actions results remain
-unobserved. Flake checks exercise ASDF startup only, not the production runtime;
-ordinary release exercises the actual runtime.
+The SHA-pinned, read-only GitHub Actions workflow uses a fail-fast-disabled
+Cartesian matrix: aarch64-linux (`ubuntu-24.04-arm`), aarch64-darwin (`macos-15`)
+and x86_64-linux (`ubuntu-24.04`), each crossed with SBCL/ECL/ABCL/CLISP.
+All 12 jobs validate their actual Nix system and selected implementation's
+exported package availability; missing targets fail rather than silently skip.
+SBCL jobs run `HOLAI_LISPS=sbcl make release`. Other jobs run `make build` and
+`HOLAI_LISP=<implementation> python3 holai/tests/compatibility.py`, not full core.
+Checkout credentials are not persisted; artifacts are host/implementation-specific
+and retained on failure. Additional-host full-core work remains opt-in.
+The preceding hosted run passed full SBCL on all three platforms, but ECL failed
+on Linux and CLISP failed on Darwin and x86 Linux. Outer logs did not expose the
+underlying Lisp diagnostics. Do not infer a green new matrix or Darwin compatibility.
+Local explicit-ASDF `make release` exited 0 in 287.53 seconds: SBCL full-core,
+all three additional-host compatibility profiles, cold diagnostics, 93-output
+clean regeneration, 55 unchanged pins and packaging passed. Actionlint passed
+locally; execution of the new push's 12-job matrix remains pending, not CI green.
+CLISP's earlier hosted failures remain unresolved. Captured phase stdout/stderr
+and public GitHub Actions error annotations expose failures for precise root
+diagnosis, not blind retries. Flake checks exercise ASDF startup, not production runtime.
 
 Use Camlp5's **MLast AST**, not a regular-expression approximation and not an
 OCaml parser that cannot recognize HOL Light syntax. Separate:
@@ -408,9 +419,9 @@ initialization and the arithmetic checkpoint are in section 21.
 
 Literal `needs "file.ml"` declarations are recognized as static dependency records. They
 do not execute the OCaml loader. Multi-file translation follows a declared
-ordered manifest and emits package-provider data plus predecessor dependencies
-for genuine ASDF package inference (§37). Other file-loading forms remain
-unsupported until there is a tested loader design.
+ordered manifest; the handwritten ordinary serial ASDF systems preserve that
+physical order (§37), without generated provider or predecessor-loading data.
+Other file-loading forms remain unsupported until there is a tested loader design.
 
 ## 10. Formatting, comments, and reproducibility
 
@@ -3066,44 +3077,62 @@ authorized committing and pushing to `tani/holai` main. Authorization and
 validation are not evidence that a push occurred, nor authorization or validation
 of the new §37 cutover.
 
-## 37. One ASDF definition and inferred package dependencies
+## 37. One explicit ASDF definition and package ownership
 
-### 37.1 Systems, providers and ordering
+### 37.1 Systems and handwritten ordering
 
-Maintain exactly one production system-definition file, root `holai.asd`.
-The main `holai` system is an ASDF `package-inferred-system` with pathname
-`holai/` and dependency `holai/all`. The maintained `holai/all.lisp` uses
-`uiop:define-package` and an empty import from terminal package `holai.define`;
-it is a real inferred orchestration source, not a public reexport facade.
-Public packages remain `holai.runtime`, `holai.<input-stem>` and their existing
-nested module packages. There are no old-system compatibility aliases.
+The user's current explicit-load-order/dotted-package instruction supersedes
+the preceding package-inferred design. Maintain exactly one production
+system-definition file, root `holai.asd`, containing two ordinary serial systems.
+`holai/runtime` explicitly lists data, pattern-registry, pattern, core, format,
+stdlib under `holai/runtime/`. `holai` depends on `holai/runtime` and explicitly
+lists all 46 generated Lisp files in original `vendor/CORE_FILES.json` order,
+system through define, under `holai/generated/`. These lists are handwritten,
+not generated from a manifest. The vendor manifest remains the independent
+audit oracle for physical compile/load ordering.
 
-`holai/runtime` is the only explicit source-component exception, defined in
-the same ASD: package, pattern, core, format and stdlib retain their original
-five-file order and shared package. Runtime-only callers require ASDF before
-reading UIOP declarations, register only the repository root and load this
-subsystem without initializing the HOL core.
+Packages are independent of filesystem paths and system IDs: runtime owners
+use `holai.runtime.<unit>`, generated roots use `holai.<input-stem>`, and static
+children use dot-separated descendants. Lexical module prefixes and OCaml
+qualification retain their dots. There are no old-package/system aliases,
+inferred per-source systems or umbrella runtime facade.
 
-The translator emits `holai/generated/package-systems.sexp`, one ordered
-readable data form mapping each input stem to every uppercase package name
-provided by its physical file, including private, nested and empty-export
-packages. The root ASD reads this data and registers providers as
-`holai/generated/<stem>`; it maps `HOLAI.RUNTIME` to `holai/runtime`.
-Root ASD and entry are maintained outside generated output. Arbitrary
-`--output-dir` translation never overwrites them. The 46 Lisp/map pairs plus
-inventory and provider data still total 94 generated outputs.
-Only after all inputs translate successfully does the CLI remove its owned
-obsolete generated ASD files. Rejected translation leaves prior output
-byte-for-byte unchanged; unrelated outputs are not pruned.
+The six runtime files keep their actual implementation ownership: data →
+pattern-registry → pattern → core → format → stdlib. Data and registry leaf units
+break dependency cycles; printing belongs to format. Cross-module macro-template
+helpers are exported by their actual owners. Runtime-only callers require ASDF
+before reading UIOP declarations, register only the repository root and load
+`holai/runtime` without initializing the HOL core. The full physical production
+order is six runtime units followed by 46 generated units, 52 total.
+The obsolete empty `holai/all.lisp` entry is removed.
+Callers explicitly load the definition with
+`(asdf:load-asd #p"/absolute/path/to/holai/holai.asd")` before loading a system.
+The runtime system ID is `holai/runtime`, not the obsolete `holai-runtime`.
 
-Stock ASDF scans only the first top-level package declaration for dependencies.
-Each generated file therefore starts with a real UIOP root-package shell,
-with owned shadows/exports/internals and empty imports from runtime, the
-previous input's root package and every externally referenced provider.
-Exclude every same-file package from these dependency imports to avoid inferred
-self-dependencies. The predecessor edge preserves the original 46-file vendor
-initialization order rather than relying on dependency-list ordering.
-Create remaining guarded same-file shells before full selective imports.
+No generated provider registry or S-expression load-order files remain.
+Ordinary ASDF does not require package-provider registration: the explicit
+serial order creates imported packages before their consumers. The root ASD is
+maintained outside generated output and arbitrary `--output-dir` translation
+never overwrites it. Generated output is 93 files: 46 Lisp/map pairs plus
+inventory. Rejected translation leaves prior output byte-for-byte unchanged;
+successful regeneration removes owned obsolete metadata, not unrelated outputs.
+
+Package shells and full selective UIOP declarations retain reader availability,
+ownership, imports and shadows. Empty dependency imports or predecessor edges
+are not an ASDF loading mechanism. Static children in the same physical file
+share that file's serial position, without inferred self-dependencies.
+Guarded same-file shells precede complete selective imports.
+
+The cutover passed local `make release` in 287.53 seconds. Tagged SBCL evidence
+records 128 native and 69 PROOF checks; 1,149 rows (1,146 exact, two structural
+registry and one Random property); 194,839 core / 207,058 fixture-inclusive map
+ranges; and ten protected rejections. All 52 physical compile/load paths matched
+literal ASD order. Fresh-cache compiler errors, warnings, style warnings and
+notices were zero; separate load/initialization counts were 0/0/21/164.
+All four ordinary profiles passed, with additional-host full core unverified.
+Clean generation reproduced 93 outputs with 55 unchanged pins; the archive
+producer reported 427 payload files, not a fixed post-documentation ZIP byte size.
+Measurements in §§37.3–37.4 describe earlier inferred-loading revisions only.
 
 ### 37.2 Reader ownership and prefix reduction
 
@@ -3127,7 +3156,7 @@ PROOF is the explicit synthetic-head exception to unconditional qualification.
 Defer its printed head until the completed reader-owner namespace is known,
 then use the existing runtime-reference conflict policy and maker-shadow guard.
 An owner without an owned, lexical, shadowing or distinct imported PROOF conflict
-explicitly imports `holai.runtime:proof` and emits bare `proof`. Conflicting
+explicitly imports `holai.runtime.core:proof` and emits bare `proof`. Conflicting
 owners keep the qualified macro, preserving all source bindings and allocations.
 Do not reserve or rename PROOF during lowering to manufacture a safe import.
 Decide for the actual package reading the form: a lexical module shares its
@@ -3135,10 +3164,10 @@ enclosing owner's decision; a static child package has its own decision.
 The same safe-bare convention applies to maintained handwritten software
 development code, using explicit UIOP imports, not only end-user examples.
 
-This is a package/dependency and printed-reference cutover, not an algorithm,
-evaluation-order, declaration-boundary or public source-API change. The safe-bare
-extension passed the actual release run recorded in §37.4; §37.3 preserves the
-completed pre-extension cutover's historical measurements.
+This is a package/loading and printed-reference cutover, not an algorithm,
+evaluation-order, declaration-boundary or source-binding change. The safe-bare
+extension passed the earlier release recorded in §37.4; those results do not
+verify the current explicit-load-order/dotted-package cutover.
 
 ### 37.3 Historical verification of the preceding cutover
 
@@ -3274,8 +3303,8 @@ implementation returns T. Default restoration therefore uses its side effect
 only, restoring real SIG_DFL without consuming that contradictory return value.
 The current ECL run observed both catches, re-enable and third-signal OS exit -2.
 SBCL's cold cache must compile/load all 52 unique production pathnames in
-manifest order, with 47 genuine inferred components. Compiler instrumentation
-scopes diagnostics to actual ASDF COMPILE-OP boundaries. Load/initialization
+explicit manifest order, without requiring inferred-system classes or counters.
+Compiler instrumentation scopes diagnostics to actual ASDF COMPILE-OP boundaries. Load/initialization
 conditions and source warning notices remain separately reported, never silently
 suppressed or misclassified as compiler diagnostics.
 
@@ -3313,7 +3342,7 @@ the complete corpus comparison and the two existing OCaml-only initialization
 exceptions. Extra-host full-core streams and cold diagnostics are not ordinary
 release prerequisites. Availability and historical/incomplete attempts cannot
 substitute for any selected profile.
-Shared clean generation retains all 94 outputs and 55 source pins. Old root
+Shared clean generation requires all 93 outputs and 55 source pins. Old root
 SBCL reports/raw streams and benchmark tools remain historical evidence, never
 relabelled or overwritten with another host's output. Heap image saving remains an explicit
 SBCL-only scratch aid and is never a release prerequisite.

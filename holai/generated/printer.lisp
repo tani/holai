@@ -368,8 +368,10 @@
   (:import-from :holai.fusion)
   (:import-from :holai.fusion.hol)
   (:import-from :holai.lib)
-  (:import-from :holai.nets)
-  (:import-from :holai.runtime)
+  (:import-from :holai.runtime.core)
+  (:import-from :holai.runtime.data)
+  (:import-from :holai.runtime.format)
+  (:import-from :holai.runtime.pattern)
   (:export
     binders
     delete_user_color_printer
@@ -448,7 +450,16 @@
 (uiop:define-package
   :holai.printer
   (:use :cl)
-  (:mix :cl :holai.basics :holai.fusion :holai.fusion.hol :holai.lib :holai.runtime)
+  (:mix
+    :cl
+    :holai.basics
+    :holai.fusion
+    :holai.fusion.hol
+    :holai.lib
+    :holai.runtime.core
+    :holai.runtime.data
+    :holai.runtime.format
+    :holai.runtime.pattern)
   (:shadow
     A
     ABSF
@@ -866,9 +877,7 @@
     butlast
     assoc)
   (:shadowing-import-from
-    :holai.runtime
-    unit
-    tuple
+    :holai.runtime.core
     string-sub
     string-of-num
     string-make
@@ -876,14 +885,38 @@
     string-get
     string-escaped
     string-concat
-    std-formatter
     Some
-    snd
+    quo-num
+    partial
+    num
+    None
+    mod-num
+    make-Some
+    make-None
+    list-exists
+    lambdac
+    labelsc
+    function-value
+    failwith
+    Failure
+    defunc
+    char-chr
+    array-set
+    array-make
+    array-get
+    abs-num
+    >=
+    >
+    =
+    <>
+    <=
+    <)
+  (:shadowing-import-from :holai.runtime.data unit tuple snd ref raise fst deref assign)
+  (:shadowing-import-from
+    :holai.runtime.format
+    std-formatter
     set-max-boxes
     set-margin
-    ref
-    raise
-    quo-num
     print-string
     print-newline
     print-flush
@@ -905,45 +938,18 @@
     pp-open-box
     pp-get-max-boxes
     pp-close-box
-    partial
     open-vbox
     open-box
-    num
-    None
-    mod-num
-    match
-    make-Some
-    make-None
-    list-exists
-    lambdac
-    labelsc
     get-margin
-    function-value
-    fst
     formatter-of-buffer
     format-printf
     format-fprintf
     format-asprintf
-    failwith
-    Failure
-    deref
-    defunc
     close-box
-    char-chr
     buffer-reset
     buffer-create
-    buffer-contents
-    assign
-    array-set
-    array-make
-    array-get
-    abs-num
-    >=
-    >
-    =
-    <>
-    <=
-    <)
+    buffer-contents)
+  (:shadowing-import-from :holai.runtime.pattern match)
   (:export
     binders
     close-box
@@ -1189,7 +1195,7 @@
       (lambdac (ns) (assign reswords (subtract (deref reswords) ns)))
       (lambdac (n) (mem n (deref reswords)))
       (lambdac (arg~288)
-        (match arg~288 ((cl:type holai.runtime::unit-value) (deref reswords))))))
+        (match arg~288 ((cl:type holai.runtime.data:unit-value) (deref reswords))))))
   ((tuple reserve_words% unreserve_words% is_reserved_word% reserved_words%)
     (setf
       is_reserved_word
@@ -1231,7 +1237,7 @@
       (lambdac (n) (assign binder_list (union (deref binder_list) (cl:cons n nil))))
       (lambdac (n) (mem n (deref binder_list)))
       (lambdac (arg~344)
-        (match arg~344 ((cl:type holai.runtime::unit-value) (deref binder_list))))))
+        (match arg~344 ((cl:type holai.runtime.data:unit-value) (deref binder_list))))))
   ((tuple unparse_as_binder% parse_as_binder% parses_as_binder% binders%)
     (setf
       binders
@@ -1259,7 +1265,7 @@
       (lambdac (n) (assign prefix_list (union (deref prefix_list) (cl:cons n nil))))
       (lambdac (n) (mem n (deref prefix_list)))
       (lambdac (arg~400)
-        (match arg~400 ((cl:type holai.runtime::unit-value) (deref prefix_list))))))
+        (match arg~400 ((cl:type holai.runtime.data:unit-value) (deref prefix_list))))))
   ((tuple unparse_as_prefix% parse_as_prefix% is_prefix% prefixes%)
     (setf
       is_prefix
@@ -1314,7 +1320,7 @@
                       (deref infix_list))))))))
         (lambdac (n) (assoc n (deref infix_list)))
         (lambdac (arg~514)
-          (match arg~514 ((cl:type holai.runtime::unit-value) (deref infix_list)))))))
+          (match arg~514 ((cl:type holai.runtime.data:unit-value) (deref infix_list)))))))
   ((tuple unparse_as_infix% parse_as_infix% get_infix_status% infixes%)
     (setf
       get_infix_status
@@ -1520,13 +1526,13 @@
       (sot (pr ty)
         (handler-case
           (dest_vartype ty)
-          (holai.runtime:ocaml-condition
+          (holai.runtime.data:ocaml-condition
             (exception~789)
             (match exception~789
               ((Failure _)
                 (handler-case
                   (string-of-num (dest_finty ty))
-                  (holai.runtime:ocaml-condition
+                  (holai.runtime.data:ocaml-condition
                     (exception~792)
                     (match exception~792
                       ((Failure _)
@@ -1581,7 +1587,7 @@
         (if (= ss nil)
           unit
           (match (if flag (color_print_str fmt "(") unit)
-            ((cl:type holai.runtime::unit-value)
+            ((cl:type holai.runtime.data:unit-value)
               (let
                 ((tuple_printer
                   (end_itlist
@@ -1590,18 +1596,18 @@
                     ss)))
                 (cl:declare (cl:ignorable tuple_printer))
                 (match (#`tuple_printer fmt)
-                  ((cl:type holai.runtime::unit-value)
+                  ((cl:type holai.runtime.data:unit-value)
                     (if flag (color_print_str fmt ")") unit))))))))
       (sot (pr ty fmt)
         (handler-case
           (#`pp_print_colored_tyvar fmt (dest_vartype ty))
-          (holai.runtime:ocaml-condition
+          (holai.runtime.data:ocaml-condition
             (exception~1008)
             (match exception~1008
               ((Failure _)
                 (handler-case
                   (color_print_str fmt (string-of-num (dest_finty ty)))
-                  (holai.runtime:ocaml-condition
+                  (holai.runtime.data:ocaml-condition
                     (exception~1011)
                     (match exception~1011
                       ((Failure _)
@@ -1738,7 +1744,7 @@
                       ((tuple s (tuple s% ty))
                         (cl:and (= s% s0) (can (type_match ty ty0) nil)))))
                   (deref the_interface)))
-              (holai.runtime:ocaml-condition
+              (holai.runtime.data:ocaml-condition
                 (exception~1308)
                 (match exception~1308 ((Failure _) s0) (_ (raise exception~1308)))))))))
       (DEST_BINARY% (c% tm)
@@ -1759,7 +1765,7 @@
                             (reverse_interface (dest_const c%))))))
                     (tuple l r)
                     (fail unit))))))
-          (holai.runtime:ocaml-condition
+          (holai.runtime.data:ocaml-condition
             (exception~1349)
             (match exception~1349
               ((Failure _) (failwith "DEST_BINARY"))
@@ -1819,7 +1825,7 @@
               (if use_color
                 (handler-case
                   (#`try_user_color_printer fmt tm)
-                  (holai.runtime:ocaml-condition
+                  (holai.runtime.data:ocaml-condition
                     (exception~1623)
                     (match exception~1623
                       (_ (#`try_user_printer fmt tm))
@@ -1829,19 +1835,19 @@
             (print_term% (prec tm)
               (handler-case
                 (try_user_printers tm)
-                (holai.runtime:ocaml-condition
+                (holai.runtime.data:ocaml-condition
                   (exception~1663)
                   (match exception~1663
                     ((Failure _)
                       (handler-case
                         (print_numeral tm)
-                        (holai.runtime:ocaml-condition
+                        (holai.runtime.data:ocaml-condition
                           (exception~1666)
                           (match exception~1666
                             ((Failure _)
                               (handler-case
                                 (print_string_or_list tm)
-                                (holai.runtime:ocaml-condition
+                                (holai.runtime.data:ocaml-condition
                                   (exception~1669)
                                   (match exception~1669
                                     ((Failure _)
@@ -1856,19 +1862,19 @@
                                               (cl:declare (cl:ignorable s))
                                               (handler-case
                                                 (print_empty_set s tm args)
-                                                (holai.runtime:ocaml-condition
+                                                (holai.runtime.data:ocaml-condition
                                                   (exception~1681)
                                                   (match exception~1681
                                                     ((Failure _)
                                                       (handler-case
                                                         (print_universal_set s tm args)
-                                                        (holai.runtime:ocaml-condition
+                                                        (holai.runtime.data:ocaml-condition
                                                           (exception~1684)
                                                           (match exception~1684
                                                             ((Failure _)
                                                               (handler-case
                                                                 (print_finite_set s tm)
-                                                                (holai.runtime:ocaml-condition
+                                                                (holai.runtime.data:ocaml-condition
                                                                   (exception~1687)
                                                                   (match exception~1687
                                                                     ((Failure _)
@@ -1876,7 +1882,7 @@
                                                                         (print_set_comprehension
                                                                           s
                                                                           tm)
-                                                                        (holai.runtime:ocaml-condition
+                                                                        (holai.runtime.data:ocaml-condition
                                                                           (exception~1690)
                                                                           (match
                                                                             exception~1690
@@ -1886,7 +1892,7 @@
                                                                                   s
                                                                                   prec
                                                                                   tm)
-                                                                                (holai.runtime:ocaml-condition
+                                                                                (holai.runtime.data:ocaml-condition
                                                                                   (exception~1693)
                                                                                   (match
                                                                                     exception~1693
@@ -1896,7 +1902,7 @@
                                                                                         (print_decimal
                                                                                           s
                                                                                           args)
-                                                                                        (holai.runtime:ocaml-condition
+                                                                                        (holai.runtime.data:ocaml-condition
                                                                                           (exception~1696)
                                                                                           (match
                                                                                             exception~1696
@@ -1907,7 +1913,7 @@
                                                                                                   s
                                                                                                   prec
                                                                                                   args)
-                                                                                                (holai.runtime:ocaml-condition
+                                                                                                (holai.runtime.data:ocaml-condition
                                                                                                   (exception~1699)
                                                                                                   (match
                                                                                                     exception~1699
@@ -1918,7 +1924,7 @@
                                                                                                           s
                                                                                                           prec
                                                                                                           args)
-                                                                                                        (holai.runtime:ocaml-condition
+                                                                                                        (holai.runtime.data:ocaml-condition
                                                                                                           (exception~1702)
                                                                                                           (match
                                                                                                             exception~1702
@@ -1930,7 +1936,7 @@
                                                                                                                   prec
                                                                                                                   tm
                                                                                                                   args)
-                                                                                                                (holai.runtime:ocaml-condition
+                                                                                                                (holai.runtime.data:ocaml-condition
                                                                                                                   (exception~1705)
                                                                                                                   (match
                                                                                                                     exception~1705
@@ -1941,7 +1947,7 @@
                                                                                                                           s
                                                                                                                           prec
                                                                                                                           args)
-                                                                                                                        (holai.runtime:ocaml-condition
+                                                                                                                        (holai.runtime.data:ocaml-condition
                                                                                                                           (exception~1708)
                                                                                                                           (match
                                                                                                                             exception~1708
@@ -1953,7 +1959,7 @@
                                                                                                                                   prec
                                                                                                                                   tm
                                                                                                                                   args)
-                                                                                                                                (holai.runtime:ocaml-condition
+                                                                                                                                (holai.runtime.data:ocaml-condition
                                                                                                                                   (exception~1711)
                                                                                                                                   (match
                                                                                                                                     exception~1711
@@ -1966,7 +1972,7 @@
                                                                                                                                           tm
                                                                                                                                           hop
                                                                                                                                           args)
-                                                                                                                                        (holai.runtime:ocaml-condition
+                                                                                                                                        (holai.runtime.data:ocaml-condition
                                                                                                                                           (exception~1714)
                                                                                                                                           (match
                                                                                                                                             exception~1714
@@ -2044,7 +2050,7 @@
                             (string-concat (string-escaped (implode ccs)) "\""))))
                       (cl:declare (cl:ignorable ccs s))
                       (pp-print-string fmt s)))
-                  (holai.runtime:ocaml-condition
+                  (holai.runtime.data:ocaml-condition
                     (exception~1820)
                     (match exception~1820
                       ((Failure _)
@@ -2264,7 +2270,7 @@
                                       (mem
                                         (fst (dest_const l))
                                         (cl:cons "real_of_num" (cl:cons "int_of_num" nil)))))))
-                              (holai.runtime:ocaml-condition
+                              (holai.runtime.data:ocaml-condition
                                 (exception~2527)
                                 (match exception~2527
                                   ((Failure _) cl:nil)
@@ -2373,7 +2379,7 @@
                         (mem
                           (fst (dest_const l))
                           (cl:cons "real_of_num" (cl:cons "int_of_num" nil)))
-                        (holai.runtime:ocaml-condition
+                        (holai.runtime.data:ocaml-condition
                           (exception~2895)
                           (match exception~2895
                             ((Failure _) cl:nil)
@@ -2570,22 +2576,22 @@
   (let* ((buf (buffer-create 16)) (fmt (formatter-of-buffer buf)))
     (cl:declare (cl:ignorable buf fmt))
     (match (pp-set-max-boxes fmt 100)
-      ((cl:type holai.runtime::unit-value)
+      ((cl:type holai.runtime.data:unit-value)
         (let*
           ((print (#`printer fmt))
             (flush (partial (function-value #'pp-print-flush 2) fmt)))
           (cl:declare (cl:ignorable print flush))
           (lambdac (x)
             (match (pp-set-margin fmt (get-margin unit))
-              ((cl:type holai.runtime::unit-value)
+              ((cl:type holai.runtime.data:unit-value)
                 (match (#`print x)
-                  ((cl:type holai.runtime::unit-value)
+                  ((cl:type holai.runtime.data:unit-value)
                     (match (#`flush unit)
-                      ((cl:type holai.runtime::unit-value)
+                      ((cl:type holai.runtime.data:unit-value)
                         (let ((s (buffer-contents buf)))
                           (cl:declare (cl:ignorable s))
                           (match (buffer-reset buf)
-                            ((cl:type holai.runtime::unit-value) s)))))))))))))))
+                            ((cl:type holai.runtime.data:unit-value) s)))))))))))))))
 
 (defparameter string_of_type (print_to_string pp_print_type))
 

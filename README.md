@@ -19,7 +19,7 @@ Use the pinned Nix shell with flakes enabled:
 ```sh
 nix develop path:.
 make build             # Build bin/ml2cl
-make regenerate        # Regenerate Lisp, source maps and provider data
+make regenerate        # Regenerate Lisp, source maps and inventory
 make test              # SBCL full suite + selected hosts' runtime/fixture checks
 make clean-build       # Compare isolated clean-generated outputs
 make release           # Add SBCL cold diagnostics, validation and source ZIP
@@ -40,23 +40,30 @@ SBCL is mandatory for the full 46-file/OCaml differential suite and release's
 Compatibility does **not** verify its full HOL core. Release packaging checks
 observed versions and executable bindings against `HOLAI_LISP_VERSIONS` and
 `HOLAI_LISP_EXECUTABLES` exported by the pinned shell, not arbitrary host tools.
-The current NixOS 26.05 profile passed locally on ARM64 Linux: flake checks,
-a forced fresh translator compiler build and ordinary `make release`, including
-SBCL full-core verification and ECL/ABCL/CLISP runtime-fixture compatibility.
+The current explicit-ASDF release passed locally on ARM64 Linux in 287.53 seconds:
+SBCL full-core verification, ECL/ABCL/CLISP runtime-fixture compatibility,
+cold diagnostics, clean regeneration and packaging (see evidence below).
 The shell supplies OCaml 4.14.4, Camlp5 8.02.01, Num 1.5, camlp-streams 5.0.1,
 SBCL 2.6.4, ECL 26.5.5, ABCL 1.9.3 and CLISP 2.49.95.
 See [DESIGN §38](DESIGN.md#38-common-lisp-host-portability) for exact coverage,
 host limitations and retained timeout evidence.
 
-GitHub Actions runs `nix flake check` and ordinary `make release` on
-**aarch64-linux, aarch64-darwin and x86_64-linux**, using each platform's selected
-hosts. Actions are commit-SHA pinned, repository permissions are read-only,
-and platform-specific reports/logs/source ZIPs are uploaded even on failure.
-No additional-host full-core run is part of CI. All three platform flake
-evaluations (`--all-systems --no-build`) and actionlint 1.7.12 passed locally.
-Flake checks test ASDF startup only, not the production runtime; release
-exercises the actual runtime. Hosted Actions results remain unobserved,
-including Darwin/x86 runtime correctness; local runtime evidence is ARM64 Linux only.
+GitHub Actions uses a **3 host × 4 implementation Cartesian matrix**: aarch64-linux
+(`ubuntu-24.04-arm`), aarch64-darwin (`macos-15`) and x86_64-linux
+(`ubuntu-24.04`), each with SBCL/ECL/ABCL/CLISP. All 12 jobs validate the Nix
+system and selected package availability; a missing target fails rather than skips.
+SBCL jobs run `HOLAI_LISPS=sbcl make release`; other jobs build the translator and
+run the selected implementation's runtime-fixture compatibility profile only.
+Fail-fast is disabled. SHA-pinned actions, read-only permissions and checkout
+without persisted credentials are retained; artifacts include host and implementation.
+Actionlint passed locally, but remote execution of the new push remains pending.
+The preceding hosted SBCL jobs passed; ECL failed on Linux and CLISP failed on
+Darwin/x86 Linux. Those CLISP failures remain unresolved, not fixed by the local
+ECL weak-GC regression repair. Captured phase stdout/stderr and public GitHub
+Actions error annotations now support precise root diagnosis rather than blind retries.
+The preceding hosted run passed full SBCL on all three hosts, but failed ECL on
+Linux and CLISP on Darwin/x86 Linux. Outer logs did not expose the Lisp root causes;
+the new matrix is not evidence of a green hosted run or verified Darwin compatibility.
 
 Expensive additional-host full-core tests and cold diagnostics are opt-in:
 `HOLAI_LISPS=ecl,abcl,clisp make test-full-core` (3600 seconds per full-core
@@ -93,13 +100,28 @@ Then read and evaluate:
 (asdf:initialize-source-registry
   '(:source-registry (:directory #p"/absolute/path/to/holai/")
     :inherit-configuration))
+(asdf:load-asd #p"/absolute/path/to/holai/holai.asd")
 (asdf:load-system "holai/runtime")   ; Runtime only
 (asdf:load-system "holai")           ; Full 46-file core
 ```
 
-The single root `holai.asd` defines both systems. Generated
-`holai/generated/<stem>` systems use package inference; `holai/all.lisp`
-preserves full-core initialization order.
+The single root `holai.asd` handwrites two ordinary serial systems:
+`holai/runtime` loads the six runtime files; `holai` then loads the 46 generated
+files in pinned vendor order. Package names are independent of filesystem and
+system names: the definition package is `holai.define`, runtime owners are
+`holai.runtime.<unit>` and generated packages are `holai.<stem>` with dot-delimited
+static children. There are no inferred
+per-source systems, provider/load-order data files, umbrella runtime package,
+or compatibility aliases.
+The runtime system ID is `holai/runtime`, not `holai-runtime`; explicitly loading
+the literal `holai.asd` above avoids relying on secondary-system discovery.
+Data and pattern-registry own the leaf representation/declaration state;
+pattern owns matching, core owns calling/proof macros, format owns printing,
+and stdlib owns the OCaml library adapters, without shared reexports.
+
+The explicit order covers 52 physical production files (six runtime plus 46 core);
+regeneration produces 93 outputs (46 Lisp/map pairs plus inventory), with no empty
+`holai/all` entry or `holai.generated` package layer.
 
 **Evaluate `(require :asdf)` before reading ASDF/UIOP forms.** Separate
 `--eval` arguments work; wrapping everything in one `progn` is too late for
@@ -115,7 +137,8 @@ After loading the full core, import only what your package needs:
 ```lisp
 (uiop:define-package :my-hol-development
   (:use :cl)
-  (:import-from :holai.runtime :proof :tuple :lambdac :labelsc)
+  (:import-from :holai.runtime.core :proof :lambdac :labelsc)
+  (:import-from :holai.runtime.data :tuple)
   (:import-from :holai.tactics :prove :DISCH_TAC :THEN :FIRST_ASSUM :ACCEPT_TAC)
   (:import-from :holai.parser :parse_term))
 (in-package :my-hol-development)
@@ -126,7 +149,7 @@ After loading the full core, import only what your package needs:
 
 Use bare `proof` for ordinary development notation; nest it for non-left
 grouping. Named functions use `#'name`, while function-valued operators such as
-`THEN` use their symbols. Namespace conflicts retain `holai.runtime:proof`.
+`THEN` use their symbols. Namespace conflicts retain `holai.runtime.core:proof`.
 Sharp-backquote (``#` ``) invokes a function-valued expression; `labelsc`
 provides curried lexical functions. See [DESIGN](DESIGN.md) for syntax,
 evaluation order, partial application and namespace rules.
@@ -150,12 +173,20 @@ The [aggregate matrix](misc/reports/implementation-matrix.json) records each
 selected profile's actual status; failed or incomplete reports are not release
 evidence. The root [`verification.json`](misc/reports/verification.json) and
 SBCL-named streams are historical, **not a current validation pass**.
-The current SBCL run passed 128 native and 69 PROOF checks, comparing 1,149
-rows: 1,146 exact, two structural registry rows and one Random property row.
+The current local `make release` exited 0 in 287.53 seconds. All four selected
+profiles passed; clean regeneration reproduced all 93 outputs and retained all
+55 input pins. Tagged SBCL evidence records 128 native checks, 69 PROOF checks
+and 1,149 observations: 1,146 exact, two structural registry rows and one Random
+property row. All 194,839 core and 207,058 fixture-inclusive source-map ranges
+passed, as did ten protected rejections. The fresh-cache compiler audit covered
+all 52 physical production files in literal ASD order (six runtime plus 46 core),
+with zero compiler errors, warnings, style warnings or notices. Load/initialization
+accounting is separate: zero errors/warnings, 21 style warnings and 164 notices.
+The archive producer reported 427 payload files; ZIP byte size is not a fixed contract.
 The three additional hosts each passed three runtime fixtures and 33 exact rows,
-not full-core verification. The final `make release` exited 0 (269.03 seconds),
-including SBCL's 52-unit cold compiler audit, inventory, 94 identical clean
-outputs and 55 unchanged input pins. Initialization notices are counted separately.
+not full-core verification. ECL's weak-GC test uses a native MP worker and join,
+retaining 28 assertions and two explicit collections without production cache changes.
+Earlier 269.03-second and 94-output measurements remain historical.
 See also [clean-generation evidence](misc/reports/clean-build.json),
 [coverage](misc/reports/COVERAGE.md), [release notes](docs/RELEASE-NOTES.md)
 and [historical reports](misc/reports/history/).

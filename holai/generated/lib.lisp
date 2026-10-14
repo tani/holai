@@ -315,8 +315,10 @@
     verbose
     warn
     zip)
-  (:import-from :holai.runtime)
-  (:import-from :holai.system)
+  (:import-from :holai.runtime.core)
+  (:import-from :holai.runtime.data)
+  (:import-from :holai.runtime.format)
+  (:import-from :holai.runtime.pattern)
   (:export
     %->
     %=>
@@ -451,7 +453,12 @@
 (uiop:define-package
   :holai.lib
   (:use :cl)
-  (:mix :cl :holai.runtime)
+  (:mix
+    :cl
+    :holai.runtime.core
+    :holai.runtime.data
+    :holai.runtime.format
+    :holai.runtime.pattern)
   (:shadow
     %->
     %->%
@@ -756,25 +763,16 @@
     zip)
   (:shadowing-import-from :cl not logxor logand append abs / - + *)
   (:shadowing-import-from
-    :holai.runtime
-    unit
-    tuple
+    :holai.runtime.core
     Sys_error
     structural-hash
     string-sub
     string-of-float
     string-length
     string-concat
-    std-formatter
     Some
-    snd
-    ref
     really-input-string
-    raise
     quo-num
-    print-string
-    print-newline
-    pp-print-string
     power-num
     partial
     output-string
@@ -785,7 +783,6 @@
     num
     None
     mod-num
-    match
     make-Some
     make-None
     lambdac
@@ -793,15 +790,12 @@
     int-of-num
     int-mod
     input-line
-    guard
     gcd-num
     function-value
-    fst
     failwith
     Failure
     exception-string
     End_of_file
-    deref
     defvariant
     defunc
     define-exception
@@ -816,6 +810,14 @@
     <>
     <=
     <)
+  (:shadowing-import-from :holai.runtime.data unit tuple snd ref raise fst deref)
+  (:shadowing-import-from
+    :holai.runtime.format
+    std-formatter
+    print-string
+    print-newline
+    pp-print-string)
+  (:shadowing-import-from :holai.runtime.pattern match guard)
   (:export
     %->
     %=>
@@ -959,7 +961,8 @@
 ;; (* ========================================================================= *)
 
 
-(defunc fail (arg~2) (match arg~2 ((cl:type holai.runtime::unit-value) (failwith ""))))
+(defunc fail (arg~2)
+  (match arg~2 ((cl:type holai.runtime.data:unit-value) (failwith ""))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Combinators.                                                              *)
@@ -1042,7 +1045,7 @@
 (defunc can (f x)
   (handler-case
     (progn (#`f x) cl:t)
-    (holai.runtime:ocaml-condition
+    (holai.runtime.data:ocaml-condition
       (exception~290)
       (match exception~290 ((Failure _) cl:nil) (_ (raise exception~290))))))
 
@@ -1058,7 +1061,7 @@
 (defunc repeat (f x)
   (handler-case
     (let ((y (#`f x))) (cl:declare (cl:ignorable y)) (repeat f y))
-    (holai.runtime:ocaml-condition
+    (holai.runtime.data:ocaml-condition
       (exception~330)
       (match exception~330 ((Failure _) x) (_ (raise exception~330))))))
 
@@ -1100,7 +1103,7 @@
   (handler-case
     (match (#`dest x)
       ((tuple l r) (match (splitlist dest r) ((tuple ls res) (tuple (cl:cons l ls) res)))))
-    (holai.runtime:ocaml-condition
+    (holai.runtime.data:ocaml-condition
       (exception~484)
       (match exception~484 ((Failure _) (tuple nil x)) (_ (raise exception~484))))))
 
@@ -1109,7 +1112,7 @@
     ((rsplist (ls x)
       (handler-case
         (match (#`dest x) ((tuple l r) (rsplist (cl:cons r ls) l)))
-        (holai.runtime:ocaml-condition
+        (holai.runtime.data:ocaml-condition
           (exception~519)
           (match exception~519 ((Failure _) (tuple x ls)) (_ (raise exception~519)))))))
     (lambdac (x) (rsplist nil x))))
@@ -1119,7 +1122,7 @@
     ((strip (x acc)
       (handler-case
         (match (#`dest x) ((tuple l r) (strip l (strip r acc))))
-        (holai.runtime:ocaml-condition
+        (holai.runtime.data:ocaml-condition
           (exception~551)
           (match exception~551 ((Failure _) (cl:cons x acc)) (_ (raise exception~551)))))))
     (lambdac (x) (strip x nil))))
@@ -1190,7 +1193,7 @@
         (cl:declare (cl:ignorable rest))
         (handler-case
           (cl:cons (#`f h) rest)
-          (holai.runtime:ocaml-condition
+          (holai.runtime.data:ocaml-condition
             (exception~835)
             (match exception~835 ((Failure _) rest) (_ (raise exception~835)))))))))
 
@@ -1203,7 +1206,7 @@
     ((cl:cons h t%)
       (handler-case
         (#`f h)
-        (holai.runtime:ocaml-condition
+        (holai.runtime.data:ocaml-condition
           (exception~880)
           (match exception~880 ((Failure _) (tryfind f t%)) (_ (raise exception~880))))))))
 
@@ -1222,7 +1225,7 @@
     (tuple nil l)
     (handler-case
       (match (chop_list (- n 1) (tl l)) ((tuple m l%) (tuple (cl:cons (hd l) m) l%)))
-      (holai.runtime:ocaml-condition
+      (holai.runtime.data:ocaml-condition
         (exception~936)
         (match exception~936
           ((Failure _) (failwith "chop_list"))
@@ -1500,7 +1503,7 @@
                 "CPU time (user): "
                 (string-of-float (- finish_time start_time))))
             result))
-        (holai.runtime:ocaml-condition
+        (holai.runtime.data:ocaml-condition
           (exception~1637)
           (match exception~1637
             (e
@@ -1685,7 +1688,7 @@
 (defunc defined (f x)
   (handler-case
     (progn (apply f x) cl:t)
-    (holai.runtime:ocaml-condition
+    (holai.runtime.data:ocaml-condition
       (exception~2277)
       (match exception~2277 ((Failure _) cl:nil) (_ (raise exception~2277))))))
 
@@ -1970,7 +1973,7 @@
     ((fd
       (handler-case
         (open-in filename)
-        (holai.runtime:ocaml-condition
+        (holai.runtime.data:ocaml-condition
           (exception~3388)
           (match exception~3388
             ((Sys_error _)
@@ -1983,7 +1986,7 @@
           ((l
             (handler-case
               (cl:cons (input-line fd) nil)
-              (holai.runtime:ocaml-condition
+              (holai.runtime.data:ocaml-condition
                 (exception~3401)
                 (match exception~3401 ((End_of_file) nil) (_ (raise exception~3401)))))))
           (cl:declare (cl:ignorable l))

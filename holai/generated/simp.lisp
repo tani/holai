@@ -316,7 +316,9 @@
   (:import-from :holai.lib)
   (:import-from :holai.nets)
   (:import-from :holai.parser)
-  (:import-from :holai.runtime)
+  (:import-from :holai.runtime.core)
+  (:import-from :holai.runtime.data)
+  (:import-from :holai.runtime.pattern)
   (:import-from :holai.tactics)
   (:export
     ABBREV_TAC
@@ -418,7 +420,9 @@
     :holai.lib
     :holai.nets
     :holai.parser
-    :holai.runtime
+    :holai.runtime.core
+    :holai.runtime.data
+    :holai.runtime.pattern
     :holai.tactics)
   (:shadow
     ABBREV_TAC
@@ -816,32 +820,24 @@
   (:shadowing-import-from :holai.nets lookup enter empty_net)
   (:shadowing-import-from :holai.parser parse_term)
   (:shadowing-import-from
-    :holai.runtime
-    unit
-    tuple
-    snd
-    ref
-    raise
+    :holai.runtime.core
     proof
     partial
-    match
     lambdac
     labelsc
-    guard
     function-value
-    fst
     failwith
     Failure
-    deref
     defvariant
     defunc
-    assign
     >=
     >
     =
     <>
     <=
     <)
+  (:shadowing-import-from :holai.runtime.data unit tuple snd ref raise fst deref assign)
+  (:shadowing-import-from :holai.runtime.pattern match guard)
   (:shadowing-import-from
     :holai.tactics
     THEN
@@ -1152,7 +1148,7 @@
     (cl:declare (cl:ignorable pconvs))
     (handler-case
       (tryfind (lambdac (arg~616) (match arg~616 ((tuple _ cnv) (#`cnv tm)))) pconvs)
-      (holai.runtime:ocaml-condition
+      (holai.runtime.data:ocaml-condition
         (exception~611)
         (match exception~611
           ((Failure _) (failwith "REWRITES_CONV"))
@@ -1188,13 +1184,13 @@
         ((sth
           (handler-case
             (#`strat ss lev tm)
-            (holai.runtime:ocaml-condition
+            (holai.runtime.data:ocaml-condition
               (exception~690)
               (match exception~690 ((Failure _) (REFL tm)) (_ (raise exception~690)))))))
         (cl:declare (cl:ignorable sth))
         (handler-case
           (EQT_ELIM sth)
-          (holai.runtime:ocaml-condition
+          (holai.runtime.data:ocaml-condition
             (exception~700)
             (match exception~700
               ((Failure _)
@@ -1307,7 +1303,7 @@
                   (match
                     (handler-case
                       (tuple (dest_eq bod) ss #'I)
-                      (holai.runtime:ocaml-condition
+                      (holai.runtime.data:ocaml-condition
                         (exception~1082)
                         (match exception~1082
                           ((Failure _)
@@ -1322,7 +1318,7 @@
                       (match
                         (handler-case
                           (tuple (#`strat ss% lev t%) cl:nil)
-                          (holai.runtime:ocaml-condition
+                          (holai.runtime.data:ocaml-condition
                             (exception~1061)
                             (match exception~1061
                               ((Failure _) (tuple (REFL t%) triv))
@@ -1350,7 +1346,7 @@
                       (cl:declare (cl:ignorable th))
                       (RUN_SUB_CONV strat ss lev cl:t th))))))
             pconvs)
-          (holai.runtime:ocaml-condition
+          (holai.runtime.data:ocaml-condition
             (exception~1126)
             (match exception~1126
               ((Failure _)
@@ -1364,12 +1360,12 @@
                             (let ((th2 (#`strat ss lev r%)))
                               (cl:declare (cl:ignorable th2))
                               (MK_COMB% (tuple th1 th2)))
-                            (holai.runtime:ocaml-condition
+                            (holai.runtime.data:ocaml-condition
                               (exception~1228)
                               (match exception~1228
                                 ((Failure _) (AP_THM th1 r%))
                                 (_ (raise exception~1228))))))
-                        (holai.runtime:ocaml-condition
+                        (holai.runtime.data:ocaml-condition
                           (exception~1214)
                           (match exception~1214
                             ((Failure _) (AP_TERM l (#`strat ss lev r%)))
@@ -1381,7 +1377,7 @@
                           (cl:declare (cl:ignorable th))
                           (handler-case
                             (ABS% v th)
-                            (holai.runtime:ocaml-condition
+                            (holai.runtime.data:ocaml-condition
                               (exception~1138)
                               (match exception~1138
                                 ((Failure _)
@@ -1413,7 +1409,7 @@
               (cl:declare (cl:ignorable pconvs))
               (handler-case
                 (IMP_REWRITES_CONV #'ONCE_DEPTH_SQCONV% ss lev pconvs tm)
-                (holai.runtime:ocaml-condition
+                (holai.runtime.data:ocaml-condition
                   (exception~1297)
                   (match exception~1297
                     ((Failure _) (GEN_SUB_CONV #'ONCE_DEPTH_SQCONV% ss lev pconvs tm))
@@ -1431,10 +1427,10 @@
                   (cl:declare (cl:ignorable th1 tm1 pconvs1))
                   (handler-case
                     (TRANS th1 (IMP_REWRITES_CONV #'DEPTH_SQCONV% ss lev pconvs1 tm1))
-                    (holai.runtime:ocaml-condition
+                    (holai.runtime.data:ocaml-condition
                       (exception~1359)
                       (match exception~1359 ((Failure _) th1) (_ (raise exception~1359))))))
-                (holai.runtime:ocaml-condition
+                (holai.runtime.data:ocaml-condition
                   (exception~1335)
                   (match exception~1335
                     ((Failure _) (IMP_REWRITES_CONV #'DEPTH_SQCONV% ss lev pconvs tm))
@@ -1455,12 +1451,12 @@
                         (TRANS
                           th1
                           (IMP_REWRITES_CONV #'REDEPTH_SQCONV% ss lev pconvs1 tm1))
-                        (holai.runtime:ocaml-condition
+                        (holai.runtime.data:ocaml-condition
                           (exception~1423)
                           (match exception~1423
                             ((Failure _) th1)
                             (_ (raise exception~1423))))))
-                    (holai.runtime:ocaml-condition
+                    (holai.runtime.data:ocaml-condition
                       (exception~1399)
                       (match exception~1399
                         ((Failure _)
@@ -1471,7 +1467,7 @@
                 (let ((th% (REDEPTH_SQCONV% ss lev (rand (concl th)))))
                   (cl:declare (cl:ignorable th%))
                   (TRANS th th%))
-                (holai.runtime:ocaml-condition
+                (holai.runtime.data:ocaml-condition
                   (exception~1440)
                   (match exception~1440 ((Failure _) th) (_ (raise exception~1440)))))))))
       (TOP_DEPTH_SQCONV% (arg~1466 lev tm)
@@ -1482,7 +1478,7 @@
                 (th1
                   (handler-case
                     (IMP_REWRITES_CONV #'TOP_DEPTH_SQCONV% ss lev pconvs tm)
-                    (holai.runtime:ocaml-condition
+                    (holai.runtime.data:ocaml-condition
                       (exception~1480)
                       (match exception~1480
                         ((Failure _) (GEN_SUB_CONV #'TOP_DEPTH_SQCONV% ss lev pconvs tm))
@@ -1492,7 +1488,7 @@
                 (let ((th2 (TOP_DEPTH_SQCONV% ss lev (rand (concl th1)))))
                   (cl:declare (cl:ignorable th2))
                   (TRANS th1 th2))
-                (holai.runtime:ocaml-condition
+                (holai.runtime.data:ocaml-condition
                   (exception~1496)
                   (match exception~1496 ((Failure _) th1) (_ (raise exception~1496)))))))))
       (TOP_SWEEP_SQCONV% (arg~1522 lev tm)
@@ -1507,10 +1503,10 @@
                     (let ((th2 (TOP_SWEEP_SQCONV% ss lev (rand (concl th1)))))
                       (cl:declare (cl:ignorable th2))
                       (TRANS th1 th2))
-                    (holai.runtime:ocaml-condition
+                    (holai.runtime.data:ocaml-condition
                       (exception~1551)
                       (match exception~1551 ((Failure _) th1) (_ (raise exception~1551))))))
-                (holai.runtime:ocaml-condition
+                (holai.runtime.data:ocaml-condition
                   (exception~1535)
                   (match exception~1535
                     ((Failure _) (GEN_SUB_CONV #'TOP_SWEEP_SQCONV% ss lev pconvs tm))
@@ -1564,7 +1560,7 @@
     (labelsc
       ((rehash_convnet (arg~1634)
         (match arg~1634
-          ((cl:type holai.runtime::unit-value)
+          ((cl:type holai.runtime.data:unit-value)
             (assign
               conv_net
               (itlist
@@ -1586,7 +1582,7 @@
               (assign rewrites (append canon_thl (deref rewrites)))
               (rehash_convnet unit))))
         (basic_rewrites% (arg~1699)
-          (match arg~1699 ((cl:type holai.runtime::unit-value) (deref rewrites))))
+          (match arg~1699 ((cl:type holai.runtime.data:unit-value) (deref rewrites))))
         (set_basic_convs% (cnvs) (progn (assign conversions cnvs) (rehash_convnet unit)))
         (extend_basic_convs% (arg~1711)
           (match arg~1711
@@ -1602,9 +1598,9 @@
                       (deref conversions))))
                 (rehash_convnet unit)))))
         (basic_convs% (arg~1740)
-          (match arg~1740 ((cl:type holai.runtime::unit-value) (deref conversions))))
+          (match arg~1740 ((cl:type holai.runtime.data:unit-value) (deref conversions))))
         (basic_net% (arg~1745)
-          (match arg~1745 ((cl:type holai.runtime::unit-value) (deref conv_net)))))
+          (match arg~1745 ((cl:type holai.runtime.data:unit-value) (deref conv_net)))))
       (tuple
         #'set_basic_rewrites%
         #'extend_basic_rewrites%
@@ -1655,7 +1651,7 @@
       (lambdac (thl) (assign congs thl))
       (lambdac (thl) (assign congs (union% #'equals_thm thl (deref congs))))
       (lambdac (arg~1793)
-        (match arg~1793 ((cl:type holai.runtime::unit-value) (deref congs))))))
+        (match arg~1793 ((cl:type holai.runtime.data:unit-value) (deref congs))))))
   ((tuple set_basic_congs% extend_basic_congs% basic_congs%)
     (setf
       basic_congs

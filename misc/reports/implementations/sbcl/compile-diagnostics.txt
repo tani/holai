@@ -1,41 +1,47 @@
 AUDIT_BEGIN INITIALIZATION holai/tests/bootstrap.lisp
-AUDIT_BEGIN COMPILE holai/runtime/package.lisp
-COMPILED_UNIT holai/runtime/package.lisp
-AUDIT_END COMPILE holai/runtime/package.lisp
-AUDIT_BEGIN LOAD holai/runtime/package.lisp
-LOADED_UNIT holai/runtime/package.lisp
-AUDIT_END LOAD holai/runtime/package.lisp
+AUDIT_BEGIN COMPILE holai/runtime/data.lisp
+COMPILED_UNIT holai/runtime/data.lisp
+AUDIT_END COMPILE holai/runtime/data.lisp
+AUDIT_BEGIN LOAD holai/runtime/data.lisp
+LOADED_UNIT holai/runtime/data.lisp
+AUDIT_END LOAD holai/runtime/data.lisp
+AUDIT_BEGIN COMPILE holai/runtime/pattern-registry.lisp
+COMPILED_UNIT holai/runtime/pattern-registry.lisp
+AUDIT_END COMPILE holai/runtime/pattern-registry.lisp
+AUDIT_BEGIN LOAD holai/runtime/pattern-registry.lisp
+AUDIT_CONDITION LOAD STYLE_WARNING holai/runtime/pattern-registry.lisp redefining HOLAI.RUNTIME.PATTERN-REGISTRY:REGISTER-PATTERN-FAMILY in DEFUN
+AUDIT_CONDITION LOAD STYLE_WARNING holai/runtime/pattern-registry.lisp redefining HOLAI.RUNTIME.PATTERN-REGISTRY:CHECK-PATTERN-SIGNATURE in DEFUN
+LOADED_UNIT holai/runtime/pattern-registry.lisp
+AUDIT_END LOAD holai/runtime/pattern-registry.lisp
 AUDIT_BEGIN COMPILE holai/runtime/pattern.lisp
 COMPILED_UNIT holai/runtime/pattern.lisp
 AUDIT_END COMPILE holai/runtime/pattern.lisp
 AUDIT_BEGIN LOAD holai/runtime/pattern.lisp
-AUDIT_CONDITION LOAD STYLE_WARNING holai/runtime/pattern.lisp redefining HOLAI.RUNTIME::REGISTER-PATTERN-FAMILY in DEFUN
-AUDIT_CONDITION LOAD STYLE_WARNING holai/runtime/pattern.lisp redefining HOLAI.RUNTIME::CHECK-PATTERN-SIGNATURE in DEFUN
-AUDIT_CONDITION LOAD STYLE_WARNING holai/runtime/pattern.lisp redefining HOLAI.RUNTIME::WILDCARD-PATTERN-P in DEFUN
-AUDIT_CONDITION LOAD STYLE_WARNING holai/runtime/pattern.lisp redefining HOLAI.RUNTIME::PARSE-PATTERN in DEFUN
-AUDIT_CONDITION LOAD STYLE_WARNING holai/runtime/pattern.lisp redefining HOLAI.RUNTIME::PATTERN-BINDINGS in DEFUN
-AUDIT_CONDITION LOAD STYLE_WARNING holai/runtime/pattern.lisp redefining HOLAI.RUNTIME::PATTERN-LET in DEFUN
-AUDIT_CONDITION LOAD STYLE_WARNING holai/runtime/pattern.lisp redefining HOLAI.RUNTIME::COMPILE-PATTERNS in DEFUN
-AUDIT_CONDITION LOAD STYLE_WARNING holai/runtime/pattern.lisp redefining HOLAI.RUNTIME::COMPILE-PATTERN in DEFUN
-AUDIT_CONDITION LOAD STYLE_WARNING holai/runtime/pattern.lisp redefining HOLAI.RUNTIME::COMPILE-CLAUSES in DEFUN
-AUDIT_CONDITION LOAD STYLE_WARNING holai/runtime/pattern.lisp redefining HOLAI.RUNTIME:MATCH in DEFMACRO
+AUDIT_CONDITION LOAD STYLE_WARNING holai/runtime/pattern.lisp redefining HOLAI.RUNTIME.PATTERN::WILDCARD-PATTERN-P in DEFUN
+AUDIT_CONDITION LOAD STYLE_WARNING holai/runtime/pattern.lisp redefining HOLAI.RUNTIME.PATTERN::PARSE-PATTERN in DEFUN
+AUDIT_CONDITION LOAD STYLE_WARNING holai/runtime/pattern.lisp redefining HOLAI.RUNTIME.PATTERN::PATTERN-BINDINGS in DEFUN
+AUDIT_CONDITION LOAD STYLE_WARNING holai/runtime/pattern.lisp redefining HOLAI.RUNTIME.PATTERN::PATTERN-LET in DEFUN
+AUDIT_CONDITION LOAD STYLE_WARNING holai/runtime/pattern.lisp redefining HOLAI.RUNTIME.PATTERN::COMPILE-PATTERNS in DEFUN
+AUDIT_CONDITION LOAD STYLE_WARNING holai/runtime/pattern.lisp redefining HOLAI.RUNTIME.PATTERN::COMPILE-PATTERN in DEFUN
+AUDIT_CONDITION LOAD STYLE_WARNING holai/runtime/pattern.lisp redefining HOLAI.RUNTIME.PATTERN::COMPILE-CLAUSES in DEFUN
+AUDIT_CONDITION LOAD STYLE_WARNING holai/runtime/pattern.lisp redefining HOLAI.RUNTIME.PATTERN:MATCH in DEFMACRO
 LOADED_UNIT holai/runtime/pattern.lisp
 AUDIT_END LOAD holai/runtime/pattern.lisp
 AUDIT_BEGIN COMPILE holai/runtime/core.lisp
 COMPILED_UNIT holai/runtime/core.lisp
 AUDIT_END COMPILE holai/runtime/core.lisp
 AUDIT_BEGIN LOAD holai/runtime/core.lisp
-AUDIT_CONDITION LOAD STYLE_WARNING holai/runtime/core.lisp redefining HOLAI.RUNTIME::SHARP-BACKQUOTE-LAMBDA-READER in DEFUN
-AUDIT_CONDITION LOAD STYLE_WARNING holai/runtime/core.lisp redefining HOLAI.RUNTIME::EXPAND-PROOF in DEFUN
-AUDIT_CONDITION LOAD STYLE_WARNING holai/runtime/core.lisp redefining HOLAI.RUNTIME::CURRIED-DEFINITION in DEFUN
-AUDIT_CONDITION LOAD STYLE_WARNING holai/runtime/core.lisp redefining HOLAI.RUNTIME:LAMBDAC in DEFMACRO
-AUDIT_CONDITION LOAD STYLE_WARNING holai/runtime/core.lisp redefining HOLAI.RUNTIME:DEFUNC in DEFMACRO
-AUDIT_CONDITION LOAD STYLE_WARNING holai/runtime/core.lisp redefining HOLAI.RUNTIME:LABELSC in DEFMACRO
-AUDIT_CONDITION LOAD STYLE_WARNING holai/runtime/core.lisp redefining HOLAI.RUNTIME:FLETC in DEFMACRO
-AUDIT_CONDITION LOAD STYLE_WARNING holai/runtime/core.lisp redefining HOLAI.RUNTIME:PROOF in DEFMACRO
-AUDIT_CONDITION LOAD STYLE_WARNING holai/runtime/core.lisp redefining HOLAI.RUNTIME:DEFINE-EXCEPTION in DEFMACRO
-AUDIT_CONDITION LOAD STYLE_WARNING holai/runtime/core.lisp redefining HOLAI.RUNTIME:DEFRECORD in DEFMACRO
-AUDIT_CONDITION LOAD STYLE_WARNING holai/runtime/core.lisp redefining HOLAI.RUNTIME:DEFVARIANT in DEFMACRO
+AUDIT_CONDITION LOAD STYLE_WARNING holai/runtime/core.lisp redefining HOLAI.RUNTIME.CORE::SHARP-BACKQUOTE-LAMBDA-READER in DEFUN
+AUDIT_CONDITION LOAD STYLE_WARNING holai/runtime/core.lisp redefining HOLAI.RUNTIME.CORE::EXPAND-PROOF in DEFUN
+AUDIT_CONDITION LOAD STYLE_WARNING holai/runtime/core.lisp redefining HOLAI.RUNTIME.CORE::CURRIED-DEFINITION in DEFUN
+AUDIT_CONDITION LOAD STYLE_WARNING holai/runtime/core.lisp redefining HOLAI.RUNTIME.CORE:LAMBDAC in DEFMACRO
+AUDIT_CONDITION LOAD STYLE_WARNING holai/runtime/core.lisp redefining HOLAI.RUNTIME.CORE:DEFUNC in DEFMACRO
+AUDIT_CONDITION LOAD STYLE_WARNING holai/runtime/core.lisp redefining HOLAI.RUNTIME.CORE:LABELSC in DEFMACRO
+AUDIT_CONDITION LOAD STYLE_WARNING holai/runtime/core.lisp redefining HOLAI.RUNTIME.CORE:FLETC in DEFMACRO
+AUDIT_CONDITION LOAD STYLE_WARNING holai/runtime/core.lisp redefining HOLAI.RUNTIME.CORE:PROOF in DEFMACRO
+AUDIT_CONDITION LOAD STYLE_WARNING holai/runtime/core.lisp redefining HOLAI.RUNTIME.CORE:DEFINE-EXCEPTION in DEFMACRO
+AUDIT_CONDITION LOAD STYLE_WARNING holai/runtime/core.lisp redefining HOLAI.RUNTIME.CORE:DEFRECORD in DEFMACRO
+AUDIT_CONDITION LOAD STYLE_WARNING holai/runtime/core.lisp redefining HOLAI.RUNTIME.CORE:DEFVARIANT in DEFMACRO
 LOADED_UNIT holai/runtime/core.lisp
 AUDIT_END LOAD holai/runtime/core.lisp
 AUDIT_BEGIN COMPILE holai/runtime/format.lisp
@@ -52,98 +58,84 @@ LOADED_UNIT holai/runtime/stdlib.lisp
 AUDIT_END LOAD holai/runtime/stdlib.lisp
 AUDIT_BEGIN COMPILE holai/generated/system.lisp
 COMPILED_UNIT holai/generated/system.lisp
-INFERRED_UNIT holai/generated/system.lisp
 AUDIT_END COMPILE holai/generated/system.lisp
 AUDIT_BEGIN LOAD holai/generated/system.lisp
 LOADED_UNIT holai/generated/system.lisp
 AUDIT_END LOAD holai/generated/system.lisp
 AUDIT_BEGIN COMPILE holai/generated/lib.lisp
 COMPILED_UNIT holai/generated/lib.lisp
-INFERRED_UNIT holai/generated/lib.lisp
 AUDIT_END COMPILE holai/generated/lib.lisp
 AUDIT_BEGIN LOAD holai/generated/lib.lisp
 LOADED_UNIT holai/generated/lib.lisp
 AUDIT_END LOAD holai/generated/lib.lisp
 AUDIT_BEGIN COMPILE holai/generated/fusion.lisp
 COMPILED_UNIT holai/generated/fusion.lisp
-INFERRED_UNIT holai/generated/fusion.lisp
 AUDIT_END COMPILE holai/generated/fusion.lisp
 AUDIT_BEGIN LOAD holai/generated/fusion.lisp
 LOADED_UNIT holai/generated/fusion.lisp
 AUDIT_END LOAD holai/generated/fusion.lisp
 AUDIT_BEGIN COMPILE holai/generated/basics.lisp
 COMPILED_UNIT holai/generated/basics.lisp
-INFERRED_UNIT holai/generated/basics.lisp
 AUDIT_END COMPILE holai/generated/basics.lisp
 AUDIT_BEGIN LOAD holai/generated/basics.lisp
 LOADED_UNIT holai/generated/basics.lisp
 AUDIT_END LOAD holai/generated/basics.lisp
 AUDIT_BEGIN COMPILE holai/generated/nets.lisp
 COMPILED_UNIT holai/generated/nets.lisp
-INFERRED_UNIT holai/generated/nets.lisp
 AUDIT_END COMPILE holai/generated/nets.lisp
 AUDIT_BEGIN LOAD holai/generated/nets.lisp
 LOADED_UNIT holai/generated/nets.lisp
 AUDIT_END LOAD holai/generated/nets.lisp
 AUDIT_BEGIN COMPILE holai/generated/printer.lisp
 COMPILED_UNIT holai/generated/printer.lisp
-INFERRED_UNIT holai/generated/printer.lisp
 AUDIT_END COMPILE holai/generated/printer.lisp
 AUDIT_BEGIN LOAD holai/generated/printer.lisp
 LOADED_UNIT holai/generated/printer.lisp
 AUDIT_END LOAD holai/generated/printer.lisp
 AUDIT_BEGIN COMPILE holai/generated/preterm.lisp
 COMPILED_UNIT holai/generated/preterm.lisp
-INFERRED_UNIT holai/generated/preterm.lisp
 AUDIT_END COMPILE holai/generated/preterm.lisp
 AUDIT_BEGIN LOAD holai/generated/preterm.lisp
 LOADED_UNIT holai/generated/preterm.lisp
 AUDIT_END LOAD holai/generated/preterm.lisp
 AUDIT_BEGIN COMPILE holai/generated/parser.lisp
 COMPILED_UNIT holai/generated/parser.lisp
-INFERRED_UNIT holai/generated/parser.lisp
 AUDIT_END COMPILE holai/generated/parser.lisp
 AUDIT_BEGIN LOAD holai/generated/parser.lisp
 LOADED_UNIT holai/generated/parser.lisp
 AUDIT_END LOAD holai/generated/parser.lisp
 AUDIT_BEGIN COMPILE holai/generated/equal.lisp
 COMPILED_UNIT holai/generated/equal.lisp
-INFERRED_UNIT holai/generated/equal.lisp
 AUDIT_END COMPILE holai/generated/equal.lisp
 AUDIT_BEGIN LOAD holai/generated/equal.lisp
 LOADED_UNIT holai/generated/equal.lisp
 AUDIT_END LOAD holai/generated/equal.lisp
 AUDIT_BEGIN COMPILE holai/generated/bool.lisp
 COMPILED_UNIT holai/generated/bool.lisp
-INFERRED_UNIT holai/generated/bool.lisp
 AUDIT_END COMPILE holai/generated/bool.lisp
 AUDIT_BEGIN LOAD holai/generated/bool.lisp
 LOADED_UNIT holai/generated/bool.lisp
 AUDIT_END LOAD holai/generated/bool.lisp
 AUDIT_BEGIN COMPILE holai/generated/drule.lisp
 COMPILED_UNIT holai/generated/drule.lisp
-INFERRED_UNIT holai/generated/drule.lisp
 AUDIT_END COMPILE holai/generated/drule.lisp
 AUDIT_BEGIN LOAD holai/generated/drule.lisp
 LOADED_UNIT holai/generated/drule.lisp
 AUDIT_END LOAD holai/generated/drule.lisp
 AUDIT_BEGIN COMPILE holai/generated/tactics.lisp
 COMPILED_UNIT holai/generated/tactics.lisp
-INFERRED_UNIT holai/generated/tactics.lisp
 AUDIT_END COMPILE holai/generated/tactics.lisp
 AUDIT_BEGIN LOAD holai/generated/tactics.lisp
 LOADED_UNIT holai/generated/tactics.lisp
 AUDIT_END LOAD holai/generated/tactics.lisp
 AUDIT_BEGIN COMPILE holai/generated/itab.lisp
 COMPILED_UNIT holai/generated/itab.lisp
-INFERRED_UNIT holai/generated/itab.lisp
 AUDIT_END COMPILE holai/generated/itab.lisp
 AUDIT_BEGIN LOAD holai/generated/itab.lisp
 LOADED_UNIT holai/generated/itab.lisp
 AUDIT_END LOAD holai/generated/itab.lisp
 AUDIT_BEGIN COMPILE holai/generated/simp.lisp
 COMPILED_UNIT holai/generated/simp.lisp
-INFERRED_UNIT holai/generated/simp.lisp
 AUDIT_END COMPILE holai/generated/simp.lisp
 AUDIT_BEGIN LOAD holai/generated/simp.lisp
 Searching with limit 0
@@ -160,7 +152,6 @@ LOADED_UNIT holai/generated/simp.lisp
 AUDIT_END LOAD holai/generated/simp.lisp
 AUDIT_BEGIN COMPILE holai/generated/theorems.lisp
 COMPILED_UNIT holai/generated/theorems.lisp
-INFERRED_UNIT holai/generated/theorems.lisp
 AUDIT_END COMPILE holai/generated/theorems.lisp
 AUDIT_BEGIN LOAD holai/generated/theorems.lisp
 Searching with limit 0
@@ -344,7 +335,6 @@ LOADED_UNIT holai/generated/theorems.lisp
 AUDIT_END LOAD holai/generated/theorems.lisp
 AUDIT_BEGIN COMPILE holai/generated/ind_defs.lisp
 COMPILED_UNIT holai/generated/ind_defs.lisp
-INFERRED_UNIT holai/generated/ind_defs.lisp
 AUDIT_END COMPILE holai/generated/ind_defs.lisp
 AUDIT_BEGIN LOAD holai/generated/ind_defs.lisp
 Searching with limit 0
@@ -353,7 +343,6 @@ LOADED_UNIT holai/generated/ind_defs.lisp
 AUDIT_END LOAD holai/generated/ind_defs.lisp
 AUDIT_BEGIN COMPILE holai/generated/class.lisp
 COMPILED_UNIT holai/generated/class.lisp
-INFERRED_UNIT holai/generated/class.lisp
 AUDIT_END COMPILE holai/generated/class.lisp
 AUDIT_BEGIN LOAD holai/generated/class.lisp
 Searching with limit 0
@@ -367,14 +356,12 @@ LOADED_UNIT holai/generated/class.lisp
 AUDIT_END LOAD holai/generated/class.lisp
 AUDIT_BEGIN COMPILE holai/generated/trivia.lisp
 COMPILED_UNIT holai/generated/trivia.lisp
-INFERRED_UNIT holai/generated/trivia.lisp
 AUDIT_END COMPILE holai/generated/trivia.lisp
 AUDIT_BEGIN LOAD holai/generated/trivia.lisp
 LOADED_UNIT holai/generated/trivia.lisp
 AUDIT_END LOAD holai/generated/trivia.lisp
 AUDIT_BEGIN COMPILE holai/generated/canon.lisp
 COMPILED_UNIT holai/generated/canon.lisp
-INFERRED_UNIT holai/generated/canon.lisp
 AUDIT_END COMPILE holai/generated/canon.lisp
 AUDIT_BEGIN LOAD holai/generated/canon.lisp
 Warning: inventing type variables
@@ -383,35 +370,30 @@ LOADED_UNIT holai/generated/canon.lisp
 AUDIT_END LOAD holai/generated/canon.lisp
 AUDIT_BEGIN COMPILE holai/generated/meson.lisp
 COMPILED_UNIT holai/generated/meson.lisp
-INFERRED_UNIT holai/generated/meson.lisp
 AUDIT_END COMPILE holai/generated/meson.lisp
 AUDIT_BEGIN LOAD holai/generated/meson.lisp
 LOADED_UNIT holai/generated/meson.lisp
 AUDIT_END LOAD holai/generated/meson.lisp
 AUDIT_BEGIN COMPILE holai/generated/firstorder.lisp
 COMPILED_UNIT holai/generated/firstorder.lisp
-INFERRED_UNIT holai/generated/firstorder.lisp
 AUDIT_END COMPILE holai/generated/firstorder.lisp
 AUDIT_BEGIN LOAD holai/generated/firstorder.lisp
 LOADED_UNIT holai/generated/firstorder.lisp
 AUDIT_END LOAD holai/generated/firstorder.lisp
 AUDIT_BEGIN COMPILE holai/generated/metis.lisp
 COMPILED_UNIT holai/generated/metis.lisp
-INFERRED_UNIT holai/generated/metis.lisp
 AUDIT_END COMPILE holai/generated/metis.lisp
 AUDIT_BEGIN LOAD holai/generated/metis.lisp
 LOADED_UNIT holai/generated/metis.lisp
 AUDIT_END LOAD holai/generated/metis.lisp
 AUDIT_BEGIN COMPILE holai/generated/thecops.lisp
 COMPILED_UNIT holai/generated/thecops.lisp
-INFERRED_UNIT holai/generated/thecops.lisp
 AUDIT_END COMPILE holai/generated/thecops.lisp
 AUDIT_BEGIN LOAD holai/generated/thecops.lisp
 LOADED_UNIT holai/generated/thecops.lisp
 AUDIT_END LOAD holai/generated/thecops.lisp
 AUDIT_BEGIN COMPILE holai/generated/quot.lisp
 COMPILED_UNIT holai/generated/quot.lisp
-INFERRED_UNIT holai/generated/quot.lisp
 AUDIT_END COMPILE holai/generated/quot.lisp
 AUDIT_BEGIN LOAD holai/generated/quot.lisp
 0..0..1..3..7..15..26..54..86..136..solved at 208
@@ -431,14 +413,12 @@ LOADED_UNIT holai/generated/quot.lisp
 AUDIT_END LOAD holai/generated/quot.lisp
 AUDIT_BEGIN COMPILE holai/generated/impconv.lisp
 COMPILED_UNIT holai/generated/impconv.lisp
-INFERRED_UNIT holai/generated/impconv.lisp
 AUDIT_END COMPILE holai/generated/impconv.lisp
 AUDIT_BEGIN LOAD holai/generated/impconv.lisp
 LOADED_UNIT holai/generated/impconv.lisp
 AUDIT_END LOAD holai/generated/impconv.lisp
 AUDIT_BEGIN COMPILE holai/generated/pair.lisp
 COMPILED_UNIT holai/generated/pair.lisp
-INFERRED_UNIT holai/generated/pair.lisp
 AUDIT_END COMPILE holai/generated/pair.lisp
 AUDIT_BEGIN LOAD holai/generated/pair.lisp
 0..0..solved at 2
@@ -468,14 +448,12 @@ LOADED_UNIT holai/generated/pair.lisp
 AUDIT_END LOAD holai/generated/pair.lisp
 AUDIT_BEGIN COMPILE holai/generated/compute.lisp
 COMPILED_UNIT holai/generated/compute.lisp
-INFERRED_UNIT holai/generated/compute.lisp
 AUDIT_END COMPILE holai/generated/compute.lisp
 AUDIT_BEGIN LOAD holai/generated/compute.lisp
 LOADED_UNIT holai/generated/compute.lisp
 AUDIT_END LOAD holai/generated/compute.lisp
 AUDIT_BEGIN COMPILE holai/generated/nums.lisp
 COMPILED_UNIT holai/generated/nums.lisp
-INFERRED_UNIT holai/generated/nums.lisp
 AUDIT_END COMPILE holai/generated/nums.lisp
 AUDIT_BEGIN LOAD holai/generated/nums.lisp
 0..0..2..solved at 5
@@ -488,14 +466,12 @@ LOADED_UNIT holai/generated/nums.lisp
 AUDIT_END LOAD holai/generated/nums.lisp
 AUDIT_BEGIN COMPILE holai/generated/recursion.lisp
 COMPILED_UNIT holai/generated/recursion.lisp
-INFERRED_UNIT holai/generated/recursion.lisp
 AUDIT_END COMPILE holai/generated/recursion.lisp
 AUDIT_BEGIN LOAD holai/generated/recursion.lisp
 LOADED_UNIT holai/generated/recursion.lisp
 AUDIT_END LOAD holai/generated/recursion.lisp
 AUDIT_BEGIN COMPILE holai/generated/arith.lisp
 COMPILED_UNIT holai/generated/arith.lisp
-INFERRED_UNIT holai/generated/arith.lisp
 AUDIT_END COMPILE holai/generated/arith.lisp
 AUDIT_BEGIN LOAD holai/generated/arith.lisp
 0..0..solved at 2
@@ -697,7 +673,6 @@ LOADED_UNIT holai/generated/arith.lisp
 AUDIT_END LOAD holai/generated/arith.lisp
 AUDIT_BEGIN COMPILE holai/generated/wf.lisp
 COMPILED_UNIT holai/generated/wf.lisp
-INFERRED_UNIT holai/generated/wf.lisp
 AUDIT_END COMPILE holai/generated/wf.lisp
 AUDIT_BEGIN LOAD holai/generated/wf.lisp
 0..0..solved at 2
@@ -809,7 +784,6 @@ LOADED_UNIT holai/generated/wf.lisp
 AUDIT_END LOAD holai/generated/wf.lisp
 AUDIT_BEGIN COMPILE holai/generated/calc_num.lisp
 COMPILED_UNIT holai/generated/calc_num.lisp
-INFERRED_UNIT holai/generated/calc_num.lisp
 AUDIT_END COMPILE holai/generated/calc_num.lisp
 AUDIT_BEGIN LOAD holai/generated/calc_num.lisp
 0..0..1..2..8..18..solved at 48
@@ -860,7 +834,6 @@ LOADED_UNIT holai/generated/calc_num.lisp
 AUDIT_END LOAD holai/generated/calc_num.lisp
 AUDIT_BEGIN COMPILE holai/generated/normalizer.lisp
 COMPILED_UNIT holai/generated/normalizer.lisp
-INFERRED_UNIT holai/generated/normalizer.lisp
 AUDIT_END COMPILE holai/generated/normalizer.lisp
 AUDIT_BEGIN LOAD holai/generated/normalizer.lisp
 0..0..solved at 2
@@ -879,7 +852,6 @@ LOADED_UNIT holai/generated/normalizer.lisp
 AUDIT_END LOAD holai/generated/normalizer.lisp
 AUDIT_BEGIN COMPILE holai/generated/grobner.lisp
 COMPILED_UNIT holai/generated/grobner.lisp
-INFERRED_UNIT holai/generated/grobner.lisp
 AUDIT_END COMPILE holai/generated/grobner.lisp
 AUDIT_BEGIN LOAD holai/generated/grobner.lisp
 0..0..2..4..10..20..52..96..204..356..638..1042..1916..3036..solved at 4498
@@ -898,7 +870,6 @@ LOADED_UNIT holai/generated/grobner.lisp
 AUDIT_END LOAD holai/generated/grobner.lisp
 AUDIT_BEGIN COMPILE holai/generated/ind_types.lisp
 COMPILED_UNIT holai/generated/ind_types.lisp
-INFERRED_UNIT holai/generated/ind_types.lisp
 AUDIT_END COMPILE holai/generated/ind_types.lisp
 AUDIT_BEGIN LOAD holai/generated/ind_types.lisp
 Searching with limit 0
@@ -964,7 +935,6 @@ LOADED_UNIT holai/generated/ind_types.lisp
 AUDIT_END LOAD holai/generated/ind_types.lisp
 AUDIT_BEGIN COMPILE holai/generated/lists.lisp
 COMPILED_UNIT holai/generated/lists.lisp
-INFERRED_UNIT holai/generated/lists.lisp
 AUDIT_END COMPILE holai/generated/lists.lisp
 AUDIT_BEGIN LOAD holai/generated/lists.lisp
 0..0..1..2..solved at 6
@@ -1149,7 +1119,6 @@ LOADED_UNIT holai/generated/lists.lisp
 AUDIT_END LOAD holai/generated/lists.lisp
 AUDIT_BEGIN COMPILE holai/generated/realax.lisp
 COMPILED_UNIT holai/generated/realax.lisp
-INFERRED_UNIT holai/generated/realax.lisp
 AUDIT_END COMPILE holai/generated/realax.lisp
 AUDIT_BEGIN LOAD holai/generated/realax.lisp
 Searching with limit 0
@@ -1180,7 +1149,6 @@ LOADED_UNIT holai/generated/realax.lisp
 AUDIT_END LOAD holai/generated/realax.lisp
 AUDIT_BEGIN COMPILE holai/generated/calc_int.lisp
 COMPILED_UNIT holai/generated/calc_int.lisp
-INFERRED_UNIT holai/generated/calc_int.lisp
 AUDIT_END COMPILE holai/generated/calc_int.lisp
 AUDIT_BEGIN LOAD holai/generated/calc_int.lisp
 0..0..solved at 2
@@ -1202,7 +1170,6 @@ LOADED_UNIT holai/generated/calc_int.lisp
 AUDIT_END LOAD holai/generated/calc_int.lisp
 AUDIT_BEGIN COMPILE holai/generated/realarith.lisp
 COMPILED_UNIT holai/generated/realarith.lisp
-INFERRED_UNIT holai/generated/realarith.lisp
 AUDIT_END COMPILE holai/generated/realarith.lisp
 AUDIT_BEGIN LOAD holai/generated/realarith.lisp
 0..0..1..7..solved at 12
@@ -1234,12 +1201,11 @@ AUDIT_BEGIN LOAD holai/generated/realarith.lisp
 0..0..1..2..5..18..35..solved at 63
 0..0..1..2..solved at 6
 0..0..2..4..10..18..34..76..138..336..872..2366..solved at 5076
-CPU time (user): 0.3339429999999979d0
+CPU time (user): 0.3091310000000007d0
 LOADED_UNIT holai/generated/realarith.lisp
 AUDIT_END LOAD holai/generated/realarith.lisp
 AUDIT_BEGIN COMPILE holai/generated/real.lisp
 COMPILED_UNIT holai/generated/real.lisp
-INFERRED_UNIT holai/generated/real.lisp
 AUDIT_END COMPILE holai/generated/real.lisp
 AUDIT_BEGIN LOAD holai/generated/real.lisp
 0..0..1..2..7..14..37..72..174..325..solved at 392
@@ -1351,7 +1317,6 @@ LOADED_UNIT holai/generated/real.lisp
 AUDIT_END LOAD holai/generated/real.lisp
 AUDIT_BEGIN COMPILE holai/generated/calc_rat.lisp
 COMPILED_UNIT holai/generated/calc_rat.lisp
-INFERRED_UNIT holai/generated/calc_rat.lisp
 AUDIT_END COMPILE holai/generated/calc_rat.lisp
 AUDIT_BEGIN LOAD holai/generated/calc_rat.lisp
 0..0..3..solved at 6
@@ -1394,7 +1359,6 @@ LOADED_UNIT holai/generated/calc_rat.lisp
 AUDIT_END LOAD holai/generated/calc_rat.lisp
 AUDIT_BEGIN COMPILE holai/generated/int.lisp
 COMPILED_UNIT holai/generated/int.lisp
-INFERRED_UNIT holai/generated/int.lisp
 AUDIT_END COMPILE holai/generated/int.lisp
 AUDIT_BEGIN LOAD holai/generated/int.lisp
 0..0..1..3..solved at 7
@@ -2881,7 +2845,6 @@ LOADED_UNIT holai/generated/int.lisp
 AUDIT_END LOAD holai/generated/int.lisp
 AUDIT_BEGIN COMPILE holai/generated/sets.lisp
 COMPILED_UNIT holai/generated/sets.lisp
-INFERRED_UNIT holai/generated/sets.lisp
 AUDIT_END COMPILE holai/generated/sets.lisp
 AUDIT_BEGIN LOAD holai/generated/sets.lisp
 0..0..solved at 2
@@ -3785,7 +3748,7 @@ Warning: inventing type variables
 0..0..solved at 2
 0..0..1..2..9..19..31..63..105..solved at 121
 0..0..solved at 2
-CPU time (user): 0.008253000000003397d0
+CPU time (user): 0.009498000000000673d0
 0..0..1..3..8..14..33..66..99..154..219..284..365..450..535..843..1220..1621..2226..2892..3660..5020..6510..8326..10667..13397..16922..20942..25267..30727..solved at 35152
 0..0..solved at 2
 0..0..solved at 2
@@ -4812,7 +4775,6 @@ LOADED_UNIT holai/generated/sets.lisp
 AUDIT_END LOAD holai/generated/sets.lisp
 AUDIT_BEGIN COMPILE holai/generated/iterate.lisp
 COMPILED_UNIT holai/generated/iterate.lisp
-INFERRED_UNIT holai/generated/iterate.lisp
 AUDIT_END COMPILE holai/generated/iterate.lisp
 AUDIT_BEGIN LOAD holai/generated/iterate.lisp
 0..0..1..7..solved at 11
@@ -5420,7 +5382,6 @@ LOADED_UNIT holai/generated/iterate.lisp
 AUDIT_END LOAD holai/generated/iterate.lisp
 AUDIT_BEGIN COMPILE holai/generated/cart.lisp
 COMPILED_UNIT holai/generated/cart.lisp
-INFERRED_UNIT holai/generated/cart.lisp
 AUDIT_END COMPILE holai/generated/cart.lisp
 AUDIT_BEGIN LOAD holai/generated/cart.lisp
 0..0..1..2..5..9..15..solved at 31
@@ -5694,7 +5655,6 @@ LOADED_UNIT holai/generated/cart.lisp
 AUDIT_END LOAD holai/generated/cart.lisp
 AUDIT_BEGIN COMPILE holai/generated/define.lisp
 COMPILED_UNIT holai/generated/define.lisp
-INFERRED_UNIT holai/generated/define.lisp
 AUDIT_END COMPILE holai/generated/define.lisp
 AUDIT_BEGIN LOAD holai/generated/define.lisp
 Warning: inventing type variables
@@ -5889,12 +5849,5 @@ Warning: inventing type variables
 0..0..0..solved at 3
 LOADED_UNIT holai/generated/define.lisp
 AUDIT_END LOAD holai/generated/define.lisp
-AUDIT_BEGIN COMPILE holai/all.lisp
-COMPILED_UNIT holai/all.lisp
-INFERRED_UNIT holai/all.lisp
-AUDIT_END COMPILE holai/all.lisp
-AUDIT_BEGIN LOAD holai/all.lisp
-LOADED_UNIT holai/all.lisp
-AUDIT_END LOAD holai/all.lisp
 AUDIT_END INITIALIZATION holai/tests/bootstrap.lisp
 DIAGNOSTICS_AUDIT_COMPLETE

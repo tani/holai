@@ -8,7 +8,7 @@ let rec local_function_groups = function
  | Origin (origin,node) when origin.rule="let" ->
    Option.map (fun (groups,body,origins) -> groups,body,origin::origins) (local_function_groups node)
  | List [Atom head;List definitions;body] ->
-   if head="labelsc" || head="holai.runtime:labelsc"
+   if head="labelsc" || head="holai.runtime.core:labelsc"
    then Some (definitions,body,[]) else None
  | _ -> None
 let combine_local_functions head functions body =
@@ -23,7 +23,7 @@ let rec module_function_group = function
  | Origin (origin,node) when origin.rule="local-module-binding" ->
    Option.map (fun (definitions,body,origins) -> definitions,body,origin::origins)
      (module_function_group node)
- | List [Atom head;List definitions;body] when head="labelsc" || head="holai.runtime:labelsc" ->
+ | List [Atom head;List definitions;body] when head="labelsc" || head="holai.runtime.core:labelsc" ->
    Some (definitions,body,[])
  | _ -> None
 let combine_module_functions head functions body =
@@ -81,7 +81,7 @@ let parameter_labels e = List.map (fun p -> fst (required_parameter p)) (fst (sp
 let labelled_binding (b:binding) e = {b with labels=parameter_labels e}
 let local_module_emitter : (context -> env -> string -> module_expr -> modul * (Sexp.t -> Sexp.t)) option ref = ref None
 let native_function (b:binding) =
- b.package="cl" || b.package="holai.runtime" || match b.kind with Constructor _ -> true | _ -> false
+ b.package="cl" || String.starts_with ~prefix:"holai.runtime." b.package || match b.kind with Constructor _ -> true | _ -> false
 let function_ref c b n =
  if native_function b then
   form (runtime c "function-value") [a ("#'"^reference c b); a (string_of_int n)]
@@ -246,7 +246,7 @@ and emit_pattern_guided c env record_hint families path p =
  in mark c loc rule node
 and emit_constructor_pattern c env loc name args family = match name,args with
  | "[]",[] -> a "nil"
- | "()",[] -> form "cl:type" [a "holai.runtime::unit-value"]
+ | "()",[] -> form "cl:type" [a "holai.runtime.data:unit-value"]
  | ("True"|"true"),[] when boolean_token c loc name -> a "cl:t"
  | ("False"|"false"),[] when boolean_token c loc name -> a "cl:nil"
  | "::",_ -> let args=match args with [PaTup (_,xs)] -> v xs | _ -> args in
@@ -332,7 +332,7 @@ let rec emit c env e =
  | ExTry (_,x,cs) -> let ex=synthetic_local c (Sexp.symbol (fresh c "exception")) in
    let fallback=l [a "_";form (runtime c "raise") [a ex]] in
    form "handler-case" [emit c env x;
-     l [a "holai.runtime:ocaml-condition";l [a ex];
+     l [a "holai.runtime.data:ocaml-condition";l [a ex];
         form (runtime c "match") (a ex::emit_cases c env (v cs)@[fallback])]],"try"
  | ExLet (_,r,bs,body) -> emit_let c env loc (v r) (v bs) body,"let"
  | ExTyc (_,e,_) -> emit c env e,"expression-annotation"

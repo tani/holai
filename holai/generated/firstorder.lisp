@@ -19,7 +19,11 @@
   (:import-from :holai.meson)
   (:import-from :holai.meson.meson)
   (:import-from :holai.printer)
-  (:import-from :holai.runtime)
+  (:import-from :holai.runtime.core)
+  (:import-from :holai.runtime.data)
+  (:import-from :holai.runtime.format)
+  (:import-from :holai.runtime.pattern)
+  (:import-from :holai.runtime.stdlib)
   (:export copverb))
 
 (cl:eval-when
@@ -244,15 +248,22 @@
 (uiop:define-package
   :holai.firstorder.utils.pair
   (:use :cl)
-  (:mix :cl :holai.runtime)
+  (:mix :cl :holai.runtime.core :holai.runtime.data :holai.runtime.pattern)
   (:shadow ARG~42 F X Y mapn)
-  (:shadowing-import-from :holai.runtime tuple match defunc)
+  (:shadowing-import-from :holai.runtime.core defunc)
+  (:shadowing-import-from :holai.runtime.data tuple)
+  (:shadowing-import-from :holai.runtime.pattern match)
   (:export mapn))
 
 (uiop:define-package
   :holai.firstorder.utils.list
   (:use :cl)
-  (:mix :cl :holai.runtime)
+  (:mix
+    :cl
+    :holai.runtime.core
+    :holai.runtime.data
+    :holai.runtime.pattern
+    :holai.runtime.stdlib)
   (:shadow
     ACC
     ACC%
@@ -307,14 +318,24 @@
     union2)
   (:shadowing-import-from :cl - +)
   (:shadowing-import-from
-    :holai.runtime
-    tuple
+    :holai.runtime.core
     Some
-    raise
     partial
     None
-    match
     make-Not_found
+    list-fold-left
+    list-exists
+    lambdac
+    labelsc
+    function-value
+    failwith
+    defunc
+    >
+    =)
+  (:shadowing-import-from :holai.runtime.data tuple raise fst)
+  (:shadowing-import-from :holai.runtime.pattern match guard)
+  (:shadowing-import-from
+    :holai.runtime.stdlib
     list-tl
     list-sort
     list-rev-map
@@ -335,22 +356,11 @@
     list-fold-right2
     list-fold-right
     list-fold-left2
-    list-fold-left
     list-find
     list-filter-map
     list-filter
-    list-exists
     list-concat
-    list-assoc
-    lambdac
-    labelsc
-    guard
-    function-value
-    fst
-    failwith
-    defunc
-    >
-    =)
+    list-assoc)
   (:export
     concat_map
     cons
@@ -400,9 +410,10 @@
 (uiop:define-package
   :holai.firstorder.utils
   (:use :cl)
-  (:mix :cl :holai.runtime)
+  (:mix :cl :holai.runtime.core :holai.runtime.pattern)
   (:shadow % %> >>= ARG~23 F G% X Y const)
-  (:shadowing-import-from :holai.runtime Some None match make-None defunc)
+  (:shadowing-import-from :holai.runtime.core Some None make-None defunc)
+  (:shadowing-import-from :holai.runtime.pattern match)
   (:export % %> >>= const))
 
 (uiop:define-package
@@ -418,7 +429,11 @@
     :holai.meson
     :holai.meson.meson
     :holai.printer
-    :holai.runtime)
+    :holai.runtime.core
+    :holai.runtime.data
+    :holai.runtime.format
+    :holai.runtime.pattern
+    :holai.runtime.stdlib)
   (:shadow
     A%
     A1
@@ -561,30 +576,21 @@
   (:shadowing-import-from :holai.meson.meson mk_negated)
   (:shadowing-import-from :holai.printer string_of_type string_of_term)
   (:shadowing-import-from
-    :holai.runtime
-    unit
-    tuple
-    snd
-    ref
-    raise
+    :holai.runtime.core
     partial
-    match
-    list-map2
-    list-length
     lambdac
     labelsc
     function-value
-    fst
-    format-printf
     failwith
     Failure
-    deref
     defunc
-    assign
-    assert-true
     =
     <=
     <)
+  (:shadowing-import-from :holai.runtime.data unit tuple snd ref raise fst deref assign)
+  (:shadowing-import-from :holai.runtime.format format-printf)
+  (:shadowing-import-from :holai.runtime.pattern match)
+  (:shadowing-import-from :holai.runtime.stdlib list-map2 list-length assert-true)
   (:export
     fol_of_atom
     fol_of_const
@@ -604,9 +610,9 @@
 (uiop:define-package
   :holai.firstorder
   (:use :cl)
-  (:mix :cl :holai.runtime)
+  (:mix :cl :holai.runtime.data)
   (:shadow copverb)
-  (:shadowing-import-from :holai.runtime ref)
+  (:shadowing-import-from :holai.runtime.data ref)
   (:export copverb))
 
 (in-package :holai.firstorder)
@@ -768,18 +774,18 @@
     (labelsc
       ((inc_vcounter (arg~533)
         (match arg~533
-          ((cl:type holai.runtime::unit-value)
+          ((cl:type holai.runtime.data:unit-value)
             (let* ((n (deref vcounter)) (m (+ n 1)))
               (cl:declare (cl:ignorable n m))
               (progn (assign vcounter m) n)))))
         (reset_vars% (arg~551)
           (match arg~551
-            ((cl:type holai.runtime::unit-value)
+            ((cl:type holai.runtime.data:unit-value)
               (progn (assign vstore nil) (assign gstore nil) (assign vcounter 0)))))
         (fol_of_var% (v)
           (handler-case
             (assoc v (deref vstore))
-            (holai.runtime:ocaml-condition
+            (holai.runtime.data:ocaml-condition
               (exception~566)
               (match exception~566
                 ((Failure _)
@@ -799,7 +805,7 @@
         (hol_of_var% (v ty)
           (handler-case
             (rev_assoc v (deref gstore))
-            (holai.runtime:ocaml-condition
+            (holai.runtime.data:ocaml-condition
               (exception~603)
               (match exception~603
                 ((Failure _)
@@ -856,7 +862,7 @@
     (let ((tm% (dest_neg tm)))
       (cl:declare (cl:ignorable tm%))
       (match (fol_of_atom env consts tm%) ((tuple p% a%) (tuple (- p%) a%))))
-    (holai.runtime:ocaml-condition
+    (holai.runtime.data:ocaml-condition
       (exception~728)
       (match exception~728
         ((Failure _) (fol_of_atom env consts tm))
@@ -871,7 +877,7 @@
             (fbod (fol_of_form (cl:cons v env) (subtract consts (cl:cons v nil)) bod)))
           (cl:declare (cl:ignorable fv fbod))
           (make-Forallq fv fbod))))
-    (holai.runtime:ocaml-condition
+    (holai.runtime.data:ocaml-condition
       (exception~759)
       (match exception~759
         ((Failure _)
@@ -881,7 +887,7 @@
                 (let ((fl (fol_of_form env consts l)) (fr (fol_of_form env consts r%)))
                   (cl:declare (cl:ignorable fl fr))
                   (make-Conj fl fr))))
-            (holai.runtime:ocaml-condition
+            (holai.runtime.data:ocaml-condition
               (exception~762)
               (match exception~762
                 ((Failure _)
@@ -893,7 +899,7 @@
                             (fr (fol_of_form env consts r%)))
                           (cl:declare (cl:ignorable fl fr))
                           (make-Disj fl fr))))
-                    (holai.runtime:ocaml-condition
+                    (holai.runtime.data:ocaml-condition
                       (exception~765)
                       (match exception~765
                         ((Failure _) (make-Atom (fol_of_literal env consts tm)))

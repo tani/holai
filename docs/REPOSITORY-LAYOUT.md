@@ -1,20 +1,33 @@
 # Repository inclusion policy
 
-The published project is Holai. The current translator CLI is `bin/ml2cl`,
-packages remain `holai.*`, and systems are `holai`/`holai/runtime` plus inferred
-`holai/generated/<stem>` systems. Exactly one root `holai.asd` provides discovery;
-no old-name compatibility aliases are retained.
+The published project is Holai. The current translator CLI is `bin/ml2cl`.
+Package names are `holai.runtime.<unit>` and `holai.<stem>`, with dot-delimited
+static descendants. Root `holai.asd` handwrites ordinary serial systems:
+load `holai` for the core or `holai/runtime` for the runtime. No inferred
+per-source systems or old-name compatibility aliases remain.
+
+The current explicit-load-order/dotted-package `make release` passed locally on
+ARM64 Linux in 287.53 seconds: SBCL full-core, all three additional-host
+compatibility profiles, cold diagnostics, 93 identical clean outputs, 55 unchanged
+pins and packaging (427 payload files). Older measurements remain historical;
+ZIP byte size is not fixed after final documentation edits.
+Runtime physical order is data, pattern-registry, pattern, core, format, stdlib;
+then the 46 generated files in vendor order (52 production units).
+Load the literal root `holai.asd` with `asdf:load-asd` before selecting `holai`
+or `holai/runtime`; `holai-runtime` is not a current system ID. Package ownership
+is `holai.define`, `holai.runtime.<unit>` and `holai.<stem>` with dotted children.
+Data/registry own leaf state, pattern matching, core calling/proof macros,
+format printing and stdlib library adapters; no aliases/shared facade are provided.
 
 ## Keep in Git
 
-- DESIGN.md, AGENTS.md, translator/runtime sources, Makefile, root holai.asd
-  and maintained holai/all.lisp inferred entry.
+- DESIGN.md, AGENTS.md, translator/runtime sources, Makefile and root holai.asd.
 - flake.nix/flake.lock: one NixOS 26.05 source, with explicit compatible
   Camlp5/Num source overrides. .github/workflows/ci.yml: SHA-pinned, read-only
-  aarch64-linux/aarch64-darwin/x86_64-linux CI, with platform-specific artifacts.
+  3 host × 4 implementation Cartesian CI, with host/implementation-specific artifacts.
 - Generated Lisp: source comparison and debugging are core project goals.
-- Generated inventory/package-systems.sexp: readable supported scope and complete
-  package-provider mapping. Runtime/predecessor/external imports infer load order.
+- Generated inventory.json: readable supported scope. Load order is handwritten
+  in the root ASD, not emitted as provider or load-order S-expression data.
 - Original pinned HOL Light/OCaml inputs, with every applicable license and
   input digest. They permit reproducible offline builds.
 - Tests and reusable scanning, validation, packaging and measurement scripts.
@@ -51,12 +64,12 @@ use the new paths. Generated Lisp/maps are regenerated for the renamed API; upst
 
 The organization places five OCaml source modules directly in `ml2cl/`, Lisp runtime/generated/tests in `holai/`, and scripts/reports in `misc/`.
 Release notes live in `docs/`; root DESIGN.md, AGENTS.md, build files, licensing and vendor inputs remain.
-The unified ASDF/UIOP cutover preserves the CLI and public package API while
-replacing old systems without aliases. No algorithm or data representation
-changes are included. Packaging verifies mandatory files, pins, observation
-digests and 52 unique production pathnames/classes/order. The 94 generated
-outputs remain 46 Lisp/map pairs plus inventory and provider data; the maintained
-entry and root ASD are separate. Prior 51-unit measurements remain historical.
+The explicit ASDF/dotted-package cutover preserves the CLI and actual runtime
+ownership without aliases. No algorithm or data representation changes are
+included. Packaging verifies mandatory files, pins, observation digests and
+52 unique production compile/load pathnames in explicit vendor-manifest order.
+The 93 generated outputs are 46 Lisp/map pairs plus inventory; the hand-maintained
+root ASD is separate. Previous measurements remain historical.
 
 Current launchers share `misc/scripts/lisp_host.py`; `run-lisp.sh` selects
 the explicit candidate IDs through `HOLAI_LISP`, without an SBCL-only alias.
@@ -72,19 +85,23 @@ ECL/ABCL/CLISP full-core processes retain the approved 3600-second guard.
 Retained previous-distribution reports record SBCL full-core and ECL/ABCL/CLISP
 runtime-fixture passes, with source fingerprints and digest-matched logs. Each additional host passed
 three runtime fixtures and 33 exact rows; its full core remains unverified.
-Fixture fingerprints cover Lisp/maps/provider/inventory only, not compiled
-FASLs; compiled FASLs are not shipped. The final `make release` exited 0 in
+Current fixture fingerprints cover Lisp/maps/inventory only, not compiled
+FASLs; compiled FASLs are not shipped. The preceding release exited 0 in
 269.03 seconds, including SBCL-backed inventory, fresh 94-output identical clean
 generation and 55 unchanged input pins. The archive producer reported 427
 payload files. The preceding inventory failure is historical, not a pending gate.
-The current NixOS 26.05 profile separately passed local ARM64 Linux flake
+The preceding NixOS 26.05 profile separately passed local ARM64 Linux flake
 checks, a forced fresh compiler build and ordinary release with all four hosts;
-the combined flake-check/release invocation took 293.62 seconds. Current reports
+the combined flake-check/release invocation took 293.62 seconds. Those reports
 retain 94 identical clean-generated outputs and 55 unchanged input pins; the
 archive producer reported 428 payload files before final documentation edits.
-CI now runs `nix flake check` plus ordinary `make release` independently on
-each platform, always retaining separate artifacts; no platform's evidence is
-merged into another's reports. The shell selects only implemented host adapters
+That historical CI ran `nix flake check` plus ordinary `make release` independently
+on each platform. Current CI is the actionlint-passed 12-job Cartesian matrix:
+three systems × SBCL/ECL/ABCL/CLISP, with separate artifacts. Only SBCL runs release;
+other implementations run runtime fixtures. Remote execution of the new push is
+pending; older CLISP failures remain unresolved. Captured phase stdout/stderr and
+public GitHub Actions annotations support root diagnosis rather than blind retries.
+The shell selects only implemented host adapters
 whose pinned packages are usable, requiring SBCL. Packaging verifies actual
 host versions and executable bindings against exported pinned-shell metadata.
 All three platform flake evaluations (`--all-systems --no-build`) and
@@ -98,7 +115,7 @@ the maintained translator-generated and handwritten sources, not just end-user
 examples. Generated PROOF heads are finalized only after the complete actual
 reader-owner namespace is known: safe owners explicitly import the runtime
 macro and emit bare `proof`; owned, lexical, imported-symbol or maker-shadow
-conflicts retain `holai.runtime:proof` without renaming source bindings.
+conflicts retain `holai.runtime.core:proof` without renaming source bindings.
 Lexical modules share their enclosing reader owner; static child packages decide
 separately. Handwritten ordinary proof code uses explicit UIOP runtime PROOF
 imports, while intentionally qualified external-API/collision examples and the

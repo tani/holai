@@ -351,7 +351,6 @@
   (:import-from :holai.fusion.hol)
   (:import-from :holai.itab)
   (:import-from :holai.lib)
-  (:import-from :holai.lists)
   (:import-from :holai.meson)
   (:import-from :holai.nums)
   (:import-from :holai.pair)
@@ -360,7 +359,9 @@
   (:import-from :holai.printer)
   (:import-from :holai.quot)
   (:import-from :holai.recursion)
-  (:import-from :holai.runtime)
+  (:import-from :holai.runtime.core)
+  (:import-from :holai.runtime.data)
+  (:import-from :holai.runtime.pattern)
   (:import-from :holai.simp)
   (:import-from :holai.tactics)
   (:import-from :holai.theorems)
@@ -629,7 +630,9 @@
     :holai.printer
     :holai.quot
     :holai.recursion
-    :holai.runtime
+    :holai.runtime.core
+    :holai.runtime.data
+    :holai.runtime.pattern
     :holai.simp
     :holai.tactics
     :holai.theorems)
@@ -1101,17 +1104,9 @@
   (:shadowing-import-from :holai.printer parse_as_prefix parse_as_infix)
   (:shadowing-import-from :holai.quot lift_theorem lift_function define_quotient_type)
   (:shadowing-import-from :holai.recursion new_recursive_definition)
-  (:shadowing-import-from
-    :holai.runtime
-    tuple
-    snd
-    proof
-    match
-    lambdac
-    labelsc
-    function-value
-    fst
-    defunc)
+  (:shadowing-import-from :holai.runtime.core proof lambdac labelsc function-value defunc)
+  (:shadowing-import-from :holai.runtime.data tuple snd fst)
+  (:shadowing-import-from :holai.runtime.pattern match)
   (:shadowing-import-from
     :holai.simp
     SIMP_TAC
@@ -1493,7 +1488,7 @@
 
 (defunc prioritize_num (arg~172)
   (match arg~172
-    ((cl:type holai.runtime::unit-value)
+    ((cl:type holai.runtime.data:unit-value)
       (prioritize_overload (mk_type (tuple "num" nil))))))
 
 ;; (* ------------------------------------------------------------------------- *)
@@ -5448,7 +5443,7 @@
 
 (defunc prioritize_real (arg~8801)
   (match arg~8801
-    ((cl:type holai.runtime::unit-value)
+    ((cl:type holai.runtime.data:unit-value)
       (prioritize_overload (mk_type (tuple "real" nil))))))
 
 ;; (* ------------------------------------------------------------------------- *)

@@ -35,7 +35,9 @@
     mk_eq
     mk_fun_ty)
   (:import-from :holai.lib)
-  (:import-from :holai.runtime)
+  (:import-from :holai.runtime.core)
+  (:import-from :holai.runtime.data)
+  (:import-from :holai.runtime.pattern)
   (:export aconv bty equals_thm is_eq mk_eq mk_fun_ty))
 
 (cl:eval-when
@@ -352,7 +354,7 @@
 (uiop:define-package
   :holai.fusion.hol
   (:use :cl)
-  (:mix :cl :holai.lib :holai.runtime)
+  (:mix :cl :holai.lib :holai.runtime.core :holai.runtime.data :holai.runtime.pattern)
   (:shadow
     A
     ABS%
@@ -610,33 +612,26 @@
     can
     assoc)
   (:shadowing-import-from
-    :holai.runtime
-    tuple
+    :holai.runtime.core
     string-join
     string-concat
-    snd
-    ref
-    raise
-    match
     lambdac
     labelsc
-    guard
     function-value
-    fst
     failwith
     Failure
-    deref
     defvariant
     defunc
     define-exception
     compare
-    assign
     >
     ==
     =
     <>
     <=
     <)
+  (:shadowing-import-from :holai.runtime.data tuple snd ref raise fst deref assign)
+  (:shadowing-import-from :holai.runtime.pattern match guard)
   (:export
     ABS%
     ASSUME
@@ -707,7 +702,7 @@
 (uiop:define-package
   :holai.fusion
   (:use :cl)
-  (:mix :cl :holai.runtime)
+  (:mix :cl :holai.runtime.core :holai.runtime.data :holai.runtime.pattern)
   (:shadow
     ARG~2170
     EQ
@@ -796,16 +791,9 @@
     alphaorder
     ABS%
     Abs)
-  (:shadowing-import-from
-    :holai.runtime
-    tuple
-    raise
-    match
-    lambdac
-    failwith
-    Failure
-    defunc
-    =)
+  (:shadowing-import-from :holai.runtime.core lambdac failwith Failure defunc =)
+  (:shadowing-import-from :holai.runtime.data tuple raise)
+  (:shadowing-import-from :holai.runtime.pattern match)
   (:export
     ABS%
     ASSUME
@@ -911,7 +899,7 @@
 
 
 (defunc types (arg~24)
-  (match arg~24 ((cl:type holai.runtime::unit-value) (deref the_type_constants))))
+  (match arg~24 ((cl:type holai.runtime.data:unit-value) (deref the_type_constants))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Lookup function for type constants. Returns arity if it succeeds.         *)
@@ -949,7 +937,7 @@
         ((arity
           (handler-case
             (get_type_arity tyop)
-            (holai.runtime:ocaml-condition
+            (holai.runtime.data:ocaml-condition
               (exception~70)
               (match exception~70
                 ((Failure _)
@@ -1045,7 +1033,7 @@
 
 
 (defunc constants (arg~224)
-  (match arg~224 ((cl:type holai.runtime::unit-value) (deref the_term_constants))))
+  (match arg~224 ((cl:type holai.runtime.data:unit-value) (deref the_term_constants))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Gets type of constant if it succeeds.                                     *)
@@ -1108,7 +1096,7 @@
         ((uty
           (handler-case
             (get_const_type name)
-            (holai.runtime:ocaml-condition
+            (holai.runtime.data:ocaml-condition
               (exception~369)
               (match exception~369
                 ((Failure _) (failwith "mk_const: not a constant name"))
@@ -1281,7 +1269,7 @@
               (let ((t%% (inst%% env% tyin t%)))
                 (cl:declare (cl:ignorable t%%))
                 (if (cl:and (== y% y) (== t%% t%)) tm (make-Abs y% t%%)))
-              (holai.runtime:ocaml-condition
+              (holai.runtime.data:ocaml-condition
                 (exception~938)
                 (match exception~938
                   ((cl:and ex (Clash w%))
@@ -1531,7 +1519,7 @@
 (defparameter the_axioms (ref nil))
 
 (defunc axioms (arg~1837)
-  (match arg~1837 ((cl:type holai.runtime::unit-value) (deref the_axioms))))
+  (match arg~1837 ((cl:type holai.runtime.data:unit-value) (deref the_axioms))))
 
 (defunc new_axiom (tm)
   (if (= (compare (type_of tm) bool_ty) 0)
@@ -1548,7 +1536,7 @@
 (defparameter the_definitions (ref nil))
 
 (defunc definitions (arg~1875)
-  (match arg~1875 ((cl:type holai.runtime::unit-value) (deref the_definitions))))
+  (match arg~1875 ((cl:type holai.runtime.data:unit-value) (deref the_definitions))))
 
 (defunc new_basic_definition (tm)
   (match tm
@@ -1600,7 +1588,7 @@
               (match
                 (handler-case
                   (dest_comb c%)
-                  (holai.runtime:ocaml-condition
+                  (holai.runtime.data:ocaml-condition
                     (exception~2097)
                     (match exception~2097
                       ((Failure _)
@@ -1614,7 +1602,7 @@
                       (match
                         (handler-case
                           (new_type (tuple tyname (#`length tyvars%)))
-                          (holai.runtime:ocaml-condition
+                          (holai.runtime.data:ocaml-condition
                             (exception~2074)
                             (match exception~2074
                               ((Failure _)
@@ -1681,7 +1669,7 @@
             (let* ((ty (type_of l)) (eq_tm (#`inst (cl:cons (tuple ty aty) nil) eq)))
               (cl:declare (cl:ignorable ty eq_tm))
               (mk_comb (tuple (mk_comb (tuple eq_tm l)) r)))
-            (holai.runtime:ocaml-condition
+            (holai.runtime.data:ocaml-condition
               (exception~2174)
               (match exception~2174
                 ((Failure _) (failwith "mk_eq"))

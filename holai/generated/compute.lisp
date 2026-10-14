@@ -25,7 +25,10 @@
   (:import-from :holai.pair)
   (:import-from :holai.parser)
   (:import-from :holai.printer)
-  (:import-from :holai.runtime)
+  (:import-from :holai.runtime.core)
+  (:import-from :holai.runtime.data)
+  (:import-from :holai.runtime.pattern)
+  (:import-from :holai.runtime.stdlib)
   (:import-from :holai.simp)
   (:import-from :holai.tactics)
   (:import-from :holai.theorems)
@@ -455,7 +458,10 @@
     :holai.pair
     :holai.parser
     :holai.printer
-    :holai.runtime
+    :holai.runtime.core
+    :holai.runtime.data
+    :holai.runtime.pattern
+    :holai.runtime.stdlib
     :holai.simp
     :holai.tactics
     :holai.theorems)
@@ -912,26 +918,46 @@
   (:shadowing-import-from :holai.parser parse_term)
   (:shadowing-import-from :holai.printer string_of_term print_term)
   (:shadowing-import-from
-    :holai.runtime
+    :holai.runtime.core
+    string-concat
+    Some
+    partial
+    Not_found
+    None
+    make-Some
+    make-None
+    lambdac
+    labelsc
+    function-value
+    failwith
+    defvariant
+    defunc
+    defrecord
+    define-exception
+    array-set
+    array-make
+    array-get
+    =
+    <=)
+  (:shadowing-import-from
+    :holai.runtime.data
     unit
     tuple
+    snd
+    ref-contents
+    ref
+    raise
+    fst
+    deref
+    assign)
+  (:shadowing-import-from :holai.runtime.pattern match)
+  (:shadowing-import-from
+    :holai.runtime.stdlib
     table-remove
     table-fold
     table-find
     table-create
     table-add
-    string-concat
-    Some
-    snd
-    ref-contents
-    ref
-    raise
-    partial
-    Not_found
-    None
-    match
-    make-Some
-    make-None
     list-rev
     list-nth
     list-map
@@ -939,23 +965,7 @@
     list-iter
     list-filter
     list-concat
-    lambdac
-    labelsc
-    function-value
-    fst
-    failwith
-    deref
-    defvariant
-    defunc
-    defrecord
-    define-exception
-    assign
-    array-set
-    array-make
-    array-get
-    array-fold-left
-    =
-    <=)
+    array-fold-left)
   (:shadowing-import-from :holai.simp PURE_REWRITE_CONV basic_rewrites basic_convs)
   (:shadowing-import-from :holai.tactics CONV_TAC)
   (:shadowing-import-from
@@ -1010,12 +1020,12 @@
       (let ((fval (deref flag)))
         (cl:declare (cl:ignorable fval))
         (match (assign flag b%)
-          ((cl:type holai.runtime::unit-value)
+          ((cl:type holai.runtime.data:unit-value)
             (let
               ((res
                 (handler-case
                   (#`f x)
-                  (holai.runtime:ocaml-condition
+                  (holai.runtime.data:ocaml-condition
                     (exception~12)
                     (match exception~12
                       (e% (progn (assign flag fval) (raise e%)))
@@ -1026,14 +1036,14 @@
 (defunc RIGHT_BETA (th)
   (handler-case
     (TRANS th (BETA_CONV (#`rhs (concl th))))
-    (holai.runtime:ocaml-condition
+    (holai.runtime.data:ocaml-condition
       (exception~42)
       (match exception~42 (_ (failwith "RIGHT_BETA")) (_ (raise exception~42))))))
 
 (defunc RIGHT_ETA (thm)
   (handler-case
     (TRANS thm (#`ETA_CONV (#`rhs (concl thm))))
-    (holai.runtime:ocaml-condition
+    (holai.runtime.data:ocaml-condition
       (exception~56)
       (match exception~56 (_ (failwith "RIGHT_ETA")) (_ (raise exception~56))))))
 
@@ -1076,7 +1086,7 @@
 (defunc try_eta (thm)
   (handler-case
     (RIGHT_ETA thm)
-    (holai.runtime:ocaml-condition
+    (holai.runtime.data:ocaml-condition
       (exception~172)
       (match exception~172 (_ thm) (_ (raise exception~172))))))
 
@@ -1125,7 +1135,7 @@
       (CONV_RULE
         (RATOR_CONV (RAND_CONV (CHANGED_CONV (PURE_REWRITE_CONV (cl:cons ETA_AX nil)))))
         (ABS% x thm)))
-    (holai.runtime:ocaml-condition
+    (holai.runtime.data:ocaml-condition
       (exception~270)
       (match exception~270 (_ (failwith "FUNIFY")) (_ (raise exception~270))))))
 
@@ -1136,7 +1146,7 @@
         (let ((x (variant (frees lhs%) (fst (dest_abs rhs%)))))
           (cl:declare (cl:ignorable x))
           (CONV_RULE (RAND_CONV #'BETA_CONV) (AP_THM thm x)))))
-    (holai.runtime:ocaml-condition
+    (holai.runtime.data:ocaml-condition
       (exception~295)
       (match exception~295 (_ (failwith "UNFUNIFY")) (_ (raise exception~295))))))
 
@@ -1145,7 +1155,7 @@
     ((iter (th)
       (handler-case
         (iter (#`f th))
-        (holai.runtime:ocaml-condition
+        (holai.runtime.data:ocaml-condition
           (exception~329)
           (match exception~329 (_ th) (_ (raise exception~329)))))))
     (end_itlist CONJ (list-map #'iter (BODY_CONJUNCTS thm)))))
@@ -1178,7 +1188,7 @@
               (cl:declare (cl:ignorable newi))
               (handler-case
                 (tuple free (make-Pvar (- (- newi (index t% free)) 1)))
-                (holai.runtime:ocaml-condition
+                (holai.runtime.data:ocaml-condition
                   (exception~404)
                   (match exception~404
                     (_ (tuple (cl:cons t% free) (make-Pvar newi)))
@@ -1291,14 +1301,14 @@
 (defvariant compset (Rws #:field0))
 
 (defunc empty_rws (arg~782)
-  (match arg~782 ((cl:type holai.runtime::unit-value) (make-Rws (table-create 100)))))
+  (match arg~782 ((cl:type holai.runtime.data:unit-value) (make-Rws (table-create 100)))))
 
 (defunc assoc_clause (arg~790 cst%)
   (match arg~790
     ((Rws rws%)
       (handler-case
         (table-find rws% cst%)
-        (holai.runtime:ocaml-condition
+        (holai.runtime.data:ocaml-condition
           (exception~794)
           (match exception~794
             ((Not_found)
@@ -1337,7 +1347,7 @@
                     (tuple
                       (handler-case
                         (make-Bv (index t%% env%))
-                        (holai.runtime:ocaml-condition
+                        (holai.runtime.data:ocaml-condition
                           (exception~912)
                           (match exception~912 (_ (make-Fv)) (_ (raise exception~912)))))
                       c%)))
@@ -1410,7 +1420,7 @@
 
 (defunc new_rws (arg~1158)
   (match arg~1158
-    ((cl:type holai.runtime::unit-value)
+    ((cl:type holai.runtime.data:unit-value)
       (let ((rws% (empty_rws unit)))
         (cl:declare (cl:ignorable rws%))
         (progn (add_thms (cl:cons REFL_CLAUSE nil) rws%) rws%)))))
@@ -1530,7 +1540,7 @@
               (if (= name name%)
                 (handler-case
                   (tuple bds (type_match ty ty% tbds))
-                  (holai.runtime:ocaml-condition
+                  (holai.runtime.data:ocaml-condition
                     (exception~1439)
                     (match exception~1439
                       (_ (raise (make-No_match)))
@@ -1590,7 +1600,7 @@
             (cl:declare (cl:ignorable env))
             (handler-case
               (make-rule_inst :rule rw% :inst (match_list (tuple env ibds) lhs% lt))
-              (holai.runtime:ocaml-condition
+              (holai.runtime.data:ocaml-condition
                 (exception~1622)
                 (match exception~1622
                   ((No_match) (try_rec% rwn))
@@ -1644,7 +1654,7 @@
         (match (array-fold-left #'inst_one_var (tuple tithm nil) bds)
           ((tuple spec_thm venv)
             (match (if monitoring% (#`print_term (concl spec_thm)) unit)
-              ((cl:type holai.runtime::unit-value)
+              ((cl:type holai.runtime.data:unit-value)
                 (tuple (#`trans_thm th spec_thm) (mk_clos (tuple venv tirhs)))))))))))
 
 (defparameter monitoring (ref (make-None)))
@@ -1674,11 +1684,11 @@
           (match (deref stoppers)
             ((None) unit)
             ((Some p%) (if (#`p% head) (raise (make-No_match)) unit)))
-          ((cl:type holai.runtime::unit-value)
+          ((cl:type holai.runtime.data:unit-value)
             (match
               (handler-case
                 (#`term_match nil hcst head)
-                (holai.runtime:ocaml-condition
+                (holai.runtime.data:ocaml-condition
                   (exception~1887)
                   (match exception~1887
                     (_ (raise (make-No_match)))
@@ -1690,7 +1700,7 @@
                     (insted (inst_rw (tuple th mon rule_inst%))))
                   (cl:declare (cl:ignorable rule_inst% mon insted))
                   (tuple cl:t insted))))))
-        (holai.runtime:ocaml-condition
+        (holai.runtime.data:ocaml-condition
           (exception~1844)
           (match exception~1844
             ((No_match)
@@ -1711,7 +1721,7 @@
       (handler-case
         (match (#`fconv (#`rhs_concl th))
           ((tuple thm ft) (tuple cl:t (tuple (#`trans_thm th thm) ft))))
-        (holai.runtime:ocaml-condition
+        (holai.runtime.data:ocaml-condition
           (exception~1933)
           (match exception~1933
             (_
@@ -1883,7 +1893,7 @@
 (defunc set_skip (compset c% opt)
   (handler-case
     (match (dest_const c%) ((tuple name _) (set_skip_name compset name opt)))
-    (holai.runtime:ocaml-condition
+    (holai.runtime.data:ocaml-condition
       (exception~2568)
       (match exception~2568 (_ (failwith "set_skip")) (_ (raise exception~2568))))))
 
@@ -1909,15 +1919,15 @@
 
 (defunc bool_compset (arg~2608)
   (match arg~2608
-    ((cl:type holai.runtime::unit-value)
+    ((cl:type holai.runtime.data:unit-value)
       (let ((base (from_list bool_redns)))
         (cl:declare (cl:ignorable base))
         (match (set_skip base (parse_term "COND: bool -> A -> A -> A") (make-None))
-          ((cl:type holai.runtime::unit-value) base))))))
+          ((cl:type holai.runtime.data:unit-value) base))))))
 
 (defunc basic_compset (arg~2625)
   (match arg~2625
-    ((cl:type holai.runtime::unit-value)
+    ((cl:type holai.runtime.data:unit-value)
       (let*
         ((basic_rws0 (#`basic_rewrites unit))
           (lhs_lambda_rules

@@ -1,4 +1,18 @@
-(in-package :holai.runtime)
+(uiop:define-package :holai.runtime.format
+  (:use :cl)
+  (:shadow :formatter)
+  (:import-from :holai.runtime.data :unit)
+  (:import-from :holai.runtime.core
+    :invalid-arg :string-of-int :string-concat :function-value)
+  (:shadowing-import-from :holai.runtime.core :funcall)
+  (:export :print-string :print-newline :print-flush :pp-print-string :std-formatter
+    :buffer-create :buffer-contents :buffer-reset :formatter-of-buffer :get-margin
+    :pp-print-char :pp-print-int :pp-print-cut :pp-open-vbox :open-vbox :open-box
+    :close-box :print-break :pp-print-as :pp-open-box :pp-open-hbox :pp-open-hvbox
+    :pp-close-box :pp-print-space :pp-print-break :pp-print-flush :pp-set-margin
+    :pp-set-max-boxes :set-margin :set-max-boxes :format-printf :format-fprintf
+    :format-asprintf :pp-get-max-boxes :pp-print-newline :printf-printf :printf-sprintf))
+(in-package :holai.runtime.format)
 
 ;; Format's box API used by the actual HOL printer. This is a bounded
 ;; compatibility interface, not a replacement for every OCaml Format feature.
@@ -16,7 +30,7 @@
         (formatter-stack fmt) (list (formatter-root fmt))
         (formatter-suppressed fmt) 0) fmt)
 (defun formatter-of-buffer (buffer) (reset-formatter (make-formatter :buffer buffer)))
-(setf std-formatter (reset-formatter (make-formatter :stream *standard-output*)))
+(defparameter std-formatter (reset-formatter (make-formatter :stream *standard-output*)))
 (defun add-format-node (fmt node)
   (when (zerop (formatter-suppressed fmt))
     (push node (format-box-children (first (formatter-stack fmt))))) unit)
@@ -110,6 +124,10 @@
   (pp-print-flush fmt u)
   (pp-print-string fmt (string #\Newline))
   (pp-print-flush fmt unit))
+
+(defun print-string (s) (pp-print-string std-formatter s))
+(defun print-newline (u) (declare (ignore u))
+  (pp-print-string std-formatter (string #\Newline)) (pp-print-flush std-formatter unit))
 
 ;; The format string selects a registered curried continuation. Keep callbacks
 ;; on the same function-value boundary as every other translated function.

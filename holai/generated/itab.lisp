@@ -60,7 +60,10 @@
   (:import-from :holai.fusion.hol)
   (:import-from :holai.lib)
   (:import-from :holai.printer)
-  (:import-from :holai.runtime)
+  (:import-from :holai.runtime.core)
+  (:import-from :holai.runtime.data)
+  (:import-from :holai.runtime.format)
+  (:import-from :holai.runtime.pattern)
   (:import-from :holai.tactics)
   (:export ITAUT ITAUT_TAC UNIFY_ACCEPT_TAC UNIFY_REFL_TAC))
 
@@ -77,7 +80,10 @@
     :holai.fusion.hol
     :holai.lib
     :holai.printer
-    :holai.runtime
+    :holai.runtime.core
+    :holai.runtime.data
+    :holai.runtime.format
+    :holai.runtime.pattern
     :holai.tactics)
   (:shadow
     ARG~23
@@ -153,20 +159,18 @@
   (:shadowing-import-from :holai.lib uncurry tryfind remark o map)
   (:shadowing-import-from :holai.printer string_of_term)
   (:shadowing-import-from
-    :holai.runtime
-    tuple
+    :holai.runtime.core
     string-of-int
     string-concat
-    snd
     proof
-    printf-printf
-    match
     lambdac
     labelsc
-    fst
     failwith
     defunc
     <=)
+  (:shadowing-import-from :holai.runtime.data tuple snd fst)
+  (:shadowing-import-from :holai.runtime.format printf-printf)
+  (:shadowing-import-from :holai.runtime.pattern match)
   (:shadowing-import-from
     :holai.tactics
     X_META_EXISTS_TAC

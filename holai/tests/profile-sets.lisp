@@ -1,5 +1,7 @@
 ;;; Diagnostic slice: stop after sets initialization; not a complete startup run.
 (require :asdf)
+(uiop:define-package :holai.tests.profile-sets (:use :cl))
+(in-package :holai.tests.profile-sets)
 (require :sb-sprof)
 (defmethod asdf:perform :before ((op asdf:compile-op) (component asdf:cl-source-file))
   (error "Unexpected compilation: ~a" (asdf:component-pathname component)))

@@ -6,7 +6,12 @@
    `(:source-registry (:directory ,root) :inherit-configuration)))
 (setf asdf:*asdf-verbose* nil *compile-verbose* nil *load-verbose* nil)
 (asdf:load-system "holai/runtime")
-(in-package :holai.runtime)
+(uiop:define-package :holai.tests.pattern-inspect
+  (:use :cl)
+  (:shadowing-import-from :holai.runtime.core :defvariant :defunc)
+  (:shadowing-import-from :holai.runtime.data :tuple)
+  (:shadowing-import-from :holai.runtime.pattern :match :guard))
+(in-package :holai.tests.pattern-inspect)
 (defvariant inspection-term (InspectionVar name ty) (InspectionComb left right))
 (defunc inspect-pattern (tm)
   (match tm

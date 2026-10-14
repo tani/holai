@@ -13,8 +13,8 @@ ROOT = Path(__file__).resolve().parents[2]
 report = report_directory()
 host = metadata()
 core = [Path(name).stem for name in json.loads((ROOT / 'vendor/CORE_FILES.json').read_text())]
-runtime = [f'holai/runtime/{name}.lisp' for name in ['package', 'pattern', 'core', 'format', 'stdlib']]
-expected_units = runtime + [f'holai/generated/{name}.lisp' for name in core] + ['holai/all.lisp']
+runtime = [f'holai/runtime/{name}.lisp' for name in ['data', 'pattern-registry', 'pattern', 'core', 'format', 'stdlib']]
+expected_units = runtime + [f'holai/generated/{name}.lisp' for name in core]
 with tempfile.TemporaryDirectory(prefix='host-diagnostics-', dir=ROOT / '_build') as work:
     work = Path(work)
     driver = work / 'audit.lisp'
@@ -43,9 +43,7 @@ with tempfile.TemporaryDirectory(prefix='host-diagnostics-', dir=ROOT / '_build'
 (defmethod asdf:perform :around ((op asdf:compile-op) (component asdf:cl-source-file))
   (with-audit-operation ("COMPILE" (audit-source-path component))
     (multiple-value-prog1 (call-next-method)
-      (format cl-user::*audit-stream* "~&COMPILED_UNIT ~a~%" cl-user::*audit-unit*)
-      (when (typep (asdf:component-parent component) 'asdf:package-inferred-system)
-        (format cl-user::*audit-stream* "~&INFERRED_UNIT ~a~%" cl-user::*audit-unit*)))))
+      (format cl-user::*audit-stream* "~&COMPILED_UNIT ~a~%" cl-user::*audit-unit*))))
 (defmethod asdf:perform :around ((op asdf:load-op) (component asdf:cl-source-file))
   (with-audit-operation ("LOAD" (audit-source-path component))
     (multiple-value-prog1 (call-next-method)
@@ -65,7 +63,6 @@ with tempfile.TemporaryDirectory(prefix='host-diagnostics-', dir=ROOT / '_build'
               (audit-flush))))
   (with-audit-operation ("INITIALIZATION" "holai/tests/bootstrap.lisp")
     (load "holai/tests/bootstrap.lisp")))
-(assert (typep (asdf:find-system "holai") 'asdf:package-inferred-system))
 (format cl-user::*audit-stream* "~&DIAGNOSTICS_AUDIT_COMPLETE~%")
 (audit-flush)
 ''')
@@ -89,7 +86,6 @@ with tempfile.TemporaryDirectory(prefix='host-diagnostics-', dir=ROOT / '_build'
 (report / 'compile-diagnostics.txt').write_text(text)
 units = re.findall(r'(?m)^COMPILED_UNIT (.+)$', text)
 loaded_units = re.findall(r'(?m)^LOADED_UNIT (.+)$', text)
-inferred_units = re.findall(r'(?m)^INFERRED_UNIT (.+)$', text)
 counts = {f'{scope}_{kind}': 0 for scope in ('compiler', 'load_initialization')
           for kind in ('errors', 'warnings', 'style_warnings', 'warning_notices')}
 notice = re.compile(r'^(?:; caught (?:error|warning|style-warning):|(?:style-)?warning:|.*: warning:)', re.I)
@@ -128,8 +124,8 @@ compiler_scope_complete = (not boundary_errors and not active_operations
                            and [op['unit'] for op in compile_operations] == expected_units
                            and all(op['ended'] and op['unit_completed'] for op in compile_operations))
 result = dict(host=host, fresh_asdf_cache=True, compiled_units=units, compiled_unit_count=len(units),
-              loaded_units=loaded_units, inferred_units=inferred_units,
-              inferred_load_order_matches_manifest=loaded_units == expected_units,
+              loaded_units=loaded_units,
+              load_order_matches_manifest=loaded_units == expected_units,
               **counts,
               compiler_scope_complete=compiler_scope_complete,
               operations=operations, active_operations=active_operations,
@@ -139,13 +135,12 @@ result = dict(host=host, fresh_asdf_cache=True, compiled_units=units, compiled_u
               elapsed_seconds=elapsed_seconds, command=args,
               diagnostic_accounting='Unmuffled Common Lisp conditions and raw notices within ASDF COMPILE-OP BEGIN/END boundaries; LOAD and source initialization recorded separately',
               code_sha256={str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest()
-                           for p in [ROOT / 'holai.asd', ROOT / 'holai/all.lisp',
-                                     ROOT / 'holai/generated/package-systems.sexp',
+                           for p in [ROOT / 'holai.asd',
                                      *(ROOT / 'ml2cl').glob('*.ml'),
-                                     *(ROOT / name for name in expected_units if name != 'holai/all.lisp')]},
+                                     *(ROOT / name for name in expected_units)]},
               audit_complete=bool(re.search(r'(?m)^DIAGNOSTICS_AUDIT_COMPLETE$', text)),
               exit_code=exit_code,
-              scope='5 runtime files, all 46 inferred production core files, and inferred holai/all entry; compiler diagnostics scoped to COMPILE-OP including compile-time evaluation; load/initialization diagnostics separate; pinned upstream unchanged')
+              scope='6 explicitly ordered runtime files and all 46 production core files in vendor manifest order; compiler diagnostics scoped to COMPILE-OP including compile-time evaluation; load/initialization diagnostics separate; pinned upstream unchanged')
 (report / 'compile-diagnostics.json').write_text(json.dumps(result, indent=2) + '\n')
 if timeout_error is not None:
     print(f"{host['implementation']}: diagnostics timed out at {timeout_seconds}s; "
@@ -155,13 +150,12 @@ if timeout_error is not None:
 assert exit_code == 0 and result['audit_complete'], text[-4000:]
 assert units == expected_units and len(set(units)) == 52, units
 assert loaded_units == expected_units, loaded_units
-assert inferred_units == expected_units[5:], inferred_units
 assert compiler_scope_complete, result
 assert not any(result[k] for k in ['compiler_errors', 'compiler_warnings',
                                   'compiler_style_warnings', 'compiler_warning_notices',
                                   'load_initialization_errors']), result
-print(f"{host['implementation']}: cold diagnostics: 52 unique production files in manifest order; "
-      "47 genuine inferred core/entry; zero compiler errors, warnings and style warnings; "
+print(f"{host['implementation']}: cold diagnostics: 52 unique production files in explicit manifest order; "
+      "zero compiler errors, warnings and style warnings; "
       f"load/initialization warnings recorded separately: {result['load_initialization_warnings']} warnings, "
       f"{result['load_initialization_style_warnings']} style warnings, "
       f"{result['load_initialization_warning_notices']} raw notices.")

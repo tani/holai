@@ -38,7 +38,8 @@
   (:import-from :holai.lib)
   (:import-from :holai.parser)
   (:import-from :holai.printer)
-  (:import-from :holai.runtime)
+  (:import-from :holai.runtime.core)
+  (:import-from :holai.runtime.data)
   (:import-from :holai.simp)
   (:import-from :holai.tactics)
   (:import-from :holai.theorems)
@@ -73,7 +74,8 @@
     :holai.lib
     :holai.parser
     :holai.printer
-    :holai.runtime
+    :holai.runtime.core
+    :holai.runtime.data
     :holai.simp
     :holai.tactics
     :holai.theorems)
@@ -108,7 +110,8 @@
   (:shadowing-import-from :holai.lib I)
   (:shadowing-import-from :holai.parser parse_term)
   (:shadowing-import-from :holai.printer parse_as_infix)
-  (:shadowing-import-from :holai.runtime tuple proof deref assign)
+  (:shadowing-import-from :holai.runtime.core proof)
+  (:shadowing-import-from :holai.runtime.data tuple deref assign)
   (:shadowing-import-from
     :holai.simp
     REWRITE_TAC

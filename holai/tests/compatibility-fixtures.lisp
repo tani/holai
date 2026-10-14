@@ -1,4 +1,6 @@
 (require :asdf)
+(uiop:define-package :holai.tests.compatibility-fixtures (:use :cl))
+(in-package :holai.tests.compatibility-fixtures)
 (let ((root (uiop:pathname-parent-directory-pathname
              (uiop:pathname-parent-directory-pathname
               (uiop:pathname-directory-pathname *load-truename*)))))
@@ -19,7 +21,7 @@
   (unless (eq :external (nth-value 1 (find-symbol name :holai.star_names)))
     (error "Missing allocated export: ~a" name)))
 (format t "~&__HOLAI_COMPATIBILITY_OBSERVATIONS__~%")
-(dolist (line (append (holai.compatibility_observations:compatibility_observations holai.runtime:unit)
-                     (holai.star_names:observations holai.runtime:unit)))
+(dolist (line (append (holai.compatibility_observations:compatibility_observations holai.runtime.data:unit)
+                     (holai.star_names:observations holai.runtime.data:unit)))
   (write-line line))
 (format t "__HOLAI_COMPATIBILITY_END__~%")

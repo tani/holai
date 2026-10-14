@@ -85,6 +85,14 @@ for host in IMPLEMENTATIONS:
                 row.get(p, {}).get("passed") is False for p in ("test", "diagnostics")) else "pending"
         failed |= not passed
         print(f"{host} {profile} {phase}: {row['status']} (exit {code})", flush=True)
+        if not passed:
+            print(f"--- {host} {profile} {phase}: {log.relative_to(ROOT)} ---", flush=True)
+            with log.open(errors="replace") as output:
+                for line in output:
+                    print(line, end="")
+            print(f"\n--- end {host} {profile} {phase} runner log ---", flush=True)
+            if "evidence_error" in row[phase]:
+                print(f"Evidence error: {row[phase]['evidence_error']}", flush=True)
         report.write_text(json.dumps(matrix, indent=2) + "\n")
 report.write_text(json.dumps(matrix, indent=2) + "\n")
 raise SystemExit(1 if failed else 0)

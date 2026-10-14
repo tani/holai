@@ -780,7 +780,6 @@
   (:import-from :holai.equal)
   (:import-from :holai.fusion)
   (:import-from :holai.fusion.hol)
-  (:import-from :holai.grobner)
   (:import-from :holai.ind_defs)
   (:import-from :holai.itab)
   (:import-from :holai.lib)
@@ -791,7 +790,9 @@
   (:import-from :holai.parser)
   (:import-from :holai.preterm)
   (:import-from :holai.recursion)
-  (:import-from :holai.runtime)
+  (:import-from :holai.runtime.core)
+  (:import-from :holai.runtime.data)
+  (:import-from :holai.runtime.pattern)
   (:import-from :holai.simp)
   (:import-from :holai.tactics)
   (:import-from :holai.theorems)
@@ -890,7 +891,9 @@
     :holai.parser
     :holai.preterm
     :holai.recursion
-    :holai.runtime
+    :holai.runtime.core
+    :holai.runtime.data
+    :holai.runtime.pattern
     :holai.simp
     :holai.tactics
     :holai.theorems
@@ -1924,29 +1927,22 @@
     prove_recursive_functions_exist
     new_recursive_definition)
   (:shadowing-import-from
-    :holai.runtime
-    unit
-    tuple
+    :holai.runtime.core
     string-of-int
     string-concat
-    snd
-    ref
-    raise
     proof
     partial
-    match
     lambdac
     labelsc
     int-mod
     int-div
     function-value
-    fst
     failwith
     Failure
-    deref
     defunc
-    assign
     =)
+  (:shadowing-import-from :holai.runtime.data unit tuple snd ref raise fst deref assign)
+  (:shadowing-import-from :holai.runtime.pattern match)
   (:shadowing-import-from
     :holai.simp
     SIMP_TAC
@@ -2686,7 +2682,7 @@
                     (handler-case
                       (match (remove (lambdac (h2) (= h2 h1)) s2)
                         ((tuple _ s2%) (cl:cons h1 (munion s1% s2%))))
-                      (holai.runtime:ocaml-condition
+                      (holai.runtime.data:ocaml-condition
                         (exception~1171)
                         (match exception~1171
                           ((Failure _) (cl:cons h1 (munion s1% s2)))
@@ -2712,7 +2708,7 @@
                               (lambdac (ty1 ty2)
                                 (mk_type (tuple "prod" (cl:cons ty1 (cl:cons ty2 nil)))))
                               alltys)
-                            (holai.runtime:ocaml-condition
+                            (holai.runtime.data:ocaml-condition
                               (exception~1236)
                               (match exception~1236
                                 ((Failure _) bool_ty)
@@ -2765,7 +2761,7 @@
                                                       (tl epstms%)
                                                       (tl alltys%)
                                                       iargs%%))))
-                                              (holai.runtime:ocaml-condition
+                                              (holai.runtime.data:ocaml-condition
                                                 (exception~1324)
                                                 (match exception~1324
                                                   ((Failure _)
@@ -2782,7 +2778,7 @@
                                             (end_itlist
                                               (curry mk_pair)
                                               (mk_injector epstms alltys iargs))
-                                            (holai.runtime:ocaml-condition
+                                            (holai.runtime.data:ocaml-condition
                                               (exception~1366)
                                               (match exception~1366
                                                 ((Failure _) beps_tm)
@@ -2991,7 +2987,7 @@
                                           (v% (mk_var (tuple (fst (dest_var v)) ty%))))
                                         (cl:declare (cl:ignorable dest ty% v%))
                                         (tuple (mk_comb (tuple dest v%)) v%))
-                                      (holai.runtime:ocaml-condition
+                                      (holai.runtime.data:ocaml-condition
                                         (exception~1900)
                                         (match exception~1900
                                           ((Failure _) (tuple v v))
@@ -4255,7 +4251,7 @@
             ((tuple l r%)
               (handler-case
                 (#`DISJ1 (prove_triv l) r%)
-                (holai.runtime:ocaml-condition
+                (holai.runtime.data:ocaml-condition
                   (exception~5020)
                   (match exception~5020
                     ((Failure _) (#`DISJ2 l (prove_disj r%)))
@@ -4329,13 +4325,13 @@
         ((ths1
           (handler-case
             (cl:cons (#`prove_constructors_distinct rth) nil)
-            (holai.runtime:ocaml-condition
+            (holai.runtime.data:ocaml-condition
               (exception~5240)
               (match exception~5240 ((Failure _) nil) (_ (raise exception~5240))))))
           (ths2
             (handler-case
               (cl:cons (#`prove_constructors_injective rth) nil)
-              (holai.runtime:ocaml-condition
+              (holai.runtime.data:ocaml-condition
                 (exception~5249)
                 (match exception~5249 ((Failure _) nil) (_ (raise exception~5249)))))))
         (cl:declare (cl:ignorable ths1 ths2))
@@ -4464,7 +4460,7 @@
           (cl:declare (cl:ignorable itys))
           (handler-case
             (assoc cty (zip itys iths))
-            (holai.runtime:ocaml-condition
+            (holai.runtime.data:ocaml-condition
               (exception~5512)
               (match exception~5512
                 ((Failure _)
@@ -5099,7 +5095,7 @@
                 (modify_type (alist ty)
                   (handler-case
                     (rev_assoc ty alist)
-                    (holai.runtime:ocaml-condition
+                    (holai.runtime.data:ocaml-condition
                       (exception~6554)
                       (match exception~6554
                         ((Failure _)
@@ -5107,7 +5103,7 @@
                             (match (dest_type ty)
                               ((tuple tycon tyargs)
                                 (mk_type (tuple tycon (map (modify_type alist) tyargs)))))
-                            (holai.runtime:ocaml-condition
+                            (holai.runtime.data:ocaml-condition
                               (exception~6557)
                               (match exception~6557
                                 ((Failure _) ty)
@@ -5131,7 +5127,7 @@
                         (match
                           (handler-case
                             (assoc tycon (deref inductive_type_store))
-                            (holai.runtime:ocaml-condition
+                            (holai.runtime.data:ocaml-condition
                               (exception~6765)
                               (match exception~6765
                                 ((Failure _)
@@ -5465,7 +5461,7 @@
     (let ((retval (assoc s (deref the_inductive_types))))
       (cl:declare (cl:ignorable retval))
       (progn (warn cl:t "Benign redefinition of inductive type") retval))
-    (holai.runtime:ocaml-condition
+    (holai.runtime.data:ocaml-condition
       (exception~7323)
       (match exception~7323
         ((Failure _)
@@ -5582,7 +5578,7 @@
               ((conv (bc tm)
                 (handler-case
                   (THENC econv (BINDER_CONV (conv bc)) tm)
-                  (holai.runtime:ocaml-condition
+                  (holai.runtime.data:ocaml-condition
                     (exception~7540)
                     (match exception~7540
                       ((Failure _) (#`bc tm))
@@ -5654,7 +5650,7 @@
                                         (rand (concl th2)))))
                                   (cl:declare (cl:ignorable v cjs% n th1 th2 th3))
                                   (CONV_RULE (RAND_CONV #'UNWIND_CONV%) (TRANS th2 th3))))))
-                          (holai.runtime:ocaml-condition
+                          (holai.runtime.data:ocaml-condition
                             (exception~7613)
                             (match exception~7613
                               ((Failure _) (REFL tm))
@@ -5781,7 +5777,7 @@
           ((conv (bc tm)
             (handler-case
               (THENC econv (BINDER_CONV (conv bc)) tm)
-              (holai.runtime:ocaml-condition
+              (holai.runtime.data:ocaml-condition
                 (exception~7934)
                 (match exception~7934 ((Failure _) (#`bc tm)) (_ (raise exception~7934)))))))
           #'conv)))
@@ -5836,7 +5832,7 @@
                                 (rand (concl th3)))))
                           (cl:declare (cl:ignorable v cjs% n th1 th2 th3 th4))
                           (CONV_RULE (RAND_CONV #'FORALL_UNWIND_CONV%) (TRANS th3 th4))))))))))
-          (holai.runtime:ocaml-condition
+          (holai.runtime.data:ocaml-condition
             (exception~7975)
             (match exception~7975 ((Failure _) (REFL tm)) (_ (raise exception~7975)))))))
       #'FORALL_UNWIND_CONV%)))

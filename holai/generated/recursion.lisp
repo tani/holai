@@ -101,7 +101,10 @@
   (:import-from :holai.ind_defs)
   (:import-from :holai.lib)
   (:import-from :holai.nums)
-  (:import-from :holai.runtime)
+  (:import-from :holai.runtime.core)
+  (:import-from :holai.runtime.data)
+  (:import-from :holai.runtime.pattern)
+  (:import-from :holai.runtime.stdlib)
   (:import-from :holai.simp)
   (:import-from :holai.theorems)
   (:export new_recursive_definition prove_recursive_functions_exist))
@@ -120,7 +123,10 @@
     :holai.ind_defs
     :holai.lib
     :holai.nums
-    :holai.runtime
+    :holai.runtime.core
+    :holai.runtime.data
+    :holai.runtime.pattern
+    :holai.runtime.stdlib
     :holai.simp
     :holai.theorems)
   (:shadow
@@ -277,22 +283,10 @@
     assocd
     assoc)
   (:shadowing-import-from :holai.nums new_specification)
-  (:shadowing-import-from
-    :holai.runtime
-    tuple
-    snd
-    ref
-    raise
-    match
-    lambdac
-    labelsc
-    ignore-value
-    function-value
-    fst
-    Failure
-    deref
-    assign
-    =)
+  (:shadowing-import-from :holai.runtime.core lambdac labelsc function-value Failure =)
+  (:shadowing-import-from :holai.runtime.data tuple snd ref raise fst deref assign)
+  (:shadowing-import-from :holai.runtime.pattern match)
+  (:shadowing-import-from :holai.runtime.stdlib ignore-value)
   (:shadowing-import-from :holai.simp GEN_REWRITE_CONV)
   (:shadowing-import-from :holai.theorems BETA_THM)
   (:export new_recursive_definition prove_recursive_functions_exist))
@@ -464,7 +458,7 @@
           (let ((th (tryfind (find_redefinition tm) (deref the_recursive_definitions))))
             (cl:declare (cl:ignorable th))
             (progn (warn cl:t "Benign redefinition of recursive function") th))
-          (holai.runtime:ocaml-condition
+          (holai.runtime.data:ocaml-condition
             (exception~518)
             (match exception~518
               ((Failure _)

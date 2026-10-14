@@ -256,7 +256,9 @@
   (:import-from :holai.ind_defs)
   (:import-from :holai.lib)
   (:import-from :holai.parser)
-  (:import-from :holai.runtime)
+  (:import-from :holai.runtime.core)
+  (:import-from :holai.runtime.data)
+  (:import-from :holai.runtime.pattern)
   (:import-from :holai.simp)
   (:import-from :holai.tactics)
   (:import-from :holai.theorems)
@@ -299,7 +301,9 @@
     :holai.ind_defs
     :holai.lib
     :holai.parser
-    :holai.runtime
+    :holai.runtime.core
+    :holai.runtime.data
+    :holai.runtime.pattern
     :holai.simp
     :holai.tactics
     :holai.theorems
@@ -692,24 +696,19 @@
     %->)
   (:shadowing-import-from :holai.parser parse_term)
   (:shadowing-import-from
-    :holai.runtime
-    unit
-    tuple
-    snd
-    raise
+    :holai.runtime.core
     proof
-    match
     lambdac
     labelsc
-    guard
     function-value
-    fst
     failwith
     Failure
     defunc
     >
     =
     <)
+  (:shadowing-import-from :holai.runtime.data unit tuple snd raise fst)
+  (:shadowing-import-from :holai.runtime.pattern match guard)
   (:shadowing-import-from
     :holai.simp
     SIMP_TAC
@@ -1199,7 +1198,7 @@
             (_
               (handler-case
                 (#`baseconvs tm)
-                (holai.runtime:ocaml-condition
+                (holai.runtime.data:ocaml-condition
                   (exception~1062)
                   (match exception~1062
                     ((Failure _) (tuple (REFL tm) (REFL (#`mk_neg tm))))
@@ -1321,7 +1320,7 @@
                   (_
                     (handler-case
                       (#`base1 tm)
-                      (holai.runtime:ocaml-condition
+                      (holai.runtime.data:ocaml-condition
                         (exception~1474)
                         (match exception~1474
                           ((Failure _) (REFL tm))
@@ -1468,7 +1467,7 @@
                       (cl:declare (cl:ignorable tm%))
                       (handler-case
                         (#`base1 tm%)
-                        (holai.runtime:ocaml-condition
+                        (holai.runtime.data:ocaml-condition
                           (exception~1981)
                           (match exception~1981
                             ((Failure _) (REFL tm%))
@@ -1842,7 +1841,7 @@
                   (let* ((th (SELECT_ELIM_ICONV tm)) (tm% (#`lhand (concl th))))
                     (cl:declare (cl:ignorable th tm%))
                     (#`IMP_TRANS (SELECT_ELIMS_ICONV tm%) th))
-                  (holai.runtime:ocaml-condition
+                  (holai.runtime.data:ocaml-condition
                     (exception~3130)
                     (match exception~3130
                       ((Failure _) (#`DISCH tm (ASSUME tm)))
@@ -1891,7 +1890,7 @@
                   ((tuple l r%)
                     (handler-case
                       (find_lambda l)
-                      (holai.runtime:ocaml-condition
+                      (holai.runtime.data:ocaml-condition
                         (exception~3205)
                         (match exception~3205
                           ((Failure _) (find_lambda r%))
@@ -1899,7 +1898,7 @@
         (ELIM_LAMBDA (conv tm)
           (handler-case
             (#`conv tm)
-            (holai.runtime:ocaml-condition
+            (holai.runtime.data:ocaml-condition
               (exception~3251)
               (match exception~3251
                 ((Failure _)
@@ -1948,7 +1947,7 @@
             (conv (tm)
               (handler-case
                 (THENC #'LAMB1_CONV #'conv tm)
-                (holai.runtime:ocaml-condition
+                (holai.runtime.data:ocaml-condition
                   (exception~3378)
                   (match exception~3378
                     ((Failure _) (REFL tm))
@@ -2003,7 +2002,7 @@
                 tm
                 (handler-case
                   (find_conditional fvs s)
-                  (holai.runtime:ocaml-condition
+                  (holai.runtime.data:ocaml-condition
                     (exception~3464)
                     (match exception~3464
                       ((Failure _) (find_conditional fvs t%))
@@ -2039,7 +2038,7 @@
                               (TRANS th_3 (#`proptsimp_conv (rand (concl th_3)))))))))))
                 (cl:declare (cl:ignorable t% p% th_new))
                 (CONV_RULE (RAND_CONV (CONDS_ELIM_CONV% dfl)) th_new))
-              (holai.runtime:ocaml-condition
+              (holai.runtime.data:ocaml-condition
                 (exception~3504)
                 (match exception~3504
                   ((Failure _)
@@ -2076,7 +2075,7 @@
           (handler-case
             (match (#`dest_forall tm)
               ((tuple v bod) (get_heads (subtract lconsts (cl:cons v nil)) bod sofar)))
-            (holai.runtime:ocaml-condition
+            (holai.runtime.data:ocaml-condition
               (exception~3663)
               (match exception~3663
                 ((Failure _)
@@ -2084,13 +2083,13 @@
                     (match
                       (handler-case
                         (#`dest_conj tm)
-                        (holai.runtime:ocaml-condition
+                        (holai.runtime.data:ocaml-condition
                           (exception~3738)
                           (match exception~3738
                             ((Failure _) (#`dest_disj tm))
                             (_ (raise exception~3738)))))
                       ((tuple l r%) (get_heads lconsts l (get_heads lconsts r% sofar))))
-                    (holai.runtime:ocaml-condition
+                    (holai.runtime.data:ocaml-condition
                       (exception~3666)
                       (match exception~3666
                         ((Failure _)
@@ -2098,7 +2097,7 @@
                             (let ((tm% (dest_neg tm)))
                               (cl:declare (cl:ignorable tm%))
                               (get_heads lconsts tm% sofar))
-                            (holai.runtime:ocaml-condition
+                            (holai.runtime.data:ocaml-condition
                               (exception~3669)
                               (match exception~3669
                                 ((Failure _)
@@ -2155,7 +2154,7 @@
                         (n
                           (handler-case
                             (- (#`length args) (assoc op hddata))
-                            (holai.runtime:ocaml-condition
+                            (holai.runtime.data:ocaml-condition
                               (exception~3831)
                               (match exception~3831
                                 ((Failure _) 0)

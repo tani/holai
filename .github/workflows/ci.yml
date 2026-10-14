@@ -14,19 +14,26 @@ concurrency:
 
 jobs:
   release:
-    name: Release and Lisp compatibility (${{ matrix.platform }})
+    name: ${{ matrix.host.platform }} / ${{ matrix.implementation }}
     strategy:
       fail-fast: false
       matrix:
-        include:
+        host:
           - platform: aarch64-linux
             runner: ubuntu-24.04-arm
           - platform: aarch64-darwin
             runner: macos-15
           - platform: x86_64-linux
             runner: ubuntu-24.04
-    runs-on: ${{ matrix.runner }}
+        implementation: [sbcl, ecl, abcl, clisp]
+    runs-on: ${{ matrix.host.runner }}
     timeout-minutes: 45
+    defaults:
+      run:
+        shell: bash
+    env:
+      EXPECTED_NIX_SYSTEM: ${{ matrix.host.platform }}
+      MATRIX_IMPLEMENTATION: ${{ matrix.implementation }}
     steps:
       - name: Check out sources
         uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
@@ -40,29 +47,70 @@ jobs:
             experimental-features = nix-command flakes
 
       - name: Verify runner architecture
-        env:
-          EXPECTED_NIX_SYSTEM: ${{ matrix.platform }}
         run: |
+          mkdir -p _build/ci
+          # Never upload committed evidence as if this job produced it.
+          rm -rf "misc/reports/implementations/$MATRIX_IMPLEMENTATION"
+          if [ "$MATRIX_IMPLEMENTATION" = sbcl ]; then
+            rm -f misc/reports/implementation-matrix.json misc/reports/clean-build.json
+            rm -f dist/*.zip
+          fi
+          exec > >(tee _build/ci/architecture.log) 2>&1
           actual_system="$(nix eval --raw --impure --expr builtins.currentSystem)"
           if [ "$actual_system" != "$EXPECTED_NIX_SYSTEM" ]; then
             echo "Expected $EXPECTED_NIX_SYSTEM, got $actual_system" >&2
             exit 1
           fi
 
-      - name: Check flake
-        run: nix flake check path:.
+      - name: Check selected ASDF startup
+        run: |
+          nix build "path:.#checks.${EXPECTED_NIX_SYSTEM}.asdf-${MATRIX_IMPLEMENTATION}" \
+            2>&1 | tee _build/ci/asdf.log
 
-      - name: Build and verify release
-        run: nix develop path:. --command make release
+      - name: Build and verify selected implementation
+        run: |
+          nix develop path:. --command bash -euo pipefail <<'SCRIPT' 2>&1 | tee _build/ci/verification.log
+          python3 - <<'PY'
+          import json
+          import os
+          from pathlib import Path
 
-      - name: Upload release evidence
+          target = os.environ["MATRIX_IMPLEMENTATION"]
+          availability = json.loads(os.environ["HOLAI_LISP_AVAILABILITY"])
+          status = availability[target]
+          if not status["available"]:
+              raise SystemExit(f"{target} unavailable: {status['reason']}")
+          executable = json.loads(os.environ["HOLAI_LISP_EXECUTABLES"])[target]
+          if not Path(executable).is_file() or not os.access(executable, os.X_OK):
+              raise SystemExit(f"{target} executable unavailable: {executable}")
+          print(f"Selected {target}: {executable}", flush=True)
+          PY
+          make build
+          if [ "$MATRIX_IMPLEMENTATION" = sbcl ]; then
+            env HOLAI_LISPS=sbcl make release
+          else
+            env HOLAI_LISP="$MATRIX_IMPLEMENTATION" python3 holai/tests/compatibility.py
+          fi
+          SCRIPT
+
+      - name: Upload selected implementation evidence
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
-          name: release-evidence-${{ matrix.platform }}-${{ github.run_id }}-${{ github.run_attempt }}
+          name: evidence-${{ matrix.host.platform }}-${{ matrix.implementation }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            _build/ci/
+            misc/reports/implementations/${{ matrix.implementation }}/
+          retention-days: 7
+          if-no-files-found: warn
+
+      - name: Upload SBCL release evidence
+        if: always() && matrix.implementation == 'sbcl'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: release-${{ matrix.host.platform }}-sbcl-${{ github.run_id }}-${{ github.run_attempt }}
           path: |
             misc/reports/implementation-matrix.json
-            misc/reports/implementations/
             misc/reports/clean-build.json
             dist/*.zip
           retention-days: 7

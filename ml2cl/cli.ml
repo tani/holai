@@ -29,7 +29,7 @@ let () =
  let set_text=Frontend.read_file set_path in
  Compiler.install_set_template "ocaml-stdlib/set.ml" set_text (Frontend.parse ~original:true set_path set_text);
  let environment=ref (Compiler.install_standard_functors (base_environment ())) and rendered=ref [] and scans=ref [] and failed=ref false in
- let seen=ref SS.empty and previous_root=ref None and providers=ref [] in
+ let seen=ref SS.empty in
  List.iter (fun filename ->
   let source=Filename.basename filename in
   let stem=Filename.remove_extension source in
@@ -47,8 +47,7 @@ let () =
     let same_file=List.fold_left (fun packages (p:Compiler.package_result) ->
       SS.add p.ctx.package packages) SS.empty result.packages in
     let dependencies=List.fold_left (fun packages (p:Compiler.package_result) ->
-      SS.union packages p.ctx.used_packages) (SS.singleton "holai.runtime") result.packages in
-    let dependencies=match !previous_root with None -> dependencies | Some package -> SS.add package dependencies in
+      SS.union packages p.ctx.used_packages) SS.empty result.packages in
     let dependencies=SS.elements dependencies |> List.filter (fun package ->
       package<>"cl" && not (SS.mem package same_file)) in
     let internals (p:Compiler.package_result) =
@@ -77,10 +76,6 @@ let () =
       ";; See vendor/ocaml-stdlib/COPYRIGHT, LGPL-2.1 and the retained original sources.\n\n" in
     let output,maps=Sexp.render ~prefix:(banner source text^template_notice) forms in
     check_maps output text maps;
-    previous_root:=Some ctx.package;
-    let packages=ctx.package::List.filter_map (fun (p:Compiler.package_result) ->
-      if p.ctx.package=ctx.package then None else Some p.ctx.package) result.packages in
-    providers:= !providers @ [Sexp.l (Sexp.string stem::List.map (fun package -> Sexp.string (String.uppercase_ascii package)) packages)];
     rendered:= !rendered @ [stem,output,Sexp.mappings_json maps];
     scans:= !scans @ [Printf.sprintf "{\"file\":%s,\"parsed\":true,\"translated\":true,%s,\"mapped_nodes\":%d}"
       (Sexp.json_string source) (Frontend.json inventory) (List.length maps)]
@@ -99,15 +94,13 @@ let () =
  let report="[\n"^String.concat ",\n" !scans^"\n]\n" in
  if mode="scan" then print_string report
  else if not !failed then (
-   let package_systems,_=Sexp.render [Sexp.l !providers] in
    if not (Sys.file_exists outdir) then Unix.mkdir outdir 0o755;
    (* Everything is compiled/lowered before committing any output. *)
    List.iter (fun (stem,lisp,map) -> write (Filename.concat outdir (stem^".lisp")) lisp;write (Filename.concat outdir (stem^".map.json")) map) !rendered;
    write (Filename.concat outdir "inventory.json") report;
-   write (Filename.concat outdir "package-systems.sexp") package_systems;
    List.iter (fun basename ->
      let path=Filename.concat outdir basename in
-     if Sys.file_exists path then Sys.remove path) ["holai-generated.asd";"hol2cl-generated.asd"];
+     if Sys.file_exists path then Sys.remove path) ["package-systems.sexp";"holai-generated.asd";"hol2cl-generated.asd"];
    Printf.printf "Translated %d files into %s\n" (List.length !rendered) outdir
  );
  if !failed then exit 1

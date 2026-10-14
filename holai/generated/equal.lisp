@@ -156,10 +156,12 @@
   (:import-from :holai.fusion.hol)
   (:import-from :holai.lib)
   (:import-from :holai.nets)
-  (:import-from :holai.parser)
   (:import-from :holai.preterm)
   (:import-from :holai.printer)
-  (:import-from :holai.runtime)
+  (:import-from :holai.runtime.core)
+  (:import-from :holai.runtime.data)
+  (:import-from :holai.runtime.format)
+  (:import-from :holai.runtime.pattern)
   (:export
     ABS_CONV
     ALL_CONV
@@ -221,7 +223,10 @@
     :holai.nets
     :holai.preterm
     :holai.printer
-    :holai.runtime)
+    :holai.runtime.core
+    :holai.runtime.data
+    :holai.runtime.format
+    :holai.runtime.pattern)
   (:shadow
     ABS%%
     ABS_CONV
@@ -420,26 +425,19 @@
   (:shadowing-import-from :holai.preterm is_hidden)
   (:shadowing-import-from :holai.printer pp_print_qterm)
   (:shadowing-import-from
-    :holai.runtime
-    tuple
+    :holai.runtime.core
     string-concat
-    snd
-    ref
-    raise
-    match
     lambdac
     labelsc
-    guard
     function-value
-    fst
-    format-printf
     failwith
     Failure
-    deref
     defunc
     compare
-    assign
     =)
+  (:shadowing-import-from :holai.runtime.data tuple snd ref raise fst deref assign)
+  (:shadowing-import-from :holai.runtime.format format-printf)
+  (:shadowing-import-from :holai.runtime.pattern match guard)
   (:export
     ABS_CONV
     ALL_CONV
@@ -529,7 +527,7 @@
 (defunc BETA_CONV (tm)
   (handler-case
     (BETA tm)
-    (holai.runtime:ocaml-condition
+    (holai.runtime.data:ocaml-condition
       (exception~66)
       (match exception~66
         ((Failure _)
@@ -539,7 +537,7 @@
                 (let ((v (bndvar f)))
                   (cl:declare (cl:ignorable v))
                   (INST% (cl:cons (tuple arg v) nil) (BETA (mk_comb (tuple f v)))))))
-            (holai.runtime:ocaml-condition
+            (holai.runtime.data:ocaml-condition
               (exception~69)
               (match exception~69
                 ((Failure _) (failwith "BETA_CONV: Not a beta-redex"))
@@ -557,7 +555,7 @@
     (lambdac (th)
       (handler-case
         (MK_COMB% (tuple rth th))
-        (holai.runtime:ocaml-condition
+        (holai.runtime.data:ocaml-condition
           (exception~108)
           (match exception~108
             ((Failure _) (failwith "AP_TERM"))
@@ -566,7 +564,7 @@
 (defunc AP_THM (th tm)
   (handler-case
     (MK_COMB% (tuple th (REFL tm)))
-    (holai.runtime:ocaml-condition
+    (holai.runtime.data:ocaml-condition
       (exception~124)
       (match exception~124 ((Failure _) (failwith "AP_THM")) (_ (raise exception~124))))))
 
@@ -582,7 +580,7 @@
 (defunc ALPHA (tm1 tm2)
   (handler-case
     (TRANS (REFL tm1) (REFL tm2))
-    (holai.runtime:ocaml-condition
+    (holai.runtime.data:ocaml-condition
       (exception~168)
       (match exception~168 ((Failure _) (failwith "ALPHA")) (_ (raise exception~168))))))
 
@@ -622,7 +620,7 @@
 (defunc ORELSEC (conv1 conv2 t%)
   (handler-case
     (#`conv1 t%)
-    (holai.runtime:ocaml-condition
+    (holai.runtime.data:ocaml-condition
       (exception~265)
       (match exception~265 ((Failure _) (#`conv2 t%)) (_ (raise exception~265))))))
 
@@ -673,7 +671,7 @@
         (cl:declare (cl:ignorable th))
         (handler-case
           (ABS% v th)
-          (holai.runtime:ocaml-condition
+          (holai.runtime.data:ocaml-condition
             (exception~416)
             (match exception~416
               ((Failure _)
@@ -740,10 +738,10 @@
             (let ((th2 (#`conv2 (rand (concl th1)))))
               (cl:declare (cl:ignorable th2))
               (TRANS th1 th2))
-            (holai.runtime:ocaml-condition
+            (holai.runtime.data:ocaml-condition
               (exception~618)
               (match exception~618 ((Failure _) th1) (_ (raise exception~618))))))
-        (holai.runtime:ocaml-condition
+        (holai.runtime.data:ocaml-condition
           (exception~610)
           (match exception~610 ((Failure _) (#`conv2 tm)) (_ (raise exception~610))))))
       (THENCQC (conv1 conv2 tm)
@@ -753,7 +751,7 @@
             (let ((th2 (#`conv2 (rand (concl th1)))))
               (cl:declare (cl:ignorable th2))
               (TRANS th1 th2))
-            (holai.runtime:ocaml-condition
+            (holai.runtime.data:ocaml-condition
               (exception~640)
               (match exception~640 ((Failure _) th1) (_ (raise exception~640)))))))
       (COMB_QCONV (conv tm)
@@ -766,12 +764,12 @@
                   (let ((th2 (#`conv r)))
                     (cl:declare (cl:ignorable th2))
                     (MK_COMB% (tuple th1 th2)))
-                  (holai.runtime:ocaml-condition
+                  (holai.runtime.data:ocaml-condition
                     (exception~672)
                     (match exception~672
                       ((Failure _) (AP_THM th1 r))
                       (_ (raise exception~672))))))
-              (holai.runtime:ocaml-condition
+              (holai.runtime.data:ocaml-condition
                 (exception~662)
                 (match exception~662
                   ((Failure _) (AP_TERM l (#`conv r)))
@@ -869,7 +867,7 @@
     (let* ((th1 (SYM (ASSUME tm))) (tm% (concl th1)) (th2 (SYM (ASSUME tm%))))
       (cl:declare (cl:ignorable th1 tm% th2))
       (DEDUCT_ANTISYM_RULE th2 th1))
-    (holai.runtime:ocaml-condition
+    (holai.runtime.data:ocaml-condition
       (exception~951)
       (match exception~951 ((Failure _) (failwith "SYM_CONV")) (_ (raise exception~951))))))
 
@@ -904,7 +902,7 @@
               (REFL abs%%))))
         (cl:declare (cl:ignorable lefts gvs pat abs%% th))
         (if (= (rand (concl th)) tm) (REFL tm) th)))
-    (holai.runtime:ocaml-condition
+    (holai.runtime.data:ocaml-condition
       (exception~987)
       (match exception~987 ((Failure _) (failwith "SUBS_CONV")) (_ (raise exception~987))))))
 
@@ -936,7 +934,7 @@
         (lambdac (tm)
           (handler-case
             (tryfind (lambdac (f) (#`f tm)) (#`lookup tm (deref net)))
-            (holai.runtime:ocaml-condition
+            (holai.runtime.data:ocaml-condition
               (exception~1096)
               (match exception~1096
                 ((Failure _)

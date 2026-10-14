@@ -1,4 +1,7 @@
 ;;; Diagnostic only: fresh FASL initialization, no implementation changes.
+(require :asdf)
+(uiop:define-package :holai.tests.profile-performance (:use :cl))
+(in-package :holai.tests.profile-performance)
 (require :sb-sprof)
 (sb-sprof:start-profiling :mode :cpu :sample-interval 0.01 :max-samples 30000 :max-depth 128)
 (unwind-protect (load "holai/tests/measure-startup.lisp")

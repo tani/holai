@@ -236,7 +236,9 @@
   (:import-from :holai.real)
   (:import-from :holai.realarith)
   (:import-from :holai.realax)
-  (:import-from :holai.runtime)
+  (:import-from :holai.runtime.core)
+  (:import-from :holai.runtime.data)
+  (:import-from :holai.runtime.pattern)
   (:import-from :holai.simp)
   (:import-from :holai.tactics)
   (:import-from :holai.theorems)
@@ -323,7 +325,9 @@
     :holai.real
     :holai.realarith
     :holai.realax
-    :holai.runtime
+    :holai.runtime.core
+    :holai.runtime.data
+    :holai.runtime.pattern
     :holai.simp
     :holai.tactics
     :holai.theorems)
@@ -710,27 +714,24 @@
     real_ge
     real_div)
   (:shadowing-import-from
-    :holai.runtime
-    unit
-    tuple
+    :holai.runtime.core
     string-concat
-    raise
     quo-num
     proof
     num
-    match
     make-Some
     lambdac
     labelsc
     gcd-num
     function-value
-    fst
     failwith
     Failure
     defunc
     >
     =
     <)
+  (:shadowing-import-from :holai.runtime.data unit tuple raise fst)
+  (:shadowing-import-from :holai.runtime.pattern match)
   (:shadowing-import-from
     :holai.simp
     SIMP_TAC
@@ -1183,7 +1184,7 @@
       (lambdac (tm)
         (handler-case
           (#`conv1 tm)
-          (holai.runtime:ocaml-condition
+          (holai.runtime.data:ocaml-condition
             (exception~729)
             (match exception~729
               ((Failure _)
@@ -1196,7 +1197,7 @@
                           (cl:and (is_realintconst r%) (> (dest_realintconst r%) num_0)))
                         (REFL tm)
                         (fail unit))))
-                  (holai.runtime:ocaml-condition
+                  (holai.runtime.data:ocaml-condition
                     (exception~732)
                     (match exception~732
                       ((Failure _) (failwith "REAL_RAT_NEG_CONV"))
@@ -1648,7 +1649,8 @@
     (lambdac (compset)
       (itlist
         (lambdac (newc arg~1643)
-          (match arg~1643 ((cl:type holai.runtime::unit-value) (add_conv newc compset))))
+          (match arg~1643
+            ((cl:type holai.runtime.data:unit-value) (add_conv newc compset))))
         convlist
         unit))))
 
@@ -1913,7 +1915,7 @@
         (let ((th (#`init tm)))
           (cl:declare (cl:ignorable th))
           (EQ_MP (SYM th) (#`pure (rand (concl th)))))
-        (holai.runtime:ocaml-condition
+        (holai.runtime.data:ocaml-condition
           (exception~2120)
           (match exception~2120
             ((Failure m)
@@ -2019,7 +2021,7 @@
           (lambdac (t%)
             (handler-case
               (#`REAL_RING t%)
-              (holai.runtime:ocaml-condition
+              (holai.runtime.data:ocaml-condition
                 (exception~2322)
                 (match exception~2322
                   ((Failure _) (#`REAL_ARITH t%))

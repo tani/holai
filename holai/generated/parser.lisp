@@ -328,7 +328,10 @@
   (:import-from :holai.lib)
   (:import-from :holai.preterm)
   (:import-from :holai.printer)
-  (:import-from :holai.runtime)
+  (:import-from :holai.runtime.core)
+  (:import-from :holai.runtime.data)
+  (:import-from :holai.runtime.pattern)
+  (:import-from :holai.runtime.stdlib)
   (:export
     %%%
     ++
@@ -365,7 +368,16 @@
 (uiop:define-package
   :holai.parser
   (:use :cl)
-  (:mix :cl :holai.fusion.hol :holai.lib :holai.preterm :holai.printer :holai.runtime)
+  (:mix
+    :cl
+    :holai.fusion.hol
+    :holai.lib
+    :holai.preterm
+    :holai.printer
+    :holai.runtime.core
+    :holai.runtime.data
+    :holai.runtime.pattern
+    :holai.runtime.stdlib)
   (:shadow
     %%%
     ++
@@ -750,9 +762,7 @@
     infixes
     get_infix_status)
   (:shadowing-import-from
-    :holai.runtime
-    unit
-    tuple
+    :holai.runtime.core
     string-sub
     string-of-num
     string-of-int
@@ -760,37 +770,31 @@
     string-length
     string-get
     string-concat
-    snd
-    ref
-    raise
     quo-num
     power-num
     num
     mod-num
-    match
     lambdac
     labelsc
     int-of-string
     int-mod
-    int-lsl
     int-div
-    guard
     function-value
-    fst
     failwith
     Failure
-    deref
     defvariant
     defunc
     define-exception
     char-chr
-    assign
     >=
     >
     =
     <>
     <=
     <)
+  (:shadowing-import-from :holai.runtime.data unit tuple snd ref raise fst deref assign)
+  (:shadowing-import-from :holai.runtime.pattern match guard)
+  (:shadowing-import-from :holai.runtime.stdlib int-lsl)
   (:export
     %%%
     ++
@@ -833,7 +837,7 @@
 (defunc %%% (parser1 parser2 input)
   (handler-case
     (#`parser1 input)
-    (holai.runtime:ocaml-condition
+    (holai.runtime.data:ocaml-condition
       (exception~14)
       (match exception~14 ((Noparse) (#`parser2 input)) (_ (raise exception~14))))))
 
@@ -849,7 +853,7 @@
       ((tuple result next)
         (match (many prs next)
           ((tuple results rest) (tuple (cl:cons result results) rest)))))
-    (holai.runtime:ocaml-condition
+    (holai.runtime.data:ocaml-condition
       (exception~51)
       (match exception~51 ((Noparse) (tuple nil input)) (_ (raise exception~51))))))
 
@@ -859,7 +863,7 @@
 (defunc fix (err prs input)
   (handler-case
     (#`prs input)
-    (holai.runtime:ocaml-condition
+    (holai.runtime.data:ocaml-condition
       (exception~101)
       (match exception~101
         ((Noparse) (failwith (string-concat err " expected")))
@@ -898,7 +902,7 @@
 (defunc possibly (prs input)
   (handler-case
     (match (#`prs input) ((tuple x rest) (tuple (cl:cons x nil) rest)))
-    (holai.runtime:ocaml-condition
+    (holai.runtime.data:ocaml-condition
       (exception~248)
       (match exception~248 ((Noparse) (tuple nil input)) (_ (raise exception~248))))))
 
@@ -1008,7 +1012,7 @@
                         rst)
                       (match (tokens rst)
                         ((tuple toks rst1) (tuple (cl:cons t% toks) rst1))))))
-                (holai.runtime:ocaml-condition
+                (holai.runtime.data:ocaml-condition
                   (exception~609)
                   (match exception~609
                     ((Noparse) (tuple nil i%))
@@ -1082,20 +1086,20 @@
               (tuple
                 (handler-case
                   (pretype_of_type (assoc s (#`type_abbrevs unit)))
-                  (holai.runtime:ocaml-condition
+                  (holai.runtime.data:ocaml-condition
                     (exception~779)
                     (match exception~779
                       ((Failure _)
                         (handler-case
                           (#`mk_prefinty (#`num_of_string s))
-                          (holai.runtime:ocaml-condition
+                          (holai.runtime.data:ocaml-condition
                             (exception~782)
                             (match exception~782
                               ((Failure _)
                                 (if
                                   (handler-case
                                     (= (get_type_arity s) 0)
-                                    (holai.runtime:ocaml-condition
+                                    (holai.runtime.data:ocaml-condition
                                       (exception~790)
                                       (match exception~790
                                         ((Failure _) cl:nil)
@@ -1112,7 +1116,7 @@
               (if
                 (handler-case
                   (> (get_type_arity s) 0)
-                  (holai.runtime:ocaml-condition
+                  (holai.runtime.data:ocaml-condition
                     (exception~829)
                     (match exception~829 ((Failure _) cl:nil) (_ (raise exception~829)))))
                 (tuple s rest)
@@ -1188,7 +1192,7 @@
         (raise (make-Noparse))
         (handler-case
           (#`(snd (hd ps)) i%)
-          (holai.runtime:ocaml-condition
+          (holai.runtime.data:ocaml-condition
             (exception~962)
             (match exception~962
               ((Noparse) (try_parsers (tl ps) i%))
@@ -1205,11 +1209,11 @@
                 (remove
                   (lambdac (arg~996) (match arg~996 ((tuple key% _) (= key key%))))
                   (deref parser_list))))
-            (holai.runtime:ocaml-condition
+            (holai.runtime.data:ocaml-condition
               (exception~992)
               (match exception~992 ((Failure _) unit) (_ (raise exception~992))))))
         (lambdac (arg~1014)
-          (match arg~1014 ((cl:type holai.runtime::unit-value) (deref parser_list))))
+          (match arg~1014 ((cl:type holai.runtime.data:unit-value) (deref parser_list))))
         (lambdac (i%) (try_parsers (deref parser_list) i%)))))
   ((tuple install_parser% delete_parser% installed_parsers% try_user_parser%)
     (setf
@@ -1320,7 +1324,7 @@
           (cl:declare (cl:ignorable gcounter))
           (lambdac (arg~1277)
             (match arg~1277
-              ((cl:type holai.runtime::unit-value)
+              ((cl:type holai.runtime.data:unit-value)
                 (let ((count (deref gcounter)))
                   (cl:declare (cl:ignorable count))
                   (progn

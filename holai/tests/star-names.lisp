@@ -1,4 +1,6 @@
 (require :asdf)
+(uiop:define-package :holai.tests.star-names (:use :cl))
+(in-package :holai.tests.star-names)
 (let ((root (uiop:pathname-parent-directory-pathname
              (uiop:pathname-parent-directory-pathname
               (uiop:pathname-directory-pathname *load-truename*)))))
@@ -11,4 +13,4 @@
   (unless (eq :external (nth-value 1 (find-symbol name :holai.star_names)))
     (error "Missing allocated export: ~a" name)))
 (format t "~&__STAR_OBSERVATIONS__~%")
-(dolist (line (holai.star_names:observations holai.runtime:unit)) (write-line line))
+(dolist (line (holai.star_names:observations holai.runtime.data:unit)) (write-line line))

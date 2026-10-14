@@ -168,7 +168,9 @@
   (:import-from :holai.pair)
   (:import-from :holai.parser)
   (:import-from :holai.printer)
-  (:import-from :holai.runtime)
+  (:import-from :holai.runtime.core)
+  (:import-from :holai.runtime.data)
+  (:import-from :holai.runtime.pattern)
   (:import-from :holai.sets)
   (:import-from :holai.simp)
   (:import-from :holai.tactics)
@@ -304,7 +306,9 @@
     :holai.pair
     :holai.parser
     :holai.printer
-    :holai.runtime
+    :holai.runtime.core
+    :holai.runtime.data
+    :holai.runtime.pattern
     :holai.sets
     :holai.simp
     :holai.tactics
@@ -509,16 +513,14 @@
   (:shadowing-import-from :holai.parser parse_type parse_term)
   (:shadowing-import-from :holai.printer parse_as_infix parse_as_binder)
   (:shadowing-import-from
-    :holai.runtime
-    unit
-    tuple
-    snd
+    :holai.runtime.core
     proof
-    match
     lambdac
     labelsc
     function-value
     failwith)
+  (:shadowing-import-from :holai.runtime.data unit tuple snd)
+  (:shadowing-import-from :holai.runtime.pattern match)
   (:shadowing-import-from
     :holai.sets
     UNIONS_GSPEC

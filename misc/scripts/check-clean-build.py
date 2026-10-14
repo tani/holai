@@ -22,9 +22,9 @@ with tempfile.TemporaryDirectory(prefix="clean-build-", dir=build) as temporary:
     if result.returncode:
         raise RuntimeError((build / "clean-build.log").read_text()[-3500:])
     files = sorted(p for p in (ROOT / "holai/generated").iterdir()
-                   if p.is_file() and p.suffix in {".lisp", ".json", ".sexp"})
+                   if p.is_file() and p.suffix in {".lisp", ".json"})
     core = json.loads((ROOT / "vendor/CORE_FILES.json").read_text())
-    assert len(files) == 2 * len(core) + 2 == 94, len(files)
+    assert len(files) == 2 * len(core) + 1 == 93, len(files)
     regenerated = sorted(p.name for p in (target / "holai/generated").iterdir() if p.is_file())
     assert [p.name for p in files] == regenerated, "Clean output file set differs"
     for file in files:

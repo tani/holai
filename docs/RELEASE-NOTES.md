@@ -1,6 +1,56 @@
 # Holai 1.0.0-percent-names
 
-## NixOS 26.05 and platform CI
+## Explicit ASDF load order, dotted packages and Cartesian CI
+
+Root `holai.asd` now handwrites ordinary serial systems `holai/runtime` and
+`holai`, not package-inferred systems. Runtime-only callers load `holai/runtime`;
+full-core callers load `holai`. Package names are dot-separated:
+`holai.runtime.<unit>` and `holai.<stem>`, including static child packages.
+Filesystem paths and ASDF system IDs retain their slashes. There are no old-name
+aliases, per-source inferred systems or shared runtime facade.
+Explicitly load root `holai.asd` with `asdf:load-asd` before `asdf:load-system`;
+the runtime ID is `holai/runtime`, not the obsolete `holai-runtime`.
+The definition package is `holai.define`. Data/registry own leaf state, pattern
+owns matching, core owns calling/proof macros, format owns printing and stdlib
+owns library adapters; exports come from actual owners, not compatibility reexports.
+
+Runtime implementation order is data, pattern-registry, pattern, core, format,
+stdlib, followed by the unchanged 46-file vendor order: 52 production units.
+The empty holai/all entry and generated provider/load-order S-expression data
+are removed. Generated output is 93 files: 46 Lisp/map pairs plus inventory.
+The maintained ASD is not generated from a manifest; cold diagnostics compare
+actual ASDF compile/load paths against the vendor order and require zero
+compiler diagnostics. The local ARM64 Linux `make release` exited 0 in 287.53
+seconds: SBCL full-core and ECL/ABCL/CLISP runtime-fixture profiles, cold audit,
+93 identical clean outputs, 55 unchanged pins and packaging all passed.
+Tagged SBCL evidence records 128 native/69 PROOF checks, 1,149 rows (1,146 exact,
+two structural registry, one Random property), 194,839 core / 207,058
+fixture-inclusive map ranges and ten protected rejections. All 52 production
+paths compiled/loaded in literal ASD order, with zero compiler diagnostics.
+Separate initialization accounting is zero errors/warnings, 21 style warnings
+and 164 notices. The producer reported 427 payload files; ZIP bytes may change
+with final documentation. Older measurements below remain historical.
+
+CI now crosses three hosts (aarch64-linux on ubuntu-24.04-arm, aarch64-darwin
+on macos-15, x86_64-linux on ubuntu-24.04) with SBCL/ECL/ABCL/CLISP: 12 jobs.
+Fail-fast is disabled. Each validates its Nix system and selected package's
+exported availability; missing targets fail. SBCL runs `HOLAI_LISPS=sbcl make release`;
+the other jobs build the translator and run only their runtime-fixture profile.
+SHA pins, read-only permissions and checkout without persisted credentials remain;
+artifact names include both host and implementation.
+
+The preceding hosted run passed full SBCL on all three platforms, but ECL failed
+on Linux and CLISP failed on Darwin/x86 Linux. Outer logs did not expose root
+Lisp diagnostics. Actionlint passed locally; remote execution of the new push's
+12-job matrix remains pending, with no claimed green hosted run or Darwin
+compatibility pass. CLISP's earlier failures remain unresolved. Captured phase
+stdout/stderr and public GitHub Actions error annotations now enable precise
+root diagnosis rather than blind retries. ECL's weak-GC regression uses a native
+MP worker and join, replacing the unstable native `GC_clear_stack` helper;
+the local ECL profile verified all 28 assertions and two explicit collections.
+No production cache behavior changes.
+
+## Historical NixOS 26.05 and three-job platform CI
 
 The development shell now uses one locked NixOS 26.05 nixpkgs input for all
 compiler tools and Lisp packages, removing the old 23.11/25.05 split. The
@@ -28,17 +78,17 @@ flake-check/release invocation). Packages were OCaml 4.14.4, Camlp5 8.02.01,
 Num 1.5, camlp-streams 5.0.1, SBCL 2.6.4, ECL 26.5.5, ABCL 1.9.3 and
 CLISP 2.49.95. All three platform evaluations (`--all-systems --no-build`)
 and actionlint 1.7.12 passed locally. Flake checks test ASDF startup only;
-release tests the production runtime. Three-platform CI is configured, but
-hosted Actions results and Darwin/x86 runtime results remain unobserved.
+release tests the production runtime. At that historical measurement, hosted
+Actions results and Darwin/x86 runtime results had not yet been observed.
 
-The current implementation-tagged reports under `misc/reports/implementations/`
+The implementation-tagged reports at that checkpoint under `misc/reports/implementations/`
 record 128 SBCL native checks, 69 PROOF DSL checks and 1,149 differential
 observations, with 94 identical clean-generated outputs and 55
 unchanged input pins. The source archive contained 428 payload files before
 these final documentation edits; no fixed archive byte size is asserted.
 
-ECL 26.5.5 weak-GC coverage retains all 28 assertions: a native-compiled
-creator and native `GC_clear_stack` precede the fixed two `SI:GC` calls.
+That earlier ECL 26.5.5 weak-GC helper retained all 28 assertions with a native
+creator and native `GC_clear_stack` before two `SI:GC` calls; it is now replaced above.
 `EXT:CATCH-SIGNAL` is proclaimed NULL in ECL source while its C implementation
 returns T; restoration now relies only on its side effect to restore real
 SIG_DFL, not that contradictory return value. The actual interrupt test observed
@@ -424,26 +474,25 @@ contract and results as history, not the current runtime API or §36 evidence.
 
 ## Pending discussion
 
-- TODO: Start a discussion of potentially excessive `funcall` usage in this project. Distinguish `holai.runtime:funcall` and curried application from native `CL:FUNCALL`; measure actual call hotspots and allocation before proposing changes. This is an investigation topic, not a demonstrated performance problem or an optimization included in this layout/API cutover.
+- TODO: Start a discussion of potentially excessive `funcall` usage in this project. Distinguish `holai/runtime/core:funcall` and curried application from native `CL:FUNCALL`; measure actual call hotspots and allocation before proposing changes. This is an investigation topic, not a demonstrated performance problem or an optimization included in this layout/API cutover.
 
 ## Unified ASDF definition and UIOP package inference
 
 DESIGN §37 replaces the previous system definitions with one root `holai.asd`.
-Load `holai` for the complete core or `holai/runtime` for runtime-only use;
-generated `holai/generated/<stem>` systems are genuinely package-inferred.
+Load `holai` for the complete core or `holai/runtime/stdlib` for runtime-only use.
+Every production unit is genuinely package-inferred, including all six runtime
+implementation owners; generated packages/systems use `holai/generated/<stem>`.
 Register only the repository root and require ASDF before UIOP package reading.
-The main `holai` system is package-inferred through `holai/all.lisp`; only
-`holai/runtime` has explicit components, its five shared-package files in the
-same root ASD and original order.
-There are no compatibility system aliases. Public `holai.*` packages,
-private constructors, source bindings and algorithms remain unchanged.
+The main `holai` system is package-inferred through `holai/all.lisp`.
+There are no compatibility package/system aliases. Private constructors,
+source bindings, lexical dotted prefixes and algorithms remain unchanged.
 
 Generated `package-systems.sexp` records every physical file's root/nested/private
 provider. The first UIOP root shell declares runtime, predecessor and external
 dependencies, excluding same-file packages. Remaining shells precede canonical
 imports. Safe CL-first foreign-input mixes shorten references without exporting
 private makers or turning lexical values into inherited SPECIAL bindings.
-The inferred `holai/all.lisp` entry raises production compiled units to 52.
+The six inferred runtime units, 46 generated files and holai/all total 53 units.
 Generated outputs remain 94; clean/release comparisons include the provider data.
 
 The preceding cutover (historical DESIGN §37.3) passed `nix develop path:. --command make release` (exit 0,

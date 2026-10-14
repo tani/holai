@@ -51,7 +51,7 @@
         "log": "misc/reports/implementations/abcl/compatibility-runner.log",
         "log_sha256": "9e95ecd01a6e4827f09d9608f2ab27f5c1a554f450c7d1cab827c7e1be0497e9",
         "report": "misc/reports/implementations/abcl/compatibility.json",
-        "report_sha256": "962bc3d3e245ba5990afcbca90848de32044e68ea0574a5a61815d79ae18843a"
+        "report_sha256": "295af52ba7c92c217c3a88712b026c40a718737f70e45724294296b5769957b5"
       },
       "compatibility_passed": true,
       "status": "compatibility_passed"
@@ -69,7 +69,7 @@
       "diagnostics": {
         "exit_code": 0,
         "log": "misc/reports/implementations/sbcl/diagnostics-runner.log",
-        "log_sha256": "d51ec8972eadd5aec3d59a9d04d48b60559d11867a0e4ffe33d1fa1106dada22",
+        "log_sha256": "4e9a9907421ecd4a735365eacc4e2420216d07706e2e0a3770b370a146005aa0",
         "passed": true
       }
     },
@@ -81,7 +81,7 @@
         "log": "misc/reports/implementations/ecl/compatibility-runner.log",
         "log_sha256": "fb091d5c5747e074ba6780d776f5656f42eb172307a9fc634b877582c5ce91cc",
         "report": "misc/reports/implementations/ecl/compatibility.json",
-        "report_sha256": "cffd8b4d562a0aa5e2557781de014c9c31eaf5868ce7cbc07b1d37c6bd59142b"
+        "report_sha256": "8c4373b4b98111a3de1bfb8c6bfaf5dbce8f6ad15907aafd2da3a71a34b493a2"
       },
       "compatibility_passed": true,
       "status": "compatibility_passed"
@@ -104,7 +104,7 @@
         "log": "misc/reports/implementations/clisp/compatibility-runner.log",
         "log_sha256": "f96755e3965ff6c1e8200ae3dcb5a8d07e272f5f775c1489adfc5765580ceeef",
         "report": "misc/reports/implementations/clisp/compatibility.json",
-        "report_sha256": "0bc2d53f030e71799898c9a25ef822cb520aaab1e4de1c4a4c5845bbe5ef6cc5"
+        "report_sha256": "4a4b5ba2eb249344a68e00c92991f28623929133d8149f68a2074220552526ca"
       },
       "compatibility_passed": true,
       "status": "compatibility_passed"

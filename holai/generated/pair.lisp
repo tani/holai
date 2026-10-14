@@ -208,12 +208,14 @@
   (:import-from :holai.equal)
   (:import-from :holai.fusion)
   (:import-from :holai.fusion.hol)
-  (:import-from :holai.impconv)
   (:import-from :holai.lib)
   (:import-from :holai.meson)
   (:import-from :holai.parser)
   (:import-from :holai.printer)
-  (:import-from :holai.runtime)
+  (:import-from :holai.runtime.core)
+  (:import-from :holai.runtime.data)
+  (:import-from :holai.runtime.pattern)
+  (:import-from :holai.runtime.stdlib)
   (:import-from :holai.simp)
   (:import-from :holai.tactics)
   (:import-from :holai.theorems)
@@ -297,7 +299,10 @@
     :holai.meson
     :holai.parser
     :holai.printer
-    :holai.runtime
+    :holai.runtime.core
+    :holai.runtime.data
+    :holai.runtime.pattern
+    :holai.runtime.stdlib
     :holai.simp
     :holai.tactics
     :holai.theorems
@@ -644,25 +649,20 @@
   (:shadowing-import-from :holai.parser parse_term)
   (:shadowing-import-from :holai.printer parse_as_infix)
   (:shadowing-import-from
-    :holai.runtime
-    unit
-    tuple
-    ref
-    raise
+    :holai.runtime.core
     proof
     partial
-    match
     lambdac
     labelsc
-    ignore-value
     function-value
     failwith
     Failure
-    deref
     defunc
-    assign
     =
     <>)
+  (:shadowing-import-from :holai.runtime.data unit tuple ref raise deref assign)
+  (:shadowing-import-from :holai.runtime.pattern match)
+  (:shadowing-import-from :holai.runtime.stdlib ignore-value)
   (:shadowing-import-from
     :holai.simp
     SIMP_TAC
@@ -1027,7 +1027,7 @@
                 (append
                   (depair (list_mk_icomb "FST" (cl:cons gv nil)) l)
                   (depair (list_mk_icomb "SND" (cl:cons gv nil)) r%))))
-            (holai.runtime:ocaml-condition
+            (holai.runtime.data:ocaml-condition
               (exception~447)
               (match exception~447
                 ((Failure _) (cl:cons (tuple gv arg) nil))
@@ -1048,10 +1048,13 @@
               ((tuple th th%)
                 (progn
                   (ignore-value
-                    (#`PART_MATCH #'I th% (holai.runtime:snd (#`strip_forall (concl th)))))
+                    (#`PART_MATCH
+                      #'I
+                      th%
+                      (holai.runtime.data:snd (#`strip_forall (concl th)))))
                   (warn cl:t "Benign redefinition")
                   (GEN_ALL (#`GENL avs th%)))))
-            (holai.runtime:ocaml-condition
+            (holai.runtime.data:ocaml-condition
               (exception~495)
               (match exception~495
                 ((Failure _)
@@ -1074,7 +1077,7 @@
                                       (map
                                         (o
                                           (#`subst slist)
-                                          (function-value #'holai.runtime:fst 1))
+                                          (function-value #'holai.runtime.data:fst 1))
                                         reps))
                                     (threps
                                       (map
@@ -1135,17 +1138,17 @@
       ((create_projections (conname)
         (handler-case
           (assoc conname (deref projection_cache))
-          (holai.runtime:ocaml-condition
+          (holai.runtime.data:ocaml-condition
             (exception~705)
             (match exception~705
               ((Failure _)
                 (let*
                   ((genty (get_const_type conname))
                     (conty
-                      (holai.runtime:fst
+                      (holai.runtime.data:fst
                         (dest_type
                           (holai.lib:repeat
-                            (o (function-value #'holai.runtime:snd 1) #'dest_fun_ty)
+                            (o (function-value #'holai.runtime.data:snd 1) #'dest_fun_ty)
                             genty)))))
                   (cl:declare (cl:ignorable genty conty))
                   (match (assoc conty (deref inductive_type_store))
@@ -1169,13 +1172,17 @@
                                                     (partial
                                                       (function-value #'= 2)
                                                       conname)
-                                                    (function-value #'holai.runtime:fst 1))
+                                                    (function-value
+                                                      #'holai.runtime.data:fst
+                                                      1))
                                                   #'dest_const)
-                                                (function-value #'holai.runtime:fst 1))
+                                                (function-value
+                                                  #'holai.runtime.data:fst
+                                                  1))
                                               strip_comb)
                                             #'rand)
                                           lhand)
-                                        (function-value #'holai.runtime:snd 1))
+                                        (function-value #'holai.runtime.data:snd 1))
                                       strip_forall)
                                     cjs))
                                 (n (index ourcj cjs)))
@@ -1210,7 +1217,7 @@
                                                   n
                                                   (#`holai.bool:CONJUNCTS
                                                     (ASSUME
-                                                      (holai.runtime:snd
+                                                      (holai.runtime.data:snd
                                                         (#`strip_exists (concl bth)))))))
                                               (dth
                                                 (CONV_RULE
@@ -1223,7 +1230,7 @@
                                                 (SIMPLE_EXISTS
                                                   (rator
                                                     (#`lhand
-                                                      (holai.runtime:snd
+                                                      (holai.runtime.data:snd
                                                         (#`strip_forall (concl dth)))))
                                                   dth))
                                               (fth
@@ -1233,7 +1240,7 @@
                                               (zty
                                                 (type_of
                                                   (rand
-                                                    (holai.runtime:snd
+                                                    (holai.runtime.data:snd
                                                       (#`strip_forall (concl dth)))))))
                                             (cl:declare
                                               (cl:ignorable
@@ -1296,7 +1303,7 @@
                     ((tuple con args)
                       (let*
                         ((prjths
-                          (create_projections (holai.runtime:fst (dest_const con))))
+                          (create_projections (holai.runtime.data:fst (dest_const con))))
                           (atm (rand (rand (concl (hd prjths)))))
                           (instn (#`term_match nil atm tm))
                           (arths (map (#`INSTANTIATE% instn) prjths))
@@ -1316,7 +1323,7 @@
               (GEN_BETA_CONV% (tm)
                 (handler-case
                   (BETA_CONV tm)
-                  (holai.runtime:ocaml-condition
+                  (holai.runtime.data:ocaml-condition
                     (exception~1030)
                     (match exception~1030
                       ((Failure _)
@@ -1340,10 +1347,11 @@
                                         (BETA_CONV (mk_comb (tuple pat vstr)))
                                         (SYM th1)))
                                     (avs
-                                      (holai.runtime:fst (#`strip_forall (body (rand l)))))
+                                      (holai.runtime.data:fst
+                                        (#`strip_forall (body (rand l)))))
                                     (th3
                                       (#`GENL
-                                        (holai.runtime:fst
+                                        (holai.runtime.data:fst
                                           (#`strip_forall (body (rand l))))
                                         th2))
                                     (efn (#`genvar (type_of pat)))
@@ -1642,7 +1650,7 @@
           (cl:declare (cl:ignorable tm%))
           (handler-case
             (#`let1_CONV tm)
-            (holai.runtime:ocaml-condition
+            (holai.runtime.data:ocaml-condition
               (exception~1647)
               (match exception~1647
                 ((Failure _)
@@ -1655,7 +1663,7 @@
       (lambdac (tm)
         (match (#`strip_comb tm)
           ((tuple ltm pargs)
-            (if (cl:or (<> (holai.runtime:fst (dest_const ltm)) "LET") (= pargs nil))
+            (if (cl:or (<> (holai.runtime.data:fst (dest_const ltm)) "LET") (= pargs nil))
               (failwith "let_CONV")
               (let ((abstm (hd pargs)))
                 (cl:declare (cl:ignorable abstm))
@@ -1674,7 +1682,7 @@
         (handler-case
           (match (dest_let tm)
             ((tuple assigs bod) (forall (uncurry (function-value #'= 2)) assigs)))
-          (holai.runtime:ocaml-condition
+          (holai.runtime.data:ocaml-condition
             (exception~1730)
             (match exception~1730 ((Failure _) cl:nil) (_ (raise exception~1730)))))))
       (PROVE_DEPAIRING_EXISTS
@@ -1711,7 +1719,7 @@
             ((path
               (handler-case
                 (#`find_path is_trivlet w%)
-                (holai.runtime:ocaml-condition
+                (holai.runtime.data:ocaml-condition
                   (exception~1838)
                   (match exception~1838
                     ((Failure _) (#`find_path is_let w%))
@@ -1730,7 +1738,9 @@
                     (lvars (itlist (o (o #'union #'frees) lhs) abbrevs nil))
                     (avoids
                       (itlist
-                        (o (o #'union #'thm_frees) (function-value #'holai.runtime:snd 1))
+                        (o
+                          (o #'union #'thm_frees)
+                          (function-value #'holai.runtime.data:snd 1))
                         asl
                         (frees w%))))
                   (cl:declare (cl:ignorable abbrevs lvars avoids))

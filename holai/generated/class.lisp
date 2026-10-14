@@ -152,7 +152,9 @@
   (:import-from :holai.lib)
   (:import-from :holai.parser)
   (:import-from :holai.printer)
-  (:import-from :holai.runtime)
+  (:import-from :holai.runtime.core)
+  (:import-from :holai.runtime.data)
+  (:import-from :holai.runtime.pattern)
   (:import-from :holai.simp)
   (:import-from :holai.tactics)
   (:import-from :holai.theorems)
@@ -237,7 +239,9 @@
     :holai.lib
     :holai.parser
     :holai.printer
-    :holai.runtime
+    :holai.runtime.core
+    :holai.runtime.data
+    :holai.runtime.pattern
     :holai.simp
     :holai.tactics
     :holai.theorems)
@@ -435,26 +439,19 @@
   (:shadowing-import-from :holai.parser parse_type parse_term)
   (:shadowing-import-from :holai.printer string_of_term parse_as_binder)
   (:shadowing-import-from
-    :holai.runtime
-    unit
-    tuple
+    :holai.runtime.core
     string-concat
-    snd
-    ref
-    raise
     proof
-    match
     lambdac
     labelsc
     function-value
-    fst
     failwith
     Failure
-    deref
     defunc
-    assign
     =
     <>)
+  (:shadowing-import-from :holai.runtime.data unit tuple snd ref raise fst deref assign)
+  (:shadowing-import-from :holai.runtime.pattern match)
   (:shadowing-import-from
     :holai.simp
     SIMP_TAC
@@ -611,7 +608,7 @@
                       (cl:cons (tuple l t%) nil)
                       pth))
                   (fail unit))))))
-        (holai.runtime:ocaml-condition
+        (holai.runtime.data:ocaml-condition
           (exception~18)
           (match exception~18
             ((Failure _) (failwith "ETA_CONV"))
@@ -697,7 +694,7 @@
             (#`MP
               (PINST (cl:cons (tuple ty aty) nil) (cl:cons (tuple abs%% P%) nil) pth)
               th)))
-        (holai.runtime:ocaml-condition
+        (holai.runtime.data:ocaml-condition
           (exception~207)
           (match exception~207
             ((Failure _) (failwith "SELECT_RULE"))
@@ -728,7 +725,7 @@
             (CONV_RULE
               (#`LAND_CONV #'BETA_CONV)
               (PINST (cl:cons (tuple ty aty) nil) (cl:cons (tuple abs%% P%) nil) pth))))
-        (holai.runtime:ocaml-condition
+        (holai.runtime.data:ocaml-condition
           (exception~261)
           (match exception~261
             ((Failure _) (failwith "SELECT_CONV"))
@@ -774,7 +771,7 @@
             (if (<> (concl th%) (concl th))
               (failwith "")
               (progn (warn cl:t "Benign redefinition of type") tth%))))
-        (holai.runtime:ocaml-condition
+        (holai.runtime.data:ocaml-condition
           (exception~378)
           (match exception~378
             ((Failure _)
@@ -924,7 +921,7 @@
         (let ((tm% (#`mk_neg tm)))
           (cl:declare (cl:ignorable tm%))
           (#`MP (INST% (cl:cons (tuple tm P%) nil) pth) (#`DISCH tm% th)))
-        (holai.runtime:ocaml-condition
+        (holai.runtime.data:ocaml-condition
           (exception~661)
           (match exception~661
             ((Failure _) (failwith "CCONTR"))
@@ -939,7 +936,7 @@
         (handler-case
           (match (#`dest_imp tm)
             ((tuple P% Q) (INST% (cl:cons (tuple P% a%) (cl:cons (tuple Q b%) nil)) pth)))
-          (holai.runtime:ocaml-condition
+          (holai.runtime.data:ocaml-condition
             (exception~698)
             (match exception~698
               ((Failure _) (failwith "CONTRAPOS_CONV"))
@@ -1141,7 +1138,7 @@
 (defunc is_cond (tm)
   (handler-case
     (= (fst (dest_const (rator (rator (rator tm))))) "COND")
-    (holai.runtime:ocaml-condition
+    (holai.runtime.data:ocaml-condition
       (exception~1030)
       (match exception~1030 ((Failure _) cl:nil) (_ (raise exception~1030))))))
 
@@ -1152,7 +1149,7 @@
         (let ((c% (mk_const (tuple "COND" (cl:cons (tuple (type_of x) aty) nil)))))
           (cl:declare (cl:ignorable c%))
           (mk_comb (tuple (mk_comb (tuple (mk_comb (tuple c% b%)) x)) y)))
-        (holai.runtime:ocaml-condition
+        (holai.runtime.data:ocaml-condition
           (exception~1050)
           (match exception~1050
             ((Failure _) (failwith "mk_cond"))
@@ -1167,7 +1164,7 @@
             (match (dest_comb tm2)
               ((tuple c% b%)
                 (if (= (fst (dest_const c%)) "COND") (tuple b% (tuple x y)) (fail unit))))))))
-    (holai.runtime:ocaml-condition
+    (holai.runtime.data:ocaml-condition
       (exception~1084)
       (match exception~1084
         ((Failure _) (failwith "dest_cond"))
@@ -1262,7 +1259,7 @@
         (lambdac (tm)
           (handler-case
             (prove (tuple tm TAUT_TAC))
-            (holai.runtime:ocaml-condition
+            (holai.runtime.data:ocaml-condition
               (exception~1289)
               (match exception~1289
                 ((Failure _)
@@ -1318,7 +1315,7 @@
                   (let ((th% (#`DENEG_RULE th)))
                     (cl:declare (cl:ignorable th%))
                     (proof (#`ASSUME_TAC th%) THEN (SUBST1_TAC (#`EQT_INTRO th%))))
-                  (holai.runtime:ocaml-condition
+                  (holai.runtime.data:ocaml-condition
                     (exception~1372)
                     (match exception~1372
                       ((Failure _)

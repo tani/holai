@@ -440,7 +440,10 @@
   (:import-from :holai.normalizer)
   (:import-from :holai.nums)
   (:import-from :holai.parser)
-  (:import-from :holai.runtime)
+  (:import-from :holai.runtime.core)
+  (:import-from :holai.runtime.data)
+  (:import-from :holai.runtime.format)
+  (:import-from :holai.runtime.pattern)
   (:import-from :holai.simp)
   (:import-from :holai.tactics)
   (:import-from :holai.theorems)
@@ -477,7 +480,10 @@
     :holai.normalizer
     :holai.nums
     :holai.parser
-    :holai.runtime
+    :holai.runtime.core
+    :holai.runtime.data
+    :holai.runtime.format
+    :holai.runtime.pattern
     :holai.simp
     :holai.tactics
     :holai.theorems)
@@ -1067,35 +1073,26 @@
     dest_small_numeral)
   (:shadowing-import-from :holai.parser parse_term)
   (:shadowing-import-from
-    :holai.runtime
-    unit
-    tuple
+    :holai.runtime.core
     string-of-int
     string-concat
-    snd
-    ref
-    raise
     proof
-    print-string
-    print-newline
     partial
-    match
     lambdac
     labelsc
-    guard
     function-value
-    fst
     failwith
     Failure
-    deref
     defvariant
     defunc
-    assign
     >
     ==
     =
     <>
     <)
+  (:shadowing-import-from :holai.runtime.data unit tuple snd ref raise fst deref assign)
+  (:shadowing-import-from :holai.runtime.format print-string print-newline)
+  (:shadowing-import-from :holai.runtime.pattern match guard)
   (:shadowing-import-from
     :holai.simp
     REWR_CONV
@@ -1243,7 +1240,7 @@
                         (tuple
                           (grob_cmul (tuple (- c%) m) cms)
                           (make-Mmul (tuple (- c%) m) hpol))))
-                    (holai.runtime:ocaml-condition
+                    (holai.runtime.data:ocaml-condition
                       (exception~383)
                       (match exception~383
                         ((Failure _) (failwith "reduce1"))
@@ -1259,7 +1256,7 @@
                     (match (reduceb cm basis)
                       ((tuple q hnew)
                         (reduce basis (tuple (grob_add q ptl) (make-Add hnew hist)))))
-                    (holai.runtime:ocaml-condition
+                    (holai.runtime.data:ocaml-condition
                       (exception~441)
                       (match exception~441
                         ((Failure _)
@@ -1471,7 +1468,7 @@
                         ((a%
                           (handler-case
                             (assoc n lis1)
-                            (holai.runtime:ocaml-condition
+                            (holai.runtime.data:ocaml-condition
                               (exception~1245)
                               (match exception~1245
                                 ((Failure _) nil)
@@ -1479,7 +1476,7 @@
                           (b%
                             (handler-case
                               (assoc n lis2)
-                              (holai.runtime:ocaml-condition
+                              (holai.runtime.data:ocaml-condition
                                 (exception~1253)
                                 (match exception~1253
                                   ((Failure _) nil)
@@ -1726,7 +1723,7 @@
                             (cl:cons
                               (tuple num_1 (map (lambdac (i%) (if (= i% tm) 1 0)) vars))
                               nil))
-                          (holai.runtime:ocaml-condition
+                          (holai.runtime.data:ocaml-condition
                             (exception~1809)
                             (match exception~1809
                               ((Failure _)
@@ -1736,14 +1733,14 @@
                                     (if (= x num_0)
                                       nil
                                       (cl:cons (tuple x (map (lambdac (v) 0) vars)) nil)))
-                                  (holai.runtime:ocaml-condition
+                                  (holai.runtime.data:ocaml-condition
                                     (exception~1812)
                                     (match exception~1812
                                       ((Failure _)
                                         (handler-case
                                           (#`grob_neg
                                             (grobify_term vars (#`ring_dest_neg tm)))
-                                          (holai.runtime:ocaml-condition
+                                          (holai.runtime.data:ocaml-condition
                                             (exception~1815)
                                             (match exception~1815
                                               ((Failure _)
@@ -1752,7 +1749,7 @@
                                                     (grobify_term
                                                       vars
                                                       (#`ring_dest_inv tm)))
-                                                  (holai.runtime:ocaml-condition
+                                                  (holai.runtime.data:ocaml-condition
                                                     (exception~1818)
                                                     (match exception~1818
                                                       ((Failure _)
@@ -1762,7 +1759,7 @@
                                                               (grob_add
                                                                 (grobify_term vars l)
                                                                 (grobify_term vars r%))))
-                                                          (holai.runtime:ocaml-condition
+                                                          (holai.runtime.data:ocaml-condition
                                                             (exception~1821)
                                                             (match exception~1821
                                                               ((Failure _)
@@ -1777,7 +1774,7 @@
                                                                         (grobify_term
                                                                           vars
                                                                           r%))))
-                                                                  (holai.runtime:ocaml-condition
+                                                                  (holai.runtime.data:ocaml-condition
                                                                     (exception~1824)
                                                                     (match exception~1824
                                                                       ((Failure _)
@@ -1793,7 +1790,7 @@
                                                                                 (grobify_term
                                                                                   vars
                                                                                   r%))))
-                                                                          (holai.runtime:ocaml-condition
+                                                                          (holai.runtime.data:ocaml-condition
                                                                             (exception~1827)
                                                                             (match
                                                                               exception~1827
@@ -1812,7 +1809,7 @@
                                                                                         (grobify_term
                                                                                           vars
                                                                                           r%))))
-                                                                                  (holai.runtime:ocaml-condition
+                                                                                  (holai.runtime.data:ocaml-condition
                                                                                     (exception~1830)
                                                                                     (match
                                                                                       exception~1830
@@ -1832,7 +1829,7 @@
                                                                                                   l)
                                                                                                 (dest_small_numeral
                                                                                                   r%))))
-                                                                                          (holai.runtime:ocaml-condition
+                                                                                          (holai.runtime.data:ocaml-condition
                                                                                             (exception~1833)
                                                                                             (match
                                                                                               exception~1833
@@ -2008,7 +2005,7 @@
                                                                       (assoceq
                                                                         prf%
                                                                         (deref execache))
-                                                                      (holai.runtime:ocaml-condition
+                                                                      (holai.runtime.data:ocaml-condition
                                                                         (exception~2396)
                                                                         (match
                                                                           exception~2396
@@ -2080,7 +2077,7 @@
                                                                       (assoceq
                                                                         prf%
                                                                         (deref execache))
-                                                                      (holai.runtime:ocaml-condition
+                                                                      (holai.runtime.data:ocaml-condition
                                                                         (exception~2251)
                                                                         (match
                                                                           exception~2251
@@ -2612,7 +2609,7 @@
                             th1)))
                       (cl:declare (cl:ignorable t% ty v p% th0 th1 th2))
                       (CONV_RULE (RAND_CONV (NUM_MULTIPLY_CONV pos)) th2))
-                    (holai.runtime:ocaml-condition
+                    (holai.runtime.data:ocaml-condition
                       (exception~3264)
                       (match exception~3264
                         ((Failure _)
@@ -2644,7 +2641,7 @@
                                     th1)))
                               (cl:declare (cl:ignorable t% ty v p% th0 th1 th2))
                               (CONV_RULE (RAND_CONV (NUM_MULTIPLY_CONV pos)) th2))
-                            (holai.runtime:ocaml-condition
+                            (holai.runtime.data:ocaml-condition
                               (exception~3267)
                               (match exception~3267
                                 ((Failure _)
@@ -2703,7 +2700,7 @@
                                             (CONV_RULE
                                               (RAND_CONV (NUM_MULTIPLY_CONV pos))
                                               th2)))))
-                                    (holai.runtime:ocaml-condition
+                                    (holai.runtime.data:ocaml-condition
                                       (exception~3270)
                                       (match exception~3270
                                         ((Failure _) (REFL tm))

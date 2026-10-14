@@ -189,14 +189,59 @@ let reference c (b:binding) =
  | Some old when old.package<>b.package || old.printed<>b.printed -> b.package^":"^b.printed
  | _ when own_conflict -> b.package^":"^b.printed
  | _ -> owner.imports<-SM.add b.logical b owner.imports; b.printed
-let runtime c name = reference c (external_binding "holai.runtime" name Value)
+let runtime_owner name = match name with
+ | "!=" | "<" | "<=" | "<>" | "="
+ | "==" | ">" | ">=" | "abs-num" | "array-get"
+ | "array-make" | "array-set" | "bool-and" | "bool-or" | "channel-length"
+ | "char-chr" | "close-channel" | "compare" | "cpu-time" | "define-exception"
+ | "defrecord" | "defunc" | "defvariant" | "End_of_file" | "end_of_file" | "exception-string"
+ | "Failure" | "failure" | "failwith" | "fletc" | "funcall" | "function-value"
+ | "gcd-num" | "input-line" | "int-div" | "int-mod" | "int-of-num"
+ | "int-of-string" | "invalid-arg" | "Invalid_argument" | "invalid_argument" | "labelsc" | "lambdac"
+ | "list-exists" | "list-fold-left" | "make-end_of_file" | "make-failure"
+ | "make-invalid_argument" | "make-none" | "make-not_found" | "make-some" | "make-sys_error"
+ | "mod-num" | "None" | "none" | "Not_found" | "not_found" | "num" | "numdom"
+ | "open-in" | "open-in-bin" | "open-out" | "output-string" | "partial"
+ | "power-num" | "proof" | "quo-num" | "really-input-string" | "record-assign"
+ | "record-field" | "record-update" | "Some" | "some" | "string-concat" | "string-escaped"
+ | "string-get" | "string-join" | "string-length" | "string-make" | "string-of-float"
+ | "string-of-int" | "string-of-num" | "string-sub" | "structural-hash" | "Sys_error" | "sys_error"
+ | "variant-fields" | "variant-tag" | "variant-type" | "variant-value" -> "holai.runtime.core"
+ | "assign" | "deref" | "fst" | "match-failure" | "ocaml-condition"
+ | "raise" | "ref" | "ref-contents" | "snd" | "tuple"
+ | "tuple-items" | "tuple-ref" | "unit" | "unit-value" -> "holai.runtime.data"
+ | "buffer-contents" | "buffer-create" | "buffer-reset" | "close-box" | "format-asprintf"
+ | "format-fprintf" | "format-printf" | "formatter-of-buffer" | "get-margin" | "open-box"
+ | "open-vbox" | "pp-close-box" | "pp-get-max-boxes" | "pp-open-box" | "pp-open-hbox"
+ | "pp-open-hvbox" | "pp-open-vbox" | "pp-print-as" | "pp-print-break" | "pp-print-char"
+ | "pp-print-cut" | "pp-print-flush" | "pp-print-int" | "pp-print-newline" | "pp-print-space"
+ | "pp-print-string" | "pp-set-margin" | "pp-set-max-boxes" | "print-break" | "print-flush"
+ | "print-newline" | "print-string" | "printf-printf" | "printf-sprintf" | "set-margin"
+ | "set-max-boxes" | "std-formatter" -> "holai.runtime.format"
+ | "character-code" | "guard" | "match" -> "holai.runtime.pattern"
+ | "array-fold-left" | "array-map" | "array-of-list" | "assert-true" | "Assert_failure" | "assert_failure"
+ | "catch-break" | "float-floor" | "float-of-int" | "gc-control" | "gc-get"
+ | "gc-set" | "ignore-value" | "int-asr" | "int-lsl" | "int-lsr"
+ | "int-of-float" | "lazy-create" | "lazy-force" | "lazy-undefined" | "list-assoc" | "list-concat"
+ | "list-filter" | "list-filter-map" | "list-find" | "list-fold-left2" | "list-fold-right"
+ | "list-fold-right2" | "list-for-all" | "list-for-all2" | "list-hd" | "list-iter"
+ | "list-length" | "list-map" | "list-map2" | "list-mapi" | "list-mem"
+ | "list-mem-assoc" | "list-nth" | "list-partition" | "list-rev" | "list-rev-append"
+ | "list-rev-map" | "list-sort" | "list-tl" | "make-assert_failure" | "make-gc-control"
+ | "make-lazy-undefined" | "make-sys_break" | "ocaml-max-int" | "print-endline" | "random-bits"
+ | "random-init" | "random-int" | "ref-decr" | "ref-incr" | "sys_break"
+ | "table-add" | "table-clear" | "table-create" | "table-find" | "table-fold"
+ | "table-remove" | "table-replace" -> "holai.runtime.stdlib"
+ | name -> invalid_arg ("Unknown runtime support symbol: "^name)
+let runtime_binding name kind = external_binding (runtime_owner name) name kind
+let runtime c name = reference c (runtime_binding name Value)
 (* Synthetic macro heads must not reserve imports while source names are still
    being allocated. Lexical modules share this cell with their reader owner. *)
 let deferred_proof_head c =
  let owner=reader_owner c in
  let head=match owner.proof_head with
  | Some head -> head
- | None -> let head=ref "holai.runtime:proof" in owner.proof_head<-Some head;head in
+ | None -> let head=ref "holai.runtime.core:proof" in owner.proof_head<-Some head;head in
  Sexp.DeferredAtom head
 let finalize_proof_head c =
  let owner=reader_owner c in
@@ -205,7 +250,7 @@ let finalize_proof_head c =
  | Some head ->
    (* REFERENCE handles source-owned/local names and foreign imports; makers
       are also shadowed by the final package declaration. *)
-   if SS.mem "PROOF" owner.makers then use_package owner "holai.runtime"
+   if SS.mem "PROOF" owner.makers then use_package owner "holai.runtime.core"
    else head:=runtime owner "proof"
 let mark c loc rule form =
  incr c.next;
@@ -218,86 +263,86 @@ let maker_spelling (b:binding) =
 let maker c (b:binding) k = reference c {b with printed=k.maker;logical=k.maker_logical;kind=Function k.fields}
 let base_environment () =
  let spec=[
-  "+","cl","+",2; "-","cl","-",2; "*","cl","*",2; "/","holai.runtime","int-div",2;
-  "~-","cl","-",1; "~-.","cl","-",1; "mod","holai.runtime","int-mod",2;
+  "+","cl","+",2; "-","cl","-",2; "*","cl","*",2; "/","holai.runtime.core","int-div",2;
+  "~-","cl","-",1; "~-.","cl","-",1; "mod","holai.runtime.core","int-mod",2;
   "+.","cl","+",2; "-.","cl","-",2; "*.","cl","*",2; "/.","cl","/",2;
-  "=","holai.runtime","=",2; "<>","holai.runtime","<>",2;
-  "==","holai.runtime","==",2; "!=","holai.runtime","!=",2;
-  "<","holai.runtime","<",2; ">","holai.runtime",">",2;
-  "<=","holai.runtime","<=",2; ">=","holai.runtime",">=",2;
-  "compare","holai.runtime","compare",2; "not","cl","not",1;
-  "String.compare","holai.runtime","compare",2;
-  "Num.mod_num","holai.runtime","mod-num",2; "Num.quo_num","holai.runtime","quo-num",2;
+  "=","holai.runtime.core","=",2; "<>","holai.runtime.core","<>",2;
+  "==","holai.runtime.core","==",2; "!=","holai.runtime.core","!=",2;
+  "<","holai.runtime.core","<",2; ">","holai.runtime.core",">",2;
+  "<=","holai.runtime.core","<=",2; ">=","holai.runtime.core",">=",2;
+  "compare","holai.runtime.core","compare",2; "not","cl","not",1;
+  "String.compare","holai.runtime.core","compare",2;
+  "Num.mod_num","holai.runtime.core","mod-num",2; "Num.quo_num","holai.runtime.core","quo-num",2;
   "is_integer_num","cl","integerp",1; "succ_num","cl","1+",1;
-  "Char.code","cl","char-code",1; "Char.chr","holai.runtime","char-chr",1;
-  "String.make","holai.runtime","string-make",2; "String.escaped","holai.runtime","string-escaped",1;
-  "int_of_string","holai.runtime","int-of-string",1;
-  "Array.make","holai.runtime","array-make",2; "Array.get","holai.runtime","array-get",2; "Array.set","holai.runtime","array-set",3;
-  "Array.fold_left","holai.runtime","array-fold-left",3;
-  "Array.of_list","holai.runtime","array-of-list",1; "Array.map","holai.runtime","array-map",2;
-  "minus_num","cl","-",1; "int_of_num","holai.runtime","int-of-num",1;
-  "Gc.get","holai.runtime","gc-get",1; "Gc.set","holai.runtime","gc-set",1;
-  "Sys.catch_break","holai.runtime","catch-break",1;
-  "List.fold_left","holai.runtime","list-fold-left",3; "List.exists","holai.runtime","list-exists",2;
-  "||","holai.runtime","bool-or",2; "or","holai.runtime","bool-or",2;
-  "&&","holai.runtime","bool-and",2; "&","holai.runtime","bool-and",2;
-  "@","cl","append",2; "^","holai.runtime","string-concat",2;
-  "ref","holai.runtime","ref",1; "!","holai.runtime","deref",1;
-  ":=","holai.runtime","assign",2; "raise","holai.runtime","raise",1;
-  "failwith","holai.runtime","failwith",1; "invalid_arg","holai.runtime","invalid-arg",1;
-  "fst","holai.runtime","fst",1; "snd","holai.runtime","snd",1;
+  "Char.code","cl","char-code",1; "Char.chr","holai.runtime.core","char-chr",1;
+  "String.make","holai.runtime.core","string-make",2; "String.escaped","holai.runtime.core","string-escaped",1;
+  "int_of_string","holai.runtime.core","int-of-string",1;
+  "Array.make","holai.runtime.core","array-make",2; "Array.get","holai.runtime.core","array-get",2; "Array.set","holai.runtime.core","array-set",3;
+  "Array.fold_left","holai.runtime.stdlib","array-fold-left",3;
+  "Array.of_list","holai.runtime.stdlib","array-of-list",1; "Array.map","holai.runtime.stdlib","array-map",2;
+  "minus_num","cl","-",1; "int_of_num","holai.runtime.core","int-of-num",1;
+  "Gc.get","holai.runtime.stdlib","gc-get",1; "Gc.set","holai.runtime.stdlib","gc-set",1;
+  "Sys.catch_break","holai.runtime.stdlib","catch-break",1;
+  "List.fold_left","holai.runtime.core","list-fold-left",3; "List.exists","holai.runtime.core","list-exists",2;
+  "||","holai.runtime.core","bool-or",2; "or","holai.runtime.core","bool-or",2;
+  "&&","holai.runtime.core","bool-and",2; "&","holai.runtime.core","bool-and",2;
+  "@","cl","append",2; "^","holai.runtime.core","string-concat",2;
+  "ref","holai.runtime.data","ref",1; "!","holai.runtime.data","deref",1;
+  ":=","holai.runtime.data","assign",2; "raise","holai.runtime.data","raise",1;
+  "failwith","holai.runtime.core","failwith",1; "invalid_arg","holai.runtime.core","invalid-arg",1;
+  "fst","holai.runtime.data","fst",1; "snd","holai.runtime.data","snd",1;
   "abs","cl","abs",1; "max","cl","max",2; "min","cl","min",2;
   "land","cl","logand",2; "lor","cl","logior",2; "lxor","cl","logxor",2; "lnot","cl","lognot",1;
-  "lsl","holai.runtime","int-lsl",2;
-  "lsr","holai.runtime","int-lsr",2;
-  "asr","holai.runtime","int-asr",2;
-  "incr","holai.runtime","ref-incr",1;"decr","holai.runtime","ref-decr",1;
-  "ignore","holai.runtime","ignore-value",1;
-  "print_endline","holai.runtime","print-endline",1;
-  "Lazy.force","holai.runtime","lazy-force",1;
-  "float_of_int","holai.runtime","float-of-int",1;
-  "int_of_float","holai.runtime","int-of-float",1;
-  "floor","holai.runtime","float-floor",1;"sqrt","cl","sqrt",1;"float_sqrt","cl","sqrt",1;
+  "lsl","holai.runtime.stdlib","int-lsl",2;
+  "lsr","holai.runtime.stdlib","int-lsr",2;
+  "asr","holai.runtime.stdlib","int-asr",2;
+  "incr","holai.runtime.stdlib","ref-incr",1;"decr","holai.runtime.stdlib","ref-decr",1;
+  "ignore","holai.runtime.stdlib","ignore-value",1;
+  "print_endline","holai.runtime.stdlib","print-endline",1;
+  "Lazy.force","holai.runtime.stdlib","lazy-force",1;
+  "float_of_int","holai.runtime.stdlib","float-of-int",1;
+  "int_of_float","holai.runtime.stdlib","int-of-float",1;
+  "floor","holai.runtime.stdlib","float-floor",1;"sqrt","cl","sqrt",1;"float_sqrt","cl","sqrt",1;
   "log","cl","log",1;"exp","cl","exp",1;"**","cl","expt",2;
-  "Random.init","holai.runtime","random-init",1;
-  "Random.bits","holai.runtime","random-bits",1;"Random.int","holai.runtime","random-int",1;
-  "Hashtbl.create","holai.runtime","table-create",1;"Hashtbl.clear","holai.runtime","table-clear",1;
-  "Hashtbl.add","holai.runtime","table-add",3;"Hashtbl.replace","holai.runtime","table-replace",3;
-  "Hashtbl.find","holai.runtime","table-find",2;
-  "Hashtbl.remove","holai.runtime","table-remove",2;
-  "Hashtbl.fold","holai.runtime","table-fold",3;
-  "String.length","holai.runtime","string-length",1; "String.sub","holai.runtime","string-sub",3;
-  "String.concat","holai.runtime","string-join",2; "String.get","holai.runtime","string-get",2;
-  "num","holai.runtime","num",1; "numdom","holai.runtime","numdom",1;
-  "gcd_num","holai.runtime","gcd-num",2; "abs_num","holai.runtime","abs-num",1;
-  "power_num","holai.runtime","power-num",2; "quo_num","holai.runtime","quo-num",2;
-  "mod_num","holai.runtime","mod-num",2; "Num.int_of_num","holai.runtime","int-of-num",1;
-  "string_of_num","holai.runtime","string-of-num",1;
-  "string_of_int","holai.runtime","string-of-int",1; "string_of_float","holai.runtime","string-of-float",1;
+  "Random.init","holai.runtime.stdlib","random-init",1;
+  "Random.bits","holai.runtime.stdlib","random-bits",1;"Random.int","holai.runtime.stdlib","random-int",1;
+  "Hashtbl.create","holai.runtime.stdlib","table-create",1;"Hashtbl.clear","holai.runtime.stdlib","table-clear",1;
+  "Hashtbl.add","holai.runtime.stdlib","table-add",3;"Hashtbl.replace","holai.runtime.stdlib","table-replace",3;
+  "Hashtbl.find","holai.runtime.stdlib","table-find",2;
+  "Hashtbl.remove","holai.runtime.stdlib","table-remove",2;
+  "Hashtbl.fold","holai.runtime.stdlib","table-fold",3;
+  "String.length","holai.runtime.core","string-length",1; "String.sub","holai.runtime.core","string-sub",3;
+  "String.concat","holai.runtime.core","string-join",2; "String.get","holai.runtime.core","string-get",2;
+  "num","holai.runtime.core","num",1; "numdom","holai.runtime.core","numdom",1;
+  "gcd_num","holai.runtime.core","gcd-num",2; "abs_num","holai.runtime.core","abs-num",1;
+  "power_num","holai.runtime.core","power-num",2; "quo_num","holai.runtime.core","quo-num",2;
+  "mod_num","holai.runtime.core","mod-num",2; "Num.int_of_num","holai.runtime.core","int-of-num",1;
+  "string_of_num","holai.runtime.core","string-of-num",1;
+  "string_of_int","holai.runtime.core","string-of-int",1; "string_of_float","holai.runtime.core","string-of-float",1;
   "+/","cl","+",2; "-/","cl","-",2; "*/","cl","*",2; "//","cl","/",2;
-  "=/","holai.runtime","=",2; "</","holai.runtime","<",2; ">/","holai.runtime",">",2;
-  "<=/","holai.runtime","<=",2; ">=/","holai.runtime",">=",2; "<>/","holai.runtime","<>",2;
-  "Format.print_string","holai.runtime","print-string",1;
-  "Format.print_newline","holai.runtime","print-newline",1;
-  "Format.pp_print_string","holai.runtime","pp-print-string",2;
-  "Sys.time","holai.runtime","cpu-time",1; "Printexc.to_string","holai.runtime","exception-string",1;
-  "Hashtbl.hash","holai.runtime","structural-hash",1;
-  "open_in","holai.runtime","open-in",1; "open_in_bin","holai.runtime","open-in-bin",1;
-  "open_out","holai.runtime","open-out",1; "input_line","holai.runtime","input-line",1;
-  "close_in","holai.runtime","close-channel",1; "close_out","holai.runtime","close-channel",1;
-  "output_string","holai.runtime","output-string",2;
-  "in_channel_length","holai.runtime","channel-length",1;
-  "really_input_string","holai.runtime","really-input-string",2
+  "=/","holai.runtime.core","=",2; "</","holai.runtime.core","<",2; ">/","holai.runtime.core",">",2;
+  "<=/","holai.runtime.core","<=",2; ">=/","holai.runtime.core",">=",2; "<>/","holai.runtime.core","<>",2;
+  "Format.print_string","holai.runtime.format","print-string",1;
+  "Format.print_newline","holai.runtime.format","print-newline",1;
+  "Format.pp_print_string","holai.runtime.format","pp-print-string",2;
+  "Sys.time","holai.runtime.core","cpu-time",1; "Printexc.to_string","holai.runtime.core","exception-string",1;
+  "Hashtbl.hash","holai.runtime.core","structural-hash",1;
+  "open_in","holai.runtime.core","open-in",1; "open_in_bin","holai.runtime.core","open-in-bin",1;
+  "open_out","holai.runtime.core","open-out",1; "input_line","holai.runtime.core","input-line",1;
+  "close_in","holai.runtime.core","close-channel",1; "close_out","holai.runtime.core","close-channel",1;
+  "output_string","holai.runtime.core","output-string",2;
+  "in_channel_length","holai.runtime.core","channel-length",1;
+  "really_input_string","holai.runtime.core","really-input-string",2
  ] in
  let env=List.fold_left (fun env (source,pkg,name,n) -> add env source (external_binding pkg name (Function n))) empty spec in
- let env=add env "max_int" (external_binding "holai.runtime" "ocaml-max-int" Value) in
- let gc_type={type_binding=external_binding "holai.runtime" "gc-control" Value;
+ let env=add env "max_int" (runtime_binding "ocaml-max-int" Value) in
+ let gc_type={type_binding=runtime_binding "gc-control" Value;
    labels=["stack_limit",false];private_record=false} in
  let gc_public={empty with records=SM.singleton "Gc.control" gc_type;
    values=SM.of_seq (List.to_seq ["get",SM.find "Gc.get" env.values;"set",SM.find "Gc.set" env.values])} in
  let env={env with records=SM.add "Gc.control" gc_type env.records;
-   modules=SM.add "Gc" {package="holai.runtime";public=gc_public;template=None} env.modules} in
- let env=add env "Sys.Break" {id=0;source_name="Sys.Break";package="holai.runtime";
+   modules=SM.add "Gc" {package="holai/runtime/stdlib";public=gc_public;template=None} env.modules} in
+ let env=add env "Sys.Break" {id=0;source_name="Sys.Break";package="holai/runtime/stdlib";
    printed="sys_break";logical="SYS_BREAK";labels=[];proof_combinator=false;
    kind=Constructor {fields=0;tuple_payload=None;record_fields=None;private_=false;
     maker="make-sys_break";maker_logical="MAKE-SYS_BREAK";exception_=true;family="ocaml.exn";
@@ -307,8 +352,8 @@ let base_environment () =
    "fold_left2",4;"fold_right2",4;"exists",2;"for_all",2;"for_all2",3;"mem",2;"mem_assoc",2;"assoc",2;"find",2;
    "filter",2;"filter_map",2;"partition",2;"sort",2] in
  let list_env=List.fold_left (fun env (name,n) -> add env name
-   (external_binding "holai.runtime" ("list-"^String.map (fun c -> if c='_' then '-' else c) name) (Function n))) empty list_functions in
- let env={env with modules=SM.add "List" {package="holai.runtime";public=list_env;template=None} env.modules} in
+   (runtime_binding ("list-"^String.map (fun c -> if c='_' then '-' else c) name) (Function n))) empty list_functions in
+ let env={env with modules=SM.add "List" {package="holai/runtime/stdlib";public=list_env;template=None} env.modules} in
  let env=List.fold_left (fun env (name,b) -> add env ("List."^name) b) env (SM.bindings list_env.values) in
  let format_functions=["print_string","print-string",1;"print_newline","print-newline",1;
   "pp_print_string","pp-print-string",2;"pp_print_as","pp-print-as",3;
@@ -323,16 +368,17 @@ let base_environment () =
   "formatter_of_buffer","formatter-of-buffer",1;"get_margin","get-margin",1;
   "set_margin","set-margin",1;"set_max_boxes","set-max-boxes",1;
   "printf","format-printf",1;"fprintf","format-fprintf",2;"asprintf","format-asprintf",1] in
- let format_env=List.fold_left (fun env (name,target,arity) -> add env name (external_binding "holai.runtime" target (Function arity))) empty format_functions in
- let format_env=add format_env "std_formatter" (external_binding "holai.runtime" "std-formatter" Value) in
- let env={env with modules=SM.add "Format" {package="holai.runtime";public=format_env;template=None} env.modules} in
+ let format_env=List.fold_left (fun env (name,target,arity) -> add env name (runtime_binding target (Function arity))) empty format_functions in
+ let format_env=add format_env "std_formatter" (runtime_binding "std-formatter" Value) in
+ let env={env with modules=SM.add "Format" {package="holai/runtime/format";public=format_env;template=None} env.modules} in
  let env=List.fold_left (fun env (name,b) -> add env ("Format."^name) b) env (SM.bindings format_env.values) in
- let env=List.fold_left (fun env (name,target) -> add env name (external_binding "holai.runtime" target (Function 1))) env
+ let env=List.fold_left (fun env (name,target) -> add env name (runtime_binding target (Function 1))) env
    ["Printf.printf","printf-printf";"Printf.sprintf","printf-sprintf"] in
- let env=List.fold_left (fun env (name,target,arity) -> add env name (external_binding "holai.runtime" target (Function arity))) env ["Buffer.create","buffer-create",1;"Buffer.contents","buffer-contents",1;"Buffer.reset","buffer-reset",1] in
+ let env=List.fold_left (fun env (name,target,arity) -> add env name (runtime_binding target (Function arity))) env ["Buffer.create","buffer-create",1;"Buffer.contents","buffer-contents",1;"Buffer.reset","buffer-reset",1] in
  List.fold_left (fun env (name,n) ->
-   let b=external_binding "holai.runtime" name Value in
+   let b=runtime_binding name Value in
    let maker,maker_logical=maker_spelling b in
+   (* Stable constructor-family key, not a Lisp package or ASDF system name. *)
    let family=if name="Some" || name="None" then "holai.runtime.option" else "ocaml.exn" in
    add env name {b with kind=Constructor {fields=n;tuple_payload=None;record_fields=None;private_=false;maker;maker_logical;exception_=true;family;non_tuple_payload=(n=1 && name<>"Some" && name<>"Assert_failure");previous=None}})
    env ["Failure",1;"Invalid_argument",1;"Sys_error",1;"End_of_file",0;"Not_found",0;"Some",1;"None",0;"Assert_failure",1]

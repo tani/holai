@@ -120,10 +120,11 @@
   (:import-from :holai.lib)
   (:import-from :holai.meson)
   (:import-from :holai.parser)
-  (:import-from :holai.runtime)
+  (:import-from :holai.runtime.core)
+  (:import-from :holai.runtime.data)
+  (:import-from :holai.runtime.pattern)
   (:import-from :holai.simp)
   (:import-from :holai.tactics)
-  (:import-from :holai.thecops)
   (:import-from :holai.theorems)
   (:export define_quotient_type lift_function lift_theorem))
 
@@ -142,7 +143,9 @@
     :holai.lib
     :holai.meson
     :holai.parser
-    :holai.runtime
+    :holai.runtime.core
+    :holai.runtime.data
+    :holai.runtime.pattern
     :holai.simp
     :holai.tactics
     :holai.theorems)
@@ -335,19 +338,16 @@
   (:shadowing-import-from :holai.meson ASM_MESON_TAC)
   (:shadowing-import-from :holai.parser parse_term)
   (:shadowing-import-from
-    :holai.runtime
-    tuple
-    snd
-    raise
+    :holai.runtime.core
     proof
     partial
-    match
     lambdac
     function-value
-    fst
     Failure
     defunc
     =)
+  (:shadowing-import-from :holai.runtime.data tuple snd raise fst)
+  (:shadowing-import-from :holai.runtime.pattern match)
   (:shadowing-import-from
     :holai.simp
     REWR_CONV
@@ -462,7 +462,7 @@
                                   (match
                                     (handler-case
                                       (F_F holai.basics:conjuncts #'I (#`dest_imp wtm))
-                                      (holai.runtime:ocaml-condition
+                                      (holai.runtime.data:ocaml-condition
                                         (exception~520)
                                         (match exception~520
                                           ((Failure _) (tuple nil wtm))
@@ -513,7 +513,7 @@
                                                         (lambdac (e%)
                                                           (handler-case
                                                             (#`lhs e%)
-                                                            (holai.runtime:ocaml-condition
+                                                            (holai.runtime.data:ocaml-condition
                                                               (exception~235)
                                                               (match exception~235
                                                                 ((Failure _)
@@ -634,7 +634,7 @@
                                                                                 (TRANS
                                                                                   th2d
                                                                                   th2a)
-                                                                                (holai.runtime:ocaml-condition
+                                                                                (holai.runtime.data:ocaml-condition
                                                                                   (exception~373)
                                                                                   (match
                                                                                     exception~373

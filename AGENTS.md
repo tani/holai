@@ -18,7 +18,7 @@ readable OCaml-to-Lisp translation, even when argument evaluation order differs.
   kernel, differential, source-map, and regeneration checks before release.
 - Keep original licensing in pinned and generated inputs, and pin dependencies.
 - Package with `make release`; its manifest must include the design and source.
-- Latest completed validation is the split-profile release:
+- Latest completed historical validation is the split-profile release:
   `nix develop path:. --command make release` exited 0 in 269.03 seconds.
   All 46 unchanged vendor/CORE_FILES.json inputs initialize in original order;
   128 native and 69 independent PROOF checks passed. The 1,149 differential rows
@@ -40,6 +40,25 @@ readable OCaml-to-Lisp translation, even when argument evaluation order differs.
   All standard-manifest TODOs are complete. Generic OCaml/library completeness
   and optional HOL Light libraries outside the manifest remain outside the profile.
   Update factual counts from reports when implementation or corpus changes.
+- Current explicit-ASDF release passed locally on ARM64 Linux: `make release`
+  exited 0 in 287.53 seconds, with SBCL full-core and ECL/ABCL/CLISP compatibility.
+  Tagged SBCL reports record 128 native/69 PROOF checks, 1,149 differential rows
+  (1,146 exact, two structural registry, one Random property), 194,839 core /
+  207,058 fixture-inclusive map ranges and ten protected rejections. Fresh cold
+  compilation covered all 52 physical files (six runtime plus 46 core) in literal
+  ASD order with zero compiler diagnostics; separate initialization accounting
+  remains zero errors/warnings, 21 style warnings and 164 notices. Clean generation
+  reproduced 93 outputs; 55 pins were unchanged; packaging reported 427 payload
+  files. Do not assert a fixed ZIP byte size after documentation changes.
+  Current packages are holai.define, holai.runtime.<unit> and holai.<stem>, not
+  holai.generated.*. There is no provider/load-order data or empty entry.
+  Preserve ECL's native MP worker/join weak-GC regression: all 28 assertions and
+  two explicit collections, without production cache changes.
+  CI is the configured, actionlint-passed 3 host × 4 Lisp matrix, not a hosted pass:
+  SBCL runs release; ECL/ABCL/CLISP run runtime-fixture compatibility. Remote
+  execution of the new push remains pending; prior CLISP failures are unresolved.
+  Captured phase stdout/stderr and public GitHub Actions error annotations support
+  precise diagnosis instead of blind retries. Earlier measurements above are history.
 - Keep THEN and the literal source helper then1_ as separate bindings.
   The one-subgoal helper must reject multiple branches; do not merge it into
   the grammar-encoded tactical name. Preserve the branch-count regressions.
@@ -233,17 +252,18 @@ readable OCaml-to-Lisp translation, even when argument evaluation order differs.
 - Two-run ABBA startup medians 97.840→81.957s; cumulative allocation50.95% lower,
   peakRSS16.67% higher. OCamlopt13.715s is a separate historical measurement.
   Never equate cumulative allocation with peak RSS or promise a universal speedup.
-- Read docs/REPOSITORY-LAYOUT.md. Track generated Lisp, inventory and
-  package-systems.sexp provider data, but not generated source maps, _build, bin,
-  dist, compiled code or Python caches. make regenerate recreates maps; every
-  source ZIP must include all 94 generated outputs plus root ASD and entry.
+- Read docs/REPOSITORY-LAYOUT.md. Track generated Lisp and inventory, but not
+  generated source maps, _build, bin, dist, compiled code or Python caches.
+  make regenerate recreates maps; source ZIPs include all 93 generated outputs
+  (46 Lisp/map pairs plus inventory) and the hand-maintained root ASD.
 - Historical reports are under misc/reports/history/. Keep current evidence separate
   and update paths when moving files. Keep all vendor digests and licenses.
-- Current layout/API contract: CLI `bin/ml2cl`, packages `holai.*`, systems
-  `holai`/`holai/runtime` and inferred `holai/generated/<stem>` systems, all
-  discovered from the single root `holai.asd`. No compatibility aliases.
-  Regenerate rather than hand-edit outputs. DESIGN37 specifies provider data,
-  reader-owner imports/shadows and CL-first safe UIOP mix rules.
+- Current layout/API contract: CLI `bin/ml2cl`, dot-separated packages
+  `holai.runtime.<unit>` and `holai.<stem>` (static children also use dots);
+  ordinary serial systems `holai` and `holai/runtime`, both defined explicitly
+  in root `holai.asd`. No compatibility aliases or inferred per-source systems.
+  Regenerate rather than hand-edit outputs. DESIGN37 specifies handwritten
+  load order, reader-owner imports/shadows and CL-first safe UIOP mix rules.
 - User authorized initial organization and push to tani/holai main. Subsequent
   unrelated publication requires its own user instruction.
 
@@ -305,7 +325,7 @@ readable OCaml-to-Lisp translation, even when argument evaluation order differs.
   Continue the same repository-maintenance task on the previously requested main.
 
 - DESIGN33 PROOF recognition applies only to canonical new globals in
-  holai.tactics/tactics.ml, without lexical prefix, at source-name occurrence1:
+  holai/generated/tactics/tactics.ml, without lexical prefix, at source-name occurrence1:
   then_/Value, thenl_/Value, orelse_/Function3. Binding reuse retains tagging;
   new aliases/shadowing do not. Only exact two-argument unlabelled applications
   qualify. Synthetic heads follow DESIGN37's completed-reader-owner policy below,
@@ -421,16 +441,17 @@ readable OCaml-to-Lisp translation, even when argument evaluation order differs.
   Static search found zero generated FLETC calls or stage tags.
   Validation and authorization are not evidence of publication.
 
-## Unified ASDF/UIOP cutover (DESIGN37)
+## Explicit ASDF/UIOP load order (DESIGN37)
 
-- Keep exactly one root holai.asd. Main holai and every generated core system
-  use genuine package inference; only the five shared-package runtime sources
-  are explicit components in holai/runtime. Register only the repository root.
+- Keep exactly one root holai.asd with handwritten serial component lists.
+  holai/runtime loads data, pattern-registry, pattern, core, format, stdlib;
+  holai depends on it and loads the original 46 generated files in vendor order.
+  Runtime-only callers load holai/runtime. Register only the repository root.
   Require ASDF before reading UIOP declarations in runtime-only scripts.
-- Track all provided packages, including nested/private/empty-export families,
-  in ordered generated package-systems.sexp. First root shell carries runtime,
-  predecessor and external-provider dependencies, excluding all same-file
-  packages. Guarded same-file shells precede complete declarations.
+- Do not infer systems from package names or generate an ASD from a manifest.
+  No provider registry or S-expression load-order data remains. Packages use
+  dots independently of filesystem paths/system IDs. Guarded same-file package
+  shells still precede complete declarations for reader availability.
 - Preserve resolved binding identity, observers, source maps, private makers and
   canonical imports. Lexical module forms use enclosing reader-owner imports
   and shadow allocation. Shadow ordinary lexical values as well as functions
@@ -441,21 +462,21 @@ readable OCaml-to-Lisp translation, even when argument evaluation order differs.
   deferred cell per actual reader owner, finalized after complete structure
   lowering and before dependencies/package declarations/rendering. Safe owners
   explicitly import runtime PROOF and emit bare proof; source-owned/local names,
-  distinct foreign PROOF imports or maker shadows retain holai.runtime:proof.
+  distinct foreign PROOF imports or maker shadows retain holai.runtime.core:proof.
   Lexical modules share the enclosing owner; static child packages decide
   separately. Never reserve/import PROOF during lowering or rename source proof
   to shorten the macro head. Retain Fragment layout, Origin spans and source IDs.
   Ordinary handwritten tests explicitly import the macro; the separate CL-only
   source-function collision regression intentionally retains qualification.
-- Audit unique physical source pathnames: runtime five, core 46 in manifest
-  order and holai/all entry, 52 total; core/entry must be actual inferred
-  components. Fingerprint root ASD, entry, provider data and every production
-  source/translator. Regeneration/clean comparisons include .sexp and 94 outputs.
-- Existing constructor/private/parent-capture/collision regressions and the
-  added module UNIT escaped-closure/native runtime-UNIT preservation check passed.
-  Fresh ASDF 3.3.1 smokes loaded runtime alone, the inferred 46-source full core
-  and fusion without parser/later theories. A closed p ==> p proof, private
-  constructors and unchanged three axioms after reload passed.
+- Audit actual ASDF compile/load operations for 52 unique physical paths:
+  runtime data/pattern-registry/pattern/core/format/stdlib, then 46 generated
+  sources in vendor manifest order. Require zero compiler diagnostics; report
+  load/initialization diagnostics separately. Fingerprint root ASD and every
+  production source/translator; no entry or provider-data fingerprint remains.
+  Regeneration/clean comparisons cover 93 Lisp/map/inventory outputs only.
+- Current explicit-order/dotted-package changes await regeneration and parent
+  release verification. Earlier constructor/private/parent-capture/collision
+  regressions and inferred-loading smokes remain historical evidence only.
   Report counters and differential/map totals from actual reports; historical
   baseline names and raw evidence stay unchanged.
 - The safe-bare extension passed 129 native/69 PROOF checks and 1,149 matching
@@ -465,7 +486,7 @@ readable OCaml-to-Lisp translation, even when argument evaluation order differs.
   72.41 seconds using an explicitly importing development package and bare
   proof/tactic/runtime/kernel names to prove the actual closed p ==> p theorem
   with its independently parsed expected conclusion.
-- The latest archive has 306 members (305 payload plus manifest), only one ASD,
+- The historical safe-bare archive has 306 members (305 payload plus manifest), only one ASD,
   entry/provider data and 92 generated Lisp/map members. Core Lisp totals
   5,942,245 bytes; static generated inventory has 2,353 bare PROOF heads and
   25 qualified collision heads. These inventories are not performance evidence.
@@ -492,7 +513,7 @@ readable OCaml-to-Lisp translation, even when argument evaluation order differs.
   it for comparison; every other row stays exact. Keep original source pins and
   licenses. Adapters preserve real weak retention, live identity and SIGINT.
 - `make release` must exercise SBCL's complete 46-file/native/PROOF/oracle
-  profile and cold 52-path/47-inferred manifest-order diagnostics. Every selected
+  profile and cold 52-path explicit-manifest-order diagnostics. Every selected
   additional host must pass `runtime-fixtures` compatibility with independent
   counts/source fingerprints/log digests and 120 seconds per process; never
   label it full-core verified or require its full-core streams/cold diagnostics.
@@ -515,17 +536,18 @@ readable OCaml-to-Lisp translation, even when argument evaluation order differs.
   compatibility/ logs. Optional full-core evidence has a separate aggregate;
   preserve incomplete/timeout attempts without relabelling them.
   Old root SBCL raw baselines and historical benchmarks retain their identity.
-  Release still checks 94 clean outputs, 55 pins and SBCL/original OCaml's
+  Release checks 93 clean outputs, 55 pins and SBCL/original OCaml's
   registries/axioms and exact initialization exceptions.
-- Current measured profiles passed: SBCL full core (128 native, 69 PROOF;
+- Historical measured profiles passed: SBCL full core (128 native, 69 PROOF;
   1,149 rows = 1,146 exact + two structural registries + one Random property)
   and ECL/ABCL/CLISP runtime fixtures (28 protocol, 84 OPTIONAL, 16 tuple-list,
   1,816 Random; 45/46/45 structural checks; three fixtures and 33 exact rows).
-  Retain current source fingerprints and digest-matched logs. Each extra-host
+  Preserve those historical source fingerprints and digest-matched logs. Each extra-host
   SIGINT test delivered three signals, caught two and restored default exit -2.
   SBCL cold diagnostics passed 52 paths/47 inferred components with zero compiler
   diagnostics, separately recording 21 load/initialization style warnings and
-  164 notices. Current maps total 194,839 core / 207,058 fixture-inclusive.
-  Test/diagnostic stages passed, then inventory failed: do not claim end-to-end
-  release success or a new 94-output clean-build pass before the parent rerun.
+  164 notices. Those maps total 194,839 core / 207,058 fixture-inclusive.
+  The earlier inventory failure was superseded by the completed split-profile
+  release. The current dotted-package/explicit-ASDF candidate still requires a
+  fresh parent release; none of those historical results verifies this cutover.
 

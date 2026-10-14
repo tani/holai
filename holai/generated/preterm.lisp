@@ -233,7 +233,9 @@
   (:import-from :holai.fusion.hol)
   (:import-from :holai.lib)
   (:import-from :holai.printer)
-  (:import-from :holai.runtime)
+  (:import-from :holai.runtime.core)
+  (:import-from :holai.runtime.data)
+  (:import-from :holai.runtime.pattern)
   (:export
     Absp
     Combp
@@ -277,7 +279,15 @@
 (uiop:define-package
   :holai.preterm
   (:use :cl)
-  (:mix :cl :holai.basics :holai.fusion.hol :holai.lib :holai.printer :holai.runtime)
+  (:mix
+    :cl
+    :holai.basics
+    :holai.fusion.hol
+    :holai.lib
+    :holai.printer
+    :holai.runtime.core
+    :holai.runtime.data
+    :holai.runtime.pattern)
   (:shadow
     ARGS
     ARGS%
@@ -546,38 +556,31 @@
     string_of_term
     isnum)
   (:shadowing-import-from
-    :holai.runtime
-    unit
-    tuple
+    :holai.runtime.core
     string-of-int
     string-join
     string-concat
     Some
-    ref
-    raise
     quo-num
     partial
     None
     mod-num
-    match
     make-Some
     make-None
     list-fold-left
     lambdac
     labelsc
-    guard
     function-value
-    fst
     failwith
     Failure
-    deref
     defvariant
     defunc
     bool-or
-    assign
     =
     <>
     <)
+  (:shadowing-import-from :holai.runtime.data unit tuple ref raise fst deref assign)
+  (:shadowing-import-from :holai.runtime.pattern match guard)
   (:export
     Absp
     Combp
@@ -672,7 +675,7 @@
         ((namty
           (handler-case
             (dest_const tm)
-            (holai.runtime:ocaml-condition
+            (holai.runtime.data:ocaml-condition
               (exception~67)
               (match exception~67 ((Failure _) (dest_var tm)) (_ (raise exception~67)))))))
         (cl:declare (cl:ignorable namty))
@@ -689,7 +692,7 @@
         ((namty
           (handler-case
             (dest_const tm)
-            (holai.runtime:ocaml-condition
+            (holai.runtime.data:ocaml-condition
               (exception~95)
               (match exception~95 ((Failure _) (dest_var tm)) (_ (raise exception~95))))))
           (interface
@@ -706,7 +709,7 @@
         ((gty
           (handler-case
             (assoc sym (deref the_overload_skeletons))
-            (holai.runtime:ocaml-condition
+            (holai.runtime.data:ocaml-condition
               (exception~130)
               (match exception~130
                 ((Failure _)
@@ -719,7 +722,7 @@
         (match
           (handler-case
             (dest_const tm)
-            (holai.runtime:ocaml-condition
+            (holai.runtime.data:ocaml-condition
               (exception~177)
               (match exception~177 ((Failure _) (dest_var tm)) (_ (raise exception~177)))))
           ((cl:and namty (tuple name ty))
@@ -750,7 +753,7 @@
                 (deref the_interface))
               ((tuple _ (tuple n t%))
                 (overload_interface (tuple s (mk_var (tuple n t%))))))
-            (holai.runtime:ocaml-condition
+            (holai.runtime.data:ocaml-condition
               (exception~197)
               (match exception~197 ((Failure _) unit) (_ (raise exception~197))))))))
     (deref the_overload_skeletons)))
@@ -789,7 +792,7 @@
                     (deref the_type_abbreviations)))))))
         (type_abbrevs% (arg~308)
           (match arg~308
-            ((cl:type holai.runtime::unit-value) (deref the_type_abbreviations)))))
+            ((cl:type holai.runtime.data:unit-value) (deref the_type_abbreviations)))))
       (tuple #'new_type_abbrev% #'remove_type_abbrev% #'type_abbrevs%)))
   ((tuple new_type_abbrev% remove_type_abbrev% type_abbrevs%)
     (setf
@@ -866,13 +869,13 @@
 (defunc preterm_of_term (tm)
   (handler-case
     (match (dest_var tm) ((tuple n ty) (make-Varp n (pretype_of_type ty))))
-    (holai.runtime:ocaml-condition
+    (holai.runtime.data:ocaml-condition
       (exception~409)
       (match exception~409
         ((Failure _)
           (handler-case
             (match (dest_const tm) ((tuple n ty) (make-Constp n (pretype_of_type ty))))
-            (holai.runtime:ocaml-condition
+            (holai.runtime.data:ocaml-condition
               (exception~412)
               (match exception~412
                 ((Failure _)
@@ -880,7 +883,7 @@
                     (match (dest_abs tm)
                       ((tuple v bod)
                         (make-Absp (preterm_of_term v) (preterm_of_term bod))))
-                    (holai.runtime:ocaml-condition
+                    (holai.runtime.data:ocaml-condition
                       (exception~415)
                       (match exception~415
                         ((Failure _)
@@ -908,7 +911,7 @@
     (labelsc
       ((new_type_var (arg~489)
         (match arg~489
-          ((cl:type holai.runtime::unit-value)
+          ((cl:type holai.runtime.data:unit-value)
             (let ((n (deref tyv_num)))
               (cl:declare (cl:ignorable n))
               (progn (assign tyv_num (+ n 1)) (make-Stv n))))))
@@ -1244,7 +1247,7 @@
                                             ty)))))
                                   (deref the_interface))
                                 ((tuple _ (tuple c% _)) (pmk_cv (tuple c% tys))))
-                              (holai.runtime:ocaml-condition
+                              (holai.runtime.data:ocaml-condition
                                 (exception~1627)
                                 (match exception~1627
                                   ((Failure _) (make-Constp s tys))
@@ -1320,7 +1323,7 @@
                               ((Typing ptm% pty) (term_of_preterm% ptm%))))
                             (report_type_invention (arg~1849)
                               (match arg~1849
-                                ((cl:type holai.runtime::unit-value)
+                                ((cl:type holai.runtime.data:unit-value)
                                   (if (<> (deref stvs_translated_terms) nil)
                                     (if (deref type_invention_error)
                                       (failwith
@@ -1345,7 +1348,7 @@
                           (match
                             (handler-case
                               (typify ty (tuple ptm venv undefined))
-                              (holai.runtime:ocaml-condition
+                              (holai.runtime.data:ocaml-condition
                                 (exception~1921)
                                 (match exception~1921
                                   ((Failure e)
@@ -1359,7 +1362,7 @@
                                 ((env%
                                   (handler-case
                                     (resolve_interface ptm% (lambdac (e) e) env)
-                                    (holai.runtime:ocaml-condition
+                                    (holai.runtime.data:ocaml-condition
                                       (exception~1898)
                                       (match exception~1898
                                         ((Failure _)

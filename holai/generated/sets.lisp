@@ -775,7 +775,9 @@
   (:import-from :holai.realarith)
   (:import-from :holai.realax)
   (:import-from :holai.recursion)
-  (:import-from :holai.runtime)
+  (:import-from :holai.runtime.core)
+  (:import-from :holai.runtime.data)
+  (:import-from :holai.runtime.pattern)
   (:import-from :holai.simp)
   (:import-from :holai.tactics)
   (:import-from :holai.theorems)
@@ -1484,7 +1486,9 @@
     :holai.realarith
     :holai.realax
     :holai.recursion
-    :holai.runtime
+    :holai.runtime.core
+    :holai.runtime.data
+    :holai.runtime.pattern
     :holai.simp
     :holai.tactics
     :holai.theorems
@@ -2428,19 +2432,18 @@
     prove_recursive_functions_exist
     new_recursive_definition)
   (:shadowing-import-from
-    :holai.runtime
-    unit
-    tuple
+    :holai.runtime.core
     string-of-int
     string-concat
     proof
-    match
     lambdac
     labelsc
     function-value
     failwith
     defunc
     =)
+  (:shadowing-import-from :holai.runtime.data unit tuple)
+  (:shadowing-import-from :holai.runtime.pattern match)
   (:shadowing-import-from
     :holai.simp
     SIMP_TAC
@@ -10322,7 +10325,7 @@
     (lambdac (tm)
       (match (#`fn tm)
         ((tuple l n)
-          (if (cl:and (is_const n) (= (holai.runtime:fst (dest_const n)) "EMPTY"))
+          (if (cl:and (is_const n) (= (holai.runtime.data:fst (dest_const n)) "EMPTY"))
             l
             (failwith "dest_setenum: not a finite set enumeration")))))))
 
@@ -10542,7 +10545,7 @@
                     (#`PART_MATCH (o lhand #'rand) DIFF_UNIONS_PAIRWISE_DISJOINT))
                   lhand)
                 #'rand)
-              (function-value #'holai.runtime:snd 1)))
+              (function-value #'holai.runtime.data:snd 1)))
         THEN ANTS_TAC
         THENL (cl:cons (ASM SET_TAC nil) (cl:cons (DISCH_THEN #'SUBST1_TAC) nil))
         THEN (REWRITE_TAC (cl:cons EMPTY_UNIONS nil))
@@ -12767,7 +12770,7 @@
                   (cl:declare (cl:ignorable v))
                   (f (+ n 1) (mk_comb (tuple tm v)) tys))))))
           (lambdac (tm)
-            (let ((tys (holai.runtime:fst (splitlist #'dest_fun_ty (type_of tm)))))
+            (let ((tys (holai.runtime.data:fst (splitlist #'dest_fun_ty (type_of tm)))))
               (cl:declare (cl:ignorable tys))
               (f 0 tm tys)))))
         (mk_eqin (o (#`REWR_CONV (#`GSYM IN)) comb_all)))
@@ -12780,8 +12783,8 @@
               (lambdac (tm)
                 (let
                   ((htm
-                    (holai.runtime:fst
-                      (#`strip_comb (holai.runtime:snd (dest_binary "IN" tm))))))
+                    (holai.runtime.data:fst
+                      (#`strip_comb (holai.runtime.data:snd (dest_binary "IN" tm))))))
                   (cl:declare (cl:ignorable htm))
                   (if (= htm ptm) (#`rconv tm) (fail unit)))))))
         (let
@@ -12793,12 +12796,13 @@
           (labelsc
             ((rule_head (tm)
               (let*
-                ((tm% (holai.runtime:snd (#`strip_forall tm)))
+                ((tm% (holai.runtime.data:snd (#`strip_forall tm)))
                   (tm
-                    (holai.runtime:snd (splitlist (dest_binop (parse_term "(==>)")) tm%)))
-                  (tm% (holai.runtime:snd (dest_binary "IN" tm))))
+                    (holai.runtime.data:snd
+                      (splitlist (dest_binop (parse_term "(==>)")) tm%)))
+                  (tm% (holai.runtime.data:snd (dest_binary "IN" tm))))
                 (cl:declare (cl:ignorable tm% tm tm%))
-                (holai.runtime:fst (#`strip_comb tm%)))))
+                (holai.runtime.data:fst (#`strip_comb tm%)))))
             (let
               ((find_pvars
                 (o (o #'setify (holai.lib:map #'rule_head)) (binops (parse_term "(/\\)")))))

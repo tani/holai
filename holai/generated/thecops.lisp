@@ -42,10 +42,13 @@
   (:import-from :holai.lib)
   (:import-from :holai.meson)
   (:import-from :holai.meson.meson)
-  (:import-from :holai.metis)
   (:import-from :holai.parser)
   (:import-from :holai.printer)
-  (:import-from :holai.runtime)
+  (:import-from :holai.runtime.core)
+  (:import-from :holai.runtime.data)
+  (:import-from :holai.runtime.format)
+  (:import-from :holai.runtime.pattern)
+  (:import-from :holai.runtime.stdlib)
   (:import-from :holai.simp)
   (:import-from :holai.tactics)
   (:import-from :holai.theorems)
@@ -1444,7 +1447,9 @@
     :holai.fusion.hol
     :holai.lib
     :holai.parser
-    :holai.runtime
+    :holai.runtime.core
+    :holai.runtime.data
+    :holai.runtime.stdlib
     :holai.simp
     :holai.tactics)
   (:shadow
@@ -1466,17 +1471,9 @@
   (:shadowing-import-from :holai.fusion.hol concl)
   (:shadowing-import-from :holai.lib W o map length end_itlist)
   (:shadowing-import-from :holai.parser parse_term)
-  (:shadowing-import-from
-    :holai.runtime
-    tuple
-    snd
-    proof
-    lambdac
-    function-value
-    fst
-    defunc
-    assert-true
-    =)
+  (:shadowing-import-from :holai.runtime.core proof lambdac function-value defunc =)
+  (:shadowing-import-from :holai.runtime.data tuple snd fst)
+  (:shadowing-import-from :holai.runtime.stdlib assert-true)
   (:shadowing-import-from :holai.simp SIMP_TAC REWRITE_TAC)
   (:shadowing-import-from
     :holai.tactics
@@ -1497,7 +1494,12 @@
 (uiop:define-package
   :holai.thecops.strom
   (:use :cl)
-  (:mix :cl :holai.runtime)
+  (:mix
+    :cl
+    :holai.runtime.core
+    :holai.runtime.data
+    :holai.runtime.pattern
+    :holai.runtime.stdlib)
   (:shadow
     ARG~134
     ARG~146
@@ -1565,24 +1567,19 @@
     take_while
     to_list)
   (:shadowing-import-from
-    :holai.runtime
-    unit
+    :holai.runtime.core
     Some
-    ref-incr
-    ref-decr
-    ref
-    raise
     None
-    match
     make-Some
     make-None
     lambdac
     labelsc
-    deref
     defunc
     define-exception
-    assign
     =)
+  (:shadowing-import-from :holai.runtime.data unit ref raise deref assign)
+  (:shadowing-import-from :holai.runtime.pattern match)
+  (:shadowing-import-from :holai.runtime.stdlib ref-incr ref-decr)
   (:export
     End_of_strom
     append
@@ -1608,7 +1605,14 @@
 (uiop:define-package
   :holai.thecops.fol_term
   (:use :cl)
-  (:mix :cl :holai.firstorder.utils :holai.meson :holai.runtime)
+  (:mix
+    :cl
+    :holai.firstorder.utils
+    :holai.meson
+    :holai.runtime.core
+    :holai.runtime.data
+    :holai.runtime.pattern
+    :holai.runtime.stdlib)
   (:shadow
     A%
     ACC
@@ -1640,14 +1644,10 @@
   (:shadowing-import-from :cl max)
   (:shadowing-import-from :holai.firstorder.utils const)
   (:shadowing-import-from :holai.meson make-Fvar make-Fnapp Fvar Fnapp)
-  (:shadowing-import-from
-    :holai.runtime
-    tuple
-    match
-    list-map
-    list-for-all
-    list-fold-left
-    defunc)
+  (:shadowing-import-from :holai.runtime.core list-fold-left defunc)
+  (:shadowing-import-from :holai.runtime.data tuple)
+  (:shadowing-import-from :holai.runtime.pattern match)
+  (:shadowing-import-from :holai.runtime.stdlib list-map list-for-all)
   (:export
     lit_ground
     lit_max_var
@@ -1662,7 +1662,15 @@
 (uiop:define-package
   :holai.thecops.print
   (:use :cl)
-  (:mix :cl :holai.meson :holai.meson.meson :holai.printer :holai.runtime)
+  (:mix
+    :cl
+    :holai.meson
+    :holai.meson.meson
+    :holai.printer
+    :holai.runtime.core
+    :holai.runtime.data
+    :holai.runtime.format
+    :holai.runtime.pattern)
   (:shadow
     ARG~659
     ARG~825
@@ -1698,18 +1706,7 @@
   (:shadowing-import-from :holai.meson.meson hol_of_const)
   (:shadowing-import-from :holai.printer print_to_string pp_print_term)
   (:shadowing-import-from
-    :holai.runtime
-    unit
-    tuple
-    pp-print-string
-    pp-print-space
-    pp-print-newline
-    pp-print-int
-    pp-print-cut
-    pp-print-char
-    pp-open-box
-    pp-close-box
-    match
+    :holai.runtime.core
     lambdac
     labelsc
     int-mod
@@ -1719,6 +1716,18 @@
     >
     <>
     <)
+  (:shadowing-import-from :holai.runtime.data unit tuple)
+  (:shadowing-import-from
+    :holai.runtime.format
+    pp-print-string
+    pp-print-space
+    pp-print-newline
+    pp-print-int
+    pp-print-cut
+    pp-print-char
+    pp-open-box
+    pp-close-box)
+  (:shadowing-import-from :holai.runtime.pattern match)
   (:export
     pp_enclose
     pp_enclose_cut
@@ -1739,7 +1748,14 @@
 (uiop:define-package
   :holai.thecops.database
   (:use :cl)
-  (:mix :cl :holai.firstorder.mapping :holai.lib :holai.runtime)
+  (:mix
+    :cl
+    :holai.firstorder.mapping
+    :holai.lib
+    :holai.runtime.core
+    :holai.runtime.data
+    :holai.runtime.pattern
+    :holai.runtime.stdlib)
   (:shadow
     ARGS
     ARG~917
@@ -1761,29 +1777,35 @@
   (:shadowing-import-from :holai.firstorder.mapping fol_of_hol_clauses)
   (:shadowing-import-from :holai.lib map %>)
   (:shadowing-import-from
-    :holai.runtime
-    tuple
+    :holai.runtime.core
+    partial
+    Not_found
+    list-fold-left
+    lambdac
+    function-value
+    defunc)
+  (:shadowing-import-from :holai.runtime.data tuple raise fst)
+  (:shadowing-import-from :holai.runtime.pattern match)
+  (:shadowing-import-from
+    :holai.runtime.stdlib
     table-find
     table-create
     table-clear
     table-add
-    raise
-    partial
-    Not_found
-    match
-    list-iter
-    list-fold-left
-    lambdac
-    function-value
-    fst
-    defunc)
+    list-iter)
   (:shadowing-import-from :holai.thecops.fol_term lit_max_var)
   (:export axioms2db clause_max_var db db_entries mapentry))
 
 (uiop:define-package
   :holai.thecops.substlist
   (:use :cl)
-  (:mix :cl :holai.meson :holai.runtime)
+  (:mix
+    :cl
+    :holai.meson
+    :holai.runtime.core
+    :holai.runtime.data
+    :holai.runtime.pattern
+    :holai.runtime.stdlib)
   (:shadow
     A%
     ARGS
@@ -1857,23 +1879,24 @@
   (:shadowing-import-from :cl +)
   (:shadowing-import-from :holai.meson make-Fvar make-Fnapp Fvar Fnapp)
   (:shadowing-import-from
-    :holai.runtime
-    tuple
-    raise
+    :holai.runtime.core
     partial
     Not_found
-    match
-    list-map
-    list-for-all2
-    list-for-all
-    list-fold-left2
     list-exists
-    list-assoc
     function-value
     defunc
     define-exception
     =
     <>)
+  (:shadowing-import-from :holai.runtime.data tuple raise)
+  (:shadowing-import-from :holai.runtime.pattern match)
+  (:shadowing-import-from
+    :holai.runtime.stdlib
+    list-map
+    list-for-all2
+    list-for-all
+    list-fold-left2
+    list-assoc)
   (:shadowing-import-from :holai.thecops offset_term)
   (:export
     Unify
@@ -1891,7 +1914,13 @@
 (uiop:define-package
   :holai.thecops.substarray
   (:use :cl)
-  (:mix :cl :holai.meson :holai.runtime)
+  (:mix
+    :cl
+    :holai.meson
+    :holai.runtime.core
+    :holai.runtime.data
+    :holai.runtime.pattern
+    :holai.runtime.stdlib)
   (:shadow
     A%
     ARGS1
@@ -1970,33 +1999,30 @@
   (:shadowing-import-from :cl not +)
   (:shadowing-import-from :holai.meson make-Fvar make-Fnapp Fvar Fnapp)
   (:shadowing-import-from
-    :holai.runtime
-    unit
-    tuple
+    :holai.runtime.core
     Some
-    ref
-    raise
     None
-    match
     make-Some
     make-None
-    list-map
-    list-for-all2
-    list-for-all
-    list-fold-left2
     list-exists
     lambdac
     failwith
-    deref
     defunc
     define-exception
-    assign
     array-set
     array-make
     array-get
     ==
     =
     <>)
+  (:shadowing-import-from :holai.runtime.data unit tuple ref raise deref assign)
+  (:shadowing-import-from :holai.runtime.pattern match)
+  (:shadowing-import-from
+    :holai.runtime.stdlib
+    list-map
+    list-for-all2
+    list-for-all
+    list-fold-left2)
   (:export
     Unify
     empty
@@ -2013,7 +2039,12 @@
 (uiop:define-package
   :holai.thecops.cop.subst
   (:use :cl)
-  (:mix :cl :holai.runtime)
+  (:mix
+    :cl
+    :holai.runtime.core
+    :holai.runtime.data
+    :holai.runtime.pattern
+    :holai.runtime.stdlib)
   (:shadow
     ARGS1
     ARGS2
@@ -2038,16 +2069,10 @@
     unify_rename
     unify_rename_subst)
   (:shadowing-import-from :cl +)
-  (:shadowing-import-from
-    :holai.runtime
-    tuple
-    raise
-    match
-    make-Some
-    make-None
-    list-map
-    defunc
-    =)
+  (:shadowing-import-from :holai.runtime.core make-Some make-None defunc =)
+  (:shadowing-import-from :holai.runtime.data tuple raise)
+  (:shadowing-import-from :holai.runtime.pattern match)
+  (:shadowing-import-from :holai.runtime.stdlib list-map)
   (:shadowing-import-from :holai.thecops offset_lit)
   (:shadowing-import-from
     :holai.thecops.substarray
@@ -2080,20 +2105,20 @@
 (uiop:define-package
   :holai.thecops.cop
   (:use :cl)
-  (:mix :cl :holai.runtime)
+  (:mix :cl :holai.runtime.core :holai.runtime.pattern)
   (:shadow F I% N OPT PRF S X deepen deepen_to make-search_opts~1 search_opts strategy)
   (:shadowing-import-from :cl +)
   (:shadowing-import-from
-    :holai.runtime
+    :holai.runtime.core
     Some
     record-update
     record-field
     None
-    match
     make-None
     defunc
     defrecord
     >)
+  (:shadowing-import-from :holai.runtime.pattern match)
   (:export deepen deepen_to make-search_opts~1 search_opts search_opts~1 strategy))
 
 (uiop:define-package
@@ -2111,7 +2136,9 @@
     :holai.lib
     :holai.meson.meson
     :holai.parser
-    :holai.runtime
+    :holai.runtime.core
+    :holai.runtime.data
+    :holai.runtime.pattern
     :holai.simp
     :holai.tactics)
   (:shadow
@@ -2230,20 +2257,16 @@
     C)
   (:shadowing-import-from :holai.parser parse_term)
   (:shadowing-import-from
-    :holai.runtime
-    unit
-    tuple
-    snd
-    raise
+    :holai.runtime.core
     proof
-    match
     lambdac
     labelsc
-    fst
     failwith
     Failure
     defunc
     =)
+  (:shadowing-import-from :holai.runtime.data unit tuple snd raise fst)
+  (:shadowing-import-from :holai.runtime.pattern match)
   (:shadowing-import-from :holai.simp REWR_CONV REWRITE_TAC ASM_REWRITE_TAC)
   (:shadowing-import-from :holai.tactics THEN prove CONV_TAC)
   (:export create_eq_axs create_equality_axioms))
@@ -2260,7 +2283,9 @@
     :holai.fusion.hol
     :holai.lib
     :holai.meson.meson
-    :holai.runtime
+    :holai.runtime.core
+    :holai.runtime.data
+    :holai.runtime.pattern
     :holai.tactics)
   (:shadow ARG~2845 ASL PREPARE_COP_TAC THS V W%)
   (:shadowing-import-from :holai.bool GEN_ALL)
@@ -2278,16 +2303,9 @@
   (:shadowing-import-from :holai.fusion.hol frees concl)
   (:shadowing-import-from :holai.lib W o map)
   (:shadowing-import-from :holai.meson.meson QUANT_BOOL_CONV POLY_ASSUME_TAC)
-  (:shadowing-import-from
-    :holai.runtime
-    tuple
-    snd
-    proof
-    match
-    lambdac
-    function-value
-    fst
-    defunc)
+  (:shadowing-import-from :holai.runtime.core proof lambdac function-value defunc)
+  (:shadowing-import-from :holai.runtime.data tuple snd fst)
+  (:shadowing-import-from :holai.runtime.pattern match)
   (:shadowing-import-from
     :holai.tactics
     UNDISCH_TAC
@@ -2310,15 +2328,24 @@
 (uiop:define-package
   :holai.thecops.proof
   (:use :cl)
-  (:mix :cl :holai.runtime)
+  (:mix :cl :holai.runtime.core)
   (:shadow Extension Lemma Reduction make-Extension make-Lemma make-Reduction)
-  (:shadowing-import-from :holai.runtime defvariant)
+  (:shadowing-import-from :holai.runtime.core defvariant)
   (:export Extension Lemma Reduction make-Extension make-Lemma make-Reduction))
 
 (uiop:define-package
   :holai.thecops.search
   (:use :cl)
-  (:mix :cl :holai.firstorder :holai.firstorder.utils :holai.lib :holai.runtime)
+  (:mix
+    :cl
+    :holai.firstorder
+    :holai.firstorder.utils
+    :holai.lib
+    :holai.runtime.core
+    :holai.runtime.data
+    :holai.runtime.format
+    :holai.runtime.pattern
+    :holai.runtime.stdlib)
   (:shadow
     ARG~2919
     ARG~3058
@@ -2362,24 +2389,20 @@
   (:shadowing-import-from :holai.firstorder.utils >>=)
   (:shadowing-import-from :holai.lib %>)
   (:shadowing-import-from
-    :holai.runtime
-    unit
-    tuple
+    :holai.runtime.core
     Some
-    snd
     record-field
     None
-    match
     make-Some
-    list-map
     list-exists
     lambdac
-    fst
-    format-printf
-    deref
     defunc
     >
     <)
+  (:shadowing-import-from :holai.runtime.data unit tuple snd fst deref)
+  (:shadowing-import-from :holai.runtime.format format-printf)
+  (:shadowing-import-from :holai.runtime.pattern match)
+  (:shadowing-import-from :holai.runtime.stdlib list-map)
   (:shadowing-import-from :holai.thecops.cop.subst unify_rename unify eq)
   (:shadowing-import-from :holai.thecops.database db_entries)
   (:shadowing-import-from :holai.thecops.fol_term negate_lit)
@@ -2411,7 +2434,9 @@
     :holai.fusion.hol
     :holai.lib
     :holai.meson.meson
-    :holai.runtime)
+    :holai.runtime.core
+    :holai.runtime.data
+    :holai.runtime.pattern)
   (:shadow
     ARG~3266
     ARG~3318
@@ -2442,7 +2467,9 @@
   (:shadowing-import-from :holai.fusion.hol concl ASSUME)
   (:shadowing-import-from :holai.lib I find end_itlist)
   (:shadowing-import-from :holai.meson.meson make_hol_contrapos finish_RULE)
-  (:shadowing-import-from :holai.runtime tuple raise match lambdac Failure defunc =)
+  (:shadowing-import-from :holai.runtime.core lambdac Failure defunc =)
+  (:shadowing-import-from :holai.runtime.data tuple raise)
+  (:shadowing-import-from :holai.runtime.pattern match)
   (:shadowing-import-from :holai.thecops.proof Reduction Lemma Extension)
   (:shadowing-import-from :holai.thecops.substarray inst_lit)
   (:export hashek_of_proof hol_negate))
@@ -2461,7 +2488,10 @@
     :holai.fusion.hol
     :holai.lib
     :holai.meson.meson
-    :holai.runtime
+    :holai.runtime.core
+    :holai.runtime.data
+    :holai.runtime.format
+    :holai.runtime.pattern
     :holai.tactics
     :holai.theorems)
   (:shadow
@@ -2500,23 +2530,19 @@
   (:shadowing-import-from :holai.lib W repeat o map)
   (:shadowing-import-from :holai.meson.meson CONJUNCTS_THEN% clear_contrapos_cache)
   (:shadowing-import-from
-    :holai.runtime
-    unit
-    tuple
+    :holai.runtime.core
     Some
-    snd
     record-field
     proof
     None
-    match
     make-Some
     make-None
     lambdac
     function-value
-    fst
-    format-printf
-    deref
     defunc)
+  (:shadowing-import-from :holai.runtime.data unit tuple snd fst deref)
+  (:shadowing-import-from :holai.runtime.format format-printf)
+  (:shadowing-import-from :holai.runtime.pattern match)
   (:shadowing-import-from
     :holai.tactics
     THEN
@@ -2557,7 +2583,10 @@
     :holai.firstorder.utils
     :holai.firstorder.utils.list
     :holai.meson
-    :holai.runtime)
+    :holai.runtime.core
+    :holai.runtime.data
+    :holai.runtime.pattern
+    :holai.runtime.stdlib)
   (:shadow
     A%
     ACC
@@ -2663,17 +2692,10 @@
   (:shadowing-import-from :holai.firstorder.utils.list fold_map filter_map)
   (:shadowing-import-from :holai.meson Forallq Disj Conj Atom)
   (:shadowing-import-from
-    :holai.runtime
-    unit
-    tuple
-    snd
+    :holai.runtime.core
     partial
-    match
     make-Some
     make-None
-    list-rev
-    list-map
-    list-for-all
     list-fold-left
     lambdac
     function-value
@@ -2681,6 +2703,9 @@
     defvariant
     defunc
     <)
+  (:shadowing-import-from :holai.runtime.data unit tuple snd)
+  (:shadowing-import-from :holai.runtime.pattern match)
+  (:shadowing-import-from :holai.runtime.stdlib list-rev list-map list-for-all)
   (:shadowing-import-from :holai.thecops.fol_term var map_lit_vars lit_max_var lit_ground)
   (:export
     Lit%
@@ -2738,7 +2763,13 @@
 (uiop:define-package
   :holai.thecops.ncprint
   (:use :cl)
-  (:mix :cl :holai.printer :holai.runtime)
+  (:mix
+    :cl
+    :holai.printer
+    :holai.runtime.core
+    :holai.runtime.data
+    :holai.runtime.format
+    :holai.runtime.pattern)
   (:shadow
     ARG~4175
     ARG~4193
@@ -2769,19 +2800,17 @@
     string_of_matrix
     string_of_nclause)
   (:shadowing-import-from :holai.printer print_to_string)
+  (:shadowing-import-from :holai.runtime.core function-value defunc)
+  (:shadowing-import-from :holai.runtime.data unit tuple)
   (:shadowing-import-from
-    :holai.runtime
-    unit
-    tuple
+    :holai.runtime.format
     std-formatter
     pp-print-space
     pp-print-int
     pp-print-char
     pp-open-box
-    pp-close-box
-    match
-    function-value
-    defunc)
+    pp-close-box)
+  (:shadowing-import-from :holai.runtime.pattern match)
   (:shadowing-import-from :holai.thecops.ncmatrix Mat% Lit%)
   (:shadowing-import-from
     :holai.thecops.print
@@ -2815,7 +2844,13 @@
 (uiop:define-package
   :holai.thecops.ncproof
   (:use :cl)
-  (:mix :cl :holai.runtime)
+  (:mix
+    :cl
+    :holai.runtime.core
+    :holai.runtime.data
+    :holai.runtime.format
+    :holai.runtime.pattern
+    :holai.runtime.stdlib)
   (:shadow
     ARG~4360
     ARG~4366
@@ -2849,23 +2884,24 @@
     print_proofa
     string_of_inst_litmat)
   (:shadowing-import-from
-    :holai.runtime
-    unit
-    tuple
+    :holai.runtime.core
     string-concat
+    partial
+    lambdac
+    function-value
+    defvariant
+    defunc)
+  (:shadowing-import-from :holai.runtime.data unit tuple)
+  (:shadowing-import-from
+    :holai.runtime.format
     std-formatter
     pp-print-string
     pp-print-cut
     pp-print-char
     pp-open-vbox
-    pp-close-box
-    partial
-    match
-    list-iter
-    lambdac
-    function-value
-    defvariant
-    defunc)
+    pp-close-box)
+  (:shadowing-import-from :holai.runtime.pattern match)
+  (:shadowing-import-from :holai.runtime.stdlib list-iter)
   (:shadowing-import-from :holai.thecops.ncprint string_of_nclause string_of_litmat)
   (:shadowing-import-from :holai.thecops.print pp_nl)
   (:export
@@ -2892,7 +2928,10 @@
     :holai.firstorder.utils.list
     :holai.firstorder.utils.pair
     :holai.lib
-    :holai.runtime)
+    :holai.runtime.core
+    :holai.runtime.data
+    :holai.runtime.pattern
+    :holai.runtime.stdlib)
   (:shadow
     ARG~4525
     ARG~4542
@@ -2950,16 +2989,15 @@
   (:shadowing-import-from :holai.firstorder.utils.pair mapn)
   (:shadowing-import-from :holai.lib %>)
   (:shadowing-import-from
-    :holai.runtime
-    tuple
+    :holai.runtime.core
     partial
-    match
-    list-rev-append
-    list-map
     lambdac
     function-value
     defvariant
     defunc)
+  (:shadowing-import-from :holai.runtime.data tuple)
+  (:shadowing-import-from :holai.runtime.pattern match)
+  (:shadowing-import-from :holai.runtime.stdlib list-rev-append list-map)
   (:shadowing-import-from
     :holai.thecops.ncmatrix
     offset_matrix
@@ -2985,7 +3023,13 @@
 (uiop:define-package
   :holai.thecops.ncdatabase
   (:use :cl)
-  (:mix :cl :holai.lib :holai.runtime)
+  (:mix
+    :cl
+    :holai.lib
+    :holai.runtime.core
+    :holai.runtime.data
+    :holai.runtime.pattern
+    :holai.runtime.stdlib)
   (:shadow
     A%
     ARG~4824
@@ -3009,24 +3053,23 @@
   (:shadowing-import-from :cl +)
   (:shadowing-import-from :holai.lib %>)
   (:shadowing-import-from
-    :holai.runtime
-    tuple
+    :holai.runtime.core
+    partial
+    Not_found
+    lambdac
+    function-value
+    defunc)
+  (:shadowing-import-from :holai.runtime.data tuple snd raise fst)
+  (:shadowing-import-from :holai.runtime.pattern match)
+  (:shadowing-import-from
+    :holai.runtime.stdlib
     table-replace
     table-find
     table-create
     table-clear
     table-add
-    snd
-    raise
-    partial
-    Not_found
-    match
     list-rev
-    list-iter
-    lambdac
-    function-value
-    fst
-    defunc)
+    list-iter)
   (:shadowing-import-from
     :holai.thecops.extclause
     matBC_of_clause_ext
@@ -3038,7 +3081,16 @@
 (uiop:define-package
   :holai.thecops.ncsearch
   (:use :cl)
-  (:mix :cl :holai.firstorder :holai.firstorder.utils.list :holai.lib :holai.runtime)
+  (:mix
+    :cl
+    :holai.firstorder
+    :holai.firstorder.utils.list
+    :holai.lib
+    :holai.runtime.core
+    :holai.runtime.data
+    :holai.runtime.format
+    :holai.runtime.pattern
+    :holai.runtime.stdlib)
   (:shadow
     ACC
     ALT1
@@ -3161,38 +3213,34 @@
   (:shadowing-import-from :holai.firstorder.utils.list filter_map)
   (:shadowing-import-from :holai.lib %>)
   (:shadowing-import-from
-    :holai.runtime
-    unit
-    tuple
+    :holai.runtime.core
     string-join
     Some
-    snd
     record-field
-    raise
     partial
     None
-    match
     make-Some
     make-None
+    list-exists
+    lambdac
+    labelsc
+    function-value
+    failwith
+    defunc
+    =
+    <)
+  (:shadowing-import-from :holai.runtime.data unit tuple snd raise fst deref)
+  (:shadowing-import-from :holai.runtime.format format-printf)
+  (:shadowing-import-from :holai.runtime.pattern match guard)
+  (:shadowing-import-from
+    :holai.runtime.stdlib
     list-rev-append
     list-mem
     list-map
     list-length
-    list-exists
     lazy-force
     lazy-create
-    lambdac
-    labelsc
-    guard
-    function-value
-    fst
-    format-printf
-    failwith
-    deref
-    defunc
-    assert-true
-    =
-    <)
+    assert-true)
   (:shadowing-import-from :holai.thecops.cop.subst eq)
   (:shadowing-import-from
     :holai.thecops.extclause
@@ -3268,7 +3316,11 @@
     :holai.meson
     :holai.parser
     :holai.printer
-    :holai.runtime)
+    :holai.runtime.core
+    :holai.runtime.data
+    :holai.runtime.format
+    :holai.runtime.pattern
+    :holai.runtime.stdlib)
   (:shadow
     ACC
     ACC1
@@ -3388,15 +3440,25 @@
   (:shadowing-import-from :holai.parser parse_term)
   (:shadowing-import-from :holai.printer string_of_thm string_of_term)
   (:shadowing-import-from
-    :holai.runtime
-    unit
-    tuple
+    :holai.runtime.core
     string-concat
-    snd
     record-field
-    raise
     partial
-    match
+    list-fold-left
+    lambdac
+    labelsc
+    function-value
+    failwith
+    Failure
+    defunc
+    defrecord
+    =
+    <)
+  (:shadowing-import-from :holai.runtime.data unit tuple snd raise fst deref)
+  (:shadowing-import-from :holai.runtime.format format-printf)
+  (:shadowing-import-from :holai.runtime.pattern match)
+  (:shadowing-import-from
+    :holai.runtime.stdlib
     list-nth
     list-mem-assoc
     list-mem
@@ -3406,22 +3468,9 @@
     list-hd
     list-for-all2
     list-fold-left2
-    list-fold-left
     list-concat
     list-assoc
-    lambdac
-    labelsc
-    function-value
-    fst
-    format-printf
-    failwith
-    Failure
-    deref
-    defunc
-    defrecord
-    assert-true
-    =
-    <)
+    assert-true)
   (:shadowing-import-from :holai.thecops.extclause Matext Litext)
   (:shadowing-import-from :holai.thecops.ncmatrix Mat% Lit%)
   (:shadowing-import-from :holai.thecops.ncproof Reduction Lemma Extension Decomposition)
@@ -3460,7 +3509,11 @@
     :holai.lib
     :holai.parser
     :holai.printer
-    :holai.runtime
+    :holai.runtime.core
+    :holai.runtime.data
+    :holai.runtime.format
+    :holai.runtime.pattern
+    :holai.runtime.stdlib
     :holai.tactics
     :holai.theorems)
   (:shadow
@@ -3522,29 +3575,26 @@
   (:shadowing-import-from :holai.parser parse_term)
   (:shadowing-import-from :holai.printer string_of_thm print_thm)
   (:shadowing-import-from
-    :holai.runtime
-    unit
-    tuple
-    snd
+    :holai.runtime.core
     record-field
     proof
-    print-endline
-    match
     make-Some
     make-None
+    list-exists
+    lambdac
+    function-value
+    defunc
+    =)
+  (:shadowing-import-from :holai.runtime.data unit tuple snd fst deref)
+  (:shadowing-import-from :holai.runtime.format format-printf)
+  (:shadowing-import-from :holai.runtime.pattern match guard)
+  (:shadowing-import-from
+    :holai.runtime.stdlib
+    print-endline
     list-mem
     list-iter
     list-for-all
-    list-exists
-    lambdac
-    guard
-    function-value
-    fst
-    format-printf
-    deref
-    defunc
-    assert-true
-    =)
+    assert-true)
   (:shadowing-import-from
     :holai.tactics
     THEN
@@ -3593,7 +3643,13 @@
 (uiop:define-package
   :holai.thecops
   (:use :cl)
-  (:mix :cl :holai.meson :holai.runtime)
+  (:mix
+    :cl
+    :holai.meson
+    :holai.runtime.core
+    :holai.runtime.data
+    :holai.runtime.pattern
+    :holai.runtime.stdlib)
   (:shadow
     A%
     ARG~1007
@@ -3611,7 +3667,10 @@
     offset_term)
   (:shadowing-import-from :cl +)
   (:shadowing-import-from :holai.meson make-Fvar make-Fnapp Fvar Fnapp)
-  (:shadowing-import-from :holai.runtime tuple match list-map defunc)
+  (:shadowing-import-from :holai.runtime.core defunc)
+  (:shadowing-import-from :holai.runtime.data tuple)
+  (:shadowing-import-from :holai.runtime.pattern match)
+  (:shadowing-import-from :holai.runtime.stdlib list-map)
   (:export LEANCOP LEANCOP_TAC NANOCOP NANOCOP_TAC offset_lit offset_term))
 
 (in-package :holai.thecops)
@@ -3667,14 +3726,14 @@
 (define-exception End_of_strom)
 
 (defunc nil% (arg~134)
-  (match arg~134 ((cl:type holai.runtime::unit-value) (raise (make-End_of_strom)))))
+  (match arg~134 ((cl:type holai.runtime.data:unit-value) (raise (make-End_of_strom)))))
 
 (defunc cons (x l)
   (let ((past (ref cl:nil)))
     (cl:declare (cl:ignorable past))
     (lambdac (arg~146)
       (match arg~146
-        ((cl:type holai.runtime::unit-value)
+        ((cl:type holai.runtime.data:unit-value)
           (if (deref past) (#`l unit) (progn (assign past cl:t) x)))))))
 
 (defunc append (xs ys)
@@ -3682,12 +3741,12 @@
     (cl:declare (cl:ignorable past))
     (lambdac (arg~168)
       (match arg~168
-        ((cl:type holai.runtime::unit-value)
+        ((cl:type holai.runtime.data:unit-value)
           (if (deref past)
             (#`ys unit)
             (handler-case
               (#`xs unit)
-              (holai.runtime:ocaml-condition
+              (holai.runtime.data:ocaml-condition
                 (exception~170)
                 (match exception~170
                   ((End_of_strom) (progn (assign past cl:t) (#`ys unit)))
@@ -3698,7 +3757,7 @@
     (cl:declare (cl:ignorable r%))
     (lambdac (arg~195)
       (match arg~195
-        ((cl:type holai.runtime::unit-value)
+        ((cl:type holai.runtime.data:unit-value)
           (match (deref r%)
             (nil (raise (make-End_of_strom)))
             ((cl:cons x xs) (progn (assign r% xs) x))))))))
@@ -3706,7 +3765,7 @@
 (defunc to_list (l)
   (handler-case
     (let ((x (#`l unit))) (cl:declare (cl:ignorable x)) (cl:cons x (to_list l)))
-    (holai.runtime:ocaml-condition
+    (holai.runtime.data:ocaml-condition
       (exception~219)
       (match exception~219 ((End_of_strom) nil) (_ (raise exception~219))))))
 
@@ -3714,25 +3773,25 @@
   (labelsc
     ((iter% (arg~236)
       (match arg~236
-        ((cl:type holai.runtime::unit-value)
+        ((cl:type holai.runtime.data:unit-value)
           (let ((x (#`l unit)))
             (cl:declare (cl:ignorable x))
             (progn (#`f x) (iter% unit)))))))
     (handler-case
       (iter% unit)
-      (holai.runtime:ocaml-condition
+      (holai.runtime.data:ocaml-condition
         (exception~248)
         (match exception~248 ((End_of_strom) unit) (_ (raise exception~248)))))))
 
 (defunc map (f l arg~259)
-  (match arg~259 ((cl:type holai.runtime::unit-value) (#`f (#`l unit)))))
+  (match arg~259 ((cl:type holai.runtime.data:unit-value) (#`f (#`l unit)))))
 
 (defunc mapi (f l)
   (let ((i% (ref 0)))
     (cl:declare (cl:ignorable i%))
     (lambdac (arg~272)
       (match arg~272
-        ((cl:type holai.runtime::unit-value)
+        ((cl:type holai.runtime.data:unit-value)
           (let ((h (deref i%)))
             (cl:declare (cl:ignorable h))
             (progn (ref-incr i%) (#`f h (#`l unit)))))))))
@@ -3742,28 +3801,28 @@
     (cl:declare (cl:ignorable i%))
     (lambdac (arg~295)
       (match arg~295
-        ((cl:type holai.runtime::unit-value)
+        ((cl:type holai.runtime.data:unit-value)
           (if (= (deref i%) 0)
             (raise (make-End_of_strom))
             (progn (ref-decr i%) (#`l unit))))))))
 
 (defunc take_while (p% l arg~316)
   (match arg~316
-    ((cl:type holai.runtime::unit-value)
+    ((cl:type holai.runtime.data:unit-value)
       (let ((x (#`l unit)))
         (cl:declare (cl:ignorable x))
         (if (#`p% x) x (raise (make-End_of_strom)))))))
 
 (defunc filter (p% l arg~333)
   (match arg~333
-    ((cl:type holai.runtime::unit-value)
+    ((cl:type holai.runtime.data:unit-value)
       (let ((x (#`l unit)))
         (cl:declare (cl:ignorable x))
         (if (#`p% x) x (filter p% l unit))))))
 
 (defunc filter_map (f l arg~352)
   (match arg~352
-    ((cl:type holai.runtime::unit-value)
+    ((cl:type holai.runtime.data:unit-value)
       (match (#`f (#`l unit)) ((None) (filter_map f l unit)) ((Some y) y)))))
 
 (defunc concat (ls)
@@ -3772,10 +3831,10 @@
     (labelsc
       ((concat% (arg~375)
         (match arg~375
-          ((cl:type holai.runtime::unit-value)
+          ((cl:type holai.runtime.data:unit-value)
             (handler-case
               (#`(deref last%) unit)
-              (holai.runtime:ocaml-condition
+              (holai.runtime.data:ocaml-condition
                 (exception~377)
                 (match exception~377
                   ((End_of_strom) (progn (assign last% (#`ls unit)) (concat% unit)))
@@ -3788,10 +3847,10 @@
     (labelsc
       ((concat_map% (arg~403)
         (match arg~403
-          ((cl:type holai.runtime::unit-value)
+          ((cl:type holai.runtime.data:unit-value)
             (handler-case
               (#`(deref last%) unit)
-              (holai.runtime:ocaml-condition
+              (holai.runtime.data:ocaml-condition
                 (exception~405)
                 (match exception~405
                   ((End_of_strom)
@@ -3802,7 +3861,7 @@
 (defunc next_opt (l)
   (handler-case
     (make-Some (#`l unit))
-    (holai.runtime:ocaml-condition
+    (holai.runtime.data:ocaml-condition
       (exception~427)
       (match exception~427 ((End_of_strom) (make-None)) (_ (raise exception~427))))))
 
@@ -3811,7 +3870,7 @@
     (cl:declare (cl:ignorable result))
     (lambdac (arg~440)
       (match arg~440
-        ((cl:type holai.runtime::unit-value)
+        ((cl:type holai.runtime.data:unit-value)
           (match (deref result)
             ((None)
               (let ((l (#`f unit)))
@@ -3824,7 +3883,7 @@
     (cl:declare (cl:ignorable cut% past))
     (lambdac (arg~475)
       (match arg~475
-        ((cl:type holai.runtime::unit-value)
+        ((cl:type holai.runtime.data:unit-value)
           (if (deref past)
             (#`ys unit)
             (if (deref cut%)
@@ -3833,7 +3892,7 @@
                 (let ((x (#`xs unit)))
                   (cl:declare (cl:ignorable x))
                   (progn (assign cut% cl:t) x))
-                (holai.runtime:ocaml-condition
+                (holai.runtime.data:ocaml-condition
                   (exception~477)
                   (match exception~477
                     ((End_of_strom) (progn (assign past cl:t) (#`ys unit)))
@@ -3844,7 +3903,7 @@
     (cl:declare (cl:ignorable i%))
     (lambdac (arg~514)
       (match arg~514
-        ((cl:type holai.runtime::unit-value)
+        ((cl:type holai.runtime.data:unit-value)
           (let ((h (deref i%))) (cl:declare (cl:ignorable h)) (progn (ref-incr i%) h)))))))
 
 (in-package :holai.thecops)
@@ -3972,7 +4031,7 @@
 (defunc db_entries (lit)
   (handler-case
     (table-find db (fst lit))
-    (holai.runtime:ocaml-condition
+    (holai.runtime.data:ocaml-condition
       (exception~972)
       (match exception~972 ((Not_found) nil) (_ (raise exception~972))))))
 
@@ -3997,7 +4056,7 @@
         (= y x)
         (handler-case
           (let ((t% (list-assoc y sub))) (cl:declare (cl:ignorable t%)) (istriv sub x t%))
-          (holai.runtime:ocaml-condition
+          (holai.runtime.data:ocaml-condition
             (exception~1031)
             (match exception~1031 ((Not_found) cl:nil) (_ (raise exception~1031)))))))
     ((Fnapp f a%) (cl:and (list-exists (istriv sub x) a%) (raise (make-Unify))))))
@@ -4013,7 +4072,7 @@
         (let ((t% (list-assoc x sub)))
           (cl:declare (cl:ignorable t%))
           (unify_tm sub tm t%))
-        (holai.runtime:ocaml-condition
+        (holai.runtime.data:ocaml-condition
           (exception~1115)
           (match exception~1115
             ((Not_found) (add_subst sub x tm))
@@ -4041,7 +4100,7 @@
           (let ((t% (list-assoc x% sub)))
             (cl:declare (cl:ignorable t%))
             (unify_tm_off 0 sub t1 t%))
-          (holai.runtime:ocaml-condition
+          (holai.runtime.data:ocaml-condition
             (exception~1209)
             (match exception~1209
               ((Not_found) (add_subst sub x% t1))
@@ -4051,7 +4110,7 @@
         (let ((t% (list-assoc x sub)))
           (cl:declare (cl:ignorable t%))
           (unify_tm_off off sub t% t2))
-        (holai.runtime:ocaml-condition
+        (holai.runtime.data:ocaml-condition
           (exception~1232)
           (match exception~1232
             ((Not_found) (add_subst sub x (offset_term off t2)))
@@ -4069,7 +4128,7 @@
           (let ((t% (list-assoc y sub)))
             (cl:declare (cl:ignorable t%))
             (eq_var_tm sub x t%))
-          (holai.runtime:ocaml-condition
+          (holai.runtime.data:ocaml-condition
             (exception~1269)
             (match exception~1269 ((Not_found) cl:nil) (_ (raise exception~1269)))))))
     ((Fnapp f a%) cl:nil)))
@@ -4082,7 +4141,7 @@
         (let ((t% (list-assoc x sub)))
           (cl:declare (cl:ignorable t%))
           (eq_term sub tm1 t%))
-        (holai.runtime:ocaml-condition
+        (holai.runtime.data:ocaml-condition
           (exception~1322)
           (match exception~1322
             ((Not_found) (eq_var_tm sub x tm1))
@@ -4092,7 +4151,7 @@
         (let ((t% (list-assoc x sub)))
           (cl:declare (cl:ignorable t%))
           (eq_term sub t% tm2))
-        (holai.runtime:ocaml-condition
+        (holai.runtime.data:ocaml-condition
           (exception~1343)
           (match exception~1343
             ((Not_found) (eq_var_tm sub x tm2))
@@ -4112,7 +4171,7 @@
     ((Fvar v)
       (handler-case
         (let ((t% (list-assoc v sub))) (cl:declare (cl:ignorable t%)) (inst_tm sub t%))
-        (holai.runtime:ocaml-condition
+        (holai.runtime.data:ocaml-condition
           (exception~1401)
           (match exception~1401 ((Not_found) (make-Fvar v)) (_ (raise exception~1401))))))
     ((Fnapp f args) (make-Fnapp f (list-map (inst_tm sub) args)))))
@@ -4125,7 +4184,7 @@
     ((Fvar v)
       (handler-case
         (let ((t% (list-assoc v sub))) (cl:declare (cl:ignorable t%)) (ground_tm sub t%))
-        (holai.runtime:ocaml-condition
+        (holai.runtime.data:ocaml-condition
           (exception~1449)
           (match exception~1449 ((Not_found) cl:nil) (_ (raise exception~1449))))))
     ((Fnapp f args) (list-for-all (ground_tm sub) args))))
@@ -4317,7 +4376,7 @@
     ((tuple sub off)
       (handler-case
         (make-Some (tuple (unify_lit sub l1 l2) off))
-        (holai.runtime:ocaml-condition
+        (holai.runtime.data:ocaml-condition
           (exception~2211)
           (match exception~2211
             ((holai.thecops.substarray:Unify) (make-None))
@@ -4337,7 +4396,7 @@
                 (tuple (tuple (unify_tms s args1 args2) off) rest)
                 (match (unify_rename_subst off args1 args2 s rest)
                   ((tuple s% rest%) (tuple (tuple s% (+ off vars)) rest%)))))
-            (holai.runtime:ocaml-condition
+            (holai.runtime.data:ocaml-condition
               (exception~2254)
               (match exception~2254
                 ((holai.thecops.substarray:Unify) (make-None))
@@ -4430,27 +4489,27 @@
             ((cl:and acc (tuple preds funs))
               (handler-case
                 (fm_consts (snd (#`dest_forall tm)) acc)
-                (holai.runtime:ocaml-condition
+                (holai.runtime.data:ocaml-condition
                   (exception~2475)
                   (match exception~2475
                     ((Failure _)
                       (handler-case
                         (fm_consts (snd (#`dest_exists tm)) acc)
-                        (holai.runtime:ocaml-condition
+                        (holai.runtime.data:ocaml-condition
                           (exception~2478)
                           (match exception~2478
                             ((Failure _)
                               (handler-case
                                 (match (#`dest_conj tm)
                                   ((tuple l r%) (fm_consts l (fm_consts r% acc))))
-                                (holai.runtime:ocaml-condition
+                                (holai.runtime.data:ocaml-condition
                                   (exception~2481)
                                   (match exception~2481
                                     ((Failure _)
                                       (handler-case
                                         (match (#`dest_disj tm)
                                           ((tuple l r%) (fm_consts l (fm_consts r% acc))))
-                                        (holai.runtime:ocaml-condition
+                                        (holai.runtime.data:ocaml-condition
                                           (exception~2484)
                                           (match exception~2484
                                             ((Failure _)
@@ -4458,13 +4517,13 @@
                                                 (match (#`dest_imp tm)
                                                   ((tuple l r%)
                                                     (fm_consts l (fm_consts r% acc))))
-                                                (holai.runtime:ocaml-condition
+                                                (holai.runtime.data:ocaml-condition
                                                   (exception~2487)
                                                   (match exception~2487
                                                     ((Failure _)
                                                       (handler-case
                                                         (fm_consts (dest_neg tm) acc)
-                                                        (holai.runtime:ocaml-condition
+                                                        (holai.runtime.data:ocaml-condition
                                                           (exception~2490)
                                                           (match exception~2490
                                                             ((Failure _)
@@ -4480,7 +4539,7 @@
                                                                         (fm_consts l acc))
                                                                       (failwith
                                                                         "atomic equality"))))
-                                                                (holai.runtime:ocaml-condition
+                                                                (holai.runtime.data:ocaml-condition
                                                                   (exception~2493)
                                                                   (match exception~2493
                                                                     ((Failure _)
@@ -4751,7 +4810,7 @@
 (defunc hol_negate (tm)
   (handler-case
     (dest_neg tm)
-    (holai.runtime:ocaml-condition
+    (holai.runtime.data:ocaml-condition
       (exception~3248)
       (match exception~3248 ((Failure _) (#`mk_neg tm)) (_ (raise exception~3248))))))
 
@@ -5255,7 +5314,7 @@
           (%>
             (%> (table-find db% p%) (lambdac (l) (cl:cons v l)))
             (partial (function-value #'table-replace 3) db% p%))
-          (holai.runtime:ocaml-condition
+          (holai.runtime.data:ocaml-condition
             (exception~4853)
             (match exception~4853
               ((Not_found) (table-add db% p% (cl:cons v nil)))
@@ -5269,7 +5328,7 @@
 (defunc db_entries (lit%%)
   (handler-case
     (table-find db (fst lit%%))
-    (holai.runtime:ocaml-condition
+    (holai.runtime.data:ocaml-condition
       (exception~4902)
       (match exception~4902 ((Not_found) nil) (_ (raise exception~4902))))))
 
@@ -5282,7 +5341,7 @@
     ((tuple sub off)
       (handler-case
         (make-Some (tuple (unify_tms sub (list-map #'var l1) (list-map #'var l2)) off))
-        (holai.runtime:ocaml-condition
+        (holai.runtime.data:ocaml-condition
           (exception~4918)
           (match exception~4918 ((Unify) (make-None)) (_ (raise exception~4918))))))))
 
@@ -5298,7 +5357,7 @@
                 (tuple
                   (tuple (unify_tms_off off sub args1 args2) (+ off vars))
                   (offset_clause_ext off clext))))
-            (holai.runtime:ocaml-condition
+            (holai.runtime.data:ocaml-condition
               (exception~4948)
               (match exception~4948 ((Unify) (make-None)) (_ (raise exception~4948))))))))))
 
@@ -5339,7 +5398,7 @@
             (labelsc
               ((alt1 (arg~5117)
                 (match arg~5117
-                  ((cl:type holai.runtime::unit-value)
+                  ((cl:type holai.runtime.data:unit-value)
                     (match lmext
                       ((guard (Matext j _ clext%) (list-mem (tuple j k1) pi%))
                         (match (unify_vars sub v v1)
@@ -5374,7 +5433,7 @@
                       (_ #'nil%)))))
                 (alt2 (arg~5220)
                   (match arg~5220
-                    ((cl:type holai.runtime::unit-value)
+                    ((cl:type holai.runtime.data:unit-value)
                       (if (cl:and (list-mem (tuple i%% k1) pi%) (= v nil))
                         #'nil%
                         (match (claBC_of_litmat_ext lmext)
@@ -5724,7 +5783,7 @@
     (cl:declare (cl:ignorable ftm))
     (handler-case
       (hol_of_term ty ftm)
-      (holai.runtime:ocaml-condition
+      (holai.runtime.data:ocaml-condition
         (exception~6106)
         (match exception~6106
           ((Failure e%) (failwith (string-concat "inst_var: " e%)))

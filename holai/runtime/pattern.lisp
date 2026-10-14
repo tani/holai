@@ -1,23 +1,14 @@
-(in-package :holai.runtime)
+(uiop:define-package :holai.runtime.pattern
+  (:use :cl)
+  (:import-from :holai.runtime.data
+    :tuple :tuple-value :tuple-items :ref-contents :ref-cell :deref :match-failure)
+  (:import-from :holai.runtime.pattern-registry
+    :*pattern-descriptions* :check-pattern-signature)
+  (:export :character-code :guard :match))
+(in-package :holai.runtime.pattern)
 
 ;; All descriptors and IR nodes below belong to the compilation environment.
 (eval-when (:compile-toplevel :load-toplevel :execute)
-  (defvar *pattern-descriptions* (make-hash-table :test #'eq))
-  (defvar *pattern-families* (make-hash-table :test #'eq))
-  (define-condition pattern-declaration-changed (simple-error)
-    ((name :initarg :name :reader pattern-declaration-name)))
-  (defun register-pattern-family (owner descriptions)
-    (dolist (name (gethash owner *pattern-families*))
-      (remhash name *pattern-descriptions*))
-    (setf (gethash owner *pattern-families*) (mapcar #'car descriptions))
-    (dolist (description descriptions)
-      (setf (gethash (car description) *pattern-descriptions*) (cdr description))))
-  (defun check-pattern-signature (name signature)
-    (unless (equal signature (gethash name *pattern-descriptions*))
-      (error 'pattern-declaration-changed :name name
-             :format-control "Pattern declaration changed for ~s; rebuild dependent FASLs"
-             :format-arguments (list name)))
-    t)
   (defun wildcard-pattern-p (x)
     (and (symbolp x) (string= (symbol-name x) "_")))
   (defun parse-pattern (p)

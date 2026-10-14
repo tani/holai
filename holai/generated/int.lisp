@@ -879,7 +879,9 @@
   (:import-from :holai.real)
   (:import-from :holai.realarith)
   (:import-from :holai.realax)
-  (:import-from :holai.runtime)
+  (:import-from :holai.runtime.core)
+  (:import-from :holai.runtime.data)
+  (:import-from :holai.runtime.pattern)
   (:import-from :holai.simp)
   (:import-from :holai.tactics)
   (:import-from :holai.theorems)
@@ -1472,7 +1474,9 @@
     :holai.real
     :holai.realarith
     :holai.realax
-    :holai.runtime
+    :holai.runtime.core
+    :holai.runtime.data
+    :holai.runtime.pattern
     :holai.simp
     :holai.tactics
     :holai.theorems)
@@ -2867,23 +2871,16 @@
     real_abs
     prioritize_num)
   (:shadowing-import-from
-    :holai.runtime
-    unit
-    tuple
+    :holai.runtime.core
     string-concat
-    snd
-    raise
     quo-num
     proof
     num
     mod-num
-    match
     make-Some
     lambdac
     labelsc
-    guard
     function-value
-    fst
     failwith
     Failure
     defunc
@@ -2892,6 +2889,8 @@
     <>
     <=
     <)
+  (:shadowing-import-from :holai.runtime.data unit tuple snd raise fst)
+  (:shadowing-import-from :holai.runtime.pattern match guard)
   (:shadowing-import-from
     :holai.simp
     SIMP_TAC
@@ -3644,7 +3643,7 @@
 
 (defunc prioritize_int (arg~187)
   (match arg~187
-    ((cl:type holai.runtime::unit-value)
+    ((cl:type holai.runtime.data:unit-value)
       (prioritize_overload (mk_type (tuple "int" nil))))))
 
 ;; (* ------------------------------------------------------------------------- *)
@@ -5630,7 +5629,7 @@
                               (th2 (AP_TERM amp_tm (#`NUM_ADD_CONV tm1))))
                             (cl:declare (cl:ignorable th1 tm1 th2))
                             (TRANS th1 th2)))))))
-                (holai.runtime:ocaml-condition
+                (holai.runtime.data:ocaml-condition
                   (exception~3852)
                   (match exception~3852
                     ((Failure _) (failwith "INT_ADD_CONV"))
@@ -5923,7 +5922,7 @@
                     (tuple
                       (find (lambdac (v) (is_defined v (#`lhand (rand (concl th))))) vars)
                       th%)
-                    (holai.runtime:ocaml-condition
+                    (holai.runtime.data:ocaml-condition
                       (exception~4805)
                       (match exception~4805
                         ((Failure _)
@@ -7177,7 +7176,7 @@
             (match (dest_binop dtm tm)
               ((tuple l r)
                 (#`CONJUNCT1 (INT_DIVMOD_CONV (dest_intconst l) (dest_intconst r)))))
-            (holai.runtime:ocaml-condition
+            (holai.runtime.data:ocaml-condition
               (exception~7579)
               (match exception~7579
                 ((Failure _) (failwith "INT_DIV_CONV"))
@@ -7187,7 +7186,7 @@
             (match (dest_binop mtm tm)
               ((tuple l r)
                 (#`CONJUNCT2 (INT_DIVMOD_CONV (dest_intconst l) (dest_intconst r)))))
-            (holai.runtime:ocaml-condition
+            (holai.runtime.data:ocaml-condition
               (exception~7602)
               (match exception~7602
                 ((Failure _) (failwith "INT_MOD_CONV"))
@@ -7249,7 +7248,8 @@
     (lambdac (compset)
       (itlist
         (lambdac (newc arg~7757)
-          (match arg~7757 ((cl:type holai.runtime::unit-value) (add_conv newc compset))))
+          (match arg~7757
+            ((cl:type holai.runtime.data:unit-value) (add_conv newc compset))))
         convlist
         unit))))
 
@@ -7899,7 +7899,7 @@
                   (th3 (#`GENL avs (rev_itlist (C MP) pths th2))))
                 (cl:declare (cl:ignorable nim gvs pths ibod gbod th2 th3))
                 (EQ_MP (SYM th1) th3)))))
-        (holai.runtime:ocaml-condition
+        (holai.runtime.data:ocaml-condition
           (exception~9000)
           (match exception~9000
             ((Failure msg)
@@ -8150,7 +8150,7 @@
                                           (#`CONJ
                                             (#`INT_POS_RULE (rand ltm))
                                             (#`INT_POS_RULE (rand rtm%))))))
-                                    (holai.runtime:ocaml-condition
+                                    (holai.runtime.data:ocaml-condition
                                       (exception~9550)
                                       (match exception~9550
                                         ((Failure _)
@@ -8176,7 +8176,7 @@
                               (CONV_RULE
                                 (RAND_CONV (BINDER_CONV (BINDER_CONV (RAND_CONV #'conv))))
                                 th3)))))
-                      (holai.runtime:ocaml-condition
+                      (holai.runtime.data:ocaml-condition
                         (exception~9465)
                         (match exception~9465
                           ((Failure _) (REFL tm))
@@ -8224,7 +8224,7 @@
               (let ((th2 (#`REAL_ARITH (#`mk_neg (rand (concl th1))))))
                 (cl:declare (cl:ignorable th2))
                 (EQ_MP th0 (EQ_MP (AP_TERM not_tm (SYM th1)) th2))))
-            (holai.runtime:ocaml-condition
+            (holai.runtime.data:ocaml-condition
               (exception~9685)
               (match exception~9685
                 ((Failure m)

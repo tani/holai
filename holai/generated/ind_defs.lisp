@@ -303,7 +303,9 @@
   (:import-from :holai.itab)
   (:import-from :holai.lib)
   (:import-from :holai.parser)
-  (:import-from :holai.runtime)
+  (:import-from :holai.runtime.core)
+  (:import-from :holai.runtime.data)
+  (:import-from :holai.runtime.pattern)
   (:import-from :holai.simp)
   (:import-from :holai.tactics)
   (:import-from :holai.theorems)
@@ -334,7 +336,9 @@
     :holai.itab
     :holai.lib
     :holai.parser
-    :holai.runtime
+    :holai.runtime.core
+    :holai.runtime.data
+    :holai.runtime.pattern
     :holai.simp
     :holai.tactics
     :holai.theorems)
@@ -750,26 +754,19 @@
     --)
   (:shadowing-import-from :holai.parser parse_term)
   (:shadowing-import-from
-    :holai.runtime
-    unit
-    tuple
-    snd
-    ref
-    raise
+    :holai.runtime.core
     proof
     partial
-    match
     lambdac
     labelsc
     function-value
-    fst
     failwith
     Failure
-    deref
-    assign
     =
     <>
     <)
+  (:shadowing-import-from :holai.runtime.data unit tuple snd ref raise fst deref assign)
+  (:shadowing-import-from :holai.runtime.pattern match)
   (:shadowing-import-from :holai.simp REWR_CONV REWRITE_TAC ASM_REWRITE_TAC)
   (:shadowing-import-from
     :holai.tactics
@@ -887,7 +884,7 @@
           (cl:declare (cl:ignorable bod))
           (handler-case
             (snd (#`dest_imp bod))
-            (holai.runtime:ocaml-condition
+            (holai.runtime.data:ocaml-condition
               (exception~149)
               (match exception~149 ((Failure _) bod) (_ (raise exception~149))))))))
       (CONJ_ACI_RULE (AC CONJ_ACI))
@@ -974,7 +971,7 @@
                 (match
                   (handler-case
                     (#`dest_imp bimp)
-                    (holai.runtime:ocaml-condition
+                    (holai.runtime.data:ocaml-condition
                       (exception~734)
                       (match exception~734
                         ((Failure _) (tuple t_tm bimp))
@@ -1493,7 +1490,7 @@
                       ((cn
                         (handler-case
                           (fst (dest_const (holai.lib:repeat #'rator c%)))
-                          (holai.runtime:ocaml-condition
+                          (holai.runtime.data:ocaml-condition
                             (exception~1534)
                             (match exception~1534
                               ((Failure _) "")
@@ -1515,7 +1512,7 @@
                     (c%
                       (handler-case
                         (fst (dest_const ft))
-                        (holai.runtime:ocaml-condition
+                        (holai.runtime.data:ocaml-condition
                           (exception~1598)
                           (match exception~1598
                             ((Failure _) "")
@@ -1629,7 +1626,7 @@
                       avs
                       (handler-case
                         (snd (#`dest_imp bod))
-                        (holai.runtime:ocaml-condition
+                        (holai.runtime.data:ocaml-condition
                           (exception~1882)
                           (match exception~1882
                             ((Failure _) bod)
@@ -1683,7 +1680,7 @@
             (match (tryfind (find_redefinition tm%) (deref the_inductive_definitions))
               ((tuple th _)
                 (progn (warn cl:t "Benign redefinition of inductive predicate") th))))
-          (holai.runtime:ocaml-condition
+          (holai.runtime.data:ocaml-condition
             (exception~2029)
             (match exception~2029
               ((Failure _)

@@ -6,6 +6,8 @@
   (asdf:initialize-source-registry
    `(:source-registry (:directory ,root) :inherit-configuration)))
 (asdf:load-system "holai/runtime")
+(uiop:define-package :holai.tests.probe-tuple (:use :cl))
+(in-package :holai.tests.probe-tuple)
 (defstruct probe-tuple-value items)
 (declaim (notinline tuple-generic tuple-direct))
 (defun tuple-generic (a b) (let ((items (list a b))) (make-probe-tuple-value :items (coerce items 'vector))))

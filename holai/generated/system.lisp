@@ -11,27 +11,31 @@
   :holai.system
   (:use :cl)
   (:shadow FMT N pp_print_num print_num)
-  (:import-from :holai.runtime)
+  (:import-from :holai.runtime.core)
+  (:import-from :holai.runtime.data)
+  (:import-from :holai.runtime.format)
+  (:import-from :holai.runtime.stdlib)
   (:export pp_print_num print_num))
 
 (uiop:define-package
   :holai.system
   (:use :cl)
-  (:mix :cl :holai.runtime)
+  (:mix
+    :cl
+    :holai.runtime.core
+    :holai.runtime.data
+    :holai.runtime.format
+    :holai.runtime.stdlib)
   (:shadow FMT N pp_print_num print_num)
+  (:shadowing-import-from :holai.runtime.core string-of-num record-update defunc)
+  (:shadowing-import-from :holai.runtime.data unit)
   (:shadowing-import-from
-    :holai.runtime
-    unit
-    string-of-num
+    :holai.runtime.format
     std-formatter
-    record-update
     pp-print-string
     pp-open-hbox
-    pp-close-box
-    gc-set
-    gc-get
-    defunc
-    catch-break)
+    pp-close-box)
+  (:shadowing-import-from :holai.runtime.stdlib gc-set gc-get catch-break)
   (:export pp_print_num print_num))
 
 (in-package :holai.system)

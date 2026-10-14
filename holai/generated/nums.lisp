@@ -112,7 +112,6 @@
   (:import-from :holai.basics)
   (:import-from :holai.bool)
   (:import-from :holai.class)
-  (:import-from :holai.compute)
   (:import-from :holai.equal)
   (:import-from :holai.fusion)
   (:import-from :holai.fusion.hol)
@@ -121,7 +120,9 @@
   (:import-from :holai.meson)
   (:import-from :holai.pair)
   (:import-from :holai.parser)
-  (:import-from :holai.runtime)
+  (:import-from :holai.runtime.core)
+  (:import-from :holai.runtime.data)
+  (:import-from :holai.runtime.pattern)
   (:import-from :holai.simp)
   (:import-from :holai.tactics)
   (:import-from :holai.theorems)
@@ -172,7 +173,9 @@
     :holai.meson
     :holai.pair
     :holai.parser
-    :holai.runtime
+    :holai.runtime.core
+    :holai.runtime.data
+    :holai.runtime.pattern
     :holai.simp
     :holai.tactics
     :holai.theorems)
@@ -357,34 +360,27 @@
   (:shadowing-import-from :holai.pair new_definition mk_pair)
   (:shadowing-import-from :holai.parser parse_term)
   (:shadowing-import-from
-    :holai.runtime
-    unit
-    tuple
+    :holai.runtime.core
     string-join
     string-get
     string-concat
-    snd
-    ref
-    raise
     quo-num
     proof
     num
     mod-num
-    match
     lambdac
     labelsc
     int-of-num
     function-value
-    fst
     failwith
     Failure
-    deref
     defunc
-    assign
     >
     =
     <>
     <)
+  (:shadowing-import-from :holai.runtime.data unit tuple snd ref raise fst deref assign)
+  (:shadowing-import-from :holai.runtime.pattern match)
   (:shadowing-import-from
     :holai.simp
     REWR_CONV
@@ -928,7 +924,7 @@
               l
               nil)
             cl:t)
-          (holai.runtime:ocaml-condition
+          (holai.runtime.data:ocaml-condition
             (exception~992)
             (match exception~992 ((Failure _) cl:nil) (_ (raise exception~992))))))
       (specify (name th)
@@ -991,7 +987,7 @@
                               (deref the_specifications)))))
                         (cl:declare (cl:ignorable sth))
                         (progn (warn cl:t "Benign respecification") sth))
-                      (holai.runtime:ocaml-condition
+                      (holai.runtime.data:ocaml-condition
                         (exception~1111)
                         (match exception~1111
                           ((Failure _)

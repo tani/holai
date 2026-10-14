@@ -99,7 +99,7 @@ def verify_pattern():
     assert stale.stdout.splitlines().count(marker) == 1, "Missing specific stale declaration rejection"
     log = report_directory() / "pattern-stale.log"
     rejection = {"checked": True, "exit_code": stale.returncode,
-                 "condition": "holai.runtime::pattern-declaration-changed",
+                 "condition": "holai.runtime.pattern-registry::pattern-declaration-changed",
                  "marker": marker, "consumer_fasl": str(consumer.relative_to(ROOT)),
                  "log": log.name, "log_sha256": hashlib.sha256(log.read_bytes()).hexdigest()}
     total = int(checks[0]) + 1
@@ -331,8 +331,8 @@ def main():
     with tempfile.TemporaryDirectory(dir=BUILD) as temp:
         run(CLI + ["translate", "--output-dir", temp] + CORE)
         generated = sorted(p for p in (ROOT / "holai/generated").iterdir()
-                           if p.is_file() and p.suffix in {".lisp", ".json", ".sexp"})
-        assert len(generated) == 2 * len(CORE) + 2 == 94, len(generated)
+                           if p.is_file() and p.suffix in {".lisp", ".json"})
+        assert len(generated) == 2 * len(CORE) + 1 == 93, len(generated)
         assert [p.name for p in generated] == sorted(p.name for p in Path(temp).iterdir()), "Generated output file set differs"
         for file in generated:
             assert file.read_bytes() == (Path(temp) / file.name).read_bytes(), f"Stale/nondeterministic: {file.name}"
