@@ -1,0 +1,18 @@
+;;; Historical vector-representation microprobe, independent of current tuple storage.
+(require :asdf)
+(asdf:initialize-source-registry `(:source-registry (:directory ,(truename ".")) :inherit-configuration))
+(asdf:load-system "holai-runtime")
+(defstruct probe-tuple-value items)
+(declaim (notinline tuple-generic tuple-direct))
+(defun tuple-generic (a b) (let ((items (list a b))) (make-probe-tuple-value :items (coerce items 'vector))))
+(defun tuple-direct (a b) (make-probe-tuple-value :items (vector a b)))
+(defvar *tuple-probe-sink*)
+(defun probe (name fn)
+  (sb-ext:gc :full t)
+  (let ((start (get-internal-run-time)) (bytes (sb-ext:get-bytes-consed)))
+    (dotimes (i 2000000) (setf *tuple-probe-sink* (funcall fn i (1+ i))))
+    (assert (= (aref (probe-tuple-value-items *tuple-probe-sink*) 0) 1999999))
+    (format t "~&TUPLE_PROBE ~a ~,6f ~d~%" name
+      (/ (- (get-internal-run-time) start) (float internal-time-units-per-second 1d0))
+      (- (sb-ext:get-bytes-consed) bytes))))
+(dotimes (i 3) (probe "generic" #'tuple-generic) (probe "direct-vector" #'tuple-direct))

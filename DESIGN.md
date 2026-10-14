@@ -36,20 +36,21 @@ soundness. Runtime and translation bugs remain in the trusted implementation.
 ## 2. Deliverable and layout
 
 ```text
-hol2cl/
+holai/
   DESIGN.md                 this specification and measured status
   AGENTS.md                 working rules and verification requirements
   README.md                 build, CLI, and limitations
   Makefile                  build, regeneration, test, release
-  src/                      all translator source, in OCaml
-  runtime/                  Common Lisp compatibility layer
-  hol2cl-runtime.asd        ASDF runtime system, depending on actual Trivia
-  generated/               generated Lisp, source maps, and ASDF system
-  tests/fixtures/           small source regression examples
-  tests/                    compiler, runtime, and differential tests
-  scripts/                  dependency preparation and release checks
-  reports/                  full-core inventory and differential evidence
+  ml2cl/                    five OCaml translator modules, flattened
+  holai/runtime/            Common Lisp compatibility layer
+  holai-runtime.asd         root ASDF runtime system, standard Common Lisp
+  holai/generated/          generated Lisp, maps and holai-generated.asd
+  holai/tests/fixtures/     small source regression examples
+  holai/tests/              compiler, runtime and differential tests
+  misc/scripts/             reusable build, release and measurement scripts
+  misc/reports/             current evidence and preserved history/
   vendor/                   pinned input files and third-party notices
+  docs/                     repository policy, release notes and design history
 ```
 
 The release target must fail if DESIGN.md, AGENTS.md, any translator source,
@@ -57,12 +58,54 @@ runtime source, pinned source inputs, or regression fixtures are absent.
 Generated files are never hand-edited. Repair the translator and regenerate.
 Temporary compiler outputs and dependency checkout histories are not releases.
 
+Current user-authorized API contract: CLI `bin/ml2cl`, runtime package
+`holai.runtime`, generated packages `holai.<input-stem>` and their nested module
+packages, ASDF systems `holai-runtime` and `holai-generated`. No compatibility
+aliases or `rt` nickname are introduced. This supersedes the earlier AGENTS
+retain-hol2cl rule and section 28's organization-only API policy. Algorithms,
+data representations, vendor input bytes/digests and source identities do not
+change. Generated Lisp and maps must be regenerated together for new names.
+Root `_build/`, `bin/`, `dist/`, build files, licensing and vendor inputs remain.
+The historical sections below retain old names, paths, archive names and measured
+results as facts about their original revisions; raw evidence is relocated, not
+rewritten. Their report files now live under `misc/reports/`; old `src/`,
+`runtime/`, `generated/`, `tests/` and `scripts/` correspond respectively to
+`ml2cl/`, `holai/runtime/`, `holai/generated/`, `holai/tests/` and `misc/scripts/`
+only for current candidate code. Baseline checkouts keep their matching old API.
+Parsed, lowered, compiled, initialized and differential-tested remain distinct
+evidence states; relocation alone does not revalidate or remeasure them.
+
+The layout/API cutover was validated on aarch64-linux inside the pinned Nix
+shell with `make release`: all 46 inputs parsed/lowered/compiled/initialized,
+1,124 differential rows matched, 51 production units compiled with zero
+diagnostics, and 94 clean-generated outputs were identical. All pinned input
+hashes remained unchanged. Both relocated SBCL launchers initialized the core
+from `/tmp`; the renamed CLI also scanned the semantics fixture there.
+The launcher smoke confirmed the new runtime/kernel packages and absence of
+the old runtime package. Benchmark cache accounting separately exercised both
+historical and relocated generated paths; historical timings were not rerun.
+
 ## 3. Front end and supported toolchain
 
 Use OCaml 4.14 and Camlp5 8.02 for the first tested build profile. Load the pinned
 HOL Light `pa_j_4.xx_8.02.ml` grammar. Do not silently select a different grammar
 when upgrading Camlp5. The CLI must reject an incompatible parser profile or
 require an explicit, tested update to the build configuration.
+
+The development environment is declared in `flake.nix`, with its nixpkgs input
+pinned by `flake.lock`. The nixpkgs `nixos-23.11` shell supplies OCaml 4.14.2,
+Camlp5 8.02.01, camlp-streams 5.0.1, SBCL, Python and GNU Make, with Num
+pinned separately to upstream 1.5.
+This is a separate development profile from the historical OCaml 4.14.1/
+Num 1.5 environment. `make build` remains the translator build entry point.
+The shell exports `CAMLPLIB` and `STREAMLIB`; compiler wrappers add Num's include
+directory to support existing direct `ocamlc nums.cma` calls without migrating
+callers to `ocamlfind`. `CAML_LD_LIBRARY_PATH` exposes Num's runtime stub.
+The aarch64-linux shell passed a forced translator build, bytecode/native Num
+and SBCL execution, and `make release`: 46 inputs, 1,124 differential rows,
+51 production files with zero diagnostics, and 94 identical clean-generated
+files. SBCL is 2.3.9. The other three declared platforms were evaluated only.
+These checks do not remeasure the historical timing results elsewhere here.
 
 Use Camlp5's **MLast AST**, not a regular-expression approximation and not an
 OCaml parser that cannot recognize HOL Light syntax. Separate:
@@ -145,8 +188,9 @@ and reader delimiters become stars; reserved stems add a star. Collisions under
 the default CL reader's uppercase normalization add stars until a free target
 exists. Owned lowercase names are preferred. Constructor Abs and rule ABS, for
 example, become Abs and ABS*. Definitions/references/exports share allocated
-binding records. Do not globally change the reader. See section29 for the
-complete current allocation contract; earlier escaped spelling is historical.
+binding records. Do not globally change reader case conversion. The explicitly
+authorized dispatch extension in section33 does not alter source atoms. See
+section29 for the complete allocation contract; earlier escaped spelling is historical.
 
 The grammar encodes some operator identifiers (`F_F` becomes `f_f_`). A fixed
 reverse-spelling table restores source-facing names, while binding resolution
@@ -2112,6 +2156,8 @@ There are no compiler-GC hooks or NOTINLINE workarounds. Timed whole-core
 processes use default1GiB capacity and256MiB control stack. These capacities
 are not measured RSS. Compilation is outside timing.
 
+For this historical OPTIONAL baseline preparation, first check out commit
+`1730c0299f7d677ba25be29d2dfbff0538fea354`; the old commands below apply there.
 Prepare a fresh independent baseline with
 `python3 scripts/prepare-optional-baseline.py --output /absolute/new-baseline`.
 Then run `python3 scripts/measure-optional.py --baseline /absolute/new-baseline`.
@@ -2123,7 +2169,7 @@ The package retains DESIGN.md, AGENTS.md and all translator/runtime sources.
 
 ## 28. Holai repository organization
 
-The user requests organization and publication to https://github.com/tani/holai.
+Historical organization-only contract (superseded by the current layout/API contract in section 2): the user requested organization and publication to https://github.com/tani/holai.
 The source/runtime/generated-Lisp algorithms and public hol2cl identifiers
 remain unchanged. README is rewritten around the current supported profile;
 AGENTS retains applicable invariants and removes superseded conversation state.
@@ -2165,9 +2211,10 @@ OCaml inputs do not change. Recorded performance measurements remain historical.
 
 # Unescaped star-suffix names: 1.0.0-star-names
 
-Generated source identifiers use ordinary Common Lisp reader atoms. The readtable
-and default case conversion are unchanged. This intentionally changes public
-Lisp spellings; source OCaml bindings and HOL strings keep their original names.
+Generated source identifiers use ordinary Common Lisp reader atoms. Default
+case conversion is unchanged; section33's authorized runtime dispatch extension
+does not affect these atoms. This intentionally changes public Lisp spellings;
+source OCaml bindings and HOL strings keep their original names.
 
 | OCaml example | Generated example |
 |---|---|
@@ -2426,3 +2473,163 @@ checks and all calling/pattern/naming checks pass without those libraries.
 Fresh-cache compilation completes51 production units with0 errors,0 warnings
 and0 style warnings. All94 clean regenerated outputs match. The cleanup is
 continued on the previously requested tani/holai main destination.
+
+## 33. Shared PROOF tactical notation
+
+### 33.1 Public syntax and expansion
+
+`holai.runtime:proof` is an exported macro for both handwritten proofs and
+generated tactical compositions. Its grammar is one operand followed by zero
+or more operator-reference/operand pairs. Operands are ordinary Lisp forms;
+the macro does not walk them. A single operand is returned unchanged, including
+NIL. Empty input is rejected.
+
+An operator reference is either a value symbol or exactly `(cl:function name)`
+with a symbol name (reader spelling `#'name`). Value symbols expand through
+`holai.runtime:funcall`; FUNCTION references expand to named calls, preserving
+Common Lisp's separate value and function namespaces, including lexical
+bindings. Keywords, CL:T and CL:NIL are not operator names. THEN and THENL
+are tactic-combining values; ORELSE is a named function and uses `#'ORELSE`.
+Function-valued aliases instead use the value-symbol form. Function operands
+likewise need `#'` where the generated declaration is a function, not a value.
+
+All operators have equal precedence and fold left. Explicit inner PROOF forms
+preserve right grouping: `(proof A THEN (proof B #'ORELSE C))` is different
+from `(proof A THEN B #'ORELSE C)`. THENL takes an ordinary list expression or
+list variable; compositions inside literal list elements use their own PROOF.
+There is no implicit branch-list syntax or conversion.
+
+Expansion-time diagnostics are:
+
+- Empty input: `PROOF: expected a tactic expression`.
+- Incomplete alternating sequence:
+  `PROOF: expected alternating operands and operator references`.
+- Invalid operator:
+  `PROOF: operator must be a value symbol or #'function-name: ~S`.
+
+The compile/load-visible helper folds tokens into the existing binary call
+tree. It adds no runtime parser, registry, dispatcher, temporaries or thunks.
+Operands retain ordinary left-to-right Lisp evaluation and lexical capture.
+Unbound/nonfunction values and tactic exceptions remain errors at their
+existing boundaries. PROOF does not parse goals or declare theorems: prove,
+TAC_PROOF and interactive e retain their existing algorithms, justification
+checks and kernel. Runtime sources do not reader-reference generated packages,
+so runtime-only compilation/loading remains possible.
+
+#### Authorized handwritten reader shorthand
+
+At the user's explicit request, runtime `sharp-backquote-lambda-reader` installs
+`(set-dispatch-macro-character #\# #\` #'sharp-backquote-lambda-reader)` in the
+active `*readtable*` at compile, load and execute time. Load the runtime before
+reading files containing this syntax. Copies of that readtable inherit it;
+a fresh standard `(copy-readtable nil)` does not. Standard `#'` dispatch and
+`readtable-case` are unchanged; source atom allocation is unchanged.
+
+Standard `#'name` references a named function. In contrast, sharp-backquote
+reads the next Lisp form once and returns a `CL:LAMBDA` wrapper with a gensym
+rest-argument variable. The wrapper evaluates that function-value expression
+on every invocation, not at construction, and forwards its arguments through
+`CL:APPLY`, including zero arguments, NIL arguments and multiple return values.
+Thus ``#`holai.tactics:DISCH_TAC`` wraps a value-held tactic, and
+``#`holai.tactics:ACCEPT_TAC`` wraps its current value when invoked.
+
+This is an optional handwritten reader extension, not a translator change.
+It can appear as an operand, but its lambda form is not a PROOF operator
+reference. Bind the wrapper to a lexical value symbol to use it as an operator;
+the value-symbol/exact FUNCTION-symbol grammar above remains unchanged.
+
+### 33.2 Binding-identity translation boundary
+
+The translator's private `binding.proof_combinator` flag is true only for a
+new global binding in package `holai.tactics`, source `tactics.ml`, with no
+lexical prefix, at source-name occurrence 1, and with exactly one of these
+name/kind pairs: `then_`/Value, `thenl_`/Value, `orelse_`/Function 3.
+Local, external and directly constructed Sys.Break bindings are false.
+Record copies and open/include/module aliases that reuse the same binding
+retain its identity and flag. A newly bound value alias does not inherit it;
+neither do shadowing declarations, same-spelled bindings in other modules,
+then1_, THENC or other conversion/theorem tacticals.
+
+Recognition first requires an identifier head accepted by qualified_value,
+then resolves it with find. Only a flagged binding with exactly two arguments,
+neither labelled nor optional, becomes PROOF. References, partial applications,
+three-or-more-argument direct goal applications, aliases and computed heads
+retain ordinary lowering; eligible nested expressions still lower recursively.
+No source-text, uppercase-name or output-symbol heuristic is used. The macro
+head is always fully qualified `holai.runtime:proof`; source functions named
+proof are not renamed for this feature.
+
+References continue through reference/function_ref, preserving imports,
+binding IDs and recursive-reference observers. Lowering processes lhs and its
+origin, then rhs, then the operator reference, retaining existing symbol
+allocation order. Only an eligible left child is joined to the same flat
+column; rhs is emitted normally, hence eligible right groups become inner
+PROOF forms. LET, lambda and annotations are not crossed. The MLast tree,
+not textual parentheses, determines grouping and the restored binary call tree.
+
+### 33.3 Fragment formatting and source provenance
+
+The output tree adds `Fragment of t list` and its fragment constructor solely
+for PROOF bodies. A Fragment emits sibling tokens without parentheses and
+counts inter-token spaces in flat_length. Short sequences stay space-separated.
+Beyond the 90-column limit, operator/right-operand pairs break after the first
+operand; an oversized pair indents its right operand another two spaces.
+Left-prefix Fragments inherit the sequence's break mode; independent right
+PROOF operands format as ordinary lists. Other form formatting and existing
+LET flattening are unchanged.
+
+The `proof-tactical` source-map rule marks the root macro once with the root
+application's Ploc.t, and each joined left-prefix Fragment with that original
+binary application's Ploc.t. Child operand origins remain inside those spans.
+The private binding flag is not a new JSON field. Generated Lisp and maps are
+regenerated together; neither generated-text rewriting nor hand-edited maps
+are part of this translation.
+
+### 33.4 Verification boundary and current evidence
+
+The completed reader-inclusive PROOF release was validated on aarch64-linux with
+`nix develop path:. --command make release` using OCaml 4.14.2,
+Camlp5 8.02.01 and SBCL 2.3.9.nixos. All 46 inputs compiled, loaded and
+initialized. The run passed 122 existing native checks, 61 independent PROOF
+checks, 46 structural-pattern, 27 calling-protocol, 84 OPTIONAL-entry and
+16 tuple checks. All 1,132 differential rows matched: 1,125 serialized
+observations and seven actual side-effect rows.
+
+Initial registries remain exactly 22 types, 303 constants, 263 definitions
+and the three source axioms INFINITY_AX, SELECT_AX and ETA_AX. Initialization
+retains 5,519 OCaml and 5,517 SBCL message rows: the exact two OCaml-only
+messages (`0..0..solved at 2` and `Warning: inventing type variables`) remain
+the documented profile, not an identical-transcript claim. Source-map audits
+passed for 194,839 core and 205,472 fixture-inclusive entries; the generated
+core contains 6,943,214 Lisp bytes and 9,100 `proof-tactical` entries.
+All ten rejection checks retained the previous output.
+
+The native `holai/tests/proof-dsl.lisp` matrix covers real closed theorems,
+literal/dynamic THENL branches, left/right grouping, interactive state
+restoration, failure/justification boundaries, lexical value/function capture,
+once-only evaluation and syntax errors. It is compiled/loaded after observation
+capture and restoration of std_formatter's stream, outside the differential
+stream. The runner records its measured `proof_dsl_checks` separately; release
+requires a positive count and packages the unit. Eight fixture observations
+exercise capture, branches, grouping, shadowing, a local function named proof,
+partial application and direct goals. A separate fresh sharp-backquote
+handwritten proof smoke produced the actual closed identity theorem.
+
+Fresh-cache compilation of all 51 production units reported zero errors,
+warnings and style warnings. Clean regeneration reproduced all 94 outputs
+identically; all 55 retained source hashes were unchanged. Release packaging
+and ZIP integrity checks passed, including the new proof unit, complete
+translator, DESIGN/AGENTS, generated Lisp/maps, reports and matching observation
+streams. See `misc/reports/verification.json`, `clean-build.json` and
+`compile-diagnostics.json` for reproducible evidence.
+The version remains 1.0.0-percent-names. No publication or PROOF performance
+measurement is claimed; earlier baseline counts and timings remain historical.
+
+The reader's runtime-only compile/load smoke also passed: per-call expression
+evaluation and dynamic rebinding, rest argument forwarding, multiple values,
+gensym hygiene and unchanged standard `#'` behavior. The completed release
+measured all 61 PROOF checks, including 13 permanent reader checks with actual
+zero-argument sum, positional decimal calculation, NIL classification, floor
+quotient/remainder and lexical-argument hygiene computations. This runtime-only
+addition leaves the differential fixture count (1,132), inclusive map inventory
+(205,472) and production unit count (51) unchanged.

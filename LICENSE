@@ -20,6 +20,6 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
-This license applies to original hol2cl code and documents. It does not replace
+This license applies to original Holai (formerly hol2cl) code and documents. It does not replace
 the licenses of vendored/generated upstream source or the source-derived Random
-section in runtime/stdlib.lisp. See THIRD-PARTY-NOTICES.md for those notices.
+section in holai/runtime/stdlib.lisp. See THIRD-PARTY-NOTICES.md for those notices.

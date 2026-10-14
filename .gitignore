@@ -12,5 +12,5 @@ __pycache__/
 *.o
 *.a
 *.fasl
-/generated/*.map.json
+/holai/generated/*.map.json
 .DS_Store

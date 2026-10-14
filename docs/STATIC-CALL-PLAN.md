@@ -2,7 +2,9 @@
 
 OPTIONAL/supplied-p entries are implemented and validated across all four macros.
 Fixed workers, callc and static call-site routing remain unadopted. The plan below
-is retained as history; see reports/OPTIONAL-ENTRY.md and DESIGN27.3 for results.
+is retained as history; see misc/reports/OPTIONAL-ENTRY.md and DESIGN27.3 for results.
+
+Historical body below retains the old layout/API. Current paths and names are specified in REPOSITORY-LAYOUT.md; `rt:` is documentary shorthand, not an installed package nickname.
 
 # 静的な呼び出し契約とカリー化マクロの最適化計画
 

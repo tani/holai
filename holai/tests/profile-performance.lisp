@@ -1,0 +1,10 @@
+;;; Diagnostic only: fresh FASL initialization, no implementation changes.
+(require :sb-sprof)
+(sb-sprof:start-profiling :mode :cpu :sample-interval 0.01 :max-samples 30000 :max-depth 128)
+(unwind-protect (load "holai/tests/measure-startup.lisp")
+  (sb-sprof:stop-profiling))
+(let ((graph (with-open-file (out "misc/reports/defunc-cpu-self.txt" :direction :output :if-exists :supersede)
+               (sb-sprof:report :type :flat :max 150 :sort-by :samples :stream out :show-progress nil))))
+  (with-open-file (out "misc/reports/defunc-cpu-inclusive.txt" :direction :output :if-exists :supersede)
+    (sb-sprof:report :type :flat :max 150 :sort-by :cumulative-samples :call-graph graph :stream out :show-progress nil)))
+(format t "~&CPU_PROFILE_COMPLETE~%")

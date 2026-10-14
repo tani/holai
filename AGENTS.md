@@ -6,7 +6,7 @@ readable OCaml-to-Lisp translation, even when argument evaluation order differs.
 - Keep DESIGN.md, AGENTS.md, and all OCaml translator sources in every artifact.
 - Update DESIGN.md when translation rules, runtime boundaries, supported input,
   or measured validation change. Keep status factual and reproducible.
-- Never hand-edit generated Lisp or source maps. Repair src/ or runtime/ and
+- Never hand-edit generated Lisp or source maps. Repair ml2cl/ or holai/runtime/ and
   regenerate. Do not patch the upstream input to evade unsupported syntax.
 - Do not introduce algorithm changes, inlining, loop conversion, or anonymous
   evaluation-order temporaries. Preserve source bindings, aliases, and scopes.
@@ -38,7 +38,7 @@ readable OCaml-to-Lisp translation, even when argument evaluation order differs.
 - Check lexical target symbols against all visible bindings, including source
   names differing only in case. Reserve names in parallel local function groups
   without extending nonrecursive RHS visibility. Preserve the R/r, K/k and
-  DISJ_CASES regressions; do not globally change the Lisp reader.
+  DISJ_CASES regressions; do not globally change Lisp reader case conversion.
 - Track local function symbols in package shadow declarations. Rename local
   functions that would hide generated control syntax using the existing suffix.
   Preserve local_cl_functions and local_syntax_function regressions.
@@ -187,17 +187,17 @@ readable OCaml-to-Lisp translation, even when argument evaluation order differs.
   Keep NIL-vs-omitted, primary return, body-once, partial/excess, old-function
   capture and fletc outer-RHS scope. rt:funcall and list tuples remain unchanged.
 - Validated: 122 native, 27 protocol, 84 OPTIONAL, 16 tuple checks; 1124 matching
-  rows and 94 identical clean-generated files. See reports/verification.json.
+  rows and 94 identical clean-generated files. See misc/reports/verification.json.
 - Two-run ABBA startup medians 97.840→81.957s; cumulative allocation50.95% lower,
   peakRSS16.67% higher. OCamlopt13.715s is a separate historical measurement.
   Never equate cumulative allocation with peak RSS or promise a universal speedup.
 - Read docs/REPOSITORY-LAYOUT.md. Track generated Lisp/inventory/ASDF, but not
   generated source maps, _build, bin, dist, compiled code or Python caches.
   make regenerate recreates maps; every source ZIP must include all94outputs.
-- Historical reports are under reports/history/. Keep current evidence separate
+- Historical reports are under misc/reports/history/. Keep current evidence separate
   and update paths when moving files. Keep all vendor digests and licenses.
-- Holai is the project name. Retain the hol2cl CLI/package/ASDF names unless an
-  explicit later task changes that API. Do not modify generated Lisp by hand.
+- Current layout/API contract: CLI `bin/ml2cl`, packages `holai.*`, systems
+  `holai-runtime`/`holai-generated`. This user-authorized cutover supersedes the earlier retain-hol2cl rule; no compatibility aliases. Regenerate rather than hand-edit outputs.
 - User authorized initial organization and push to tani/holai main. Subsequent
   unrelated publication requires its own user instruction.
 
@@ -209,8 +209,9 @@ readable OCaml-to-Lisp translation, even when argument evaluation order differs.
   Do not change readtable-case, HOL string literals or runtime algorithms.
 
 - Naming inherited from 1.0.0-star-names: ordinary CL reader atoms, star suffixes
-  for primes/reserved stems/collisions. No readtable changes; foreign names and
-  HOL strings stay native/original. Public source symbol spellings change.
+  for primes/reserved stems/collisions. Reader case conversion stays unchanged;
+  the authorized DESIGN33 dispatch extension does not affect foreign names or
+  HOL strings, which stay native/original. Public source symbol spellings change.
   19allocator checks,9additional OCaml/SBCL observations,9export checks and no
   escaped symbols in46core files. Full1124-row corpus and94clean outputs pass.
   Earlier OPTIONAL performance measurements are historical after this rename.
@@ -223,14 +224,14 @@ readable OCaml-to-Lisp translation, even when argument evaluation order differs.
 - Structural backend validated on all46 unchanged inputs,122native checks,
   1124 differential rows and94 clean regenerated files. Additional46 pattern
   checks cover OR/guard, literals, stale FASL detection and registry-independent
-  execution, plus wide/deep patterns. Production runtime/src/generated contain
+  execution, plus wide/deep patterns. Production holai/runtime, ml2cl and holai/generated contain
   no Trivia references. Historical Lisp dependencies and licenses are available in the baseline Git revision.
 
 - Final structural-backend single-run comparison: compile operations33.857→
   24.181s; cold compile/load peakRSS1822.102→1079.875MiB; fresh startup80.927→
   82.044s, peakRSS239.762→205.594MiB. Allocation effectively unchanged. Cold
   RSS includes initialization; do not call it compile-only. Startup speedup is
-  not demonstrated. See reports/PATTERN-MATCH.md and its one-run limitations.
+  not demonstrated. See misc/reports/PATTERN-MATCH.md and its one-run limitations.
 
 - DESIGN31: user authorizes replacing translator-added stars with percent
   suffixes and adding IGNORABLE at curried parameter/input binding sites.
@@ -256,3 +257,38 @@ readable OCaml-to-Lisp translation, even when argument evaluation order differs.
   corpus,51 production files with zero diagnostics,94 clean outputs and55
   unchanged retained input hashes. vendor/README.md explains each retained item.
   Continue the same repository-maintenance task on the previously requested main.
+
+- DESIGN33 PROOF contract: emit fully qualified `holai.runtime:proof` only for
+  canonical new globals in holai.tactics/tactics.ml, without lexical prefix,
+  at source-name occurrence1: then_/Value, thenl_/Value, orelse_/Function3.
+  Binding reuse retains tagging; new aliases/shadowing do not. Only exact
+  two-argument unlabelled applications qualify. Source proof names are not
+  newly reserved/renamed; then1_ remains separate. Left folding/right inner
+  PROOF preserve the binary call tree; branch lists, justification and kernel
+  operations are unchanged.
+- Reader-inclusive PROOF release validated with `nix develop path:. --command make release`:
+  46 inputs,122 existing native,61 independent PROOF,46 pattern,27 protocol,
+  84 OPTIONAL,16 tuple checks;1132 matching rows(1125 serialized,7 side effects).
+  Initial registries22/303/263/3 and exact3source axioms unchanged;5519 OCaml/
+  5517 SBCL initialization rows retain the exact2known OCaml-only differences.
+  Audited194839 core/205472 inclusive maps;10 rejections keep output;94 clean
+  outputs identical,55 pins unchanged,51units zero errors/warnings/style warnings.
+  Native PROOF counter runs after capture/std_formatter restoration, isolated
+  from observations. Fresh sharp-backquote handwritten smoke proved the actual
+  closed identity theorem. Package retains newunit/translator/design/maps/reports/streams.
+  Keep1.0.0-percent-names; no PROOF timing or publication claim. Earlier
+  baseline measurements above remain historical.
+- Explicitly authorized DESIGN33 reader: runtime sharp-backquote-lambda-reader
+  installs #` in the active *readtable* at compile/load/execute time. Load runtime
+  before reading consumers; copies inherit dispatch, fresh standard readtables
+  from NIL do not. Never redefine standard #' or change readtable-case/source
+  atoms. #' references named functions; #` wraps a value/expression in CL:LAMBDA
+  using a gensym rest variable and CL:APPLY. Evaluate the expression each call,
+  not at construction; preserve all arguments and multiple values. It is a
+  PROOF operand, not a direct operator form; bind it to a value symbol for an
+  operator. Keep PROOF grammar and translator/generated output unchanged.
+  Runtime-only compile/load smoke passed. Completed reader-inclusive release
+  measured61 PROOF checks, including13 permanent reader checks with actual
+  zeroarg sum, positional decimal calculation, NIL classification, floor
+  quotient/remainder and lexicalargs hygiene computations, not mock echoes.
+  Differential1132/maps205472/production51 inventories are unaffected.
