@@ -1,6 +1,9 @@
 open MLast
 open Scope
 open Sexp
+let let_form head bindings bodies =
+ let names=List.map (function List (name::_) -> name | _ -> assert false) bindings in
+ form head (l bindings :: form "cl:declare" [form "cl:ignorable" names] :: bodies)
 let rec expression_spine = function
  | ExApp (_,f,x) -> let h,xs=expression_spine f in h,xs@[x]
  | e -> e,[]
@@ -186,7 +189,7 @@ and emit_pattern_guided c env record_hint families path p =
  | PaStr (_,s) -> string (decode_string loc (v s)),"string-pattern"
  | PaChr (_,s) -> let s=decode_string loc (v s) in
    if String.length s<>1 then error loc "Non-byte character literal";
-   form "trivia:guard" [a (Sexp.symbol "char~value");form "cl:char=" [a (Sexp.symbol "char~value");form "cl:code-char" [a (string_of_int (Char.code s.[0]))]]],"character-pattern"
+   form (runtime c "character-code") [a (string_of_int (Char.code s.[0]))],"character-pattern"
  | PaLong (_,li,_) -> emit_constructor_pattern c env loc (longid li) [] (SM.find_opt path families),"constructor-pattern"
  | PaApp _ -> let h,args=pattern_spine p in
    let name=match patt_id h with Some s -> s | None -> error loc "Unsupported pattern application" in
@@ -354,7 +357,7 @@ and emit_cases c env cs =
  List.map (fun (p,g,e) ->
  let branch_env=bind_pattern c env p in
  let pattern=emit_pattern_guided c branch_env record_hint families "" p in
- let pattern=match v g with None -> pattern | Some g -> form "trivia:guard" [pattern;emit c branch_env g] in
+ let pattern=match v g with None -> pattern | Some g -> form (runtime c "guard") [pattern;emit c branch_env g] in
  l [pattern;emit c branch_env e]) cs
 and compile_function c env parameters body =
  let parameters=List.map (fun p -> snd (required_parameter p)) parameters in
@@ -402,13 +405,15 @@ and emit_let c env loc recursive bindings body =
      let bs=List.map2 (fun (_,e,_) b -> l [a (reference c b);emit_initializer c (if recursive then body_env else env) recursive group e]) bindings group in
      let body=emit c body_env body in
      if recursive then
-       form "let" [l (List.map (function List [name;_] -> l [name;a "nil"] | _ -> assert false) bs);
+       let_form "let" (List.map (function List [name;_] -> l [name;a "nil"] | _ -> assert false) bs) [
          form "setf" (List.concat_map (function List [name;value] -> [name;value] | _ -> assert false) bs);body]
      else
      match unwrap body with
+     | List [Atom ("let"|"let*");List inner;List [Atom "cl:declare";_];innerbody]
+       when List.length bindings=1 -> let_form "let*" (bs@inner) [innerbody]
      | List [Atom ("let"|"let*");List inner;innerbody] when List.length bindings=1 ->
-       form "let*" [l (bs@inner);innerbody]
-     | _ -> form "let" [l bs;body]
+       let_form "let*" (bs@inner) [innerbody]
+     | _ -> let_form "let" bs [body]
    ) else if List.length bindings=1 then (
      let p,e,_=List.hd bindings in form (runtime c "match") [emit c env e;l [emit_pattern c body_env p;emit c body_env body]]
    ) else form (runtime c "match") [form (runtime c "tuple") (List.map (fun (_,e,_) -> emit c env e) bindings);
@@ -511,16 +516,16 @@ let rec structure c initial signature items =
        else if List.for_all (fun (p,_,_) -> match strip_pattern p with PaLid _ -> true | _ -> false) defs then
          let binds=List.map (fun (_,e,ns) -> l [a (snd (List.hd ns)).printed;emit_initializer c rhsenv (v recursive) group e]) defs in
          if v recursive then
-           form "let" [l (List.map (function List [name;_] -> l [name;a "nil"] | _ -> assert false) binds);
+           let_form "let" (List.map (function List [name;_] -> l [name;a "nil"] | _ -> assert false) binds) [
              form "setf" (List.concat_map (function List [name;value] -> [name;value] | _ -> assert false) binds);body]
-         else form "let" [l binds;body]
+         else let_form "let" binds [body]
        else (
          let pe=List.fold_left (fun env (p,_,_) -> bind_pattern c env p) rhsenv defs in
          let binds=List.concat_map (fun (_,_,ns) -> List.map (fun (name,b) -> l [a b.printed;a (reference c (find pe loc name))]) ns) defs in
          let patterns=List.map (fun (p,_,_) -> emit_pattern c pe p) defs in
          let expressions=List.map (fun (_,e,_) -> emit c rhsenv e) defs in
          let input,pattern=match expressions,patterns with [e],[p] -> e,p | _ -> form (runtime c "tuple") expressions,form (runtime c "tuple") patterns in
-         form (runtime c "match") [input;l [pattern;form "let" [l binds;body]]]) in
+         form (runtime c "match") [input;l [pattern;let_form "let" binds [body]]]) in
        mark c loc "local-module-binding" node in
      wrappers:= !wrappers@[wrap]
    ) else (

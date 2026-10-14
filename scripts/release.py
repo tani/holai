@@ -5,7 +5,7 @@ import json
 import zipfile
 
 root = Path(__file__).resolve().parents[1]
-version = "1.0.0-star-names"
+version = "1.0.0-percent-names"
 core = [Path(name).stem for name in json.loads((root / "vendor/CORE_FILES.json").read_text())]
 required = ["DESIGN.md", "AGENTS.md", "README.md", "RELEASE-NOTES.md", "Makefile", "hol2cl-runtime.asd",
             "src/sexp.ml", "src/scope.ml", "src/compiler.ml", "src/frontend.ml", "src/cli.ml",
@@ -44,6 +44,10 @@ required += [f"reports/ocamlopt-startup-run{i}.txt" for i in [1,2,3]]
 required += ["docs/STATIC-CALL-PLAN.md"]
 required += ["scripts/compile-core.sh", "scripts/prepare-optional-baseline.py", "scripts/measure-optional.py", "tests/optional-baseline-core.lisp", "tests/optional-entry.lisp", "tests/optional-inspect.lisp", "tests/optional-benchmark.lisp", "reports/OPTIONAL-ENTRY.md", "reports/optional-entry.json", "reports/optional-before.asm", "reports/optional-after.asm", "reports/optional-baseline-micro.txt", "reports/optional-optional-micro.txt", "reports/optional-checks.txt"]
 required += [f"reports/optional-{mode}-startup-run{i}.{suffix}" for mode in ["baseline", "optional"] for i in [1,2] for suffix in ["json", "txt"]]
+required += ["scripts/check-compile-diagnostics.py", "reports/compile-diagnostics.json", "reports/compile-diagnostics.txt", "reports/PERCENT-NAMES.md"]
+required += ["runtime/pattern.lisp", "tests/pattern.lisp", "tests/pattern-inspect.lisp",
+             "scripts/measure-pattern.py", "reports/PATTERN-MATCH.md", "reports/pattern-performance.json",
+             "reports/pattern-expansion-and-assembly.txt", "reports/pattern-checks.txt"]
 required += ["tests/star-allocator.ml", "tests/fixtures/star_names.ml", "tests/star-names.py", "tests/star-names.lisp", "reports/star-names.json", "reports/STAR-NAMES.md"]
 pins = json.loads((root / "vendor/SOURCES.json").read_text())["input_sha256"]
 required += list(pins)
@@ -51,7 +55,14 @@ for name in required:
     assert (root / name).is_file(), f"Required release file missing: {name}"
 for name, digest in pins.items():
     assert hashlib.sha256((root / name).read_bytes()).hexdigest() == digest, f"Pinned source changed: {name}"
+diagnostics = json.loads((root / "reports/compile-diagnostics.json").read_text())
+assert diagnostics["audit_complete"] and diagnostics["exit_code"] == 0 and diagnostics["compiled_unit_count"] == 51
+assert all(diagnostics[k] == 0 for k in ["caught_errors", "caught_warnings", "caught_style_warnings", "warning_notices"])
+for name, digest in diagnostics["code_sha256"].items():
+    assert hashlib.sha256((root / name).read_bytes()).hexdigest() == digest, f"Stale diagnostic report: {name}"
 verification = json.loads((root / "reports/verification.json").read_text())
+assert verification["pattern_backend"] == "standard-common-lisp"
+assert verification["structural_pattern_checks"] >= 46
 assert verification["compiled_loaded_inputs"] == [f"vendor/hol-light/{name}.ml" for name in core]
 assert verification["identical_regeneration"] and verification["pinned_inputs_unchanged"]
 clean_build = json.loads((root / "reports/clean-build.json").read_text())

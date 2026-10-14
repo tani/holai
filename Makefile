@@ -33,6 +33,7 @@ test: regenerate
 clean-build: regenerate
 	python3 scripts/check-clean-build.py
 release: test
+	python3 scripts/check-compile-diagnostics.py
 	python3 scripts/scan_core.py
 	python3 scripts/check-clean-build.py
 	python3 scripts/release.py

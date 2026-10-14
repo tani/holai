@@ -503,7 +503,7 @@
           (W
             (o
               (o
-                (C #'SUBGOAL_THEN (lambdac (t*) (REWRITE_TAC (cl:cons t* nil))))
+                (C #'SUBGOAL_THEN (lambdac (t%) (REWRITE_TAC (cl:cons t% nil))))
                 (funpow 2 lhand))
               (function-value #'snd 1))))
         (cl:cons
@@ -542,6 +542,7 @@
           (funcall
             prove_inductive_relations_exist
             (parse_term "!f:A->B x. (!z. z << x ==> R z (f z)) ==> R x (H f x)"))))
+        (cl:declare (cl:ignorable lemma))
         (funcall
           THEN
           (funcall
@@ -1175,6 +1176,7 @@
                   THEN
                   (funcall THEN (REPEAT (ORELSE DISCH_TAC #'EQ_TAC)) INDUCT_TAC)
                   (funcall ASM_MESON_TAC (cl:cons LT_SUC (cl:cons LT_0 nil))))))))
+        (cl:declare (cl:ignorable lemma1 lemma2))
         (funcall
           THENL
           (funcall
@@ -1462,6 +1464,7 @@
             (tuple
               (parse_term "(!x. P x ==> !y. Q x y) <=> !y x. P x ==> Q x y")
               (MESON_TAC nil)))))
+        (cl:declare (cl:ignorable pth))
         (GEN_REWRITE_CONV #'I (cl:cons pth nil))))
       (eqconv
         (let
@@ -1470,7 +1473,9 @@
               (tuple
                 (parse_term "(!m. P m ==> (m = e) ==> Q) <=> (P e ==> Q)")
                 (MESON_TAC nil)))))
+          (cl:declare (cl:ignorable pth))
           (funcall REWR_CONV pth))))
+    (cl:declare (cl:ignorable qqconv eqconv))
     (labelsc
       ((qqconvs
         (tm)
@@ -1483,17 +1488,19 @@
               (_ (raise exception~1448)))))))
       (lambdac (tm arg~1460)
         (match arg~1460
-          ((cl:and gl (tuple asl w*))
+          ((cl:and gl (tuple asl w%))
             (let ((fvs (frees tm)) (gv (funcall genvar (type_of tm))))
+              (cl:declare (cl:ignorable fvs gv))
               (let*
                 ((pat
                   (list_mk_forall
                     (tuple
                       (cl:cons gv fvs)
-                      (funcall mk_imp (tuple (funcall mk_eq (tuple gv tm)) w*)))))
+                      (funcall mk_imp (tuple (funcall mk_eq (tuple gv tm)) w%)))))
                   (th0 (UNDISCH (funcall PART_MATCH #'rand num_WF pat)))
                   (th1 (funcall MP (SPECL (cl:cons tm fvs) th0) (REFL tm)))
                   (th2 (CONV_RULE (funcall LAND_CONV #'qqconvs) (DISCH_ALL th1))))
+                (cl:declare (cl:ignorable pat th0 th1 th2))
                 (funcall
                   THEN
                   (funcall

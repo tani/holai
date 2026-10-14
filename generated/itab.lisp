@@ -17,12 +17,12 @@
     (defpackage :hol2cl.itab
       (:use :cl)
       (:shadow
-        CONJUNCTS_THEN*
+        CONJUNCTS_THEN%
         IMPLICATE
         ITAUT
         ITAUT_ITERDEEP_TAC
         ITAUT_TAC
-        ITAUT_TAC*
+        ITAUT_TAC%
         UNIFY_ACCEPT_TAC
         UNIFY_REFL_TAC)
       (:export ITAUT ITAUT_TAC UNIFY_ACCEPT_TAC UNIFY_REFL_TAC))))
@@ -30,12 +30,12 @@
 (defpackage :hol2cl.itab
   (:use :cl)
   (:shadow
-    CONJUNCTS_THEN*
+    CONJUNCTS_THEN%
     IMPLICATE
     ITAUT
     ITAUT_ITERDEEP_TAC
     ITAUT_TAC
-    ITAUT_TAC*
+    ITAUT_TAC%
     UNIFY_ACCEPT_TAC
     UNIFY_REFL_TAC)
   (:shadowing-import-from :cl not - +)
@@ -58,7 +58,7 @@
     CONJUNCT2
     CONJUNCT1
     CONJ)
-  (:shadowing-import-from :hol2cl.drule term_unify INSTANTIATE*)
+  (:shadowing-import-from :hol2cl.drule term_unify INSTANTIATE%)
   (:shadowing-import-from :hol2cl.equal RAND_CONV DEPTH_CONV CONV_RULE BETA_CONV AP_THM)
   (:shadowing-import-from :hol2cl.fusion mk_eq)
   (:shadowing-import-from
@@ -126,13 +126,15 @@
 
 (defunc UNIFY_ACCEPT_TAC (mvs th arg~4)
   (match arg~4
-    ((tuple asl w*)
-      (let ((insts (funcall term_unify mvs (concl th) w*)))
+    ((tuple asl w%)
+      (let ((insts (funcall term_unify mvs (concl th) w%)))
+        (cl:declare (cl:ignorable insts))
         (tuple
           (tuple nil insts)
           nil
-          (let ((th* (funcall INSTANTIATE* insts th)))
-            (lambdac (i* arg~23) (match arg~23 (nil (funcall INSTANTIATE* i* th*))))))))))
+          (let ((th% (funcall INSTANTIATE% insts th)))
+            (cl:declare (cl:ignorable th%))
+            (lambdac (i% arg~23) (match arg~23 (nil (funcall INSTANTIATE% i% th%))))))))))
 
 ;; (* REFL version of UNIFY_ACCEPT_TAC.
 ;;    The conclusion ust be `expr = x` where x is a meta variable.
@@ -142,16 +144,16 @@
 
 (defunc UNIFY_REFL_TAC (arg~38)
   (match arg~38
-    ((tuple asl w*)
-      (match (dest_eq w*)
+    ((tuple asl w%)
+      (match (dest_eq w%)
         ((tuple w_lhs w_rhs)
           (if (is_var w_rhs)
             (if (vfree_in w_rhs w_lhs)
               (failwith
                 (string-concat
                   "UNIFY_REFL_TAC: failed: `"
-                  (string-concat (funcall string_of_term w*) "`")))
-              (UNIFY_ACCEPT_TAC (cl:cons w_rhs nil) (REFL w_lhs) (tuple asl w*)))
+                  (string-concat (funcall string_of_term w%) "`")))
+              (UNIFY_ACCEPT_TAC (cl:cons w_rhs nil) (REFL w_lhs) (tuple asl w%)))
             (match (funcall strip_comb w_rhs)
               ((tuple constr rargs)
                 (if (not (is_var constr))
@@ -160,7 +162,7 @@
                     (failwith
                       (string-concat
                         "UNIFY_REFL_TAC: failed: `"
-                        (string-concat (funcall string_of_term w*) "`")))
+                        (string-concat (funcall string_of_term w%) "`")))
                     (let*
                       ((rargs_vars
                         (map
@@ -188,7 +190,8 @@
                                   CONV_TAC
                                   (RAND_CONV (funcall DEPTH_CONV #'BETA_CONV)))
                                 #'REFL_TAC)))))
-                      (UNIFY_ACCEPT_TAC (cl:cons constr nil) th (tuple asl w*)))))))))))))
+                      (cl:declare (cl:ignorable rargs_vars f the_goal th))
+                      (UNIFY_ACCEPT_TAC (cl:cons constr nil) th (tuple asl w%)))))))))))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* The actual prover, as a tactic.                                           *)
@@ -197,7 +200,7 @@
 
 (defparameter ITAUT_TAC
   (fletc
-    ((CONJUNCTS_THEN*
+    ((CONJUNCTS_THEN%
       (ttac cth)
       (funcall
         THEN
@@ -205,8 +208,9 @@
         (funcall ttac (funcall CONJUNCT2 cth)))))
     (fletc
       ((IMPLICATE
-        (t*)
-        (let ((th1 (AP_THM NOT_DEF (dest_neg t*))))
+        (t%)
+        (let ((th1 (AP_THM NOT_DEF (dest_neg t%))))
+          (cl:declare (cl:ignorable th1))
           (CONV_RULE (RAND_CONV #'BETA_CONV) th1))))
       (let
         ((RIGHT_REVERSIBLE_TAC
@@ -219,19 +223,20 @@
               (tryfind
                 (lambdac (ttac) (funcall ttac th gl))
                 (cl:cons
-                  (CONJUNCTS_THEN* ASSUME_TAC)
+                  (CONJUNCTS_THEN% ASSUME_TAC)
                   (cl:cons
                     #'DISJ_CASES_TAC
                     (cl:cons
                       #'CHOOSE_TAC
                       (cl:cons
-                        (lambdac (th*)
-                          (funcall ASSUME_TAC (EQ_MP (IMPLICATE (concl th*)) th*)))
+                        (lambdac (th%)
+                          (funcall ASSUME_TAC (EQ_MP (IMPLICATE (concl th%)) th%)))
                         (cl:cons
-                          (o (o (CONJUNCTS_THEN* #'MP_TAC) (uncurry CONJ)) EQ_IMP_RULE)
+                          (o (o (CONJUNCTS_THEN% #'MP_TAC) (uncurry CONJ)) EQ_IMP_RULE)
                           nil)))))))))
+        (cl:declare (cl:ignorable RIGHT_REVERSIBLE_TAC LEFT_REVERSIBLE_TAC))
         (labelsc
-          ((ITAUT_TAC*
+          ((ITAUT_TAC%
             (mvs n gl)
             (if (<= n 0)
               (failwith "ITAUT_TAC: Too deep")
@@ -247,11 +252,11 @@
                                 (FIRST_ASSUM (UNIFY_ACCEPT_TAC mvs))
                                 (funcall ACCEPT_TAC TRUTH))
                               (FIRST_ASSUM CONTR_TAC))
-                            (funcall THEN RIGHT_REVERSIBLE_TAC (TRY (ITAUT_TAC* mvs n))))
+                            (funcall THEN RIGHT_REVERSIBLE_TAC (TRY (ITAUT_TAC% mvs n))))
                           (funcall
                             THEN
                             (FIRST_X_ASSUM LEFT_REVERSIBLE_TAC)
-                            (TRY (ITAUT_TAC* mvs n))))
+                            (TRY (ITAUT_TAC% mvs n))))
                         (FIRST_X_ASSUM
                           (lambdac (th)
                             (funcall
@@ -262,27 +267,29 @@
                                   (funcall
                                     genvar
                                     (type_of (fst (funcall dest_forall (concl th)))))))
+                                (cl:declare (cl:ignorable gv))
                                 (funcall
                                   THEN
                                   (funcall
                                     THEN
                                     (META_SPEC_TAC gv th)
-                                    (ITAUT_TAC* (cl:cons gv mvs) (- n 2)))
+                                    (ITAUT_TAC% (cl:cons gv mvs) (- n 2)))
                                   NO_TAC))))))
-                      (funcall THEN (funcall THEN #'DISJ1_TAC (ITAUT_TAC* mvs n)) NO_TAC))
-                    (funcall THEN (funcall THEN #'DISJ2_TAC (ITAUT_TAC* mvs n)) NO_TAC))
-                  (lambdac (gl*)
+                      (funcall THEN (funcall THEN #'DISJ1_TAC (ITAUT_TAC% mvs n)) NO_TAC))
+                    (funcall THEN (funcall THEN #'DISJ2_TAC (ITAUT_TAC% mvs n)) NO_TAC))
+                  (lambdac (gl%)
                     (let
                       ((gv
-                        (funcall genvar (type_of (fst (funcall dest_exists (snd gl*)))))))
+                        (funcall genvar (type_of (fst (funcall dest_exists (snd gl%)))))))
+                      (cl:declare (cl:ignorable gv))
                       (funcall
                         THEN
                         (funcall
                           THEN
                           (X_META_EXISTS_TAC gv)
-                          (ITAUT_TAC* (cl:cons gv mvs) (- n 2)))
+                          (ITAUT_TAC% (cl:cons gv mvs) (- n 2)))
                         NO_TAC
-                        gl*))))
+                        gl%))))
                 (FIRST_ASSUM
                   (lambdac (th)
                     (funcall
@@ -292,7 +299,7 @@
                         (SUBGOAL_THEN
                           (fst (funcall dest_imp (concl th)))
                           (lambdac (ath) (funcall ASSUME_TAC (funcall MP th ath))))
-                        (ITAUT_TAC* mvs (- n 1)))
+                        (ITAUT_TAC% mvs (- n 1)))
                       NO_TAC)))
                 gl))))
           (labelsc
@@ -301,7 +308,7 @@
               (progn
                 (remark (string-concat "Searching with limit " (string-of-int n)))
                 (ORELSE
-                  (funcall THEN (ITAUT_TAC* nil n) NO_TAC)
+                  (funcall THEN (ITAUT_TAC% nil n) NO_TAC)
                   (ITAUT_ITERDEEP_TAC (+ n 1))
                   gl))))
             (ITAUT_ITERDEEP_TAC 0)))))))

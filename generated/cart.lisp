@@ -114,7 +114,7 @@
         finite_prod_tybij
         finite_sum_tybij
         fstcart
-        lambda*
+        lambda%
         pastecart
         sndcart
         tybit0_INDUCT
@@ -221,7 +221,7 @@
         finite_prod_tybij
         finite_sum_tybij
         fstcart
-        lambda*
+        lambda%
         pastecart
         sndcart
         tybit0_INDUCT
@@ -332,7 +332,7 @@
     finite_prod_tybij
     finite_sum_tybij
     fstcart
-    lambda*
+    lambda%
     pastecart
     sndcart
     tybit0_INDUCT
@@ -381,7 +381,7 @@
     mk_var
     mk_comb
     INST_TYPE
-    INST*
+    INST%
     inst
     EQ_MP
     dest_type
@@ -583,7 +583,7 @@
     finite_prod_tybij
     finite_sum_tybij
     fstcart
-    lambda*
+    lambda%
     pastecart
     sndcart
     tybit0_INDUCT
@@ -816,7 +816,7 @@
 
 (funcall parse_as_binder "lambda")
 
-(defparameter lambda*
+(defparameter lambda%
   (funcall
     new_definition
     (parse_term
@@ -847,7 +847,7 @@
                       THEN
                       (funcall
                         THEN
-                        (REWRITE_TAC (cl:cons lambda* nil))
+                        (REWRITE_TAC (cl:cons lambda% nil))
                         (funcall CONV_TAC SELECT_CONV))
                       (funcall
                         EXISTS_TAC
@@ -941,6 +941,7 @@
                     (cl:cons
                       (funcall ARITH_RULE (parse_term "1 <= a ==> 1 <= a + b"))
                       nil))))))))))
+    (cl:declare (cl:ignorable th))
     (new_type_definition "finite_sum" (tuple "mk_finite_sum" "dest_finite_sum") th)))
 
 (defparameter pastecart
@@ -1039,9 +1040,9 @@
             (W
               (lambdac (arg~628)
                 (match arg~628
-                  ((tuple _ w*)
+                  ((tuple _ w%)
                     (MP_TAC
-                      (funcall PART_MATCH (o lhs #'rand) LAMBDA_BETA (funcall lhand w*))))))))
+                      (funcall PART_MATCH (o lhs #'rand) LAMBDA_BETA (funcall lhand w%))))))))
           ANTS_TAC)
         (cl:cons
           (funcall
@@ -1221,6 +1222,7 @@
               (funcall EXISTS_TAC (parse_term "1"))
               (REWRITE_TAC (cl:cons IN_NUMSEG nil)))
             ARITH_TAC)))))
+    (cl:declare (cl:ignorable th))
     (new_type_definition "finite_diff" (tuple "mk_finite_diff" "dest_finite_diff") th)))
 
 (defparameter FINITE_DIFF_IMAGE
@@ -1288,6 +1290,7 @@
               (funcall EXISTS_TAC (parse_term "1"))
               (REWRITE_TAC (cl:cons IN_NUMSEG (cl:cons LE_REFL nil))))
             (MESON_TAC (cl:cons LE_1 (cl:cons DIMINDEX_GE_1 (cl:cons MULT_EQ_0 nil)))))))))
+    (cl:declare (cl:ignorable th))
     (new_type_definition "finite_prod" (tuple "mk_finite_prod" "dest_finite_prod") th)))
 
 (defparameter FINITE_PROD_IMAGE
@@ -1341,16 +1344,16 @@
 (defparameter tybit0_RECURSION nil)
 
 (match (define_type "tybit0 = mktybit0((A,A)finite_sum)")
-  ((tuple tybit0_INDUCT* tybit0_RECURSION*)
-    (setf tybit0_INDUCT tybit0_INDUCT* tybit0_RECURSION tybit0_RECURSION*)))
+  ((tuple tybit0_INDUCT% tybit0_RECURSION%)
+    (setf tybit0_INDUCT tybit0_INDUCT% tybit0_RECURSION tybit0_RECURSION%)))
 
 (defparameter tybit1_INDUCT nil)
 
 (defparameter tybit1_RECURSION nil)
 
 (match (define_type "tybit1 = mktybit1(((A,A)finite_sum,1)finite_sum)")
-  ((tuple tybit1_INDUCT* tybit1_RECURSION*)
-    (setf tybit1_INDUCT tybit1_INDUCT* tybit1_RECURSION tybit1_RECURSION*)))
+  ((tuple tybit1_INDUCT% tybit1_RECURSION%)
+    (setf tybit1_INDUCT tybit1_INDUCT% tybit1_RECURSION tybit1_RECURSION%)))
 
 (defparameter HAS_SIZE_TYBIT0
   (prove
@@ -1522,41 +1525,47 @@
           ARITH_TAC)))
     ((cl:cons pth_num (cl:cons pth0 (cl:cons pth1 (cl:cons pth_one nil))))
       (let ((nvar (parse_term "n:num")))
+        (cl:declare (cl:ignorable nvar))
         (labelsc
           ((calc_dimindex
             (ty)
             (match ty
               ((Tyapp "1" _) pth_one)
-              ((Tyapp "tybit0" (cl:cons ty* _))
-                (let* ((th (calc_dimindex ty*)) (n (rand (concl th))))
+              ((Tyapp "tybit0" (cl:cons ty% _))
+                (let* ((th (calc_dimindex ty%)) (n (rand (concl th))))
+                  (cl:declare (cl:ignorable th n))
                   (EQ_MP
-                    (INST*
+                    (INST%
                       (cl:cons (tuple n nvar) nil)
-                      (INST_TYPE (cl:cons (tuple ty* aty) nil) pth0))
+                      (INST_TYPE (cl:cons (tuple ty% aty) nil) pth0))
                     th)))
-              ((Tyapp "tybit1" (cl:cons ty* _))
-                (let* ((th (calc_dimindex ty*)) (n (rand (concl th))))
+              ((Tyapp "tybit1" (cl:cons ty% _))
+                (let* ((th (calc_dimindex ty%)) (n (rand (concl th))))
+                  (cl:declare (cl:ignorable th n))
                   (EQ_MP
-                    (INST*
+                    (INST%
                       (cl:cons (tuple n nvar) nil)
-                      (INST_TYPE (cl:cons (tuple ty* aty) nil) pth1))
+                      (INST_TYPE (cl:cons (tuple ty% aty) nil) pth1))
                     th)))
               (_ (fail unit)))))
           (lambdac (arg~1365)
             (match arg~1365
               ((Comb (Const "dimindex" _) tm)
                 (let ((uty (type_of tm)))
+                  (cl:declare (cl:ignorable uty))
                   (match (dest_type uty)
                     ((tuple _ (cl:cons sty _))
                       (let*
                         ((th (calc_dimindex sty))
                           (svar (mk_var (tuple "s" uty)))
                           (ntm (rand (concl th))))
+                        (cl:declare (cl:ignorable th svar ntm))
                         (let
                           ((pth
-                            (INST*
+                            (INST%
                               (cl:cons (tuple tm svar) (cl:cons (tuple ntm nvar) nil))
                               (INST_TYPE (cl:cons (tuple sty aty) nil) pth_num))))
+                          (cl:declare (cl:ignorable pth))
                           (EQ_MP pth th)))))))
               (_ (failwith "DIMINDEX_CONV")))))))))
 
@@ -1570,6 +1579,7 @@
       (htm (parse_term "(HAS_SIZE) (:A)"))
       (conv (GEN_REWRITE_CONV #'I (cl:cons pth nil)))
       (rule (o #'EQT_ELIM (GEN_REWRITE_CONV #'I (cl:cons FINITE_CLAUSES nil)))))
+    (cl:declare (cl:ignorable pth htm conv rule))
     (lambdac (nty)
       (let*
         ((tm
@@ -1578,6 +1588,7 @@
               (funcall inst (cl:cons (tuple nty aty) nil) htm)
               (funcall mk_numeral (dest_finty nty)))))
           (th1 (funcall conv tm)))
+        (cl:declare (cl:ignorable tm th1))
         (EQ_MP
           (SYM th1)
           (funcall
@@ -2230,8 +2241,8 @@
                 FORALL_PASTECART
                 (cl:cons IN_ELIM_THM (cl:cons PASTECART_IN_PCROSS nil))))))
         (funcall SET_TAC nil))))
-  ((tuple PCROSS_UNIONS_UNIONS* PCROSS_UNIONS*)
-    (setf PCROSS_UNIONS PCROSS_UNIONS* PCROSS_UNIONS_UNIONS PCROSS_UNIONS_UNIONS*)))
+  ((tuple PCROSS_UNIONS_UNIONS% PCROSS_UNIONS%)
+    (setf PCROSS_UNIONS PCROSS_UNIONS% PCROSS_UNIONS_UNIONS PCROSS_UNIONS_UNIONS%)))
 
 (defparameter PCROSS_INTERS nil)
 
@@ -2271,8 +2282,8 @@
                     IN_ELIM_THM
                     (cl:cons PASTECART_IN_PCROSS (cl:cons NOT_IN_EMPTY nil))))))))
         (ASM SET_TAC nil))))
-  ((tuple PCROSS_INTERS_INTERS* PCROSS_INTERS*)
-    (setf PCROSS_INTERS PCROSS_INTERS* PCROSS_INTERS_INTERS PCROSS_INTERS_INTERS*)))
+  ((tuple PCROSS_INTERS_INTERS% PCROSS_INTERS%)
+    (setf PCROSS_INTERS PCROSS_INTERS% PCROSS_INTERS_INTERS PCROSS_INTERS_INTERS%)))
 
 (defparameter DISJOINT_PCROSS
   (prove

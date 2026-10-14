@@ -45,7 +45,7 @@
         GABS_CONV
         GABS_DEF
         GEN_BETA_CONV
-        GEN_BETA_CONV*
+        GEN_BETA_CONV%
         GEQ_DEF
         LAMBDA_PAIR
         LAMBDA_PAIR_THM
@@ -177,7 +177,7 @@
     GABS_CONV
     GABS_DEF
     GEN_BETA_CONV
-    GEN_BETA_CONV*
+    GEN_BETA_CONV%
     GEQ_DEF
     LAMBDA_PAIR
     LAMBDA_PAIR_THM
@@ -286,7 +286,7 @@
     PART_MATCH
     MK_FORALL
     MATCH_MP
-    INSTANTIATE*
+    INSTANTIATE%
     BETAS_CONV)
   (:shadowing-import-from
     :hol2cl.equal
@@ -324,7 +324,7 @@
     mk_abs
     is_var
     is_abs
-    INST*
+    INST%
     inst
     get_const_type
     frees
@@ -339,14 +339,14 @@
     Comb
     aty
     ASSUME
-    ABS*)
+    ABS%)
   (:shadowing-import-from
     :hol2cl.lib
     zip
     warn
     W
     unzip
-    unions*
+    unions%
     unions
     union
     uncurry
@@ -756,9 +756,10 @@
 
 (defparameter mk_pair
   (let ((ptm (mk_const (tuple "," nil))))
+    (cl:declare (cl:ignorable ptm))
     (lambdac (arg~356)
       (match arg~356
-        ((tuple l r*)
+        ((tuple l r%)
           (mk_comb
             (tuple
               (mk_comb
@@ -767,10 +768,10 @@
                     inst
                     (cl:cons
                       (tuple (type_of l) aty)
-                      (cl:cons (tuple (type_of r*) bty) nil))
+                      (cl:cons (tuple (type_of r%) bty) nil))
                     ptm)
                   l))
-              r*)))))))
+              r%)))))))
 
 (funcall extend_basic_rewrites (cl:cons FST (cl:cons SND (cl:cons PAIR nil))))
 
@@ -831,17 +832,20 @@
           (gv arg)
           (handler-case
             (match (funcall dest_pair arg)
-              ((tuple l r*)
+              ((tuple l r%)
                 (append
                   (depair (list_mk_icomb "FST" (cl:cons gv nil)) l)
-                  (depair (list_mk_icomb "SND" (cl:cons gv nil)) r*))))
+                  (depair (list_mk_icomb "SND" (cl:cons gv nil)) r%))))
             (hol2cl.runtime:ocaml-condition
               (exception~447)
               (match exception~447
                 ((Failure _) (cl:cons (tuple gv arg) nil))
                 (_ (raise exception~447)))))))
         (lambdac (arg)
-          (let ((gv (funcall genvar (type_of arg)))) (tuple gv (depair gv arg)))))))
+          (let ((gv (funcall genvar (type_of arg))))
+            (cl:declare (cl:ignorable gv))
+            (tuple gv (depair gv arg)))))))
+    (cl:declare (cl:ignorable depair))
     (lambdac (tm)
       (match (funcall strip_forall tm)
         ((tuple avs def)
@@ -850,35 +854,36 @@
               (tryfind
                 (lambdac (th) (tuple th (funcall PART_MATCH #'I th def)))
                 (deref the_definitions))
-              ((tuple th th*)
+              ((tuple th th%)
                 (progn
                   (ignore-value
                     (funcall
                       PART_MATCH
                       #'I
-                      th*
+                      th%
                       (hol2cl.runtime:snd (funcall strip_forall (concl th)))))
                   (warn cl:t "Benign redefinition")
-                  (GEN_ALL (funcall GENL avs th*)))))
+                  (GEN_ALL (funcall GENL avs th%)))))
             (hol2cl.runtime:ocaml-condition
               (exception~495)
               (match exception~495
                 ((Failure _)
                   (match (dest_eq def)
-                    ((tuple l r*)
+                    ((tuple l r%)
                       (match (funcall strip_comb l)
                         ((tuple fn args)
                           (match (F_F #'I #'unions (unzip (map depair args)))
                             ((tuple gargs reps)
                               (let
-                                ((l* (list_mk_comb (tuple fn gargs)))
-                                  (r** (funcall subst reps r*)))
+                                ((l% (list_mk_comb (tuple fn gargs)))
+                                  (r%% (funcall subst reps r%)))
+                                (cl:declare (cl:ignorable l% r%%))
                                 (let*
                                   ((th1
                                     (hol2cl.drule:new_definition
-                                      (funcall mk_eq (tuple l* r**))))
+                                      (funcall mk_eq (tuple l% r%%))))
                                     (slist (zip args gargs))
-                                    (th2 (INST* slist (SPEC_ALL th1)))
+                                    (th2 (INST% slist (SPEC_ALL th1)))
                                     (xreps
                                       (map
                                         (o
@@ -892,8 +897,10 @@
                                           (PURE_REWRITE_CONV
                                             (cl:cons FST (cl:cons SND nil))))
                                         xreps))
-                                    (th3 (TRANS th2 (SYM (SUBS_CONV threps r*))))
+                                    (th3 (TRANS th2 (SYM (SUBS_CONV threps r%))))
                                     (th4 (GEN_ALL (funcall GENL avs th3))))
+                                  (cl:declare
+                                    (cl:ignorable th1 slist th2 xreps threps th3 th4))
                                   (progn
                                     (assign
                                       the_definitions
@@ -930,8 +937,8 @@
         (match (dest_abs bod)
           ((tuple f qtm)
             (match (funcall strip_forall qtm)
-              ((tuple xs bod*)
-                (AP_TERM gabs (ABS* f (itlist MK_FORALL xs (RAND_CONV conv bod*))))))))))))
+              ((tuple xs bod%)
+                (AP_TERM gabs (ABS% f (itlist MK_FORALL xs (RAND_CONV conv bod%))))))))))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* General beta-conversion over linear pattern of nested constructors.       *)
@@ -940,6 +947,7 @@
 
 (defparameter GEN_BETA_CONV
   (let ((projection_cache (ref nil)))
+    (cl:declare (cl:ignorable projection_cache))
     (fletc
       ((create_projections
         (conname)
@@ -957,9 +965,11 @@
                           (hol2cl.lib:repeat
                             (o (function-value #'hol2cl.runtime:snd 1) #'dest_fun_ty)
                             genty)))))
+                  (cl:declare (cl:ignorable genty conty))
                   (match (assoc conty (deref inductive_type_store))
                     ((tuple _ _ rth)
                       (let ((sth (SPEC_ALL rth)))
+                        (cl:declare (cl:ignorable sth))
                         (match (funcall strip_exists (concl sth))
                           ((tuple evs bod)
                             (let*
@@ -989,10 +999,11 @@
                                       strip_forall)
                                     cjs))
                                 (n (index ourcj cjs)))
+                              (cl:declare (cl:ignorable cjs ourcj n))
                               (match (funcall strip_forall ourcj)
                                 ((tuple avs eqn)
                                   (match (funcall strip_comb (rand eqn))
-                                    ((tuple con* args)
+                                    ((tuple con% args)
                                       (match (chop_list (funcall length avs) args)
                                         ((tuple aargs zargs)
                                           (let*
@@ -1005,14 +1016,14 @@
                                                     avs
                                                     (type_of (rand eqn)))))
                                               (bth
-                                                (INST*
+                                                (INST%
                                                   (cl:cons
                                                     (tuple
                                                       (list_mk_abs
                                                         (tuple
                                                           (append aargs gargs)
                                                           (list_mk_comb (tuple gcon avs))))
-                                                      con*)
+                                                      con%)
                                                     nil)
                                                   sth))
                                               (cth
@@ -1047,11 +1058,21 @@
                                                   (rand
                                                     (hol2cl.runtime:snd
                                                       (funcall strip_forall (concl dth)))))))
+                                            (cl:declare
+                                              (cl:ignorable
+                                                gargs
+                                                gcon
+                                                bth
+                                                cth
+                                                dth
+                                                eth
+                                                fth
+                                                zty))
                                             (fletc
                                               ((mk_projector
-                                                (a*)
+                                                (a%)
                                                 (let*
-                                                  ((ity (type_of a*))
+                                                  ((ity (type_of a%))
                                                     (th
                                                       (funcall
                                                         BETA_RULE
@@ -1059,13 +1080,15 @@
                                                           (cl:cons (tuple ity zty) nil)
                                                           (cl:cons
                                                             (tuple
-                                                              (list_mk_abs (tuple avs a*))
+                                                              (list_mk_abs (tuple avs a%))
                                                               gcon)
                                                             nil)
                                                           fth))))
+                                                  (cl:declare (cl:ignorable ity th))
                                                   (SYM
                                                     (SPEC_ALL (funcall SELECT_RULE th))))))
                                               (let ((ths (map #'mk_projector avs)))
+                                                (cl:declare (cl:ignorable ths))
                                                 (progn
                                                   (assign
                                                     projection_cache
@@ -1077,6 +1100,7 @@
       (let
         ((GEQ_CONV (funcall REWR_CONV (funcall GSYM GEQ_DEF)))
           (DEGEQ_RULE (CONV_RULE (funcall REWR_CONV GEQ_DEF))))
+        (cl:declare (cl:ignorable GEQ_CONV DEGEQ_RULE))
         (let
           ((GABS_RULE
             (let
@@ -1085,7 +1109,9 @@
                   (tuple
                     (parse_term "(?) P ==> P (GABS P)")
                     (SIMP_TAC (cl:cons GABS_DEF (cl:cons SELECT_AX (cl:cons ETA_AX nil))))))))
+              (cl:declare (cl:ignorable pth))
               (MATCH_MP pth))))
+          (cl:declare (cl:ignorable GABS_RULE))
           (labelsc
             ((create_iterated_projections
               (tm)
@@ -1100,7 +1126,7 @@
                           (create_projections (hol2cl.runtime:fst (dest_const con))))
                           (atm (rand (rand (concl (hd prjths)))))
                           (instn (funcall term_match nil atm tm))
-                          (arths (map (funcall INSTANTIATE* instn) prjths))
+                          (arths (map (funcall INSTANTIATE% instn) prjths))
                           (ths
                             (map
                               (lambdac (arth)
@@ -1108,13 +1134,15 @@
                                   ((sths
                                     (create_iterated_projections
                                       (funcall lhand (concl arth)))))
+                                  (cl:declare (cl:ignorable sths))
                                   (map
                                     (CONV_RULE (RAND_CONV (SUBS_CONV (cl:cons arth nil))))
                                     sths)))
                               arths)))
-                        (unions* #'equals_thm ths))))))))
+                        (cl:declare (cl:ignorable prjths atm instn arths ths))
+                        (unions% #'equals_thm ths))))))))
             (fletc
-              ((GEN_BETA_CONV*
+              ((GEN_BETA_CONV%
                 (tm)
                 (handler-case
                   (BETA_CONV tm)
@@ -1123,14 +1151,14 @@
                     (match exception~1030
                       ((Failure _)
                         (match (dest_comb tm)
-                          ((tuple l r*)
+                          ((tuple l r%)
                             (match (funcall dest_gabs l)
                               ((tuple vstr bod)
                                 (let*
-                                  ((instn (funcall term_match nil vstr r*))
+                                  ((instn (funcall term_match nil vstr r%))
                                     (prjs (create_iterated_projections vstr))
                                     (th1 (SUBS_CONV prjs bod))
-                                    (bod* (rand (concl th1)))
+                                    (bod% (rand (concl th1)))
                                     (gv (funcall genvar (type_of vstr)))
                                     (pat
                                       (mk_abs
@@ -1139,7 +1167,7 @@
                                           (funcall
                                             subst
                                             (cl:cons (tuple gv vstr) nil)
-                                            bod*))))
+                                            bod%))))
                                     (th2
                                       (TRANS
                                         (BETA_CONV (mk_comb (tuple pat vstr)))
@@ -1176,12 +1204,27 @@
                                           GEQ_CONV)
                                         th4))
                                     (th6 (CONV_RULE #'BETA_CONV (funcall GABS_RULE th5))))
+                                  (cl:declare
+                                    (cl:ignorable
+                                      instn
+                                      prjs
+                                      th1
+                                      bod%
+                                      gv
+                                      pat
+                                      th2
+                                      avs
+                                      th3
+                                      efn
+                                      th4
+                                      th5
+                                      th6))
                                   (funcall
-                                    INSTANTIATE*
+                                    INSTANTIATE%
                                     instn
                                     (funcall DEGEQ_RULE (SPEC_ALL th6)))))))))
                       (_ (raise exception~1030)))))))
-              #'GEN_BETA_CONV*)))))))
+              #'GEN_BETA_CONV%)))))))
 
 (funcall
   extend_basic_convs
@@ -1493,10 +1536,12 @@
   (let
     ((let1_CONV (THENC (funcall REWR_CONV LET_DEF) GEN_BETA_CONV))
       (lete_CONV (funcall REWR_CONV LET_END_DEF)))
+    (cl:declare (cl:ignorable let1_CONV lete_CONV))
     (labelsc
       ((EXPAND_BETAS_CONV
         (tm)
-        (let ((tm* (rator tm)))
+        (let ((tm% (rator tm)))
+          (cl:declare (cl:ignorable tm%))
           (handler-case
             (funcall let1_CONV tm)
             (hol2cl.runtime:ocaml-condition
@@ -1504,8 +1549,9 @@
               (match exception~1647
                 ((Failure _)
                   (let*
-                    ((th1 (AP_THM (EXPAND_BETAS_CONV tm*) (rand tm)))
+                    ((th1 (AP_THM (EXPAND_BETAS_CONV tm%) (rand tm)))
                       (th2 (funcall GEN_BETA_CONV (rand (concl th1)))))
+                    (cl:declare (cl:ignorable th1 th2))
                     (TRANS th1 th2)))
                 (_ (raise exception~1647))))))))
       (lambdac (tm)
@@ -1514,9 +1560,11 @@
             (if (cl:or (<> (hol2cl.runtime:fst (dest_const ltm)) "LET") (= pargs nil))
               (failwith "let_CONV")
               (let ((abstm (hd pargs)))
+                (cl:declare (cl:ignorable abstm))
                 (match (funcall strip_gabs abstm)
                   ((tuple vs bod)
                     (let* ((es (tl pargs)) (n (funcall length es)))
+                      (cl:declare (cl:ignorable es n))
                       (if (<> (funcall length vs) n)
                         (failwith "let_CONV")
                         (THENC #'EXPAND_BETAS_CONV lete_CONV tm)))))))))))))
@@ -1545,6 +1593,7 @@
                 (cl:cons
                   (funcall TAUT (parse_term "(x = x) <=> T"))
                   (cl:cons (funcall TAUT (parse_term "a /\\ T <=> a")) nil)))))
+          (cl:declare (cl:ignorable pth rewr1_CONV rewr2_RULE))
           (lambdac (tm)
             (let*
               ((th1 (funcall rewr1_CONV tm))
@@ -1554,23 +1603,26 @@
                 (th2 (EQ_MP (SYM th1) (ASSUME tm1)))
                 (th3 (DISCH_ALL (itlist #'SIMPLE_EXISTS vars th2)))
                 (th4
-                  (INST*
-                    (map (lambdac (t*) (tuple (rand t*) (funcall lhand t*))) cjs)
+                  (INST%
+                    (map (lambdac (t%) (tuple (rand t%) (funcall lhand t%))) cjs)
                     th3)))
+              (cl:declare (cl:ignorable th1 tm1 cjs vars th2 th3 th4))
               (funcall MP (funcall rewr2_RULE th4) TRUTH))))))
+    (cl:declare (cl:ignorable is_trivlet PROVE_DEPAIRING_EXISTS))
     (lambdac (arg~1832)
       (match arg~1832
-        ((cl:and gl (tuple asl w*))
+        ((cl:and gl (tuple asl w%))
           (let*
             ((path
               (handler-case
-                (funcall find_path is_trivlet w*)
+                (funcall find_path is_trivlet w%)
                 (hol2cl.runtime:ocaml-condition
                   (exception~1838)
                   (match exception~1838
-                    ((Failure _) (funcall find_path is_let w*))
+                    ((Failure _) (funcall find_path is_let w%))
                     (_ (raise exception~1838))))))
-              (tm (funcall follow_path path w*)))
+              (tm (funcall follow_path path w%)))
+            (cl:declare (cl:ignorable path tm))
             (match (dest_let tm)
               ((tuple assigs bod)
                 (let*
@@ -1588,33 +1640,37 @@
                           (o #'union #'thm_frees)
                           (function-value #'hol2cl.runtime:snd 1))
                         asl
-                        (frees w*))))
+                        (frees w%))))
+                  (cl:declare (cl:ignorable abbrevs lvars avoids))
                   (let*
                     ((rename (funcall vsubst (zip (variants avoids lvars) lvars)))
-                      (abbrevs*
+                      (abbrevs%
                         (map
                           (lambdac (eq)
                             (match (dest_eq eq)
-                              ((tuple l r*) (funcall mk_eq (tuple (funcall rename l) r*)))))
+                              ((tuple l r%) (funcall mk_eq (tuple (funcall rename l) r%)))))
                           abbrevs))
-                      (deprths (map PROVE_DEPAIRING_EXISTS abbrevs*)))
+                      (deprths (map PROVE_DEPAIRING_EXISTS abbrevs%)))
+                    (cl:declare (cl:ignorable rename abbrevs% deprths))
                     (funcall
                       THEN
                       (MAP_EVERY
                         (REPEAT_TCL
                           #'CHOOSE_THEN
                           (lambdac (th)
-                            (let ((th* (SYM th)))
-                              (funcall THEN (SUBST_ALL_TAC th*) (funcall ASSUME_TAC th*)))))
+                            (let ((th% (SYM th)))
+                              (cl:declare (cl:ignorable th%))
+                              (funcall THEN (SUBST_ALL_TAC th%) (funcall ASSUME_TAC th%)))))
                         deprths)
                       (W
                         (lambdac (arg~1938)
                           (match arg~1938
-                            ((tuple asl* w**)
-                              (let ((tm* (funcall follow_path path w**)))
+                            ((tuple asl% w%%)
+                              (let ((tm% (funcall follow_path path w%%)))
+                                (cl:declare (cl:ignorable tm%))
                                 (funcall
                                   CONV_TAC
-                                  (funcall PATH_CONV path (K (funcall let_CONV tm*)))))))))
+                                  (funcall PATH_CONV path (K (funcall let_CONV tm%)))))))))
                       gl)))))))))))
 
 ;; (* ------------------------------------------------------------------------- *)
@@ -1628,7 +1684,7 @@
       (tm)
       (match tm
         ((Comb (Const "LET" _) _) (REFL tm))
-        ((Comb l r*) (COMB2_CONV #'largconv conv tm))
+        ((Comb l r%) (COMB2_CONV #'largconv conv tm))
         (_ (failwith "SUBLET_CONV")))))
     (lambdac (tm) (if (funcall is_let tm) (largconv tm) (failwith "SUBLET_CONV")))))
 

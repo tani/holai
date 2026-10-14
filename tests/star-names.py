@@ -13,7 +13,7 @@ pp=shlex.join(['camlp5r','-I',lib,'-I',str(ROOT/'_build'),'pa_j.cmo'])
 streams=os.environ.get('STREAMLIB') or str(Path(lib).parent/'camlp-streams')
 allocator=BUILD/'allocator'
 run(['ocamlc','-I',str(ROOT/'_build'),'-I',lib,'-I',streams,'camlp_streams.cma','camlp5.cma',str(ROOT/'_build/sexp.cmo'),str(ROOT/'_build/scope.cmo'),'tests/star-allocator.ml','-o',str(allocator)])
-assert 'Star allocator checks passed: 19' in run(['ocamlrun',str(allocator)])
+assert 'Star allocator checks passed: 21' in run(['ocamlrun',str(allocator)])
 source=(ROOT/'tests/fixtures/star_names.ml').read_text()+'\nlet () = List.iter print_endline (observations());;\n'
 ml=BUILD/'original.ml';ml.write_text(source)
 run(['ocamlc','-w','-a','-pp',pp,str(ml),'-o',str(BUILD/'original')])
@@ -36,5 +36,5 @@ def escaped_symbols(text):
  return count
 assert escaped_symbols((BUILD/'star_names.lisp').read_text())==0
 for file in (ROOT/'generated').glob('*.lisp'):assert escaped_symbols(file.read_text())==0,file
-(ROOT/'reports/star-names.json').write_text(json.dumps({'allocator_checks':19,'original_observations_match':True,'observations':original.splitlines(),'escaped_symbol_delimiters_in_core':0,'core_files':46,'checked_exports':['T*','T**','NIL*','PI*','PI**','NAME','NAME*','NAME**','NAME***']},indent=2)+'\n')
+(ROOT/'reports/star-names.json').write_text(json.dumps({'allocator_checks':21,'original_observations_match':True,'observations':original.splitlines(),'escaped_symbol_delimiters_in_core':0,'core_files':46,'checked_exports':['T%','T%%','NIL%','PI%','PI%%','NAME','NAME%','NAME%%','NAME%%%']},indent=2)+'\n')
 print('Star naming checks passed: 9 matching observations; 9 allocated exports; 0 escaped symbols in generated core.')

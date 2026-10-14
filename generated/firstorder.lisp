@@ -85,18 +85,18 @@
         fol_of_literal
         fol_of_term
         fol_of_var
-        fol_of_var*
+        fol_of_var%
         hol_of_atom
         hol_of_const
         hol_of_literal
         hol_of_term
         hol_of_var
-        hol_of_var*
+        hol_of_var%
         inc_vcounter
         mk_contraposes
         reset_consts
         reset_vars
-        reset_vars*)
+        reset_vars%)
       (:export
         fol_of_atom
         fol_of_const
@@ -187,6 +187,7 @@
     list-assoc
     lambdac
     labelsc
+    guard
     function-value
     funcall
     fst
@@ -258,18 +259,18 @@
     fol_of_literal
     fol_of_term
     fol_of_var
-    fol_of_var*
+    fol_of_var%
     hol_of_atom
     hol_of_const
     hol_of_literal
     hol_of_term
     hol_of_var
-    hol_of_var*
+    hol_of_var%
     inc_vcounter
     mk_contraposes
     reset_consts
     reset_vars
-    reset_vars*)
+    reset_vars%)
   (:shadowing-import-from :cl not append abs +)
   (:shadowing-import-from
     :hol2cl.basics
@@ -289,7 +290,7 @@
   (:shadowing-import-from :hol2cl.fusion.hol type_of is_var hyp freesl concl)
   (:shadowing-import-from
     :hol2cl.lib
-    union*
+    union%
     subtract
     splitlist
     sort
@@ -374,9 +375,9 @@
 
 (in-package :hol2cl.firstorder.utils)
 
-(defunc %> (f g* x) (funcall g* (funcall f x)))
+(defunc %> (f g% x) (funcall g% (funcall f x)))
 
-(defunc % (f g* x) (funcall f (funcall g* x)))
+(defunc % (f g% x) (funcall f (funcall g% x)))
 
 (defunc const (x arg~23) x)
 
@@ -409,14 +410,14 @@
 (defunc nth_rest (n)
   (labelsc
     ((go
-      (acc i* arg~97)
+      (acc i% arg~97)
       (match arg~97
-        ((trivia:guard (cl:cons x xs) (> i* 0)) (go (cl:cons x acc) (- i* 1) xs))
-        ((trivia:guard (cl:cons x xs) (= i* 0)) (tuple x (tuple (list-rev acc) xs)))
+        ((guard (cl:cons x xs) (> i% 0)) (go (cl:cons x acc) (- i% 1) xs))
+        ((guard (cl:cons x xs) (= i% 0)) (tuple x (tuple (list-rev acc) xs)))
         (_ (failwith "nth_rest")))))
     (go nil n)))
 
-(defunc insert_at (i* elem l)
+(defunc insert_at (i% elem l)
   (labelsc
     ((go
       (acc arg~143)
@@ -424,27 +425,27 @@
         ((tuple 0 xs) (list-rev-append acc (cl:cons elem xs)))
         ((tuple n nil) (failwith "insert_at"))
         ((tuple n (cl:cons x xs)) (go (cl:cons x acc) (tuple (- n 1) xs))))))
-    (go nil (tuple i* l))))
+    (go nil (tuple i% l))))
 
 (defunc take_drop (n)
   (labelsc
     ((go
-      (acc i* arg~189)
+      (acc i% arg~189)
       (match arg~189
-        ((trivia:guard nil (> i* 0)) (failwith "take_drop"))
-        ((trivia:guard (cl:cons x xs) (> i* 0)) (go (cl:cons x acc) (- i* 1) xs))
+        ((guard nil (> i% 0)) (failwith "take_drop"))
+        ((guard (cl:cons x xs) (> i% 0)) (go (cl:cons x acc) (- i% 1) xs))
         (xs (tuple (list-rev acc) xs)))))
     (go nil n)))
 
 (defunc take (n l) (fst (take_drop n l)))
 
-(defunc findi (p* l)
+(defunc findi (p% l)
   (labelsc
     ((loop
       (n arg~237)
       (match arg~237
         (nil (raise (make-Not_found)))
-        ((cl:cons h t*) (if (funcall p* n h) (tuple n h) (loop (+ n 1) t*))))))
+        ((cl:cons h t%) (if (funcall p% n h) (tuple n h) (loop (+ n 1) t%))))))
     (loop 0 l)))
 
 (defunc concat_map (f l) (list-concat (list-map f l)))
@@ -453,12 +454,12 @@
   (partial (function-value #'list-fold-left 3) (function-value #'+ 2) 0.d0))
 
 (defunc last (arg~278)
-  (match arg~278 (nil (failwith "last")) ((cl:cons h nil) h) ((cl:cons h t*) (last t*))))
+  (match arg~278 (nil (failwith "last")) ((cl:cons h nil) h) ((cl:cons h t%) (last t%))))
 
 (defunc union1 (x y)
   (match x
     (nil y)
-    ((cl:cons h t*) (if (list-mem h y) (union1 t* y) (cl:cons h (union1 t* y))))))
+    ((cl:cons h t%) (if (list-mem h y) (union1 t% y) (cl:cons h (union1 t% y))))))
 
 ;; (* tail-recursive version -- reverses first argument *)
 
@@ -466,7 +467,7 @@
 (defunc union2 (x y)
   (match x
     (nil y)
-    ((cl:cons h t*) (if (list-mem h y) (union1 t* y) (union2 t* (cl:cons h y))))))
+    ((cl:cons h t%) (if (list-mem h y) (union1 t% y) (union2 t% (cl:cons h y))))))
 
 (defunc fold_right1 (f arg~348)
   (match arg~348
@@ -479,21 +480,21 @@
     (function-value #'list-fold-left 3)
     (lambdac (arg~372 x)
       (match arg~372
-        ((tuple acc* ys)
-          (match (funcall f acc* x) ((tuple acc** y) (tuple acc** (cl:cons y ys)))))))
+        ((tuple acc% ys)
+          (match (funcall f acc% x) ((tuple acc%% y) (tuple acc%% (cl:cons y ys)))))))
     (tuple acc nil)))
 
 (defunc fold_right_map (f acc xs)
   (list-fold-right
     (lambdac (x arg~405)
       (match arg~405
-        ((tuple acc* ys)
-          (match (funcall f acc* x) ((tuple acc** y) (tuple acc** (cl:cons y ys)))))))
+        ((tuple acc% ys)
+          (match (funcall f acc% x) ((tuple acc%% y) (tuple acc%% (cl:cons y ys)))))))
     xs
     (tuple acc nil)))
 
 (defunc fold_map (f sf l)
-  (match (fold_left_map f sf l) ((tuple sf* rev) (tuple sf* (list-rev rev)))))
+  (match (fold_left_map f sf l) ((tuple sf% rev) (tuple sf% (list-rev rev)))))
 
 (defunc filter_map (f arg~454)
   (match arg~454
@@ -503,13 +504,13 @@
         ((None) (filter_map f xs))
         ((Some y) (cl:cons y (filter_map f xs)))))))
 
-(defunc exists_unique (p* l)
+(defunc exists_unique (p% l)
   (labelsc
     ((go
       (acc arg~484)
       (match arg~484
         (nil acc)
-        ((cl:cons x xs) (if (funcall p* x) (if acc cl:nil (go cl:t xs)) (go acc xs))))))
+        ((cl:cons x xs) (if (funcall p% x) (if acc cl:nil (go cl:t xs)) (go acc xs))))))
     (go cl:nil l)))
 
 (in-package :hol2cl.firstorder.utils)
@@ -526,20 +527,23 @@
 
 (match
   (let ((vstore (ref nil)) (gstore (ref nil)) (vcounter (ref 0)))
+    (cl:declare (cl:ignorable vstore gstore vcounter))
     (fletc
       ((inc_vcounter
         (arg~533)
         (match arg~533
           ((cl:type hol2cl.runtime::unit-value)
-            (let* ((n (deref vcounter)) (m (+ n 1))) (progn (assign vcounter m) n))))))
+            (let* ((n (deref vcounter)) (m (+ n 1)))
+              (cl:declare (cl:ignorable n m))
+              (progn (assign vcounter m) n))))))
       (fletc
-        ((reset_vars*
+        ((reset_vars%
           (arg~551)
           (match arg~551
             ((cl:type hol2cl.runtime::unit-value)
               (progn (assign vstore nil) (assign gstore nil) (assign vcounter 0))))))
         (fletc
-          ((fol_of_var*
+          ((fol_of_var%
             (v)
             (handler-case
               (assoc v (deref vstore))
@@ -548,6 +552,7 @@
                 (match exception~566
                   ((Failure _)
                     (let ((n (inc_vcounter unit)))
+                      (cl:declare (cl:ignorable n))
                       (progn
                         (if (deref copverb)
                           (funcall
@@ -561,7 +566,7 @@
                         n)))
                   (_ (raise exception~566)))))))
           (fletc
-            ((hol_of_var*
+            ((hol_of_var%
               (v ty)
               (handler-case
                 (rev_assoc v (deref gstore))
@@ -570,11 +575,12 @@
                   (match exception~603
                     ((Failure _)
                       (let ((gv (funcall genvar ty)))
+                        (cl:declare (cl:ignorable gv))
                         (progn (assign gstore (cl:cons (tuple gv v) (deref gstore))) gv)))
                     (_ (raise exception~603)))))))
-            (tuple #'reset_vars* #'fol_of_var* #'hol_of_var*))))))
-  ((tuple reset_vars* fol_of_var* hol_of_var*)
-    (setf fol_of_var fol_of_var* hol_of_var hol_of_var* reset_vars reset_vars*)))
+            (tuple #'reset_vars% #'fol_of_var% #'hol_of_var%))))))
+  ((tuple reset_vars% fol_of_var% hol_of_var%)
+    (setf fol_of_var fol_of_var% hol_of_var hol_of_var% reset_vars reset_vars%)))
 
 (defparameter fol_of_const nil)
 
@@ -587,14 +593,14 @@
     hol2cl.meson.meson:reset_consts
     hol2cl.meson.meson:fol_of_const
     hol2cl.meson.meson:hol_of_const)
-  ((tuple reset_consts* fol_of_const* hol_of_const*)
+  ((tuple reset_consts% fol_of_const% hol_of_const%)
     (setf
       fol_of_const
-      fol_of_const*
+      fol_of_const%
       hol_of_const
-      hol_of_const*
+      hol_of_const%
       reset_consts
-      reset_consts*)))
+      reset_consts%)))
 
 (defunc fol_of_term (env consts tm)
   (if (cl:and (is_var tm) (not (mem tm consts)))
@@ -604,6 +610,7 @@
         (if (mem f env)
           (failwith "fol_of_term: higher order")
           (let ((ff (funcall fol_of_const f)))
+            (cl:declare (cl:ignorable ff))
             (make-Fnapp ff (map (fol_of_term env consts) args))))))))
 
 (defunc fol_of_atom (env consts tm)
@@ -612,12 +619,14 @@
       (if (mem f env)
         (failwith "fol_of_atom: higher order")
         (let ((ff (funcall fol_of_const f)))
+          (cl:declare (cl:ignorable ff))
           (tuple ff (map (fol_of_term env consts) args)))))))
 
 (defunc fol_of_literal (env consts tm)
   (handler-case
-    (let ((tm* (dest_neg tm)))
-      (match (fol_of_atom env consts tm*) ((tuple p* a*) (tuple (- p*) a*))))
+    (let ((tm% (dest_neg tm)))
+      (cl:declare (cl:ignorable tm%))
+      (match (fol_of_atom env consts tm%) ((tuple p% a%) (tuple (- p%) a%))))
     (hol2cl.runtime:ocaml-condition
       (exception~728)
       (match exception~728
@@ -631,6 +640,7 @@
         (let*
           ((fv (funcall fol_of_var v))
             (fbod (fol_of_form (cl:cons v env) (subtract consts (cl:cons v nil)) bod)))
+          (cl:declare (cl:ignorable fv fbod))
           (make-Forallq fv fbod))))
     (hol2cl.runtime:ocaml-condition
       (exception~759)
@@ -638,8 +648,9 @@
         ((Failure _)
           (handler-case
             (match (funcall dest_conj tm)
-              ((tuple l r*)
-                (let ((fl (fol_of_form env consts l)) (fr (fol_of_form env consts r*)))
+              ((tuple l r%)
+                (let ((fl (fol_of_form env consts l)) (fr (fol_of_form env consts r%)))
+                  (cl:declare (cl:ignorable fl fr))
                   (make-Conj fl fr))))
             (hol2cl.runtime:ocaml-condition
               (exception~762)
@@ -647,10 +658,11 @@
                 ((Failure _)
                   (handler-case
                     (match (funcall dest_disj tm)
-                      ((tuple l r*)
+                      ((tuple l r%)
                         (let
                           ((fl (fol_of_form env consts l))
-                            (fr (fol_of_form env consts r*)))
+                            (fr (fol_of_form env consts r%)))
+                          (cl:declare (cl:ignorable fl fr))
                           (make-Disj fl fr))))
                     (hol2cl.runtime:ocaml-condition
                       (exception~765)
@@ -674,18 +686,20 @@
   (match arg~870
     ((tuple f args)
       (let*
-        ((f* (funcall hol_of_const f)) (tys (fst (splitlist #'dest_fun_ty (type_of f*)))))
+        ((f% (funcall hol_of_const f)) (tys (fst (splitlist #'dest_fun_ty (type_of f%)))))
+        (cl:declare (cl:ignorable f% tys))
         (progn
           (assert-true (<= (list-length args) (list-length tys)) "firstorder.ml" 217 4)
-          (let ((tys* (take (list-length args) tys)))
-            (list_mk_comb (tuple f* (list-map2 #'hol_of_term tys* args)))))))))
+          (let ((tys% (take (list-length args) tys)))
+            (cl:declare (cl:ignorable tys%))
+            (list_mk_comb (tuple f% (list-map2 #'hol_of_term tys% args)))))))))
 
 (defunc hol_of_literal (arg~910)
   (match arg~910
-    ((tuple p* args)
-      (if (< p* 0)
-        (funcall mk_neg (hol_of_atom (tuple (- p*) args)))
-        (hol_of_atom (tuple p* args))))))
+    ((tuple p% args)
+      (if (< p% 0)
+        (funcall mk_neg (hol_of_atom (tuple (- p%) args)))
+        (hol_of_atom (tuple p% args))))))
 
 ;; (* ----------------------------------------------------------------------- *)
 ;;   (* Creation of tagged contrapositives from a HOL clause.                   *)
@@ -708,13 +722,14 @@
         (n th used unused sofar)
         (match unused
           (nil sofar)
-          ((cl:cons h t*)
-            (let ((nw (tuple (tuple (map #'mk_negated (append used t*)) h) (tuple n th))))
+          ((cl:cons h t%)
+            (let ((nw (tuple (tuple (map #'mk_negated (append used t%)) h) (tuple n th))))
+              (cl:declare (cl:ignorable nw))
               (mk_contraposes
                 (+ n 1)
                 th
                 (append used (cl:cons h nil))
-                t*
+                t%
                 (cl:cons nw sofar)))))))
       (fletc
         ((fol_of_hol_clause
@@ -725,15 +740,16 @@
               (hlits (funcall disjuncts tm))
               (flits (map (fol_of_literal nil lconsts) hlits))
               (basics (mk_contraposes 0 th nil flits nil)))
+            (cl:declare (cl:ignorable lconsts tm hlits flits basics))
             (if
-              (forall (lambdac (arg~1047) (match arg~1047 ((tuple p* _) (< p* 0)))) flits)
+              (forall (lambdac (arg~1047) (match arg~1047 ((tuple p% _) (< p% 0)))) flits)
               (cl:cons
                 (tuple (tuple (map #'mk_negated flits) (tuple 1 nil)) (tuple (- 1) th))
                 basics)
               basics))))
         (lambdac (thms)
           (let*
-            ((rawrules (itlist (o (union* #'eqt) #'fol_of_hol_clause) thms nil))
+            ((rawrules (itlist (o (union% #'eqt) #'fol_of_hol_clause) thms nil))
               (prs
                 (setify
                   (map
@@ -743,14 +759,14 @@
                     rawrules)))
               (prules
                 (map
-                  (lambdac (t*)
+                  (lambdac (t%)
                     (tuple
-                      t*
+                      t%
                       (filter
                         (o
                           (o
                             (o
-                              (partial (function-value #'= 2) t*)
+                              (partial (function-value #'= 2) t%)
                               (function-value #'fst 1))
                             (function-value #'snd 1))
                           (function-value #'fst 1))
@@ -760,8 +776,9 @@
                 (sort
                   (lambdac (arg~1101 arg~1104)
                     (match arg~1101
-                      ((tuple p* _) (match arg~1104 ((tuple q _) (<= (abs p*) (abs q)))))))
+                      ((tuple p% _) (match arg~1104 ((tuple q _) (<= (abs p%) (abs q)))))))
                   prules)))
+            (cl:declare (cl:ignorable rawrules prs prules srules))
             srules))))))
 
 (in-package :hol2cl.firstorder)

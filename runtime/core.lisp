@@ -33,7 +33,7 @@
   (let ((self (gensym "CURRIED")))
     (multiple-value-bind (arguments expression)
         (curried-definition parameters body `(cl:function ,self))
-      `(cl:labels ((,self ,arguments ,expression)) (cl:function ,self)))))
+      `(cl:labels ((,self ,arguments (declare (ignorable ,@parameters)) ,expression)) (cl:function ,self)))))
 
 (defmacro defunc (name parameters &body body)
   ;; Construct one self-contained function object at definition time. Partial
@@ -43,7 +43,7 @@
     `(progn
        (cl:declaim (cl:ftype (cl:function (&rest cl:t) *) ,name))
        (setf (cl:fdefinition ',name)
-             (cl:labels ((,name ,arguments ,expression)) (cl:function ,name)))
+             (cl:labels ((,name ,arguments (declare (ignorable ,@parameters)) ,expression)) (cl:function ,name)))
        ',name)))
 
 (defmacro labelsc (definitions &body body)
@@ -52,7 +52,7 @@
                 (destructuring-bind (name parameters &rest forms) definition
                   (multiple-value-bind (arguments expression)
                       (curried-definition parameters forms `(cl:function ,name))
-                    `(,name ,arguments ,expression)))) definitions)
+                    `(,name ,arguments (declare (ignorable ,@parameters)) ,expression)))) definitions)
      ,@body))
 
 (defmacro fletc (definitions &body body)
@@ -69,7 +69,7 @@
                             (multiple-value-bind (arguments expression)
                                 (curried-definition parameters
                                   (list `(cl:funcall ,cell ,@parameters)) cell)
-                              `(,name ,arguments ,expression)))) definitions cells)
+                              `(,name ,arguments (declare (ignorable ,@parameters)) ,expression)))) definitions cells)
          ,@body))))
 
 (defun partial (function &rest initial)
@@ -107,29 +107,15 @@
     (unless (and (integerp i) (cl:<= 0 i) (cl:< i (length items)))
       (error 'type-error :datum i :expected-type `(integer 0 (,(length items)))))
     (nth i items)))
-(trivia:defpattern tuple (&rest patterns)
-  ;; Check exact arity once, without nested cons-test expansion.
-  (let ((items (gensym "TUPLE-ITEMS")))
-    `(cl:and (cl:type tuple-value)
-       (trivia:access #'tuple-items
-         (trivia:guard1 (,items :type list)
-           (cl:= (length ,items) ,(length patterns))
-           ,@(loop for pattern in patterns for i from 0
-                   append (list `(nth ,i ,items) pattern)))))))
 (defun fst (tuple) (tuple-ref tuple 0))
 (defun snd (tuple) (tuple-ref tuple 1))
 
 (defstruct (ref-cell (:constructor ref (value))) value)
 (defun deref (cell) (ref-cell-value cell))
 (defun assign (cell value) (setf (ref-cell-value cell) value) unit)
-(trivia:defpattern ref-contents (value)
-  `(cl:and (cl:type ref-cell) (trivia:access #'deref ,value)))
-
 (define-condition ocaml-condition (error) ())
 (define-condition match-failure (ocaml-condition) ())
 (defun match-failure () (error 'match-failure))
-(defmacro match (value &body clauses)
-  `(trivia:match ,value ,@clauses (_ (match-failure))))
 (defun raise (condition) (error condition))
 
 (defmacro define-exception (name &rest slots)
@@ -143,9 +129,9 @@
                   slots accessors))
        (defun ,constructor ,slots
          (make-condition ',name ,@(mapcan (lambda (slot) (list (intern (symbol-name slot) :keyword) slot)) slots)))
-       (trivia:defpattern ,name ,slots
-         (list 'cl:and (list 'cl:type ',name)
-               ,@(mapcar (lambda (slot accessor) `(list 'trivia:access (list 'function ',accessor) ,slot)) slots accessors))))))
+       (eval-when (:compile-toplevel :load-toplevel :execute)
+         (register-pattern-family ',name
+           '((,name :class ,name :arity ,(length slots) :readers ,accessors)))))))
 
 (define-exception failure message)
 (define-exception invalid_argument message)
@@ -208,12 +194,15 @@
        (eval-when (:compile-toplevel :load-toplevel :execute)
          (setf (gethash ',name *record-descriptions*) (list ',keys ',mutable)))
        (defun ,maker (&key ,@slots) (,raw (vector ,@slots)))
-       (trivia:defpattern ,name (&key ,@(mapcar (lambda (s) `(,s '_)) slots))
-         (list 'cl:and (list 'cl:type ',name)
-               (list 'trivia:access '(function record-fields) (list 'vector ,@slots)))))))
+       (eval-when (:compile-toplevel :load-toplevel :execute)
+         (register-pattern-family ',name
+           '((,name :class ,name :arity ,(length slots) :record t
+                    :keys ,keys :accessor record-fields)))))))
 (defmacro defvariant (type &body constructors)
   (let ((constant-tag 0) (block-tag 0))
     `(progn
+      (eval-when (:compile-toplevel :load-toplevel :execute)
+        (register-pattern-family ',type ',(mapcar (lambda (c) (list (car c))) constructors)))
       ,@(loop for (name . specifications) in constructors
          for record-p = (and (consp (first specifications)) (eq (caar specifications) :record))
          for record-spec = (when record-p (cdar specifications))
@@ -236,17 +225,11 @@
                                      (list ',(mapcar (lambda (s) (intern (symbol-name s) :keyword)) slots) ',mutable)))))
            (defun ,maker ,(if record-p `(&key ,@slots) slots)
              ,(if constant-p singleton `(,raw-maker (vector ,@slots))))
-           ,(if (and (not record-p) (cl:> (length slots) 1))
-                `(trivia:defpattern ,name (&rest patterns)
-                   (list 'cl:and (list 'cl:type ',class)
-                     (cond ((cl:= (length patterns) ,(length slots))
-                            (list 'trivia:access '(function variant-fields) (cons 'vector patterns)))
-                           ((and (cl:= (length patterns) 1) (symbolp (first patterns))
-                                 (string= (symbol-name (first patterns)) "_")) '_)
-                           (t (error "Wrong constructor pattern arity: ~s" ',name)))))
-                `(trivia:defpattern ,name ,(if record-p `(&key ,@(mapcar (lambda (s) `(,s '_)) slots)) slots)
-                   (list 'cl:and (list 'cl:type ',class)
-                         (list 'trivia:access '(function variant-fields) (list 'vector ,@slots))))))))))
+           (eval-when (:compile-toplevel :load-toplevel :execute)
+             (setf (gethash ',name *pattern-descriptions*)
+                   '(:class ,class :arity ,(length slots) :record ,record-p
+                     :keys ,(when record-p (mapcar (lambda (s) (intern (symbol-name s) :keyword)) slots))
+                     :accessor variant-fields))))))))
 
 (defvariant option (None) (Some value))
 

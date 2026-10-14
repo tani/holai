@@ -259,10 +259,10 @@
     rator
     rand
     new_basic_definition
-    MK_COMB*
+    MK_COMB%
     mk_comb
     INST_TYPE
-    INST*
+    INST%
     inst
     hyp
     freesl
@@ -278,7 +278,7 @@
     Comb
     aty
     ASSUME
-    ABS*)
+    ABS%)
   (:shadowing-import-from
     :hol2cl.lib
     subtract
@@ -436,6 +436,7 @@
 
 (defparameter mk_iff
   (let ((eq_tm (parse_term "(<=>)")))
+    (cl:declare (cl:ignorable eq_tm))
     (lambdac (arg~114)
       (match arg~114 ((tuple l r) (mk_comb (tuple (mk_comb (tuple eq_tm l)) r)))))))
 
@@ -446,8 +447,9 @@
 
 (defunc PINST (tyin tmin)
   (let
-    ((iterm_fn (INST* (map (F_F #'I (funcall inst tyin)) tmin)))
+    ((iterm_fn (INST% (map (F_F #'I (funcall inst tyin)) tmin)))
       (itype_fn (INST_TYPE tyin)))
+    (cl:declare (cl:ignorable iterm_fn itype_fn))
     (lambdac (th)
       (handler-case
         (funcall iterm_fn (funcall itype_fn th))
@@ -484,13 +486,15 @@
 
 (defparameter EQT_INTRO
   (let*
-    ((t* (parse_term "t:bool"))
+    ((t% (parse_term "t:bool"))
       (pth
         (let*
-          ((th1 (DEDUCT_ANTISYM_RULE (ASSUME t*) TRUTH))
+          ((th1 (DEDUCT_ANTISYM_RULE (ASSUME t%) TRUTH))
             (th2 (EQT_ELIM (ASSUME (concl th1)))))
+          (cl:declare (cl:ignorable th1 th2))
           (DEDUCT_ANTISYM_RULE th2 th1))))
-    (lambdac (th) (EQ_MP (INST* (cl:cons (tuple (concl th) t*) nil) pth) th))))
+    (cl:declare (cl:ignorable t% pth))
+    (lambdac (th) (EQ_MP (INST% (cl:cons (tuple (concl th) t%) nil) pth) th))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Rules for /\                                                              *)
@@ -510,42 +514,52 @@
     ((f (parse_term "f:bool->bool->bool"))
       (p (parse_term "p:bool"))
       (q (parse_term "q:bool")))
+    (cl:declare (cl:ignorable f p q))
     (let
       ((pth1
         (let*
           ((th1 (CONV_RULE (RAND_CONV #'BETA_CONV) (AP_THM AND_DEF p)))
             (th2 (CONV_RULE (RAND_CONV #'BETA_CONV) (AP_THM th1 q)))
             (th3 (EQ_MP th2 (ASSUME (funcall mk_conj (tuple p q))))))
+          (cl:declare (cl:ignorable th1 th2 th3))
           (EQT_ELIM
             (funcall BETA_RULE (AP_THM th3 (parse_term "\\(p:bool) (q:bool). q"))))))
         (pth2
           (let ((pth (ASSUME p)) (qth (ASSUME q)))
+            (cl:declare (cl:ignorable pth qth))
             (let*
               ((th1
-                (MK_COMB*
+                (MK_COMB%
                   (tuple (AP_TERM f (funcall EQT_INTRO pth)) (funcall EQT_INTRO qth))))
-                (th2 (ABS* f th1))
+                (th2 (ABS% f th1))
                 (th3 (funcall BETA_RULE (AP_THM (AP_THM AND_DEF p) q))))
+              (cl:declare (cl:ignorable th1 th2 th3))
               (EQ_MP (SYM th3) th2)))))
+      (cl:declare (cl:ignorable pth1 pth2))
       (let ((pth (DEDUCT_ANTISYM_RULE pth1 pth2)))
+        (cl:declare (cl:ignorable pth))
         (lambdac (th1 th2)
           (let
             ((th
-              (INST*
+              (INST%
                 (cl:cons (tuple (concl th1) p) (cl:cons (tuple (concl th2) q) nil))
                 pth)))
+            (cl:declare (cl:ignorable th))
             (EQ_MP (EQ_MP (DEDUCT_ANTISYM_RULE th1 th) th1) th2)))))))
 
 (defparameter CONJUNCT1
   (let ((P (parse_term "P:bool")) (Q (parse_term "Q:bool")))
+    (cl:declare (cl:ignorable P Q))
     (let
       ((pth
         (let*
           ((th1 (CONV_RULE (RAND_CONV #'BETA_CONV) (AP_THM AND_DEF P)))
             (th2 (CONV_RULE (RAND_CONV #'BETA_CONV) (AP_THM th1 Q)))
             (th3 (EQ_MP th2 (ASSUME (funcall mk_conj (tuple P Q))))))
+          (cl:declare (cl:ignorable th1 th2 th3))
           (EQT_ELIM
             (funcall BETA_RULE (AP_THM th3 (parse_term "\\(p:bool) (q:bool). p")))))))
+      (cl:declare (cl:ignorable pth))
       (lambdac (th)
         (handler-case
           (match (funcall dest_conj (concl th))
@@ -553,7 +567,7 @@
               (EQ_MP
                 (DEDUCT_ANTISYM_RULE
                   th
-                  (INST* (cl:cons (tuple l P) (cl:cons (tuple r Q) nil)) pth))
+                  (INST% (cl:cons (tuple l P) (cl:cons (tuple r Q) nil)) pth))
                 th)))
           (hol2cl.runtime:ocaml-condition
             (exception~400)
@@ -563,14 +577,17 @@
 
 (defparameter CONJUNCT2
   (let ((P (parse_term "P:bool")) (Q (parse_term "Q:bool")))
+    (cl:declare (cl:ignorable P Q))
     (let
       ((pth
         (let*
           ((th1 (CONV_RULE (RAND_CONV #'BETA_CONV) (AP_THM AND_DEF P)))
             (th2 (CONV_RULE (RAND_CONV #'BETA_CONV) (AP_THM th1 Q)))
             (th3 (EQ_MP th2 (ASSUME (funcall mk_conj (tuple P Q))))))
+          (cl:declare (cl:ignorable th1 th2 th3))
           (EQT_ELIM
             (funcall BETA_RULE (AP_THM th3 (parse_term "\\(p:bool) (q:bool). q")))))))
+      (cl:declare (cl:ignorable pth))
       (lambdac (th)
         (handler-case
           (match (funcall dest_conj (concl th))
@@ -578,7 +595,7 @@
               (EQ_MP
                 (DEDUCT_ANTISYM_RULE
                   th
-                  (INST* (cl:cons (tuple l P) (cl:cons (tuple r Q) nil)) pth))
+                  (INST% (cl:cons (tuple l P) (cl:cons (tuple r Q) nil)) pth))
                 th)))
           (hol2cl.runtime:ocaml-condition
             (exception~474)
@@ -608,19 +625,24 @@
 
 (defparameter MP
   (let ((p (parse_term "p:bool")) (q (parse_term "q:bool")))
+    (cl:declare (cl:ignorable p q))
     (let
       ((pth
         (let
           ((th1 (funcall BETA_RULE (AP_THM (AP_THM IMP_DEF p) q)))
             (th2 (funcall CONJ (ASSUME p) (ASSUME q)))
             (th3 (funcall CONJUNCT1 (ASSUME (funcall mk_conj (tuple p q))))))
+          (cl:declare (cl:ignorable th1 th2 th3))
           (EQ_MP (SYM th1) (DEDUCT_ANTISYM_RULE th2 th3))))
         (qth
           (let*
             ((th1 (funcall BETA_RULE (AP_THM (AP_THM IMP_DEF p) q)))
               (th2 (EQ_MP th1 (ASSUME (funcall mk_imp (tuple p q))))))
+            (cl:declare (cl:ignorable th1 th2))
             (funcall CONJUNCT2 (EQ_MP (SYM th2) (ASSUME p))))))
+      (cl:declare (cl:ignorable pth qth))
       (let ((rth (DEDUCT_ANTISYM_RULE pth qth)))
+        (cl:declare (cl:ignorable rth))
         (lambdac (ith th)
           (match (funcall dest_imp (concl ith))
             ((tuple ant con)
@@ -629,20 +651,23 @@
                   (EQ_MP
                     (DEDUCT_ANTISYM_RULE
                       th
-                      (INST* (cl:cons (tuple ant p) (cl:cons (tuple con q) nil)) rth))
+                      (INST% (cl:cons (tuple ant p) (cl:cons (tuple con q) nil)) rth))
                     th)
                   ith)
                 (failwith "MP: theorems do not agree")))))))))
 
 (defparameter DISCH
   (let ((p (parse_term "p:bool")) (q (parse_term "q:bool")))
+    (cl:declare (cl:ignorable p q))
     (let ((pth (SYM (funcall BETA_RULE (AP_THM (AP_THM IMP_DEF p) q)))))
-      (lambdac (a* th)
+      (cl:declare (cl:ignorable pth))
+      (lambdac (a% th)
         (let*
-          ((th1 (funcall CONJ (ASSUME a*) th))
+          ((th1 (funcall CONJ (ASSUME a%) th))
             (th2 (funcall CONJUNCT1 (ASSUME (concl th1))))
             (th3 (DEDUCT_ANTISYM_RULE th1 th2))
-            (th4 (INST* (cl:cons (tuple a* p) (cl:cons (tuple (concl th) q) nil)) pth)))
+            (th4 (INST% (cl:cons (tuple a% p) (cl:cons (tuple (concl th) q) nil)) pth)))
+          (cl:declare (cl:ignorable th1 th2 th3 th4))
           (EQ_MP th4 th3))))))
 
 (defunc DISCH_ALL (th)
@@ -663,13 +688,16 @@
 
 (defparameter IMP_ANTISYM_RULE
   (let ((p (parse_term "p:bool")) (q (parse_term "q:bool")) (imp_tm (parse_term "(==>)")))
+    (cl:declare (cl:ignorable p q imp_tm))
     (let ((pq (funcall mk_imp (tuple p q))) (qp (funcall mk_imp (tuple q p))))
+      (cl:declare (cl:ignorable pq qp))
       (match (CONJ_PAIR (ASSUME (funcall mk_conj (tuple pq qp))))
         ((tuple pth1 pth2)
           (let*
             ((pth3 (DEDUCT_ANTISYM_RULE (UNDISCH pth2) (UNDISCH pth1)))
               (pth4 (DISCH_ALL (ASSUME q)))
               (pth5 (ASSUME (funcall mk_eq (tuple p q)))))
+            (cl:declare (cl:ignorable pth3 pth4 pth5))
             (let*
               ((pth6
                 (funcall
@@ -677,38 +705,42 @@
                   (EQ_MP (SYM (AP_THM (AP_TERM imp_tm pth5) q)) pth4)
                   (EQ_MP (SYM (AP_TERM (mk_comb (tuple imp_tm q)) pth5)) pth4)))
                 (pth (DEDUCT_ANTISYM_RULE pth6 pth3)))
+              (cl:declare (cl:ignorable pth6 pth))
               (lambdac (th1 th2)
                 (match (funcall dest_imp (concl th1))
                   ((tuple p1 q1)
                     (EQ_MP
-                      (INST* (cl:cons (tuple p1 p) (cl:cons (tuple q1 q) nil)) pth)
+                      (INST% (cl:cons (tuple p1 p) (cl:cons (tuple q1 q) nil)) pth)
                       (funcall CONJ th1 th2))))))))))))
 
 (defunc ADD_ASSUM (tm th) (funcall MP (funcall DISCH tm th) (ASSUME tm)))
 
 (defparameter EQ_IMP_RULE
   (let ((peq (parse_term "p <=> q")))
+    (cl:declare (cl:ignorable peq))
     (match (dest_iff peq)
       ((tuple p q)
         (let
           ((pth1 (funcall DISCH peq (funcall DISCH p (EQ_MP (ASSUME peq) (ASSUME p)))))
             (pth2
               (funcall DISCH peq (funcall DISCH q (EQ_MP (SYM (ASSUME peq)) (ASSUME q))))))
+          (cl:declare (cl:ignorable pth1 pth2))
           (lambdac (th)
             (match (dest_iff (concl th))
               ((tuple l r)
                 (tuple
                   (funcall
                     MP
-                    (INST* (cl:cons (tuple l p) (cl:cons (tuple r q) nil)) pth1)
+                    (INST% (cl:cons (tuple l p) (cl:cons (tuple r q) nil)) pth1)
                     th)
                   (funcall
                     MP
-                    (INST* (cl:cons (tuple l p) (cl:cons (tuple r q) nil)) pth2)
+                    (INST% (cl:cons (tuple l p) (cl:cons (tuple r q) nil)) pth2)
                     th))))))))))
 
 (defparameter IMP_TRANS
   (let ((pq (parse_term "p ==> q")) (qr (parse_term "q ==> r")))
+    (cl:declare (cl:ignorable pq qr))
     (match (tuple (funcall dest_imp pq) (rand qr))
       ((tuple (tuple p q) r)
         (let
@@ -717,16 +749,17 @@
               DISCH
               (cl:cons pq (cl:cons qr (cl:cons p nil)))
               (funcall MP (ASSUME qr) (funcall MP (ASSUME pq) (ASSUME p))))))
+          (cl:declare (cl:ignorable pth))
           (lambdac (th1 th2)
             (match (tuple (funcall dest_imp (concl th1)) (funcall dest_imp (concl th2)))
-              ((tuple (tuple x y) (tuple y* z))
-                (if (<> y y*)
+              ((tuple (tuple x y) (tuple y% z))
+                (if (<> y y%)
                   (failwith "IMP_TRANS")
                   (funcall
                     MP
                     (funcall
                       MP
-                      (INST*
+                      (INST%
                         (cl:cons
                           (tuple x p)
                           (cl:cons (tuple y q) (cl:cons (tuple z r) nil)))
@@ -749,6 +782,7 @@
 
 (defparameter SPEC
   (let ((P (parse_term "P:A->bool")) (x (parse_term "x:A")))
+    (cl:declare (cl:ignorable P x))
     (let
       ((pth
         (let*
@@ -758,17 +792,20 @@
               (ASSUME (parse_term "(!)(P:A->bool)"))))
             (th2 (AP_THM (CONV_RULE #'BETA_CONV th1) (parse_term "x:A")))
             (th3 (CONV_RULE (RAND_CONV #'BETA_CONV) th2)))
+          (cl:declare (cl:ignorable th1 th2 th3))
           (DISCH_ALL (EQT_ELIM th3)))))
+      (cl:declare (cl:ignorable pth))
       (lambdac (tm th)
         (handler-case
-          (let ((abs** (rand (concl th))))
+          (let ((abs%% (rand (concl th))))
+            (cl:declare (cl:ignorable abs%%))
             (CONV_RULE
               #'BETA_CONV
               (funcall
                 MP
                 (PINST
-                  (cl:cons (tuple (snd (dest_var (bndvar abs**))) aty) nil)
-                  (cl:cons (tuple abs** P) (cl:cons (tuple tm x) nil))
+                  (cl:cons (tuple (snd (dest_var (bndvar abs%%))) aty) nil)
+                  (cl:cons (tuple abs%% P) (cl:cons (tuple tm x) nil))
                   pth)
                 th)))
           (hol2cl.runtime:ocaml-condition
@@ -786,12 +823,13 @@
 
 (defunc SPEC_VAR (th)
   (let ((bv (variant (thm_frees th) (bndvar (rand (concl th))))))
+    (cl:declare (cl:ignorable bv))
     (tuple bv (funcall SPEC bv th))))
 
 (defunc SPEC_ALL (th)
   (if (funcall is_forall (concl th)) (SPEC_ALL (snd (SPEC_VAR th))) th))
 
-(defunc ISPEC (t* th)
+(defunc ISPEC (t% th)
   (match
     (handler-case
       (funcall dest_forall (concl th))
@@ -804,14 +842,15 @@
       (let
         ((tyins
           (handler-case
-            (type_match (snd (dest_var x)) (type_of t*) nil)
+            (type_match (snd (dest_var x)) (type_of t%) nil)
             (hol2cl.runtime:ocaml-condition
               (exception~1154)
               (match exception~1154
                 ((Failure _) (failwith "ISPEC can't type-instantiate input theorem"))
                 (_ (raise exception~1154)))))))
+        (cl:declare (cl:ignorable tyins))
         (handler-case
-          (funcall SPEC t* (INST_TYPE tyins th))
+          (funcall SPEC t% (INST_TYPE tyins th))
           (hol2cl.runtime:ocaml-condition
             (exception~1167)
             (match exception~1167
@@ -831,6 +870,7 @@
               (map (o (function-value #'snd 1) #'dest_var) avs)
               (map #'type_of tms)
               nil)))
+        (cl:declare (cl:ignorable avs tyins))
         (SPECL tms (INST_TYPE tyins th))))
     (hol2cl.runtime:ocaml-condition
       (exception~1196)
@@ -841,23 +881,28 @@
     ((pth
       (SYM
         (CONV_RULE (RAND_CONV #'BETA_CONV) (AP_THM FORALL_DEF (parse_term "P:A->bool"))))))
+    (cl:declare (cl:ignorable pth))
     (lambdac (x)
       (let*
         ((qth (INST_TYPE (cl:cons (tuple (snd (dest_var x)) aty) nil) pth))
           (ptm (rand (rand (concl qth)))))
+        (cl:declare (cl:ignorable qth ptm))
         (lambdac (th)
           (let*
-            ((th* (ABS* x (funcall EQT_INTRO th)))
-              (phi (funcall lhand (concl th*)))
-              (rth (INST* (cl:cons (tuple phi ptm) nil) qth)))
-            (EQ_MP rth th*)))))))
+            ((th% (ABS% x (funcall EQT_INTRO th)))
+              (phi (funcall lhand (concl th%)))
+              (rth (INST% (cl:cons (tuple phi ptm) nil) qth)))
+            (cl:declare (cl:ignorable th% phi rth))
+            (EQ_MP rth th%)))))))
 
 (defparameter GENL (itlist GEN))
 
 (defunc GEN_ALL (th)
   (match (dest_thm th)
-    ((tuple asl c*)
-      (let ((vars (subtract (frees c*) (freesl asl)))) (funcall GENL vars th)))))
+    ((tuple asl c%)
+      (let ((vars (subtract (frees c%) (freesl asl))))
+        (cl:declare (cl:ignorable vars))
+        (funcall GENL vars th)))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Rules for ?                                                               *)
@@ -874,6 +919,7 @@
 
 (defparameter EXISTS
   (let ((P (parse_term "P:A->bool")) (x (parse_term "x:A")))
+    (cl:declare (cl:ignorable P x))
     (let
       ((pth
         (let*
@@ -885,20 +931,23 @@
                 DISCH
                 (parse_term "!x:A. P x ==> Q")
                 (funcall MP th2 (ASSUME (parse_term "(P:A->bool) x"))))))
+          (cl:declare (cl:ignorable th1 th2 th3))
           (EQ_MP (SYM th1) (funcall GEN (parse_term "Q:bool") th3)))))
+      (cl:declare (cl:ignorable pth))
       (lambdac (arg~1381 th)
         (match arg~1381
           ((tuple etm stm)
             (handler-case
               (match (dest_comb etm)
-                ((tuple qf abs**)
+                ((tuple qf abs%%)
                   (let*
-                    ((bth (BETA_CONV (mk_comb (tuple abs** stm))))
+                    ((bth (BETA_CONV (mk_comb (tuple abs%% stm))))
                       (cth
                         (PINST
                           (cl:cons (tuple (type_of stm) aty) nil)
-                          (cl:cons (tuple abs** P) (cl:cons (tuple stm x) nil))
+                          (cl:cons (tuple abs%% P) (cl:cons (tuple stm x) nil))
                           pth)))
+                    (cl:declare (cl:ignorable bth cth))
                     (PROVE_HYP (EQ_MP (SYM bth) th) cth))))
               (hol2cl.runtime:ocaml-condition
                 (exception~1386)
@@ -911,6 +960,7 @@
 
 (defparameter CHOOSE
   (let ((P (parse_term "P:A->bool")) (Q (parse_term "Q:bool")))
+    (cl:declare (cl:ignorable P Q))
     (let
       ((pth
         (let*
@@ -920,16 +970,19 @@
                 SPEC
                 (parse_term "Q:bool")
                 (UNDISCH (fst (funcall EQ_IMP_RULE th1))))))
+          (cl:declare (cl:ignorable th1 th2))
           (DISCH_ALL (funcall DISCH (parse_term "(?) (P:A->bool)") (UNDISCH th2))))))
+      (cl:declare (cl:ignorable pth))
       (lambdac (arg~1483 th2)
         (match arg~1483
           ((tuple v th1)
             (handler-case
-              (let ((abs** (rand (concl th1))))
-                (match (dest_abs abs**)
+              (let ((abs%% (rand (concl th1))))
+                (cl:declare (cl:ignorable abs%%))
+                (match (dest_abs abs%%)
                   ((tuple bv bod)
                     (let*
-                      ((cmb (mk_comb (tuple abs** v)))
+                      ((cmb (mk_comb (tuple abs%% v)))
                         (pat (funcall vsubst (cl:cons (tuple v bv) nil) bod))
                         (th3 (CONV_RULE #'BETA_CONV (ASSUME cmb)))
                         (th4
@@ -940,8 +993,9 @@
                         (th5
                           (PINST
                             (cl:cons (tuple (snd (dest_var v)) aty) nil)
-                            (cl:cons (tuple abs** P) (cl:cons (tuple (concl th2) Q) nil))
+                            (cl:cons (tuple abs%% P) (cl:cons (tuple (concl th2) Q) nil))
                             pth)))
+                      (cl:declare (cl:ignorable cmb pat th3 th4 th5))
                       (funcall MP (funcall MP th5 th4) th1)))))
               (hol2cl.runtime:ocaml-condition
                 (exception~1488)
@@ -966,6 +1020,7 @@
 
 (defparameter DISJ1
   (let ((P (parse_term "P:bool")) (Q (parse_term "Q:bool")))
+    (cl:declare (cl:ignorable P Q))
     (let
       ((pth
         (let*
@@ -981,13 +1036,15 @@
                   DISCH
                   (parse_term "P ==> t")
                   (funcall DISCH (parse_term "Q ==> t") th3)))))
+          (cl:declare (cl:ignorable th1 th2 th3 th4))
           (EQ_MP (SYM th2) th4))))
+      (cl:declare (cl:ignorable pth))
       (lambdac (th tm)
         (handler-case
           (EQ_MP
             (DEDUCT_ANTISYM_RULE
               th
-              (INST* (cl:cons (tuple (concl th) P) (cl:cons (tuple tm Q) nil)) pth))
+              (INST% (cl:cons (tuple (concl th) P) (cl:cons (tuple tm Q) nil)) pth))
             th)
           (hol2cl.runtime:ocaml-condition
             (exception~1654)
@@ -997,6 +1054,7 @@
 
 (defparameter DISJ2
   (let ((P (parse_term "P:bool")) (Q (parse_term "Q:bool")))
+    (cl:declare (cl:ignorable P Q))
     (let
       ((pth
         (let*
@@ -1012,13 +1070,15 @@
                   DISCH
                   (parse_term "P ==> t")
                   (funcall DISCH (parse_term "Q ==> t") th3)))))
+          (cl:declare (cl:ignorable th1 th2 th3 th4))
           (EQ_MP (SYM th2) th4))))
+      (cl:declare (cl:ignorable pth))
       (lambdac (tm th)
         (handler-case
           (EQ_MP
             (DEDUCT_ANTISYM_RULE
               th
-              (INST* (cl:cons (tuple tm P) (cl:cons (tuple (concl th) Q) nil)) pth))
+              (INST% (cl:cons (tuple tm P) (cl:cons (tuple (concl th) Q) nil)) pth))
             th)
           (hol2cl.runtime:ocaml-condition
             (exception~1733)
@@ -1028,6 +1088,7 @@
 
 (defparameter DISJ_CASES
   (let ((P (parse_term "P:bool")) (Q (parse_term "Q:bool")) (R (parse_term "R:bool")))
+    (cl:declare (cl:ignorable P Q R))
     (let
       ((pth
         (let*
@@ -1038,23 +1099,27 @@
                 SPEC
                 (parse_term "R:bool")
                 (EQ_MP th2 (ASSUME (parse_term "P \\/ Q"))))))
+          (cl:declare (cl:ignorable th1 th2 th3))
           (UNDISCH (UNDISCH th3)))))
+      (cl:declare (cl:ignorable pth))
       (lambdac (th0 th1 th2)
         (handler-case
           (let ((c1 (concl th1)) (c2 (concl th2)))
+            (cl:declare (cl:ignorable c1 c2))
             (if (not (aconv c1 c2))
               (failwith "DISJ_CASES")
               (match (funcall dest_disj (concl th0))
-                ((tuple l r*)
+                ((tuple l r%)
                   (let
                     ((th
-                      (INST*
+                      (INST%
                         (cl:cons
                           (tuple l P)
-                          (cl:cons (tuple r* Q) (cl:cons (tuple c1 R) nil)))
+                          (cl:cons (tuple r% Q) (cl:cons (tuple c1 R) nil)))
                         pth)))
+                    (cl:declare (cl:ignorable th))
                     (PROVE_HYP
-                      (funcall DISCH r* th2)
+                      (funcall DISCH r% th2)
                       (PROVE_HYP
                         (funcall DISCH l th1)
                         (EQ_MP (DEDUCT_ANTISYM_RULE th0 th) th0))))))))
@@ -1082,6 +1147,7 @@
 
 (defparameter mk_neg
   (let ((neg_tm (parse_term "(~)")))
+    (cl:declare (cl:ignorable neg_tm))
     (lambdac (tm)
       (handler-case
         (mk_comb (tuple neg_tm tm))
@@ -1095,9 +1161,10 @@
   (let*
     ((P (parse_term "P:bool"))
       (pth (CONV_RULE (RAND_CONV #'BETA_CONV) (AP_THM NOT_DEF P))))
+    (cl:declare (cl:ignorable P pth))
     (lambdac (th)
       (handler-case
-        (EQ_MP (INST* (cl:cons (tuple (rand (concl th)) P) nil) pth) th)
+        (EQ_MP (INST% (cl:cons (tuple (rand (concl th)) P) nil) pth) th)
         (hol2cl.runtime:ocaml-condition
           (exception~1923)
           (match exception~1923
@@ -1108,9 +1175,10 @@
   (let*
     ((P (parse_term "P:bool"))
       (pth (SYM (CONV_RULE (RAND_CONV #'BETA_CONV) (AP_THM NOT_DEF P)))))
+    (cl:declare (cl:ignorable P pth))
     (lambdac (th)
       (handler-case
-        (EQ_MP (INST* (cl:cons (tuple (rand (rator (concl th))) P) nil) pth) th)
+        (EQ_MP (INST% (cl:cons (tuple (rand (rator (concl th))) P) nil) pth) th)
         (hol2cl.runtime:ocaml-condition
           (exception~1957)
           (match exception~1957
@@ -1128,10 +1196,12 @@
                 DISCH
                 (parse_term "F")
                 (funcall SPEC P (EQ_MP F_DEF (ASSUME (parse_term "F")))))))
+          (cl:declare (cl:ignorable th1 th2))
           (DISCH_ALL (funcall IMP_ANTISYM_RULE th1 th2)))))
+    (cl:declare (cl:ignorable P pth))
     (lambdac (th)
       (handler-case
-        (funcall MP (INST* (cl:cons (tuple (rand (concl th)) P) nil) pth) th)
+        (funcall MP (INST% (cl:cons (tuple (rand (concl th)) P) nil) pth) th)
         (hol2cl.runtime:ocaml-condition
           (exception~2006)
           (match exception~2006
@@ -1145,10 +1215,12 @@
         (let*
           ((th1 (EQ_MP (ASSUME (parse_term "P = F")) (ASSUME (parse_term "P:bool"))))
             (th2 (funcall DISCH P (funcall SPEC (parse_term "F") (EQ_MP F_DEF th1)))))
+          (cl:declare (cl:ignorable th1 th2))
           (DISCH_ALL (funcall NOT_INTRO th2)))))
+    (cl:declare (cl:ignorable P pth))
     (lambdac (th)
       (handler-case
-        (funcall MP (INST* (cl:cons (tuple (rand (rator (concl th))) P) nil) pth) th)
+        (funcall MP (INST% (cl:cons (tuple (rand (rator (concl th))) P) nil) pth) th)
         (hol2cl.runtime:ocaml-condition
           (exception~2055)
           (match exception~2055
@@ -1157,11 +1229,13 @@
 
 (defparameter CONTR
   (let ((P (parse_term "P:bool")) (f_tm (parse_term "F")))
+    (cl:declare (cl:ignorable P f_tm))
     (let ((pth (funcall SPEC P (EQ_MP F_DEF (ASSUME (parse_term "F"))))))
+      (cl:declare (cl:ignorable pth))
       (lambdac (tm th)
         (if (<> (concl th) f_tm)
           (failwith "CONTR")
-          (EQ_MP (DEDUCT_ANTISYM_RULE th (INST* (cl:cons (tuple tm P) nil) pth)) th))))))
+          (EQ_MP (DEDUCT_ANTISYM_RULE th (INST% (cl:cons (tuple tm P) nil) pth)) th))))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Rules for unique existence.                                               *)
@@ -1181,13 +1255,16 @@
         (let*
           ((th1 (CONV_RULE (RAND_CONV #'BETA_CONV) (AP_THM EXISTS_UNIQUE_DEF P)))
             (th2 (UNDISCH (fst (funcall EQ_IMP_RULE th1)))))
+          (cl:declare (cl:ignorable th1 th2))
           (DISCH_ALL (funcall CONJUNCT1 th2)))))
+    (cl:declare (cl:ignorable P pth))
     (lambdac (th)
       (handler-case
-        (let* ((abs** (rand (concl th))) (ty (snd (dest_var (bndvar abs**)))))
+        (let* ((abs%% (rand (concl th))) (ty (snd (dest_var (bndvar abs%%)))))
+          (cl:declare (cl:ignorable abs%% ty))
           (funcall
             MP
-            (PINST (cl:cons (tuple ty aty) nil) (cl:cons (tuple abs** P) nil) pth)
+            (PINST (cl:cons (tuple ty aty) nil) (cl:cons (tuple abs%% P) nil) pth)
             th))
         (hol2cl.runtime:ocaml-condition
           (exception~2148)

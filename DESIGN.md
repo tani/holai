@@ -2219,3 +2219,183 @@ Earlier benchmark results refer to the previous naming version.
 
 Reproduce with `make test` and `make clean-build`; the naming fixture runs as
 part of tests/run.py. Its raw observation/allocator result is star-names.json.
+
+## 30. Standard Common Lisp structural match — implementation specification
+
+Replace the production Trivia dependency with runtime/pattern.lisp. Preserve
+Tuple lists, Variant/Record vectors, refs and condition subclasses. Keep the
+existing match DSL, replacing trivia:guard with exported guard. Compile patterns
+to a validated expansion-only tagged IR and then IF/LET/DESTRUCTURING-BIND.
+Evaluate the scrutinee once; type-check before field access. Exact tuple/vector
+arity is checked once. Constructor/record indexes are embedded constants.
+
+Declarations register symbol-keyed descriptors in EVAL-WHEN at compile/load/
+execute time. Registering a variant family removes its previous descriptors;
+versioned symbols and package identities remain independent. Every expansion
+records its descriptor signature and checks it when loading the compiled unit,
+so changed declarations require dependent FASLs to be rebuilt, rather than
+silently using stale field indexes. Dependencies must load declarations first.
+Load order: package, pattern registry/compiler, core, format, stdlib.
+
+The IR validates constructor arity, record keys, duplicate pattern bindings and
+identical OR binding sets. Guards may refer to outer lexical variables: their
+free names are not rejected. Source character patterns use a dedicated literal
+DSL node (character code), avoiding repeated synthetic char~value bindings.
+Integers/floats use EQL (including the existing representation-sensitive float
+behavior), strings STRING= with STRINGP, characters CHAR= with CHARACTERP,
+booleans EQ. NaN is not an OCaml source literal; direct Lisp float matching
+retains EQL semantics, rather than inventing numeric coercion.
+
+Clause failures use lexical BLOCK/RETURN-FROM. OR joins use a local function
+with explicit bound values, sharing the remaining pattern/guard/body once. A
+guard after an OR selection fails to the next clause, never to another OR arm;
+exceptions propagate. Neither bodies nor guards are duplicated for OR arms.
+Simple patterns introduce no continuation function. Pattern metadata and IR
+are never looked up or allocated by a running match. No source algorithms,
+function entry protocols, argument order or data representations change.
+
+Regression coverage must include the supplied semantic matrix, macro errors,
+OR/guard side effects, lexical capture, compile-file/load descriptor visibility
+and stale-ABI rejection. Run the whole unchanged 46-file corpus, source-map and
+clean-build checks before packaging all sources, DESIGN.md and AGENTS.md.
+Historical Trivia benchmark support may retain its pinned dependency in an
+isolated historical baseline; the production ASDF system must not require it.
+
+### 30.1 Validation and boundary details
+
+All46 unchanged source files compile/load,122 native checks and1124 differential
+observations pass. The94 outputs match clean regeneration; source pins/maps
+and ten negative translation cases pass. 46 additional backend checks cover
+OR binding joins, guard side effects/exceptions and outer lexical references,
+alias identity, records, refs, exceptions, exact tuple/vector sizes, literal
+type mismatch, signed zero and SBCL NaN EQL compatibility, duplicate/invalid
+patterns,128-wide tuples and60-deep constructors. Compile-file/load works for
+declarations and dependent matches. Changing a descriptor after loading does
+not affect execution (no registry lookup), but loading the stale FASL rejects.
+
+Character patterns are the one additional DSL spelling change: character-code
+with the source byte code, instead of a Trivia guard with a repeated helper
+variable. Literal validation does not coerce floats to integers. Guard free
+variables remain governed by ordinary Common Lisp lexical scope. Structural
+nodes access each field once; this initial compiler does not construct a
+cross-clause decision tree or deduplicate repeated explicit AND type tests.
+The sample expansion/disassembly is retained in pattern-expansion-and-assembly.txt.
+Performance evidence and its measurement scope are in reports/PATTERN-MATCH.md.
+
+### 30.2 Expansion contract
+
+| Surface pattern | Expansion-only IR | Runtime operations |
+|---|---|---|
+| `_`, variable | wildcard, bind | none; lexical binding at success |
+| scalar literal, `(character-code n)` | literal | typed STRING=/CHAR=, EQL or EQ |
+| `(cl:type type)` | type | TYPEP |
+| `(cl:cons head tail)` | cons | CONSP before CAR/CDR |
+| `(tuple ...)` | tuple | TYPEP, one LENGTH, DESTRUCTURING-BIND |
+| `(cl:vector ...)` | vector | VECTORP, one LENGTH, fixed AREF |
+| `(ref-contents p)` | ref | TYPEP before DEREF |
+| constructor/exception | constructor plus descriptor | TYPEP before fixed AREF/readers |
+| record keyword subset | constructor plus selected indexes | TYPEP before selected AREF |
+| `(cl:and ...)` | and | ordered composition on the same value |
+| `(cl:or ...)` | or | left-priority alternatives, fixed-argument FLET join |
+| `(guard p expression)` | guard | lexical bindings, one IF after structural success |
+
+`parse-pattern` produces tagged lists at expansion time. `pattern-bindings`
+validates duplicate bindings and OR equality recursively. Constructor parsing
+also checks arity/keywords, using exact resolved symbols as registry keys.
+`compile-pattern` takes IR, an evaluated-value symbol, a static binding alist,
+a compile-time success callback and a generated failure form. These callbacks
+run only while constructing code. Values extracted from structures live in
+fresh lexical temporaries; no field list or environment object is allocated
+for matching. Tuple DESTRUCTURING-BIND does not copy its existing item list.
+
+Each clause has a fresh failure BLOCK. Success returns directly from the outer
+MATCH block, preserving multiple return values and body forms. An OR's local
+FLET join receives its bound values explicitly and closes over only the earlier
+structural values required by the remaining pattern. The join contains the
+remaining guard/body once. Its failure after selection exits the clause block;
+it cannot enter a sibling OR arm. Failed structural alternatives instead enter
+the next arm. No HANDLER-CASE surrounds matching: errors in guards and bodies
+propagate unchanged. Clause order and source algorithms remain unchanged.
+
+Descriptors contain class, arity, accessor or exception readers, record-kind
+flag and ordered keyword keys. The vector index for each selected key is
+resolved during parsing. Family refresh removes the previous member names and
+re-registers every declaration in source order. ASDF loads pattern helpers
+before core declarations; EVAL-WHEN exposes registration at compile/load time.
+Dependent expansion embeds a read-only LOAD-TIME-VALUE signature check. It is
+not evaluated on each function invocation. Loading a dependent FASL requires
+its declaration provider to be loaded first and fails clearly on a changed ABI.
+Exact package-symbol keys retain module/version identities. Metadata does not
+provide a runtime reflection interface or a global source-name cache.
+
+The compiler trusts tuple instances built by the retained runtime to contain
+proper lists, and vector-backed classes to have their declared field counts.
+Malformed objects constructed outside this data profile are not repaired.
+There is no arbitrary user-defined pattern protocol, dynamic pattern input,
+full Common Lisp guard free-variable analysis, clause reordering, generic
+pattern library API, or static direct-call worker added by this replacement.
+
+### 30.3 Wildcard access refinement
+
+The first measurement exposed many unused-binding style warnings and unnecessary
+reads for wildcard fields. The finalized expansion omits field/ref/head/tail
+reads whose entire subpattern is wildcard, and omits tuple destructuring when
+only the exact arity is required. Named pattern bindings and tuple temporaries
+carry IGNORABLE declarations, without changing types or optimization settings.
+This is pattern compilation, not a source algorithm rewrite. Type/arity checks
+remain before every used access. The initial measurement is retained as
+history/pattern-initial-performance.json; final validation/measurement is rerun.
+
+### 30.4 Final measured status
+
+Final refinement again passes the complete46-file/1124-row corpus and46 pattern
+checks. Single serial measurements compare the unchanged Trivia baseline with
+the final backend: all compile operations33.857→24.181s; core compile operations
+32.685→23.797s; cold compile/load process peakRSS1822.102→1079.875MiB. This peak
+includes prerequisite/core initialization, not just compilation. Fresh FASL-only
+start-to-exit80.927→82.044s and peakRSS239.762→205.594MiB. Core allocation is
+55,727,650,256→55,734,329,328bytes, effectively unchanged. No startup speed gain
+is established. Total FASL bytes20,903,888→21,817,272. Final STYLE diagnostics97
+vs baseline324, ordinary caught WARNING diagnostics0 for both. Capacity and
+per-child peak-metric details, hashes and raw logs are in PATTERN-MATCH.md/JSON.
+The earlier86.351s prototype result is historical, not the final implementation.
+
+## 31. Percent suffixes and explicit ignorable bindings — before implementation
+
+User replaces all translator-added star suffixes with percent signs, including
+case/scope collisions, source primes and reserved/numeric reader atoms. Source
+operator stars, native CL names, literal strings and runtime special variables
+remain their original symbols. Examples: x'→x%, t→t%, t'→t%%, ABS collision→ABS%,
+*-> collision→*->%. Append another percent until the reader-normalized symbol
+is free. Preserve binding identity, record keywords, constructor maker names,
+module names and import/reference handling; do not perform generated-text
+replacement. Existing ~n versioning and private fresh variables stay unchanged.
+
+All defunc/lambdac/labelsc/fletc parameter binding forms receive IGNORABLE
+declarations; MATCH's once-evaluated input temporary also receives IGNORABLE.
+Keep the input expression evaluated even if a wildcard makes its value unused.
+No compiler warning muffling or SPECIAL declarations are added. Naming removes
+the accidental *->* lexical/special-convention warning. Compile everything from
+a fresh cache, classify remaining diagnostics, run the original complete corpus
+and clean regeneration, then deliver DESIGN/AGENTS/translator in the new ZIP.
+
+Local value/module LET and LET* binding forms also receive IGNORABLE. Retain
+the existing single-binding flattening rule when an inner form includes the
+new declaration, merging binding lists and rebuilding their declaration.
+Source-named unused module slots are not removed, moved or made special.
+
+### 31.1 Final validation
+
+Percent encoding passes21 isolated atom/allocation/native-target checks and9
+OCaml/SBCL observations, including9 expected percent-suffix exports and original
+operator-star preservation. Full46-file initialization,122 native checks,27
+protocol checks,84 OPTIONAL checks,16 tuple checks,46 pattern checks and1124
+differential rows pass. All94 clean generated outputs and source pins match.
+
+A separate fresh-cache compile audit completes all51 production units (5runtime
+plus46core) with zero errors, caught WARNING, caught STYLE-WARNING and warning
+notices. The diagnostic driver captures output before saving it and requires
+an explicit completion marker; a partial log is never accepted. Source hashes
+are recorded and checked at packaging time. make release runs the fresh audit
+after the normal corpus tests. Existing timing reports are historical; no new
+performance result is asserted for percent naming or IGNORABLE declarations.

@@ -1,5 +1,5 @@
 {
-  "allocator_checks": 19,
+  "allocator_checks": 21,
   "original_observations_match": true,
   "observations": [
     "star-case=1115",
@@ -15,14 +15,14 @@
   "escaped_symbol_delimiters_in_core": 0,
   "core_files": 46,
   "checked_exports": [
-    "T*",
-    "T**",
-    "NIL*",
-    "PI*",
-    "PI**",
+    "T%",
+    "T%%",
+    "NIL%",
+    "PI%",
+    "PI%%",
     "NAME",
-    "NAME*",
-    "NAME**",
-    "NAME***"
+    "NAME%",
+    "NAME%%",
+    "NAME%%%"
   ]
 }

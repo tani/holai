@@ -17,7 +17,7 @@
     (defpackage :hol2cl.fusion.hol
       (:use :cl)
       (:shadow
-        ABS*
+        ABS%
         ASSUME
         Abs
         BETA
@@ -26,9 +26,9 @@
         Const
         DEDUCT_ANTISYM_RULE
         EQ_MP
-        INST*
+        INST%
         INST_TYPE
-        MK_COMB*
+        MK_COMB%
         REFL
         Sequent
         TRANS
@@ -57,7 +57,7 @@
         get_type_arity
         hyp
         inst
-        inst**
+        inst%%
         is_abs
         is_comb
         is_const
@@ -103,9 +103,9 @@
         variant
         vfree_in
         vsubst
-        vsubst*)
+        vsubst%)
       (:export
-        ABS*
+        ABS%
         ASSUME
         Abs
         BETA
@@ -113,9 +113,9 @@
         Const
         DEDUCT_ANTISYM_RULE
         EQ_MP
-        INST*
+        INST%
         INST_TYPE
-        MK_COMB*
+        MK_COMB%
         REFL
         TRANS
         Tyapp
@@ -183,7 +183,7 @@
 (defpackage :hol2cl.fusion.hol
   (:use :cl)
   (:shadow
-    ABS*
+    ABS%
     ASSUME
     Abs
     BETA
@@ -192,9 +192,9 @@
     Const
     DEDUCT_ANTISYM_RULE
     EQ_MP
-    INST*
+    INST%
     INST_TYPE
-    MK_COMB*
+    MK_COMB%
     REFL
     Sequent
     TRANS
@@ -223,7 +223,7 @@
     get_type_arity
     hyp
     inst
-    inst**
+    inst%%
     is_abs
     is_comb
     is_const
@@ -269,7 +269,7 @@
     variant
     vfree_in
     vsubst
-    vsubst*)
+    vsubst%)
   (:shadowing-import-from :cl not)
   (:shadowing-import-from
     :hol2cl.lib
@@ -300,6 +300,7 @@
     match
     lambdac
     labelsc
+    guard
     function-value
     funcall
     fst
@@ -318,7 +319,7 @@
     <=
     <)
   (:export
-    ABS*
+    ABS%
     ASSUME
     Abs
     BETA
@@ -326,9 +327,9 @@
     Const
     DEDUCT_ANTISYM_RULE
     EQ_MP
-    INST*
+    INST%
     INST_TYPE
-    MK_COMB*
+    MK_COMB%
     REFL
     TRANS
     Tyapp
@@ -413,7 +414,7 @@
     mk_var
     mk_type
     mk_const
-    MK_COMB*
+    MK_COMB%
     mk_comb
     mk_abs
     is_vartype
@@ -423,7 +424,7 @@
     is_comb
     is_abs
     INST_TYPE
-    INST*
+    INST%
     inst
     hyp
     get_type_arity
@@ -452,7 +453,7 @@
     aty
     ASSUME
     alphaorder
-    ABS*
+    ABS%
     Abs)
   (:shadowing-import-from
     :hol2cl.runtime
@@ -466,7 +467,7 @@
     defunc
     =)
   (:export
-    ABS*
+    ABS%
     ASSUME
     Abs
     BETA
@@ -474,9 +475,9 @@
     Const
     DEDUCT_ANTISYM_RULE
     EQ_MP
-    INST*
+    INST%
     INST_TYPE
-    MK_COMB*
+    MK_COMB%
     REFL
     TRANS
     Tyapp
@@ -617,6 +618,7 @@
                       "mk_type: type "
                       (string-concat tyop " has not been defined"))))
                 (_ (raise exception~70)))))))
+        (cl:declare (cl:ignorable arity))
         (if (= arity (funcall length args))
           (make-Tyapp tyop args)
           (failwith (string-concat "mk_type: wrong number of arguments to " tyop)))))))
@@ -665,12 +667,13 @@
 ;; (* ------------------------------------------------------------------------- *)
 
 
-(defunc type_subst (i* ty)
+(defunc type_subst (i% ty)
   (match ty
     ((Tyapp tycon args)
-      (let ((args* (qmap (type_subst i*) args)))
-        (if (== args* args) ty (make-Tyapp tycon args*))))
-    (_ (rev_assocd ty i* ty))))
+      (let ((args% (qmap (type_subst i%) args)))
+        (cl:declare (cl:ignorable args%))
+        (if (== args% args) ty (make-Tyapp tycon args%))))
+    (_ (rev_assocd ty i% ty))))
 
 (defparameter bool_ty (make-Tyapp "bool" nil))
 
@@ -736,7 +739,7 @@
     ((Var _ ty) ty)
     ((Const _ ty) ty)
     ((Comb s _) (match (type_of s) ((Tyapp "fun" (cl:cons dty (cl:cons rty nil))) rty)))
-    ((Abs (Var _ ty) t*) (make-Tyapp "fun" (cl:cons ty (cl:cons (type_of t*) nil))))))
+    ((Abs (Var _ ty) t%) (make-Tyapp "fun" (cl:cons ty (cl:cons (type_of t%) nil))))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Primitive discriminators.                                                 *)
@@ -770,6 +773,7 @@
               (match exception~369
                 ((Failure _) (failwith "mk_const: not a constant name"))
                 (_ (raise exception~369)))))))
+        (cl:declare (cl:ignorable uty))
         (make-Const name (type_subst theta uty))))))
 
 (defunc mk_abs (arg~388)
@@ -781,9 +785,7 @@
   (match arg~408
     ((tuple f a)
       (match (type_of f)
-        ((trivia:guard
-          (Tyapp "fun" (cl:cons ty (cl:cons _ nil)))
-          (= (compare ty (type_of a)) 0))
+        ((guard (Tyapp "fun" (cl:cons ty (cl:cons _ nil))) (= (compare ty (type_of a)) 0))
           (make-Comb f a))
         (_ (failwith "mk_comb: types do not agree"))))))
 
@@ -814,7 +816,7 @@
     ((Var _ _) (cl:cons tm nil))
     ((Const _ _) nil)
     ((Abs bv bod) (subtract (frees bod) (cl:cons bv nil)))
-    ((Comb s t*) (union (frees s) (frees t*)))))
+    ((Comb s t%) (union (frees s) (frees t%)))))
 
 (defunc freesl (tml) (itlist (o #'union #'frees) tml nil))
 
@@ -828,7 +830,7 @@
     ((Var _ _) (mem tm acc))
     ((Const _ _) cl:t)
     ((Abs bv bod) (freesin (cl:cons bv acc) bod))
-    ((Comb s t*) (cl:and (freesin acc s) (freesin acc t*)))))
+    ((Comb s t%) (cl:and (freesin acc s) (freesin acc t%)))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Whether a variable (or constant in fact) is free in a term.               *)
@@ -838,7 +840,7 @@
 (defunc vfree_in (v tm)
   (match tm
     ((Abs bv bod) (cl:and (<> v bv) (vfree_in v bod)))
-    ((Comb s t*) (cl:or (vfree_in v s) (vfree_in v t*)))
+    ((Comb s t%) (cl:or (vfree_in v s) (vfree_in v t%)))
     (_ (= (compare tm v) 0))))
 
 ;; (* ------------------------------------------------------------------------- *)
@@ -850,8 +852,8 @@
   (match tm
     ((Var _ ty) (tyvars ty))
     ((Const _ ty) (tyvars ty))
-    ((Comb s t*) (union (type_vars_in_term s) (type_vars_in_term t*)))
-    ((Abs (Var _ ty) t*) (union (tyvars ty) (type_vars_in_term t*)))))
+    ((Comb s t%) (union (type_vars_in_term s) (type_vars_in_term t%)))
+    ((Abs (Var _ ty) t%) (union (tyvars ty) (type_vars_in_term t%)))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* For name-carrying syntax, we need this early.                             *)
@@ -872,32 +874,36 @@
 
 (defparameter vsubst
   (labelsc
-    ((vsubst*
+    ((vsubst%
       (ilist tm)
       (match tm
         ((Var _ _) (rev_assocd tm ilist tm))
         ((Const _ _) tm)
-        ((Comb s t*)
-          (let ((s* (vsubst* ilist s)) (t** (vsubst* ilist t*)))
-            (if (cl:and (== s* s) (== t** t*)) tm (make-Comb s* t**))))
+        ((Comb s t%)
+          (let ((s% (vsubst% ilist s)) (t%% (vsubst% ilist t%)))
+            (cl:declare (cl:ignorable s% t%%))
+            (if (cl:and (== s% s) (== t%% t%)) tm (make-Comb s% t%%))))
         ((Abs v s)
           (let
-            ((ilist*
-              (filter (lambdac (arg~732) (match arg~732 ((tuple t* x) (<> x v)))) ilist)))
-            (if (= ilist* nil)
+            ((ilist%
+              (filter (lambdac (arg~732) (match arg~732 ((tuple t% x) (<> x v)))) ilist)))
+            (cl:declare (cl:ignorable ilist%))
+            (if (= ilist% nil)
               tm
-              (let ((s* (vsubst* ilist* s)))
-                (if (== s* s)
+              (let ((s% (vsubst% ilist% s)))
+                (cl:declare (cl:ignorable s%))
+                (if (== s% s)
                   tm
                   (if
                     (exists
                       (lambdac (arg~768)
                         (match arg~768
-                          ((tuple t* x) (cl:and (vfree_in v t*) (vfree_in x s)))))
-                      ilist*)
-                    (let ((v* (variant (cl:cons s* nil) v)))
-                      (make-Abs v* (vsubst* (cl:cons (tuple v* v) ilist*) s)))
-                    (make-Abs v s*))))))))))
+                          ((tuple t% x) (cl:and (vfree_in v t%) (vfree_in x s)))))
+                      ilist%)
+                    (let ((v% (variant (cl:cons s% nil) v)))
+                      (cl:declare (cl:ignorable v%))
+                      (make-Abs v% (vsubst% (cl:cons (tuple v% v) ilist%) s)))
+                    (make-Abs v s%))))))))))
     (lambdac (theta)
       (if (= theta nil)
         (lambdac (tm) tm)
@@ -905,48 +911,55 @@
           (forall
             (lambdac (arg~805)
               (match arg~805
-                ((tuple t* (Var _ y)) (= (compare (type_of t*) y) 0))
+                ((tuple t% (Var _ y)) (= (compare (type_of t%) y) 0))
                 (_ cl:nil)))
             theta)
-          (vsubst* theta)
+          (vsubst% theta)
           (failwith "vsubst: Bad substitution list"))))))
 
 (define-exception Clash field0)
 
 (defparameter inst
   (labelsc
-    ((inst**
+    ((inst%%
       (env tyin tm)
       (match tm
         ((Var n ty)
-          (let* ((ty* (type_subst tyin ty)) (tm* (if (== ty* ty) tm (make-Var n ty*))))
-            (if (= (compare (rev_assocd tm* env tm) tm) 0) tm* (raise (make-Clash tm*)))))
-        ((Const c* ty)
-          (let ((ty* (type_subst tyin ty))) (if (== ty* ty) tm (make-Const c* ty*))))
+          (let* ((ty% (type_subst tyin ty)) (tm% (if (== ty% ty) tm (make-Var n ty%))))
+            (cl:declare (cl:ignorable ty% tm%))
+            (if (= (compare (rev_assocd tm% env tm) tm) 0) tm% (raise (make-Clash tm%)))))
+        ((Const c% ty)
+          (let ((ty% (type_subst tyin ty)))
+            (cl:declare (cl:ignorable ty%))
+            (if (== ty% ty) tm (make-Const c% ty%))))
         ((Comb f x)
-          (let ((f* (inst** env tyin f)) (x* (inst** env tyin x)))
-            (if (cl:and (== f* f) (== x* x)) tm (make-Comb f* x*))))
-        ((Abs y t*)
-          (let* ((y* (inst** nil tyin y)) (env* (cl:cons (tuple y y*) env)))
+          (let ((f% (inst%% env tyin f)) (x% (inst%% env tyin x)))
+            (cl:declare (cl:ignorable f% x%))
+            (if (cl:and (== f% f) (== x% x)) tm (make-Comb f% x%))))
+        ((Abs y t%)
+          (let* ((y% (inst%% nil tyin y)) (env% (cl:cons (tuple y y%) env)))
+            (cl:declare (cl:ignorable y% env%))
             (handler-case
-              (let ((t** (inst** env* tyin t*)))
-                (if (cl:and (== y* y) (== t** t*)) tm (make-Abs y* t**)))
+              (let ((t%% (inst%% env% tyin t%)))
+                (cl:declare (cl:ignorable t%%))
+                (if (cl:and (== y% y) (== t%% t%)) tm (make-Abs y% t%%)))
               (hol2cl.runtime:ocaml-condition
                 (exception~938)
                 (match exception~938
-                  ((cl:and ex (Clash w*))
-                    (if (<> w* y*)
+                  ((cl:and ex (Clash w%))
+                    (if (<> w% y%)
                       (raise ex)
                       (let*
-                        ((ifrees (map (inst** nil tyin) (frees t*)))
-                          (y** (variant ifrees y*))
-                          (z (make-Var (fst (dest_var y**)) (snd (dest_var y)))))
-                        (inst**
+                        ((ifrees (map (inst%% nil tyin) (frees t%)))
+                          (y%% (variant ifrees y%))
+                          (z (make-Var (fst (dest_var y%%)) (snd (dest_var y)))))
+                        (cl:declare (cl:ignorable ifrees y%% z))
+                        (inst%%
                           env
                           tyin
-                          (make-Abs z (funcall vsubst (cl:cons (tuple z y) nil) t*))))))
+                          (make-Abs z (funcall vsubst (cl:cons (tuple z y) nil) t%))))))
                   (_ (raise exception~938))))))))))
-    (lambdac (tyin) (if (= tyin nil) (lambdac (tm) tm) (inst** nil tyin)))))
+    (lambdac (tyin) (if (= tyin nil) (lambdac (tm) tm) (inst%% nil tyin)))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* A few bits of general derived syntax.                                     *)
@@ -964,6 +977,7 @@
 
 (defunc safe_mk_eq (l r)
   (let ((ty (type_of l)))
+    (cl:declare (cl:ignorable ty))
     (make-Comb
       (make-Comb
         (make-Const
@@ -1002,10 +1016,13 @@
       ((tuple (Var x1 ty1) (Var x2 ty2)) (ordav env tm1 tm2))
       ((tuple (Const x1 ty1) (Const x2 ty2)) (compare tm1 tm2))
       ((tuple (Comb s1 t1) (Comb s2 t2))
-        (let ((c* (orda env s1 s2))) (if (<> c* 0) c* (orda env t1 t2))))
+        (let ((c% (orda env s1 s2)))
+          (cl:declare (cl:ignorable c%))
+          (if (<> c% 0) c% (orda env t1 t2))))
       ((tuple (Abs (cl:and x1 (Var _ ty1)) t1) (Abs (cl:and x2 (Var _ ty2)) t2))
-        (let ((c* (compare ty1 ty2)))
-          (if (<> c* 0) c* (orda (cl:cons (tuple x1 x2) env) t1 t2))))
+        (let ((c% (compare ty1 ty2)))
+          (cl:declare (cl:ignorable c%))
+          (if (<> c% 0) c% (orda (cl:cons (tuple x1 x2) env) t1 t2))))
       ((tuple (Const _ _) _) (- 1))
       ((tuple _ (Const _ _)) 1)
       ((tuple (Var _ _) _) (- 1))
@@ -1017,28 +1034,33 @@
 
 (defunc term_union (l1 l2)
   (match (tuple l1 l2)
-    ((tuple nil l2*) l2*)
-    ((tuple l1* nil) l1*)
+    ((tuple nil l2%) l2%)
+    ((tuple l1% nil) l1%)
     ((tuple (cl:cons h1 t1) (cl:cons h2 t2))
-      (let ((c* (funcall alphaorder h1 h2)))
-        (if (= c* 0)
+      (let ((c% (funcall alphaorder h1 h2)))
+        (cl:declare (cl:ignorable c%))
+        (if (= c% 0)
           (cl:cons h1 (term_union t1 t2))
-          (if (< c* 0) (cl:cons h1 (term_union t1 l2)) (cl:cons h2 (term_union l1 t2))))))))
+          (if (< c% 0) (cl:cons h1 (term_union t1 l2)) (cl:cons h2 (term_union l1 t2))))))))
 
-(defunc term_remove (t* l)
+(defunc term_remove (t% l)
   (match l
     ((cl:cons s ss)
-      (let ((c* (funcall alphaorder t* s)))
-        (if (> c* 0)
-          (let ((ss* (term_remove t* ss))) (if (== ss* ss) l (cl:cons s ss*)))
-          (if (= c* 0) ss l))))
+      (let ((c% (funcall alphaorder t% s)))
+        (cl:declare (cl:ignorable c%))
+        (if (> c% 0)
+          (let ((ss% (term_remove t% ss)))
+            (cl:declare (cl:ignorable ss%))
+            (if (== ss% ss) l (cl:cons s ss%)))
+          (if (= c% 0) ss l))))
     (nil l)))
 
 (defunc term_image (f l)
   (match l
-    ((cl:cons h t*)
-      (let ((h* (funcall f h)) (t** (term_image f t*)))
-        (if (cl:and (== h* h) (== t** t*)) l (term_union (cl:cons h* nil) t**))))
+    ((cl:cons h t%)
+      (let ((h% (funcall f h)) (t%% (term_image f t%)))
+        (cl:declare (cl:ignorable h% t%%))
+        (if (cl:and (== h% h) (== t%% t%)) l (term_union (cl:cons h% nil) t%%))))
     (nil l)))
 
 ;; (* ------------------------------------------------------------------------- *)
@@ -1046,11 +1068,11 @@
 ;; (* ------------------------------------------------------------------------- *)
 
 
-(defunc dest_thm (arg~1441) (match arg~1441 ((Sequent (tuple asl c*)) (tuple asl c*))))
+(defunc dest_thm (arg~1441) (match arg~1441 ((Sequent (tuple asl c%)) (tuple asl c%))))
 
-(defunc hyp (arg~1454) (match arg~1454 ((Sequent (tuple asl c*)) asl)))
+(defunc hyp (arg~1454) (match arg~1454 ((Sequent (tuple asl c%)) asl)))
 
-(defunc concl (arg~1465) (match arg~1465 ((Sequent (tuple asl c*)) c*)))
+(defunc concl (arg~1465) (match arg~1465 ((Sequent (tuple asl c%)) c%)))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Basic equality properties; TRANS is derivable but included for efficiency *)
@@ -1065,7 +1087,7 @@
       (match arg~1489
         ((Sequent (tuple asl2 c2))
           (match (tuple c1 c2)
-            ((trivia:guard
+            ((guard
               (tuple
                 (Comb (cl:and eql (Comb (Const "=" _) _)) m1)
                 (Comb (Comb (Const "=" _) m2) r))
@@ -1078,13 +1100,13 @@
 ;; (* ------------------------------------------------------------------------- *)
 
 
-(defunc MK_COMB* (arg~1544)
+(defunc MK_COMB% (arg~1544)
   (match arg~1544
     ((tuple (Sequent (tuple asl1 c1)) (Sequent (tuple asl2 c2)))
       (match (tuple c1 c2)
         ((tuple (Comb (Comb (Const "=" _) l1) r1) (Comb (Comb (Const "=" _) l2) r2))
           (match (type_of r1)
-            ((trivia:guard
+            ((guard
               (Tyapp "fun" (cl:cons ty (cl:cons _ nil)))
               (= (compare ty (type_of r2)) 0))
               (make-Sequent
@@ -1094,11 +1116,11 @@
             (_ (failwith "MK_COMB: types do not agree"))))
         (_ (failwith "MK_COMB: not both equations"))))))
 
-(defunc ABS* (v arg~1620)
+(defunc ABS% (v arg~1620)
   (match arg~1620
-    ((Sequent (tuple asl c*))
-      (match (tuple v c*)
-        ((trivia:guard
+    ((Sequent (tuple asl c%))
+      (match (tuple v c%)
+        ((guard
           (tuple (Var _ _) (Comb (Comb (Const "=" _) l) r))
           (not (exists (vfree_in v) asl)))
           (make-Sequent (tuple asl (safe_mk_eq (make-Abs v l) (make-Abs v r)))))
@@ -1111,7 +1133,7 @@
 
 (defunc BETA (tm)
   (match tm
-    ((trivia:guard (Comb (Abs v bod) arg) (= (compare arg v) 0))
+    ((guard (Comb (Abs v bod) arg) (= (compare arg v) 0))
       (make-Sequent (tuple nil (safe_mk_eq tm bod))))
     (_ (failwith "BETA: not a trivial beta-redex"))))
 
@@ -1129,11 +1151,9 @@
   (match arg~1710
     ((Sequent (tuple asl1 eq))
       (match arg~1714
-        ((Sequent (tuple asl2 c*))
+        ((Sequent (tuple asl2 c%))
           (match eq
-            ((trivia:guard
-              (Comb (Comb (Const "=" _) l) r)
-              (= (funcall alphaorder l c*) 0))
+            ((guard (Comb (Comb (Const "=" _) l) r) (= (funcall alphaorder l c%) 0))
               (make-Sequent (tuple (term_union asl1 asl2) r)))
             (_ (failwith "EQ_MP"))))))))
 
@@ -1142,8 +1162,9 @@
     ((Sequent (tuple asl1 c1))
       (match arg~1757
         ((Sequent (tuple asl2 c2))
-          (let ((asl1* (term_remove c2 asl1)) (asl2* (term_remove c1 asl2)))
-            (make-Sequent (tuple (term_union asl1* asl2*) (safe_mk_eq c1 c2)))))))))
+          (let ((asl1% (term_remove c2 asl1)) (asl2% (term_remove c1 asl2)))
+            (cl:declare (cl:ignorable asl1% asl2%))
+            (make-Sequent (tuple (term_union asl1% asl2%) (safe_mk_eq c1 c2)))))))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Type and term instantiation.                                              *)
@@ -1152,15 +1173,17 @@
 
 (defunc INST_TYPE (theta arg~1789)
   (match arg~1789
-    ((Sequent (tuple asl c*))
+    ((Sequent (tuple asl c%))
       (let ((inst_fn (funcall inst theta)))
-        (make-Sequent (tuple (term_image inst_fn asl) (funcall inst_fn c*)))))))
+        (cl:declare (cl:ignorable inst_fn))
+        (make-Sequent (tuple (term_image inst_fn asl) (funcall inst_fn c%)))))))
 
-(defunc INST* (theta arg~1811)
+(defunc INST% (theta arg~1811)
   (match arg~1811
-    ((Sequent (tuple asl c*))
+    ((Sequent (tuple asl c%))
       (let ((inst_fun (funcall vsubst theta)))
-        (make-Sequent (tuple (term_image inst_fun asl) (funcall inst_fun c*)))))))
+        (cl:declare (cl:ignorable inst_fun))
+        (make-Sequent (tuple (term_image inst_fun asl) (funcall inst_fun c%)))))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Handling of axioms.                                                       *)
@@ -1175,6 +1198,7 @@
 (defunc new_axiom (tm)
   (if (= (compare (type_of tm) bool_ty) 0)
     (let ((th (make-Sequent (tuple nil tm))))
+      (cl:declare (cl:ignorable th))
       (progn (assign the_axioms (cl:cons th (deref the_axioms))) th))
     (failwith "new_axiom: Not a proposition")))
 
@@ -1201,8 +1225,9 @@
         (if (not (subset (type_vars_in_term r) (tyvars ty)))
           (failwith "new_definition: Type variables not reflected in constant")
           (let*
-            ((c* (progn (new_constant (tuple cname ty)) (make-Const cname ty)))
-              (dth (make-Sequent (tuple nil (safe_mk_eq c* r)))))
+            ((c% (progn (new_constant (tuple cname ty)) (make-Const cname ty)))
+              (dth (make-Sequent (tuple nil (safe_mk_eq c% r)))))
+            (cl:declare (cl:ignorable c% dth))
             (progn (assign the_definitions (cl:cons dth (deref the_definitions))) dth)))))
     ((Comb (Comb (Const "=" _) (Const cname ty)) r)
       (failwith
@@ -1229,14 +1254,14 @@
   (match arg~1977
     ((tuple absname repname)
       (match arg~1981
-        ((Sequent (tuple asl c*))
+        ((Sequent (tuple asl c%))
           (if (exists (can #'get_const_type) (cl:cons absname (cl:cons repname nil)))
             (failwith "new_basic_type_definition: Constant(s) already in use")
             (if (not (= asl nil))
               (failwith "new_basic_type_definition: Assumptions in theorem")
               (match
                 (handler-case
-                  (dest_comb c*)
+                  (dest_comb c%)
                   (hol2cl.runtime:ocaml-condition
                     (exception~2097)
                     (match exception~2097
@@ -1246,10 +1271,11 @@
                 ((tuple P x)
                   (if (not (freesin nil P))
                     (failwith "new_basic_type_definition: Predicate is not closed")
-                    (let ((tyvars* (sort (function-value #'<= 2) (type_vars_in_term P))))
+                    (let ((tyvars% (sort (function-value #'<= 2) (type_vars_in_term P))))
+                      (cl:declare (cl:ignorable tyvars%))
                       (match
                         (handler-case
-                          (new_type (tuple tyname (funcall length tyvars*)))
+                          (new_type (tuple tyname (funcall length tyvars%)))
                           (hol2cl.runtime:ocaml-condition
                             (exception~2074)
                             (match exception~2074
@@ -1258,13 +1284,15 @@
                                   "new_basic_type_definition: Type already defined"))
                               (_ (raise exception~2074)))))
                         (_
-                          (let ((aty* (make-Tyapp tyname tyvars*)) (rty (type_of x)))
+                          (let ((aty% (make-Tyapp tyname tyvars%)) (rty (type_of x)))
+                            (cl:declare (cl:ignorable aty% rty))
                             (let
-                              ((absty (make-Tyapp "fun" (cl:cons rty (cl:cons aty* nil))))
+                              ((absty (make-Tyapp "fun" (cl:cons rty (cl:cons aty% nil))))
                                 (repty
-                                  (make-Tyapp "fun" (cl:cons aty* (cl:cons rty nil)))))
+                                  (make-Tyapp "fun" (cl:cons aty% (cl:cons rty nil)))))
+                              (cl:declare (cl:ignorable absty repty))
                               (let
-                                ((abs**
+                                ((abs%%
                                   (progn
                                     (new_constant (tuple absname absty))
                                     (make-Const absname absty)))
@@ -1272,13 +1300,15 @@
                                     (progn
                                       (new_constant (tuple repname repty))
                                       (make-Const repname repty))))
-                                (let ((a (make-Var "a" aty*)) (r (make-Var "r" rty)))
+                                (cl:declare (cl:ignorable abs%% rep))
+                                (let ((a (make-Var "a" aty%)) (r (make-Var "r" rty)))
+                                  (cl:declare (cl:ignorable a r))
                                   (tuple
                                     (make-Sequent
                                       (tuple
                                         nil
                                         (safe_mk_eq
-                                          (make-Comb abs** (mk_comb (tuple rep a)))
+                                          (make-Comb abs%% (mk_comb (tuple rep a)))
                                           a)))
                                     (make-Sequent
                                       (tuple
@@ -1287,7 +1317,7 @@
                                           (make-Comb P r)
                                           (safe_mk_eq
                                             (mk_comb
-                                              (tuple rep (mk_comb (tuple abs** r))))
+                                              (tuple rep (mk_comb (tuple abs%% r))))
                                             r))))))))))))))))))))))
 
 (in-package :hol2cl.fusion)
@@ -1305,12 +1335,14 @@
 
 (defparameter mk_eq
   (let ((eq (mk_const (tuple "=" nil))))
+    (cl:declare (cl:ignorable eq))
     (lambdac (arg~2170)
       (match arg~2170
         ((tuple l r)
           (handler-case
             (let*
               ((ty (type_of l)) (eq_tm (funcall inst (cl:cons (tuple ty aty) nil) eq)))
+              (cl:declare (cl:ignorable ty eq_tm))
               (mk_comb (tuple (mk_comb (tuple eq_tm l)) r)))
             (hol2cl.runtime:ocaml-condition
               (exception~2174)
@@ -1323,7 +1355,7 @@
 ;; (* ------------------------------------------------------------------------- *)
 
 
-(defunc aconv (s t*) (= (funcall alphaorder s t*) 0))
+(defunc aconv (s t%) (= (funcall alphaorder s t%) 0))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Comparison function on theorems. Currently the same as equality, but      *)
@@ -1331,5 +1363,5 @@
 ;; (* ------------------------------------------------------------------------- *)
 
 
-(defunc equals_thm (th th*) (= (dest_thm th) (dest_thm th*)))
+(defunc equals_thm (th th%) (= (dest_thm th) (dest_thm th%)))
 

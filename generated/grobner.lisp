@@ -31,7 +31,7 @@
         PROVE_NZ
         REFUTE
         RING
-        RING*
+        RING%
         RING_AND_IDEAL_CONV
         Start
         align
@@ -114,7 +114,7 @@
     PROVE_NZ
     REFUTE
     RING
-    RING*
+    RING%
     RING_AND_IDEAL_CONV
     Start
     align
@@ -173,10 +173,10 @@
   (:shadowing-import-from :cl not max append / - + *)
   (:shadowing-import-from
     :hol2cl.arith
-    SUB_ELIM_THM*
+    SUB_ELIM_THM%
     SUB_ELIM_THM
     RIGHT_ADD_DISTRIB
-    PRE_ELIM_THM*
+    PRE_ELIM_THM%
     PRE_ELIM_THM
     ODD_EXISTS
     NOT_ODD
@@ -190,7 +190,7 @@
     EVEN_EXISTS
     EQ_ADD_LCANCEL_0
     EQ_ADD_LCANCEL
-    DIVMOD_ELIM_THM*
+    DIVMOD_ELIM_THM%
     DIVMOD_ELIM_THM
     ADD_SYM
     ADD_ASSOC
@@ -284,12 +284,12 @@
     REFL
     rator
     rand
-    MK_COMB*
+    MK_COMB%
     mk_comb
     mk_abs
     is_var
     is_comb
-    INST*
+    INST%
     frees
     EQ_MP
     dest_eq
@@ -361,6 +361,7 @@
     match
     lambdac
     labelsc
+    guard
     function-value
     funcall
     fst
@@ -448,18 +449,21 @@
           (let
             ((n1 (itlist (function-value #'+ 2) m1 0))
               (n2 (itlist (function-value #'+ 2) m2 0)))
+            (cl:declare (cl:ignorable n1 n2))
             (cl:or (< n1 n2) (cl:and (= n1 n2) (lexorder m1 m2)))))))
-      (grob_neg (map (lambdac (arg~70) (match arg~70 ((tuple c* m) (tuple (- c*) m)))))))
+      (grob_neg (map (lambdac (arg~70) (match arg~70 ((tuple c% m) (tuple (- c%) m)))))))
+    (cl:declare (cl:ignorable morder_lt grob_neg))
     (labelsc
       ((grob_add
         (l1 l2)
         (match (tuple l1 l2)
-          ((tuple nil l2*) l2*)
-          ((tuple l1* nil) l1*)
+          ((tuple nil l2%) l2%)
+          ((tuple l1% nil) l1%)
           ((tuple (cl:cons (tuple c1 m1) o1) (cl:cons (tuple c2 m2) o2))
             (if (= m1 m2)
-              (let ((c* (+ c1 c2)) (rest (grob_add o1 o2)))
-                (if (= c* num_0) rest (cl:cons (tuple c* m1) rest)))
+              (let ((c% (+ c1 c2)) (rest (grob_add o1 o2)))
+                (cl:declare (cl:ignorable c% rest))
+                (if (= c% num_0) rest (cl:cons (tuple c% m1) rest)))
               (if (funcall morder_lt m2 m1)
                 (cl:cons (tuple c1 m1) (grob_add o1 l2))
                 (cl:cons (tuple c2 m2) (grob_add l1 o2))))))))
@@ -482,23 +486,19 @@
                 ((grob_inv
                   (l)
                   (match l
-                    ((trivia:guard
-                      (cl:cons (tuple c* vs) nil)
-                      (forall (lambdac (x) (= x 0)) vs))
-                      (if (= c* num_0)
+                    ((guard (cl:cons (tuple c% vs) nil) (forall (lambdac (x) (= x 0)) vs))
+                      (if (= c% num_0)
                         (failwith "grob_inv: division by zero")
-                        (cl:cons (tuple (/ num_1 c*) vs) nil)))
+                        (cl:cons (tuple (/ num_1 c%) vs) nil)))
                     (_ (failwith "grob_inv: non-constant divisor polynomial")))))
                 (fletc
                   ((grob_div
                     (l1 l2)
                     (match l2
-                      ((trivia:guard
-                        (cl:cons (tuple c* l) nil)
-                        (forall (lambdac (x) (= x 0)) l))
-                        (if (= c* num_0)
+                      ((guard (cl:cons (tuple c% l) nil) (forall (lambdac (x) (= x 0)) l))
+                        (if (= c% num_0)
                           (failwith "grob_div: division by zero")
-                          (grob_cmul (tuple (/ num_1 c*) l) l1)))
+                          (grob_cmul (tuple (/ num_1 c%) l) l1)))
                       (_ (failwith "grob_div: non-constant divisor polynomial")))))
                   (labelsc
                     ((grob_pow
@@ -540,10 +540,10 @@
                                   ((cl:cons cm1 cms)
                                     (handler-case
                                       (match (mdiv cm cm1)
-                                        ((tuple c* m)
+                                        ((tuple c% m)
                                           (tuple
-                                            (grob_cmul (tuple (- c*) m) cms)
-                                            (make-Mmul (tuple (- c*) m) hpol))))
+                                            (grob_cmul (tuple (- c%) m) cms)
+                                            (make-Mmul (tuple (- c%) m) hpol))))
                                       (hol2cl.runtime:ocaml-condition
                                         (exception~383)
                                         (match exception~383
@@ -552,7 +552,7 @@
                           (fletc
                             ((reduceb
                               (cm basis)
-                              (tryfind (lambdac (p*) (reduce1 cm p*)) basis)))
+                              (tryfind (lambdac (p%) (reduce1 cm p%)) basis)))
                             (labelsc
                               ((reduce
                                 (basis arg~428)
@@ -574,8 +574,8 @@
                                             (match exception~441
                                               ((Failure _)
                                                 (match (reduce basis (tuple ptl hist))
-                                                  ((tuple q hist*)
-                                                    (tuple (cl:cons cm q) hist*))))
+                                                  ((tuple q hist%)
+                                                    (tuple (cl:cons cm q) hist%))))
                                               (_ (raise exception~441)))))))))))
                               (fletc
                                 ((orthogonal
@@ -585,8 +585,8 @@
                                   ((spoly
                                     (cm ph1 ph2)
                                     (match (tuple ph1 ph2)
-                                      ((tuple (tuple nil h) p*) (tuple nil h))
-                                      ((tuple p* (tuple nil h)) (tuple nil h))
+                                      ((tuple (tuple nil h) p%) (tuple nil h))
+                                      ((tuple p% (tuple nil h)) (tuple nil h))
                                       ((tuple
                                         (tuple (cl:cons cm1 ptl1) his1)
                                         (tuple (cl:cons cm2 ptl2) his2))
@@ -607,16 +607,16 @@
                                           (if (= pol nil)
                                             (tuple pol hist)
                                             (match (hd pol)
-                                              ((tuple c* m*)
+                                              ((tuple c% m%)
                                                 (tuple
                                                   (map
                                                     (lambdac (arg~577)
                                                       (match arg~577
-                                                        ((tuple c** m)
-                                                          (tuple (/ c** c*) m))))
+                                                        ((tuple c%% m)
+                                                          (tuple (/ c%% c%) m))))
                                                     pol)
                                                   (make-Mmul
-                                                    (tuple (/ num_1 c*) (map (K 0) m*))
+                                                    (tuple (/ num_1 c%) (map (K 0) m%))
                                                     hist)))))))))
                                     (fletc
                                       ((forder
@@ -628,10 +628,10 @@
                                                 (funcall morder_lt m1 m2)))))))
                                       (labelsc
                                         ((poly_lt
-                                          (p* q)
-                                          (match (tuple p* q)
+                                          (p% q)
+                                          (match (tuple p% q)
                                             ((tuple p nil) cl:nil)
-                                            ((tuple nil q*) cl:t)
+                                            ((tuple nil q%) cl:t)
                                             ((tuple
                                               (cl:cons (tuple c1 m1) o1)
                                               (cl:cons (tuple c2 m2) o2))
@@ -646,10 +646,10 @@
                                           ((align
                                             (arg~695)
                                             (match arg~695
-                                              ((tuple (tuple p* hp) (tuple q hq))
-                                                (if (poly_lt p* q)
-                                                  (tuple (tuple p* hp) (tuple q hq))
-                                                  (tuple (tuple q hq) (tuple p* hp)))))))
+                                              ((tuple (tuple p% hp) (tuple q hq))
+                                                (if (poly_lt p% q)
+                                                  (tuple (tuple p% hp) (tuple q hq))
+                                                  (tuple (tuple q hq) (tuple p% hp)))))))
                                           (fletc
                                             ((poly_eq
                                               (p1 p2)
@@ -686,21 +686,21 @@
                                                       lcm
                                                       (tuple (tuple p1 h1) (tuple p2 h2)))
                                                       (exists
-                                                        (lambdac (g*)
+                                                        (lambdac (g%)
                                                           (cl:and
-                                                            (not (poly_eq (fst g*) p1))
+                                                            (not (poly_eq (fst g%) p1))
                                                             (cl:and
-                                                              (not (poly_eq (fst g*) p2))
+                                                              (not (poly_eq (fst g%) p2))
                                                               (cl:and
                                                                 (can
                                                                   (mdiv lcm)
-                                                                  (hd (fst g*)))
+                                                                  (hd (fst g%)))
                                                                 (cl:and
                                                                   (not
                                                                     (memx
                                                                       (align
                                                                         (tuple
-                                                                          g*
+                                                                          g%
                                                                           (tuple p1 h1)))
                                                                       (map
                                                                         (function-value
@@ -711,7 +711,7 @@
                                                                     (memx
                                                                       (align
                                                                         (tuple
-                                                                          g*
+                                                                          g%
                                                                           (tuple p2 h2)))
                                                                       (map
                                                                         (function-value
@@ -721,12 +721,12 @@
                                                         basis)))))
                                                 (fletc
                                                   ((constant_poly
-                                                    (p*)
+                                                    (p%)
                                                     (cl:and
-                                                      (= (funcall length p*) 1)
+                                                      (= (funcall length p%) 1)
                                                       (forall
                                                         (partial (function-value #'= 2) 0)
-                                                        (snd (hd p*))))))
+                                                        (snd (hd p%))))))
                                                   (labelsc
                                                     ((grobner_basis
                                                       (basis pairs)
@@ -774,15 +774,15 @@
                                                                     (let*
                                                                       ((rawcps
                                                                         (map
-                                                                          (lambdac (p*)
+                                                                          (lambdac (p%)
                                                                             (tuple
                                                                               (mlcm
                                                                                 (hd
-                                                                                  (fst p*))
+                                                                                  (fst p%))
                                                                                 (hd sp))
                                                                               (align
                                                                                 (tuple
-                                                                                  p*
+                                                                                  p%
                                                                                   sph))))
                                                                           basis))
                                                                         (newcps
@@ -792,18 +792,22 @@
                                                                               (match
                                                                                 arg~919
                                                                                 ((tuple
-                                                                                  l*
+                                                                                  l%
                                                                                   (tuple
-                                                                                    p*
+                                                                                    p%
                                                                                     q))
                                                                                   (not
                                                                                     (orthogonal
-                                                                                      l*
+                                                                                      l%
                                                                                       (fst
-                                                                                        p*)
+                                                                                        p%)
                                                                                       (fst
                                                                                         q))))))
                                                                             rawcps)))
+                                                                      (cl:declare
+                                                                        (cl:ignorable
+                                                                          rawcps
+                                                                          newcps))
                                                                       (grobner_basis
                                                                         (cl:cons
                                                                           sph
@@ -822,18 +826,20 @@
                                                             (map
                                                               #'monic
                                                               (funcall rev rpols)))
-                                                          ((cl:cons p* ps)
+                                                          ((cl:cons p% ps)
                                                             (let
-                                                              ((p**
+                                                              ((p%%
                                                                 (reduce
                                                                   (append rpols ps)
-                                                                  p*)))
-                                                              (if (= (fst p**) nil)
+                                                                  p%)))
+                                                              (cl:declare
+                                                                (cl:ignorable p%%))
+                                                              (if (= (fst p%%) nil)
                                                                 (grobner_interreduce
                                                                   rpols
                                                                   ps)
                                                                 (grobner_interreduce
-                                                                  (cl:cons p** rpols)
+                                                                  (cl:cons p%% rpols)
                                                                   ps)))))))
                                                       (fletc
                                                         ((grobner
@@ -841,9 +847,9 @@
                                                           (let*
                                                             ((npols
                                                               (map2
-                                                                (lambdac (p* n)
+                                                                (lambdac (p% n)
                                                                   (tuple
-                                                                    p*
+                                                                    p%
                                                                     (make-Start n)))
                                                                 pols
                                                                 (--
@@ -855,8 +861,8 @@
                                                                 (filter
                                                                   (lambdac (arg~1045)
                                                                     (match arg~1045
-                                                                      ((tuple p* _)
-                                                                        (<> p* nil))))
+                                                                      ((tuple p% _)
+                                                                        (<> p% nil))))
                                                                   npols))
                                                               (bas
                                                                 (grobner_interreduce
@@ -881,12 +887,12 @@
                                                                 (map
                                                                   (lambdac (arg~1092)
                                                                     (match arg~1092
-                                                                      ((tuple p* q)
+                                                                      ((tuple p% q)
                                                                         (tuple
                                                                           (mlcm
-                                                                            (hd (fst p*))
+                                                                            (hd (fst p%))
                                                                             (hd (fst q)))
-                                                                          (tuple p* q)))))
+                                                                          (tuple p% q)))))
                                                                   prs1))
                                                               (prs3
                                                                 (filter
@@ -894,13 +900,22 @@
                                                                     (match arg~1114
                                                                       ((tuple
                                                                         l
-                                                                        (tuple p* q))
+                                                                        (tuple p% q))
                                                                         (not
                                                                           (orthogonal
                                                                             l
-                                                                            (fst p*)
+                                                                            (fst p%)
                                                                             (fst q))))))
                                                                   prs2)))
+                                                            (cl:declare
+                                                              (cl:ignorable
+                                                                npols
+                                                                phists
+                                                                bas
+                                                                prs0
+                                                                prs1
+                                                                prs2
+                                                                prs3))
                                                             (grobner_basis
                                                               bas
                                                               (mergesort #'forder prs3)))))
@@ -908,16 +923,18 @@
                                                           ((grobner_refute
                                                             (pols)
                                                             (let ((gb (grobner pols)))
+                                                              (cl:declare
+                                                                (cl:ignorable gb))
                                                               (snd
                                                                 (find
                                                                   (lambdac (arg~1151)
                                                                     (match arg~1151
-                                                                      ((tuple p* h)
+                                                                      ((tuple p% h)
                                                                         (cl:and
                                                                           (=
                                                                             (funcall
                                                                               length
-                                                                              p*)
+                                                                              p%)
                                                                             1)
                                                                           (forall
                                                                             (partial
@@ -925,7 +942,7 @@
                                                                                 #'=
                                                                                 2)
                                                                               0)
-                                                                            (snd (hd p*)))))))
+                                                                            (snd (hd p%)))))))
                                                                   gb)))))
                                                           (labelsc
                                                             ((resolve_proof
@@ -948,15 +965,17 @@
                                                                       (resolve_proof
                                                                         vars
                                                                         lin)))
+                                                                    (cl:declare
+                                                                      (cl:ignorable lis))
                                                                     (map
                                                                       (lambdac (arg~1204)
                                                                         (match arg~1204
-                                                                          ((tuple n p*)
+                                                                          ((tuple n p%)
                                                                             (tuple
                                                                               n
                                                                               (grob_cmul
                                                                                 pol
-                                                                                p*)))))
+                                                                                p%)))))
                                                                       lis)))
                                                                 ((Add lin1 lin2)
                                                                   (let
@@ -968,8 +987,12 @@
                                                                         (resolve_proof
                                                                           vars
                                                                           lin2)))
+                                                                    (cl:declare
+                                                                      (cl:ignorable
+                                                                        lis1
+                                                                        lis2))
                                                                     (let
-                                                                      ((dom*
+                                                                      ((dom%
                                                                         (setify
                                                                           (union
                                                                             (map
@@ -982,10 +1005,13 @@
                                                                                 #'fst
                                                                                 1)
                                                                               lis2)))))
+                                                                      (cl:declare
+                                                                        (cl:ignorable
+                                                                          dom%))
                                                                       (map
                                                                         (lambdac (n)
                                                                           (let
-                                                                            ((a*
+                                                                            ((a%
                                                                               (handler-case
                                                                                 (assoc
                                                                                   n
@@ -1000,7 +1026,7 @@
                                                                                     (_
                                                                                       (raise
                                                                                         exception~1245))))))
-                                                                              (b*
+                                                                              (b%
                                                                                 (handler-case
                                                                                   (assoc
                                                                                     n
@@ -1015,12 +1041,16 @@
                                                                                       (_
                                                                                         (raise
                                                                                           exception~1253)))))))
+                                                                            (cl:declare
+                                                                              (cl:ignorable
+                                                                                a%
+                                                                                b%))
                                                                             (tuple
                                                                               n
                                                                               (grob_add
-                                                                                a*
-                                                                                b*))))
-                                                                        dom*)))))))
+                                                                                a%
+                                                                                b%))))
+                                                                        dom%)))))))
                                                             (fletc
                                                               ((grobner_weak
                                                                 (vars pols)
@@ -1046,14 +1076,16 @@
                                                                             1))
                                                                         cert
                                                                         num_1)))
+                                                                  (cl:declare
+                                                                    (cl:ignorable cert l))
                                                                   (tuple
                                                                     l
                                                                     (map
                                                                       (lambdac (arg~1295)
                                                                         (match arg~1295
-                                                                          ((tuple i* p*)
+                                                                          ((tuple i% p%)
                                                                             (tuple
-                                                                              i*
+                                                                              i%
                                                                               (map
                                                                                 (lambdac
                                                                                   (arg~1300)
@@ -1067,7 +1099,7 @@
                                                                                           l
                                                                                           d)
                                                                                         m))))
-                                                                                p*)))))
+                                                                                p%)))))
                                                                       cert)))))
                                                               (fletc
                                                                 ((grobner_ideal
@@ -1080,8 +1112,8 @@
                                                                           grob_neg
                                                                           pol)
                                                                         (make-Start (- 1))))
-                                                                    ((tuple pol* h)
-                                                                      (if (<> pol* nil)
+                                                                    ((tuple pol% h)
+                                                                      (if (<> pol% nil)
                                                                         (failwith
                                                                           "grobner_ideal: not in the ideal")
                                                                         (resolve_proof
@@ -1093,7 +1125,7 @@
                                                                     (if (= pol nil)
                                                                       (tuple 1 num_1 nil)
                                                                       (let*
-                                                                        ((vars*
+                                                                        ((vars%
                                                                           (cl:cons
                                                                             (concl TRUTH)
                                                                             vars))
@@ -1117,43 +1149,56 @@
                                                                                   (lambdac
                                                                                     (x)
                                                                                     0)
-                                                                                  vars*))
+                                                                                  vars%))
                                                                               nil))
-                                                                          (augment*
+                                                                          (augment%
                                                                             (map
                                                                               (lambdac
                                                                                 (arg~1385)
                                                                                 (match
                                                                                   arg~1385
                                                                                   ((tuple
-                                                                                    c*
+                                                                                    c%
                                                                                     m)
                                                                                     (tuple
-                                                                                      c*
+                                                                                      c%
                                                                                       (cl:cons
                                                                                         0
                                                                                         m))))))))
+                                                                        (cl:declare
+                                                                          (cl:ignorable
+                                                                            vars%
+                                                                            grob_z
+                                                                            grob_1
+                                                                            augment%))
                                                                         (let
-                                                                          ((pols*
+                                                                          ((pols%
                                                                             (map
-                                                                              augment*
+                                                                              augment%
                                                                               pols))
-                                                                            (pol*
+                                                                            (pol%
                                                                               (funcall
-                                                                                augment*
+                                                                                augment%
                                                                                 pol)))
+                                                                          (cl:declare
+                                                                            (cl:ignorable
+                                                                              pols%
+                                                                              pol%))
                                                                           (let
                                                                             ((allpols
                                                                               (cl:cons
                                                                                 (grob_sub
                                                                                   (grob_mul
                                                                                     grob_z
-                                                                                    pol*)
+                                                                                    pol%)
                                                                                   grob_1)
-                                                                                pols*)))
+                                                                                pols%)))
+                                                                            (cl:declare
+                                                                              (cl:ignorable
+                                                                                allpols))
                                                                             (match
                                                                               (grobner_weak
-                                                                                vars*
+                                                                                vars%
                                                                                 allpols)
                                                                               ((tuple
                                                                                 l
@@ -1177,17 +1222,20 @@
                                                                                           1))
                                                                                       cert
                                                                                       0)))
+                                                                                  (cl:declare
+                                                                                    (cl:ignorable
+                                                                                      d))
                                                                                   (fletc
                                                                                     ((transform_monomial
                                                                                       (arg~1429)
                                                                                       (match
                                                                                         arg~1429
                                                                                         ((tuple
-                                                                                          c*
+                                                                                          c%
                                                                                           m)
                                                                                           (grob_cmul
                                                                                             (tuple
-                                                                                              c*
+                                                                                              c%
                                                                                               (tl
                                                                                                 m))
                                                                                             (grob_pow
@@ -1207,18 +1255,18 @@
                                                                                           q
                                                                                           nil)))
                                                                                       (let
-                                                                                        ((cert*
+                                                                                        ((cert%
                                                                                           (map
                                                                                             (lambdac
                                                                                               (arg~1457)
                                                                                               (match
                                                                                                 arg~1457
                                                                                                 ((tuple
-                                                                                                  c*
+                                                                                                  c%
                                                                                                   q)
                                                                                                   (tuple
                                                                                                     (-
-                                                                                                      c*
+                                                                                                      c%
                                                                                                       1)
                                                                                                     (transform_polynomial
                                                                                                       q)))))
@@ -1228,16 +1276,19 @@
                                                                                                 (match
                                                                                                   arg~1471
                                                                                                   ((tuple
-                                                                                                    k*
+                                                                                                    k%
                                                                                                     _)
                                                                                                     (<>
-                                                                                                      k*
+                                                                                                      k%
                                                                                                       0))))
                                                                                               cert))))
+                                                                                        (cl:declare
+                                                                                          (cl:ignorable
+                                                                                            cert%))
                                                                                         (tuple
                                                                                           d
                                                                                           l
-                                                                                          cert*)))))))))))))
+                                                                                          cert%)))))))))))))
                                                                   (let
                                                                     ((pth_step
                                                                       (prove
@@ -1318,6 +1369,11 @@
                                                                               "(p ==> F) ==> (~q = p) ==> q"))))
                                                                       (false_tm
                                                                         (parse_term "F")))
+                                                                    (cl:declare
+                                                                      (cl:ignorable
+                                                                        pth_step
+                                                                        FINAL_RULE
+                                                                        false_tm))
                                                                     (labelsc
                                                                       ((refute_disj
                                                                         (rfn tm)
@@ -1328,7 +1384,7 @@
                                                                                 "\\/"
                                                                                 _)
                                                                               l)
-                                                                            r*)
+                                                                            r%)
                                                                             (funcall
                                                                               DISJ_CASES
                                                                               (ASSUME tm)
@@ -1337,7 +1393,7 @@
                                                                                 l)
                                                                               (refute_disj
                                                                                 rfn
-                                                                                r*)))
+                                                                                r%)))
                                                                           (_
                                                                             (funcall
                                                                               rfn
@@ -1409,34 +1465,34 @@
                                                                                                         nil)))))))))))))
                                                                                 (ring_dest_neg
                                                                                   (lambdac
-                                                                                    (t*)
+                                                                                    (t%)
                                                                                     (match
                                                                                       (dest_comb
-                                                                                        t*)
+                                                                                        t%)
                                                                                       ((tuple
                                                                                         l
-                                                                                        r*)
+                                                                                        r%)
                                                                                         (if
                                                                                           (=
                                                                                             l
                                                                                             ring_neg_tm)
-                                                                                          r*
+                                                                                          r%
                                                                                           (failwith
                                                                                             "ring_dest_neg"))))))
                                                                                 (ring_dest_inv
                                                                                   (lambdac
-                                                                                    (t*)
+                                                                                    (t%)
                                                                                     (match
                                                                                       (dest_comb
-                                                                                        t*)
+                                                                                        t%)
                                                                                       ((tuple
                                                                                         l
-                                                                                        r*)
+                                                                                        r%)
                                                                                         (if
                                                                                           (=
                                                                                             l
                                                                                             ring_inv_tm)
-                                                                                          r*
+                                                                                          r%
                                                                                           (failwith
                                                                                             "ring_dest_inv"))))))
                                                                                 (ring_dest_add
@@ -1463,6 +1519,19 @@
                                                                                 (ring_mk_pow
                                                                                   (mk_binop
                                                                                     ring_pow_tm)))
+                                                                              (cl:declare
+                                                                                (cl:ignorable
+                                                                                  INITIAL_CONV
+                                                                                  ring_dest_neg
+                                                                                  ring_dest_inv
+                                                                                  ring_dest_add
+                                                                                  ring_mk_add
+                                                                                  ring_dest_sub
+                                                                                  ring_dest_mul
+                                                                                  ring_mk_mul
+                                                                                  ring_dest_div
+                                                                                  ring_dest_pow
+                                                                                  ring_mk_pow))
                                                                               (labelsc
                                                                                 ((grobvars
                                                                                   (tm acc)
@@ -1523,6 +1592,9 @@
                                                                                                   (rand
                                                                                                     tm)
                                                                                                   nil)))
+                                                                                              (cl:declare
+                                                                                                (cl:ignorable
+                                                                                                  gvs))
                                                                                               (if
                                                                                                 (=
                                                                                                   gvs
@@ -1547,6 +1619,10 @@
                                                                                                       (rand
                                                                                                         tm)
                                                                                                       nil)))
+                                                                                                (cl:declare
+                                                                                                  (cl:ignorable
+                                                                                                    lvs
+                                                                                                    gvs))
                                                                                                 (if
                                                                                                   (=
                                                                                                     gvs
@@ -1575,10 +1651,10 @@
                                                                                             num_1
                                                                                             (map
                                                                                               (lambdac
-                                                                                                (i*)
+                                                                                                (i%)
                                                                                                 (if
                                                                                                   (=
-                                                                                                    i*
+                                                                                                    i%
                                                                                                     tm)
                                                                                                   1
                                                                                                   0))
@@ -1596,6 +1672,9 @@
                                                                                                   (funcall
                                                                                                     ring_dest_const
                                                                                                     tm)))
+                                                                                                (cl:declare
+                                                                                                  (cl:ignorable
+                                                                                                    x))
                                                                                                 (if
                                                                                                   (=
                                                                                                     x
@@ -1650,14 +1729,14 @@
                                                                                                                           tm)
                                                                                                                         ((tuple
                                                                                                                           l
-                                                                                                                          r*)
+                                                                                                                          r%)
                                                                                                                           (grob_add
                                                                                                                             (grobify_term
                                                                                                                               vars
                                                                                                                               l)
                                                                                                                             (grobify_term
                                                                                                                               vars
-                                                                                                                              r*))))
+                                                                                                                              r%))))
                                                                                                                       (hol2cl.runtime:ocaml-condition
                                                                                                                         (exception~1821)
                                                                                                                         (match
@@ -1671,14 +1750,14 @@
                                                                                                                                   tm)
                                                                                                                                 ((tuple
                                                                                                                                   l
-                                                                                                                                  r*)
+                                                                                                                                  r%)
                                                                                                                                   (grob_sub
                                                                                                                                     (grobify_term
                                                                                                                                       vars
                                                                                                                                       l)
                                                                                                                                     (grobify_term
                                                                                                                                       vars
-                                                                                                                                      r*))))
+                                                                                                                                      r%))))
                                                                                                                               (hol2cl.runtime:ocaml-condition
                                                                                                                                 (exception~1824)
                                                                                                                                 (match
@@ -1692,14 +1771,14 @@
                                                                                                                                           tm)
                                                                                                                                         ((tuple
                                                                                                                                           l
-                                                                                                                                          r*)
+                                                                                                                                          r%)
                                                                                                                                           (grob_mul
                                                                                                                                             (grobify_term
                                                                                                                                               vars
                                                                                                                                               l)
                                                                                                                                             (grobify_term
                                                                                                                                               vars
-                                                                                                                                              r*))))
+                                                                                                                                              r%))))
                                                                                                                                       (hol2cl.runtime:ocaml-condition
                                                                                                                                         (exception~1827)
                                                                                                                                         (match
@@ -1713,14 +1792,14 @@
                                                                                                                                                   tm)
                                                                                                                                                 ((tuple
                                                                                                                                                   l
-                                                                                                                                                  r*)
+                                                                                                                                                  r%)
                                                                                                                                                   (grob_div
                                                                                                                                                     (grobify_term
                                                                                                                                                       vars
                                                                                                                                                       l)
                                                                                                                                                     (grobify_term
                                                                                                                                                       vars
-                                                                                                                                                      r*))))
+                                                                                                                                                      r%))))
                                                                                                                                               (hol2cl.runtime:ocaml-condition
                                                                                                                                                 (exception~1830)
                                                                                                                                                 (match
@@ -1734,14 +1813,14 @@
                                                                                                                                                           tm)
                                                                                                                                                         ((tuple
                                                                                                                                                           l
-                                                                                                                                                          r*)
+                                                                                                                                                          r%)
                                                                                                                                                           (grob_pow
                                                                                                                                                             vars
                                                                                                                                                             (grobify_term
                                                                                                                                                               vars
                                                                                                                                                               l)
                                                                                                                                                             (dest_small_numeral
-                                                                                                                                                              r*))))
+                                                                                                                                                              r%))))
                                                                                                                                                       (hol2cl.runtime:ocaml-condition
                                                                                                                                                         (exception~1833)
                                                                                                                                                         (match
@@ -1786,14 +1865,14 @@
                                                                                           tm)
                                                                                         ((tuple
                                                                                           l
-                                                                                          r*)
+                                                                                          r%)
                                                                                           (grob_sub
                                                                                             (grobify_term
                                                                                               vars
                                                                                               l)
                                                                                             (grobify_term
                                                                                               vars
-                                                                                              r*))))))
+                                                                                              r%))))))
                                                                                     (fletc
                                                                                       ((grobify_equations
                                                                                         (tm)
@@ -1806,7 +1885,7 @@
                                                                                               (itlist
                                                                                                 (lambdac
                                                                                                   (eq
-                                                                                                    a*)
+                                                                                                    a%)
                                                                                                   (grobvars
                                                                                                     (funcall
                                                                                                       lhand
@@ -1814,7 +1893,7 @@
                                                                                                     (grobvars
                                                                                                       (rand
                                                                                                         eq)
-                                                                                                      a*)))
+                                                                                                      a%)))
                                                                                                 cjs
                                                                                                 nil))
                                                                                             (vars
@@ -1827,6 +1906,11 @@
                                                                                                     y))
                                                                                                 (setify
                                                                                                   rawvars))))
+                                                                                          (cl:declare
+                                                                                            (cl:ignorable
+                                                                                              cjs
+                                                                                              rawvars
+                                                                                              vars))
                                                                                           (tuple
                                                                                             vars
                                                                                             (map
@@ -1860,7 +1944,7 @@
                                                                                                 (match
                                                                                                   arg~2047
                                                                                                   ((tuple
-                                                                                                    c*
+                                                                                                    c%
                                                                                                     m)
                                                                                                     (let
                                                                                                       ((xps
@@ -1880,20 +1964,23 @@
                                                                                                             (zip
                                                                                                               vars
                                                                                                               m)))))
+                                                                                                      (cl:declare
+                                                                                                        (cl:ignorable
+                                                                                                          xps))
                                                                                                       (end_itlist
                                                                                                         ring_mk_mul
                                                                                                         (cl:cons
                                                                                                           (funcall
                                                                                                             ring_mk_const
-                                                                                                            c*)
+                                                                                                            c%)
                                                                                                           xps)))))))
                                                                                               (fletc
                                                                                                 ((holify_polynomial
                                                                                                   (vars
-                                                                                                    p*)
+                                                                                                    p%)
                                                                                                   (if
                                                                                                     (=
-                                                                                                      p*
+                                                                                                      p%
                                                                                                       nil)
                                                                                                     (funcall
                                                                                                       ring_mk_const
@@ -1903,8 +1990,11 @@
                                                                                                       (map
                                                                                                         (holify_monomial
                                                                                                           vars)
-                                                                                                        p*)))))
+                                                                                                        p%)))))
                                                                                                 #'holify_polynomial)))))
+                                                                                        (cl:declare
+                                                                                          (cl:ignorable
+                                                                                            holify_polynomial))
                                                                                         (match
                                                                                           (CONJ_PAIR
                                                                                             (MATCH_MP
@@ -1919,6 +2009,9 @@
                                                                                                   (funcall
                                                                                                     REWR_CONV
                                                                                                     pth_idom))))
+                                                                                              (cl:declare
+                                                                                                (cl:ignorable
+                                                                                                  IDOM_RULE))
                                                                                               (fletc
                                                                                                 ((PROVE_NZ
                                                                                                   (n)
@@ -1951,12 +2044,17 @@
                                                                                                       (lambdac
                                                                                                         (th1
                                                                                                           th2)
-                                                                                                        (MK_COMB*
+                                                                                                        (MK_COMB%
                                                                                                           (tuple
                                                                                                             (AP_TERM
                                                                                                               ring_add_tm
                                                                                                               th1)
                                                                                                             th2)))))
+                                                                                                  (cl:declare
+                                                                                                    (cl:ignorable
+                                                                                                      NOT_EQ_01
+                                                                                                      INE_RULE
+                                                                                                      MK_ADD))
                                                                                                   (fletc
                                                                                                     ((execute_proof
                                                                                                       (vars
@@ -1990,7 +2088,7 @@
                                                                                                                         #'I
                                                                                                                         (cl:cons
                                                                                                                           (SYM
-                                                                                                                            (INST*
+                                                                                                                            (INST%
                                                                                                                               (cl:cons
                                                                                                                                 (tuple
                                                                                                                                   (mk_comb
@@ -2009,21 +2107,25 @@
                                                                                                                                 RING_NORMALIZE_CONV))
                                                                                                                             SUB_EQ_RULE)
                                                                                                                           eths)))
+                                                                                                                    (cl:declare
+                                                                                                                      (cl:ignorable
+                                                                                                                        SUB_EQ_RULE
+                                                                                                                        initpols))
                                                                                                                     (fletc
                                                                                                                       ((ADD_RULE
-                                                                                                                        (th1*
-                                                                                                                          th2*)
+                                                                                                                        (th1%
+                                                                                                                          th2%)
                                                                                                                         (CONV_RULE
                                                                                                                           (BINOP_CONV
                                                                                                                             RING_NORMALIZE_CONV)
-                                                                                                                          (MK_COMB*
+                                                                                                                          (MK_COMB%
                                                                                                                             (tuple
                                                                                                                               (AP_TERM
                                                                                                                                 ring_add_tm
-                                                                                                                                th1*)
-                                                                                                                              th2*))))
+                                                                                                                                th1%)
+                                                                                                                              th2%))))
                                                                                                                         (MUL_RULE
-                                                                                                                          (vars*
+                                                                                                                          (vars%
                                                                                                                             m
                                                                                                                             th)
                                                                                                                           (CONV_RULE
@@ -2035,14 +2137,14 @@
                                                                                                                                   ring_mul_tm
                                                                                                                                   (funcall
                                                                                                                                     holify_polynomial
-                                                                                                                                    vars*
+                                                                                                                                    vars%
                                                                                                                                     (cl:cons
                                                                                                                                       m
                                                                                                                                       nil))))
                                                                                                                               th))))
                                                                                                                       (labelsc
                                                                                                                         ((assoceq
-                                                                                                                          (a*
+                                                                                                                          (a%
                                                                                                                             l)
                                                                                                                           (match
                                                                                                                             l
@@ -2051,17 +2153,17 @@
                                                                                                                                 "assoceq"))
                                                                                                                             ((cl:cons
                                                                                                                               (tuple
-                                                                                                                                x*
-                                                                                                                                y*)
-                                                                                                                              t*)
+                                                                                                                                x%
+                                                                                                                                y%)
+                                                                                                                              t%)
                                                                                                                               (if
                                                                                                                                 (==
-                                                                                                                                  x*
-                                                                                                                                  a*)
-                                                                                                                                y*
+                                                                                                                                  x%
+                                                                                                                                  a%)
+                                                                                                                                y%
                                                                                                                                 (assoceq
-                                                                                                                                  a*
-                                                                                                                                  t*))))))
+                                                                                                                                  a%
+                                                                                                                                  t%))))))
                                                                                                                         (let*
                                                                                                                           ((run_proof
                                                                                                                             (if
@@ -2080,27 +2182,30 @@
                                                                                                                                   ((execache
                                                                                                                                     (ref
                                                                                                                                       nil)))
+                                                                                                                                  (cl:declare
+                                                                                                                                    (cl:ignorable
+                                                                                                                                      execache))
                                                                                                                                   (fletc
                                                                                                                                     ((memoize
-                                                                                                                                      (prf*
-                                                                                                                                        x*)
+                                                                                                                                      (prf%
+                                                                                                                                        x%)
                                                                                                                                       (progn
                                                                                                                                         (assign
                                                                                                                                           execache
                                                                                                                                           (cl:cons
                                                                                                                                             (tuple
-                                                                                                                                              prf*
-                                                                                                                                              x*)
+                                                                                                                                              prf%
+                                                                                                                                              x%)
                                                                                                                                             (deref
                                                                                                                                               execache)))
-                                                                                                                                        x*)))
+                                                                                                                                        x%)))
                                                                                                                                     (labelsc
                                                                                                                                       ((run_proof
-                                                                                                                                        (vars*
-                                                                                                                                          prf*)
+                                                                                                                                        (vars%
+                                                                                                                                          prf%)
                                                                                                                                         (handler-case
                                                                                                                                           (assoceq
-                                                                                                                                            prf*
+                                                                                                                                            prf%
                                                                                                                                             (deref
                                                                                                                                               execache))
                                                                                                                                           (hol2cl.runtime:ocaml-condition
@@ -2110,7 +2215,7 @@
                                                                                                                                               ((Failure
                                                                                                                                                 _)
                                                                                                                                                 (match
-                                                                                                                                                  prf*
+                                                                                                                                                  prf%
                                                                                                                                                   ((Start
                                                                                                                                                     m)
                                                                                                                                                     (el
@@ -2120,36 +2225,39 @@
                                                                                                                                                     p1
                                                                                                                                                     p2)
                                                                                                                                                     (memoize
-                                                                                                                                                      prf*
+                                                                                                                                                      prf%
                                                                                                                                                       (ADD_RULE
                                                                                                                                                         (run_proof
-                                                                                                                                                          vars*
+                                                                                                                                                          vars%
                                                                                                                                                           p1)
                                                                                                                                                         (run_proof
-                                                                                                                                                          vars*
+                                                                                                                                                          vars%
                                                                                                                                                           p2))))
                                                                                                                                                   ((Mmul
                                                                                                                                                     m
                                                                                                                                                     p2)
                                                                                                                                                     (memoize
-                                                                                                                                                      prf*
+                                                                                                                                                      prf%
                                                                                                                                                       (MUL_RULE
-                                                                                                                                                        vars*
+                                                                                                                                                        vars%
                                                                                                                                                         m
                                                                                                                                                         (run_proof
-                                                                                                                                                          vars*
+                                                                                                                                                          vars%
                                                                                                                                                           p2))))))
                                                                                                                                               (_
                                                                                                                                                 (raise
                                                                                                                                                   exception~2396)))))))
                                                                                                                                       (lambdac
-                                                                                                                                        (vars*
-                                                                                                                                          prf*)
+                                                                                                                                        (vars%
+                                                                                                                                          prf%)
                                                                                                                                         (let
                                                                                                                                           ((ans
                                                                                                                                             (run_proof
-                                                                                                                                              vars*
-                                                                                                                                              prf*)))
+                                                                                                                                              vars%
+                                                                                                                                              prf%)))
+                                                                                                                                          (cl:declare
+                                                                                                                                            (cl:ignorable
+                                                                                                                                              ans))
                                                                                                                                           (progn
                                                                                                                                             (assign
                                                                                                                                               execache
@@ -2164,33 +2272,37 @@
                                                                                                                                   ((km
                                                                                                                                     (map
                                                                                                                                       (lambdac
-                                                                                                                                        (x*)
+                                                                                                                                        (x%)
                                                                                                                                         0)
                                                                                                                                       vars))
                                                                                                                                     (execache
                                                                                                                                       (ref
                                                                                                                                         nil)))
+                                                                                                                                  (cl:declare
+                                                                                                                                    (cl:ignorable
+                                                                                                                                      km
+                                                                                                                                      execache))
                                                                                                                                   (fletc
                                                                                                                                     ((memoize
-                                                                                                                                      (prf*
-                                                                                                                                        x*)
+                                                                                                                                      (prf%
+                                                                                                                                        x%)
                                                                                                                                       (progn
                                                                                                                                         (assign
                                                                                                                                           execache
                                                                                                                                           (cl:cons
                                                                                                                                             (tuple
-                                                                                                                                              prf*
-                                                                                                                                              x*)
+                                                                                                                                              prf%
+                                                                                                                                              x%)
                                                                                                                                             (deref
                                                                                                                                               execache)))
-                                                                                                                                        x*)))
+                                                                                                                                        x%)))
                                                                                                                                     (labelsc
                                                                                                                                       ((run_scaled_proof
-                                                                                                                                        (vars*
-                                                                                                                                          prf*)
+                                                                                                                                        (vars%
+                                                                                                                                          prf%)
                                                                                                                                         (handler-case
                                                                                                                                           (assoceq
-                                                                                                                                            prf*
+                                                                                                                                            prf%
                                                                                                                                             (deref
                                                                                                                                               execache))
                                                                                                                                           (hol2cl.runtime:ocaml-condition
@@ -2200,7 +2312,7 @@
                                                                                                                                               ((Failure
                                                                                                                                                 _)
                                                                                                                                                 (match
-                                                                                                                                                  prf*
+                                                                                                                                                  prf%
                                                                                                                                                   ((Start
                                                                                                                                                     m)
                                                                                                                                                     (tuple
@@ -2214,85 +2326,91 @@
                                                                                                                                                     (match
                                                                                                                                                       (tuple
                                                                                                                                                         (run_scaled_proof
-                                                                                                                                                          vars*
+                                                                                                                                                          vars%
                                                                                                                                                           p1)
                                                                                                                                                         (run_scaled_proof
-                                                                                                                                                          vars*
+                                                                                                                                                          vars%
                                                                                                                                                           p2))
                                                                                                                                                       ((tuple
                                                                                                                                                         (tuple
                                                                                                                                                           d1
-                                                                                                                                                          th1*)
+                                                                                                                                                          th1%)
                                                                                                                                                         (tuple
                                                                                                                                                           d2
-                                                                                                                                                          th2*))
+                                                                                                                                                          th2%))
                                                                                                                                                         (let
                                                                                                                                                           ((d
                                                                                                                                                             (lcm_num
                                                                                                                                                               d1
                                                                                                                                                               d2)))
+                                                                                                                                                          (cl:declare
+                                                                                                                                                            (cl:ignorable
+                                                                                                                                                              d))
                                                                                                                                                           (memoize
-                                                                                                                                                            prf*
+                                                                                                                                                            prf%
                                                                                                                                                             (tuple
                                                                                                                                                               d
                                                                                                                                                               (ADD_RULE
                                                                                                                                                                 (MUL_RULE
-                                                                                                                                                                  vars*
+                                                                                                                                                                  vars%
                                                                                                                                                                   (tuple
                                                                                                                                                                     (/
                                                                                                                                                                       d
                                                                                                                                                                       d1)
                                                                                                                                                                     km)
-                                                                                                                                                                  th1*)
+                                                                                                                                                                  th1%)
                                                                                                                                                                 (MUL_RULE
-                                                                                                                                                                  vars*
+                                                                                                                                                                  vars%
                                                                                                                                                                   (tuple
                                                                                                                                                                     (/
                                                                                                                                                                       d
                                                                                                                                                                       d2)
                                                                                                                                                                     km)
-                                                                                                                                                                  th2*))))))))
+                                                                                                                                                                  th2%))))))))
                                                                                                                                                   ((Mmul
                                                                                                                                                     (tuple
-                                                                                                                                                      c*
+                                                                                                                                                      c%
                                                                                                                                                       xs)
                                                                                                                                                     p2)
                                                                                                                                                     (let
-                                                                                                                                                      ((e*
+                                                                                                                                                      ((e%
                                                                                                                                                         (funcall
                                                                                                                                                           denominator
-                                                                                                                                                          c*)))
+                                                                                                                                                          c%)))
+                                                                                                                                                      (cl:declare
+                                                                                                                                                        (cl:ignorable
+                                                                                                                                                          e%))
                                                                                                                                                       (match
                                                                                                                                                         (run_scaled_proof
-                                                                                                                                                          vars*
+                                                                                                                                                          vars%
                                                                                                                                                           p2)
                                                                                                                                                         ((tuple
                                                                                                                                                           d
                                                                                                                                                           th)
                                                                                                                                                           (memoize
-                                                                                                                                                            prf*
+                                                                                                                                                            prf%
                                                                                                                                                             (tuple
                                                                                                                                                               (*
                                                                                                                                                                 d
-                                                                                                                                                                e*)
+                                                                                                                                                                e%)
                                                                                                                                                               (MUL_RULE
-                                                                                                                                                                vars*
+                                                                                                                                                                vars%
                                                                                                                                                                 (tuple
                                                                                                                                                                   (*
-                                                                                                                                                                    c*
-                                                                                                                                                                    e*)
+                                                                                                                                                                    c%
+                                                                                                                                                                    e%)
                                                                                                                                                                   xs)
                                                                                                                                                                 th)))))))))
                                                                                                                                               (_
                                                                                                                                                 (raise
                                                                                                                                                   exception~2251)))))))
                                                                                                                                       (lambdac
-                                                                                                                                        (vars*
-                                                                                                                                          prf*)
+                                                                                                                                        (vars%
+                                                                                                                                          prf%)
                                                                                                                                         (match
                                                                                                                                           (run_scaled_proof
-                                                                                                                                            vars*
-                                                                                                                                            prf*)
+                                                                                                                                            vars%
+                                                                                                                                            prf%)
                                                                                                                                           ((tuple
                                                                                                                                             _
                                                                                                                                             ans)
@@ -2306,6 +2424,10 @@
                                                                                                                                 run_proof
                                                                                                                                 vars
                                                                                                                                 prf)))
+                                                                                                                          (cl:declare
+                                                                                                                            (cl:ignorable
+                                                                                                                              run_proof
+                                                                                                                              th))
                                                                                                                           (CONV_RULE
                                                                                                                             RING_EQ_CONV
                                                                                                                             th)))))))))))))
@@ -2345,6 +2467,10 @@
                                                                                                                         #'is_eq
                                                                                                                         #'concl)
                                                                                                                       eths0)))
+                                                                                                                (cl:declare
+                                                                                                                  (cl:ignorable
+                                                                                                                    nths
+                                                                                                                    eths))
                                                                                                                 (if
                                                                                                                   (=
                                                                                                                     eths
@@ -2368,6 +2494,10 @@
                                                                                                                             (BINOP_CONV
                                                                                                                               RING_NORMALIZE_CONV))
                                                                                                                           th1)))
+                                                                                                                    (cl:declare
+                                                                                                                      (cl:ignorable
+                                                                                                                        th1
+                                                                                                                        th2))
                                                                                                                     (match
                                                                                                                       (dest_eq
                                                                                                                         (rand
@@ -2375,7 +2505,7 @@
                                                                                                                             th2)))
                                                                                                                       ((tuple
                                                                                                                         l
-                                                                                                                        r*)
+                                                                                                                        r%)
                                                                                                                         (EQ_MP
                                                                                                                           (funcall
                                                                                                                             EQF_INTRO
@@ -2445,6 +2575,9 @@
                                                                                                                                     th1
                                                                                                                                     th2)))
                                                                                                                               nths)))
+                                                                                                                          (cl:declare
+                                                                                                                            (cl:ignorable
+                                                                                                                              nth))
                                                                                                                           (match
                                                                                                                             (grobify_equations
                                                                                                                               (funcall
@@ -2486,6 +2619,10 @@
                                                                                                                                               CONJ
                                                                                                                                               th1))
                                                                                                                                           NOT_EQ_01)))
+                                                                                                                                    (cl:declare
+                                                                                                                                      (cl:ignorable
+                                                                                                                                        th1
+                                                                                                                                        th2))
                                                                                                                                     (tuple
                                                                                                                                       vars
                                                                                                                                       l
@@ -2509,22 +2646,22 @@
                                                                                                                                   (match
                                                                                                                                     arg~2523
                                                                                                                                     ((tuple
-                                                                                                                                      i*
-                                                                                                                                      p*)
+                                                                                                                                      i%
+                                                                                                                                      p%)
                                                                                                                                       (tuple
-                                                                                                                                        i*
+                                                                                                                                        i%
                                                                                                                                         (filter
                                                                                                                                           (lambdac
                                                                                                                                             (arg~2528)
                                                                                                                                             (match
                                                                                                                                               arg~2528
                                                                                                                                               ((tuple
-                                                                                                                                                c*
+                                                                                                                                                c%
                                                                                                                                                 m)
                                                                                                                                                 (>
-                                                                                                                                                  c*
+                                                                                                                                                  c%
                                                                                                                                                   num_0))))
-                                                                                                                                          p*)))))
+                                                                                                                                          p%)))))
                                                                                                                                 cert))
                                                                                                                               (cert_neg
                                                                                                                                 (map
@@ -2533,21 +2670,21 @@
                                                                                                                                     (match
                                                                                                                                       arg~2548
                                                                                                                                       ((tuple
-                                                                                                                                        i*
-                                                                                                                                        p*)
+                                                                                                                                        i%
+                                                                                                                                        p%)
                                                                                                                                         (tuple
-                                                                                                                                          i*
+                                                                                                                                          i%
                                                                                                                                           (map
                                                                                                                                             (lambdac
                                                                                                                                               (arg~2553)
                                                                                                                                               (match
                                                                                                                                                 arg~2553
                                                                                                                                                 ((tuple
-                                                                                                                                                  c*
+                                                                                                                                                  c%
                                                                                                                                                   m)
                                                                                                                                                   (tuple
                                                                                                                                                     (-
-                                                                                                                                                      c*)
+                                                                                                                                                      c%)
                                                                                                                                                     m))))
                                                                                                                                             (filter
                                                                                                                                               (lambdac
@@ -2555,13 +2692,17 @@
                                                                                                                                                 (match
                                                                                                                                                   arg~2565
                                                                                                                                                   ((tuple
-                                                                                                                                                    c*
+                                                                                                                                                    c%
                                                                                                                                                     m)
                                                                                                                                                     (<
-                                                                                                                                                      c*
+                                                                                                                                                      c%
                                                                                                                                                       num_0))))
-                                                                                                                                              p*))))))
+                                                                                                                                              p%))))))
                                                                                                                                   cert)))
+                                                                                                                            (cl:declare
+                                                                                                                              (cl:ignorable
+                                                                                                                                cert_pos
+                                                                                                                                cert_neg))
                                                                                                                             (let
                                                                                                                               ((herts_pos
                                                                                                                                 (map
@@ -2570,14 +2711,14 @@
                                                                                                                                     (match
                                                                                                                                       arg~2588
                                                                                                                                       ((tuple
-                                                                                                                                        i*
-                                                                                                                                        p*)
+                                                                                                                                        i%
+                                                                                                                                        p%)
                                                                                                                                         (tuple
-                                                                                                                                          i*
+                                                                                                                                          i%
                                                                                                                                           (funcall
                                                                                                                                             holify_polynomial
                                                                                                                                             vars
-                                                                                                                                            p*)))))
+                                                                                                                                            p%)))))
                                                                                                                                   cert_pos))
                                                                                                                                 (herts_neg
                                                                                                                                   (map
@@ -2586,15 +2727,19 @@
                                                                                                                                       (match
                                                                                                                                         arg~2603
                                                                                                                                         ((tuple
-                                                                                                                                          i*
-                                                                                                                                          p*)
+                                                                                                                                          i%
+                                                                                                                                          p%)
                                                                                                                                           (tuple
-                                                                                                                                            i*
+                                                                                                                                            i%
                                                                                                                                             (funcall
                                                                                                                                               holify_polynomial
                                                                                                                                               vars
-                                                                                                                                              p*)))))
+                                                                                                                                              p%)))))
                                                                                                                                     cert_neg)))
+                                                                                                                              (cl:declare
+                                                                                                                                (cl:ignorable
+                                                                                                                                  herts_pos
+                                                                                                                                  herts_neg))
                                                                                                                               (fletc
                                                                                                                                 ((thm_fn
                                                                                                                                   (pols)
@@ -2614,15 +2759,15 @@
                                                                                                                                           (match
                                                                                                                                             arg~2621
                                                                                                                                             ((tuple
-                                                                                                                                              i*
-                                                                                                                                              p*)
+                                                                                                                                              i%
+                                                                                                                                              p%)
                                                                                                                                               (AP_TERM
                                                                                                                                                 (mk_comb
                                                                                                                                                   (tuple
                                                                                                                                                     ring_mul_tm
-                                                                                                                                                    p*))
+                                                                                                                                                    p%))
                                                                                                                                                 (el
-                                                                                                                                                  i*
+                                                                                                                                                  i%
                                                                                                                                                   eths)))))
                                                                                                                                         pols)))))
                                                                                                                                 (let
@@ -2632,6 +2777,10 @@
                                                                                                                                     (th2
                                                                                                                                       (thm_fn
                                                                                                                                         herts_neg)))
+                                                                                                                                  (cl:declare
+                                                                                                                                    (cl:ignorable
+                                                                                                                                      th1
+                                                                                                                                      th2))
                                                                                                                                   (let*
                                                                                                                                     ((th3
                                                                                                                                       (funcall
@@ -2651,20 +2800,24 @@
                                                                                                                                             INE_RULE
                                                                                                                                             l
                                                                                                                                             th3))))
+                                                                                                                                    (cl:declare
+                                                                                                                                      (cl:ignorable
+                                                                                                                                        th3
+                                                                                                                                        th4))
                                                                                                                                     (match
                                                                                                                                       (dest_eq
                                                                                                                                         (rand
                                                                                                                                           (concl
                                                                                                                                             th4)))
                                                                                                                                       ((tuple
-                                                                                                                                        l*
-                                                                                                                                        r*)
+                                                                                                                                        l%
+                                                                                                                                        r%)
                                                                                                                                         (EQ_MP
                                                                                                                                           (funcall
                                                                                                                                             EQF_INTRO
                                                                                                                                             th4)
                                                                                                                                           (REFL
-                                                                                                                                            l*))))))))))))))))))))
+                                                                                                                                            l%))))))))))))))))))))
                                                                                                       (let
                                                                                                         ((ring_ty
                                                                                                           (snd
@@ -2673,8 +2826,11 @@
                                                                                                                 (dest_fun_ty
                                                                                                                   (type_of
                                                                                                                     ring_add_tm)))))))
+                                                                                                        (cl:declare
+                                                                                                          (cl:ignorable
+                                                                                                            ring_ty))
                                                                                                         (fletc
-                                                                                                          ((RING*
+                                                                                                          ((RING%
                                                                                                             (tm)
                                                                                                             (let*
                                                                                                               ((avs
@@ -2688,7 +2844,7 @@
                                                                                                                     #'type_of)
                                                                                                                   (frees
                                                                                                                     tm)))
-                                                                                                                (tm*
+                                                                                                                (tm%
                                                                                                                   (list_mk_forall
                                                                                                                     (tuple
                                                                                                                       avs
@@ -2698,7 +2854,12 @@
                                                                                                                     INITIAL_CONV
                                                                                                                     (funcall
                                                                                                                       mk_neg
-                                                                                                                      tm*))))
+                                                                                                                      tm%))))
+                                                                                                              (cl:declare
+                                                                                                                (cl:ignorable
+                                                                                                                  avs
+                                                                                                                  tm%
+                                                                                                                  th1))
                                                                                                               (match
                                                                                                                 (funcall
                                                                                                                   strip_exists
@@ -2745,10 +2906,17 @@
                                                                                                                               (funcall
                                                                                                                                 EQF_ELIM
                                                                                                                                 th2b)))))
+                                                                                                                      (cl:declare
+                                                                                                                        (cl:ignorable
+                                                                                                                          th1a
+                                                                                                                          boda
+                                                                                                                          th2a
+                                                                                                                          th2b
+                                                                                                                          th2))
                                                                                                                       (match
                                                                                                                         (labelsc
                                                                                                                           ((CHOOSES
-                                                                                                                            (evs*
+                                                                                                                            (evs%
                                                                                                                               arg~2934)
                                                                                                                             (match
                                                                                                                               arg~2934
@@ -2756,7 +2924,7 @@
                                                                                                                                 etm
                                                                                                                                 th)
                                                                                                                                 (match
-                                                                                                                                  evs*
+                                                                                                                                  evs%
                                                                                                                                   (nil
                                                                                                                                     (tuple
                                                                                                                                       etm
@@ -2771,14 +2939,14 @@
                                                                                                                                           etm
                                                                                                                                           th))
                                                                                                                                       ((tuple
-                                                                                                                                        etm*
-                                                                                                                                        th*)
+                                                                                                                                        etm%
+                                                                                                                                        th%)
                                                                                                                                         (tuple
                                                                                                                                           (funcall
                                                                                                                                             mk_exists
                                                                                                                                             (tuple
                                                                                                                                               ev
-                                                                                                                                              etm*))
+                                                                                                                                              etm%))
                                                                                                                                           (funcall
                                                                                                                                             CHOOSE
                                                                                                                                             (tuple
@@ -2788,8 +2956,8 @@
                                                                                                                                                   mk_exists
                                                                                                                                                   (tuple
                                                                                                                                                     ev
-                                                                                                                                                    etm*))))
-                                                                                                                                            th*))))))))))
+                                                                                                                                                    etm%))))
+                                                                                                                                            th%))))))))))
                                                                                                                           (CHOOSES
                                                                                                                             evs
                                                                                                                             (tuple
@@ -2838,25 +3006,37 @@
                                                                                                                     (grobify_term
                                                                                                                       vars
                                                                                                                       tm)))
+                                                                                                                (cl:declare
+                                                                                                                  (cl:ignorable
+                                                                                                                    rawvars
+                                                                                                                    vars
+                                                                                                                    pols
+                                                                                                                    pol))
                                                                                                                 (let
                                                                                                                   ((cert
                                                                                                                     (grobner_ideal
                                                                                                                       vars
                                                                                                                       pols
                                                                                                                       pol)))
+                                                                                                                  (cl:declare
+                                                                                                                    (cl:ignorable
+                                                                                                                      cert))
                                                                                                                   (map
                                                                                                                     (lambdac
                                                                                                                       (n)
                                                                                                                       (let
-                                                                                                                        ((p*
+                                                                                                                        ((p%
                                                                                                                           (assocd
                                                                                                                             n
                                                                                                                             cert
                                                                                                                             nil)))
+                                                                                                                        (cl:declare
+                                                                                                                          (cl:ignorable
+                                                                                                                            p%))
                                                                                                                         (funcall
                                                                                                                           holify_polynomial
                                                                                                                           vars
-                                                                                                                          p*)))
+                                                                                                                          p%)))
                                                                                                                     (--
                                                                                                                       0
                                                                                                                       (-
@@ -2865,7 +3045,7 @@
                                                                                                                           pols)
                                                                                                                         1)))))))
                                                                                                           (tuple
-                                                                                                            #'RING*
+                                                                                                            #'RING%
                                                                                                             #'ideal))))))))))))))))))))))))))))))))))))))))))))))))))))))
 
 ;; (* ----------------------------------------------------------------------- *)
@@ -2897,23 +3077,25 @@
       (q_tm (parse_term "P:num->num->bool"))
       (a_tm (parse_term "a:num"))
       (b_tm (parse_term "b:num")))
+    (cl:declare (cl:ignorable pre_tm div_tm mod_tm p_tm n_tm m_tm q_tm a_tm b_tm))
     (let
       ((is_pre (lambdac (tm) (cl:and (is_comb tm) (= (rator tm) pre_tm))))
         (is_sub (is_binop (parse_term "(-):num->num->num")))
         (is_divmod
           (let ((is_div (is_binop div_tm)) (is_mod (is_binop mod_tm)))
+            (cl:declare (cl:ignorable is_div is_mod))
             (lambdac (tm) (cl:or (funcall is_div tm) (funcall is_mod tm)))))
         (contains_quantifier
           (can
             (find_term
-              (lambdac (t*)
+              (lambdac (t%)
                 (cl:or
-                  (funcall is_forall t*)
-                  (cl:or (funcall is_exists t*) (funcall is_uexists t*)))))))
+                  (funcall is_forall t%)
+                  (cl:or (funcall is_exists t%) (funcall is_uexists t%)))))))
         (BETA2_CONV (THENC (RATOR_CONV #'BETA_CONV) #'BETA_CONV))
-        (PRE_ELIM_THM** (CONV_RULE (RAND_CONV NNF_CONV) PRE_ELIM_THM))
-        (SUB_ELIM_THM** (CONV_RULE (RAND_CONV NNF_CONV) SUB_ELIM_THM))
-        (DIVMOD_ELIM_THM** (CONV_RULE (RAND_CONV NNF_CONV) DIVMOD_ELIM_THM))
+        (PRE_ELIM_THM%% (CONV_RULE (RAND_CONV NNF_CONV) PRE_ELIM_THM))
+        (SUB_ELIM_THM%% (CONV_RULE (RAND_CONV NNF_CONV) SUB_ELIM_THM))
+        (DIVMOD_ELIM_THM%% (CONV_RULE (RAND_CONV NNF_CONV) DIVMOD_ELIM_THM))
         (pth_evenodd
           (prove
             (tuple
@@ -2931,6 +3113,17 @@
                       (funcall GSYM EVEN_EXISTS)
                       (cl:cons (funcall GSYM ODD_EXISTS) nil))))
                 (REWRITE_TAC (cl:cons NOT_EVEN (cl:cons NOT_ODD nil))))))))
+      (cl:declare
+        (cl:ignorable
+          is_pre
+          is_sub
+          is_divmod
+          contains_quantifier
+          BETA2_CONV
+          PRE_ELIM_THM%%
+          SUB_ELIM_THM%%
+          DIVMOD_ELIM_THM%%
+          pth_evenodd))
       (labelsc
         ((NUM_MULTIPLY_CONV
           (pos tm)
@@ -2954,18 +3147,18 @@
                   (RAND_CONV (NUM_MULTIPLY_CONV (not pos)) tm)
                   (handler-case
                     (let*
-                      ((t*
+                      ((t%
                         (find_term
-                          (lambdac (t*) (cl:and (funcall is_pre t*) (free_in t* tm)))
+                          (lambdac (t%) (cl:and (funcall is_pre t%) (free_in t% tm)))
                           tm))
-                        (ty (type_of t*))
+                        (ty (type_of t%))
                         (v (funcall genvar ty))
-                        (p*
-                          (mk_abs (tuple v (funcall subst (cl:cons (tuple v t*) nil) tm))))
-                        (th0 (if pos PRE_ELIM_THM** PRE_ELIM_THM*))
+                        (p%
+                          (mk_abs (tuple v (funcall subst (cl:cons (tuple v t%) nil) tm))))
+                        (th0 (if pos PRE_ELIM_THM%% PRE_ELIM_THM%))
                         (th1
-                          (INST*
-                            (cl:cons (tuple p* p_tm) (cl:cons (tuple (rand t*) n_tm) nil))
+                          (INST%
+                            (cl:cons (tuple p% p_tm) (cl:cons (tuple (rand t%) n_tm) nil))
                             th0))
                         (th2
                           (CONV_RULE
@@ -2973,6 +3166,7 @@
                               (RAND_CONV #'BETA_CONV)
                               (BINDER_CONV (RAND_CONV #'BETA_CONV)))
                             th1)))
+                      (cl:declare (cl:ignorable t% ty v p% th0 th1 th2))
                       (CONV_RULE (RAND_CONV (NUM_MULTIPLY_CONV pos)) th2))
                     (hol2cl.runtime:ocaml-condition
                       (exception~3264)
@@ -2980,26 +3174,26 @@
                         ((Failure _)
                           (handler-case
                             (let*
-                              ((t*
+                              ((t%
                                 (find_term
-                                  (lambdac (t*)
-                                    (cl:and (funcall is_sub t*) (free_in t* tm)))
+                                  (lambdac (t%)
+                                    (cl:and (funcall is_sub t%) (free_in t% tm)))
                                   tm))
-                                (ty (type_of t*))
+                                (ty (type_of t%))
                                 (v (funcall genvar ty))
-                                (p*
+                                (p%
                                   (mk_abs
                                     (tuple
                                       v
-                                      (funcall subst (cl:cons (tuple v t*) nil) tm))))
-                                (th0 (if pos SUB_ELIM_THM** SUB_ELIM_THM*))
+                                      (funcall subst (cl:cons (tuple v t%) nil) tm))))
+                                (th0 (if pos SUB_ELIM_THM%% SUB_ELIM_THM%))
                                 (th1
-                                  (INST*
+                                  (INST%
                                     (cl:cons
-                                      (tuple p* p_tm)
+                                      (tuple p% p_tm)
                                       (cl:cons
-                                        (tuple (funcall lhand t*) a_tm)
-                                        (cl:cons (tuple (rand t*) b_tm) nil)))
+                                        (tuple (funcall lhand t%) a_tm)
+                                        (cl:cons (tuple (rand t%) b_tm) nil)))
                                     th0))
                                 (th2
                                   (CONV_RULE
@@ -3007,6 +3201,7 @@
                                       (RAND_CONV #'BETA_CONV)
                                       (BINDER_CONV (RAND_CONV #'BETA_CONV)))
                                     th1)))
+                              (cl:declare (cl:ignorable t% ty v p% th0 th1 th2))
                               (CONV_RULE (RAND_CONV (NUM_MULTIPLY_CONV pos)) th2))
                             (hol2cl.runtime:ocaml-condition
                               (exception~3267)
@@ -3014,25 +3209,28 @@
                                 ((Failure _)
                                   (handler-case
                                     (let*
-                                      ((t*
+                                      ((t%
                                         (find_term
-                                          (lambdac (t*)
+                                          (lambdac (t%)
                                             (cl:and
-                                              (funcall is_divmod t*)
-                                              (free_in t* tm)))
+                                              (funcall is_divmod t%)
+                                              (free_in t% tm)))
                                           tm))
-                                        (x (funcall lhand t*))
-                                        (y (rand t*)))
+                                        (x (funcall lhand t%))
+                                        (y (rand t%)))
+                                      (cl:declare (cl:ignorable t% x y))
                                       (let
                                         ((dtm
                                           (mk_comb (tuple (mk_comb (tuple div_tm x)) y)))
                                           (mtm
                                             (mk_comb (tuple (mk_comb (tuple mod_tm x)) y))))
+                                        (cl:declare (cl:ignorable dtm mtm))
                                         (let
                                           ((vd (funcall genvar (type_of dtm)))
                                             (vm (funcall genvar (type_of mtm))))
+                                          (cl:declare (cl:ignorable vd vm))
                                           (let*
-                                            ((p*
+                                            ((p%
                                               (list_mk_abs
                                                 (tuple
                                                   (cl:cons vd (cl:cons vm nil))
@@ -3044,12 +3242,12 @@
                                                     tm))))
                                               (th0
                                                 (if pos
-                                                  DIVMOD_ELIM_THM**
-                                                  DIVMOD_ELIM_THM*))
+                                                  DIVMOD_ELIM_THM%%
+                                                  DIVMOD_ELIM_THM%))
                                               (th1
-                                                (INST*
+                                                (INST%
                                                   (cl:cons
-                                                    (tuple p* q_tm)
+                                                    (tuple p% q_tm)
                                                     (cl:cons
                                                       (tuple x m_tm)
                                                       (cl:cons (tuple y n_tm) nil)))
@@ -3063,6 +3261,7 @@
                                                       #'BINDER_CONV
                                                       (RAND_CONV BETA2_CONV)))
                                                   th1)))
+                                            (cl:declare (cl:ignorable p% th0 th1 th2))
                                             (CONV_RULE
                                               (RAND_CONV (NUM_MULTIPLY_CONV pos))
                                               th2)))))
@@ -3163,8 +3362,10 @@
       (initconv
         (THENC NUM_SIMPLIFY_CONV (GEN_REWRITE_CONV DEPTH_CONV (cl:cons ADD1 nil))))
       (t_tm (parse_term "T")))
+    (cl:declare (cl:ignorable NUM_INTEGRAL_LEMMA NUM_INTEGRAL rawring initconv t_tm))
     (lambdac (tm)
       (let ((th (funcall initconv tm)))
+        (cl:declare (cl:ignorable th))
         (if (= (rand (concl th)) t_tm)
           th
           (EQ_MP (SYM th) (funcall rawring (rand (concl th)))))))))

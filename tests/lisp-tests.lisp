@@ -98,8 +98,8 @@
 (check (eq :internal (nth-value 1 (find-symbol "MAKE-SEQUENT" :hol2cl.fusion.hol))) "theorem maker internal")
 (check (not (eq :external (nth-value 1 (find-symbol "MAKE-TYAPP" :hol2cl.fusion.hol)))) "private type maker")
 (check (and (eq :external (nth-value 1 (find-symbol "ABS" :hol2cl.fusion)))
-            (eq :external (nth-value 1 (find-symbol "ABS*" :hol2cl.fusion)))
-            (not (eq (find-symbol "ABS" :hol2cl.fusion) (find-symbol "ABS*" :hol2cl.fusion)))) "constructor/rule case collision")
+            (eq :external (nth-value 1 (find-symbol "ABS%" :hol2cl.fusion)))
+            (not (eq (find-symbol "ABS" :hol2cl.fusion) (find-symbol "ABS%" :hol2cl.fusion)))) "constructor/rule case collision")
 (check (hol2cl.fusion:aconv
          (hol2cl.fusion:mk_abs (hol2cl.runtime:tuple
            (hol2cl.fusion:mk_var (hol2cl.runtime:tuple "x" hol2cl.fusion:bool_ty))

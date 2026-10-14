@@ -23,7 +23,7 @@
         ASM_SIMP_TAC
         AUGMENT_SIMPSET
         DEPTH_SQCONV
-        DEPTH_SQCONV*
+        DEPTH_SQCONV%
         EXPAND_TAC
         GENERAL_REWRITE_CONV
         GEN_REWRITE_CONV
@@ -37,7 +37,7 @@
         ONCE_ASM_REWRITE_TAC
         ONCE_ASM_SIMP_TAC
         ONCE_DEPTH_SQCONV
-        ONCE_DEPTH_SQCONV*
+        ONCE_DEPTH_SQCONV%
         ONCE_REWRITE_CONV
         ONCE_REWRITE_RULE
         ONCE_REWRITE_TAC
@@ -63,7 +63,7 @@
         PURE_SIMP_TAC
         Prover
         REDEPTH_SQCONV
-        REDEPTH_SQCONV*
+        REDEPTH_SQCONV%
         REWRITES_CONV
         REWRITE_CONV
         REWRITE_RULE
@@ -76,19 +76,19 @@
         SIMP_TAC
         Simpset
         TOP_DEPTH_SQCONV
-        TOP_DEPTH_SQCONV*
+        TOP_DEPTH_SQCONV%
         TOP_SWEEP_SQCONV
-        TOP_SWEEP_SQCONV*
+        TOP_SWEEP_SQCONV%
         apply_prover
         augment
         basic_congs
         basic_convs
-        basic_convs*
+        basic_convs%
         basic_net
-        basic_net*
+        basic_net%
         basic_prover
         basic_rewrites
-        basic_rewrites*
+        basic_rewrites%
         basic_ss
         collect_condition
         conv
@@ -96,14 +96,14 @@
         empty_ss
         extend_basic_congs
         extend_basic_convs
-        extend_basic_convs*
+        extend_basic_convs%
         extend_basic_rewrites
-        extend_basic_rewrites*
+        extend_basic_rewrites%
         lexify
         make-Prover
         make-Simpset
         mk_prover
-        mk_prover*
+        mk_prover%
         mk_rewrites
         net_of_cong
         net_of_conv
@@ -111,9 +111,9 @@
         rehash_convnet
         set_basic_congs
         set_basic_convs
-        set_basic_convs*
+        set_basic_convs%
         set_basic_rewrites
-        set_basic_rewrites*
+        set_basic_rewrites%
         split_rewrites
         ss_of_congs
         ss_of_conv
@@ -216,7 +216,7 @@
     ASM_SIMP_TAC
     AUGMENT_SIMPSET
     DEPTH_SQCONV
-    DEPTH_SQCONV*
+    DEPTH_SQCONV%
     EXPAND_TAC
     GENERAL_REWRITE_CONV
     GEN_REWRITE_CONV
@@ -230,7 +230,7 @@
     ONCE_ASM_REWRITE_TAC
     ONCE_ASM_SIMP_TAC
     ONCE_DEPTH_SQCONV
-    ONCE_DEPTH_SQCONV*
+    ONCE_DEPTH_SQCONV%
     ONCE_REWRITE_CONV
     ONCE_REWRITE_RULE
     ONCE_REWRITE_TAC
@@ -256,7 +256,7 @@
     PURE_SIMP_TAC
     Prover
     REDEPTH_SQCONV
-    REDEPTH_SQCONV*
+    REDEPTH_SQCONV%
     REWRITES_CONV
     REWRITE_CONV
     REWRITE_RULE
@@ -269,19 +269,19 @@
     SIMP_TAC
     Simpset
     TOP_DEPTH_SQCONV
-    TOP_DEPTH_SQCONV*
+    TOP_DEPTH_SQCONV%
     TOP_SWEEP_SQCONV
-    TOP_SWEEP_SQCONV*
+    TOP_SWEEP_SQCONV%
     apply_prover
     augment
     basic_congs
     basic_convs
-    basic_convs*
+    basic_convs%
     basic_net
-    basic_net*
+    basic_net%
     basic_prover
     basic_rewrites
-    basic_rewrites*
+    basic_rewrites%
     basic_ss
     collect_condition
     conv
@@ -289,14 +289,14 @@
     empty_ss
     extend_basic_congs
     extend_basic_convs
-    extend_basic_convs*
+    extend_basic_convs%
     extend_basic_rewrites
-    extend_basic_rewrites*
+    extend_basic_rewrites%
     lexify
     make-Prover
     make-Simpset
     mk_prover
-    mk_prover*
+    mk_prover%
     mk_rewrites
     net_of_cong
     net_of_conv
@@ -304,9 +304,9 @@
     rehash_convnet
     set_basic_congs
     set_basic_convs
-    set_basic_convs*
+    set_basic_convs%
     set_basic_rewrites
-    set_basic_rewrites*
+    set_basic_rewrites%
     split_rewrites
     ss_of_congs
     ss_of_conv
@@ -347,7 +347,7 @@
     DISCH
     CONJUNCT2
     CONJUNCT1)
-  (:shadowing-import-from :hol2cl.drule term_match PART_MATCH INSTANTIATE* GEN_PART_MATCH)
+  (:shadowing-import-from :hol2cl.drule term_match PART_MATCH INSTANTIATE% GEN_PART_MATCH)
   (:shadowing-import-from
     :hol2cl.equal
     TRY_CONV
@@ -374,11 +374,11 @@
     TRANS
     REFL
     rand
-    MK_COMB*
+    MK_COMB%
     is_var
     is_comb
     is_abs
-    INST*
+    INST%
     hyp
     freesl
     frees
@@ -391,12 +391,12 @@
     concl
     Comb
     ASSUME
-    ABS*
+    ABS%
     Abs)
   (:shadowing-import-from :hol2cl.itab ITAUT)
   (:shadowing-import-from
     :hol2cl.lib
-    union*
+    union%
     union
     tryfind
     tl
@@ -428,6 +428,7 @@
     match
     lambdac
     labelsc
+    guard
     function-value
     funcall
     fst
@@ -560,19 +561,23 @@
 
 (defunc ORDERED_REWR_CONV (ord th)
   (let ((basic_conv (funcall REWR_CONV th)))
+    (cl:declare (cl:ignorable basic_conv))
     (lambdac (tm)
       (let ((thm (funcall basic_conv tm)))
+        (cl:declare (cl:ignorable thm))
         (match (dest_eq (concl thm))
-          ((tuple l r*)
-            (if (funcall ord l r*) thm (failwith "ORDERED_REWR_CONV: wrong orientation"))))))))
+          ((tuple l r%)
+            (if (funcall ord l r%) thm (failwith "ORDERED_REWR_CONV: wrong orientation"))))))))
 
 (defunc ORDERED_IMP_REWR_CONV (ord th)
   (let ((basic_conv (funcall IMP_REWR_CONV th)))
+    (cl:declare (cl:ignorable basic_conv))
     (lambdac (tm)
       (let ((thm (funcall basic_conv tm)))
+        (cl:declare (cl:ignorable thm))
         (match (dest_eq (rand (concl thm)))
-          ((tuple l r*)
-            (if (funcall ord l r*)
+          ((tuple l r%)
+            (if (funcall ord l r%)
               thm
               (failwith "ORDERED_IMP_REWR_CONV: wrong orientation"))))))))
 
@@ -604,6 +609,7 @@
         (if (= l2 nil)
           cl:t
           (let ((h1 (hd l1)) (h2 (hd l2)))
+            (cl:declare (cl:ignorable h1 h2))
             (cl:or (funcall ord h1 h2) (cl:and (= h1 h2) (lexify ord (tl l1) (tl l2)))))))))
     (labelsc
       ((dyn_order
@@ -630,30 +636,33 @@
     ((tm (concl th))
       (lconsts (freesl (hyp th)))
       (matchable (o #'can (funcall term_match lconsts))))
+    (cl:declare (cl:ignorable tm lconsts matchable))
     (match tm
-      ((trivia:guard
-        (Comb (Comb (Const "=" _) (cl:and l (Abs x (Comb (cl:and v (Var s ty)) x*)))) v*)
-        (cl:and (= x* x) (cl:and (= v* v) (not (= x v)))))
+      ((guard
+        (Comb (Comb (Const "=" _) (cl:and l (Abs x (Comb (cl:and v (Var s ty)) x%)))) v%)
+        (cl:and (= x% x) (cl:and (= v% v) (not (= x v)))))
         (fletc
           ((conv
-            (tm*)
-            (match tm*
-              ((trivia:guard (Abs y (Comb t* y*)) (cl:and (= y y*) (not (free_in y t*))))
-                (funcall INSTANTIATE* (funcall term_match nil v t*) th))
+            (tm%)
+            (match tm%
+              ((guard (Abs y (Comb t% y%)) (cl:and (= y y%) (not (free_in y t%))))
+                (funcall INSTANTIATE% (funcall term_match nil v t%) th))
               (_ (failwith "REWR_CONV (ETA_AX special case)")))))
           (funcall enter lconsts (tuple l (tuple 1 #'conv)))))
-      ((Comb (Comb (Const "=" _) l) r*)
-        (if (cl:and rep (free_in l r*))
-          (let ((th* (funcall EQT_INTRO th)))
-            (funcall enter lconsts (tuple l (tuple 1 (funcall REWR_CONV th*)))))
-          (if (cl:and rep (cl:and (funcall matchable l r*) (funcall matchable r* l)))
+      ((Comb (Comb (Const "=" _) l) r%)
+        (if (cl:and rep (free_in l r%))
+          (let ((th% (funcall EQT_INTRO th)))
+            (cl:declare (cl:ignorable th%))
+            (funcall enter lconsts (tuple l (tuple 1 (funcall REWR_CONV th%)))))
+          (if (cl:and rep (cl:and (funcall matchable l r%) (funcall matchable r% l)))
             (funcall enter lconsts (tuple l (tuple 1 (ORDERED_REWR_CONV term_order th))))
             (funcall enter lconsts (tuple l (tuple 1 (funcall REWR_CONV th)))))))
-      ((Comb (Comb _ t*) (Comb (Comb (Const "=" _) l) r*))
-        (if (cl:and rep (free_in l r*))
-          (let ((th* (funcall DISCH t* (funcall EQT_INTRO (UNDISCH th)))))
-            (funcall enter lconsts (tuple l (tuple 3 (funcall IMP_REWR_CONV th*)))))
-          (if (cl:and rep (cl:and (funcall matchable l r*) (funcall matchable r* l)))
+      ((Comb (Comb _ t%) (Comb (Comb (Const "=" _) l) r%))
+        (if (cl:and rep (free_in l r%))
+          (let ((th% (funcall DISCH t% (funcall EQT_INTRO (UNDISCH th)))))
+            (cl:declare (cl:ignorable th%))
+            (funcall enter lconsts (tuple l (tuple 3 (funcall IMP_REWR_CONV th%)))))
+          (if (cl:and rep (cl:and (funcall matchable l r%) (funcall matchable r% l)))
             (funcall
               enter
               lconsts
@@ -684,6 +693,7 @@
         (let*
           ((pat (funcall lhs conc))
             (conv (funcall GEN_PART_MATCH (o lhand (funpow n #'rand)) th)))
+          (cl:declare (cl:ignorable pat conv))
           (funcall enter nil (tuple pat (tuple 4 conv)) sofar))))))
 
 ;; (* ------------------------------------------------------------------------- *)
@@ -704,26 +714,32 @@
         (let
           ((cnv
             (funcall REWR_CONV (ITAUT (parse_term "(!x. P x ==> Q) <=> (?x. P x) ==> Q")))))
+          (cl:declare (cl:ignorable cnv))
           (lambdac (v th) (CONV_RULE cnv (funcall GEN v th))))))
+    (cl:declare (cl:ignorable IMP_CONJ_CONV IMP_EXISTS_RULE))
     (fletc
       ((collect_condition
         (oldhyps th)
         (let ((conds (subtract (hyp th) oldhyps)))
+          (cl:declare (cl:ignorable conds))
           (if (= conds nil)
             th
             (let*
               ((jth (itlist DISCH conds th))
                 (kth (CONV_RULE (funcall REPEATC IMP_CONJ_CONV) jth)))
+              (cl:declare (cl:ignorable jth kth))
               (match (funcall dest_imp (concl kth))
-                ((tuple cond* eqn)
+                ((tuple cond% eqn)
                   (let
                     ((fvs
-                      (subtract (subtract (frees cond*) (frees eqn)) (freesl oldhyps))))
+                      (subtract (subtract (frees cond%) (frees eqn)) (freesl oldhyps))))
+                    (cl:declare (cl:ignorable fvs))
                     (itlist IMP_EXISTS_RULE fvs kth)))))))))
       (labelsc
         ((split_rewrites
           (oldhyps cf th sofar)
           (let ((tm (concl th)))
+            (cl:declare (cl:ignorable tm))
             (if (funcall is_forall tm)
               (split_rewrites oldhyps cf (SPEC_ALL th) sofar)
               (if (funcall is_conj tm)
@@ -739,6 +755,7 @@
                     (if (is_neg tm)
                       (let
                         ((ths (split_rewrites oldhyps cf (funcall EQF_INTRO th) sofar)))
+                        (cl:declare (cl:ignorable ths))
                         (if (is_eq (rand tm))
                           (split_rewrites
                             oldhyps
@@ -756,6 +773,7 @@
 
 (defunc REWRITES_CONV (net tm)
   (let ((pconvs (funcall lookup tm net)))
+    (cl:declare (cl:ignorable pconvs))
     (handler-case
       (tryfind
         (lambdac (arg~616) (match arg~616 ((tuple _ cnv) (funcall cnv tm))))
@@ -770,13 +788,14 @@
 
 (defunc mk_prover (applicator augmentor)
   (labelsc
-    ((mk_prover*
+    ((mk_prover%
       (state)
       (let
-        ((apply* (funcall applicator state))
-          (augment* (lambdac (thms) (mk_prover* (funcall augmentor state thms)))))
-        (make-Prover apply* augment*))))
-    #'mk_prover*))
+        ((apply% (funcall applicator state))
+          (augment% (lambdac (thms) (mk_prover% (funcall augmentor state thms)))))
+        (cl:declare (cl:ignorable apply% augment%))
+        (make-Prover apply% augment%))))
+    #'mk_prover%))
 
 (defunc augment (arg~655 thms) (match arg~655 ((Prover _ aug) (funcall aug thms))))
 
@@ -791,7 +810,7 @@
 
 (defunc basic_prover (strat arg~680 lev tm)
   (match arg~680
-    ((cl:and ss (Simpset net prover* provers rewmaker))
+    ((cl:and ss (Simpset net prover% provers rewmaker))
       (let
         ((sth
           (handler-case
@@ -799,6 +818,7 @@
             (hol2cl.runtime:ocaml-condition
               (exception~690)
               (match exception~690 ((Failure _) (REFL tm)) (_ (raise exception~690)))))))
+        (cl:declare (cl:ignorable sth))
         (handler-case
           (EQT_ELIM sth)
           (hol2cl.runtime:ocaml-condition
@@ -808,6 +828,7 @@
                 (let
                   ((tth
                     (tryfind (lambdac (pr) (apply_prover pr (rand (concl sth)))) provers)))
+                  (cl:declare (cl:ignorable tth))
                   (EQ_MP (SYM sth) tth)))
               (_ (raise exception~700)))))))))
 
@@ -818,22 +839,25 @@
 
 (defunc ss_of_thms (thms arg~732)
   (match arg~732
-    ((Simpset net prover* provers rewmaker)
+    ((Simpset net prover% provers rewmaker)
       (let*
-        ((cthms (itlist rewmaker thms nil)) (net* (itlist (net_of_thm cl:t) cthms net)))
-        (make-Simpset net* prover* provers rewmaker)))))
+        ((cthms (itlist rewmaker thms nil)) (net% (itlist (net_of_thm cl:t) cthms net)))
+        (cl:declare (cl:ignorable cthms net%))
+        (make-Simpset net% prover% provers rewmaker)))))
 
 (defunc ss_of_conv (keytm conv arg~765)
   (match arg~765
-    ((Simpset net prover* provers rewmaker)
-      (let ((net* (net_of_conv keytm conv net)))
-        (make-Simpset net* prover* provers rewmaker)))))
+    ((Simpset net prover% provers rewmaker)
+      (let ((net% (net_of_conv keytm conv net)))
+        (cl:declare (cl:ignorable net%))
+        (make-Simpset net% prover% provers rewmaker)))))
 
 (defunc ss_of_congs (thms arg~790)
   (match arg~790
-    ((Simpset net prover* provers rewmaker)
-      (let ((net* (itlist #'net_of_cong thms net)))
-        (make-Simpset net* prover* provers rewmaker)))))
+    ((Simpset net prover% provers rewmaker)
+      (let ((net% (itlist #'net_of_cong thms net)))
+        (cl:declare (cl:ignorable net%))
+        (make-Simpset net% prover% provers rewmaker)))))
 
 (defunc ss_of_prover (newprover arg~815)
   (match arg~815
@@ -841,12 +865,12 @@
 
 (defunc ss_of_provers (newprovers arg~833)
   (match arg~833
-    ((Simpset net prover* provers rewmaker)
-      (make-Simpset net prover* (append newprovers provers) rewmaker))))
+    ((Simpset net prover% provers rewmaker)
+      (make-Simpset net prover% (append newprovers provers) rewmaker))))
 
 (defunc ss_of_maker (newmaker arg~854)
   (match arg~854
-    ((Simpset net prover* provers _) (make-Simpset net prover* provers newmaker))))
+    ((Simpset net prover% provers _) (make-Simpset net prover% provers newmaker))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Perform a context-augmentation operation on a simpset.                    *)
@@ -855,12 +879,13 @@
 
 (defunc AUGMENT_SIMPSET (cth arg~872)
   (match arg~872
-    ((Simpset net prover* provers rewmaker)
+    ((Simpset net prover% provers rewmaker)
       (let*
-        ((provers* (map (C #'augment (cl:cons cth nil)) provers))
+        ((provers% (map (C #'augment (cl:cons cth nil)) provers))
           (cthms (funcall rewmaker cth nil))
-          (net* (itlist (net_of_thm cl:t) cthms net)))
-        (make-Simpset net* prover* provers* rewmaker)))))
+          (net% (itlist (net_of_thm cl:t) cthms net)))
+        (cl:declare (cl:ignorable provers% cthms net%))
+        (make-Simpset net% prover% provers% rewmaker)))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Depth conversions.                                                        *)
@@ -882,7 +907,7 @@
     ((IMP_REWRITES_CONV
       (strat arg~933 lev pconvs tm)
       (match arg~933
-        ((cl:and ss (Simpset net prover* provers rewmaker))
+        ((cl:and ss (Simpset net prover% provers rewmaker))
           (tryfind
             (lambdac (arg~943)
               (match arg~943
@@ -890,21 +915,25 @@
                   (if (>= n 4)
                     (fail unit)
                     (let* ((th (funcall cnv tm)) (etm (concl th)))
+                      (cl:declare (cl:ignorable th etm))
                       (if (is_eq etm)
                         th
                         (if (<= lev 0)
                           (failwith "IMP_REWRITES_CONV: Too deep")
                           (let
                             ((cth
-                              (funcall prover* strat ss (- lev 1) (funcall lhand etm))))
+                              (funcall prover% strat ss (- lev 1) (funcall lhand etm))))
+                            (cl:declare (cl:ignorable cth))
                             (funcall MP th cth)))))))))
             pconvs)))))
     (labelsc
       ((RUN_SUB_CONV
         (strat ss lev triv th)
         (let ((tm (concl th)))
+          (cl:declare (cl:ignorable tm))
           (if (funcall is_imp tm)
             (let ((subtm (funcall lhand tm)))
+              (cl:declare (cl:ignorable subtm))
               (match (funcall strip_forall subtm)
                 ((tuple avs bod)
                   (match
@@ -921,24 +950,25 @@
                                   (AUGMENT_SIMPSET (ASSUME cxt) ss)
                                   (funcall DISCH cxt)))))
                           (_ (raise exception~1082)))))
-                    ((tuple (tuple t* t**) ss* mk_fun)
+                    ((tuple (tuple t% t%%) ss% mk_fun)
                       (match
                         (handler-case
-                          (tuple (funcall strat ss* lev t*) cl:nil)
+                          (tuple (funcall strat ss% lev t%) cl:nil)
                           (hol2cl.runtime:ocaml-condition
                             (exception~1061)
                             (match exception~1061
-                              ((Failure _) (tuple (REFL t*) triv))
+                              ((Failure _) (tuple (REFL t%) triv))
                               (_ (raise exception~1061)))))
-                        ((tuple eth triv*)
+                        ((tuple eth triv%)
                           (let*
-                            ((eth* (funcall GENL avs (funcall mk_fun eth)))
-                              (th*
-                                (if (is_var t**)
-                                  (INST* (cl:cons (tuple (rand (concl eth)) t**) nil) th)
-                                  (funcall GEN_PART_MATCH lhand th (concl eth*))))
-                              (th** (funcall MP th* eth*)))
-                            (RUN_SUB_CONV strat ss lev triv* th**)))))))))
+                            ((eth% (funcall GENL avs (funcall mk_fun eth)))
+                              (th%
+                                (if (is_var t%%)
+                                  (INST% (cl:cons (tuple (rand (concl eth)) t%%) nil) th)
+                                  (funcall GEN_PART_MATCH lhand th (concl eth%))))
+                              (th%% (funcall MP th% eth%)))
+                            (cl:declare (cl:ignorable eth% th% th%%))
+                            (RUN_SUB_CONV strat ss lev triv% th%%)))))))))
             (if triv (fail unit) th)))))
       (fletc
         ((GEN_SUB_CONV
@@ -950,7 +980,9 @@
                   ((tuple n cnv)
                     (if (< n 4)
                       (fail unit)
-                      (let ((th (funcall cnv tm))) (RUN_SUB_CONV strat ss lev cl:t th))))))
+                      (let ((th (funcall cnv tm)))
+                        (cl:declare (cl:ignorable th))
+                        (RUN_SUB_CONV strat ss lev cl:t th))))))
               pconvs)
             (hol2cl.runtime:ocaml-condition
               (exception~1126)
@@ -958,28 +990,31 @@
                 ((Failure _)
                   (if (is_comb tm)
                     (match (dest_comb tm)
-                      ((tuple l r*)
+                      ((tuple l r%)
                         (handler-case
                           (let ((th1 (funcall strat ss lev l)))
+                            (cl:declare (cl:ignorable th1))
                             (handler-case
-                              (let ((th2 (funcall strat ss lev r*)))
-                                (MK_COMB* (tuple th1 th2)))
+                              (let ((th2 (funcall strat ss lev r%)))
+                                (cl:declare (cl:ignorable th2))
+                                (MK_COMB% (tuple th1 th2)))
                               (hol2cl.runtime:ocaml-condition
                                 (exception~1228)
                                 (match exception~1228
-                                  ((Failure _) (AP_THM th1 r*))
+                                  ((Failure _) (AP_THM th1 r%))
                                   (_ (raise exception~1228))))))
                           (hol2cl.runtime:ocaml-condition
                             (exception~1214)
                             (match exception~1214
-                              ((Failure _) (AP_TERM l (funcall strat ss lev r*)))
+                              ((Failure _) (AP_TERM l (funcall strat ss lev r%)))
                               (_ (raise exception~1214)))))))
                     (if (is_abs tm)
                       (match (dest_abs tm)
                         ((tuple v bod)
                           (let ((th (funcall strat ss lev bod)))
+                            (cl:declare (cl:ignorable th))
                             (handler-case
-                              (ABS* v th)
+                              (ABS% v th)
                               (hol2cl.runtime:ocaml-condition
                                 (exception~1138)
                                 (match exception~1138
@@ -988,50 +1023,55 @@
                                       ((gv (funcall genvar (type_of v)))
                                         (gbod
                                           (funcall vsubst (cl:cons (tuple gv v) nil) bod))
-                                        (gth (ABS* gv (funcall strat ss lev gbod)))
+                                        (gth (ABS% gv (funcall strat ss lev gbod)))
                                         (gtm (concl gth)))
+                                      (cl:declare (cl:ignorable gv gbod gth gtm))
                                       (match (dest_eq gtm)
-                                        ((tuple l r*)
+                                        ((tuple l r%)
                                           (let*
-                                            ((v* (variant (frees gtm) v))
-                                              (l* (alpha v* l))
-                                              (r** (alpha v* r*)))
+                                            ((v% (variant (frees gtm) v))
+                                              (l% (alpha v% l))
+                                              (r%% (alpha v% r%)))
+                                            (cl:declare (cl:ignorable v% l% r%%))
                                             (EQ_MP
                                               (hol2cl.equal:ALPHA
                                                 gtm
-                                                (funcall mk_eq (tuple l* r**)))
+                                                (funcall mk_eq (tuple l% r%%)))
                                               gth))))))
                                   (_ (raise exception~1138))))))))
                       (failwith "GEN_SUB_CONV"))))
                 (_ (raise exception~1126)))))))
         (labelsc
-          ((ONCE_DEPTH_SQCONV*
+          ((ONCE_DEPTH_SQCONV%
             (arg~1284 lev tm)
             (match arg~1284
-              ((cl:and ss (Simpset net prover* provers rewmaker))
+              ((cl:and ss (Simpset net prover% provers rewmaker))
                 (let ((pconvs (funcall lookup tm net)))
+                  (cl:declare (cl:ignorable pconvs))
                   (handler-case
-                    (IMP_REWRITES_CONV #'ONCE_DEPTH_SQCONV* ss lev pconvs tm)
+                    (IMP_REWRITES_CONV #'ONCE_DEPTH_SQCONV% ss lev pconvs tm)
                     (hol2cl.runtime:ocaml-condition
                       (exception~1297)
                       (match exception~1297
-                        ((Failure _) (GEN_SUB_CONV #'ONCE_DEPTH_SQCONV* ss lev pconvs tm))
+                        ((Failure _) (GEN_SUB_CONV #'ONCE_DEPTH_SQCONV% ss lev pconvs tm))
                         (_ (raise exception~1297))))))))))
           (labelsc
-            ((DEPTH_SQCONV*
+            ((DEPTH_SQCONV%
               (arg~1322 lev tm)
               (match arg~1322
-                ((cl:and ss (Simpset net prover* provers rewmaker))
+                ((cl:and ss (Simpset net prover% provers rewmaker))
                   (let ((pconvs (funcall lookup tm net)))
+                    (cl:declare (cl:ignorable pconvs))
                     (handler-case
                       (let*
-                        ((th1 (GEN_SUB_CONV #'DEPTH_SQCONV* ss lev pconvs tm))
+                        ((th1 (GEN_SUB_CONV #'DEPTH_SQCONV% ss lev pconvs tm))
                           (tm1 (rand (concl th1)))
                           (pconvs1 (funcall lookup tm1 net)))
+                        (cl:declare (cl:ignorable th1 tm1 pconvs1))
                         (handler-case
                           (TRANS
                             th1
-                            (IMP_REWRITES_CONV #'DEPTH_SQCONV* ss lev pconvs1 tm1))
+                            (IMP_REWRITES_CONV #'DEPTH_SQCONV% ss lev pconvs1 tm1))
                           (hol2cl.runtime:ocaml-condition
                             (exception~1359)
                             (match exception~1359
@@ -1041,25 +1081,26 @@
                         (exception~1335)
                         (match exception~1335
                           ((Failure _)
-                            (IMP_REWRITES_CONV #'DEPTH_SQCONV* ss lev pconvs tm))
+                            (IMP_REWRITES_CONV #'DEPTH_SQCONV% ss lev pconvs tm))
                           (_ (raise exception~1335))))))))))
             (labelsc
-              ((REDEPTH_SQCONV*
+              ((REDEPTH_SQCONV%
                 (arg~1385 lev tm)
                 (match arg~1385
-                  ((cl:and ss (Simpset net prover* provers rewmaker))
+                  ((cl:and ss (Simpset net prover% provers rewmaker))
                     (let*
                       ((pconvs (funcall lookup tm net))
                         (th
                           (handler-case
                             (let*
-                              ((th1 (GEN_SUB_CONV #'REDEPTH_SQCONV* ss lev pconvs tm))
+                              ((th1 (GEN_SUB_CONV #'REDEPTH_SQCONV% ss lev pconvs tm))
                                 (tm1 (rand (concl th1)))
                                 (pconvs1 (funcall lookup tm1 net)))
+                              (cl:declare (cl:ignorable th1 tm1 pconvs1))
                               (handler-case
                                 (TRANS
                                   th1
-                                  (IMP_REWRITES_CONV #'REDEPTH_SQCONV* ss lev pconvs1 tm1))
+                                  (IMP_REWRITES_CONV #'REDEPTH_SQCONV% ss lev pconvs1 tm1))
                                 (hol2cl.runtime:ocaml-condition
                                   (exception~1423)
                                   (match exception~1423
@@ -1069,34 +1110,38 @@
                               (exception~1399)
                               (match exception~1399
                                 ((Failure _)
-                                  (IMP_REWRITES_CONV #'REDEPTH_SQCONV* ss lev pconvs tm))
+                                  (IMP_REWRITES_CONV #'REDEPTH_SQCONV% ss lev pconvs tm))
                                 (_ (raise exception~1399)))))))
+                      (cl:declare (cl:ignorable pconvs th))
                       (handler-case
-                        (let ((th* (REDEPTH_SQCONV* ss lev (rand (concl th)))))
-                          (TRANS th th*))
+                        (let ((th% (REDEPTH_SQCONV% ss lev (rand (concl th)))))
+                          (cl:declare (cl:ignorable th%))
+                          (TRANS th th%))
                         (hol2cl.runtime:ocaml-condition
                           (exception~1440)
                           (match exception~1440
                             ((Failure _) th)
                             (_ (raise exception~1440))))))))))
               (labelsc
-                ((TOP_DEPTH_SQCONV*
+                ((TOP_DEPTH_SQCONV%
                   (arg~1466 lev tm)
                   (match arg~1466
-                    ((cl:and ss (Simpset net prover* provers rewmaker))
+                    ((cl:and ss (Simpset net prover% provers rewmaker))
                       (let*
                         ((pconvs (funcall lookup tm net))
                           (th1
                             (handler-case
-                              (IMP_REWRITES_CONV #'TOP_DEPTH_SQCONV* ss lev pconvs tm)
+                              (IMP_REWRITES_CONV #'TOP_DEPTH_SQCONV% ss lev pconvs tm)
                               (hol2cl.runtime:ocaml-condition
                                 (exception~1480)
                                 (match exception~1480
                                   ((Failure _)
-                                    (GEN_SUB_CONV #'TOP_DEPTH_SQCONV* ss lev pconvs tm))
+                                    (GEN_SUB_CONV #'TOP_DEPTH_SQCONV% ss lev pconvs tm))
                                   (_ (raise exception~1480)))))))
+                        (cl:declare (cl:ignorable pconvs th1))
                         (handler-case
-                          (let ((th2 (TOP_DEPTH_SQCONV* ss lev (rand (concl th1)))))
+                          (let ((th2 (TOP_DEPTH_SQCONV% ss lev (rand (concl th1)))))
+                            (cl:declare (cl:ignorable th2))
                             (TRANS th1 th2))
                           (hol2cl.runtime:ocaml-condition
                             (exception~1496)
@@ -1104,17 +1149,20 @@
                               ((Failure _) th1)
                               (_ (raise exception~1496))))))))))
                 (labelsc
-                  ((TOP_SWEEP_SQCONV*
+                  ((TOP_SWEEP_SQCONV%
                     (arg~1522 lev tm)
                     (match arg~1522
-                      ((cl:and ss (Simpset net prover* provers rewmaker))
+                      ((cl:and ss (Simpset net prover% provers rewmaker))
                         (let ((pconvs (funcall lookup tm net)))
+                          (cl:declare (cl:ignorable pconvs))
                           (handler-case
                             (let
                               ((th1
-                                (IMP_REWRITES_CONV #'TOP_SWEEP_SQCONV* ss lev pconvs tm)))
+                                (IMP_REWRITES_CONV #'TOP_SWEEP_SQCONV% ss lev pconvs tm)))
+                              (cl:declare (cl:ignorable th1))
                               (handler-case
-                                (let ((th2 (TOP_SWEEP_SQCONV* ss lev (rand (concl th1)))))
+                                (let ((th2 (TOP_SWEEP_SQCONV% ss lev (rand (concl th1)))))
+                                  (cl:declare (cl:ignorable th2))
                                   (TRANS th1 th2))
                                 (hol2cl.runtime:ocaml-condition
                                   (exception~1551)
@@ -1125,31 +1173,31 @@
                               (exception~1535)
                               (match exception~1535
                                 ((Failure _)
-                                  (GEN_SUB_CONV #'TOP_SWEEP_SQCONV* ss lev pconvs tm))
+                                  (GEN_SUB_CONV #'TOP_SWEEP_SQCONV% ss lev pconvs tm))
                                 (_ (raise exception~1535))))))))))
                   (tuple
-                    #'ONCE_DEPTH_SQCONV*
-                    #'DEPTH_SQCONV*
-                    #'REDEPTH_SQCONV*
-                    #'TOP_DEPTH_SQCONV*
-                    #'TOP_SWEEP_SQCONV*)))))))))
+                    #'ONCE_DEPTH_SQCONV%
+                    #'DEPTH_SQCONV%
+                    #'REDEPTH_SQCONV%
+                    #'TOP_DEPTH_SQCONV%
+                    #'TOP_SWEEP_SQCONV%)))))))))
   ((tuple
-    ONCE_DEPTH_SQCONV*
-    DEPTH_SQCONV*
-    REDEPTH_SQCONV*
-    TOP_DEPTH_SQCONV*
-    TOP_SWEEP_SQCONV*)
+    ONCE_DEPTH_SQCONV%
+    DEPTH_SQCONV%
+    REDEPTH_SQCONV%
+    TOP_DEPTH_SQCONV%
+    TOP_SWEEP_SQCONV%)
     (setf
       DEPTH_SQCONV
-      DEPTH_SQCONV*
+      DEPTH_SQCONV%
       ONCE_DEPTH_SQCONV
-      ONCE_DEPTH_SQCONV*
+      ONCE_DEPTH_SQCONV%
       REDEPTH_SQCONV
-      REDEPTH_SQCONV*
+      REDEPTH_SQCONV%
       TOP_DEPTH_SQCONV
-      TOP_DEPTH_SQCONV*
+      TOP_DEPTH_SQCONV%
       TOP_SWEEP_SQCONV
-      TOP_SWEEP_SQCONV*)))
+      TOP_SWEEP_SQCONV%)))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Maintenence of basic rewrites and conv nets for rewriting.                *)
@@ -1172,6 +1220,7 @@
 
 (match
   (let ((rewrites (ref nil)) (conversions (ref nil)) (conv_net (ref empty_net)))
+    (cl:declare (cl:ignorable rewrites conversions conv_net))
     (fletc
       ((rehash_convnet
         (arg~1634)
@@ -1188,23 +1237,25 @@
                   (deref conversions)
                   empty_net)))))))
       (fletc
-        ((set_basic_rewrites*
+        ((set_basic_rewrites%
           (thl)
           (let ((canon_thl (itlist (funcall mk_rewrites cl:nil) thl nil)))
+            (cl:declare (cl:ignorable canon_thl))
             (progn (assign rewrites canon_thl) (rehash_convnet unit))))
-          (extend_basic_rewrites*
+          (extend_basic_rewrites%
             (thl)
             (let ((canon_thl (itlist (funcall mk_rewrites cl:nil) thl nil)))
+              (cl:declare (cl:ignorable canon_thl))
               (progn
                 (assign rewrites (append canon_thl (deref rewrites)))
                 (rehash_convnet unit))))
-          (basic_rewrites*
+          (basic_rewrites%
             (arg~1699)
             (match arg~1699 ((cl:type hol2cl.runtime::unit-value) (deref rewrites))))
-          (set_basic_convs*
+          (set_basic_convs%
             (cnvs)
             (progn (assign conversions cnvs) (rehash_convnet unit)))
-          (extend_basic_convs*
+          (extend_basic_convs%
             (arg~1711)
             (match arg~1711
               ((tuple name patcong)
@@ -1215,46 +1266,46 @@
                       (tuple name patcong)
                       (filter
                         (lambdac (arg~1718)
-                          (match arg~1718 ((tuple name* _) (<> name name*))))
+                          (match arg~1718 ((tuple name% _) (<> name name%))))
                         (deref conversions))))
                   (rehash_convnet unit)))))
-          (basic_convs*
+          (basic_convs%
             (arg~1740)
             (match arg~1740 ((cl:type hol2cl.runtime::unit-value) (deref conversions))))
-          (basic_net*
+          (basic_net%
             (arg~1745)
             (match arg~1745 ((cl:type hol2cl.runtime::unit-value) (deref conv_net)))))
         (tuple
-          #'set_basic_rewrites*
-          #'extend_basic_rewrites*
-          #'basic_rewrites*
-          #'set_basic_convs*
-          #'extend_basic_convs*
-          #'basic_convs*
-          #'basic_net*))))
+          #'set_basic_rewrites%
+          #'extend_basic_rewrites%
+          #'basic_rewrites%
+          #'set_basic_convs%
+          #'extend_basic_convs%
+          #'basic_convs%
+          #'basic_net%))))
   ((tuple
-    set_basic_rewrites*
-    extend_basic_rewrites*
-    basic_rewrites*
-    set_basic_convs*
-    extend_basic_convs*
-    basic_convs*
-    basic_net*)
+    set_basic_rewrites%
+    extend_basic_rewrites%
+    basic_rewrites%
+    set_basic_convs%
+    extend_basic_convs%
+    basic_convs%
+    basic_net%)
     (setf
       basic_convs
-      basic_convs*
+      basic_convs%
       basic_net
-      basic_net*
+      basic_net%
       basic_rewrites
-      basic_rewrites*
+      basic_rewrites%
       extend_basic_convs
-      extend_basic_convs*
+      extend_basic_convs%
       extend_basic_rewrites
-      extend_basic_rewrites*
+      extend_basic_rewrites%
       set_basic_convs
-      set_basic_convs*
+      set_basic_convs%
       set_basic_rewrites
-      set_basic_rewrites*)))
+      set_basic_rewrites%)))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Same thing for the default congruences.                                   *)
@@ -1269,19 +1320,20 @@
 
 (match
   (let ((congs (ref nil)))
+    (cl:declare (cl:ignorable congs))
     (tuple
       (lambdac (thl) (assign congs thl))
-      (lambdac (thl) (assign congs (union* #'equals_thm thl (deref congs))))
+      (lambdac (thl) (assign congs (union% #'equals_thm thl (deref congs))))
       (lambdac (arg~1793)
         (match arg~1793 ((cl:type hol2cl.runtime::unit-value) (deref congs))))))
-  ((tuple set_basic_congs* extend_basic_congs* basic_congs*)
+  ((tuple set_basic_congs% extend_basic_congs% basic_congs%)
     (setf
       basic_congs
-      basic_congs*
+      basic_congs%
       extend_basic_congs
-      extend_basic_congs*
+      extend_basic_congs%
       set_basic_congs
-      set_basic_congs*)))
+      set_basic_congs%)))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Main rewriting conversions.                                               *)
@@ -1292,6 +1344,7 @@
   (let*
     ((thl_canon (itlist (funcall mk_rewrites cl:nil) thl nil))
       (final_net (itlist (net_of_thm rep) thl_canon builtin_net)))
+    (cl:declare (cl:ignorable thl_canon final_net))
     (funcall cnvl (REWRITES_CONV final_net))))
 
 (defunc GEN_REWRITE_CONV (cnvl thl) (GENERAL_REWRITE_CONV cl:nil cnvl empty_net thl))
@@ -1357,7 +1410,9 @@
 
 
 (defunc GEN_SIMPLIFY_CONV (strat ss lev thl)
-  (let ((ss* (itlist #'AUGMENT_SIMPSET thl ss))) (TRY_CONV (funcall strat ss* lev))))
+  (let ((ss% (itlist #'AUGMENT_SIMPSET thl ss)))
+    (cl:declare (cl:ignorable ss%))
+    (TRY_CONV (funcall strat ss% lev))))
 
 (defunc ONCE_SIMPLIFY_CONV (ss) (GEN_SIMPLIFY_CONV ONCE_DEPTH_SQCONV ss 1))
 
@@ -1373,12 +1428,14 @@
 
 (defparameter basic_ss
   (let ((rewmaker (funcall mk_rewrites cl:t)))
+    (cl:declare (cl:ignorable rewmaker))
     (lambdac (thl)
       (let*
         ((cthms (itlist rewmaker thl nil))
-          (net* (itlist (net_of_thm cl:t) cthms (funcall basic_net unit)))
-          (net** (itlist #'net_of_cong (funcall basic_congs unit) net*)))
-        (make-Simpset net** #'basic_prover nil rewmaker)))))
+          (net% (itlist (net_of_thm cl:t) cthms (funcall basic_net unit)))
+          (net%% (itlist #'net_of_cong (funcall basic_congs unit) net%)))
+        (cl:declare (cl:ignorable cthms net% net%%))
+        (make-Simpset net%% #'basic_prover nil rewmaker)))))
 
 (defunc SIMP_CONV (thl) (SIMPLIFY_CONV (funcall basic_ss nil) thl))
 
@@ -1411,16 +1468,16 @@
 
 (defunc ABBREV_TAC (tm)
   (match (dest_eq tm)
-    ((tuple cvs t*)
+    ((tuple cvs t%)
       (match (funcall strip_comb cvs)
         ((tuple v vs)
           (let*
-            ((rs (list_mk_abs (tuple vs t*)))
+            ((rs (list_mk_abs (tuple vs t%)))
               (eq (funcall mk_eq (tuple rs v)))
               (th1
                 (itlist
-                  (lambdac (v* th)
-                    (CONV_RULE (funcall LAND_CONV #'BETA_CONV) (AP_THM th v*)))
+                  (lambdac (v% th)
+                    (CONV_RULE (funcall LAND_CONV #'BETA_CONV) (AP_THM th v%)))
                   (funcall rev vs)
                   (ASSUME eq)))
               (th2 (SIMPLE_CHOOSE v (SIMPLE_EXISTS v (funcall GENL vs th1))))
@@ -1428,15 +1485,17 @@
                 (PROVE_HYP
                   (funcall EXISTS (tuple (funcall mk_exists (tuple v eq)) rs) (REFL rs))
                   th2)))
+            (cl:declare (cl:ignorable rs eq th1 th2 th3))
             (lambdac (arg~2187)
               (match arg~2187
-                ((cl:and gl (tuple asl w*))
+                ((cl:and gl (tuple asl w%))
                   (let
                     ((avoids
                       (itlist
                         (o (o (o #'union #'frees) #'concl) (function-value #'snd 1))
                         asl
-                        (frees w*))))
+                        (frees w%))))
+                    (cl:declare (cl:ignorable avoids))
                     (if (mem v avoids)
                       (failwith "ABBREV_TAC: variable already used")
                       (CHOOSE_THEN

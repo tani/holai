@@ -20,7 +20,7 @@
       (:use :cl)
       (:shadow
         ARIGHT
-        DEST_BINARY*
+        DEST_BINARY%
         binders
         bool_of_term
         charcode
@@ -42,19 +42,19 @@
         is_prefix
         is_reserved_word
         isalnum
-        isalnum*
+        isalnum%
         isalpha
-        isalpha*
+        isalpha%
         isbra
-        isbra*
+        isbra%
         isnum
-        isnum*
+        isnum%
         issep
-        issep*
+        issep%
         isspace
-        isspace*
+        isspace%
         issymb
-        issymb*
+        issymb%
         name_of
         parse_as_binder
         parse_as_infix
@@ -104,7 +104,7 @@
         print_set_comprehension
         print_string_or_list
         print_term
-        print_term*
+        print_term%
         print_term_sequence
         print_thm
         print_to_string
@@ -219,7 +219,7 @@
   (:use :cl)
   (:shadow
     ARIGHT
-    DEST_BINARY*
+    DEST_BINARY%
     binders
     bool_of_term
     charcode
@@ -241,19 +241,19 @@
     is_prefix
     is_reserved_word
     isalnum
-    isalnum*
+    isalnum%
     isalpha
-    isalpha*
+    isalpha%
     isbra
-    isbra*
+    isbra%
     isnum
-    isnum*
+    isnum%
     issep
-    issep*
+    issep%
     isspace
-    isspace*
+    isspace%
     issymb
-    issymb*
+    issymb%
     name_of
     parse_as_binder
     parse_as_infix
@@ -303,7 +303,7 @@
     print_set_comprehension
     print_string_or_list
     print_term
-    print_term*
+    print_term%
     print_term_sequence
     print_thm
     print_to_string
@@ -625,6 +625,7 @@
         (symbs "\\!@#$%^&*-+|\\<=>/?~.:")
         (alphas "'abcdefghijklmnopqrstuvwxyz_ABCDEFGHIJKLMNOPQRSTUVWXYZ")
         (nums "0123456789"))
+      (cl:declare (cl:ignorable spaces separators brackets symbs alphas nums))
       (let*
         ((allchars
           (string-concat
@@ -635,38 +636,39 @@
           (csetsize
             (itlist (o (function-value #'max 2) #'charcode) (explode allchars) 256))
           (ctable (array-make csetsize 0)))
+        (cl:declare (cl:ignorable allchars csetsize ctable))
         (progn
-          (do_list (lambdac (c*) (array-set ctable (charcode c*) 1)) (explode spaces))
-          (do_list (lambdac (c*) (array-set ctable (charcode c*) 2)) (explode separators))
-          (do_list (lambdac (c*) (array-set ctable (charcode c*) 4)) (explode brackets))
-          (do_list (lambdac (c*) (array-set ctable (charcode c*) 8)) (explode symbs))
-          (do_list (lambdac (c*) (array-set ctable (charcode c*) 16)) (explode alphas))
-          (do_list (lambdac (c*) (array-set ctable (charcode c*) 32)) (explode nums))
+          (do_list (lambdac (c%) (array-set ctable (charcode c%) 1)) (explode spaces))
+          (do_list (lambdac (c%) (array-set ctable (charcode c%) 2)) (explode separators))
+          (do_list (lambdac (c%) (array-set ctable (charcode c%) 4)) (explode brackets))
+          (do_list (lambdac (c%) (array-set ctable (charcode c%) 8)) (explode symbs))
+          (do_list (lambdac (c%) (array-set ctable (charcode c%) 16)) (explode alphas))
+          (do_list (lambdac (c%) (array-set ctable (charcode c%) 32)) (explode nums))
           (fletc
-            ((isspace* (c*) (= (array-get ctable (charcode c*)) 1))
-              (issep* (c*) (= (array-get ctable (charcode c*)) 2))
-              (isbra* (c*) (= (array-get ctable (charcode c*)) 4))
-              (issymb* (c*) (= (array-get ctable (charcode c*)) 8))
-              (isalpha* (c*) (= (array-get ctable (charcode c*)) 16))
-              (isnum* (c*) (= (array-get ctable (charcode c*)) 32))
-              (isalnum* (c*) (>= (array-get ctable (charcode c*)) 16)))
-            (tuple #'isspace* #'issep* #'isbra* #'issymb* #'isalpha* #'isnum* #'isalnum*))))))
-  ((tuple isspace* issep* isbra* issymb* isalpha* isnum* isalnum*)
+            ((isspace% (c%) (= (array-get ctable (charcode c%)) 1))
+              (issep% (c%) (= (array-get ctable (charcode c%)) 2))
+              (isbra% (c%) (= (array-get ctable (charcode c%)) 4))
+              (issymb% (c%) (= (array-get ctable (charcode c%)) 8))
+              (isalpha% (c%) (= (array-get ctable (charcode c%)) 16))
+              (isnum% (c%) (= (array-get ctable (charcode c%)) 32))
+              (isalnum% (c%) (>= (array-get ctable (charcode c%)) 16)))
+            (tuple #'isspace% #'issep% #'isbra% #'issymb% #'isalpha% #'isnum% #'isalnum%))))))
+  ((tuple isspace% issep% isbra% issymb% isalpha% isnum% isalnum%)
     (setf
       isalnum
-      isalnum*
+      isalnum%
       isalpha
-      isalpha*
+      isalpha%
       isbra
-      isbra*
+      isbra%
       isnum
-      isnum*
+      isnum%
       issep
-      issep*
+      issep%
       isspace
-      isspace*
+      isspace%
       issymb
-      issymb*)))
+      issymb%)))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Reserved words.                                                           *)
@@ -724,22 +726,23 @@
                                             (cl:cons
                                               "function"
                                               (cl:cons "->" (cl:cons "when" nil))))))))))))))))))))))))
+    (cl:declare (cl:ignorable reswords))
     (tuple
       (lambdac (ns) (assign reswords (union (deref reswords) ns)))
       (lambdac (ns) (assign reswords (subtract (deref reswords) ns)))
       (lambdac (n) (mem n (deref reswords)))
       (lambdac (arg~288)
         (match arg~288 ((cl:type hol2cl.runtime::unit-value) (deref reswords))))))
-  ((tuple reserve_words* unreserve_words* is_reserved_word* reserved_words*)
+  ((tuple reserve_words% unreserve_words% is_reserved_word% reserved_words%)
     (setf
       is_reserved_word
-      is_reserved_word*
+      is_reserved_word%
       reserve_words
-      reserve_words*
+      reserve_words%
       reserved_words
-      reserved_words*
+      reserved_words%
       unreserve_words
-      unreserve_words*)))
+      unreserve_words%)))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Functions to access the global tables controlling special parse status.   *)
@@ -765,22 +768,23 @@
 
 (match
   (let ((binder_list (ref nil)))
+    (cl:declare (cl:ignorable binder_list))
     (tuple
       (lambdac (n) (assign binder_list (subtract (deref binder_list) (cl:cons n nil))))
       (lambdac (n) (assign binder_list (union (deref binder_list) (cl:cons n nil))))
       (lambdac (n) (mem n (deref binder_list)))
       (lambdac (arg~344)
         (match arg~344 ((cl:type hol2cl.runtime::unit-value) (deref binder_list))))))
-  ((tuple unparse_as_binder* parse_as_binder* parses_as_binder* binders*)
+  ((tuple unparse_as_binder% parse_as_binder% parses_as_binder% binders%)
     (setf
       binders
-      binders*
+      binders%
       parse_as_binder
-      parse_as_binder*
+      parse_as_binder%
       parses_as_binder
-      parses_as_binder*
+      parses_as_binder%
       unparse_as_binder
-      unparse_as_binder*)))
+      unparse_as_binder%)))
 
 (defparameter is_prefix nil)
 
@@ -792,22 +796,23 @@
 
 (match
   (let ((prefix_list (ref nil)))
+    (cl:declare (cl:ignorable prefix_list))
     (tuple
       (lambdac (n) (assign prefix_list (subtract (deref prefix_list) (cl:cons n nil))))
       (lambdac (n) (assign prefix_list (union (deref prefix_list) (cl:cons n nil))))
       (lambdac (n) (mem n (deref prefix_list)))
       (lambdac (arg~400)
         (match arg~400 ((cl:type hol2cl.runtime::unit-value) (deref prefix_list))))))
-  ((tuple unparse_as_prefix* parse_as_prefix* is_prefix* prefixes*)
+  ((tuple unparse_as_prefix% parse_as_prefix% is_prefix% prefixes%)
     (setf
       is_prefix
-      is_prefix*
+      is_prefix%
       parse_as_prefix
-      parse_as_prefix*
+      parse_as_prefix%
       prefixes
-      prefixes*
+      prefixes%
       unparse_as_prefix
-      unparse_as_prefix*)))
+      unparse_as_prefix%)))
 
 (defparameter get_infix_status nil)
 
@@ -824,13 +829,14 @@
       (match arg~427
         ((tuple s (tuple x a))
           (match arg~432
-            ((tuple t* (tuple y b))
+            ((tuple t% (tuple y b))
               (cl:or
                 (< x y)
                 (cl:or
                   (cl:and (= x y) (> a b))
-                  (cl:and (= x y) (cl:and (= a b) (< s t*)))))))))))
+                  (cl:and (= x y) (cl:and (= a b) (< s t%)))))))))))
     (let ((infix_list (ref nil)))
+      (cl:declare (cl:ignorable infix_list))
       (tuple
         (lambdac (n)
           (assign
@@ -853,16 +859,16 @@
         (lambdac (n) (assoc n (deref infix_list)))
         (lambdac (arg~514)
           (match arg~514 ((cl:type hol2cl.runtime::unit-value) (deref infix_list)))))))
-  ((tuple unparse_as_infix* parse_as_infix* get_infix_status* infixes*)
+  ((tuple unparse_as_infix% parse_as_infix% get_infix_status% infixes%)
     (setf
       get_infix_status
-      get_infix_status*
+      get_infix_status%
       infixes
-      infixes*
+      infixes%
       parse_as_infix
-      parse_as_infix*
+      parse_as_infix%
       unparse_as_infix
-      unparse_as_infix*)))
+      unparse_as_infix%)))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Interface mapping.                                                        *)
@@ -983,6 +989,7 @@
   (match colorcode
     ((Some thecode)
       (let* ((ansicmd (string-concat "[" (string-concat thecode "m"))) (endcmd "[0m"))
+        (cl:declare (cl:ignorable ansicmd endcmd))
         (progn
           (pp-print-as fmt 0 ansicmd)
           (pp-print-string fmt contents)
@@ -1016,25 +1023,25 @@
         fmt
         s)))
   ((tuple
-    pp_print_colored_const*
-    pp_print_colored_resword*
-    pp_print_colored_binder*
-    pp_print_colored_infix*
-    pp_print_colored_prefix*
-    pp_print_colored_tyvar*)
+    pp_print_colored_const%
+    pp_print_colored_resword%
+    pp_print_colored_binder%
+    pp_print_colored_infix%
+    pp_print_colored_prefix%
+    pp_print_colored_tyvar%)
     (setf
       pp_print_colored_binder
-      pp_print_colored_binder*
+      pp_print_colored_binder%
       pp_print_colored_const
-      pp_print_colored_const*
+      pp_print_colored_const%
       pp_print_colored_infix
-      pp_print_colored_infix*
+      pp_print_colored_infix%
       pp_print_colored_prefix
-      pp_print_colored_prefix*
+      pp_print_colored_prefix%
       pp_print_colored_resword
-      pp_print_colored_resword*
+      pp_print_colored_resword%
       pp_print_colored_tyvar
-      pp_print_colored_tyvar*)))
+      pp_print_colored_tyvar%)))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Printer for types.                                                        *)
@@ -1053,6 +1060,7 @@
         ""
         (let
           ((s (end_itlist (lambdac (s1 s2) (string-concat s1 (string-concat sep s2))) ss)))
+          (cl:declare (cl:ignorable s))
           (if flag (string-concat "(" (string-concat s ")")) s)))))
     (labelsc
       ((sot
@@ -1102,8 +1110,8 @@
             (pp-print-string fmt "`:")
             (pp-print-string fmt (sot 0 ty))
             (pp-print-string fmt "`"))))))
-  ((tuple pp_print_type* pp_print_qtype*)
-    (setf pp_print_qtype pp_print_qtype* pp_print_type pp_print_type*)))
+  ((tuple pp_print_type% pp_print_qtype%)
+    (setf pp_print_qtype pp_print_qtype% pp_print_type pp_print_type%)))
 
 ;; (* Reimplementation of pp_print_type/pp_print_qtype, using prettyprinter
 ;;    to properly color strings *)
@@ -1126,12 +1134,13 @@
               (let
                 ((tuple_printer
                   (end_itlist
-                    (lambdac (pp pp_next fmt*)
+                    (lambdac (pp pp_next fmt%)
                       (progn
-                        (funcall pp fmt*)
-                        (color_print_str fmt* sep)
-                        (funcall pp_next fmt*)))
+                        (funcall pp fmt%)
+                        (color_print_str fmt% sep)
+                        (funcall pp_next fmt%)))
                     ss)))
+                (cl:declare (cl:ignorable tuple_printer))
                 (match (funcall tuple_printer fmt)
                   ((cl:type hol2cl.runtime::unit-value)
                     (if flag (color_print_str fmt ")") unit)))))))))
@@ -1186,12 +1195,12 @@
           (lambdac (fmt ty) (sot 0 ty fmt))
           (lambdac (fmt ty)
             (progn (pp-print-string fmt "`:") (sot 0 ty fmt) (pp-print-string fmt "`")))))))
-  ((tuple pp_print_colored_type* pp_print_colored_qtype*)
+  ((tuple pp_print_colored_type% pp_print_colored_qtype%)
     (setf
       pp_print_colored_qtype
-      pp_print_colored_qtype*
+      pp_print_colored_qtype%
       pp_print_colored_type
-      pp_print_colored_type*)))
+      pp_print_colored_type%)))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Allow the installation of user printers. Must fail quickly if N/A.        *)
@@ -1212,6 +1221,7 @@
 
 (match
   (let ((user_printers (ref nil)) (user_color_printers (ref nil)))
+    (cl:declare (cl:ignorable user_printers user_color_printers))
     (tuple
       (lambdac (pr) (assign user_printers (cl:cons pr (deref user_printers))))
       (lambdac (pr) (assign user_color_printers (cl:cons pr (deref user_color_printers))))
@@ -1220,14 +1230,14 @@
           user_printers
           (snd
             (remove
-              (lambdac (arg~1224) (match arg~1224 ((tuple s* _) (= s s*))))
+              (lambdac (arg~1224) (match arg~1224 ((tuple s% _) (= s s%))))
               (deref user_printers)))))
       (lambdac (s)
         (assign
           user_color_printers
           (snd
             (remove
-              (lambdac (arg~1242) (match arg~1242 ((tuple s* _) (= s s*))))
+              (lambdac (arg~1242) (match arg~1242 ((tuple s% _) (= s s%))))
               (deref user_color_printers)))))
       (lambdac (fmt tm)
         (tryfind
@@ -1238,25 +1248,25 @@
           (lambdac (arg~1277) (match arg~1277 ((tuple _ pr) (funcall pr fmt tm))))
           (deref user_color_printers)))))
   ((tuple
-    install_user_printer*
-    install_user_color_printer*
-    delete_user_printer*
-    delete_user_color_printer*
-    try_user_printer*
-    try_user_color_printer*)
+    install_user_printer%
+    install_user_color_printer%
+    delete_user_printer%
+    delete_user_color_printer%
+    try_user_printer%
+    try_user_color_printer%)
     (setf
       delete_user_color_printer
-      delete_user_color_printer*
+      delete_user_color_printer%
       delete_user_printer
-      delete_user_printer*
+      delete_user_printer%
       install_user_color_printer
-      install_user_color_printer*
+      install_user_color_printer%
       install_user_printer
-      install_user_printer*
+      install_user_printer%
       try_user_color_printer
-      try_user_color_printer*
+      try_user_color_printer%
       try_user_printer
-      try_user_printer*)))
+      try_user_printer%)))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Printer for terms.                                                        *)
@@ -1280,30 +1290,30 @@
                 (find
                   (lambdac (arg~1312)
                     (match arg~1312
-                      ((tuple s (tuple s* ty))
-                        (cl:and (= s* s0) (can (type_match ty ty0) nil)))))
+                      ((tuple s (tuple s% ty))
+                        (cl:and (= s% s0) (can (type_match ty ty0) nil)))))
                   (deref the_interface)))
               (hol2cl.runtime:ocaml-condition
                 (exception~1308)
                 (match exception~1308 ((Failure _) s0) (_ (raise exception~1308))))))))))
     (fletc
-      ((DEST_BINARY*
-        (c* tm)
+      ((DEST_BINARY%
+        (c% tm)
         (handler-case
           (match (dest_comb tm)
             ((tuple il r)
               (match (dest_comb il)
-                ((tuple i* l)
+                ((tuple i% l)
                   (if
                     (cl:or
-                      (= i* c*)
+                      (= i% c%)
                       (cl:and
-                        (is_const i*)
+                        (is_const i%)
                         (cl:and
-                          (is_const c*)
+                          (is_const c%)
                           (=
-                            (reverse_interface (dest_const i*))
-                            (reverse_interface (dest_const c*))))))
+                            (reverse_interface (dest_const i%))
+                            (reverse_interface (dest_const c%))))))
                     (tuple l r)
                     (fail unit))))))
           (hol2cl.runtime:ocaml-condition
@@ -1320,15 +1330,15 @@
             (if (= n (num 1)) cl:t (powerof10 (/ n (num 10)))))))
         (fletc
           ((bool_of_term
-            (t*)
-            (match t*
+            (t%)
+            (match t%
               ((Const "T" _) cl:t)
               ((Const "F" _) cl:nil)
               (_ (failwith "bool_of_term")))))
           (fletc
             ((code_of_term
-              (t*)
-              (match (funcall strip_comb t*)
+              (t%)
+              (match (funcall strip_comb t%)
                 ((tuple f tms)
                   (if
                     (cl:or
@@ -1336,13 +1346,14 @@
                       (not (= (funcall length tms) 8)))
                     (failwith "code_of_term")
                     (itlist
-                      (lambdac (b f*) (if b (+ 1 (* 2 f*)) (* 2 f*)))
+                      (lambdac (b f%) (if b (+ 1 (* 2 f%)) (* 2 f%)))
                       (map #'bool_of_term (funcall rev tms))
                       0))))))
             (labelsc
               ((dest_clause
                 (tm)
                 (let ((pbod (snd (funcall strip_exists (body (body tm))))))
+                  (cl:declare (cl:ignorable pbod))
                   (match (funcall strip_comb pbod)
                     ((tuple s args)
                       (if
@@ -1375,8 +1386,8 @@
                   ((pdest_cond
                     (tm)
                     (match tm
-                      ((Comb (Comb (Comb (Const "COND" _) i*) t*) e)
-                        (tuple (tuple i* t*) e))
+                      ((Comb (Comb (Comb (Const "COND" _) i%) t%) e)
+                        (tuple (tuple i% t%) e))
                       (_ (failwith "pdest_cond")))))
                   (fletc
                     ((print_colored_term
@@ -1404,7 +1415,7 @@
                                 fmt
                                 (string-of-num (funcall dest_numeral tm)))))
                             (labelsc
-                              ((print_term*
+                              ((print_term%
                                 (prec tm)
                                 (handler-case
                                   (try_user_printers tm)
@@ -1434,6 +1445,8 @@
                                                                     (tuple
                                                                       (name_of hop)
                                                                       (type_of hop)))))
+                                                                (cl:declare
+                                                                  (cl:ignorable s))
                                                                 (handler-case
                                                                   (print_empty_set
                                                                     s
@@ -1622,6 +1635,7 @@
                                 (print_string_or_list
                                   (tm)
                                   (let ((tms (dest_list tm)))
+                                    (cl:declare (cl:ignorable tms))
                                     (handler-case
                                       (if
                                         (<>
@@ -1647,6 +1661,7 @@
                                                 (string-concat
                                                   (string-escaped (implode ccs))
                                                   "\""))))
+                                          (cl:declare (cl:ignorable ccs s))
                                           (pp-print-string fmt s)))
                                       (hol2cl.runtime:ocaml-condition
                                         (exception~1820)
@@ -1678,6 +1693,7 @@
                                         (deref typify_universal_set)
                                         (cl:and (is_const tm) (= args nil))))
                                     (let ((ty (fst (dest_fun_ty (type_of tm)))))
+                                      (cl:declare (cl:ignorable ty))
                                       (progn
                                         (pp-print-string fmt "(:")
                                         (funcall pp_print_type fmt ty)
@@ -1712,17 +1728,19 @@
                                           ((tuple bod1 fabs)
                                             (match (dest_comb bod1)
                                               ((tuple bod2 babs)
-                                                (let ((c* (rator bod2)))
+                                                (let ((c% (rator bod2)))
+                                                  (cl:declare (cl:ignorable c%))
                                                   (progn
                                                     (if
-                                                      (<> (fst (dest_const c*)) "SETSPEC")
+                                                      (<> (fst (dest_const c%)) "SETSPEC")
                                                       (fail unit)
                                                       (pp-print-string fmt "{"))
-                                                    (print_term* 0 fabs)
+                                                    (print_term% 0 fabs)
                                                     (pp-print-string fmt " | ")
                                                     (let
                                                       ((fvs (frees fabs))
                                                         (bvs (frees babs)))
+                                                      (cl:declare (cl:ignorable fvs bvs))
                                                       (if
                                                         (cl:and
                                                           (not
@@ -1746,7 +1764,7 @@
                                                             14
                                                             evs)
                                                           (pp-print-string fmt " | "))))
-                                                    (print_term* 0 babs)
+                                                    (print_term% 0 babs)
                                                     (pp-print-string fmt "}")))))))))))
                                 (print_let_term
                                   (s prec tm)
@@ -1764,27 +1782,27 @@
                                             pp_print_colored_resword
                                             fmt
                                             "let ")
-                                          (print_term* 0 (funcall mk_eq (hd eqs)))
+                                          (print_term% 0 (funcall mk_eq (hd eqs)))
                                           (do_list
                                             (lambdac (arg~2117)
                                               (match arg~2117
-                                                ((tuple v t*)
+                                                ((tuple v t%)
                                                   (progn
                                                     (pp-print-break fmt 1 0)
                                                     (color_switch
                                                       pp_print_colored_resword
                                                       fmt
                                                       "and ")
-                                                    (print_term*
+                                                    (print_term%
                                                       0
-                                                      (funcall mk_eq (tuple v t*)))))))
+                                                      (funcall mk_eq (tuple v t%)))))))
                                             (tl eqs))
                                           (color_switch
                                             pp_print_colored_resword
                                             fmt
                                             " in")
                                           (pp-print-break fmt 1 0)
-                                          (print_term* 0 bod)
+                                          (print_term% 0 bod)
                                           (if (= prec 0) unit (pp-print-string fmt ")"))
                                           (pp-close-box fmt unit))))))
                                 (print_decimal
@@ -1794,6 +1812,7 @@
                                     (let
                                       ((n_num (funcall dest_numeral (hd args)))
                                         (n_den (funcall dest_numeral (hd (tl args)))))
+                                      (cl:declare (cl:ignorable n_num n_den))
                                       (if (not (powerof10 n_den))
                                         (fail unit)
                                         (let*
@@ -1804,6 +1823,7 @@
                                                   (explode
                                                     (string-of-num
                                                       (+ n_den (mod-num n_num n_den))))))))
+                                          (cl:declare (cl:ignorable s_num s_den))
                                           (pp-print-string
                                             fmt
                                             (string-concat
@@ -1818,6 +1838,7 @@
                                   (if (cl:or (<> s "_MATCH") (<> (funcall length args) 2))
                                     (fail unit)
                                     (let ((cls (dest_clauses (hd (tl args)))))
+                                      (cl:declare (cl:ignorable cls))
                                       (progn
                                         (if (= prec 0) unit (pp-print-string fmt "("))
                                         (pp-open-hvbox fmt 0)
@@ -1825,7 +1846,7 @@
                                           pp_print_colored_resword
                                           fmt
                                           "match ")
-                                        (print_term* 0 (hd args))
+                                        (print_term% 0 (hd args))
                                         (color_switch
                                           pp_print_colored_resword
                                           fmt
@@ -1842,6 +1863,7 @@
                                       (<> (funcall length args) 1))
                                     (fail unit)
                                     (let ((cls (dest_clauses (hd args))))
+                                      (cl:declare (cl:ignorable cls))
                                       (progn
                                         (if (= prec 0) unit (pp-print-string fmt "("))
                                         (pp-open-hvbox fmt 0)
@@ -1868,53 +1890,53 @@
                                                 pp_print_colored_resword
                                                 fmt
                                                 "if ")
-                                              (print_term* 0 (hd args))
+                                              (print_term% 0 (hd args))
                                               (pp-print-break fmt 0 0)
                                               (color_switch
                                                 pp_print_colored_resword
                                                 fmt
                                                 " then ")
-                                              (print_term* 0 (hd (tl args)))
+                                              (print_term% 0 (hd (tl args)))
                                               (pp-print-break fmt 0 0)
                                               (color_switch
                                                 pp_print_colored_resword
                                                 fmt
                                                 " else ")
-                                              (print_term* 0 (hd (tl (tl args)))))
+                                              (print_term% 0 (hd (tl (tl args)))))
                                             (progn
                                               (color_switch
                                                 pp_print_colored_resword
                                                 fmt
                                                 "if ")
-                                              (print_term* 0 (fst (hd ccls)))
+                                              (print_term% 0 (fst (hd ccls)))
                                               (color_switch
                                                 pp_print_colored_resword
                                                 fmt
                                                 " then ")
-                                              (print_term* 0 (snd (hd ccls)))
+                                              (print_term% 0 (snd (hd ccls)))
                                               (pp-print-break fmt 0 0)
                                               (do_list
                                                 (lambdac (arg~2387)
                                                   (match arg~2387
-                                                    ((tuple i* t*)
+                                                    ((tuple i% t%)
                                                       (progn
                                                         (color_switch
                                                           pp_print_colored_resword
                                                           fmt
                                                           " else if ")
-                                                        (print_term* 0 i*)
+                                                        (print_term% 0 i%)
                                                         (color_switch
                                                           pp_print_colored_resword
                                                           fmt
                                                           " then ")
-                                                        (print_term* 0 t*)
+                                                        (print_term% 0 t%)
                                                         (pp-print-break fmt 0 0)))))
                                                 (tl ccls))
                                               (color_switch
                                                 pp_print_colored_resword
                                                 fmt
                                                 " else ")
-                                              (print_term* 0 ecl)))))
+                                              (print_term% 0 ecl)))))
                                       (pp-close-box fmt unit)
                                       (if (= prec 0) unit (pp-print-string fmt ")")))))
                                 (print_prefix_app
@@ -1942,6 +1964,7 @@
                                                       (let
                                                         ((s0 (name_of l))
                                                           (ty0 (type_of l)))
+                                                        (cl:declare (cl:ignorable s0 ty0))
                                                         (cl:or
                                                           (=
                                                             (reverse_interface
@@ -1964,7 +1987,7 @@
                                                 (is_neg (hd args))))))
                                         (pp-print-string fmt " ")
                                         unit)
-                                      (print_term* 999 (hd args))
+                                      (print_term% 999 (hd args))
                                       (if (= prec 1000) (pp-print-string fmt ")") unit))))
                                 (print_binder_app
                                   (s prec tm args)
@@ -1987,19 +2010,20 @@
                                     (let*
                                       ((bargs
                                         (if (ARIGHT s)
-                                          (match (splitlist (DEST_BINARY* hop) tm)
+                                          (match (splitlist (DEST_BINARY% hop) tm)
                                             ((tuple tms tmt)
                                               (append tms (cl:cons tmt nil))))
-                                          (match (rev_splitlist (DEST_BINARY* hop) tm)
+                                          (match (rev_splitlist (DEST_BINARY% hop) tm)
                                             ((tuple tmt tms) (cl:cons tmt tms)))))
                                         (newprec (fst (funcall get_infix_status s))))
+                                      (cl:declare (cl:ignorable bargs newprec))
                                       (progn
                                         (if (<= newprec prec)
                                           (progn
                                             (pp-open-hvbox fmt 1)
                                             (pp-print-string fmt "("))
                                           (pp-open-hvbox fmt 0))
-                                        (print_term* newprec (hd bargs))
+                                        (print_term% newprec (hd bargs))
                                         (do_list
                                           (lambdac (x)
                                             (progn
@@ -2014,7 +2038,7 @@
                                                 (if (mem s (deref prebroken_binops))
                                                   (pp-print-string fmt " ")
                                                   (pp-print-break fmt 1 0)))
-                                              (print_term* newprec x)))
+                                              (print_term% newprec x)))
                                           (tl bargs))
                                         (if (<= newprec prec)
                                           (pp-print-string fmt ")")
@@ -2023,7 +2047,7 @@
                                 (print_atom
                                   (hop s)
                                   (let
-                                    ((s*
+                                    ((s%
                                       (if
                                         (cl:or
                                           (funcall parses_as_binder s)
@@ -2032,6 +2056,7 @@
                                             (funcall is_prefix s)))
                                         (string-concat "(" (string-concat s ")"))
                                         s)))
+                                    (cl:declare (cl:ignorable s%))
                                     (labelsc
                                       ((has_invented_typevar
                                         (ty)
@@ -2052,14 +2077,14 @@
                                           (pp-open-box fmt 0)
                                           (pp-print-string fmt "(")
                                           (if (is_const hop)
-                                            (color_switch pp_print_colored_const fmt s*)
-                                            (pp-print-string fmt s*))
+                                            (color_switch pp_print_colored_const fmt s%)
+                                            (pp-print-string fmt s%))
                                           (if
                                             (cl:and
-                                              (> (string-length s*) 0)
+                                              (> (string-length s%) 0)
                                               (funcall
                                                 issymb
-                                                (string-sub s* (- (string-length s*) 1) 1)))
+                                                (string-sub s% (- (string-length s%) 1) 1)))
                                             (pp-print-string fmt " ")
                                             unit)
                                           (pp-print-string fmt ":")
@@ -2072,8 +2097,8 @@
                                           (pp-print-string fmt ")")
                                           (pp-close-box fmt unit))
                                         (if (is_const hop)
-                                          (color_switch pp_print_colored_const fmt s*)
-                                          (pp-print-string fmt s*))))))
+                                          (color_switch pp_print_colored_const fmt s%)
+                                          (pp-print-string fmt s%))))))
                                 (print_generic_app
                                   (prec tm)
                                   (match (dest_comb tm)
@@ -2081,7 +2106,7 @@
                                       (progn
                                         (pp-open-hvbox fmt 0)
                                         (if (= prec 1000) (pp-print-string fmt "(") unit)
-                                        (print_term* 999 l)
+                                        (print_term% 999 l)
                                         (if
                                           (handler-case
                                             (mem
@@ -2096,7 +2121,7 @@
                                                 (_ (raise exception~2895)))))
                                           unit
                                           (pp-print-space fmt unit))
-                                        (print_term* 1000 r)
+                                        (print_term% 1000 r)
                                         (if (= prec 1000) (pp-print-string fmt ")") unit)
                                         (pp-close-box fmt unit)))))
                                 (print_term_sequence
@@ -2104,8 +2129,9 @@
                                   (if (= tms nil)
                                     unit
                                     (progn
-                                      (print_term* prec (hd tms))
+                                      (print_term% prec (hd tms))
                                       (let ((ttms (tl tms)))
+                                        (cl:declare (cl:ignorable ttms))
                                         (if (= ttms nil)
                                           unit
                                           (progn
@@ -2115,57 +2141,59 @@
                                 (print_binder
                                   (prec tm)
                                   (let ((absf (funcall is_gabs tm)))
+                                    (cl:declare (cl:ignorable absf))
                                     (match
                                       (if absf
                                         (tuple "\\" "\\")
                                         (let* ((bt (rator tm)) (sn (name_of bt)))
+                                          (cl:declare (cl:ignorable bt sn))
                                           (tuple
                                             sn
                                             (reverse_interface (tuple sn (type_of bt))))))
-                                      ((tuple s s*)
+                                      ((tuple s s%)
                                         (labelsc
                                           ((collectvs
-                                            (tm*)
+                                            (tm%)
                                             (if absf
-                                              (if (is_abs tm*)
-                                                (match (dest_abs tm*)
-                                                  ((tuple v t*)
-                                                    (match (collectvs t*)
+                                              (if (is_abs tm%)
+                                                (match (dest_abs tm%)
+                                                  ((tuple v t%)
+                                                    (match (collectvs t%)
                                                       ((tuple vs bod)
                                                         (tuple
                                                           (cl:cons (tuple cl:nil v) vs)
                                                           bod)))))
-                                                (if (funcall is_gabs tm*)
-                                                  (match (funcall dest_gabs tm*)
-                                                    ((tuple v t*)
-                                                      (match (collectvs t*)
+                                                (if (funcall is_gabs tm%)
+                                                  (match (funcall dest_gabs tm%)
+                                                    ((tuple v t%)
+                                                      (match (collectvs t%)
                                                         ((tuple vs bod)
                                                           (tuple
                                                             (cl:cons (tuple cl:t v) vs)
                                                             bod)))))
-                                                  (tuple nil tm*)))
+                                                  (tuple nil tm%)))
                                               (if
                                                 (cl:and
-                                                  (is_comb tm*)
-                                                  (= (name_of (rator tm*)) s))
-                                                (if (is_abs (rand tm*))
-                                                  (match (dest_abs (rand tm*))
-                                                    ((tuple v t*)
-                                                      (match (collectvs t*)
+                                                  (is_comb tm%)
+                                                  (= (name_of (rator tm%)) s))
+                                                (if (is_abs (rand tm%))
+                                                  (match (dest_abs (rand tm%))
+                                                    ((tuple v t%)
+                                                      (match (collectvs t%)
                                                         ((tuple vs bod)
                                                           (tuple
                                                             (cl:cons (tuple cl:nil v) vs)
                                                             bod)))))
-                                                  (if (funcall is_gabs (rand tm*))
-                                                    (match (funcall dest_gabs (rand tm*))
-                                                      ((tuple v t*)
-                                                        (match (collectvs t*)
+                                                  (if (funcall is_gabs (rand tm%))
+                                                    (match (funcall dest_gabs (rand tm%))
+                                                      ((tuple v t%)
+                                                        (match (collectvs t%)
                                                           ((tuple vs bod)
                                                             (tuple
                                                               (cl:cons (tuple cl:t v) vs)
                                                               bod)))))
-                                                    (tuple nil tm*)))
-                                                (tuple nil tm*)))))
+                                                    (tuple nil tm%)))
+                                                (tuple nil tm%)))))
                                           (match (collectvs tm)
                                             ((tuple vs bod)
                                               (progn
@@ -2177,8 +2205,8 @@
                                                 (color_switch
                                                   pp_print_colored_binder
                                                   fmt
-                                                  s*)
-                                                (if (funcall isalnum s*)
+                                                  s%)
+                                                (if (funcall isalnum s%)
                                                   (pp-print-string fmt " ")
                                                   unit)
                                                 (do_list
@@ -2189,7 +2217,7 @@
                                                           (if b
                                                             (pp-print-string fmt "(")
                                                             unit)
-                                                          (print_term* 0 x)
+                                                          (print_term% 0 x)
                                                           (if b
                                                             (pp-print-string fmt ")")
                                                             unit)
@@ -2198,13 +2226,13 @@
                                                 (if (fst (last vs))
                                                   (pp-print-string fmt "(")
                                                   unit)
-                                                (print_term* 0 (snd (last vs)))
+                                                (print_term% 0 (snd (last vs)))
                                                 (if (fst (last vs))
                                                   (pp-print-string fmt ")")
                                                   unit)
                                                 (pp-print-string fmt ".")
                                                 (pp-print-space fmt unit)
-                                                (print_term* 0 bod)
+                                                (print_term% 0 bod)
                                                 (if (= prec 0)
                                                   unit
                                                   (pp-print-string fmt ")"))
@@ -2212,10 +2240,10 @@
                                 (print_clauses
                                   (cls)
                                   (match cls
-                                    ((cl:cons c* nil) (print_clause c*))
-                                    ((cl:cons c* cs)
+                                    ((cl:cons c% nil) (print_clause c%))
+                                    ((cl:cons c% cs)
                                       (progn
-                                        (print_clause c*)
+                                        (print_clause c%)
                                         (pp-print-break fmt 1 0)
                                         (pp-print-string fmt "| ")
                                         (print_clauses cs)))))
@@ -2224,20 +2252,20 @@
                                   (match cl
                                     ((cl:cons p (cl:cons g (cl:cons r nil)))
                                       (progn
-                                        (print_term* 1 p)
+                                        (print_term% 1 p)
                                         (pp-print-string fmt " when ")
-                                        (print_term* 1 g)
+                                        (print_term% 1 g)
                                         (pp-print-string fmt " -> ")
-                                        (print_term* 1 r)))
+                                        (print_term% 1 r)))
                                     ((cl:cons p (cl:cons r nil))
                                       (progn
-                                        (print_term* 1 p)
+                                        (print_term% 1 p)
                                         (pp-print-string fmt " -> ")
-                                        (print_term* 1 r))))))
-                              (print_term* 0)))))))
+                                        (print_term% 1 r))))))
+                              (print_term% 0)))))))
                     (tuple (print_colored_term cl:nil) (print_colored_term cl:t)))))))))))
-  ((tuple pp_print_term* pp_print_colored_term*)
-    (setf pp_print_colored_term pp_print_colored_term* pp_print_term pp_print_term*)))
+  ((tuple pp_print_term% pp_print_colored_term%)
+    (setf pp_print_colored_term pp_print_colored_term% pp_print_term pp_print_term%)))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Print term with quotes.                                                   *)
@@ -2257,8 +2285,8 @@
         (funcall (if use_color pp_print_colored_term pp_print_term) fmt tm)
         (pp-print-string fmt "`"))))
     (tuple (fn cl:nil) (fn cl:t)))
-  ((tuple pp_print_qterm* pp_print_colored_qterm*)
-    (setf pp_print_colored_qterm pp_print_colored_qterm* pp_print_qterm pp_print_qterm*)))
+  ((tuple pp_print_qterm% pp_print_colored_qterm%)
+    (setf pp_print_colored_qterm pp_print_colored_qterm% pp_print_qterm pp_print_qterm%)))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Printer for theorems.                                                     *)
@@ -2302,8 +2330,8 @@
             (funcall (if use_color pp_print_colored_term pp_print_term) fmt tm)
             (pp-close-box fmt unit))))))
     (tuple (fn cl:nil) (fn cl:t)))
-  ((tuple pp_print_thm* pp_print_colored_thm*)
-    (setf pp_print_colored_thm pp_print_colored_thm* pp_print_thm pp_print_thm*)))
+  ((tuple pp_print_thm% pp_print_colored_thm%)
+    (setf pp_print_colored_thm pp_print_colored_thm% pp_print_thm pp_print_thm%)))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Print on standard output.                                                 *)
@@ -2327,11 +2355,13 @@
 
 (defunc print_to_string (printer)
   (let* ((buf (buffer-create 16)) (fmt (formatter-of-buffer buf)))
+    (cl:declare (cl:ignorable buf fmt))
     (match (pp-set-max-boxes fmt 100)
       ((cl:type hol2cl.runtime::unit-value)
         (let*
           ((print (funcall printer fmt))
             (flush (partial (function-value #'pp-print-flush 2) fmt)))
+          (cl:declare (cl:ignorable print flush))
           (lambdac (x)
             (match (pp-set-margin fmt (get-margin unit))
               ((cl:type hol2cl.runtime::unit-value)
@@ -2340,6 +2370,7 @@
                     (match (funcall flush unit)
                       ((cl:type hol2cl.runtime::unit-value)
                         (let ((s (buffer-contents buf)))
+                          (cl:declare (cl:ignorable s))
                           (match (buffer-reset buf)
                             ((cl:type hol2cl.runtime::unit-value) s)))))))))))))))
 

@@ -168,7 +168,7 @@
         trans_thm
         try_eta
         try_rec
-        try_rec*
+        try_rec%
         try_rwn
         tyi_dt
         unsuitable
@@ -364,7 +364,7 @@
     trans_thm
     try_eta
     try_rec
-    try_rec*
+    try_rec%
     try_rwn
     tyi_dt
     unsuitable
@@ -416,7 +416,7 @@
     TRANS
     REFL
     rand
-    MK_COMB*
+    MK_COMB%
     is_var
     is_const
     is_comb
@@ -430,7 +430,7 @@
     dest_abs
     concl
     Comb
-    ABS*)
+    ABS%)
   (:shadowing-import-from
     :hol2cl.lib
     rev_itlist
@@ -549,9 +549,10 @@
 
 (defunc with_flag (arg~2 f x)
   (match arg~2
-    ((tuple flag b*)
+    ((tuple flag b%)
       (let ((fval (deref flag)))
-        (match (assign flag b*)
+        (cl:declare (cl:ignorable fval))
+        (match (assign flag b%)
           ((cl:type hol2cl.runtime::unit-value)
             (let
               ((res
@@ -560,8 +561,9 @@
                   (hol2cl.runtime:ocaml-condition
                     (exception~12)
                     (match exception~12
-                      (e* (progn (assign flag fval) (raise e*)))
+                      (e% (progn (assign flag fval) (raise e%)))
                       (_ (raise exception~12)))))))
+              (cl:declare (cl:ignorable res))
               (progn (assign flag fval) res))))))))
 
 (defunc RIGHT_BETA (th)
@@ -580,14 +582,14 @@
 
 (defunc MK_comb (th)
   (match (dest_comb (funcall rhs (concl th)))
-    ((tuple rator* rand*)
-      (fletc ((mka (th1 th2) (TRANS th (MK_COMB* (tuple th1 th2)))))
-        (tuple (REFL rator*) (REFL rand*) #'mka)))))
+    ((tuple rator% rand%)
+      (fletc ((mka (th1 th2) (TRANS th (MK_COMB% (tuple th1 th2)))))
+        (tuple (REFL rator%) (REFL rand%) #'mka)))))
 
 (defunc MK_abs (th)
   (match (dest_abs (funcall rhs (concl th)))
-    ((tuple bvar body*)
-      (tuple bvar (REFL body*) (lambdac (th1) (TRANS th (ABS* bvar th1)))))))
+    ((tuple bvar body%)
+      (tuple bvar (REFL body%) (lambdac (th1) (TRANS th (ABS% bvar th1)))))))
 
 (defunc BODY_CONJUNCTS (th)
   (if (funcall is_forall (concl th))
@@ -664,9 +666,10 @@
 (defunc FUNIFY (thm)
   (handler-case
     (let ((x (rand (funcall lhs (concl thm)))))
+      (cl:declare (cl:ignorable x))
       (CONV_RULE
         (RATOR_CONV (RAND_CONV (CHANGED_CONV (PURE_REWRITE_CONV (cl:cons ETA_AX nil)))))
-        (ABS* x thm)))
+        (ABS% x thm)))
     (hol2cl.runtime:ocaml-condition
       (exception~270)
       (match exception~270 (_ (failwith "FUNIFY")) (_ (raise exception~270))))))
@@ -674,8 +677,9 @@
 (defunc UNFUNIFY (thm)
   (handler-case
     (match (dest_eq (concl thm))
-      ((tuple lhs* rhs*)
-        (let ((x (variant (frees lhs*) (fst (dest_abs rhs*)))))
+      ((tuple lhs% rhs%)
+        (let ((x (variant (frees lhs%) (fst (dest_abs rhs%)))))
+          (cl:declare (cl:ignorable x))
           (CONV_RULE (RAND_CONV #'BETA_CONV) (AP_THM thm x)))))
     (hol2cl.runtime:ocaml-condition
       (exception~295)
@@ -709,34 +713,35 @@
 (defunc check_arg_form (trm)
   (labelsc
     ((chk
-      (t* stk free)
-      (if (is_comb t*)
-        (match (dest_comb t*)
-          ((tuple rator* rand*)
-            (match (chk rand* nil free)
-              ((tuple free* pat1) (chk rator* (cl:cons pat1 stk) free*)))))
-        (if (is_var t*)
+      (t% stk free)
+      (if (is_comb t%)
+        (match (dest_comb t%)
+          ((tuple rator% rand%)
+            (match (chk rand% nil free)
+              ((tuple free% pat1) (chk rator% (cl:cons pat1 stk) free%)))))
+        (if (is_var t%)
           (if (= stk nil)
             (let ((newi (list-length free)))
+              (cl:declare (cl:ignorable newi))
               (handler-case
-                (tuple free (make-Pvar (- (- newi (index t* free)) 1)))
+                (tuple free (make-Pvar (- (- newi (index t% free)) 1)))
                 (hol2cl.runtime:ocaml-condition
                   (exception~404)
                   (match exception~404
-                    (_ (tuple (cl:cons t* free) (make-Pvar newi)))
+                    (_ (tuple (cl:cons t% free) (make-Pvar newi)))
                     (_ (raise exception~404))))))
             (failwith
               (string-concat
                 "check_arg_form: "
-                (string-concat (fst (dest_var t*)) " occurs as a variable on lhs"))))
-          (if (is_const t*)
-            (tuple free (make-Papp t* (list-rev stk)))
+                (string-concat (fst (dest_var t%)) " occurs as a variable on lhs"))))
+          (if (is_const t%)
+            (tuple free (make-Papp t% (list-rev stk)))
             (failwith
               (string-concat
                 "check_arg_form: lambda abstraction not allowed on lhs: `"
                 (string-concat (funcall string_of_term trm) "`"))))))))
     (match (chk trm nil nil)
-      ((tuple fv* (Papp head args)) (tuple (list-rev fv*) head args))
+      ((tuple fv% (Papp head args)) (tuple (list-rev fv%) head args))
       (_ (failwith "check_arg_form: ill-formed lhs")))))
 
 (defrecord cst_rec head args rws skip)
@@ -752,8 +757,8 @@
 
 (defunc appl (arg~496)
   (match arg~496
-    ((tuple (App a* l1) arg) (make-App a* (cl:cons arg l1)))
-    ((tuple t* arg) (make-App t* (cl:cons arg nil)))))
+    ((tuple (App a% l1) arg) (make-App a% (cl:cons arg l1)))
+    ((tuple t% arg) (make-App t% (cl:cons arg nil)))))
 
 ;; (*---------------------------------------------------------------------------
 ;;  * Type variable instantiation in dterm. Make it tail-recursive ?
@@ -768,10 +773,10 @@
         ((tyi_dt
           (arg~536)
           (match arg~536
-            ((Cst c* dbsk) (make-Cst (funcall inst tysub c*) dbsk))
+            ((Cst c% dbsk) (make-Cst (funcall inst tysub c%) dbsk))
             ((App h l) (make-App (tyi_dt h) (map #'tyi_dt l)))
-            ((Abs v*) (make-Abs (tyi_dt v*)))
-            (v* v*))))
+            ((Abs v%) (make-Abs (tyi_dt v%)))
+            (v% v%))))
         (tyi_dt v)))))
 
 (defvariant action (Rewrite field0) (Conv field0))
@@ -786,32 +791,32 @@
 
 (defunc add_in_db (arg~586)
   (match arg~586
-    ((tuple n cst* act (End_db))
+    ((tuple n cst% act (End_db))
       (funpow
         n
-        (lambdac (a*) (make-Need_arg a*))
-        (make-Try (make-try_rec :hcst cst* :rws act :tail (make-End_db)))))
+        (lambdac (a%) (make-Need_arg a%))
+        (make-Try (make-try_rec :hcst cst% :rws act :tail (make-End_db)))))
     ((tuple
       0
-      cst*
+      cst%
       (cl:and act (Rewrite nrws))
-      (Try (try_rec :hcst hcst :rws (cl:and rw* (Rewrite rws*)) :tail tail)))
-      (if (= cst* hcst)
+      (Try (try_rec :hcst hcst :rws (cl:and rw% (Rewrite rws%)) :tail tail)))
+      (if (= cst% hcst)
         (make-Try
-          (make-try_rec :hcst hcst :rws (make-Rewrite (append nrws rws*)) :tail tail))
+          (make-try_rec :hcst hcst :rws (make-Rewrite (append nrws rws%)) :tail tail))
         (make-Try
-          (make-try_rec :hcst hcst :rws rw* :tail (add_in_db (tuple 0 cst* act tail))))))
-    ((tuple n cst* act (Try (try_rec :hcst hcst :rws rws* :tail tail)))
+          (make-try_rec :hcst hcst :rws rw% :tail (add_in_db (tuple 0 cst% act tail))))))
+    ((tuple n cst% act (Try (try_rec :hcst hcst :rws rws% :tail tail)))
       (make-Try
-        (make-try_rec :hcst hcst :rws rws* :tail (add_in_db (tuple n cst* act tail)))))
-    ((tuple 0 cst* act db) (make-Try (make-try_rec :hcst cst* :rws act :tail db)))
-    ((tuple n cst* act (Need_arg tail))
-      (make-Need_arg (add_in_db (tuple (- n 1) cst* act tail))))))
+        (make-try_rec :hcst hcst :rws rws% :tail (add_in_db (tuple n cst% act tail)))))
+    ((tuple 0 cst% act db) (make-Try (make-try_rec :hcst cst% :rws act :tail db)))
+    ((tuple n cst% act (Need_arg tail))
+      (make-Need_arg (add_in_db (tuple (- n 1) cst% act tail))))))
 
 (defunc key_of (arg~710)
   (match arg~710
-    ((Rw (rewrite_rec :cst cst* :lhs lhs*))
-      (match (dest_const cst*) ((tuple name _) (tuple name (funcall length lhs*) cst*))))))
+    ((Rw (rewrite_rec :cst cst% :lhs lhs%))
+      (match (dest_const cst%) ((tuple name _) (tuple name (funcall length lhs%) cst%))))))
 
 (defunc is_skip (arg~732)
   (match arg~732
@@ -822,6 +827,7 @@
   (match skip
     ((Some n)
       (let ((len (list-length args)))
+        (cl:declare (cl:ignorable len))
         (if (<= n len) (chop_list (- len n) args) (tuple nil args))))
     ((None) (tuple nil args))))
 
@@ -830,69 +836,70 @@
 (defunc empty_rws (arg~782)
   (match arg~782 ((cl:type hol2cl.runtime::unit-value) (make-Rws (table-create 100)))))
 
-(defunc assoc_clause (arg~790 cst*)
+(defunc assoc_clause (arg~790 cst%)
   (match arg~790
-    ((Rws rws*)
+    ((Rws rws%)
       (handler-case
-        (table-find rws* cst*)
+        (table-find rws% cst%)
         (hol2cl.runtime:ocaml-condition
           (exception~794)
           (match exception~794
             ((Not_found)
               (let ((mt (ref (tuple (make-End_db) (make-None)))))
-                (progn (table-add rws* cst* mt) mt)))
+                (cl:declare (cl:ignorable mt))
+                (progn (table-add rws% cst% mt) mt)))
             (_ (raise exception~794))))))))
 
-(defunc add_in_db_upd (rws* arg~817 act)
+(defunc add_in_db_upd (rws% arg~817 act)
   (match arg~817
     ((tuple name arity hcst)
-      (match (assoc_clause rws* name)
+      (match (assoc_clause rws% name)
         ((cl:and rl (ref-contents (tuple db sk)))
           (assign rl (tuple (add_in_db (tuple arity hcst act db)) sk)))))))
 
-(defunc set_skip_name (arg~852 p* sk)
+(defunc set_skip_name (arg~852 p% sk)
   (match arg~852
-    ((cl:and rws* (Rws htbl))
-      (match (assoc_clause rws* p*)
+    ((cl:and rws% (Rws htbl))
+      (match (assoc_clause rws% p%)
         ((cl:and rl (ref-contents (tuple db _))) (assign rl (tuple db sk)))))))
 
-(defunc scrub_const (arg~881 c*)
+(defunc scrub_const (arg~881 c%)
   (match arg~881
-    ((Rws htbl) (match (dest_const c*) ((tuple name _) (table-remove htbl name))))))
+    ((Rws htbl) (match (dest_const c%) ((tuple name _) (table-remove htbl name))))))
 
 (defunc from_term (arg~899)
   (match arg~899
-    ((tuple rws* env t*)
+    ((tuple rws% env t%)
       (labelsc
         ((down
           (arg~906)
           (match arg~906
-            ((tuple env* t** c*)
-              (match t**
+            ((tuple env% t%% c%)
+              (match t%%
                 ((Var _)
                   (up
                     (tuple
                       (handler-case
-                        (make-Bv (index t** env*))
+                        (make-Bv (index t%% env%))
                         (hol2cl.runtime:ocaml-condition
                           (exception~912)
                           (match exception~912 (_ (make-Fv)) (_ (raise exception~912)))))
-                      c*)))
+                      c%)))
                 ((hol2cl.fusion.hol:Const name _)
-                  (up (tuple (make-Cst t** (assoc_clause rws* name)) c*)))
-                ((Comb rator* rand*)
-                  (down (tuple env* rator* (make-Zrator (tuple env* rand*) c*))))
-                ((hol2cl.fusion.hol:Abs bvar body*)
-                  (down (tuple (cl:cons bvar env*) body* (make-Zabs unit c*))))))))
+                  (up (tuple (make-Cst t%% (assoc_clause rws% name)) c%)))
+                ((Comb rator% rand%)
+                  (down (tuple env% rator% (make-Zrator (tuple env% rand%) c%))))
+                ((hol2cl.fusion.hol:Abs bvar body%)
+                  (down (tuple (cl:cons bvar env%) body% (make-Zabs unit c%))))))))
           (up
             (arg~969)
             (match arg~969
               ((tuple dt (Ztop)) dt)
-              ((tuple dt (Zrator (tuple env* arg) c*))
-                (down (tuple env* arg (make-Zrand dt c*))))
-              ((tuple dt (Zrand dr c*)) (up (tuple (appl (tuple dr dt)) c*)))
-              ((tuple dt (Zabs _ c*)) (up (tuple (make-Abs dt) c*))))))
-        (down (tuple env t* (make-Ztop)))))))
+              ((tuple dt (Zrator (tuple env% arg) c%))
+                (down (tuple env% arg (make-Zrand dt c%))))
+              ((tuple dt (Zrand dr c%)) (up (tuple (appl (tuple dr dt)) c%)))
+              ((tuple dt (Zabs _ c%)) (up (tuple (make-Abs dt) c%))))))
+        (down (tuple env t% (make-Ztop)))))))
 
 ;; (*---------------------------------------------------------------------------
 ;;  * Note: if the list of free variables of the lhs was empty, we could
@@ -901,57 +908,64 @@
 ;;  *---------------------------------------------------------------------------*)
 
 
-(defunc mk_rewrite (rws* eq_thm)
+(defunc mk_rewrite (rws% eq_thm)
   (match (dest_eq (concl eq_thm))
-    ((tuple lhs* rhs*)
-      (match (check_arg_form lhs*)
-        ((tuple fv* cst* pats)
+    ((tuple lhs% rhs%)
+      (match (check_arg_form lhs%)
+        ((tuple fv% cst% pats)
           (let*
-            ((gen_thm (itlist GEN fv* eq_thm))
-              (rhsc (from_term (tuple rws* (funcall rev fv*) rhs*))))
+            ((gen_thm (itlist GEN fv% eq_thm))
+              (rhsc (from_term (tuple rws% (funcall rev fv%) rhs%))))
+            (cl:declare (cl:ignorable gen_thm rhsc))
             (make-Rw
               (make-rewrite_rec
                 :cst
-                cst*
+                cst%
                 :lhs
                 pats
                 :rhs
                 rhsc
                 :npv
-                (funcall length fv*)
+                (funcall length fv%)
                 :thm
                 gen_thm))))))))
 
 (defunc unsuitable (th)
-  (match (dest_eq (concl th)) ((tuple l r*) (can (funcall term_match nil l) r*))))
+  (match (dest_eq (concl th)) ((tuple l r%) (can (funcall term_match nil l) r%))))
 
-(defunc enter_thm (rws* thm0)
+(defunc enter_thm (rws% thm0)
   (let ((thm (eq_intro thm0)))
+    (cl:declare (cl:ignorable thm))
     (if (unsuitable thm)
       unit
-      (let ((rw* (mk_rewrite rws* thm)))
-        (add_in_db_upd rws* (key_of rw*) (make-Rewrite (cl:cons rw* nil)))))))
+      (let ((rw% (mk_rewrite rws% thm)))
+        (cl:declare (cl:ignorable rw%))
+        (add_in_db_upd rws% (key_of rw%) (make-Rewrite (cl:cons rw% nil)))))))
 
-(defunc add_thms (lthm rws*)
+(defunc add_thms (lthm rws%)
   (list-iter
-    (o (partial (function-value #'list-iter 2) (enter_thm rws*)) #'BODY_CONJUNCTS)
+    (o (partial (function-value #'list-iter 2) (enter_thm rws%)) #'BODY_CONJUNCTS)
     lthm))
 
-(defunc add_extern (arg~1131 rws*)
+(defunc add_extern (arg~1131 rws%)
   (match arg~1131
-    ((tuple cst* arity fconv)
-      (match (dest_const cst*)
-        ((tuple name _) (add_in_db_upd rws* (tuple name arity cst*) (make-Conv fconv)))))))
+    ((tuple cst% arity fconv)
+      (match (dest_const cst%)
+        ((tuple name _) (add_in_db_upd rws% (tuple name arity cst%) (make-Conv fconv)))))))
 
 (defunc new_rws (arg~1158)
   (match arg~1158
     ((cl:type hol2cl.runtime::unit-value)
-      (let ((rws* (empty_rws unit)))
-        (progn (add_thms (cl:cons REFL_CLAUSE nil) rws*) rws*)))))
+      (let ((rws% (empty_rws unit)))
+        (cl:declare (cl:ignorable rws%))
+        (progn (add_thms (cl:cons REFL_CLAUSE nil) rws%) rws%)))))
 
-(defunc from_list (lthm) (let ((rws* (new_rws unit))) (progn (add_thms lthm rws*) rws*)))
+(defunc from_list (lthm)
+  (let ((rws% (new_rws unit)))
+    (cl:declare (cl:ignorable rws%))
+    (progn (add_thms lthm rws%) rws%)))
 
-(defunc scrub_thms (lthm rws*)
+(defunc scrub_thms (lthm rws%)
   (let*
     ((tmlist (map (o (o #'concl #'hd) #'BODY_CONJUNCTS) lthm))
       (clist
@@ -960,7 +974,8 @@
             (o (o (o (function-value #'fst 1) strip_comb) lhs) (function-value #'snd 1))
             strip_forall)
           tmlist)))
-    (list-iter (scrub_const rws*) clist)))
+    (cl:declare (cl:ignorable tmlist clist))
+    (list-iter (scrub_const rws%) clist)))
 
 ;; (*---------------------------------------------------------------------------*)
 ;; (* Support for analysis of compsets                                          *)
@@ -973,27 +988,31 @@
       (let
         ((dblist
           (table-fold
-            (lambdac (arg~1220 arg~1222 r*)
-              (match arg~1222 ((ref-contents (tuple db _)) (cl:cons db r*))))
+            (lambdac (arg~1220 arg~1222 r%)
+              (match arg~1222 ((ref-contents (tuple db _)) (cl:cons db r%))))
             htbl
             nil)))
+        (cl:declare (cl:ignorable dblist))
         (labelsc
           ((get_actions
             (db)
             (match db
               ((End_db) nil)
-              ((Need_arg db*) (get_actions db*))
-              ((Try (try_rec :hcst hcst :rws rws* :tail tail))
-                (cl:cons (tuple hcst rws*) (get_actions tail))))))
+              ((Need_arg db%) (get_actions db%))
+              ((Try (try_rec :hcst hcst :rws rws% :tail tail))
+                (cl:cons (tuple hcst rws%) (get_actions tail))))))
           (let ((actionlist (list-concat (list-map #'get_actions dblist))))
+            (cl:declare (cl:ignorable actionlist))
             (fletc ((dest (arg~1268) (match arg~1268 ((Rw (rewrite_rec :thm thm)) thm))))
               (fletc
                 ((dest_action
                   (arg~1276)
                   (match arg~1276
-                    ((tuple hcst (Rewrite rws*)) (tuple hcst (map #'dest rws*)))
+                    ((tuple hcst (Rewrite rws%)) (tuple hcst (map #'dest rws%)))
                     ((tuple hcst (Conv _)) (tuple hcst nil)))))
-                (let ((rwlist (list-map #'dest_action actionlist))) rwlist)))))))))
+                (let ((rwlist (list-map #'dest_action actionlist)))
+                  (cl:declare (cl:ignorable rwlist))
+                  rwlist)))))))))
 
 (defvariant transform (Conversion field0) (Rrules field0))
 
@@ -1012,30 +1031,32 @@
       (let
         ((dblist
           (table-fold
-            (lambdac (s arg~1320 r*)
-              (match arg~1320 ((ref-contents (tuple db _)) (cl:cons (tuple s db) r*))))
+            (lambdac (s arg~1320 r%)
+              (match arg~1320 ((ref-contents (tuple db _)) (cl:cons (tuple s db) r%))))
             htbl
             nil)))
+        (cl:declare (cl:ignorable dblist))
         (labelsc
           ((get_actions
             (db)
             (match db
               ((End_db) nil)
-              ((Need_arg db*) (get_actions db*))
-              ((Try (try_rec :hcst hcst :rws rws* :tail tail))
-                (cl:cons rws* (get_actions tail))))))
+              ((Need_arg db%) (get_actions db%))
+              ((Try (try_rec :hcst hcst :rws rws% :tail tail))
+                (cl:cons rws% (get_actions tail))))))
           (let
             ((actionlist
               (list-map
                 (lambdac (arg~1361)
                   (match arg~1361 ((tuple s db) (tuple s (get_actions db)))))
                 dblist)))
+            (cl:declare (cl:ignorable actionlist))
             (fletc ((dest (arg~1376) (match arg~1376 ((Rw (rewrite_rec :thm thm)) thm))))
               (fletc
                 ((dest_action
                   (arg~1384)
                   (match arg~1384
-                    ((Rewrite rws*) (make-Rrules (map #'dest rws*)))
+                    ((Rewrite rws%) (make-Rrules (map #'dest rws%)))
                     ((Conv ecnv) (make-Conversion ecnv)))))
                 (let
                   ((rwlist
@@ -1043,20 +1064,21 @@
                       (lambdac (arg~1399)
                         (match arg~1399 ((tuple s act) (tuple s (map #'dest_action act)))))
                       actionlist)))
+                  (cl:declare (cl:ignorable rwlist))
                   rwlist)))))))))
 
 (define-exception No_match)
 
-(defunc match_const (arg~1427 pc c*)
+(defunc match_const (arg~1427 pc c%)
   (match arg~1427
     ((tuple bds tbds)
       (match (dest_const pc)
         ((tuple name ty)
-          (match (dest_const c*)
-            ((tuple name* ty*)
-              (if (= name name*)
+          (match (dest_const c%)
+            ((tuple name% ty%)
+              (if (= name name%)
                 (handler-case
-                  (tuple bds (type_match ty ty* tbds))
+                  (tuple bds (type_match ty ty% tbds))
                   (hol2cl.runtime:ocaml-condition
                     (exception~1439)
                     (match exception~1439
@@ -1071,13 +1093,13 @@
 ;;  *---------------------------------------------------------------------------*)
 
 
-(defunc match_var (arg~1471 var* arg)
+(defunc match_var (arg~1471 var% arg)
   (match arg~1471
     ((tuple bds tbds)
       (match
-        (match (array-get bds var*)
+        (match (array-get bds var%)
           ((Some (tuple tm _)) (if (aconv tm (fst arg)) unit (raise (make-No_match))))
-          ((None) (array-set bds var* (make-Some arg))))
+          ((None) (array-set bds var% (make-Some arg))))
         (_ (tuple bds tbds))))))
 
 ;; (*---------------------------------------------------------------------------
@@ -1091,14 +1113,14 @@
 
 (defunc match_list (bds pats args)
   (match (tuple pats args)
-    ((tuple (cl:cons pat pats*) (cl:cons arg args*))
-      (match_list (match_solve bds pat arg) pats* args*))
+    ((tuple (cl:cons pat pats%) (cl:cons arg args%))
+      (match_list (match_solve bds pat arg) pats% args%))
     ((tuple nil nil) bds)
     (_ (raise (make-Dead_code "match_list")))))
 
 (defunc match_solve (bds pat arg)
   (match (tuple pat arg)
-    ((tuple (Pvar var*) arg*) (match_var bds var* arg*))
+    ((tuple (Pvar var%) arg%) (match_var bds var% arg%))
     ((tuple (Papp phead pargs) (tuple _ (Const (cst_rec :head head :args args))))
       (if (= (funcall length pargs) (funcall length args))
         (match_list (match_const bds phead head) pargs args)
@@ -1109,28 +1131,29 @@
 
 (defunc try_rwn (ibds lt)
   (labelsc
-    ((try_rec*
+    ((try_rec%
       (arg~1601)
       (match arg~1601
         (nil (raise (make-No_match)))
-        ((cl:cons (cl:and rw* (Rw (rewrite_rec :lhs lhs* :npv npv))) rwn)
+        ((cl:cons (cl:and rw% (Rw (rewrite_rec :lhs lhs% :npv npv))) rwn)
           (let ((env (array-make npv (make-None))))
+            (cl:declare (cl:ignorable env))
             (handler-case
-              (make-rule_inst :rule rw* :inst (match_list (tuple env ibds) lhs* lt))
+              (make-rule_inst :rule rw% :inst (match_list (tuple env ibds) lhs% lt))
               (hol2cl.runtime:ocaml-condition
                 (exception~1622)
                 (match exception~1622
-                  ((No_match) (try_rec* rwn))
+                  ((No_match) (try_rec% rwn))
                   (_ (raise exception~1622))))))))))
-    #'try_rec*))
+    #'try_rec%))
 
 ;; (*---------------------------------------------------------------------------
 ;;  * Instantiating the rule according to the output of the matching.
 ;;  *---------------------------------------------------------------------------*)
 
 
-(defunc comb_ct (cst* arg)
-  (match cst*
+(defunc comb_ct (cst% arg)
+  (match cst%
     ((cst_rec :head head :args args :rws (Need_arg tail) :skip skip)
       (make-Const (make-cst_rec :head head :args (cl:cons arg args) :rws tail :skip skip)))
     ((cst_rec :head head :args args :rws (End_db) :skip skip)
@@ -1140,13 +1163,13 @@
 
 (defunc mk_clos (arg~1686)
   (match arg~1686
-    ((tuple env t*)
-      (match t*
-        ((Cst hc (ref-contents (tuple db b*)))
-          (make-Const (make-cst_rec :head hc :args nil :rws db :skip b*)))
-        ((Bv i*) (list-nth env i*))
+    ((tuple env t%)
+      (match t%
+        ((Cst hc (ref-contents (tuple db b%)))
+          (make-Const (make-cst_rec :head hc :args nil :rws db :skip b%)))
+        ((Bv i%) (list-nth env i%))
         ((Fv) (make-Neutr))
-        (_ (make-Clos (make-clos_rec :env env :term t*)))))))
+        (_ (make-Clos (make-clos_rec :env env :term t%)))))))
 
 ;; (*---------------------------------------------------------------------------
 ;;  * It is probably this code that can be improved the most
@@ -1164,12 +1187,13 @@
   (match arg~1753
     ((tuple
       th
-      monitoring*
-      (rule_inst :rule (Rw (rewrite_rec :thm thm :rhs rhs*)) :inst (tuple bds tysub)))
-      (let* ((tirhs (inst_type_dterm (tuple tysub rhs*))) (tithm (INST_TYPE tysub thm)))
+      monitoring%
+      (rule_inst :rule (Rw (rewrite_rec :thm thm :rhs rhs%)) :inst (tuple bds tysub)))
+      (let* ((tirhs (inst_type_dterm (tuple tysub rhs%))) (tithm (INST_TYPE tysub thm)))
+        (cl:declare (cl:ignorable tirhs tithm))
         (match (array-fold-left #'inst_one_var (tuple tithm nil) bds)
           ((tuple spec_thm venv)
-            (match (if monitoring* (funcall print_term (concl spec_thm)) unit)
+            (match (if monitoring% (funcall print_term (concl spec_thm)) unit)
               ((cl:type hol2cl.runtime::unit-value)
                 (tuple (funcall trans_thm th spec_thm) (mk_clos (tuple venv tirhs)))))))))))
 
@@ -1199,7 +1223,7 @@
         (match
           (match (deref stoppers)
             ((None) unit)
-            ((Some p*) (if (funcall p* head) (raise (make-No_match)) unit)))
+            ((Some p%) (if (funcall p% head) (raise (make-No_match)) unit)))
           ((cl:type hol2cl.runtime::unit-value)
             (match
               (handler-case
@@ -1211,12 +1235,13 @@
                     (_ (raise exception~1887)))))
               ((tuple _ _ tytheta)
                 (let*
-                  ((rule_inst* (try_rwn tytheta args rls))
+                  ((rule_inst% (try_rwn tytheta args rls))
                     (mon
                       (match (deref monitoring)
                         ((None) cl:nil)
                         ((Some f) (funcall f head))))
-                    (insted (inst_rw (tuple th mon rule_inst*))))
+                    (insted (inst_rw (tuple th mon rule_inst%))))
+                  (cl:declare (cl:ignorable rule_inst% mon insted))
                   (tuple cl:t insted))))))
         (hol2cl.runtime:ocaml-condition
           (exception~1844)
@@ -1246,7 +1271,7 @@
               (reduce_cst
                 (tuple th (make-cst_rec :head head :args args :rws tail :skip skip))))
             (_ (raise exception~1933))))))
-    ((tuple th cst*) (tuple cl:nil (tuple th (make-Const cst*))))))
+    ((tuple th cst%) (tuple cl:nil (tuple th (make-Const cst%))))))
 
 ;; (*** computeLib.sml ***)
 
@@ -1269,9 +1294,9 @@
       (stack_out (tuple (funcall mka tha th) ctx)))
     ((tuple th (Zabs mkl ctx)) (stack_out (tuple (funcall mkl th) ctx)))))
 
-(defunc initial_state (rws* t*)
+(defunc initial_state (rws% t%)
   (tuple
-    (tuple (funcall refl_thm t*) (mk_clos (tuple nil (from_term (tuple rws* nil t*)))))
+    (tuple (funcall refl_thm t%) (mk_clos (tuple nil (from_term (tuple rws% nil t%)))))
     (make-Ztop)))
 
 ;; (*---------------------------------------------------------------------------
@@ -1296,28 +1321,29 @@
 
 (defunc cbv_wk (arg~2063)
   (match arg~2063
-    ((tuple (tuple th (Clos (clos_rec :env env :term (App a* args)))) stk)
+    ((tuple (tuple th (Clos (clos_rec :env env :term (App a% args)))) stk)
       (match (rev_itlist (push_in_stk (curry #'mk_clos env)) args (tuple th stk))
-        ((tuple tha stka) (cbv_wk (tuple (tuple tha (mk_clos (tuple env a*))) stka)))))
+        ((tuple tha stka) (cbv_wk (tuple (tuple tha (mk_clos (tuple env a%))) stka)))))
     ((tuple
-      (tuple th (Clos (clos_rec :env env :term (Abs body*))))
-      (Zrator (tuple mka (tuple thb cl)) s*))
+      (tuple th (Clos (clos_rec :env env :term (Abs body%))))
+      (Zrator (tuple mka (tuple thb cl)) s%))
       (cbv_wk
         (tuple
           (tuple
             (funcall beta_thm (funcall mka th thb))
-            (mk_clos (tuple (cl:cons cl env) body*)))
-          s*)))
+            (mk_clos (tuple (cl:cons cl env) body%)))
+          s%)))
     ((tuple (tuple th (Const cargs)) stk)
       (match (reduce_cst (tuple th cargs))
-        ((tuple reduced clos*)
-          (if reduced (cbv_wk (tuple clos* stk)) (cbv_up (tuple clos* stk))))))
-    ((tuple clos* stk) (cbv_up (tuple clos* stk)))))
+        ((tuple reduced clos%)
+          (if reduced (cbv_wk (tuple clos% stk)) (cbv_up (tuple clos% stk))))))
+    ((tuple clos% stk) (cbv_up (tuple clos% stk)))))
 
 (defunc cbv_up (arg~2179)
   (match arg~2179
-    ((tuple hcl (Zrator (tuple mka clos*) ctx))
-      (let ((new_state (tuple clos* (make-Zrand (tuple mka cl:nil hcl) ctx))))
+    ((tuple hcl (Zrator (tuple mka clos%) ctx))
+      (let ((new_state (tuple clos% (make-Zrand (tuple mka cl:nil hcl) ctx))))
+        (cl:declare (cl:ignorable new_state))
         (if (is_skip hcl) (cbv_up new_state) (cbv_wk new_state))))
     ((tuple (tuple thb v) (Zrand (tuple mka cl:nil (tuple th (Const cargs))) stk))
       (cbv_wk
@@ -1326,7 +1352,7 @@
           stk)))
     ((tuple (tuple thb (Neutr)) (Zrand (tuple mka cl:nil (tuple th (Neutr))) stk))
       (cbv_up (tuple (tuple (funcall mka th thb) (make-Neutr)) stk)))
-    ((tuple clos* stk) (tuple clos* stk))))
+    ((tuple clos% stk) (tuple clos% stk))))
 
 ;; (*---------------------------------------------------------------------------
 ;;  * [strong] continues the reduction of a term in head normal form under
@@ -1337,25 +1363,25 @@
 
 (defunc strong (arg~2276)
   (match arg~2276
-    ((tuple (tuple th (Clos (clos_rec :env env :term (Abs t*)))) stk)
+    ((tuple (tuple th (Clos (clos_rec :env env :term (Abs t%)))) stk)
       (match (push_lam_in_stk (tuple th stk))
-        ((tuple thb stk*)
+        ((tuple thb stk%)
           (strong
             (cbv_wk
-              (tuple (tuple thb (mk_clos (tuple (cl:cons (make-Neutr) env) t*))) stk*))))))
+              (tuple (tuple thb (mk_clos (tuple (cl:cons (make-Neutr) env) t%))) stk%))))))
     ((tuple (tuple _ (Clos _)) stk) (raise (make-Dead_code "strong")))
     ((tuple (tuple th (Const (cst_rec :skip skip :args args))) stk)
       (match (partition_skip skip args)
         ((tuple argssk argsrd)
           (match
             (rev_itlist (push_skip_stk (function-value #'snd 1)) argssk (tuple th stk))
-            ((tuple th* stk*)
+            ((tuple th% stk%)
               (match
                 (rev_itlist
                   (push_in_stk (function-value #'snd 1))
                   argsrd
-                  (tuple th* stk*))
-                ((tuple th** stk**) (strong_up (tuple th** stk**)))))))))
+                  (tuple th% stk%))
+                ((tuple th%% stk%%) (strong_up (tuple th%% stk%%)))))))))
     ((tuple (tuple th (Neutr)) stk) (strong_up (tuple th stk)))))
 
 (defunc strong_up (arg~2386)
@@ -1363,10 +1389,10 @@
     ((tuple th (Ztop)) th)
     ((tuple th (Zrand (tuple mka cl:nil (tuple tha (Neutr))) ctx))
       (strong (cbv_wk (tuple (tuple (funcall mka tha th) (make-Neutr)) ctx))))
-    ((tuple th (Zrand (tuple mka cl:nil clos*) ctx)) (raise (make-Dead_code "strong_up")))
-    ((tuple th (Zrator (tuple mka clos*) ctx))
+    ((tuple th (Zrand (tuple mka cl:nil clos%) ctx)) (raise (make-Dead_code "strong_up")))
+    ((tuple th (Zrator (tuple mka clos%) ctx))
       (strong
-        (cbv_wk (tuple clos* (make-Zrand (tuple mka cl:t (tuple th (make-Neutr))) ctx)))))
+        (cbv_wk (tuple clos% (make-Zrand (tuple mka cl:t (tuple th (make-Neutr))) ctx)))))
     ((tuple th (Zrand (tuple mka cl:t (tuple tha _)) ctx))
       (strong_up (tuple (funcall mka tha th) ctx)))
     ((tuple th (Zabs mkl ctx)) (strong_up (tuple (funcall mkl th) ctx)))))
@@ -1377,7 +1403,7 @@
 ;;  *---------------------------------------------------------------------------*)
 
 
-(defunc CBV_CONV (rws*) (o (o (o #'evaluate #'strong) #'cbv_wk) (initial_state rws*)))
+(defunc CBV_CONV (rws%) (o (o (o #'evaluate #'strong) #'cbv_wk) (initial_state rws%)))
 
 ;; (*---------------------------------------------------------------------------
 ;;  * WEAK_CBV_CONV is the same as CBV_CONV except that it does not reduce
@@ -1386,7 +1412,7 @@
 ;;  *---------------------------------------------------------------------------*)
 
 
-(defunc WEAK_CBV_CONV (rws*)
+(defunc WEAK_CBV_CONV (rws%)
   (o
     (o
       (o
@@ -1394,27 +1420,28 @@
         (lambdac (arg~2502)
           (match arg~2502 ((tuple (tuple th _) stk) (stack_out (tuple th stk))))))
       #'cbv_wk)
-    (initial_state rws*)))
+    (initial_state rws%)))
 
 ;; (*---------------------------------------------------------------------------
 ;;  * Adding an arbitrary conv
 ;;  *---------------------------------------------------------------------------*)
 
 
-(defunc extern_of_conv (rws* conv* tm)
-  (let ((thm (funcall conv* tm)))
+(defunc extern_of_conv (rws% conv% tm)
+  (let ((thm (funcall conv% tm)))
+    (cl:declare (cl:ignorable thm))
     (tuple
       thm
-      (mk_clos (tuple nil (from_term (tuple rws* nil (funcall rhs (concl thm)))))))))
+      (mk_clos (tuple nil (from_term (tuple rws% nil (funcall rhs (concl thm)))))))))
 
-(defunc add_conv (arg~2545 rws*)
+(defunc add_conv (arg~2545 rws%)
   (match arg~2545
-    ((tuple cst* arity conv*)
-      (add_extern (tuple cst* arity (extern_of_conv rws* conv*)) rws*))))
+    ((tuple cst% arity conv%)
+      (add_extern (tuple cst% arity (extern_of_conv rws% conv%)) rws%))))
 
-(defunc set_skip (compset c* opt)
+(defunc set_skip (compset c% opt)
   (handler-case
-    (match (dest_const c*) ((tuple name _) (set_skip_name compset name opt)))
+    (match (dest_const c%) ((tuple name _) (set_skip_name compset name opt)))
     (hol2cl.runtime:ocaml-condition
       (exception~2568)
       (match exception~2568 (_ (failwith "set_skip")) (_ (raise exception~2568))))))
@@ -1443,6 +1470,7 @@
   (match arg~2608
     ((cl:type hol2cl.runtime::unit-value)
       (let ((base (from_list bool_redns)))
+        (cl:declare (cl:ignorable base))
         (match (set_skip base (parse_term "COND: bool -> A -> A -> A") (make-None))
           ((cl:type hol2cl.runtime::unit-value) base))))))
 
@@ -1458,14 +1486,15 @@
           (basic_rws
             (list-filter (lambdac (th) (not (mem th lhs_lambda_rules))) basic_rws0))
           (cs (funcall new_compset (list-map lazyfy_thm basic_rws))))
+        (cl:declare (cl:ignorable basic_rws0 lhs_lambda_rules basic_rws cs))
         (progn
           (list-iter
             (lambdac (arg~2654)
               (match arg~2654
                 ((tuple _ (tuple pat the_conv))
                   (match (funcall strip_comb pat)
-                    ((tuple cst* args)
-                      (add_conv (tuple cst* (funcall length args) the_conv) cs))))))
+                    ((tuple cst% args)
+                      (add_conv (tuple cst% (funcall length args) the_conv) cs))))))
             (funcall basic_convs unit))
           (add_conv (tuple (parse_term "LET:(A->B)->A->B") 2 let_CONV) cs)
           (set_skip cs (parse_term "COND: bool -> A -> A -> A") (make-None))
@@ -1495,7 +1524,7 @@
   (match arg~2751
     (nil (K cl:nil))
     ((cl:cons x nil) (same_const x))
-    ((cl:cons h t*) (lambdac (x) (cl:or (same_const h x) (OR t* x))))))
+    ((cl:cons h t%) (lambdac (x) (cl:or (same_const h x) (OR t% x))))))
 
 (defunc RESTR_EVAL_CONV (clist)
   (with_flag (tuple stoppers (make-Some (OR clist))) EVAL_CONV))

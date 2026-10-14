@@ -45,12 +45,12 @@
         modify_rule
         monotonicity_theorems
         new_inductive_definition
-        new_inductive_definition*
+        new_inductive_definition%
         pare_comb
         proc_fn
         prove_inductive_properties
         prove_inductive_relations_exist
-        prove_inductive_relations_exist*
+        prove_inductive_relations_exist%
         prove_monotonicity_hyps
         prove_mth
         prove_rule
@@ -104,12 +104,12 @@
     modify_rule
     monotonicity_theorems
     new_inductive_definition
-    new_inductive_definition*
+    new_inductive_definition%
     pare_comb
     proc_fn
     prove_inductive_properties
     prove_inductive_relations_exist
-    prove_inductive_relations_exist*
+    prove_inductive_relations_exist%
     prove_monotonicity_hyps
     prove_mth
     prove_rule
@@ -175,7 +175,7 @@
     new_definition
     MK_FORALL
     MATCH_MP
-    INSTANTIATE*)
+    INSTANTIATE%)
   (:shadowing-import-from
     :hol2cl.equal
     SYM
@@ -198,11 +198,11 @@
     rator
     rand
     mk_var
-    MK_COMB*
+    MK_COMB%
     mk_comb
     mk_abs
     is_var
-    INST*
+    INST%
     hyp
     frees
     EQ_MP
@@ -331,7 +331,7 @@
           (if (< n 1)
             (tuple tm acc)
             (match (dest_comb tm)
-              ((tuple l r*) (strip (tuple (- n 1) l (cl:cons r* acc))))))))))
+              ((tuple l r%) (strip (tuple (- n 1) l (cl:cons r% acc))))))))))
     (lambdac (n tm) (strip (tuple n tm nil)))))
 
 ;; (* ------------------------------------------------------------------------- *)
@@ -340,7 +340,7 @@
 
 
 (defparameter RIGHT_BETAS
-  (rev_itlist (lambdac (a*) (o (CONV_RULE (RAND_CONV #'BETA_CONV)) (C #'AP_THM a*)))))
+  (rev_itlist (lambdac (a%) (o (CONV_RULE (RAND_CONV #'BETA_CONV)) (C #'AP_THM a%)))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (*      A, x = t |- P[x]                                                     *)
@@ -371,15 +371,17 @@
                 (funcall EXISTS_TAC (parse_term "t:A")))
               (FIRST_ASSUM #'MATCH_MP_TAC))
             #'REFL_TAC)))))
+    (cl:declare (cl:ignorable pth))
     (lambdac (tm th)
       (match (dest_eq tm)
-        ((tuple l r*)
+        ((tuple l r%)
           (let*
-            ((P* (mk_abs (tuple l (concl th))))
-              (th1 (BETA_CONV (mk_comb (tuple P* l))))
-              (th2 (ISPECL (cl:cons P* (cl:cons r* nil)) pth))
+            ((P% (mk_abs (tuple l (concl th))))
+              (th1 (BETA_CONV (mk_comb (tuple P% l))))
+              (th2 (ISPECL (cl:cons P% (cl:cons r% nil)) pth))
               (th3 (EQ_MP (SYM th1) th))
               (th4 (funcall GEN l (funcall DISCH tm th3))))
+            (cl:declare (cl:ignorable P% th1 th2 th3 th4))
             (funcall MP th2 th4)))))))
 
 ;; (* ========================================================================= *)
@@ -393,6 +395,7 @@
     ((getconcl
       (lambdac (tm)
         (let ((bod (hol2cl.lib:repeat (o (function-value #'snd 1) dest_forall) tm)))
+          (cl:declare (cl:ignorable bod))
           (handler-case
             (snd (funcall dest_imp bod))
             (hol2cl.runtime:ocaml-condition
@@ -402,12 +405,13 @@
       (SIMPLE_DISJ_PAIR
         (lambdac (th)
           (match (funcall dest_disj (hd (hyp th)))
-            ((tuple l r*)
+            ((tuple l r%)
               (tuple
-                (PROVE_HYP (funcall DISJ1 (ASSUME l) r*) th)
-                (PROVE_HYP (funcall DISJ2 l (ASSUME r*)) th))))))
+                (PROVE_HYP (funcall DISJ1 (ASSUME l) r%) th)
+                (PROVE_HYP (funcall DISJ2 l (ASSUME r%)) th))))))
       (HALF_BETA_EXPAND
         (lambdac (args th) (funcall GENL args (funcall RIGHT_BETAS args th)))))
+    (cl:declare (cl:ignorable getconcl CONJ_ACI_RULE SIMPLE_DISJ_PAIR HALF_BETA_EXPAND))
     (fletc
       ((AND_IMPS_CONV
         (tm)
@@ -420,14 +424,17 @@
             (th2 (funcall GENL avs (funcall DISCH tm1 (UNDISCH th1))))
             (tm2 (concl th2))
             (th3 (funcall DISCH tm2 (UNDISCH (SPEC_ALL (ASSUME tm2))))))
+          (cl:declare (cl:ignorable ths avs thl th1 tm1 th2 tm2 th3))
           (match (nsplit SIMPLE_DISJ_PAIR (tl ths) th3)
             ((tuple thts tht)
               (fletc
                 ((proc_fn
                   (th)
-                  (let ((t* (hd (hyp th))))
-                    (funcall GENL avs (funcall DISCH t* (UNDISCH th))))))
+                  (let ((t% (hd (hyp th))))
+                    (cl:declare (cl:ignorable t%))
+                    (funcall GENL avs (funcall DISCH t% (UNDISCH th))))))
                 (let ((th4 (itlist (o CONJ #'proc_fn) thts (proc_fn tht))))
+                  (cl:declare (cl:ignorable th4))
                   (funcall IMP_ANTISYM_RULE (DISCH_ALL th2) (DISCH_ALL th4)))))))))
       (let*
         ((t_tm (parse_term "T"))
@@ -440,9 +447,10 @@
                     (if (= plis nil)
                       nil
                       (match plis
-                        ((cl:cons h t*)
-                          (let ((r* (snd h)))
-                            (if (mem r* avs)
+                        ((cl:cons h t%)
+                          (let ((r% (snd h)))
+                            (cl:declare (cl:ignorable r%))
+                            (if (mem r% avs)
                               (cl:cons
                                 h
                                 (getequs
@@ -450,12 +458,14 @@
                                     avs
                                     (filter
                                       (o
-                                        (partial (function-value #'<> 2) r*)
+                                        (partial (function-value #'<> 2) r%)
                                         (function-value #'snd 1))
-                                      t*))))
-                              (getequs (tuple avs t*)))))))))))
+                                      t%))))
+                              (getequs (tuple avs t%)))))))))))
               (lambdac (avs plis)
-                (let ((oks (getequs (tuple avs plis)))) (tuple oks (subtract plis oks))))))
+                (let ((oks (getequs (tuple avs plis))))
+                  (cl:declare (cl:ignorable oks))
+                  (tuple oks (subtract plis oks))))))
           (FORALL_IMPS_CONV
             (lambdac (tm)
               (match (funcall strip_forall tm)
@@ -469,7 +479,9 @@
                       (ant (funcall lhand bod))
                       (th5 (itlist #'SIMPLE_EXISTS avs (ASSUME ant)))
                       (th6 (funcall GENL avs (funcall DISCH ant (funcall MP th4 th5)))))
+                    (cl:declare (cl:ignorable th1 th2 tm2 th3 th4 ant th5 th6))
                     (funcall IMP_ANTISYM_RULE (DISCH_ALL th3) (DISCH_ALL th6))))))))
+        (cl:declare (cl:ignorable t_tm calculate_simp_sequence FORALL_IMPS_CONV))
         (fletc
           ((canonicalize_clause
             (cls args)
@@ -487,6 +499,7 @@
                     (match (funcall strip_comb con)
                       ((tuple rel xargs)
                         (let ((plis (zip args xargs)))
+                          (cl:declare (cl:ignorable plis))
                           (match (funcall calculate_simp_sequence avs plis)
                             ((tuple yes no)
                               (let*
@@ -504,15 +517,16 @@
                                             (o (curry mk_conj) mk_eq)
                                             (append yes no)
                                             ant)))
+                                        (cl:declare (cl:ignorable atm))
                                         (match (nsplit #'CONJ_PAIR plis (ASSUME atm))
                                           ((tuple ths tth)
                                             (let*
                                               ((thl
                                                 (map
-                                                  (lambdac (t*)
+                                                  (lambdac (t%)
                                                     (find
                                                       (lambdac (th)
-                                                        (= (funcall lhs (concl th)) t*))
+                                                        (= (funcall lhs (concl th)) t%))
                                                       ths))
                                                   args))
                                                 (th0
@@ -522,11 +536,11 @@
                                                     tth))
                                                 (th1
                                                   (rev_itlist
-                                                    (C (curry #'MK_COMB*))
+                                                    (C (curry #'MK_COMB%))
                                                     thl
                                                     (REFL rel)))
                                                 (th2 (EQ_MP (SYM th1) th0))
-                                                (th3 (INST* yes (funcall DISCH atm th2)))
+                                                (th3 (INST% yes (funcall DISCH atm th2)))
                                                 (tm4
                                                   (funpow
                                                     (funcall length yes)
@@ -571,6 +585,19 @@
                                                       DISCH
                                                       ant
                                                       (funcall MP th6 th7)))))
+                                              (cl:declare
+                                                (cl:ignorable
+                                                  thl
+                                                  th0
+                                                  th1
+                                                  th2
+                                                  th3
+                                                  tm4
+                                                  th4
+                                                  th5
+                                                  th6
+                                                  th7
+                                                  th8))
                                               (funcall
                                                 IMP_ANTISYM_RULE
                                                 (DISCH_ALL th5)
@@ -583,20 +610,20 @@
                                           (ths (funcall CONJUNCTS (ASSUME atm)))
                                           (thl
                                             (map
-                                              (lambdac (t*)
+                                              (lambdac (t%)
                                                 (find
                                                   (lambdac (th)
-                                                    (= (funcall lhs (concl th)) t*))
+                                                    (= (funcall lhs (concl th)) t%))
                                                   ths))
                                               args))
                                           (th0 (SPECL avs (ASSUME cls)))
                                           (th1
                                             (rev_itlist
-                                              (C (curry #'MK_COMB*))
+                                              (C (curry #'MK_COMB%))
                                               thl
                                               (REFL rel)))
                                           (th2 (EQ_MP (SYM th1) th0))
-                                          (th3 (INST* yes (funcall DISCH atm th2)))
+                                          (th3 (INST% yes (funcall DISCH atm th2)))
                                           (tm4
                                             (funpow
                                               (funcall length yes)
@@ -626,6 +653,21 @@
                                               CONJ
                                               (map (o #'REFL (function-value #'snd 1)) no)))
                                           (th8 (funcall GENL avs (funcall MP th6 th7))))
+                                        (cl:declare
+                                          (cl:ignorable
+                                            atm
+                                            ths
+                                            thl
+                                            th0
+                                            th1
+                                            th2
+                                            th3
+                                            tm4
+                                            th4
+                                            th5
+                                            th6
+                                            th7
+                                            th8))
                                         (funcall
                                           IMP_ANTISYM_RULE
                                           (DISCH_ALL th5)
@@ -635,6 +677,7 @@
                                       (funcall length args)
                                       (o #'body #'rand)
                                       (rand (concl eth)))))
+                                (cl:declare (cl:ignorable nvs eth ftm))
                                 (TRANS
                                   eth
                                   (itlist MK_FORALL args (funcall FORALL_IMPS_CONV ftm)))))))))))))))
@@ -657,25 +700,40 @@
                   (zargs (zip rels (shareout xargs flargs)))
                   (cargs
                     (map
-                      (lambdac (arg~796) (match arg~796 ((tuple r* a*) (assoc r* zargs))))
+                      (lambdac (arg~796) (match arg~796 ((tuple r% a%) (assoc r% zargs))))
                       uncs))
                   (cthms (map2 #'canonicalize_clause clauses cargs))
                   (pclauses (map (o #'rand #'concl) cthms)))
+                (cl:declare
+                  (cl:ignorable
+                    concls
+                    uncs
+                    rels
+                    xargs
+                    closed
+                    avoids
+                    flargs
+                    zargs
+                    cargs
+                    cthms
+                    pclauses))
                 (fletc
                   ((collectclauses
                     (tm)
                     (mapfilter
-                      (lambdac (t*) (if (= (fst t*) tm) (snd t*) (fail unit)))
+                      (lambdac (t%) (if (= (fst t%) tm) (snd t%) (fail unit)))
                       (zip (map (function-value #'fst 1) uncs) pclauses))))
                   (let*
                     ((clausell (map #'collectclauses rels))
                       (cclausel (map list_mk_conj clausell))
                       (cclauses (funcall list_mk_conj cclausel))
                       (oclauses (funcall list_mk_conj pclauses)))
+                    (cl:declare (cl:ignorable clausell cclausel cclauses oclauses))
                     (let*
                       ((eth
                         (funcall CONJ_ACI_RULE (funcall mk_eq (tuple oclauses cclauses))))
                         (pth (TRANS (end_itlist hol2cl.drule:MK_CONJ cthms) eth)))
+                      (cl:declare (cl:ignorable eth pth))
                       (TRANS
                         pth
                         (end_itlist hol2cl.drule:MK_CONJ (map #'AND_IMPS_CONV cclausel))))))))
@@ -683,18 +741,21 @@
                 (clauses)
                 (let*
                   ((closed (funcall list_mk_conj clauses))
-                    (clauses* (funcall hol2cl.basics:conjuncts closed)))
-                  (match (unzip (map strip_forall clauses*))
+                    (clauses% (funcall hol2cl.basics:conjuncts closed)))
+                  (cl:declare (cl:ignorable closed clauses%))
+                  (match (unzip (map strip_forall clauses%))
                     ((tuple vargs bodies)
                       (match (unzip (map dest_imp bodies))
                         ((tuple ants concs)
                           (let*
                             ((rels (map (hol2cl.lib:repeat #'rator) concs))
                               (avoids (funcall variables closed))
-                              (rels* (variants avoids rels))
-                              (crels (zip rels* rels))
+                              (rels% (variants avoids rels))
+                              (crels (zip rels% rels))
                               (prime_fn (funcall subst crels))
-                              (closed* (funcall prime_fn closed)))
+                              (closed% (funcall prime_fn closed)))
+                            (cl:declare
+                              (cl:ignorable rels avoids rels% crels prime_fn closed%))
                             (fletc
                               ((mk_def
                                 (arg con)
@@ -707,21 +768,23 @@
                                         arg
                                         (list_mk_forall
                                           (tuple
-                                            rels*
+                                            rels%
                                             (funcall
                                               mk_imp
-                                              (tuple closed* (funcall prime_fn con)))))))))))
+                                              (tuple closed% (funcall prime_fn con)))))))))))
                               (let*
                                 ((deftms (map2 #'mk_def vargs concs))
                                   (defthms
                                     (map2 HALF_BETA_EXPAND vargs (map #'ASSUME deftms))))
+                                (cl:declare (cl:ignorable deftms defthms))
                                 (fletc
                                   ((mk_ind
                                     (args th)
                                     (let*
                                       ((th1 (fst (funcall EQ_IMP_RULE (SPEC_ALL th))))
                                         (ant (funcall lhand (concl th1)))
-                                        (th2 (SPECL rels* (UNDISCH th1))))
+                                        (th2 (SPECL rels% (UNDISCH th1))))
+                                      (cl:declare (cl:ignorable th1 ant th2))
                                       (funcall
                                         GENL
                                         args
@@ -732,17 +795,17 @@
                                       (indthm
                                         (funcall
                                           GENL
-                                          rels*
-                                          (funcall DISCH closed* indthmr)))
+                                          rels%
+                                          (funcall DISCH closed% indthmr)))
                                       (mconcs
                                         (map2
-                                          (lambdac (a* t*)
+                                          (lambdac (a% t%)
                                             (list_mk_forall
                                               (tuple
-                                                a*
+                                                a%
                                                 (funcall
                                                   mk_imp
-                                                  (tuple t* (funcall prime_fn t*))))))
+                                                  (tuple t% (funcall prime_fn t%))))))
                                           vargs
                                           ants))
                                       (monotm
@@ -756,16 +819,27 @@
                                           (list_mk_forall
                                             (tuple
                                               rels
-                                              (list_mk_forall (tuple rels* monotm))))))
-                                      (closthm (ASSUME closed*))
+                                              (list_mk_forall (tuple rels% monotm))))))
+                                      (closthm (ASSUME closed%))
                                       (monothms
                                         (funcall
                                           CONJUNCTS
                                           (funcall
                                             MP
                                             (SPEC_ALL monothm)
-                                            (funcall MP (SPECL rels* indthm) closthm))))
+                                            (funcall MP (SPECL rels% indthm) closthm))))
                                       (closthms (funcall CONJUNCTS closthm)))
+                                    (cl:declare
+                                      (cl:ignorable
+                                        indthms
+                                        indthmr
+                                        indthm
+                                        mconcs
+                                        monotm
+                                        monothm
+                                        closthm
+                                        monothms
+                                        closthms))
                                     (fletc
                                       ((prove_rule
                                         (mth arg~1043)
@@ -782,13 +856,14 @@
                                                     (th2
                                                       (funcall
                                                         GENL
-                                                        rels*
+                                                        rels%
                                                         (funcall
                                                           DISCH
-                                                          closed*
+                                                          closed%
                                                           (UNDISCH th1))))
                                                     (th3
                                                       (EQ_MP (SYM (SPECL avs dth)) th2)))
+                                                  (cl:declare (cl:ignorable th1 th2 th3))
                                                   (funcall
                                                     GENL
                                                     avs
@@ -805,15 +880,17 @@
                                           (rulethm (end_itlist CONJ rulethms))
                                           (dtms (map2 (curry #'list_mk_abs) vargs ants))
                                           (double_fn (funcall subst (zip dtms rels))))
+                                        (cl:declare
+                                          (cl:ignorable rulethms rulethm dtms double_fn))
                                         (fletc
                                           ((mk_unbetas
                                             (tm dtm)
                                             (match (funcall strip_forall tm)
                                               ((tuple avs bod)
                                                 (match (dest_comb bod)
-                                                  ((tuple il r*)
+                                                  ((tuple il r%)
                                                     (match (dest_comb il)
-                                                      ((tuple i* l)
+                                                      ((tuple i% l)
                                                         (let*
                                                           ((bth
                                                             (funcall
@@ -821,27 +898,34 @@
                                                               avs
                                                               (REFL dtm)))
                                                             (munb
-                                                              (AP_THM (AP_TERM i* bth) r*))
+                                                              (AP_THM (AP_TERM i% bth) r%))
                                                             (iunb
                                                               (AP_TERM
                                                                 (mk_comb
                                                                   (tuple
-                                                                    i*
+                                                                    i%
                                                                     (funcall double_fn l)))
                                                                 bth))
                                                             (junb
                                                               (AP_TERM
-                                                                (mk_comb (tuple i* r*))
+                                                                (mk_comb (tuple i% r%))
                                                                 bth))
                                                             (quantify
                                                               (itlist MK_FORALL avs)))
+                                                          (cl:declare
+                                                            (cl:ignorable
+                                                              bth
+                                                              munb
+                                                              iunb
+                                                              junb
+                                                              quantify))
                                                           (tuple
                                                             (funcall quantify munb)
                                                             (tuple
                                                               (funcall quantify iunb)
                                                               (funcall quantify junb))))))))))))
                                           (let*
-                                            ((unths (map2 #'mk_unbetas clauses* dtms))
+                                            ((unths (map2 #'mk_unbetas clauses% dtms))
                                               (irthm
                                                 (EQ_MP
                                                   (SYM
@@ -877,6 +961,14 @@
                                                         (function-value #'snd 1))
                                                       unths))
                                                   ifthm)))
+                                            (cl:declare
+                                              (cl:ignorable
+                                                unths
+                                                irthm
+                                                mrthm
+                                                imrth
+                                                ifthm
+                                                fthm))
                                             (fletc
                                               ((mk_case
                                                 (th1 th2)
@@ -884,6 +976,7 @@
                                                   ((avs
                                                     (fst
                                                       (funcall strip_forall (concl th1)))))
+                                                  (cl:declare (cl:ignorable avs))
                                                   (funcall
                                                     GENL
                                                     avs
@@ -899,6 +992,7 @@
                                                       #'mk_case
                                                       (funcall CONJUNCTS fthm)
                                                       (funcall CONJUNCTS rulethm)))))
+                                                (cl:declare (cl:ignorable casethm))
                                                 (funcall
                                                   CONJ
                                                   rulethm
@@ -907,21 +1001,24 @@
               (let*
                 ((clauses (funcall hol2cl.basics:conjuncts tm))
                   (canonthm (canonicalize_clauses clauses))
-                  (canonthm* (SYM canonthm))
+                  (canonthm% (SYM canonthm))
                   (pclosed (rand (concl canonthm)))
                   (pclauses (funcall hol2cl.basics:conjuncts pclosed))
                   (rawthm (derive_canon_inductive_relations pclauses)))
+                (cl:declare
+                  (cl:ignorable clauses canonthm canonthm% pclosed pclauses rawthm))
                 (match (CONJ_PAIR rawthm)
                   ((tuple rulethm otherthms)
                     (match (CONJ_PAIR otherthms)
                       ((tuple indthm casethm)
                         (let
-                          ((rulethm* (EQ_MP canonthm* rulethm))
-                            (indthm*
+                          ((rulethm% (EQ_MP canonthm% rulethm))
+                            (indthm%
                               (CONV_RULE
-                                (funcall ONCE_DEPTH_CONV (funcall REWR_CONV canonthm*))
+                                (funcall ONCE_DEPTH_CONV (funcall REWR_CONV canonthm%))
                                 indthm)))
-                          (funcall CONJ rulethm* (funcall CONJ indthm* casethm)))))))))))))))
+                          (cl:declare (cl:ignorable rulethm% indthm%))
+                          (funcall CONJ rulethm% (funcall CONJ indthm% casethm)))))))))))))))
 
 ;; (* ========================================================================= *)
 ;; (* Part 2: Tactic-integrated tools for proving monotonicity automatically.   *)
@@ -945,31 +1042,35 @@
 
 (defparameter MONO_TAC
   (let ((imp (parse_term "(==>)")) (IMP_REFL (ITAUT (parse_term "!p. p ==> p"))))
+    (cl:declare (cl:ignorable imp IMP_REFL))
     (fletc
       ((BACKCHAIN_TAC
         (th)
         (let ((match_fn (funcall PART_MATCH (o (function-value #'snd 1) dest_imp) th)))
+          (cl:declare (cl:ignorable match_fn))
           (lambdac (arg~1412)
             (match arg~1412
-              ((tuple asl w*)
-                (let ((th1 (funcall match_fn w*)))
+              ((tuple asl w%)
+                (let ((th1 (funcall match_fn w%)))
+                  (cl:declare (cl:ignorable th1))
                   (match (funcall dest_imp (concl th1))
                     ((tuple ant con)
                       (tuple
                         null_meta
                         (cl:cons (tuple asl ant) nil)
-                        (lambdac (i* arg~1428)
+                        (lambdac (i% arg~1428)
                           (match arg~1428
-                            ((cl:cons t* nil) (MATCH_MP (funcall INSTANTIATE* i* th1) t*)))))))))))))
+                            ((cl:cons t% nil) (MATCH_MP (funcall INSTANTIATE% i% th1) t%)))))))))))))
         (MONO_ABS_TAC
           (arg~1454)
           (match arg~1454
-            ((tuple asl w*)
-              (match (funcall dest_imp w*)
+            ((tuple asl w%)
+              (match (funcall dest_imp w%)
                 ((tuple ant con)
                   (let*
                     ((vars (snd (funcall strip_comb con)))
                       (rnum (- (funcall length vars) 1)))
+                    (cl:declare (cl:ignorable vars rnum))
                     (match
                       (tuple
                         (funcall strip_ncomb rnum ant)
@@ -978,30 +1079,33 @@
                         (let
                           ((th1 (rev_itlist (C #'AP_THM) args1 (BETA_CONV hd1)))
                             (th2 (rev_itlist (C #'AP_THM) args1 (BETA_CONV hd2))))
-                          (let ((th3 (MK_COMB* (tuple (AP_TERM imp th1) th2))))
-                            (funcall CONV_TAC (funcall REWR_CONV th3) (tuple asl w*))))))))))))
+                          (cl:declare (cl:ignorable th1 th2))
+                          (let ((th3 (MK_COMB% (tuple (AP_TERM imp th1) th2))))
+                            (cl:declare (cl:ignorable th3))
+                            (funcall CONV_TAC (funcall REWR_CONV th3) (tuple asl w%))))))))))))
         (APPLY_MONOTAC
           (tacs arg~1527)
           (match arg~1527
-            ((tuple asl w*)
-              (match (funcall dest_imp w*)
-                ((tuple a* c*)
-                  (if (aconv a* c*)
-                    (funcall ACCEPT_TAC (funcall SPEC a* IMP_REFL) (tuple asl w*))
+            ((tuple asl w%)
+              (match (funcall dest_imp w%)
+                ((tuple a% c%)
+                  (if (aconv a% c%)
+                    (funcall ACCEPT_TAC (funcall SPEC a% IMP_REFL) (tuple asl w%))
                     (let
                       ((cn
                         (handler-case
-                          (fst (dest_const (hol2cl.lib:repeat #'rator c*)))
+                          (fst (dest_const (hol2cl.lib:repeat #'rator c%)))
                           (hol2cl.runtime:ocaml-condition
                             (exception~1534)
                             (match exception~1534
                               ((Failure _) "")
                               (_ (raise exception~1534)))))))
+                      (cl:declare (cl:ignorable cn))
                       (tryfind
                         (lambdac (arg~1544)
                           (match arg~1544
-                            ((tuple k* t*)
-                              (if (= k* cn) (funcall t* (tuple asl w*)) (fail unit)))))
+                            ((tuple k% t%)
+                              (if (= k% cn) (funcall t% (tuple asl w%)) (fail unit)))))
                         tacs)))))))))
       (lambdac (gl)
         (let*
@@ -1010,7 +1114,7 @@
               (lambdac (th l)
                 (let*
                   ((ft (hol2cl.lib:repeat #'rator (funpow 2 #'rand (concl th))))
-                    (c*
+                    (c%
                       (handler-case
                         (fst (dest_const ft))
                         (hol2cl.runtime:ocaml-condition
@@ -1018,12 +1122,14 @@
                           (match exception~1598
                             ((Failure _) "")
                             (_ (raise exception~1598)))))))
+                  (cl:declare (cl:ignorable ft c%))
                   (cl:cons
-                    (tuple c* (funcall THEN (BACKCHAIN_TAC th) (REPEAT #'CONJ_TAC)))
+                    (tuple c% (funcall THEN (BACKCHAIN_TAC th) (REPEAT #'CONJ_TAC)))
                     l)))
               (deref monotonicity_theorems)
               (cl:cons (tuple "" #'MONO_ABS_TAC) nil)))
             (MONO_STEP_TAC (funcall THEN (REPEAT #'GEN_TAC) (APPLY_MONOTAC tacs))))
+          (cl:declare (cl:ignorable tacs MONO_STEP_TAC))
           (funcall THEN (REPEAT MONO_STEP_TAC) (funcall ASM_REWRITE_TAC nil) gl))))))
 
 ;; (* ------------------------------------------------------------------------- *)
@@ -1044,11 +1150,13 @@
             (DISCH_THEN (REPEAT_TCL CONJUNCTS_THEN ASSUME_TAC)))
           (REPEAT #'CONJ_TAC))
         MONO_TAC)))
-    (fletc ((prove_mth (t*) (prove (tuple t* tac))))
+    (cl:declare (cl:ignorable tac))
+    (fletc ((prove_mth (t%) (prove (tuple t% tac))))
       (lambdac (th)
         (let
           ((mths
             (mapfilter #'prove_mth (filter (o (function-value #'not 1) #'is_eq) (hyp th)))))
+          (cl:declare (cl:ignorable mths))
           (itlist #'PROVE_HYP mths th))))))
 
 ;; (* ========================================================================= *)
@@ -1079,44 +1187,51 @@
           ((generalize_def
             (tm th)
             (match (dest_eq tm)
-              ((tuple l r*)
+              ((tuple l r%)
                 (match (dest_var l)
                   ((tuple lname lty)
                     (let*
-                      ((l*
+                      ((l%
                         (mk_var (tuple lname (itlist (o #'mk_fun_ty #'type_of) vs lty))))
-                        (r** (list_mk_abs (tuple vs r*)))
-                        (tm* (funcall mk_eq (tuple l* r**)))
-                        (th0 (funcall RIGHT_BETAS vs (ASSUME tm*)))
+                        (r%% (list_mk_abs (tuple vs r%)))
+                        (tm% (funcall mk_eq (tuple l% r%%)))
+                        (th0 (funcall RIGHT_BETAS vs (ASSUME tm%)))
                         (th1
-                          (INST*
+                          (INST%
                             (cl:cons (tuple (funcall lhs (concl th0)) l) nil)
                             (funcall DISCH tm th))))
+                      (cl:declare (cl:ignorable l% r%% tm% th0 th1))
                       (funcall MP th1 th0))))))))
           (lambdac (th)
             (match (partition #'is_eq (hyp th))
               ((tuple defs others)
                 (let ((th1 (itlist #'generalize_def defs th)))
+                  (cl:declare (cl:ignorable th1))
                   (if gflag
                     (let
-                      ((others*
+                      ((others%
                         (map
-                          (lambdac (t*)
-                            (let ((fvs (frees t*)))
-                              (SPECL fvs (ASSUME (list_mk_forall (tuple fvs t*))))))
+                          (lambdac (t%)
+                            (let ((fvs (frees t%)))
+                              (cl:declare (cl:ignorable fvs))
+                              (SPECL fvs (ASSUME (list_mk_forall (tuple fvs t%))))))
                           others)))
-                      (funcall GENL vs (itlist #'PROVE_HYP others* th1)))
+                      (cl:declare (cl:ignorable others%))
+                      (funcall GENL vs (itlist #'PROVE_HYP others% th1)))
                     th1)))))))
         (derive_existence
           (th)
-          (let ((defs (filter #'is_eq (hyp th)))) (itlist EXISTS_EQUATION defs th)))
+          (let ((defs (filter #'is_eq (hyp th))))
+            (cl:declare (cl:ignorable defs))
+            (itlist EXISTS_EQUATION defs th)))
         (make_definitions
           (th)
           (let*
             ((defs (filter #'is_eq (hyp th)))
               (dths (map #'new_definition defs))
               (insts (zip (map (o lhs #'concl) dths) (map lhs defs))))
-            (rev_itlist (C MP) dths (INST* insts (itlist DISCH defs th)))))
+            (cl:declare (cl:ignorable defs dths insts))
+            (rev_itlist (C MP) dths (INST% insts (itlist DISCH defs th)))))
         (unschematize_clauses
           (clauses)
           (let*
@@ -1136,6 +1251,7 @@
                               (_ (raise exception~1882)))))))))
                 clauses))
               (schems (setify schem)))
+            (cl:declare (cl:ignorable schem schems))
             (if (is_var (hd schem))
               (tuple clauses nil)
               (if
@@ -1147,6 +1263,7 @@
                     1))
                 (failwith "Schematic variables not used consistently")
                 (let ((avoids (funcall variables (funcall list_mk_conj clauses))))
+                  (cl:declare (cl:ignorable avoids))
                   (fletc
                     ((hack_fn
                       (tm)
@@ -1157,8 +1274,9 @@
                     (let*
                       ((grels (variants avoids (map #'hack_fn schems)))
                         (crels (zip grels schems))
-                        (clauses* (map (funcall subst crels) clauses)))
-                      (tuple clauses* (snd (funcall strip_comb (hd schems))))))))))))
+                        (clauses% (map (funcall subst crels) clauses)))
+                      (cl:declare (cl:ignorable grels crels clauses%))
+                      (tuple clauses% (snd (funcall strip_comb (hd schems))))))))))))
       (fletc
         ((find_redefinition
           (tm arg~1968)
@@ -1169,27 +1287,31 @@
           ((prove_inductive_properties
             (tm)
             (let ((clauses (funcall hol2cl.basics:conjuncts tm)))
+              (cl:declare (cl:ignorable clauses))
               (match (unschematize_clauses clauses)
-                ((tuple clauses* fvs)
+                ((tuple clauses% fvs)
                   (let
                     ((th
                       (funcall
                         derive_nonschematic_inductive_relations
-                        (funcall list_mk_conj clauses*))))
+                        (funcall list_mk_conj clauses%))))
+                    (cl:declare (cl:ignorable th))
                     (tuple fvs (funcall prove_monotonicity_hyps th))))))))
           (fletc
-            ((prove_inductive_relations_exist*
+            ((prove_inductive_relations_exist%
               (tm)
               (match (prove_inductive_properties tm)
                 ((tuple fvs th1)
                   (let ((th2 (generalize_schematic_variables cl:t fvs th1)))
+                    (cl:declare (cl:ignorable th2))
                     (derive_existence th2)))))
-              (new_inductive_definition*
+              (new_inductive_definition%
                 (tm)
                 (handler-case
-                  (let ((tm* (snd (funcall strip_forall tm))))
+                  (let ((tm% (snd (funcall strip_forall tm))))
+                    (cl:declare (cl:ignorable tm%))
                     (match
-                      (tryfind (find_redefinition tm*) (deref the_inductive_definitions))
+                      (tryfind (find_redefinition tm%) (deref the_inductive_definitions))
                       ((tuple th _)
                         (progn
                           (warn cl:t "Benign redefinition of inductive predicate")
@@ -1204,16 +1326,18 @@
                               ((th2 (generalize_schematic_variables cl:t fvs th1))
                                 (th3 (make_definitions th2))
                                 (avs (fst (funcall strip_forall (concl th3)))))
+                              (cl:declare (cl:ignorable th2 th3 avs))
                               (match (CONJ_PAIR (SPECL avs th3))
-                                ((tuple r* ic)
+                                ((tuple r% ic)
                                   (match (CONJ_PAIR ic)
-                                    ((tuple i* c*)
+                                    ((tuple i% c%)
                                       (let
                                         ((thtr
                                           (tuple
-                                            (funcall GENL avs r*)
-                                            (funcall GENL avs i*)
-                                            (funcall GENL avs c*))))
+                                            (funcall GENL avs r%)
+                                            (funcall GENL avs i%)
+                                            (funcall GENL avs c%))))
+                                        (cl:declare (cl:ignorable thtr))
                                         (progn
                                           (assign
                                             the_inductive_definitions
@@ -1222,13 +1346,13 @@
                                               (deref the_inductive_definitions)))
                                           thtr))))))))))
                       (_ (raise exception~2029)))))))
-            (tuple #'prove_inductive_relations_exist* #'new_inductive_definition*))))))
-  ((tuple prove_inductive_relations_exist* new_inductive_definition*)
+            (tuple #'prove_inductive_relations_exist% #'new_inductive_definition%))))))
+  ((tuple prove_inductive_relations_exist% new_inductive_definition%)
     (setf
       new_inductive_definition
-      new_inductive_definition*
+      new_inductive_definition%
       prove_inductive_relations_exist
-      prove_inductive_relations_exist*)))
+      prove_inductive_relations_exist%)))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Derivation of "strong induction".                                         *)
@@ -1242,6 +1366,7 @@
       (match (funcall strip_forall tm)
         ((tuple avs ibod)
           (let* ((n (funcall length avs)) (prator (funpow n #'rator)))
+            (cl:declare (cl:ignorable n prator))
             (match (funcall dest_imp ibod)
               ((tuple ant con)
                 (tuple n (tuple (funcall prator ant) (funcall prator con))))))))))
@@ -1253,11 +1378,12 @@
           (match (funcall strip_forall tm)
             ((tuple avs bod)
               (match (funcall dest_imp bod)
-                ((tuple a* c*)
+                ((tuple a% c%)
                   (let*
-                    ((ths (funcall CONJUNCTS (ASSUME a*)))
-                      (th (find (o (aconv c*) #'concl) ths)))
-                    (funcall GENL avs (funcall DISCH a* th))))))))))
+                    ((ths (funcall CONJUNCTS (ASSUME a%)))
+                      (th (find (o (aconv c%) #'concl) ths)))
+                    (cl:declare (cl:ignorable ths th))
+                    (funcall GENL avs (funcall DISCH a% th))))))))))
       (labelsc
         ((weaken_triv
           (th)
@@ -1268,9 +1394,11 @@
               (weaken_triv (funcall CONJUNCT2 th)))
             (match (funcall strip_forall (concl th))
               ((tuple avs bod)
-                (let* ((th1 (SPECL avs th)) (a* (fst (funcall dest_imp (concl th1)))))
-                  (funcall GENL avs (funcall DISCH a* (funcall CONJUNCT2 (UNDISCH th1))))))))))
+                (let* ((th1 (SPECL avs th)) (a% (fst (funcall dest_imp (concl th1)))))
+                  (cl:declare (cl:ignorable th1 a%))
+                  (funcall GENL avs (funcall DISCH a% (funcall CONJUNCT2 (UNDISCH th1))))))))))
         (let ((MATCH_IMPS (MATCH_MP MONO_AND)))
+          (cl:declare (cl:ignorable MATCH_IMPS))
           (lambdac (arg~2248)
             (match arg~2248
               ((tuple rth ith)
@@ -1284,26 +1412,30 @@
                             (match (unzip prrs)
                               ((tuple rs ps)
                                 (let ((gs (variants (funcall variables ibod) ps)))
+                                  (cl:declare (cl:ignorable gs))
                                   (match
                                     (chop_list
                                       (- (funcall length ovs) (funcall length ns))
                                       ovs)
                                     ((tuple svs tvs)
                                       (let ((sth (SPECL svs rth)) (jth (SPECL svs ith)))
+                                        (cl:declare (cl:ignorable sth jth))
                                         (let*
                                           ((gimps (funcall subst (zip gs rs) icon))
                                             (prs
                                               (map2
                                                 (lambdac (n arg~2283)
                                                   (match arg~2283
-                                                    ((tuple r* p*)
+                                                    ((tuple r% p%)
                                                       (match
                                                         (nsplit
                                                           #'dest_fun_ty
                                                           (-- 1 n)
-                                                          (type_of r*))
+                                                          (type_of r%))
                                                         ((tuple tys ty)
                                                           (let ((gvs (map genvar tys)))
+                                                            (cl:declare
+                                                              (cl:ignorable gvs))
                                                             (list_mk_abs
                                                               (tuple
                                                                 gvs
@@ -1311,11 +1443,12 @@
                                                                   mk_conj
                                                                   (tuple
                                                                     (list_mk_comb
-                                                                      (tuple r* gvs))
+                                                                      (tuple r% gvs))
                                                                     (list_mk_comb
-                                                                      (tuple p* gvs))))))))))))
+                                                                      (tuple p% gvs))))))))))))
                                                 ns
                                                 prrs)))
+                                          (cl:declare (cl:ignorable gimps prs))
                                           (fletc
                                             ((modify_rule
                                               (rcl itm)
@@ -1323,7 +1456,7 @@
                                                 ((tuple avs bod)
                                                   (if (funcall is_imp bod)
                                                     (match (funcall dest_imp bod)
-                                                      ((tuple a* c*)
+                                                      ((tuple a% c%)
                                                         (let*
                                                           ((mgoal
                                                             (funcall
@@ -1336,8 +1469,8 @@
                                                                     (funcall
                                                                       vsubst
                                                                       (zip gs ps)
-                                                                      a*)
-                                                                    a*)))))
+                                                                      a%)
+                                                                    a%)))))
                                                             (mth
                                                               (ASSUME
                                                                 (list_mk_forall
@@ -1362,7 +1495,7 @@
                                                                   (funcall
                                                                     lhand
                                                                     (concl ith_r)))))
-                                                            (t*
+                                                            (t%
                                                               (funcall
                                                                 lhand
                                                                 (concl jth_r)))
@@ -1373,7 +1506,7 @@
                                                                   avs
                                                                   (funcall
                                                                     mk_imp
-                                                                    (tuple t* c*)))))
+                                                                    (tuple t% c%)))))
                                                             (lth_r
                                                               (funcall
                                                                 MP
@@ -1382,6 +1515,17 @@
                                                             (lth_p
                                                               (UNDISCH
                                                                 (SPECL avs (ASSUME ntm)))))
+                                                          (cl:declare
+                                                            (cl:ignorable
+                                                              mgoal
+                                                              mth
+                                                              ith_r
+                                                              jth_r
+                                                              t%
+                                                              kth_r
+                                                              ntm
+                                                              lth_r
+                                                              lth_p))
                                                           (funcall
                                                             DISCH
                                                             ntm
@@ -1390,7 +1534,7 @@
                                                               avs
                                                               (funcall
                                                                 DISCH
-                                                                t*
+                                                                t%
                                                                 (funcall CONJ lth_r lth_p)))))))
                                                     (funcall
                                                       DISCH
@@ -1410,10 +1554,10 @@
                                                   (funcall hol2cl.basics:conjuncts iant)))
                                                 (th1
                                                   (end_itlist
-                                                    (lambdac (th th*)
+                                                    (lambdac (th th%)
                                                       (funcall
                                                         MATCH_IMPS
-                                                        (funcall CONJ th th*)))
+                                                        (funcall CONJ th th%)))
                                                     mimps))
                                                 (th2 (funcall BETA_RULE (SPECL prs jth)))
                                                 (th3 (funcall IMP_TRANS th1 th2))
@@ -1426,6 +1570,8 @@
                                                       DISCH
                                                       nasm
                                                       (weaken_triv (UNDISCH th3))))))
+                                              (cl:declare
+                                                (cl:ignorable mimps th1 th2 th3 nasm th4))
                                               (funcall
                                                 GENL
                                                 svs

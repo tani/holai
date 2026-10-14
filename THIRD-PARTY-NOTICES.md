@@ -15,9 +15,9 @@ The revision lock is `vendor/SOURCES.json`. Vendored sources are unmodified.
 | Alexandria | `vendor/lisp/alexandria/` | Original permissive headers and packaged copyright notices |
 | closer-mop | `vendor/lisp/closer-mop/` | Original license headers and packaged copyright notices |
 
-The runtime depends on `trivia.trivial`, the real upstream Trivia compiler
-with its basic optimizer. The optional Balland2006 optimizer is not required.
-Complete vendored Trivia source is included, rather than a local replacement.
+The production runtime has no external pattern-library dependency. Complete
+vendored Trivia and its dependencies retain their original licenses for
+historical benchmark reproduction; they are not loaded by hol2cl-runtime.
 OCaml, Camlp5 binaries, and SBCL are prerequisites and are not shipped as
 machine binaries in this release.
 

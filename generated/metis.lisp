@@ -82,7 +82,7 @@
         intCompare
         interval
         isDigit
-        lex*
+        lex%
         lexCompare
         make-Bug
         mkPrefix
@@ -126,7 +126,7 @@
       (:shadow
         Empty
         Left_to_right_iterator
-        Map*
+        Map%
         Right_to_left_iterator
         Tree
         addLeftToRightIterator
@@ -170,7 +170,7 @@
         inDomain
         ins
         insert
-        insert**
+        insert%%
         insertList
         insertNodePath
         intersect
@@ -180,7 +180,7 @@
         lowerPriorityNode
         make-Empty
         make-Left_to_right_iterator
-        make-Map*
+        make-Map%
         make-Right_to_left_iterator
         make-Tree
         make-node
@@ -273,7 +273,7 @@
       (:export
         Empty
         Left_to_right_iterator
-        Map*
+        Map%
         Right_to_left_iterator
         Tree
         addLeftToRightIterator
@@ -323,7 +323,7 @@
         lowerPriorityNode
         make-Empty
         make-Left_to_right_iterator
-        make-Map*
+        make-Map%
         make-Right_to_left_iterator
         make-Tree
         make-node
@@ -459,7 +459,7 @@
         mf
         mkIterator
         mkRevIterator
-        mp*
+        mp%
         mpred
         nth
         null
@@ -558,7 +558,7 @@
     (defpackage :hol2cl.metis.metis_prover.intmap.include~4681.ma
       (:use :cl)
       (:shadow
-        Empty*
+        Empty%
         End
         More
         Node
@@ -580,7 +580,7 @@
         height
         is_empty
         join
-        make-Empty*
+        make-Empty%
         make-End
         make-More
         make-Node
@@ -619,7 +619,7 @@
       (:shadow
         delete
         exists
-        f*
+        f%
         filter
         foldl
         foldr
@@ -678,7 +678,7 @@
     (defpackage :hol2cl.metis.metis_prover.stringmap.include~6119.ma
       (:use :cl)
       (:shadow
-        Empty*
+        Empty%
         End
         More
         Node
@@ -700,7 +700,7 @@
         height
         is_empty
         join
-        make-Empty*
+        make-Empty%
         make-End
         make-More
         make-Node
@@ -739,7 +739,7 @@
       (:shadow
         delete
         exists
-        f*
+        f%
         filter
         foldl
         foldr
@@ -804,7 +804,7 @@
     (defpackage :hol2cl.metis.metis_prover.intset.include~7557.se
       (:use :cl)
       (:shadow
-        Empty*
+        Empty%
         End
         Found
         More
@@ -833,7 +833,7 @@
         inter
         is_empty
         join
-        make-Empty*
+        make-Empty%
         make-End
         make-Found
         make-More
@@ -1001,7 +1001,7 @@
     (defpackage :hol2cl.metis.metis_prover.name.map.ma
       (:use :cl)
       (:shadow
-        Empty*
+        Empty%
         End
         More
         Node
@@ -1023,7 +1023,7 @@
         height
         is_empty
         join
-        make-Empty*
+        make-Empty%
         make-End
         make-More
         make-Node
@@ -1062,7 +1062,7 @@
       (:shadow
         delete
         exists
-        f*
+        f%
         filter
         foldl
         foldr
@@ -1106,7 +1106,7 @@
     (defpackage :hol2cl.metis.metis_prover.name.set.se
       (:use :cl)
       (:shadow
-        Empty*
+        Empty%
         End
         Found
         More
@@ -1135,7 +1135,7 @@
         inter
         is_empty
         join
-        make-Empty*
+        make-Empty%
         make-End
         make-Found
         make-More
@@ -1246,7 +1246,7 @@
         numName
         prefix
         toString
-        variant*
+        variant%
         variantNum
         variantPrime)
       (:export
@@ -1277,7 +1277,7 @@
     (defpackage :hol2cl.metis.metis_prover.name_arity.map.include~12152.ma
       (:use :cl)
       (:shadow
-        Empty*
+        Empty%
         End
         More
         Node
@@ -1299,7 +1299,7 @@
         height
         is_empty
         join
-        make-Empty*
+        make-Empty%
         make-End
         make-More
         make-Node
@@ -1338,7 +1338,7 @@
       (:shadow
         delete
         exists
-        f*
+        f%
         filter
         foldl
         foldr
@@ -1391,7 +1391,7 @@
     (defpackage :hol2cl.metis.metis_prover.name_arity.set.include~13610.se
       (:use :cl)
       (:shadow
-        Empty*
+        Empty%
         End
         Found
         More
@@ -1420,7 +1420,7 @@
         inter
         is_empty
         join
-        make-Empty*
+        make-Empty%
         make-End
         make-Found
         make-More
@@ -1549,7 +1549,7 @@
     (defpackage :hol2cl.metis.metis_prover.term.map
       (:use :cl)
       (:shadow
-        Empty*
+        Empty%
         End
         More
         Node
@@ -1571,7 +1571,7 @@
         height
         is_empty
         join
-        make-Empty*
+        make-Empty%
         make-End
         make-More
         make-Node
@@ -1608,7 +1608,7 @@
     (defpackage :hol2cl.metis.metis_prover.term.set
       (:use :cl)
       (:shadow
-        Empty*
+        Empty%
         End
         Found
         More
@@ -1637,7 +1637,7 @@
         inter
         is_empty
         join
-        make-Empty*
+        make-Empty%
         make-End
         make-Found
         make-More
@@ -1733,7 +1733,7 @@
         strip
         stripApp
         subterm
-        subterm*
+        subterm%
         subterms
         subtms
         symbols
@@ -1792,7 +1792,7 @@
         replace
         stripApp
         subterm
-        subterm*
+        subterm%
         subterms
         symbols
         toString
@@ -1808,7 +1808,7 @@
     (defpackage :hol2cl.metis.metis_prover.substitute
       (:use :cl)
       (:shadow
-        Subst*
+        Subst%
         add
         compatible
         compose
@@ -1826,7 +1826,7 @@
         isNotId
         isRenaming
         isRestrictedVar
-        make-Subst*
+        make-Subst%
         matchList
         matchTerms
         normalize
@@ -1839,14 +1839,14 @@
         singleton
         size
         solve
-        solve*
+        solve%
         subst
         tmSub
         toList
         unify
         union)
       (:export
-        Subst*
+        Subst%
         compose
         empty
         foldl
@@ -1858,7 +1858,7 @@
         insert
         invert
         isRenaming
-        make-Subst*
+        make-Subst%
         matchTerms
         normalize
         null
@@ -1890,7 +1890,7 @@
     (defpackage :hol2cl.metis.metis_prover.atom.map.ma
       (:use :cl)
       (:shadow
-        Empty*
+        Empty%
         End
         More
         Node
@@ -1912,7 +1912,7 @@
         height
         is_empty
         join
-        make-Empty*
+        make-Empty%
         make-End
         make-More
         make-Node
@@ -1951,7 +1951,7 @@
       (:shadow
         delete
         exists
-        f*
+        f%
         filter
         foldl
         foldr
@@ -1995,7 +1995,7 @@
     (defpackage :hol2cl.metis.metis_prover.atom.set.se
       (:use :cl)
       (:shadow
-        Empty*
+        Empty%
         End
         Found
         More
@@ -2024,7 +2024,7 @@
         inter
         is_empty
         join
-        make-Empty*
+        make-Empty%
         make-End
         make-Found
         make-More
@@ -2160,7 +2160,7 @@
         rhs
         subst
         subterm
-        subterm*
+        subterm%
         subterms
         sym
         symbols
@@ -2220,7 +2220,7 @@
     (defpackage :hol2cl.metis.metis_prover.formula.map.ma
       (:use :cl)
       (:shadow
-        Empty*
+        Empty%
         End
         More
         Node
@@ -2242,7 +2242,7 @@
         height
         is_empty
         join
-        make-Empty*
+        make-Empty%
         make-End
         make-More
         make-Node
@@ -2281,7 +2281,7 @@
       (:shadow
         delete
         exists
-        f*
+        f%
         filter
         foldl
         foldr
@@ -2325,7 +2325,7 @@
     (defpackage :hol2cl.metis.metis_prover.formula.set.se
       (:use :cl)
       (:shadow
-        Empty*
+        Empty%
         End
         Found
         More
@@ -2354,7 +2354,7 @@
         inter
         is_empty
         join
-        make-Empty*
+        make-Empty%
         make-End
         make-Found
         make-More
@@ -2487,7 +2487,7 @@
         existentialName
         f
         falsityName
-        flat*
+        flat%
         flattenConj
         flattenDisj
         flattenEquiv
@@ -2668,7 +2668,7 @@
     (defpackage :hol2cl.metis.metis_prover.literal.map.ma
       (:use :cl)
       (:shadow
-        Empty*
+        Empty%
         End
         More
         Node
@@ -2690,7 +2690,7 @@
         height
         is_empty
         join
-        make-Empty*
+        make-Empty%
         make-End
         make-More
         make-Node
@@ -2729,7 +2729,7 @@
       (:shadow
         delete
         exists
-        f*
+        f%
         filter
         foldl
         foldr
@@ -2773,7 +2773,7 @@
     (defpackage :hol2cl.metis.metis_prover.literal.set.include~30172.se
       (:use :cl)
       (:shadow
-        Empty*
+        Empty%
         End
         Found
         More
@@ -2802,7 +2802,7 @@
         inter
         is_empty
         join
-        make-Empty*
+        make-Empty%
         make-End
         make-Found
         make-More
@@ -2950,7 +2950,7 @@
     (defpackage :hol2cl.metis.metis_prover.literal.set_map.ma
       (:use :cl)
       (:shadow
-        Empty*
+        Empty%
         End
         More
         Node
@@ -2972,7 +2972,7 @@
         height
         is_empty
         join
-        make-Empty*
+        make-Empty%
         make-End
         make-More
         make-Node
@@ -3011,7 +3011,7 @@
       (:shadow
         delete
         exists
-        f*
+        f%
         filter
         foldl
         foldr
@@ -3055,7 +3055,7 @@
     (defpackage :hol2cl.metis.metis_prover.literal.set_set.se
       (:use :cl)
       (:shadow
-        Empty*
+        Empty%
         End
         Found
         More
@@ -3084,7 +3084,7 @@
         inter
         is_empty
         join
-        make-Empty*
+        make-Empty%
         make-End
         make-Found
         make-More
@@ -3285,13 +3285,13 @@
     (defpackage :hol2cl.metis.metis_prover.thm
       (:use :cl)
       (:shadow
-        Assume*
-        Axiom*
-        Equality*
+        Assume%
+        Axiom%
+        Equality%
         Factor
-        Refl*
-        Resolve*
-        Subst*
+        Refl%
+        Resolve%
+        Subst%
         Thm
         assume
         axiom
@@ -3310,13 +3310,13 @@
         isTautology
         isUnit
         isUnitEq
-        make-Assume*
-        make-Axiom*
-        make-Equality*
+        make-Assume%
+        make-Axiom%
+        make-Equality%
         make-Factor
-        make-Refl*
-        make-Resolve*
-        make-Subst*
+        make-Refl%
+        make-Resolve%
+        make-Subst%
         make-Thm
         member
         negateMember
@@ -3326,13 +3326,13 @@
         subst
         toString)
       (:export
-        Assume*
-        Axiom*
-        Equality*
+        Assume%
+        Axiom%
+        Equality%
         Factor
-        Refl*
-        Resolve*
-        Subst*
+        Refl%
+        Resolve%
+        Subst%
         Thm
         assume
         axiom
@@ -3350,13 +3350,13 @@
         isTautology
         isUnit
         isUnitEq
-        make-Assume*
-        make-Axiom*
-        make-Equality*
+        make-Assume%
+        make-Axiom%
+        make-Equality%
         make-Factor
-        make-Refl*
-        make-Resolve*
-        make-Subst*
+        make-Refl%
+        make-Resolve%
+        make-Subst%
         make-Thm
         member
         negateMember
@@ -3463,16 +3463,16 @@
         expandAbbrevs
         f
         fact
-        fact*
+        fact%
         factor
-        factor*
+        factor%
         firstConv
         firstLiterule
         firstRule
         flip
         freshVars
         functionCongruence
-        g*
+        g%
         h
         init
         init_edges
@@ -3567,7 +3567,7 @@
         expandAbbrevs
         fact
         factor
-        factor*
+        factor%
         firstConv
         firstLiterule
         firstRule
@@ -3719,7 +3719,7 @@
         gtRel
         hasTypeFn
         iexp
-        iexp*
+        iexp%
         inc
         incrementElement
         incrementValuation
@@ -3730,7 +3730,7 @@
         insertValuation
         intToBool
         interpret
-        interpret*
+        interpret%
         interpretAtom
         interpretClause
         interpretFormula
@@ -3850,7 +3850,7 @@
         tables
         tailName
         union
-        union**
+        union%%
         unionFixed
         unionFn
         unionListFixed
@@ -3936,7 +3936,7 @@
         gtRel
         hasTypeFn
         iexp
-        iexp*
+        iexp%
         incrementElement
         incrementValuation
         insertFn
@@ -4102,7 +4102,7 @@
         finally
         fnCmp
         fold
-        fold*
+        fold%
         foldEqualTerms
         foldTerms
         foldUnifiableTerms
@@ -4326,7 +4326,7 @@
         size
         sortClause
         strictlySubsumes
-        subCl*
+        subCl%
         subLit
         subUnit
         subsume
@@ -4430,10 +4430,10 @@
       (:shadow
         Left_to_right
         Neq_convs
-        Rewrite*
+        Rewrite%
         Right_to_left
         add
-        add*
+        add%
         addEqn
         addList
         addRed
@@ -4459,7 +4459,7 @@
         literalsReducible
         make-Left_to_right
         make-Neq_convs
-        make-Rewrite*
+        make-Rewrite%
         make-Right_to_left
         make-rewrite_t
         matchingRedexes
@@ -4484,26 +4484,26 @@
         redexResidue
         redexResidues
         reduce
-        reduce*
+        reduce%
         reduce1
         reduceAcc
         reorder
         rewr
         rewrConv
         rewrIdConv
-        rewrIdConv*
+        rewrIdConv%
         rewr_lit
         rewr_neq_lit
         rewr_neq_lits
         rewrite
         rewriteConv
         rewriteIdConv
-        rewriteIdConv*
-        rewriteIdEqn*
+        rewriteIdConv%
+        rewriteIdEqn%
         rewriteIdLiteralsRule
-        rewriteIdLiteralsRule*
+        rewriteIdLiteralsRule%
         rewriteIdRule
-        rewriteIdRule*
+        rewriteIdRule%
         rewriteLiteralsRule
         rewriteRule
         rewrite_t
@@ -4521,7 +4521,7 @@
       (:export
         Left_to_right
         Neq_convs
-        Rewrite*
+        Rewrite%
         Right_to_left
         add
         addEqn
@@ -4539,7 +4539,7 @@
         literalsReducible
         make-Left_to_right
         make-Neq_convs
-        make-Rewrite*
+        make-Rewrite%
         make-Right_to_left
         make-rewrite_t
         matchingRedexes
@@ -4563,22 +4563,22 @@
         redexResidue
         redexResidues
         reduce
-        reduce*
+        reduce%
         reduce1
         reduceAcc
         reorder
         rewrConv
         rewrIdConv
-        rewrIdConv*
+        rewrIdConv%
         rewrite
         rewriteConv
         rewriteIdConv
-        rewriteIdConv*
-        rewriteIdEqn*
+        rewriteIdConv%
+        rewriteIdEqn%
         rewriteIdLiteralsRule
-        rewriteIdLiteralsRule*
+        rewriteIdLiteralsRule%
         rewriteIdRule
-        rewriteIdRule*
+        rewriteIdRule%
         rewriteLiteralsRule
         rewriteRule
         rewrite_t
@@ -4602,7 +4602,7 @@
         Units
         add
         addList
-        check*
+        check%
         empty
         make-Units
         matchUnits
@@ -4626,10 +4626,10 @@
         Unsigned_literal_order
         addEq
         addLit
-        addLit*
+        addLit%
         addTm
         allSubterms
-        apply*
+        apply%
         atomToTerms
         clauseInfo
         default
@@ -4732,7 +4732,7 @@
         Active
         active_t
         add
-        add*
+        add%
         addAllSubterms
         addClause
         addEquation
@@ -4761,7 +4761,7 @@
         empty
         extract_rewritables
         factor
-        factor*
+        factor%
         factor1
         getSubsume
         idPred
@@ -4780,7 +4780,7 @@
         postfactor_simplify
         pre_factor
         prefactor_simplify
-        remove*
+        remove%
         resolve
         rewr
         rewritables
@@ -4820,7 +4820,7 @@
         empty
         extract_rewritables
         factor
-        factor*
+        factor%
         factor1
         getSubsume
         make-Active
@@ -4857,9 +4857,9 @@
       (:shadow
         Waiting
         add
-        add*
+        add%
         addCl
-        check*
+        check%
         checkModels
         clauseLiterals
         clausePriority
@@ -4892,7 +4892,7 @@
       (:export
         Waiting
         add
-        add*
+        add%
         checkModels
         clauseLiterals
         clausePriority
@@ -5255,7 +5255,7 @@
     intCompare
     interval
     isDigit
-    lex*
+    lex%
     lexCompare
     make-Bug
     mkPrefix
@@ -5324,7 +5324,7 @@
   (:shadow
     Empty
     Left_to_right_iterator
-    Map*
+    Map%
     Right_to_left_iterator
     Tree
     addLeftToRightIterator
@@ -5368,7 +5368,7 @@
     inDomain
     ins
     insert
-    insert**
+    insert%%
     insertList
     insertNodePath
     intersect
@@ -5378,7 +5378,7 @@
     lowerPriorityNode
     make-Empty
     make-Left_to_right_iterator
-    make-Map*
+    make-Map%
     make-Right_to_left_iterator
     make-Tree
     make-node
@@ -5503,7 +5503,7 @@
   (:export
     Empty
     Left_to_right_iterator
-    Map*
+    Map%
     Right_to_left_iterator
     Tree
     addLeftToRightIterator
@@ -5553,7 +5553,7 @@
     lowerPriorityNode
     make-Empty
     make-Left_to_right_iterator
-    make-Map*
+    make-Map%
     make-Right_to_left_iterator
     make-Tree
     make-node
@@ -5685,7 +5685,7 @@
     mf
     mkIterator
     mkRevIterator
-    mp*
+    mp%
     mpred
     nth
     null
@@ -5805,7 +5805,7 @@
 (defpackage :hol2cl.metis.metis_prover.intmap.include~4681.ma
   (:use :cl)
   (:shadow
-    Empty*
+    Empty%
     End
     More
     Node
@@ -5827,7 +5827,7 @@
     height
     is_empty
     join
-    make-Empty*
+    make-Empty%
     make-End
     make-More
     make-Node
@@ -5853,6 +5853,7 @@
     make-Not_found
     make-None
     invalid-arg
+    guard
     funcall
     defvariant
     defunc
@@ -5884,7 +5885,7 @@
   (:shadow
     delete
     exists
-    f*
+    f%
     filter
     foldl
     foldr
@@ -6002,7 +6003,7 @@
 (defpackage :hol2cl.metis.metis_prover.stringmap.include~6119.ma
   (:use :cl)
   (:shadow
-    Empty*
+    Empty%
     End
     More
     Node
@@ -6024,7 +6025,7 @@
     height
     is_empty
     join
-    make-Empty*
+    make-Empty%
     make-End
     make-More
     make-Node
@@ -6050,6 +6051,7 @@
     make-Not_found
     make-None
     invalid-arg
+    guard
     funcall
     defvariant
     defunc
@@ -6081,7 +6083,7 @@
   (:shadow
     delete
     exists
-    f*
+    f%
     filter
     foldl
     foldr
@@ -6201,7 +6203,7 @@
 (defpackage :hol2cl.metis.metis_prover.intset.include~7557.se
   (:use :cl)
   (:shadow
-    Empty*
+    Empty%
     End
     Found
     More
@@ -6230,7 +6232,7 @@
     inter
     is_empty
     join
-    make-Empty*
+    make-Empty%
     make-End
     make-Found
     make-More
@@ -6493,7 +6495,7 @@
 (defpackage :hol2cl.metis.metis_prover.name.map.ma
   (:use :cl)
   (:shadow
-    Empty*
+    Empty%
     End
     More
     Node
@@ -6515,7 +6517,7 @@
     height
     is_empty
     join
-    make-Empty*
+    make-Empty%
     make-End
     make-More
     make-Node
@@ -6541,6 +6543,7 @@
     make-Not_found
     make-None
     invalid-arg
+    guard
     funcall
     defvariant
     defunc
@@ -6572,7 +6575,7 @@
   (:shadow
     delete
     exists
-    f*
+    f%
     filter
     foldl
     foldr
@@ -6642,7 +6645,7 @@
 (defpackage :hol2cl.metis.metis_prover.name.set.se
   (:use :cl)
   (:shadow
-    Empty*
+    Empty%
     End
     Found
     More
@@ -6671,7 +6674,7 @@
     inter
     is_empty
     join
-    make-Empty*
+    make-Empty%
     make-End
     make-Found
     make-More
@@ -6817,7 +6820,7 @@
     numName
     prefix
     toString
-    variant*
+    variant%
     variantNum
     variantPrime)
   (:shadowing-import-from :cl not +)
@@ -6861,7 +6864,7 @@
 (defpackage :hol2cl.metis.metis_prover.name_arity.map.include~12152.ma
   (:use :cl)
   (:shadow
-    Empty*
+    Empty%
     End
     More
     Node
@@ -6883,7 +6886,7 @@
     height
     is_empty
     join
-    make-Empty*
+    make-Empty%
     make-End
     make-More
     make-Node
@@ -6909,6 +6912,7 @@
     make-Not_found
     make-None
     invalid-arg
+    guard
     funcall
     defvariant
     defunc
@@ -6940,7 +6944,7 @@
   (:shadow
     delete
     exists
-    f*
+    f%
     filter
     foldl
     foldr
@@ -7055,7 +7059,7 @@
 (defpackage :hol2cl.metis.metis_prover.name_arity.set.include~13610.se
   (:use :cl)
   (:shadow
-    Empty*
+    Empty%
     End
     Found
     More
@@ -7084,7 +7088,7 @@
     inter
     is_empty
     join
-    make-Empty*
+    make-Empty%
     make-End
     make-Found
     make-More
@@ -7293,7 +7297,7 @@
 (defpackage :hol2cl.metis.metis_prover.term.map
   (:use :cl)
   (:shadow
-    Empty*
+    Empty%
     End
     More
     Node
@@ -7315,7 +7319,7 @@
     height
     is_empty
     join
-    make-Empty*
+    make-Empty%
     make-End
     make-More
     make-Node
@@ -7341,6 +7345,7 @@
     make-Not_found
     make-None
     invalid-arg
+    guard
     funcall
     defvariant
     defunc
@@ -7370,7 +7375,7 @@
 (defpackage :hol2cl.metis.metis_prover.term.set
   (:use :cl)
   (:shadow
-    Empty*
+    Empty%
     End
     Found
     More
@@ -7399,7 +7404,7 @@
     inter
     is_empty
     join
-    make-Empty*
+    make-Empty%
     make-End
     make-Found
     make-More
@@ -7508,7 +7513,7 @@
     strip
     stripApp
     subterm
-    subterm*
+    subterm%
     subterms
     subtms
     symbols
@@ -7607,7 +7612,7 @@
     replace
     stripApp
     subterm
-    subterm*
+    subterm%
     subterms
     symbols
     toString
@@ -7619,7 +7624,7 @@
 (defpackage :hol2cl.metis.metis_prover.substitute
   (:use :cl)
   (:shadow
-    Subst*
+    Subst%
     add
     compatible
     compose
@@ -7637,7 +7642,7 @@
     isNotId
     isRenaming
     isRestrictedVar
-    make-Subst*
+    make-Subst%
     matchList
     matchTerms
     normalize
@@ -7650,7 +7655,7 @@
     singleton
     size
     solve
-    solve*
+    solve%
     subst
     tmSub
     toList
@@ -7689,7 +7694,7 @@
     ==
     =)
   (:export
-    Subst*
+    Subst%
     compose
     empty
     foldl
@@ -7701,7 +7706,7 @@
     insert
     invert
     isRenaming
-    make-Subst*
+    make-Subst%
     matchTerms
     normalize
     null
@@ -7725,7 +7730,7 @@
 (defpackage :hol2cl.metis.metis_prover.atom.map.ma
   (:use :cl)
   (:shadow
-    Empty*
+    Empty%
     End
     More
     Node
@@ -7747,7 +7752,7 @@
     height
     is_empty
     join
-    make-Empty*
+    make-Empty%
     make-End
     make-More
     make-Node
@@ -7773,6 +7778,7 @@
     make-Not_found
     make-None
     invalid-arg
+    guard
     funcall
     defvariant
     defunc
@@ -7804,7 +7810,7 @@
   (:shadow
     delete
     exists
-    f*
+    f%
     filter
     foldl
     foldr
@@ -7874,7 +7880,7 @@
 (defpackage :hol2cl.metis.metis_prover.atom.set.se
   (:use :cl)
   (:shadow
-    Empty*
+    Empty%
     End
     Found
     More
@@ -7903,7 +7909,7 @@
     inter
     is_empty
     join
-    make-Empty*
+    make-Empty%
     make-End
     make-Found
     make-More
@@ -8074,7 +8080,7 @@
     rhs
     subst
     subterm
-    subterm*
+    subterm%
     subterms
     sym
     symbols
@@ -8164,7 +8170,7 @@
 (defpackage :hol2cl.metis.metis_prover.formula.map.ma
   (:use :cl)
   (:shadow
-    Empty*
+    Empty%
     End
     More
     Node
@@ -8186,7 +8192,7 @@
     height
     is_empty
     join
-    make-Empty*
+    make-Empty%
     make-End
     make-More
     make-Node
@@ -8212,6 +8218,7 @@
     make-Not_found
     make-None
     invalid-arg
+    guard
     funcall
     defvariant
     defunc
@@ -8243,7 +8250,7 @@
   (:shadow
     delete
     exists
-    f*
+    f%
     filter
     foldl
     foldr
@@ -8313,7 +8320,7 @@
 (defpackage :hol2cl.metis.metis_prover.formula.set.se
   (:use :cl)
   (:shadow
-    Empty*
+    Empty%
     End
     Found
     More
@@ -8342,7 +8349,7 @@
     inter
     is_empty
     join
-    make-Empty*
+    make-Empty%
     make-End
     make-Found
     make-More
@@ -8510,7 +8517,7 @@
     existentialName
     f
     falsityName
-    flat*
+    flat%
     flattenConj
     flattenDisj
     flattenEquiv
@@ -8720,7 +8727,7 @@
 (defpackage :hol2cl.metis.metis_prover.literal.map.ma
   (:use :cl)
   (:shadow
-    Empty*
+    Empty%
     End
     More
     Node
@@ -8742,7 +8749,7 @@
     height
     is_empty
     join
-    make-Empty*
+    make-Empty%
     make-End
     make-More
     make-Node
@@ -8768,6 +8775,7 @@
     make-Not_found
     make-None
     invalid-arg
+    guard
     funcall
     defvariant
     defunc
@@ -8799,7 +8807,7 @@
   (:shadow
     delete
     exists
-    f*
+    f%
     filter
     foldl
     foldr
@@ -8869,7 +8877,7 @@
 (defpackage :hol2cl.metis.metis_prover.literal.set.include~30172.se
   (:use :cl)
   (:shadow
-    Empty*
+    Empty%
     End
     Found
     More
@@ -8898,7 +8906,7 @@
     inter
     is_empty
     join
-    make-Empty*
+    make-Empty%
     make-End
     make-Found
     make-More
@@ -9139,7 +9147,7 @@
 (defpackage :hol2cl.metis.metis_prover.literal.set_map.ma
   (:use :cl)
   (:shadow
-    Empty*
+    Empty%
     End
     More
     Node
@@ -9161,7 +9169,7 @@
     height
     is_empty
     join
-    make-Empty*
+    make-Empty%
     make-End
     make-More
     make-Node
@@ -9187,6 +9195,7 @@
     make-Not_found
     make-None
     invalid-arg
+    guard
     funcall
     defvariant
     defunc
@@ -9218,7 +9227,7 @@
   (:shadow
     delete
     exists
-    f*
+    f%
     filter
     foldl
     foldr
@@ -9288,7 +9297,7 @@
 (defpackage :hol2cl.metis.metis_prover.literal.set_set.se
   (:use :cl)
   (:shadow
-    Empty*
+    Empty%
     End
     Found
     More
@@ -9317,7 +9326,7 @@
     inter
     is_empty
     join
-    make-Empty*
+    make-Empty%
     make-End
     make-Found
     make-More
@@ -9555,13 +9564,13 @@
 (defpackage :hol2cl.metis.metis_prover.thm
   (:use :cl)
   (:shadow
-    Assume*
-    Axiom*
-    Equality*
+    Assume%
+    Axiom%
+    Equality%
     Factor
-    Refl*
-    Resolve*
-    Subst*
+    Refl%
+    Resolve%
+    Subst%
     Thm
     assume
     axiom
@@ -9580,13 +9589,13 @@
     isTautology
     isUnit
     isUnitEq
-    make-Assume*
-    make-Axiom*
-    make-Equality*
+    make-Assume%
+    make-Axiom%
+    make-Equality%
     make-Factor
-    make-Refl*
-    make-Resolve*
-    make-Subst*
+    make-Refl%
+    make-Resolve%
+    make-Subst%
     make-Thm
     member
     negateMember
@@ -9638,13 +9647,13 @@
     ==
     =)
   (:export
-    Assume*
-    Axiom*
-    Equality*
+    Assume%
+    Axiom%
+    Equality%
     Factor
-    Refl*
-    Resolve*
-    Subst*
+    Refl%
+    Resolve%
+    Subst%
     Thm
     assume
     axiom
@@ -9662,13 +9671,13 @@
     isTautology
     isUnit
     isUnitEq
-    make-Assume*
-    make-Axiom*
-    make-Equality*
+    make-Assume%
+    make-Axiom%
+    make-Equality%
     make-Factor
-    make-Refl*
-    make-Resolve*
-    make-Subst*
+    make-Refl%
+    make-Resolve%
+    make-Subst%
     make-Thm
     member
     negateMember
@@ -9747,14 +9756,14 @@
   (:shadowing-import-from :hol2cl.metis.metis_prover.term Fn)
   (:shadowing-import-from
     :hol2cl.metis.metis_prover.thm
-    Subst*
-    Resolve*
-    Refl*
+    Subst%
+    Resolve%
+    Refl%
     inference
-    Equality*
+    Equality%
     clause
-    Axiom*
-    Assume*)
+    Axiom%
+    Assume%)
   (:shadowing-import-from :hol2cl.metis.metis_prover.useful total make-Bug)
   (:shadowing-import-from
     :hol2cl.runtime
@@ -9835,16 +9844,16 @@
     expandAbbrevs
     f
     fact
-    fact*
+    fact%
     factor
-    factor*
+    factor%
     firstConv
     firstLiterule
     firstRule
     flip
     freshVars
     functionCongruence
-    g*
+    g%
     h
     init
     init_edges
@@ -10002,7 +10011,7 @@
     expandAbbrevs
     fact
     factor
-    factor*
+    factor%
     firstConv
     firstLiterule
     firstRule
@@ -10150,7 +10159,7 @@
     gtRel
     hasTypeFn
     iexp
-    iexp*
+    iexp%
     inc
     incrementElement
     incrementValuation
@@ -10161,7 +10170,7 @@
     insertValuation
     intToBool
     interpret
-    interpret*
+    interpret%
     interpretAtom
     interpretClause
     interpretFormula
@@ -10281,7 +10290,7 @@
     tables
     tailName
     union
-    union**
+    union%%
     unionFixed
     unionFn
     unionListFixed
@@ -10462,7 +10471,7 @@
     gtRel
     hasTypeFn
     iexp
-    iexp*
+    iexp%
     incrementElement
     incrementValuation
     insertFn
@@ -10624,7 +10633,7 @@
     finally
     fnCmp
     fold
-    fold*
+    fold%
     foldEqualTerms
     foldTerms
     foldUnifiableTerms
@@ -10903,7 +10912,7 @@
     size
     sortClause
     strictlySubsumes
-    subCl*
+    subCl%
     subLit
     subUnit
     subsume
@@ -11081,10 +11090,10 @@
   (:shadow
     Left_to_right
     Neq_convs
-    Rewrite*
+    Rewrite%
     Right_to_left
     add
-    add*
+    add%
     addEqn
     addList
     addRed
@@ -11110,7 +11119,7 @@
     literalsReducible
     make-Left_to_right
     make-Neq_convs
-    make-Rewrite*
+    make-Rewrite%
     make-Right_to_left
     make-rewrite_t
     matchingRedexes
@@ -11135,26 +11144,26 @@
     redexResidue
     redexResidues
     reduce
-    reduce*
+    reduce%
     reduce1
     reduceAcc
     reorder
     rewr
     rewrConv
     rewrIdConv
-    rewrIdConv*
+    rewrIdConv%
     rewr_lit
     rewr_neq_lit
     rewr_neq_lits
     rewrite
     rewriteConv
     rewriteIdConv
-    rewriteIdConv*
-    rewriteIdEqn*
+    rewriteIdConv%
+    rewriteIdEqn%
     rewriteIdLiteralsRule
-    rewriteIdLiteralsRule*
+    rewriteIdLiteralsRule%
     rewriteIdRule
-    rewriteIdRule*
+    rewriteIdRule%
     rewriteLiteralsRule
     rewriteRule
     rewrite_t
@@ -11240,6 +11249,7 @@
     list-exists
     lambdac
     labelsc
+    guard
     funcall
     fst
     fletc
@@ -11254,7 +11264,7 @@
   (:export
     Left_to_right
     Neq_convs
-    Rewrite*
+    Rewrite%
     Right_to_left
     add
     addEqn
@@ -11272,7 +11282,7 @@
     literalsReducible
     make-Left_to_right
     make-Neq_convs
-    make-Rewrite*
+    make-Rewrite%
     make-Right_to_left
     make-rewrite_t
     matchingRedexes
@@ -11296,22 +11306,22 @@
     redexResidue
     redexResidues
     reduce
-    reduce*
+    reduce%
     reduce1
     reduceAcc
     reorder
     rewrConv
     rewrIdConv
-    rewrIdConv*
+    rewrIdConv%
     rewrite
     rewriteConv
     rewriteIdConv
-    rewriteIdConv*
-    rewriteIdEqn*
+    rewriteIdConv%
+    rewriteIdEqn%
     rewriteIdLiteralsRule
-    rewriteIdLiteralsRule*
+    rewriteIdLiteralsRule%
     rewriteIdRule
-    rewriteIdRule*
+    rewriteIdRule%
     rewriteLiteralsRule
     rewriteRule
     rewrite_t
@@ -11331,7 +11341,7 @@
     Units
     add
     addList
-    check*
+    check%
     empty
     make-Units
     matchUnits
@@ -11384,10 +11394,10 @@
     Unsigned_literal_order
     addEq
     addLit
-    addLit*
+    addLit%
     addTm
     allSubterms
-    apply*
+    apply%
     atomToTerms
     clauseInfo
     default
@@ -11452,7 +11462,7 @@
     make-Left_to_right
     Left_to_right
     isReduced)
-  (:shadowing-import-from :hol2cl.metis.metis_prover.rule symEqn rewrRule factor*)
+  (:shadowing-import-from :hol2cl.metis.metis_prover.rule symEqn rewrRule factor%)
   (:shadowing-import-from :hol2cl.metis.metis_prover.subsume isStrictlySubsumed)
   (:shadowing-import-from :hol2cl.metis.metis_prover.term make-Fn)
   (:shadowing-import-from :hol2cl.metis.metis_prover.thm subst equal)
@@ -11471,6 +11481,7 @@
     list-for-all
     list-exists
     lambdac
+    guard
     funcall
     fletc
     failwith
@@ -11538,7 +11549,7 @@
     Active
     active_t
     add
-    add*
+    add%
     addAllSubterms
     addClause
     addEquation
@@ -11567,7 +11578,7 @@
     empty
     extract_rewritables
     factor
-    factor*
+    factor%
     factor1
     getSubsume
     idPred
@@ -11586,7 +11597,7 @@
     postfactor_simplify
     pre_factor
     prefactor_simplify
-    remove*
+    remove%
     resolve
     rewr
     rewritables
@@ -11636,7 +11647,7 @@
   (:shadowing-import-from
     :hol2cl.metis.metis_prover.rewrite
     Right_to_left
-    reduce*
+    reduce%
     peek
     newRewrite
     Left_to_right
@@ -11702,7 +11713,7 @@
     empty
     extract_rewritables
     factor
-    factor*
+    factor%
     factor1
     getSubsume
     make-Active
@@ -11735,9 +11746,9 @@
   (:shadow
     Waiting
     add
-    add*
+    add%
     addCl
-    check*
+    check%
     checkModels
     clauseLiterals
     clausePriority
@@ -11805,7 +11816,7 @@
   (:export
     Waiting
     add
-    add*
+    add%
     checkModels
     clauseLiterals
     clausePriority
@@ -12014,7 +12025,7 @@
     typecheckl)
   (:shadowing-import-from :hol2cl.basics disjuncts)
   (:shadowing-import-from :hol2cl.fusion.hol dest_eq bool_ty)
-  (:shadowing-import-from :hol2cl.lib o map *>)
+  (:shadowing-import-from :hol2cl.lib o map %>)
   (:shadowing-import-from :hol2cl.metis.metis_prover.term Var Fn)
   (:shadowing-import-from
     :hol2cl.metis.preterm
@@ -12103,6 +12114,7 @@
     list-mem
     list-assoc
     int-of-string
+    guard
     funcall
     format-printf
     Failure
@@ -12155,7 +12167,7 @@
   (:shadowing-import-from :hol2cl.bool SPEC)
   (:shadowing-import-from :hol2cl.canon DISJ_CANON_CONV)
   (:shadowing-import-from :hol2cl.class EXCLUDED_MIDDLE)
-  (:shadowing-import-from :hol2cl.drule type_unify term_type_unify INSTANTIATE*)
+  (:shadowing-import-from :hol2cl.drule type_unify term_type_unify INSTANTIATE%)
   (:shadowing-import-from :hol2cl.equal PATH_CONV CONV_RULE)
   (:shadowing-import-from :hol2cl.firstorder.utils.list filter_map concat_map)
   (:shadowing-import-from :hol2cl.fusion mk_eq)
@@ -12166,13 +12178,13 @@
     mk_var
     is_vartype
     INST_TYPE
-    INST*
+    INST%
     inst
     hyp
     freesl
     frees
     concl)
-  (:shadowing-import-from :hol2cl.lib striplist o map itlist find *>)
+  (:shadowing-import-from :hol2cl.lib striplist o map itlist find %>)
   (:shadowing-import-from :hol2cl.metis metisverb)
   (:shadowing-import-from
     :hol2cl.metis.metis_mapping
@@ -12326,7 +12338,7 @@
     reset_consts
     QUANT_BOOL_CONV
     POLY_ASSUME_TAC
-    CONJUNCTS_THEN*
+    CONJUNCTS_THEN%
     clear_contrapos_cache)
   (:shadowing-import-from :hol2cl.metis metisverb)
   (:shadowing-import-from :hol2cl.metis.metis_generate metis_of_clauses)
@@ -12436,21 +12448,21 @@
 
 (in-package :hol2cl.metis.metis_prover.mlist)
 
-(defunc foldl (f a* l) (list-fold-left (lambdac (acc x) (funcall f (tuple x acc))) a* l))
+(defunc foldl (f a% l) (list-fold-left (lambdac (acc x) (funcall f (tuple x acc))) a% l))
 
-(defunc foldr (f a* l) (list-fold-right (lambdac (x acc) (funcall f (tuple x acc))) l a*))
+(defunc foldr (f a% l) (list-fold-right (lambdac (x acc) (funcall f (tuple x acc))) l a%))
 
 (defunc null (arg~128) (match arg~128 (nil cl:t) (_ cl:nil)))
 
 (defunc tabulate (arg~136)
   (match arg~136
     ((tuple n f)
-      (labelsc ((go (i*) (if (== i* n) nil (cl:cons (funcall f i*) (go (+ i* 1))))))
+      (labelsc ((go (i%) (if (== i% n) nil (cl:cons (funcall f i%) (go (+ i% 1))))))
         (go 0)))))
 
-(defunc find (p* l)
+(defunc find (p% l)
   (handler-case
-    (make-Some (list-find p* l))
+    (make-Some (list-find p% l))
     (hol2cl.runtime:ocaml-condition
       (exception~164)
       (match exception~164 ((Not_found) (make-None)) (_ (raise exception~164))))))
@@ -12467,19 +12479,19 @@
     ((revDiv
       (acc arg~210)
       (match arg~210
-        ((tuple l* 0) (tuple acc l*))
+        ((tuple l% 0) (tuple acc l%))
         ((tuple nil _) (invalid-arg "Metis_prover.Mlist.revDivide"))
-        ((tuple (cl:cons h t*) n) (revDiv (cl:cons h acc) (tuple t* (- n 1)))))))
+        ((tuple (cl:cons h t%) n) (revDiv (cl:cons h acc) (tuple t% (- n 1)))))))
     (lambdac (n) (revDiv nil (tuple l n)))))
 
 (defunc updateNth (arg~251 l)
   (match arg~251
     ((tuple n x)
       (match (revDivide l n)
-        ((tuple a* b*)
-          (match b*
+        ((tuple a% b%)
+          (match b%
             (nil (invalid-arg "Metis_prover.Mlist.updateNth"))
-            ((cl:cons _ t*) (list-rev-append a* (cl:cons x t*)))))))))
+            ((cl:cons _ t%) (list-rev-append a% (cl:cons x t%)))))))))
 
 (defunc sortMap (f cmp arg~286)
   (match arg~286
@@ -12493,6 +12505,7 @@
         (let*
           ((nxs (list-map (lambdac (x) (tuple (funcall f x) x)) xs))
             (nys (list-sort #'ncmp nxs)))
+          (cl:declare (cl:ignorable nxs nys))
           (list-map (function-value #'snd 1) nys))))))
 
 (in-package :hol2cl.metis.metis_prover)
@@ -12519,7 +12532,7 @@
 ;; (* ------------------------------------------------------------------------- *)
 
 
-(defunc isDigit (c*) (cl:and (<= (cl:code-char 48) c*) (<= c* (cl:code-char 57))))
+(defunc isDigit (c%) (cl:and (<= (cl:code-char 48) c%) (<= c% (cl:code-char 57))))
 
 (define-exception Bug field0)
 
@@ -12555,19 +12568,23 @@
     ((tuple x1 y1)
       (match arg~445
         ((tuple x2 y2)
-          (let ((c* (funcall xCmp x1 x2))) (if (<> c* 0) c* (funcall yCmp y1 y2))))))))
+          (let ((c% (funcall xCmp x1 x2)))
+            (cl:declare (cl:ignorable c%))
+            (if (<> c% 0) c% (funcall yCmp y1 y2))))))))
 
 (defunc lexCompare (cmp)
   (labelsc
-    ((lex*
+    ((lex%
       (xs ys)
       (match (tuple xs ys)
         ((tuple nil nil) 0)
         ((tuple nil (cl:cons _ _)) (- 1))
         ((tuple (cl:cons _ _) nil) 1)
-        ((tuple (cl:cons x xs*) (cl:cons y ys*))
-          (let ((c* (funcall cmp x y))) (if (<> c* 0) c* (lex* xs* ys*)))))))
-    #'lex*))
+        ((tuple (cl:cons x xs%) (cl:cons y ys%))
+          (let ((c% (funcall cmp x y)))
+            (cl:declare (cl:ignorable c%))
+            (if (<> c% 0) c% (lex% xs% ys%)))))))
+    #'lex%))
 
 (defunc boolCompare (x y)
   (match (tuple x y) ((tuple cl:nil cl:t) (- 1)) ((tuple cl:t cl:nil) 1) (_ 0)))
@@ -12579,7 +12596,7 @@
 ;; (* ------------------------------------------------------------------------- *)
 
 
-(defunc mkPrefix (p* s) (string-concat p* s))
+(defunc mkPrefix (p% s) (string-concat p% s))
 
 (defunc stripSuffix (pred s)
   (labelsc
@@ -12604,7 +12621,7 @@
   (match arg~606
     ((tuple _ 0) cl:t)
     ((tuple 0 _) cl:nil)
-    ((tuple a* b*) (= (int-mod b* (abs a*)) 0))))
+    ((tuple a% b%) (= (int-mod b% (abs a%)) 0))))
 
 (defparameter divides (curry #'divides~1))
 
@@ -12618,17 +12635,21 @@
 (defunc newIntThunk (arg~637)
   (match arg~637
     ((cl:type hol2cl.runtime::unit-value)
-      (let ((n (deref generator))) (progn (assign generator (+ n 1)) n)))))
+      (let ((n (deref generator)))
+        (cl:declare (cl:ignorable n))
+        (progn (assign generator (+ n 1)) n)))))
 
-(defunc newIntsThunk (k* arg~654)
+(defunc newIntsThunk (k% arg~654)
   (match arg~654
     ((cl:type hol2cl.runtime::unit-value)
-      (let ((n (deref generator))) (progn (assign generator (+ n k*)) (interval n k*))))))
+      (let ((n (deref generator)))
+        (cl:declare (cl:ignorable n))
+        (progn (assign generator (+ n k%)) (interval n k%))))))
 
 (defunc newInt (arg~672)
   (match arg~672 ((cl:type hol2cl.runtime::unit-value) (newIntThunk unit))))
 
-(defunc newInts (k*) (if (<= k* 0) nil (newIntsThunk k* unit)))
+(defunc newInts (k%) (if (<= k% 0) nil (newIntsThunk k% unit)))
 
 (in-package :hol2cl.metis.metis_prover)
 
@@ -12742,13 +12763,14 @@
 
 (defunc nodeSize (arg~735) (match arg~735 ((node :size x) x)))
 
-(defunc treeSize (tree*) (match tree* ((Empty) 0) ((Tree x) (nodeSize x))))
+(defunc treeSize (tree%) (match tree% ((Empty) 0) ((Tree x) (nodeSize x))))
 
 (defunc mkNode (priority left key value right)
-  (let ((size* (+ (+ (treeSize left) 1) (treeSize right))))
+  (let ((size% (+ (+ (treeSize left) 1) (treeSize right))))
+    (cl:declare (cl:ignorable size%))
     (make-node
       :size
-      size*
+      size%
       :priority
       priority
       :left
@@ -12761,24 +12783,26 @@
       right)))
 
 (defunc mkTree (priority left key value right)
-  (let ((node* (mkNode priority left key value right))) (make-Tree node*)))
+  (let ((node% (mkNode priority left key value right)))
+    (cl:declare (cl:ignorable node%))
+    (make-Tree node%)))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Extracting the left and right spines of a tree.                           *)
 ;; (* ------------------------------------------------------------------------- *)
 
 
-(defunc treeLeftSpine (acc tree*)
-  (match tree* ((Empty) acc) ((Tree node*) (nodeLeftSpine acc node*))))
+(defunc treeLeftSpine (acc tree%)
+  (match tree% ((Empty) acc) ((Tree node%) (nodeLeftSpine acc node%))))
 
-(defunc nodeLeftSpine (acc node*)
-  (match node* ((node :left left) (treeLeftSpine (cl:cons node* acc) left))))
+(defunc nodeLeftSpine (acc node%)
+  (match node% ((node :left left) (treeLeftSpine (cl:cons node% acc) left))))
 
-(defunc treeRightSpine (acc tree*)
-  (match tree* ((Empty) acc) ((Tree node*) (nodeRightSpine acc node*))))
+(defunc treeRightSpine (acc tree%)
+  (match tree% ((Empty) acc) ((Tree node%) (nodeRightSpine acc node%))))
 
-(defunc nodeRightSpine (acc node*)
-  (match node* ((node :right right) (treeRightSpine (cl:cons node* acc) right))))
+(defunc nodeRightSpine (acc node%)
+  (match node% ((node :right right) (treeRightSpine (cl:cons node% acc) right))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Singleton trees.                                                          *)
@@ -12786,10 +12810,11 @@
 
 
 (defunc mkNodeSingleton (priority key value)
-  (let ((size* 1) (left (make-Empty)) (right (make-Empty)))
+  (let ((size% 1) (left (make-Empty)) (right (make-Empty)))
+    (cl:declare (cl:ignorable size% left right))
     (make-node
       :size
-      size*
+      size%
       :priority
       priority
       :left
@@ -12805,10 +12830,13 @@
   (match arg~870
     ((tuple key value)
       (let ((priority (funcall randomPriority unit)))
+        (cl:declare (cl:ignorable priority))
         (mkNodeSingleton priority key value)))))
 
 (defunc treeSingleton (key_value)
-  (let ((node* (nodeSingleton key_value))) (make-Tree node*)))
+  (let ((node% (nodeSingleton key_value)))
+    (cl:declare (cl:ignorable node%))
+    (make-Tree node%)))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Appending two trees, where every element of the first tree is less than   *)
@@ -12826,12 +12854,14 @@
           (if (lowerPriorityNode node1 node2)
             (match node2
               ((node :priority priority :left left :key key :value value :right right)
-                (let ((left* (treeAppend tree1 left)))
-                  (mkTree priority left* key value right))))
+                (let ((left% (treeAppend tree1 left)))
+                  (cl:declare (cl:ignorable left%))
+                  (mkTree priority left% key value right))))
             (match node1
               ((node :priority priority :left left :key key :value value :right right)
-                (let ((right* (treeAppend right tree2)))
-                  (mkTree priority left key value right*))))))))))
+                (let ((right% (treeAppend right tree2)))
+                  (cl:declare (cl:ignorable right%))
+                  (mkTree priority left key value right%))))))))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Appending two trees and a node, where every element of the first tree is  *)
@@ -12840,24 +12870,27 @@
 ;; (* ------------------------------------------------------------------------- *)
 
 
-(defunc treeCombine (left node* right)
-  (let ((left_node (treeAppend left (make-Tree node*)))) (treeAppend left_node right)))
+(defunc treeCombine (left node% right)
+  (let ((left_node (treeAppend left (make-Tree node%))))
+    (cl:declare (cl:ignorable left_node))
+    (treeAppend left_node right)))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Searching a tree for a value.                                             *)
 ;; (* ------------------------------------------------------------------------- *)
 
 
-(defunc treePeek (compareKey pkey tree*)
-  (match tree* ((Empty) (make-None)) ((Tree node*) (nodePeek compareKey pkey node*))))
+(defunc treePeek (compareKey pkey tree%)
+  (match tree% ((Empty) (make-None)) ((Tree node%) (nodePeek compareKey pkey node%))))
 
-(defunc nodePeek (compareKey pkey node*)
-  (match node*
+(defunc nodePeek (compareKey pkey node%)
+  (match node%
     ((node :left left :key key :value value :right right)
-      (let ((c* (funcall compareKey pkey key)))
-        (if (< c* 0)
+      (let ((c% (funcall compareKey pkey key)))
+        (cl:declare (cl:ignorable c%))
+        (if (< c% 0)
           (treePeek compareKey pkey left)
-          (if (= c* 0) (make-Some value) (treePeek compareKey pkey right)))))))
+          (if (= c% 0) (make-Some value) (treePeek compareKey pkey right)))))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Tree paths.                                                               *)
@@ -12866,28 +12899,29 @@
 ;; (* Generating a path by searching a tree for a key/value pair *)
 
 
-(defunc treePeekPath (compareKey pkey path tree*)
-  (match tree*
+(defunc treePeekPath (compareKey pkey path tree%)
+  (match tree%
     ((Empty) (tuple path (make-None)))
-    ((Tree node*) (nodePeekPath compareKey pkey path node*))))
+    ((Tree node%) (nodePeekPath compareKey pkey path node%))))
 
-(defunc nodePeekPath (compareKey pkey path node*)
-  (match node*
+(defunc nodePeekPath (compareKey pkey path node%)
+  (match node%
     ((node :left left :key key :right right)
-      (let ((c* (funcall compareKey pkey key)))
-        (if (< c* 0)
-          (treePeekPath compareKey pkey (cl:cons (tuple cl:t node*) path) left)
-          (if (= c* 0)
-            (tuple path (make-Some node*))
-            (treePeekPath compareKey pkey (cl:cons (tuple cl:nil node*) path) right)))))))
+      (let ((c% (funcall compareKey pkey key)))
+        (cl:declare (cl:ignorable c%))
+        (if (< c% 0)
+          (treePeekPath compareKey pkey (cl:cons (tuple cl:t node%) path) left)
+          (if (= c% 0)
+            (tuple path (make-Some node%))
+            (treePeekPath compareKey pkey (cl:cons (tuple cl:nil node%) path) right)))))))
 
 ;; (* A path splits a tree into left/right components *)
 
 
 (defunc addSidePath (arg~1105)
   (match arg~1105
-    ((tuple (tuple wentLeft node*) (tuple leftTree rightTree))
-      (match node*
+    ((tuple (tuple wentLeft node%) (tuple leftTree rightTree))
+      (match node%
         ((node :priority priority :left left :key key :value value :right right)
           (if wentLeft
             (tuple leftTree (mkTree priority rightTree key value right))
@@ -12903,32 +12937,35 @@
 
 (defunc updateTree (arg~1165)
   (match arg~1165
-    ((tuple (tuple wentLeft node*) tree*)
-      (match node*
+    ((tuple (tuple wentLeft node%) tree%)
+      (match node%
         ((node :priority priority :left left :key key :value value :right right)
           (if wentLeft
-            (mkTree priority tree* key value right)
-            (mkTree priority left key value tree*)))))))
+            (mkTree priority tree% key value right)
+            (mkTree priority left key value tree%)))))))
 
-(defunc updateTreePath (tree*) (hol2cl.metis.metis_prover.mlist:foldl #'updateTree tree*))
+(defunc updateTreePath (tree%) (hol2cl.metis.metis_prover.mlist:foldl #'updateTree tree%))
 
 ;; (* Inserting a new node at a path position *)
 
 
-(defunc insertNodePath (node*)
+(defunc insertNodePath (node%)
   (labelsc
-    ((insert**
+    ((insert%%
       (left_right path)
       (match path
-        (nil (match left_right ((tuple left right) (treeCombine left node* right))))
+        (nil (match left_right ((tuple left right) (treeCombine left node% right))))
         ((cl:cons (cl:and step (tuple _ snode)) rest)
-          (if (lowerPriorityNode snode node*)
-            (let ((left_right* (addSidePath (tuple step left_right))))
-              (insert** left_right* rest))
+          (if (lowerPriorityNode snode node%)
+            (let ((left_right% (addSidePath (tuple step left_right))))
+              (cl:declare (cl:ignorable left_right%))
+              (insert%% left_right% rest))
             (match left_right
               ((tuple left right)
-                (let ((tree* (treeCombine left node* right))) (updateTreePath tree* path)))))))))
-    (insert** (tuple (make-Empty) (make-Empty)))))
+                (let ((tree% (treeCombine left node% right)))
+                  (cl:declare (cl:ignorable tree%))
+                  (updateTreePath tree% path)))))))))
+    (insert%% (tuple (make-Empty) (make-Empty)))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Using a key to split a node into three components: the keys comparing     *)
@@ -12937,56 +12974,58 @@
 ;; (* ------------------------------------------------------------------------- *)
 
 
-(defunc nodePartition (compareKey pkey node*)
-  (match (nodePeekPath compareKey pkey nil node*)
+(defunc nodePartition (compareKey pkey node%)
+  (match (nodePeekPath compareKey pkey nil node%)
     ((tuple path pnode)
       (match pnode
         ((None)
           (match (mkSidesPath path) ((tuple left right) (tuple left (make-None) right))))
-        ((Some node**)
-          (match node**
+        ((Some node%%)
+          (match node%%
             ((node :left left :key key :value value :right right)
               (match (addSidesPath (tuple left right) path)
-                ((tuple left* right*) (tuple left* (make-Some (tuple key value)) right*))))))))))
+                ((tuple left% right%) (tuple left% (make-Some (tuple key value)) right%))))))))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Searching a tree for a key/value pair.                                    *)
 ;; (* ------------------------------------------------------------------------- *)
 
 
-(defunc treePeekKey (compareKey pkey tree*)
-  (match tree* ((Empty) (make-None)) ((Tree node*) (nodePeekKey compareKey pkey node*))))
+(defunc treePeekKey (compareKey pkey tree%)
+  (match tree% ((Empty) (make-None)) ((Tree node%) (nodePeekKey compareKey pkey node%))))
 
-(defunc nodePeekKey (compareKey pkey node*)
-  (match node*
+(defunc nodePeekKey (compareKey pkey node%)
+  (match node%
     ((node :left left :key key :value value :right right)
-      (let ((c* (funcall compareKey pkey key)))
-        (if (< c* 0)
+      (let ((c% (funcall compareKey pkey key)))
+        (cl:declare (cl:ignorable c%))
+        (if (< c% 0)
           (treePeekKey compareKey pkey left)
-          (if (= c* 0) (make-Some (tuple key value)) (treePeekKey compareKey pkey right)))))))
+          (if (= c% 0) (make-Some (tuple key value)) (treePeekKey compareKey pkey right)))))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Inserting new key/values into the tree.                                   *)
 ;; (* ------------------------------------------------------------------------- *)
 
 
-(defunc treeInsert (compareKey key_value tree*)
+(defunc treeInsert (compareKey key_value tree%)
   (match key_value
     ((tuple key value)
-      (match (treePeekPath compareKey key nil tree*)
+      (match (treePeekPath compareKey key nil tree%)
         ((tuple path inode)
           (match inode
             ((None)
-              (let ((node* (nodeSingleton (tuple key value))))
-                (insertNodePath node* path)))
-            ((Some node*)
-              (match node*
-                ((node :size size* :priority priority :left left :right right)
+              (let ((node% (nodeSingleton (tuple key value))))
+                (cl:declare (cl:ignorable node%))
+                (insertNodePath node% path)))
+            ((Some node%)
+              (match node%
+                ((node :size size% :priority priority :left left :right right)
                   (let
-                    ((node**
+                    ((node%%
                       (make-node
                         :size
-                        size*
+                        size%
                         :priority
                         priority
                         :left
@@ -12997,7 +13036,8 @@
                         value
                         :right
                         right)))
-                    (updateTreePath (make-Tree node**) path)))))))))))
+                    (cl:declare (cl:ignorable node%%))
+                    (updateTreePath (make-Tree node%%) path)))))))))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Deleting key/value pairs: it raises an exception if the supplied key is   *)
@@ -13005,41 +13045,45 @@
 ;; (* ------------------------------------------------------------------------- *)
 
 
-(defunc treeDelete (compareKey dkey tree*)
-  (match tree*
+(defunc treeDelete (compareKey dkey tree%)
+  (match tree%
     ((Empty) (raise (make-Bug "Map.delete: element not found")))
-    ((Tree node*) (nodeDelete compareKey dkey node*))))
+    ((Tree node%) (nodeDelete compareKey dkey node%))))
 
-(defunc nodeDelete (compareKey dkey node*)
-  (match node*
-    ((node :size size* :priority priority :left left :key key :value value :right right)
-      (let ((c* (funcall compareKey dkey key)))
-        (if (< c* 0)
-          (let ((size** (- size* 1)) (left* (treeDelete compareKey dkey left)))
+(defunc nodeDelete (compareKey dkey node%)
+  (match node%
+    ((node :size size% :priority priority :left left :key key :value value :right right)
+      (let ((c% (funcall compareKey dkey key)))
+        (cl:declare (cl:ignorable c%))
+        (if (< c% 0)
+          (let ((size%% (- size% 1)) (left% (treeDelete compareKey dkey left)))
+            (cl:declare (cl:ignorable size%% left%))
             (let
-              ((node**
+              ((node%%
                 (make-node
                   :size
-                  size**
+                  size%%
                   :priority
                   priority
                   :left
-                  left*
+                  left%
                   :key
                   key
                   :value
                   value
                   :right
                   right)))
-              (make-Tree node**)))
-          (if (= c* 0)
+              (cl:declare (cl:ignorable node%%))
+              (make-Tree node%%)))
+          (if (= c% 0)
             (treeAppend left right)
-            (let ((size** (- size* 1)) (right* (treeDelete compareKey dkey right)))
+            (let ((size%% (- size% 1)) (right% (treeDelete compareKey dkey right)))
+              (cl:declare (cl:ignorable size%% right%))
               (let
-                ((node**
+                ((node%%
                   (make-node
                     :size
-                    size**
+                    size%%
                     :priority
                     priority
                     :left
@@ -13049,8 +13093,9 @@
                     :value
                     value
                     :right
-                    right*)))
-                (make-Tree node**)))))))))
+                    right%)))
+                (cl:declare (cl:ignorable node%%))
+                (make-Tree node%%)))))))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Partial map is the basic operation for preserving tree structure.         *)
@@ -13058,48 +13103,50 @@
 ;; (* ------------------------------------------------------------------------- *)
 
 
-(defunc treeMapPartial (f tree*)
-  (match tree* ((Empty) (make-Empty)) ((Tree node*) (nodeMapPartial f node*))))
+(defunc treeMapPartial (f tree%)
+  (match tree% ((Empty) (make-Empty)) ((Tree node%) (nodeMapPartial f node%))))
 
 (defunc nodeMapPartial (f arg~1567)
   (match arg~1567
     ((node :priority priority :left left :key key :value value :right right)
       (let
-        ((left* (treeMapPartial f left))
+        ((left% (treeMapPartial f left))
           (vo (funcall f (tuple key value)))
-          (right* (treeMapPartial f right)))
+          (right% (treeMapPartial f right)))
+        (cl:declare (cl:ignorable left% vo right%))
         (match vo
-          ((None) (treeAppend left* right*))
-          ((Some value*) (mkTree priority left* key value* right*)))))))
+          ((None) (treeAppend left% right%))
+          ((Some value%) (mkTree priority left% key value% right%)))))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Mapping tree values.                                                      *)
 ;; (* ------------------------------------------------------------------------- *)
 
 
-(defunc treeMap (f tree*)
-  (match tree* ((Empty) (make-Empty)) ((Tree node*) (make-Tree (nodeMap f node*)))))
+(defunc treeMap (f tree%)
+  (match tree% ((Empty) (make-Empty)) ((Tree node%) (make-Tree (nodeMap f node%)))))
 
-(defunc nodeMap (f node*)
-  (match node*
-    ((node :size size* :priority priority :left left :key key :value value :right right)
+(defunc nodeMap (f node%)
+  (match node%
+    ((node :size size% :priority priority :left left :key key :value value :right right)
       (let
-        ((left* (treeMap f left))
-          (value* (funcall f (tuple key value)))
-          (right* (treeMap f right)))
+        ((left% (treeMap f left))
+          (value% (funcall f (tuple key value)))
+          (right% (treeMap f right)))
+        (cl:declare (cl:ignorable left% value% right%))
         (make-node
           :size
-          size*
+          size%
           :priority
           priority
           :left
-          left*
+          left%
           :key
           key
           :value
-          value*
+          value%
           :right
-          right*)))))
+          right%)))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Merge is the basic operation for joining two trees. Note that the merged  *)
@@ -13119,20 +13166,23 @@
   (match node2
     ((node :priority priority :left left :key key :value value :right right)
       (match (nodePartition compareKey key node1)
-        ((tuple l kvo r*)
+        ((tuple l kvo r%)
           (let
-            ((left* (treeMerge compareKey f1 f2 fb l left))
-              (right* (treeMerge compareKey f1 f2 fb r* right)))
+            ((left% (treeMerge compareKey f1 f2 fb l left))
+              (right% (treeMerge compareKey f1 f2 fb r% right)))
+            (cl:declare (cl:ignorable left% right%))
             (let
               ((vo
                 (match kvo
                   ((None) (funcall f2 (tuple key value)))
                   ((Some kv) (funcall fb (tuple kv (tuple key value)))))))
+              (cl:declare (cl:ignorable vo))
               (match vo
-                ((None) (treeAppend left* right*))
-                ((Some value*)
-                  (let ((node* (mkNodeSingleton priority key value*)))
-                    (treeCombine left* node* right*)))))))))))
+                ((None) (treeAppend left% right%))
+                ((Some value%)
+                  (let ((node% (mkNodeSingleton priority key value%)))
+                    (cl:declare (cl:ignorable node%))
+                    (treeCombine left% node% right%)))))))))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* A union operation on trees.                                               *)
@@ -13151,20 +13201,23 @@
     (match node2
       ((node :priority priority :left left :key key :value value :right right)
         (match (nodePartition compareKey key node1)
-          ((tuple l kvo r*)
+          ((tuple l kvo r%)
             (let
-              ((left* (treeUnion compareKey f f2 l left))
-                (right* (treeUnion compareKey f f2 r* right)))
+              ((left% (treeUnion compareKey f f2 l left))
+                (right% (treeUnion compareKey f f2 r% right)))
+              (cl:declare (cl:ignorable left% right%))
               (let
                 ((vo
                   (match kvo
                     ((None) (make-Some value))
                     ((Some kv) (funcall f (tuple kv (tuple key value)))))))
+                (cl:declare (cl:ignorable vo))
                 (match vo
-                  ((None) (treeAppend left* right*))
-                  ((Some value*)
-                    (let ((node* (mkNodeSingleton priority key value*)))
-                      (treeCombine left* node* right*))))))))))))
+                  ((None) (treeAppend left% right%))
+                  ((Some value%)
+                    (let ((node% (mkNodeSingleton priority key value%)))
+                      (cl:declare (cl:ignorable node%))
+                      (treeCombine left% node% right%))))))))))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* An intersect operation on trees.                                          *)
@@ -13181,18 +13234,20 @@
   (match n2
     ((node :priority priority :left left :key key :value value :right right)
       (match (nodePartition compareKey key n1)
-        ((tuple l kvo r*)
+        ((tuple l kvo r%)
           (let
-            ((left* (treeIntersect compareKey f l left))
-              (right* (treeIntersect compareKey f r* right)))
+            ((left% (treeIntersect compareKey f l left))
+              (right% (treeIntersect compareKey f r% right)))
+            (cl:declare (cl:ignorable left% right%))
             (let
               ((vo
                 (match kvo
                   ((None) (make-None))
                   ((Some kv) (funcall f (tuple kv (tuple key value)))))))
+              (cl:declare (cl:ignorable vo))
               (match vo
-                ((None) (treeAppend left* right*))
-                ((Some value*) (mkTree priority left* key value* right*))))))))))
+                ((None) (treeAppend left% right%))
+                ((Some value%) (mkTree priority left% key value% right%))))))))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* A union operation on trees which simply chooses the second value.         *)
@@ -13212,12 +13267,14 @@
   (match node2
     ((node :priority priority :left left :key key :value value :right right)
       (match (nodePartition compareKey key node1)
-        ((tuple l _ r*)
+        ((tuple l _ r%)
           (let
-            ((left* (treeUnionDomain compareKey l left))
-              (right* (treeUnionDomain compareKey r* right)))
-            (let ((node* (mkNodeSingleton priority key value)))
-              (treeCombine left* node* right*))))))))
+            ((left% (treeUnionDomain compareKey l left))
+              (right% (treeUnionDomain compareKey r% right)))
+            (cl:declare (cl:ignorable left% right%))
+            (let ((node% (mkNodeSingleton priority key value)))
+              (cl:declare (cl:ignorable node%))
+              (treeCombine left% node% right%))))))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* An intersect operation on trees which simply chooses the second value.    *)
@@ -13237,13 +13294,14 @@
   (match node2
     ((node :priority priority :left left :key key :value value :right right)
       (match (nodePartition compareKey key node1)
-        ((tuple l kvo r*)
+        ((tuple l kvo r%)
           (let
-            ((left* (treeIntersectDomain compareKey l left))
-              (right* (treeIntersectDomain compareKey r* right)))
+            ((left% (treeIntersectDomain compareKey l left))
+              (right% (treeIntersectDomain compareKey r% right)))
+            (cl:declare (cl:ignorable left% right%))
             (if (is_some kvo)
-              (mkTree priority left* key value right*)
-              (treeAppend left* right*))))))))
+              (mkTree priority left% key value right%)
+              (treeAppend left% right%))))))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* A difference operation on trees.                                          *)
@@ -13262,13 +13320,14 @@
     (match n1
       ((node :priority priority :left left :key key :value value :right right)
         (match (nodePartition compareKey key n2)
-          ((tuple l kvo r*)
+          ((tuple l kvo r%)
             (let
-              ((left* (treeDifferenceDomain compareKey left l))
-                (right* (treeDifferenceDomain compareKey right r*)))
+              ((left% (treeDifferenceDomain compareKey left l))
+                (right% (treeDifferenceDomain compareKey right r%)))
+              (cl:declare (cl:ignorable left% right%))
               (if (is_some kvo)
-                (treeAppend left* right*)
-                (mkTree priority left* key value right*)))))))))
+                (treeAppend left% right%)
+                (mkTree priority left% key value right%)))))))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* A subset operation on trees.                                              *)
@@ -13287,107 +13346,111 @@
   (cl:or
     (== node1 node2)
     (match node1
-      ((node :size size* :left left :key key :right right)
+      ((node :size size% :left left :key key :right right)
         (cl:and
-          (<= size* (nodeSize node2))
+          (<= size% (nodeSize node2))
           (match (nodePartition compareKey key node2)
-            ((tuple l kvo r*)
+            ((tuple l kvo r%)
               (cl:and
                 (is_some kvo)
                 (cl:and
                   (treeSubsetDomain compareKey left l)
-                  (treeSubsetDomain compareKey right r*))))))))))
+                  (treeSubsetDomain compareKey right r%))))))))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Picking an arbitrary key/value pair from a tree.                          *)
 ;; (* ------------------------------------------------------------------------- *)
 
 
-(defunc nodePick (node*) (match node* ((node :key key :value value) (tuple key value))))
+(defunc nodePick (node%) (match node% ((node :key key :value value) (tuple key value))))
 
-(defunc treePick (tree*)
-  (match tree*
+(defunc treePick (tree%)
+  (match tree%
     ((Empty) (raise (make-Bug "Map.treePick")))
-    ((Tree node*) (nodePick node*))))
+    ((Tree node%) (nodePick node%))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Removing an arbitrary key/value pair from a tree.                         *)
 ;; (* ------------------------------------------------------------------------- *)
 
 
-(defunc nodeDeletePick (node*)
-  (match node*
+(defunc nodeDeletePick (node%)
+  (match node%
     ((node :left left :key key :value value :right right)
       (tuple (tuple key value) (treeAppend left right)))))
 
-(defunc treeDeletePick (tree*)
-  (match tree*
+(defunc treeDeletePick (tree%)
+  (match tree%
     ((Empty) (raise (make-Bug "Map.treeDeletePick")))
-    ((Tree node*) (nodeDeletePick node*))))
+    ((Tree node%) (nodeDeletePick node%))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Finding the nth smallest key/value (counting from 0).                     *)
 ;; (* ------------------------------------------------------------------------- *)
 
 
-(defunc treeNth (n tree*)
-  (match tree*
+(defunc treeNth (n tree%)
+  (match tree%
     ((Empty) (raise (make-Bug "Map.treeNth")))
-    ((Tree node*) (nodeNth n node*))))
+    ((Tree node%) (nodeNth n node%))))
 
-(defunc nodeNth (n node*)
-  (match node*
+(defunc nodeNth (n node%)
+  (match node%
     ((node :left left :key key :value value :right right)
-      (let ((k* (treeSize left)))
-        (if (= n k*)
+      (let ((k% (treeSize left)))
+        (cl:declare (cl:ignorable k%))
+        (if (= n k%)
           (tuple key value)
-          (if (< n k*) (treeNth n left) (treeNth (- n (+ k* 1)) right)))))))
+          (if (< n k%) (treeNth n left) (treeNth (- n (+ k% 1)) right)))))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Removing the nth smallest key/value (counting from 0).                    *)
 ;; (* ------------------------------------------------------------------------- *)
 
 
-(defunc treeDeleteNth (n tree*)
-  (match tree*
+(defunc treeDeleteNth (n tree%)
+  (match tree%
     ((Empty) (raise (make-Bug "Map.treeDeleteNth")))
-    ((Tree node*) (nodeDeleteNth n node*))))
+    ((Tree node%) (nodeDeleteNth n node%))))
 
-(defunc nodeDeleteNth (n node*)
-  (match node*
-    ((node :size size* :priority priority :left left :key key :value value :right right)
-      (let ((k* (treeSize left)))
-        (if (= n k*)
+(defunc nodeDeleteNth (n node%)
+  (match node%
+    ((node :size size% :priority priority :left left :key key :value value :right right)
+      (let ((k% (treeSize left)))
+        (cl:declare (cl:ignorable k%))
+        (if (= n k%)
           (tuple (tuple key value) (treeAppend left right))
-          (if (< n k*)
+          (if (< n k%)
             (match (treeDeleteNth n left)
-              ((tuple key_value left*)
+              ((tuple key_value left%)
                 (let*
-                  ((size** (- size* 1))
-                    (node**
+                  ((size%% (- size% 1))
+                    (node%%
                       (make-node
                         :size
-                        size**
+                        size%%
                         :priority
                         priority
                         :left
-                        left*
+                        left%
                         :key
                         key
                         :value
                         value
                         :right
                         right)))
-                  (tuple key_value (make-Tree node**)))))
-            (let ((n* (- n (+ k* 1))))
-              (match (treeDeleteNth n* right)
-                ((tuple key_value right*)
+                  (cl:declare (cl:ignorable size%% node%%))
+                  (tuple key_value (make-Tree node%%)))))
+            (let ((n% (- n (+ k% 1))))
+              (cl:declare (cl:ignorable n%))
+              (match (treeDeleteNth n% right)
+                ((tuple key_value right%)
                   (let*
-                    ((size** (- size* 1))
-                      (node**
+                    ((size%% (- size% 1))
+                      (node%%
                         (make-node
                           :size
-                          size**
+                          size%%
                           :priority
                           priority
                           :left
@@ -13397,8 +13460,9 @@
                           :value
                           value
                           :right
-                          right*)))
-                    (tuple key_value (make-Tree node**))))))))))))
+                          right%)))
+                    (cl:declare (cl:ignorable size%% node%%))
+                    (tuple key_value (make-Tree node%%))))))))))))
 
 (defvariant iterator
   (Left_to_right_iterator field0 field1 field2)
@@ -13407,24 +13471,24 @@
 (defunc fromSpineLeftToRightIterator (nodes)
   (match nodes
     (nil (make-None))
-    ((cl:cons (node :key key :value value :right right) nodes*)
-      (make-Some (make-Left_to_right_iterator (tuple key value) right nodes*)))))
+    ((cl:cons (node :key key :value value :right right) nodes%)
+      (make-Some (make-Left_to_right_iterator (tuple key value) right nodes%)))))
 
 (defunc fromSpineRightToLeftIterator (nodes)
   (match nodes
     (nil (make-None))
-    ((cl:cons (node :key key :value value :left left) nodes*)
-      (make-Some (make-Right_to_left_iterator (tuple key value) left nodes*)))))
+    ((cl:cons (node :key key :value value :left left) nodes%)
+      (make-Some (make-Right_to_left_iterator (tuple key value) left nodes%)))))
 
-(defunc addLeftToRightIterator (nodes tree*)
-  (fromSpineLeftToRightIterator (treeLeftSpine nodes tree*)))
+(defunc addLeftToRightIterator (nodes tree%)
+  (fromSpineLeftToRightIterator (treeLeftSpine nodes tree%)))
 
-(defunc addRightToLeftIterator (nodes tree*)
-  (fromSpineRightToLeftIterator (treeRightSpine nodes tree*)))
+(defunc addRightToLeftIterator (nodes tree%)
+  (fromSpineRightToLeftIterator (treeRightSpine nodes tree%)))
 
-(defunc treeMkIterator (tree*) (addLeftToRightIterator nil tree*))
+(defunc treeMkIterator (tree%) (addLeftToRightIterator nil tree%))
 
-(defunc treeMkRevIterator (tree*) (addRightToLeftIterator nil tree*))
+(defunc treeMkRevIterator (tree%) (addRightToLeftIterator nil tree%))
 
 (defunc readIterator (iter)
   (match iter
@@ -13433,8 +13497,8 @@
 
 (defunc advanceIterator (iter)
   (match iter
-    ((Left_to_right_iterator _ tree* nodes) (addLeftToRightIterator nodes tree*))
-    ((Right_to_left_iterator _ tree* nodes) (addRightToLeftIterator nodes tree*))))
+    ((Left_to_right_iterator _ tree% nodes) (addLeftToRightIterator nodes tree%))
+    ((Right_to_left_iterator _ tree% nodes) (addRightToLeftIterator nodes tree%))))
 
 (defunc foldIterator (f acc io)
   (match io
@@ -13449,6 +13513,7 @@
     ((None) (make-None))
     ((Some iter)
       (let ((key_value (readIterator iter)))
+        (cl:declare (cl:ignorable key_value))
         (if (funcall pred key_value)
           (make-Some key_value)
           (findIterator pred (advanceIterator iter)))))))
@@ -13458,6 +13523,7 @@
     ((None) (make-None))
     ((Some iter)
       (let ((key_value (readIterator iter)))
+        (cl:declare (cl:ignorable key_value))
         (match (funcall f key_value)
           ((None) (firstIterator f (advanceIterator iter)))
           (s s))))))
@@ -13470,16 +13536,19 @@
     ((tuple (Some i1) (Some i2))
       (match (tuple (readIterator i1) (readIterator i2))
         ((tuple (tuple k1 v1) (tuple k2 v2))
-          (let ((c* (funcall compareKey k1 k2)))
-            (if (<> c* 0)
-              c*
-              (let ((c** (funcall compareValue v1 v2)))
-                (if (<> c** 0)
-                  c**
-                  (let ((io1* (advanceIterator i1)) (io2* (advanceIterator i2)))
-                    (compareIterator compareKey compareValue io1* io2*)))))))))))
+          (let ((c% (funcall compareKey k1 k2)))
+            (cl:declare (cl:ignorable c%))
+            (if (<> c% 0)
+              c%
+              (let ((c%% (funcall compareValue v1 v2)))
+                (cl:declare (cl:ignorable c%%))
+                (if (<> c%% 0)
+                  c%%
+                  (let ((io1% (advanceIterator i1)) (io2% (advanceIterator i2)))
+                    (cl:declare (cl:ignorable io1% io2%))
+                    (compareIterator compareKey compareValue io1% io2%)))))))))))
 
-(defunc equalIterator (equalKey* equalValue io1 io2)
+(defunc equalIterator (equalKey% equalValue io1 io2)
   (match (tuple io1 io2)
     ((tuple (None) (None)) cl:t)
     ((tuple (None) (Some _)) cl:nil)
@@ -13488,13 +13557,14 @@
       (match (tuple (readIterator i1) (readIterator i2))
         ((tuple (tuple k1 v1) (tuple k2 v2))
           (cl:and
-            (funcall equalKey* k1 k2)
+            (funcall equalKey% k1 k2)
             (cl:and
               (funcall equalValue v1 v2)
-              (let ((io1* (advanceIterator i1)) (io2* (advanceIterator i2)))
-                (equalIterator equalKey* equalValue io1* io2*)))))))))
+              (let ((io1% (advanceIterator i1)) (io2% (advanceIterator i2)))
+                (cl:declare (cl:ignorable io1% io2%))
+                (equalIterator equalKey% equalValue io1% io2%)))))))))
 
-(defvariant map (Map* field0 field1))
+(defvariant map (Map% field0 field1))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Map debugging functions.                                                  *)
@@ -13517,17 +13587,22 @@
 ;; (* ------------------------------------------------------------------------- *)
 
 
-(defunc newMap (compareKey) (let ((tree* (treeNew unit))) (make-Map* compareKey tree*)))
+(defunc newMap (compareKey)
+  (let ((tree% (treeNew unit)))
+    (cl:declare (cl:ignorable tree%))
+    (make-Map% compareKey tree%)))
 
 (defunc singleton (compareKey key_value)
-  (let ((tree* (treeSingleton key_value))) (make-Map* compareKey tree*)))
+  (let ((tree% (treeSingleton key_value)))
+    (cl:declare (cl:ignorable tree%))
+    (make-Map% compareKey tree%)))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Map size.                                                                 *)
 ;; (* ------------------------------------------------------------------------- *)
 
 
-(defunc size (arg~2912) (match arg~2912 ((Map* _ tree*) (treeSize tree*))))
+(defunc size (arg~2912) (match arg~2912 ((Map% _ tree%) (treeSize tree%))))
 
 (defunc null (m) (= (size m) 0))
 
@@ -13537,10 +13612,10 @@
 
 
 (defunc peekKey (arg~2929 key)
-  (match arg~2929 ((Map* compareKey tree*) (treePeekKey compareKey key tree*))))
+  (match arg~2929 ((Map% compareKey tree%) (treePeekKey compareKey key tree%))))
 
 (defunc peek (arg~2943 key)
-  (match arg~2943 ((Map* compareKey tree*) (treePeek compareKey key tree*))))
+  (match arg~2943 ((Map% compareKey tree%) (treePeek compareKey key tree%))))
 
 (defunc inDomain (key m) (is_some (peek m key)))
 
@@ -13549,12 +13624,13 @@
     ((None) (failwith "Map.get: element not found"))
     ((Some value) value)))
 
-(defunc pick (arg~2980) (match arg~2980 ((Map* _ tree*) (treePick tree*))))
+(defunc pick (arg~2980) (match arg~2980 ((Map% _ tree%) (treePick tree%))))
 
-(defunc nth (arg~2990 n) (match arg~2990 ((Map* _ tree*) (treeNth n tree*))))
+(defunc nth (arg~2990 n) (match arg~2990 ((Map% _ tree%) (treeNth n tree%))))
 
 (defunc random (m)
   (let ((n (size m)))
+    (cl:declare (cl:ignorable n))
     (if (= n 0) (raise (make-Bug "Map.random: empty")) (nth m (random-int n)))))
 
 ;; (* ------------------------------------------------------------------------- *)
@@ -13564,9 +13640,10 @@
 
 (defunc insert (arg~3020 key_value)
   (match arg~3020
-    ((Map* compareKey tree*)
-      (let ((tree** (treeInsert compareKey key_value tree*)))
-        (make-Map* compareKey tree**)))))
+    ((Map% compareKey tree%)
+      (let ((tree%% (treeInsert compareKey key_value tree%)))
+        (cl:declare (cl:ignorable tree%%))
+        (make-Map% compareKey tree%%)))))
 
 ;; (*BasicDebug
 ;; let insert = fun m -> fun kv ->
@@ -13587,8 +13664,10 @@
 
 (defunc delete (arg~3057 dkey)
   (match arg~3057
-    ((Map* compareKey tree*)
-      (let ((tree** (treeDelete compareKey dkey tree*))) (make-Map* compareKey tree**)))))
+    ((Map% compareKey tree%)
+      (let ((tree%% (treeDelete compareKey dkey tree%)))
+        (cl:declare (cl:ignorable tree%%))
+        (make-Map% compareKey tree%%)))))
 
 ;; (*BasicDebug
 ;; let delete = fun m -> fun k ->
@@ -13601,9 +13680,9 @@
 
 (defunc deletePick (arg~3088)
   (match arg~3088
-    ((Map* compareKey tree*)
-      (match (treeDeletePick tree*)
-        ((tuple key_value tree**) (tuple key_value (make-Map* compareKey tree**)))))))
+    ((Map% compareKey tree%)
+      (match (treeDeletePick tree%)
+        ((tuple key_value tree%%) (tuple key_value (make-Map% compareKey tree%%)))))))
 
 ;; (*BasicDebug
 ;; let deletePick = fun m ->
@@ -13617,9 +13696,9 @@
 
 (defunc deleteNth (arg~3110 n)
   (match arg~3110
-    ((Map* compareKey tree*)
-      (match (treeDeleteNth n tree*)
-        ((tuple key_value tree**) (tuple key_value (make-Map* compareKey tree**)))))))
+    ((Map% compareKey tree%)
+      (match (treeDeleteNth n tree%)
+        ((tuple key_value tree%%) (tuple key_value (make-Map% compareKey tree%%)))))))
 
 ;; (*BasicDebug
 ;; let deleteNth = fun m -> fun n ->
@@ -13633,6 +13712,7 @@
 
 (defunc deleteRandom (m)
   (let ((n (size m)))
+    (cl:declare (cl:ignorable n))
     (if (= n 0) (raise (make-Bug "Map.deleteRandom: empty")) (deleteNth m (random-int n)))))
 
 ;; (* ------------------------------------------------------------------------- *)
@@ -13642,13 +13722,14 @@
 
 (defunc merge (arg~3152 arg~3157 arg~3161)
   (match arg~3152
-    ((tuple first* second both)
+    ((tuple first% second both)
       (match arg~3157
-        ((Map* compareKey tree1)
+        ((Map% compareKey tree1)
           (match arg~3161
-            ((Map* _ tree2)
-              (let ((tree* (treeMerge compareKey first* second both tree1 tree2)))
-                (make-Map* compareKey tree*)))))))))
+            ((Map% _ tree2)
+              (let ((tree% (treeMerge compareKey first% second both tree1 tree2)))
+                (cl:declare (cl:ignorable tree%))
+                (make-Map% compareKey tree%)))))))))
 
 ;; (*BasicDebug
 ;; let merge = fun f -> fun m1 -> fun m2 ->
@@ -13661,12 +13742,13 @@
 
 (defunc union (f arg~3189 arg~3193)
   (match arg~3189
-    ((Map* compareKey tree1)
+    ((Map% compareKey tree1)
       (match arg~3193
-        ((Map* _ tree2)
+        ((Map% _ tree2)
           (fletc ((f2 (kv) (funcall f (tuple kv kv))))
-            (let ((tree* (treeUnion compareKey f #'f2 tree1 tree2)))
-              (make-Map* compareKey tree*))))))))
+            (let ((tree% (treeUnion compareKey f #'f2 tree1 tree2)))
+              (cl:declare (cl:ignorable tree%))
+              (make-Map% compareKey tree%))))))))
 
 ;; (*BasicDebug
 ;; let union = fun f -> fun m1 -> fun m2 ->
@@ -13679,11 +13761,12 @@
 
 (defunc intersect (f arg~3223 arg~3227)
   (match arg~3223
-    ((Map* compareKey tree1)
+    ((Map% compareKey tree1)
       (match arg~3227
-        ((Map* _ tree2)
-          (let ((tree* (treeIntersect compareKey f tree1 tree2)))
-            (make-Map* compareKey tree*)))))))
+        ((Map% _ tree2)
+          (let ((tree% (treeIntersect compareKey f tree1 tree2)))
+            (cl:declare (cl:ignorable tree%))
+            (make-Map% compareKey tree%)))))))
 
 ;; (*BasicDebug
 ;; let intersect = fun f -> fun m1 -> fun m2 ->
@@ -13698,10 +13781,10 @@
 ;; (* ------------------------------------------------------------------------- *)
 
 
-(defunc mkIterator (arg~3248) (match arg~3248 ((Map* _ tree*) (treeMkIterator tree*))))
+(defunc mkIterator (arg~3248) (match arg~3248 ((Map% _ tree%) (treeMkIterator tree%))))
 
 (defunc mkRevIterator (arg~3258)
-  (match arg~3258 ((Map* _ tree*) (treeMkRevIterator tree*))))
+  (match arg~3258 ((Map% _ tree%) (treeMkRevIterator tree%))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Mapping and folding.                                                      *)
@@ -13710,8 +13793,10 @@
 
 (defunc mapPartial (f arg~3269)
   (match arg~3269
-    ((Map* compareKey tree*)
-      (let ((tree** (treeMapPartial f tree*))) (make-Map* compareKey tree**)))))
+    ((Map% compareKey tree%)
+      (let ((tree%% (treeMapPartial f tree%)))
+        (cl:declare (cl:ignorable tree%%))
+        (make-Map% compareKey tree%%)))))
 
 ;; (*BasicDebug
 ;; let mapPartial = fun f -> fun m ->
@@ -13722,8 +13807,10 @@
 
 (defunc map (f arg~3287)
   (match arg~3287
-    ((Map* compareKey tree*)
-      (let ((tree** (treeMap f tree*))) (make-Map* compareKey tree**)))))
+    ((Map% compareKey tree%)
+      (let ((tree%% (treeMap f tree%)))
+        (cl:declare (cl:ignorable tree%%))
+        (make-Map% compareKey tree%%)))))
 
 ;; (*BasicDebug
 ;; let map = fun f -> fun m ->
@@ -13744,13 +13831,13 @@
           (if (funcall pred key_value) (make-Some value) (make-None))))))
     (mapPartial #'f)))
 
-(defunc partition (p*)
-  (fletc ((np (x) (not (funcall p* x))))
-    (lambdac (m) (tuple (filter p* m) (filter #'np m)))))
+(defunc partition (p%)
+  (fletc ((np (x) (not (funcall p% x))))
+    (lambdac (m) (tuple (filter p% m) (filter #'np m)))))
 
-(defunc foldl (f b* m) (foldIterator f b* (mkIterator m)))
+(defunc foldl (f b% m) (foldIterator f b% (mkIterator m)))
 
-(defunc foldr (f b* m) (foldIterator f b* (mkRevIterator m)))
+(defunc foldr (f b% m) (foldIterator f b% (mkRevIterator m)))
 
 (defunc app (f m)
   (foldl
@@ -13766,24 +13853,24 @@
 ;; (* ------------------------------------------------------------------------- *)
 
 
-(defunc findl (p* m) (findIterator p* (mkIterator m)))
+(defunc findl (p% m) (findIterator p% (mkIterator m)))
 
-(defunc findr (p* m) (findIterator p* (mkRevIterator m)))
+(defunc findr (p% m) (findIterator p% (mkRevIterator m)))
 
 (defunc firstl (f m) (firstIterator f (mkIterator m)))
 
 (defunc firstr (f m) (firstIterator f (mkRevIterator m)))
 
-(defunc exists (p* m) (is_some (findl p* m)))
+(defunc exists (p% m) (is_some (findl p% m)))
 
-(defunc all (p*)
-  (fletc ((np (x) (not (funcall p* x)))) (lambdac (m) (not (exists #'np m)))))
+(defunc all (p%)
+  (fletc ((np (x) (not (funcall p% x)))) (lambdac (m) (not (exists #'np m)))))
 
 (defunc count (pred)
   (fletc
     ((f
       (arg~3454)
-      (match arg~3454 ((tuple k* v acc) (if (funcall pred (tuple k* v)) (+ acc 1) acc)))))
+      (match arg~3454 ((tuple k% v acc) (if (funcall pred (tuple k% v)) (+ acc 1) acc)))))
     (foldl #'f 0)))
 
 ;; (* ------------------------------------------------------------------------- *)
@@ -13794,12 +13881,14 @@
 (defunc compare (compareValue m1 m2)
   (if (== m1 m2)
     0
-    (let ((c* (intCompare (size m1) (size m2))))
-      (if (<> c* 0)
-        c*
+    (let ((c% (intCompare (size m1) (size m2))))
+      (cl:declare (cl:ignorable c%))
+      (if (<> c% 0)
+        c%
         (match m1
-          ((Map* compareKey _)
+          ((Map% compareKey _)
             (let ((io1 (mkIterator m1)) (io2 (mkIterator m2)))
+              (cl:declare (cl:ignorable io1 io2))
               (compareIterator compareKey compareValue io1 io2))))))))
 
 (defunc equal (equalValue m1 m2)
@@ -13808,8 +13897,9 @@
     (cl:and
       (= (size m1) (size m2))
       (match m1
-        ((Map* compareKey _)
+        ((Map% compareKey _)
           (let ((io1 (mkIterator m1)) (io2 (mkIterator m2)))
+            (cl:declare (cl:ignorable io1 io2))
             (equalIterator (equalKey compareKey) equalValue io1 io2)))))))
 
 ;; (* ------------------------------------------------------------------------- *)
@@ -13819,11 +13909,12 @@
 
 (defunc unionDomain (arg~3552 arg~3556)
   (match arg~3552
-    ((Map* compareKey tree1)
+    ((Map% compareKey tree1)
       (match arg~3556
-        ((Map* _ tree2)
-          (let ((tree* (treeUnionDomain compareKey tree1 tree2)))
-            (make-Map* compareKey tree*)))))))
+        ((Map% _ tree2)
+          (let ((tree% (treeUnionDomain compareKey tree1 tree2)))
+            (cl:declare (cl:ignorable tree%))
+            (make-Map% compareKey tree%)))))))
 
 ;; (*BasicDebug
 ;; let unionDomain = fun m1 -> fun m2 ->
@@ -13840,15 +13931,16 @@
 (defunc unionListDomain (ms)
   (match ms
     (nil (raise (make-Bug "Map.unionListDomain: no sets")))
-    ((cl:cons m ms*) (hol2cl.metis.metis_prover.mlist:foldl #'uncurriedUnionDomain m ms*))))
+    ((cl:cons m ms%) (hol2cl.metis.metis_prover.mlist:foldl #'uncurriedUnionDomain m ms%))))
 
 (defunc intersectDomain (arg~3606 arg~3610)
   (match arg~3606
-    ((Map* compareKey tree1)
+    ((Map% compareKey tree1)
       (match arg~3610
-        ((Map* _ tree2)
-          (let ((tree* (treeIntersectDomain compareKey tree1 tree2)))
-            (make-Map* compareKey tree*)))))))
+        ((Map% _ tree2)
+          (let ((tree% (treeIntersectDomain compareKey tree1 tree2)))
+            (cl:declare (cl:ignorable tree%))
+            (make-Map% compareKey tree%)))))))
 
 ;; (*BasicDebug
 ;; let intersectDomain = fun m1 -> fun m2 ->
@@ -13865,16 +13957,17 @@
 (defunc intersectListDomain (ms)
   (match ms
     (nil (raise (make-Bug "Map.intersectListDomain: no sets")))
-    ((cl:cons m ms*)
-      (hol2cl.metis.metis_prover.mlist:foldl #'uncurriedIntersectDomain m ms*))))
+    ((cl:cons m ms%)
+      (hol2cl.metis.metis_prover.mlist:foldl #'uncurriedIntersectDomain m ms%))))
 
 (defunc differenceDomain (arg~3660 arg~3664)
   (match arg~3660
-    ((Map* compareKey tree1)
+    ((Map% compareKey tree1)
       (match arg~3664
-        ((Map* _ tree2)
-          (let ((tree* (treeDifferenceDomain compareKey tree1 tree2)))
-            (make-Map* compareKey tree*)))))))
+        ((Map% _ tree2)
+          (let ((tree% (treeDifferenceDomain compareKey tree1 tree2)))
+            (cl:declare (cl:ignorable tree%))
+            (make-Map% compareKey tree%)))))))
 
 ;; (*BasicDebug
 ;; let differenceDomain = fun m1 -> fun m2 ->
@@ -13892,8 +13985,8 @@
 
 (defunc subsetDomain (arg~3705 arg~3709)
   (match arg~3705
-    ((Map* compareKey tree1)
-      (match arg~3709 ((Map* _ tree2) (treeSubsetDomain compareKey tree1 tree2))))))
+    ((Map% compareKey tree1)
+      (match arg~3709 ((Map% _ tree2) (treeSubsetDomain compareKey tree1 tree2))))))
 
 (defunc disjointDomain (m1 m2) (null (intersectDomain m1 m2)))
 
@@ -13918,7 +14011,8 @@
     nil
     m))
 
-(defunc fromList (compareKey l) (let ((m (newMap compareKey))) (insertList m l)))
+(defunc fromList (compareKey l)
+  (let ((m (newMap compareKey))) (cl:declare (cl:ignorable m)) (insertList m l)))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Pretty-printing.                                                          *)
@@ -13990,7 +14084,7 @@
   (match arg~3912
     ((Set m)
       (match (peekKey m elt)
-        ((Some (tuple elt* (cl:type hol2cl.runtime::unit-value))) (make-Some elt*))
+        ((Some (tuple elt% (cl:type hol2cl.runtime::unit-value))) (make-Some elt%))
         ((None) (make-None))))))
 
 (defunc member (elt arg~3934) (match arg~3934 ((Set m) (inDomain elt m))))
@@ -14013,11 +14107,15 @@
 
 
 (defunc add (arg~3991 elt)
-  (match arg~3991 ((Set m) (let ((m* (insert m (tuple elt unit)))) (make-Set m*)))))
+  (match arg~3991
+    ((Set m)
+      (let ((m% (insert m (tuple elt unit))))
+        (cl:declare (cl:ignorable m%))
+        (make-Set m%)))))
 
-(defunc uncurriedAdd (arg~4008) (match arg~4008 ((tuple elt set*) (add set* elt))))
+(defunc uncurriedAdd (arg~4008) (match arg~4008 ((tuple elt set%) (add set% elt))))
 
-(defunc addList (set*) (hol2cl.metis.metis_prover.mlist:foldl #'uncurriedAdd set*))
+(defunc addList (set%) (hol2cl.metis.metis_prover.mlist:foldl #'uncurriedAdd set%))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Removing.                                                                 *)
@@ -14026,32 +14124,38 @@
 
 (defunc delete (arg~4026 elt)
   (match arg~4026
-    ((Set m) (let ((m* (hol2cl.metis.metis_prover.pmap:delete m elt))) (make-Set m*)))))
+    ((Set m)
+      (let ((m% (hol2cl.metis.metis_prover.pmap:delete m elt)))
+        (cl:declare (cl:ignorable m%))
+        (make-Set m%)))))
 
 (defunc remove (arg~4041 elt)
   (match arg~4041
-    ((Set m) (let ((m* (hol2cl.metis.metis_prover.pmap:remove m elt))) (make-Set m*)))))
+    ((Set m)
+      (let ((m% (hol2cl.metis.metis_prover.pmap:remove m elt)))
+        (cl:declare (cl:ignorable m%))
+        (make-Set m%)))))
 
 (defunc deletePick (arg~4056)
   (match arg~4056
     ((Set m)
       (match (hol2cl.metis.metis_prover.pmap:deletePick m)
-        ((tuple (tuple elt (cl:type hol2cl.runtime::unit-value)) m*)
-          (tuple elt (make-Set m*)))))))
+        ((tuple (tuple elt (cl:type hol2cl.runtime::unit-value)) m%)
+          (tuple elt (make-Set m%)))))))
 
 (defunc deleteNth (arg~4077 n)
   (match arg~4077
     ((Set m)
       (match (hol2cl.metis.metis_prover.pmap:deleteNth m n)
-        ((tuple (tuple elt (cl:type hol2cl.runtime::unit-value)) m*)
-          (tuple elt (make-Set m*)))))))
+        ((tuple (tuple elt (cl:type hol2cl.runtime::unit-value)) m%)
+          (tuple elt (make-Set m%)))))))
 
 (defunc deleteRandom (arg~4100)
   (match arg~4100
     ((Set m)
       (match (hol2cl.metis.metis_prover.pmap:deleteRandom m)
-        ((tuple (tuple elt (cl:type hol2cl.runtime::unit-value)) m*)
-          (tuple elt (make-Set m*)))))))
+        ((tuple (tuple elt (cl:type hol2cl.runtime::unit-value)) m%)
+          (tuple elt (make-Set m%)))))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Joining.                                                                  *)
@@ -14062,14 +14166,18 @@
   (match arg~4121 ((Set m1) (match arg~4124 ((Set m2) (make-Set (unionDomain m1 m2)))))))
 
 (defunc unionList (sets)
-  (let ((ms (list-map #'dest sets))) (make-Set (unionListDomain ms))))
+  (let ((ms (list-map #'dest sets)))
+    (cl:declare (cl:ignorable ms))
+    (make-Set (unionListDomain ms))))
 
 (defunc intersect (arg~4148 arg~4151)
   (match arg~4148
     ((Set m1) (match arg~4151 ((Set m2) (make-Set (intersectDomain m1 m2)))))))
 
 (defunc intersectList (sets)
-  (let ((ms (list-map #'dest sets))) (make-Set (intersectListDomain ms))))
+  (let ((ms (list-map #'dest sets)))
+    (cl:declare (cl:ignorable ms))
+    (make-Set (intersectListDomain ms))))
 
 (defunc difference (arg~4175 arg~4178)
   (match arg~4175
@@ -14137,27 +14245,27 @@
 ;; (* ------------------------------------------------------------------------- *)
 
 
-(defunc findl (p*)
+(defunc findl (p%)
   (fletc
-    ((mp*
+    ((mp%
       (arg~4343)
-      (match arg~4343 ((tuple elt (cl:type hol2cl.runtime::unit-value)) (funcall p* elt)))))
+      (match arg~4343 ((tuple elt (cl:type hol2cl.runtime::unit-value)) (funcall p% elt)))))
     (lambdac (arg~4351)
       (match arg~4351
         ((Set m)
-          (match (hol2cl.metis.metis_prover.pmap:findl #'mp* m)
+          (match (hol2cl.metis.metis_prover.pmap:findl #'mp% m)
             ((Some (tuple elt (cl:type hol2cl.runtime::unit-value))) (make-Some elt))
             ((None) (make-None))))))))
 
-(defunc findr (p*)
+(defunc findr (p%)
   (fletc
-    ((mp*
+    ((mp%
       (arg~4375)
-      (match arg~4375 ((tuple elt (cl:type hol2cl.runtime::unit-value)) (funcall p* elt)))))
+      (match arg~4375 ((tuple elt (cl:type hol2cl.runtime::unit-value)) (funcall p% elt)))))
     (lambdac (arg~4383)
       (match arg~4383
         ((Set m)
-          (match (hol2cl.metis.metis_prover.pmap:findr #'mp* m)
+          (match (hol2cl.metis.metis_prover.pmap:findr #'mp% m)
             ((Some (tuple elt (cl:type hol2cl.runtime::unit-value))) (make-Some elt))
             ((None) (make-None))))))))
 
@@ -14177,29 +14285,29 @@
     (lambdac (arg~4437)
       (match arg~4437 ((Set m) (hol2cl.metis.metis_prover.pmap:firstr #'mf m))))))
 
-(defunc exists (p*)
+(defunc exists (p%)
   (fletc
-    ((mp*
+    ((mp%
       (arg~4451)
-      (match arg~4451 ((tuple elt (cl:type hol2cl.runtime::unit-value)) (funcall p* elt)))))
+      (match arg~4451 ((tuple elt (cl:type hol2cl.runtime::unit-value)) (funcall p% elt)))))
     (lambdac (arg~4459)
-      (match arg~4459 ((Set m) (hol2cl.metis.metis_prover.pmap:exists #'mp* m))))))
+      (match arg~4459 ((Set m) (hol2cl.metis.metis_prover.pmap:exists #'mp% m))))))
 
-(defunc all (p*)
+(defunc all (p%)
   (fletc
-    ((mp*
+    ((mp%
       (arg~4473)
-      (match arg~4473 ((tuple elt (cl:type hol2cl.runtime::unit-value)) (funcall p* elt)))))
+      (match arg~4473 ((tuple elt (cl:type hol2cl.runtime::unit-value)) (funcall p% elt)))))
     (lambdac (arg~4481)
-      (match arg~4481 ((Set m) (hol2cl.metis.metis_prover.pmap:all #'mp* m))))))
+      (match arg~4481 ((Set m) (hol2cl.metis.metis_prover.pmap:all #'mp% m))))))
 
-(defunc count (p*)
+(defunc count (p%)
   (fletc
-    ((mp*
+    ((mp%
       (arg~4495)
-      (match arg~4495 ((tuple elt (cl:type hol2cl.runtime::unit-value)) (funcall p* elt)))))
+      (match arg~4495 ((tuple elt (cl:type hol2cl.runtime::unit-value)) (funcall p% elt)))))
     (lambdac (arg~4503)
-      (match arg~4503 ((Set m) (hol2cl.metis.metis_prover.pmap:count #'mp* m))))))
+      (match arg~4503 ((Set m) (hol2cl.metis.metis_prover.pmap:count #'mp% m))))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Comparing.                                                                *)
@@ -14252,8 +14360,8 @@
 ;; (* ------------------------------------------------------------------------- *)
 
 
-(defunc toString (set*)
-  (string-concat "{" (string-concat (if (null set*) "" (string-of-int (size set*))) "}")))
+(defunc toString (set%)
+  (string-concat "{" (string-concat (if (null set%) "" (string-of-int (size set%))) "}")))
 
 (defunc mkIterator (arg~4645)
   (match arg~4645 ((Set m) (hol2cl.metis.metis_prover.pmap:mkIterator m))))
@@ -14285,114 +14393,131 @@
 
 (in-package :hol2cl.metis.metis_prover.intmap.include~4681.ma)
 
-(defvariant t* (Empty*) (Node (:record l v d r h)))
+(defvariant t% (Empty%) (Node (:record l v d r h)))
 
-(defunc height (arg~4686) (match arg~4686 ((Empty*) 0) ((Node :h h) h)))
+(defunc height (arg~4686) (match arg~4686 ((Empty%) 0) ((Node :h h) h)))
 
 (defunc create (l x d r)
   (let ((hl (height l)) (hr (height r)))
+    (cl:declare (cl:ignorable hl hr))
     (make-Node :l l :v x :d d :r r :h (if (>= hl hr) (+ hl 1) (+ hr 1)))))
 
-(defunc singleton (x d) (make-Node :l (make-Empty*) :v x :d d :r (make-Empty*) :h 1))
+(defunc singleton (x d) (make-Node :l (make-Empty%) :v x :d d :r (make-Empty%) :h 1))
 
 (defunc bal (l x d r)
   (let*
-    ((hl (match l ((Empty*) 0) ((Node :h h) h)))
-      (hr (match r ((Empty*) 0) ((Node :h h) h))))
+    ((hl (match l ((Empty%) 0) ((Node :h h) h)))
+      (hr (match r ((Empty%) 0) ((Node :h h) h))))
+    (cl:declare (cl:ignorable hl hr))
     (if (> hl (+ hr 2))
       (match l
-        ((Empty*) (invalid-arg "Map.bal"))
+        ((Empty%) (invalid-arg "Map.bal"))
         ((Node :l ll :v lv :d ld :r lr)
           (if (>= (height ll) (height lr))
             (create ll lv ld (create lr x d r))
             (match lr
-              ((Empty*) (invalid-arg "Map.bal"))
+              ((Empty%) (invalid-arg "Map.bal"))
               ((Node :l lrl :v lrv :d lrd :r lrr)
                 (create (create ll lv ld lrl) lrv lrd (create lrr x d r)))))))
       (if (> hr (+ hl 2))
         (match r
-          ((Empty*) (invalid-arg "Map.bal"))
+          ((Empty%) (invalid-arg "Map.bal"))
           ((Node :l rl :v rv :d rd :r rr)
             (if (>= (height rr) (height rl))
               (create (create l x d rl) rv rd rr)
               (match rl
-                ((Empty*) (invalid-arg "Map.bal"))
+                ((Empty%) (invalid-arg "Map.bal"))
                 ((Node :l rll :v rlv :d rld :r rlr)
                   (create (create l x d rll) rlv rld (create rlr rv rd rr)))))))
         (make-Node :l l :v x :d d :r r :h (if (>= hl hr) (+ hl 1) (+ hr 1)))))))
 
-(defparameter empty (make-Empty*))
+(defparameter empty (make-Empty%))
 
-(defunc is_empty (arg~4902) (match arg~4902 ((Empty*) cl:t) (_ cl:nil)))
+(defunc is_empty (arg~4902) (match arg~4902 ((Empty%) cl:t) (_ cl:nil)))
 
 (defunc add (x data arg~4912)
   (match arg~4912
-    ((Empty*) (make-Node :l (make-Empty*) :v x :d data :r (make-Empty*) :h 1))
+    ((Empty%) (make-Node :l (make-Empty%) :v x :d data :r (make-Empty%) :h 1))
     ((cl:and m (Node :l l :v v :d d :r r :h h))
       (let ((c (funcall compare x v)))
+        (cl:declare (cl:ignorable c))
         (if (= c 0)
           (if (== d data) m (make-Node :l l :v x :d data :r r :h h))
           (if (< c 0)
-            (let ((ll (add x data l))) (if (== l ll) m (bal ll v d r)))
-            (let ((rr (add x data r))) (if (== r rr) m (bal l v d rr)))))))))
+            (let ((ll (add x data l)))
+              (cl:declare (cl:ignorable ll))
+              (if (== l ll) m (bal ll v d r)))
+            (let ((rr (add x data r)))
+              (cl:declare (cl:ignorable rr))
+              (if (== r rr) m (bal l v d rr)))))))))
 
 (defunc find (x arg~4994)
   (match arg~4994
-    ((Empty*) (raise (make-Not_found)))
+    ((Empty%) (raise (make-Not_found)))
     ((Node :l l :v v :d d :r r)
-      (let ((c (funcall compare x v))) (if (= c 0) d (find x (if (< c 0) l r)))))))
+      (let ((c (funcall compare x v)))
+        (cl:declare (cl:ignorable c))
+        (if (= c 0) d (find x (if (< c 0) l r)))))))
 
 (defunc mem (x arg~5029)
   (match arg~5029
-    ((Empty*) cl:nil)
+    ((Empty%) cl:nil)
     ((Node :l l :v v :r r)
-      (let ((c (funcall compare x v))) (cl:or (= c 0) (mem x (if (< c 0) l r)))))))
+      (let ((c (funcall compare x v)))
+        (cl:declare (cl:ignorable c))
+        (cl:or (= c 0) (mem x (if (< c 0) l r)))))))
 
 (defunc min_binding (arg~5059)
   (match arg~5059
-    ((Empty*) (raise (make-Not_found)))
-    ((Node :l (Empty*) :v v :d d) (tuple v d))
+    ((Empty%) (raise (make-Not_found)))
+    ((Node :l (Empty%) :v v :d d) (tuple v d))
     ((Node :l l) (min_binding l))))
 
 (defunc remove_min_binding (arg~5080)
   (match arg~5080
-    ((Empty*) (invalid-arg "Map.remove_min_elt"))
-    ((Node :l (Empty*) :r r) r)
+    ((Empty%) (invalid-arg "Map.remove_min_elt"))
+    ((Node :l (Empty%) :r r) r)
     ((Node :l l :v v :d d :r r) (bal (remove_min_binding l) v d r))))
 
 (defunc merge~1 (t1 t2)
   (match (tuple t1 t2)
-    ((tuple (Empty*) t*) t*)
-    ((tuple t* (Empty*)) t*)
+    ((tuple (Empty%) t%) t%)
+    ((tuple t% (Empty%)) t%)
     ((tuple _ _)
       (match (min_binding t2) ((tuple x d) (bal t1 x d (remove_min_binding t2)))))))
 
 (defunc remove (x arg~5143)
   (match arg~5143
-    ((Empty*) (make-Empty*))
+    ((Empty%) (make-Empty%))
     ((cl:and m (Node :l l :v v :d d :r r))
       (let ((c (funcall compare x v)))
+        (cl:declare (cl:ignorable c))
         (if (= c 0)
           (merge~1 l r)
           (if (< c 0)
-            (let ((ll (remove x l))) (if (== l ll) m (bal ll v d r)))
-            (let ((rr (remove x r))) (if (== r rr) m (bal l v d rr)))))))))
+            (let ((ll (remove x l)))
+              (cl:declare (cl:ignorable ll))
+              (if (== l ll) m (bal ll v d r)))
+            (let ((rr (remove x r)))
+              (cl:declare (cl:ignorable rr))
+              (if (== r rr) m (bal l v d rr)))))))))
 
 (defunc map (f arg~5208)
   (match arg~5208
-    ((Empty*) (make-Empty*))
+    ((Empty%) (make-Empty%))
     ((Node :l l :v v :d d :r r :h h)
-      (let* ((l* (map f l)) (d* (funcall f d)) (r* (map f r)))
-        (make-Node :l l* :v v :d d* :r r* :h h)))))
+      (let* ((l% (map f l)) (d% (funcall f d)) (r% (map f r)))
+        (cl:declare (cl:ignorable l% d% r%))
+        (make-Node :l l% :v v :d d% :r r% :h h)))))
 
 (defunc fold (f m accu)
   (match m
-    ((Empty*) accu)
+    ((Empty%) accu)
     ((Node :l l :v v :d d :r r) (fold f r (funcall f v d (fold f l accu))))))
 
 (defunc exists (p arg~5274)
   (match arg~5274
-    ((Empty*) cl:nil)
+    ((Empty%) cl:nil)
     ((Node :l l :v v :d d :r r) (cl:or (funcall p v d) (cl:or (exists p l) (exists p r))))))
 
 ;; (* Beware: those two functions assume that the added k is *strictly*
@@ -14406,12 +14531,12 @@
 
 (defunc add_min_binding (k x arg~5302)
   (match arg~5302
-    ((Empty*) (singleton k x))
+    ((Empty%) (singleton k x))
     ((Node :l l :v v :d d :r r) (bal (add_min_binding k x l) v d r))))
 
 (defunc add_max_binding (k x arg~5329)
   (match arg~5329
-    ((Empty*) (singleton k x))
+    ((Empty%) (singleton k x))
     ((Node :l l :v v :d d :r r) (bal l v d (add_max_binding k x r)))))
 
 ;; (* Same as create and bal, but no assumptions are made on the
@@ -14420,8 +14545,8 @@
 
 (defunc join (l v d r)
   (match (tuple l r)
-    ((tuple (Empty*) _) (add_min_binding v d r))
-    ((tuple _ (Empty*)) (add_max_binding v d l))
+    ((tuple (Empty%) _) (add_min_binding v d r))
+    ((tuple _ (Empty%)) (add_max_binding v d l))
     ((tuple (Node :l ll :v lv :d ld :r lr :h lh) (Node :l rl :v rv :d rd :r rr :h rh))
       (if (> lh (+ rh 2))
         (bal ll lv ld (join lr v d r))
@@ -14434,19 +14559,20 @@
 
 (defunc concat (t1 t2)
   (match (tuple t1 t2)
-    ((tuple (Empty*) t*) t*)
-    ((tuple t* (Empty*)) t*)
+    ((tuple (Empty%) t%) t%)
+    ((tuple t% (Empty%)) t%)
     ((tuple _ _)
       (match (min_binding t2) ((tuple x d) (join t1 x d (remove_min_binding t2)))))))
 
 (defunc concat_or_join (t1 v d t2)
-  (match d ((Some d*) (join t1 v d* t2)) ((None) (concat t1 t2))))
+  (match d ((Some d%) (join t1 v d% t2)) ((None) (concat t1 t2))))
 
 (defunc split (x arg~5492)
   (match arg~5492
-    ((Empty*) (tuple (make-Empty*) (make-None) (make-Empty*)))
+    ((Empty%) (tuple (make-Empty%) (make-None) (make-Empty%)))
     ((Node :l l :v v :d d :r r)
       (let ((c (funcall compare x v)))
+        (cl:declare (cl:ignorable c))
         (if (= c 0)
           (tuple l (make-Some d) r)
           (if (< c 0)
@@ -14455,8 +14581,8 @@
 
 (defunc merge (f s1 s2)
   (match (tuple s1 s2)
-    ((tuple (Empty*) (Empty*)) (make-Empty*))
-    ((trivia:guard (tuple (Node :l l1 :v v1 :d d1 :r r1 :h h1) _) (>= h1 (height s2)))
+    ((tuple (Empty%) (Empty%)) (make-Empty%))
+    ((guard (tuple (Node :l l1 :v v1 :d d1 :r r1 :h h1) _) (>= h1 (height s2)))
       (match (split v1 s2)
         ((tuple l2 d2 r2)
           (concat_or_join
@@ -14476,37 +14602,40 @@
 
 (defunc union (f s1 s2)
   (match (tuple s1 s2)
-    ((cl:or (tuple (Empty*) s) (tuple s (Empty*))) s)
+    ((cl:or (tuple (Empty%) s) (tuple s (Empty%))) s)
     ((tuple (Node :l l1 :v v1 :d d1 :r r1 :h h1) (Node :l l2 :v v2 :d d2 :r r2 :h h2))
       (if (>= h1 h2)
         (match (split v1 s2)
-          ((tuple l2* d2* r2*)
-            (let ((l (union f l1 l2*)) (r (union f r1 r2*)))
-              (match d2*
+          ((tuple l2% d2% r2%)
+            (let ((l (union f l1 l2%)) (r (union f r1 r2%)))
+              (cl:declare (cl:ignorable l r))
+              (match d2%
                 ((None) (join l v1 d1 r))
                 ((Some d2) (concat_or_join l v1 (funcall f v1 d1 d2) r))))))
         (match (split v2 s1)
-          ((tuple l1* d1* r1*)
-            (let ((l (union f l1* l2)) (r (union f r1* r2)))
-              (match d1*
+          ((tuple l1% d1% r1%)
+            (let ((l (union f l1% l2)) (r (union f r1% r2)))
+              (cl:declare (cl:ignorable l r))
+              (match d1%
                 ((None) (join l v2 d2 r))
                 ((Some d1) (concat_or_join l v2 (funcall f v2 d1 d2) r))))))))))
 
 (defunc filter (p arg~5790)
   (match arg~5790
-    ((Empty*) (make-Empty*))
+    ((Empty%) (make-Empty%))
     ((cl:and m (Node :l l :v v :d d :r r))
-      (let* ((l* (filter p l)) (pvd (funcall p v d)) (r* (filter p r)))
-        (if pvd (if (cl:and (== l l*) (== r r*)) m (join l* v d r*)) (concat l* r*))))))
+      (let* ((l% (filter p l)) (pvd (funcall p v d)) (r% (filter p r)))
+        (cl:declare (cl:ignorable l% pvd r%))
+        (if pvd (if (cl:and (== l l%) (== r r%)) m (join l% v d r%)) (concat l% r%))))))
 
 (defvariant enumeration (End) (More field0 field1 field2 field3))
 
 (defunc cardinal (arg~5845)
-  (match arg~5845 ((Empty*) 0) ((Node :l l :r r) (+ (+ (cardinal l) 1) (cardinal r)))))
+  (match arg~5845 ((Empty%) 0) ((Node :l l :r r) (+ (+ (cardinal l) 1) (cardinal r)))))
 
 (defunc bindings_aux (accu arg~5864)
   (match arg~5864
-    ((Empty*) accu)
+    ((Empty%) accu)
     ((Node :l l :v v :d d :r r)
       (bindings_aux (cl:cons (tuple v d) (bindings_aux accu r)) l))))
 
@@ -14520,27 +14649,27 @@
 
 (defunc singleton (arg~5903)
   (match arg~5903
-    ((tuple k* x) (hol2cl.metis.metis_prover.intmap.include~4681.ma:singleton k* x))))
+    ((tuple k% x) (hol2cl.metis.metis_prover.intmap.include~4681.ma:singleton k% x))))
 
 (defparameter size #'cardinal)
 
-(defunc get (m k*)
+(defunc get (m k%)
   (handler-case
-    (find k* m)
+    (find k% m)
     (hol2cl.runtime:ocaml-condition
       (exception~5920)
       (match exception~5920
         ((Not_found) (failwith "Mmap.get: element not found"))
         (_ (raise exception~5920))))))
 
-(defunc peek (m k*)
+(defunc peek (m k%)
   (handler-case
-    (make-Some (find k* m))
+    (make-Some (find k% m))
     (hol2cl.runtime:ocaml-condition
       (exception~5932)
       (match exception~5932 ((Not_found) (make-None)) (_ (raise exception~5932))))))
 
-(defunc insert (m arg~5943) (match arg~5943 ((tuple k* v) (add k* v m))))
+(defunc insert (m arg~5943) (match arg~5943 ((tuple k% v) (add k% v m))))
 
 (defparameter toList #'bindings)
 
@@ -14550,10 +14679,10 @@
     l
     empty))
 
-(defunc foldl (f b* m)
+(defunc foldl (f b% m)
   (list-fold-left
     (lambdac (s arg~5980) (match arg~5980 ((tuple v tm) (funcall f (tuple v tm s)))))
-    b*
+    b%
     (bindings m)))
 
 (defparameter foldr #'foldl)
@@ -14566,21 +14695,21 @@
 
 (defunc union (f m1 m2)
   (fletc
-    ((f*
-      (k* arg~6021)
+    ((f%
+      (k% arg~6021)
       (match arg~6021
-        ((tuple (Some x) (Some y)) (funcall f (tuple (tuple k* x) (tuple k* y))))
+        ((tuple (Some x) (Some y)) (funcall f (tuple (tuple k% x) (tuple k% y))))
         ((tuple (Some x) (None)) (make-Some x))
         ((tuple (None) (Some y)) (make-Some y))
         ((tuple (None) (None)) (make-None)))))
-    (merge (lambdac (k* x y) (f* k* (tuple x y))) m1 m2)))
+    (merge (lambdac (k% x y) (f% k% (tuple x y))) m1 m2)))
 
-(defunc delete (m k*) (remove k* m))
+(defunc delete (m k%) (remove k% m))
 
 (defunc mapPartial (f m)
   (fold
-    (lambdac (k* x acc)
-      (match (funcall f (tuple k* x)) ((Some y) (add k* y acc)) ((None) acc)))
+    (lambdac (k% x acc)
+      (match (funcall f (tuple k% x)) ((Some y) (add k% y acc)) ((None) acc)))
     m
     empty))
 
@@ -14588,7 +14717,7 @@
 
 (defunc exists (f)
   (hol2cl.metis.metis_prover.intmap.include~4681.ma:exists
-    (lambdac (k* m) (funcall f (tuple k* m)))))
+    (lambdac (k% m) (funcall f (tuple k% m)))))
 
 (in-package :hol2cl.metis.metis_prover.intmap)
 
@@ -14606,114 +14735,131 @@
 
 (in-package :hol2cl.metis.metis_prover.stringmap.include~6119.ma)
 
-(defvariant t* (Empty*) (Node (:record l v d r h)))
+(defvariant t% (Empty%) (Node (:record l v d r h)))
 
-(defunc height (arg~6124) (match arg~6124 ((Empty*) 0) ((Node :h h) h)))
+(defunc height (arg~6124) (match arg~6124 ((Empty%) 0) ((Node :h h) h)))
 
 (defunc create (l x d r)
   (let ((hl (height l)) (hr (height r)))
+    (cl:declare (cl:ignorable hl hr))
     (make-Node :l l :v x :d d :r r :h (if (>= hl hr) (+ hl 1) (+ hr 1)))))
 
-(defunc singleton (x d) (make-Node :l (make-Empty*) :v x :d d :r (make-Empty*) :h 1))
+(defunc singleton (x d) (make-Node :l (make-Empty%) :v x :d d :r (make-Empty%) :h 1))
 
 (defunc bal (l x d r)
   (let*
-    ((hl (match l ((Empty*) 0) ((Node :h h) h)))
-      (hr (match r ((Empty*) 0) ((Node :h h) h))))
+    ((hl (match l ((Empty%) 0) ((Node :h h) h)))
+      (hr (match r ((Empty%) 0) ((Node :h h) h))))
+    (cl:declare (cl:ignorable hl hr))
     (if (> hl (+ hr 2))
       (match l
-        ((Empty*) (invalid-arg "Map.bal"))
+        ((Empty%) (invalid-arg "Map.bal"))
         ((Node :l ll :v lv :d ld :r lr)
           (if (>= (height ll) (height lr))
             (create ll lv ld (create lr x d r))
             (match lr
-              ((Empty*) (invalid-arg "Map.bal"))
+              ((Empty%) (invalid-arg "Map.bal"))
               ((Node :l lrl :v lrv :d lrd :r lrr)
                 (create (create ll lv ld lrl) lrv lrd (create lrr x d r)))))))
       (if (> hr (+ hl 2))
         (match r
-          ((Empty*) (invalid-arg "Map.bal"))
+          ((Empty%) (invalid-arg "Map.bal"))
           ((Node :l rl :v rv :d rd :r rr)
             (if (>= (height rr) (height rl))
               (create (create l x d rl) rv rd rr)
               (match rl
-                ((Empty*) (invalid-arg "Map.bal"))
+                ((Empty%) (invalid-arg "Map.bal"))
                 ((Node :l rll :v rlv :d rld :r rlr)
                   (create (create l x d rll) rlv rld (create rlr rv rd rr)))))))
         (make-Node :l l :v x :d d :r r :h (if (>= hl hr) (+ hl 1) (+ hr 1)))))))
 
-(defparameter empty (make-Empty*))
+(defparameter empty (make-Empty%))
 
-(defunc is_empty (arg~6340) (match arg~6340 ((Empty*) cl:t) (_ cl:nil)))
+(defunc is_empty (arg~6340) (match arg~6340 ((Empty%) cl:t) (_ cl:nil)))
 
 (defunc add (x data arg~6350)
   (match arg~6350
-    ((Empty*) (make-Node :l (make-Empty*) :v x :d data :r (make-Empty*) :h 1))
+    ((Empty%) (make-Node :l (make-Empty%) :v x :d data :r (make-Empty%) :h 1))
     ((cl:and m (Node :l l :v v :d d :r r :h h))
       (let ((c (funcall compare x v)))
+        (cl:declare (cl:ignorable c))
         (if (= c 0)
           (if (== d data) m (make-Node :l l :v x :d data :r r :h h))
           (if (< c 0)
-            (let ((ll (add x data l))) (if (== l ll) m (bal ll v d r)))
-            (let ((rr (add x data r))) (if (== r rr) m (bal l v d rr)))))))))
+            (let ((ll (add x data l)))
+              (cl:declare (cl:ignorable ll))
+              (if (== l ll) m (bal ll v d r)))
+            (let ((rr (add x data r)))
+              (cl:declare (cl:ignorable rr))
+              (if (== r rr) m (bal l v d rr)))))))))
 
 (defunc find (x arg~6432)
   (match arg~6432
-    ((Empty*) (raise (make-Not_found)))
+    ((Empty%) (raise (make-Not_found)))
     ((Node :l l :v v :d d :r r)
-      (let ((c (funcall compare x v))) (if (= c 0) d (find x (if (< c 0) l r)))))))
+      (let ((c (funcall compare x v)))
+        (cl:declare (cl:ignorable c))
+        (if (= c 0) d (find x (if (< c 0) l r)))))))
 
 (defunc mem (x arg~6467)
   (match arg~6467
-    ((Empty*) cl:nil)
+    ((Empty%) cl:nil)
     ((Node :l l :v v :r r)
-      (let ((c (funcall compare x v))) (cl:or (= c 0) (mem x (if (< c 0) l r)))))))
+      (let ((c (funcall compare x v)))
+        (cl:declare (cl:ignorable c))
+        (cl:or (= c 0) (mem x (if (< c 0) l r)))))))
 
 (defunc min_binding (arg~6497)
   (match arg~6497
-    ((Empty*) (raise (make-Not_found)))
-    ((Node :l (Empty*) :v v :d d) (tuple v d))
+    ((Empty%) (raise (make-Not_found)))
+    ((Node :l (Empty%) :v v :d d) (tuple v d))
     ((Node :l l) (min_binding l))))
 
 (defunc remove_min_binding (arg~6518)
   (match arg~6518
-    ((Empty*) (invalid-arg "Map.remove_min_elt"))
-    ((Node :l (Empty*) :r r) r)
+    ((Empty%) (invalid-arg "Map.remove_min_elt"))
+    ((Node :l (Empty%) :r r) r)
     ((Node :l l :v v :d d :r r) (bal (remove_min_binding l) v d r))))
 
 (defunc merge~1 (t1 t2)
   (match (tuple t1 t2)
-    ((tuple (Empty*) t*) t*)
-    ((tuple t* (Empty*)) t*)
+    ((tuple (Empty%) t%) t%)
+    ((tuple t% (Empty%)) t%)
     ((tuple _ _)
       (match (min_binding t2) ((tuple x d) (bal t1 x d (remove_min_binding t2)))))))
 
 (defunc remove (x arg~6581)
   (match arg~6581
-    ((Empty*) (make-Empty*))
+    ((Empty%) (make-Empty%))
     ((cl:and m (Node :l l :v v :d d :r r))
       (let ((c (funcall compare x v)))
+        (cl:declare (cl:ignorable c))
         (if (= c 0)
           (merge~1 l r)
           (if (< c 0)
-            (let ((ll (remove x l))) (if (== l ll) m (bal ll v d r)))
-            (let ((rr (remove x r))) (if (== r rr) m (bal l v d rr)))))))))
+            (let ((ll (remove x l)))
+              (cl:declare (cl:ignorable ll))
+              (if (== l ll) m (bal ll v d r)))
+            (let ((rr (remove x r)))
+              (cl:declare (cl:ignorable rr))
+              (if (== r rr) m (bal l v d rr)))))))))
 
 (defunc map (f arg~6646)
   (match arg~6646
-    ((Empty*) (make-Empty*))
+    ((Empty%) (make-Empty%))
     ((Node :l l :v v :d d :r r :h h)
-      (let* ((l* (map f l)) (d* (funcall f d)) (r* (map f r)))
-        (make-Node :l l* :v v :d d* :r r* :h h)))))
+      (let* ((l% (map f l)) (d% (funcall f d)) (r% (map f r)))
+        (cl:declare (cl:ignorable l% d% r%))
+        (make-Node :l l% :v v :d d% :r r% :h h)))))
 
 (defunc fold (f m accu)
   (match m
-    ((Empty*) accu)
+    ((Empty%) accu)
     ((Node :l l :v v :d d :r r) (fold f r (funcall f v d (fold f l accu))))))
 
 (defunc exists (p arg~6712)
   (match arg~6712
-    ((Empty*) cl:nil)
+    ((Empty%) cl:nil)
     ((Node :l l :v v :d d :r r) (cl:or (funcall p v d) (cl:or (exists p l) (exists p r))))))
 
 ;; (* Beware: those two functions assume that the added k is *strictly*
@@ -14727,12 +14873,12 @@
 
 (defunc add_min_binding (k x arg~6740)
   (match arg~6740
-    ((Empty*) (singleton k x))
+    ((Empty%) (singleton k x))
     ((Node :l l :v v :d d :r r) (bal (add_min_binding k x l) v d r))))
 
 (defunc add_max_binding (k x arg~6767)
   (match arg~6767
-    ((Empty*) (singleton k x))
+    ((Empty%) (singleton k x))
     ((Node :l l :v v :d d :r r) (bal l v d (add_max_binding k x r)))))
 
 ;; (* Same as create and bal, but no assumptions are made on the
@@ -14741,8 +14887,8 @@
 
 (defunc join (l v d r)
   (match (tuple l r)
-    ((tuple (Empty*) _) (add_min_binding v d r))
-    ((tuple _ (Empty*)) (add_max_binding v d l))
+    ((tuple (Empty%) _) (add_min_binding v d r))
+    ((tuple _ (Empty%)) (add_max_binding v d l))
     ((tuple (Node :l ll :v lv :d ld :r lr :h lh) (Node :l rl :v rv :d rd :r rr :h rh))
       (if (> lh (+ rh 2))
         (bal ll lv ld (join lr v d r))
@@ -14755,19 +14901,20 @@
 
 (defunc concat (t1 t2)
   (match (tuple t1 t2)
-    ((tuple (Empty*) t*) t*)
-    ((tuple t* (Empty*)) t*)
+    ((tuple (Empty%) t%) t%)
+    ((tuple t% (Empty%)) t%)
     ((tuple _ _)
       (match (min_binding t2) ((tuple x d) (join t1 x d (remove_min_binding t2)))))))
 
 (defunc concat_or_join (t1 v d t2)
-  (match d ((Some d*) (join t1 v d* t2)) ((None) (concat t1 t2))))
+  (match d ((Some d%) (join t1 v d% t2)) ((None) (concat t1 t2))))
 
 (defunc split (x arg~6930)
   (match arg~6930
-    ((Empty*) (tuple (make-Empty*) (make-None) (make-Empty*)))
+    ((Empty%) (tuple (make-Empty%) (make-None) (make-Empty%)))
     ((Node :l l :v v :d d :r r)
       (let ((c (funcall compare x v)))
+        (cl:declare (cl:ignorable c))
         (if (= c 0)
           (tuple l (make-Some d) r)
           (if (< c 0)
@@ -14776,8 +14923,8 @@
 
 (defunc merge (f s1 s2)
   (match (tuple s1 s2)
-    ((tuple (Empty*) (Empty*)) (make-Empty*))
-    ((trivia:guard (tuple (Node :l l1 :v v1 :d d1 :r r1 :h h1) _) (>= h1 (height s2)))
+    ((tuple (Empty%) (Empty%)) (make-Empty%))
+    ((guard (tuple (Node :l l1 :v v1 :d d1 :r r1 :h h1) _) (>= h1 (height s2)))
       (match (split v1 s2)
         ((tuple l2 d2 r2)
           (concat_or_join
@@ -14797,37 +14944,40 @@
 
 (defunc union (f s1 s2)
   (match (tuple s1 s2)
-    ((cl:or (tuple (Empty*) s) (tuple s (Empty*))) s)
+    ((cl:or (tuple (Empty%) s) (tuple s (Empty%))) s)
     ((tuple (Node :l l1 :v v1 :d d1 :r r1 :h h1) (Node :l l2 :v v2 :d d2 :r r2 :h h2))
       (if (>= h1 h2)
         (match (split v1 s2)
-          ((tuple l2* d2* r2*)
-            (let ((l (union f l1 l2*)) (r (union f r1 r2*)))
-              (match d2*
+          ((tuple l2% d2% r2%)
+            (let ((l (union f l1 l2%)) (r (union f r1 r2%)))
+              (cl:declare (cl:ignorable l r))
+              (match d2%
                 ((None) (join l v1 d1 r))
                 ((Some d2) (concat_or_join l v1 (funcall f v1 d1 d2) r))))))
         (match (split v2 s1)
-          ((tuple l1* d1* r1*)
-            (let ((l (union f l1* l2)) (r (union f r1* r2)))
-              (match d1*
+          ((tuple l1% d1% r1%)
+            (let ((l (union f l1% l2)) (r (union f r1% r2)))
+              (cl:declare (cl:ignorable l r))
+              (match d1%
                 ((None) (join l v2 d2 r))
                 ((Some d1) (concat_or_join l v2 (funcall f v2 d1 d2) r))))))))))
 
 (defunc filter (p arg~7228)
   (match arg~7228
-    ((Empty*) (make-Empty*))
+    ((Empty%) (make-Empty%))
     ((cl:and m (Node :l l :v v :d d :r r))
-      (let* ((l* (filter p l)) (pvd (funcall p v d)) (r* (filter p r)))
-        (if pvd (if (cl:and (== l l*) (== r r*)) m (join l* v d r*)) (concat l* r*))))))
+      (let* ((l% (filter p l)) (pvd (funcall p v d)) (r% (filter p r)))
+        (cl:declare (cl:ignorable l% pvd r%))
+        (if pvd (if (cl:and (== l l%) (== r r%)) m (join l% v d r%)) (concat l% r%))))))
 
 (defvariant enumeration (End) (More field0 field1 field2 field3))
 
 (defunc cardinal (arg~7283)
-  (match arg~7283 ((Empty*) 0) ((Node :l l :r r) (+ (+ (cardinal l) 1) (cardinal r)))))
+  (match arg~7283 ((Empty%) 0) ((Node :l l :r r) (+ (+ (cardinal l) 1) (cardinal r)))))
 
 (defunc bindings_aux (accu arg~7302)
   (match arg~7302
-    ((Empty*) accu)
+    ((Empty%) accu)
     ((Node :l l :v v :d d :r r)
       (bindings_aux (cl:cons (tuple v d) (bindings_aux accu r)) l))))
 
@@ -14841,27 +14991,27 @@
 
 (defunc singleton (arg~7341)
   (match arg~7341
-    ((tuple k* x) (hol2cl.metis.metis_prover.stringmap.include~6119.ma:singleton k* x))))
+    ((tuple k% x) (hol2cl.metis.metis_prover.stringmap.include~6119.ma:singleton k% x))))
 
 (defparameter size #'cardinal)
 
-(defunc get (m k*)
+(defunc get (m k%)
   (handler-case
-    (find k* m)
+    (find k% m)
     (hol2cl.runtime:ocaml-condition
       (exception~7358)
       (match exception~7358
         ((Not_found) (failwith "Mmap.get: element not found"))
         (_ (raise exception~7358))))))
 
-(defunc peek (m k*)
+(defunc peek (m k%)
   (handler-case
-    (make-Some (find k* m))
+    (make-Some (find k% m))
     (hol2cl.runtime:ocaml-condition
       (exception~7370)
       (match exception~7370 ((Not_found) (make-None)) (_ (raise exception~7370))))))
 
-(defunc insert (m arg~7381) (match arg~7381 ((tuple k* v) (add k* v m))))
+(defunc insert (m arg~7381) (match arg~7381 ((tuple k% v) (add k% v m))))
 
 (defparameter toList #'bindings)
 
@@ -14871,10 +15021,10 @@
     l
     empty))
 
-(defunc foldl (f b* m)
+(defunc foldl (f b% m)
   (list-fold-left
     (lambdac (s arg~7418) (match arg~7418 ((tuple v tm) (funcall f (tuple v tm s)))))
-    b*
+    b%
     (bindings m)))
 
 (defparameter foldr #'foldl)
@@ -14887,21 +15037,21 @@
 
 (defunc union (f m1 m2)
   (fletc
-    ((f*
-      (k* arg~7459)
+    ((f%
+      (k% arg~7459)
       (match arg~7459
-        ((tuple (Some x) (Some y)) (funcall f (tuple (tuple k* x) (tuple k* y))))
+        ((tuple (Some x) (Some y)) (funcall f (tuple (tuple k% x) (tuple k% y))))
         ((tuple (Some x) (None)) (make-Some x))
         ((tuple (None) (Some y)) (make-Some y))
         ((tuple (None) (None)) (make-None)))))
-    (merge (lambdac (k* x y) (f* k* (tuple x y))) m1 m2)))
+    (merge (lambdac (k% x y) (f% k% (tuple x y))) m1 m2)))
 
-(defunc delete (m k*) (remove k* m))
+(defunc delete (m k%) (remove k% m))
 
 (defunc mapPartial (f m)
   (fold
-    (lambdac (k* x acc)
-      (match (funcall f (tuple k* x)) ((Some y) (add k* y acc)) ((None) acc)))
+    (lambdac (k% x acc)
+      (match (funcall f (tuple k% x)) ((Some y) (add k% y acc)) ((None) acc)))
     m
     empty))
 
@@ -14909,7 +15059,7 @@
 
 (defunc exists (f)
   (hol2cl.metis.metis_prover.stringmap.include~6119.ma:exists
-    (lambdac (k* m) (funcall f (tuple k* m)))))
+    (lambdac (k% m) (funcall f (tuple k% m)))))
 
 (in-package :hol2cl.metis.metis_prover.stringmap)
 
@@ -14931,13 +15081,13 @@
 
 (in-package :hol2cl.metis.metis_prover.intset.include~7557.se)
 
-(defvariant t* (Empty*) (Node (:record l v r h)))
+(defvariant t% (Empty%) (Node (:record l v r h)))
 
 ;; (* Sets are represented by balanced binary trees (the heights of the
 ;;        children differ by at most 2 *)
 
 
-(defunc height (arg~7562) (match arg~7562 ((Empty*) 0) ((Node :h h) h)))
+(defunc height (arg~7562) (match arg~7562 ((Empty%) 0) ((Node :h h) h)))
 
 ;; (* Creates a new node with left son l, value v and right son r.
 ;;        We must have all elements of l < v < all elements of r.
@@ -14947,8 +15097,9 @@
 
 (defunc create (l v r)
   (let*
-    ((hl (match l ((Empty*) 0) ((Node :h h) h)))
-      (hr (match r ((Empty*) 0) ((Node :h h) h))))
+    ((hl (match l ((Empty%) 0) ((Node :h h) h)))
+      (hr (match r ((Empty%) 0) ((Node :h h) h))))
+    (cl:declare (cl:ignorable hl hr))
     (make-Node :l l :v v :r r :h (if (>= hl hr) (+ hl 1) (+ hr 1)))))
 
 ;; (* Same as create, but performs one step of rebalancing if necessary.
@@ -14959,26 +15110,27 @@
 
 (defunc bal (l v r)
   (let*
-    ((hl (match l ((Empty*) 0) ((Node :h h) h)))
-      (hr (match r ((Empty*) 0) ((Node :h h) h))))
+    ((hl (match l ((Empty%) 0) ((Node :h h) h)))
+      (hr (match r ((Empty%) 0) ((Node :h h) h))))
+    (cl:declare (cl:ignorable hl hr))
     (if (> hl (+ hr 2))
       (match l
-        ((Empty*) (invalid-arg "Set.bal"))
+        ((Empty%) (invalid-arg "Set.bal"))
         ((Node :l ll :v lv :r lr)
           (if (>= (height ll) (height lr))
             (create ll lv (create lr v r))
             (match lr
-              ((Empty*) (invalid-arg "Set.bal"))
+              ((Empty%) (invalid-arg "Set.bal"))
               ((Node :l lrl :v lrv :r lrr)
                 (create (create ll lv lrl) lrv (create lrr v r)))))))
       (if (> hr (+ hl 2))
         (match r
-          ((Empty*) (invalid-arg "Set.bal"))
+          ((Empty%) (invalid-arg "Set.bal"))
           ((Node :l rl :v rv :r rr)
             (if (>= (height rr) (height rl))
               (create (create l v rl) rv rr)
               (match rl
-                ((Empty*) (invalid-arg "Set.bal"))
+                ((Empty%) (invalid-arg "Set.bal"))
                 ((Node :l rll :v rlv :r rlr)
                   (create (create l v rll) rlv (create rlr rv rr)))))))
         (make-Node :l l :v v :r r :h (if (>= hl hr) (+ hl 1) (+ hr 1)))))))
@@ -14988,16 +15140,21 @@
 
 (defunc add (x arg~7757)
   (match arg~7757
-    ((Empty*) (make-Node :l (make-Empty*) :v x :r (make-Empty*) :h 1))
-    ((cl:and t* (Node :l l :v v :r r))
+    ((Empty%) (make-Node :l (make-Empty%) :v x :r (make-Empty%) :h 1))
+    ((cl:and t% (Node :l l :v v :r r))
       (let ((c (funcall hol2cl.metis.metis_prover.intset.ordered:compare x v)))
+        (cl:declare (cl:ignorable c))
         (if (= c 0)
-          t*
+          t%
           (if (< c 0)
-            (let ((ll (add x l))) (if (== l ll) t* (bal ll v r)))
-            (let ((rr (add x r))) (if (== r rr) t* (bal l v rr)))))))))
+            (let ((ll (add x l)))
+              (cl:declare (cl:ignorable ll))
+              (if (== l ll) t% (bal ll v r)))
+            (let ((rr (add x r)))
+              (cl:declare (cl:ignorable rr))
+              (if (== r rr) t% (bal l v rr)))))))))
 
-(defunc singleton (x) (make-Node :l (make-Empty*) :v x :r (make-Empty*) :h 1))
+(defunc singleton (x) (make-Node :l (make-Empty%) :v x :r (make-Empty%) :h 1))
 
 ;; (* Beware: those two functions assume that the added v is *strictly*
 ;;        smaller (or bigger) than all the present elements in the tree; it
@@ -15009,12 +15166,12 @@
 
 (defunc add_min_element (x arg~7828)
   (match arg~7828
-    ((Empty*) (singleton x))
+    ((Empty%) (singleton x))
     ((Node :l l :v v :r r) (bal (add_min_element x l) v r))))
 
 (defunc add_max_element (x arg~7849)
   (match arg~7849
-    ((Empty*) (singleton x))
+    ((Empty%) (singleton x))
     ((Node :l l :v v :r r) (bal l v (add_max_element x r)))))
 
 ;; (* Same as create and bal, but no assumptions are made on the
@@ -15023,8 +15180,8 @@
 
 (defunc join (l v r)
   (match (tuple l r)
-    ((tuple (Empty*) _) (add_min_element v r))
-    ((tuple _ (Empty*)) (add_max_element v l))
+    ((tuple (Empty%) _) (add_min_element v r))
+    ((tuple _ (Empty%)) (add_max_element v l))
     ((tuple (Node :l ll :v lv :r lr :h lh) (Node :l rl :v rv :r rr :h rh))
       (if (> lh (+ rh 2))
         (bal ll lv (join lr v r))
@@ -15035,8 +15192,8 @@
 
 (defunc min_elt (arg~7939)
   (match arg~7939
-    ((Empty*) (raise (make-Not_found)))
-    ((Node :l (Empty*) :v v) v)
+    ((Empty%) (raise (make-Not_found)))
+    ((Node :l (Empty%) :v v) v)
     ((Node :l l) (min_elt l))))
 
 ;; (* Remove the smallest element of the given set *)
@@ -15044,8 +15201,8 @@
 
 (defunc remove_min_elt (arg~7956)
   (match arg~7956
-    ((Empty*) (invalid-arg "Set.remove_min_elt"))
-    ((Node :l (Empty*) :r r) r)
+    ((Empty%) (invalid-arg "Set.remove_min_elt"))
+    ((Node :l (Empty%) :r r) r)
     ((Node :l l :v v :r r) (bal (remove_min_elt l) v r))))
 
 ;; (* Merge two trees l and r into one.
@@ -15055,8 +15212,8 @@
 
 (defunc merge (t1 t2)
   (match (tuple t1 t2)
-    ((tuple (Empty*) t*) t*)
-    ((tuple t* (Empty*)) t*)
+    ((tuple (Empty%) t%) t%)
+    ((tuple t% (Empty%)) t%)
     ((tuple _ _) (bal t1 (min_elt t2) (remove_min_elt t2)))))
 
 ;; (* Merge two trees l and r into one.
@@ -15066,8 +15223,8 @@
 
 (defunc concat (t1 t2)
   (match (tuple t1 t2)
-    ((tuple (Empty*) t*) t*)
-    ((tuple t* (Empty*)) t*)
+    ((tuple (Empty%) t%) t%)
+    ((tuple t% (Empty%)) t%)
     ((tuple _ _) (join t1 (min_elt t2) (remove_min_elt t2)))))
 
 ;; (* Splitting.  split x s returns a triple (l, present, r) where
@@ -15079,9 +15236,10 @@
 
 (defunc split (x arg~8035)
   (match arg~8035
-    ((Empty*) (tuple (make-Empty*) cl:nil (make-Empty*)))
+    ((Empty%) (tuple (make-Empty%) cl:nil (make-Empty%)))
     ((Node :l l :v v :r r)
       (let ((c (funcall hol2cl.metis.metis_prover.intset.ordered:compare x v)))
+        (cl:declare (cl:ignorable c))
         (if (= c 0)
           (tuple l cl:t r)
           (if (< c 0)
@@ -15091,47 +15249,53 @@
 ;; (* Implementation of the set operations *)
 
 
-(defparameter empty (make-Empty*))
+(defparameter empty (make-Empty%))
 
-(defunc is_empty (arg~8107) (match arg~8107 ((Empty*) cl:t) (_ cl:nil)))
+(defunc is_empty (arg~8107) (match arg~8107 ((Empty%) cl:t) (_ cl:nil)))
 
 (defunc mem (x arg~8116)
   (match arg~8116
-    ((Empty*) cl:nil)
+    ((Empty%) cl:nil)
     ((Node :l l :v v :r r)
       (let ((c (funcall hol2cl.metis.metis_prover.intset.ordered:compare x v)))
+        (cl:declare (cl:ignorable c))
         (cl:or (= c 0) (mem x (if (< c 0) l r)))))))
 
 (defunc remove (x arg~8147)
   (match arg~8147
-    ((Empty*) (make-Empty*))
-    ((cl:and t* (Node :l l :v v :r r))
+    ((Empty%) (make-Empty%))
+    ((cl:and t% (Node :l l :v v :r r))
       (let ((c (funcall hol2cl.metis.metis_prover.intset.ordered:compare x v)))
+        (cl:declare (cl:ignorable c))
         (if (= c 0)
           (merge l r)
           (if (< c 0)
-            (let ((ll (remove x l))) (if (== l ll) t* (bal ll v r)))
-            (let ((rr (remove x r))) (if (== r rr) t* (bal l v rr)))))))))
+            (let ((ll (remove x l)))
+              (cl:declare (cl:ignorable ll))
+              (if (== l ll) t% (bal ll v r)))
+            (let ((rr (remove x r)))
+              (cl:declare (cl:ignorable rr))
+              (if (== r rr) t% (bal l v rr)))))))))
 
 (defunc union (s1 s2)
   (match (tuple s1 s2)
-    ((tuple (Empty*) t2) t2)
-    ((tuple t1 (Empty*)) t1)
+    ((tuple (Empty%) t2) t2)
+    ((tuple t1 (Empty%)) t1)
     ((tuple (Node :l l1 :v v1 :r r1 :h h1) (Node :l l2 :v v2 :r r2 :h h2))
       (if (>= h1 h2)
         (if (= h2 1)
           (add v2 s1)
           (match (split v1 s2)
-            ((tuple l2* _ r2*) (join (union l1 l2*) v1 (union r1 r2*)))))
+            ((tuple l2% _ r2%) (join (union l1 l2%) v1 (union r1 r2%)))))
         (if (= h1 1)
           (add v1 s2)
           (match (split v2 s1)
-            ((tuple l1* _ r1*) (join (union l1* l2) v2 (union r1* r2)))))))))
+            ((tuple l1% _ r1%) (join (union l1% l2) v2 (union r1% r2)))))))))
 
 (defunc inter (s1 s2)
   (match (tuple s1 s2)
-    ((tuple (Empty*) _) (make-Empty*))
-    ((tuple _ (Empty*)) (make-Empty*))
+    ((tuple (Empty%) _) (make-Empty%))
+    ((tuple _ (Empty%)) (make-Empty%))
     ((tuple (Node :l l1 :v v1 :r r1) t2)
       (match (split v1 t2)
         ((tuple l2 cl:nil r2) (concat (inter l1 l2) (inter r1 r2)))
@@ -15141,8 +15305,8 @@
 
 (defunc diff (s1 s2)
   (match (tuple s1 s2)
-    ((tuple (Empty*) _) (make-Empty*))
-    ((tuple t1 (Empty*)) t1)
+    ((tuple (Empty%) _) (make-Empty%))
+    ((tuple t1 (Empty%)) t1)
     ((tuple (Node :l l1 :v v1 :r r1) t2)
       (match (split v1 t2)
         ((tuple l2 cl:nil r2) (join (diff l1 l2) v1 (diff r1 r2)))
@@ -15151,16 +15315,17 @@
 (defvariant enumeration (End) (More field0 field1 field2))
 
 (defunc cons_enum (s e)
-  (match s ((Empty*) e) ((Node :l l :v v :r r) (cons_enum l (make-More v r e)))))
+  (match s ((Empty%) e) ((Node :l l :v v :r r) (cons_enum l (make-More v r e)))))
 
 (defunc compare_aux (e1 e2)
   (match (tuple e1 e2)
     ((tuple (End) (End)) 0)
     ((tuple (End) _) (- 1))
     ((tuple _ (End)) 1)
-    ((tuple (More v1 r1 e1*) (More v2 r2 e2*))
+    ((tuple (More v1 r1 e1%) (More v2 r2 e2%))
       (let ((c (funcall hol2cl.metis.metis_prover.intset.ordered:compare v1 v2)))
-        (if (<> c 0) c (compare_aux (cons_enum r1 e1*) (cons_enum r2 e2*)))))))
+        (cl:declare (cl:ignorable c))
+        (if (<> c 0) c (compare_aux (cons_enum r1 e1%) (cons_enum r2 e2%)))))))
 
 (defunc compare (s1 s2) (compare_aux (cons_enum s1 (make-End)) (cons_enum s2 (make-End))))
 
@@ -15168,41 +15333,42 @@
 
 (defunc subset (s1 s2)
   (match (tuple s1 s2)
-    ((tuple (Empty*) _) cl:t)
-    ((tuple _ (Empty*)) cl:nil)
+    ((tuple (Empty%) _) cl:t)
+    ((tuple _ (Empty%)) cl:nil)
     ((tuple (Node :l l1 :v v1 :r r1) (cl:and t2 (Node :l l2 :v v2 :r r2)))
       (let ((c (funcall hol2cl.metis.metis_prover.intset.ordered:compare v1 v2)))
+        (cl:declare (cl:ignorable c))
         (if (= c 0)
           (cl:and (subset l1 l2) (subset r1 r2))
           (if (< c 0)
             (cl:and
-              (subset (make-Node :l l1 :v v1 :r (make-Empty*) :h 0) l2)
+              (subset (make-Node :l l1 :v v1 :r (make-Empty%) :h 0) l2)
               (subset r1 t2))
             (cl:and
-              (subset (make-Node :l (make-Empty*) :v v1 :r r1 :h 0) r2)
+              (subset (make-Node :l (make-Empty%) :v v1 :r r1 :h 0) r2)
               (subset l1 t2))))))))
 
 (defunc fold (f s accu)
   (match s
-    ((Empty*) accu)
+    ((Empty%) accu)
     ((Node :l l :v v :r r) (fold f r (funcall f v (fold f l accu))))))
 
 (defunc for_all (p arg~8615)
   (match arg~8615
-    ((Empty*) cl:t)
+    ((Empty%) cl:t)
     ((Node :l l :v v :r r) (cl:and (funcall p v) (cl:and (for_all p l) (for_all p r))))))
 
 (defunc exists (p arg~8639)
   (match arg~8639
-    ((Empty*) cl:nil)
+    ((Empty%) cl:nil)
     ((Node :l l :v v :r r) (cl:or (funcall p v) (cl:or (exists p l) (exists p r))))))
 
 (defunc cardinal (arg~8662)
-  (match arg~8662 ((Empty*) 0) ((Node :l l :r r) (+ (+ (cardinal l) 1) (cardinal r)))))
+  (match arg~8662 ((Empty%) 0) ((Node :l l :r r) (+ (+ (cardinal l) 1) (cardinal r)))))
 
 (defunc elements_aux (accu arg~8681)
   (match arg~8681
-    ((Empty*) accu)
+    ((Empty%) accu)
     ((Node :l l :v v :r r) (elements_aux (cl:cons v (elements_aux accu r)) l))))
 
 (defunc elements (s) (elements_aux nil s))
@@ -15215,7 +15381,7 @@
 
 (defunc add (s x) (hol2cl.metis.metis_prover.intset.include~7557.se:add x s))
 
-(defunc foldr (f a* s) (fold (lambdac (x acc) (funcall f (tuple x acc))) s a*))
+(defunc foldr (f a% s) (fold (lambdac (x acc) (funcall f (tuple x acc))) s a%))
 
 (defparameter foldl #'foldr)
 
@@ -15258,25 +15424,25 @@
     (nil hol2cl.metis.metis_prover.intset.include~7557.se:empty)
     ((cl:cons s ss) (list-fold-right #'inter ss s))))
 
-(defunc findl (p* s)
+(defunc findl (p% s)
   (fletc
     ((go
       (x arg~8810)
       (match arg~8810
-        ((cl:and s* (Some _)) s*)
-        ((None) (if (funcall p* x) (make-Some x) (make-None))))))
+        ((cl:and s% (Some _)) s%)
+        ((None) (if (funcall p% x) (make-Some x) (make-None))))))
     (fold #'go s (make-None))))
 
 (defunc firstl (f s)
   (fletc
-    ((go (x arg~8836) (match arg~8836 ((cl:and s* (Some _)) s*) ((None) (funcall f x)))))
+    ((go (x arg~8836) (match arg~8836 ((cl:and s% (Some _)) s%) ((None) (funcall f x)))))
     (fold #'go s (make-None))))
 
 (defunc transform (f s) (fold (lambdac (x acc) (cl:cons (funcall f x) acc)) s nil))
 
 (defparameter all #'for_all)
 
-(defunc count (p* s) (fold (lambdac (x c*) (if (funcall p* x) (+ c* 1) c*)) s 0))
+(defunc count (p% s) (fold (lambdac (x c%) (if (funcall p% x) (+ c% 1) c%)) s 0))
 
 (in-package :hol2cl.metis.metis_prover.intset)
 
@@ -15290,14 +15456,14 @@
 
 (defvariant heap (Heap field0 field1 field2))
 
-(defunc rank (arg~8895) (match arg~8895 ((Em) 0) ((Tr r* _ _ _) r*)))
+(defunc rank (arg~8895) (match arg~8895 ((Em) 0) ((Tr r% _ _ _) r%)))
 
 (defunc makeT (arg~8908)
   (match arg~8908
-    ((tuple x a* b*)
-      (if (>= (rank a*) (rank b*))
-        (make-Tr (+ (rank b*) 1) x a* b*)
-        (make-Tr (+ (rank a*) 1) x b* a*)))))
+    ((tuple x a% b%)
+      (if (>= (rank a%) (rank b%))
+        (make-Tr (+ (rank b%) 1) x a% b%)
+        (make-Tr (+ (rank a%) 1) x b% a%)))))
 
 (defunc merge (cmp)
   (labelsc
@@ -15316,8 +15482,8 @@
 
 (defunc add (arg~9011 x)
   (match arg~9011
-    ((Heap f n a*)
-      (make-Heap f (+ n 1) (merge f (tuple (make-Tr 1 x (make-Em) (make-Em)) a*))))))
+    ((Heap f n a%)
+      (make-Heap f (+ n 1) (merge f (tuple (make-Tr 1 x (make-Em) (make-Em)) a%))))))
 
 (defunc size (arg~9037) (match arg~9037 ((Heap _ n _) n)))
 
@@ -15329,7 +15495,7 @@
 (defunc remove (arg~9074)
   (match arg~9074
     ((Heap _ _ (Em)) (raise (make-Empty)))
-    ((Heap f n (Tr _ x a* b*)) (tuple x (make-Heap f (- n 1) (merge f (tuple a* b*)))))))
+    ((Heap f n (Tr _ x a% b%)) (tuple x (make-Heap f (- n 1) (merge f (tuple a% b%)))))))
 
 (defunc app (f)
   (labelsc
@@ -15338,12 +15504,12 @@
       (match arg~9111
         (nil unit)
         ((cl:cons (Em) rest) (ap rest))
-        ((cl:cons (Tr _ d a* b*) rest)
-          (progn (funcall f d) (ap (cl:cons a* (cl:cons b* rest))))))))
-    (lambdac (arg~9141) (match arg~9141 ((Heap _ _ a*) (ap (cl:cons a* nil)))))))
+        ((cl:cons (Tr _ d a% b%) rest)
+          (progn (funcall f d) (ap (cl:cons a% (cl:cons b% rest))))))))
+    (lambdac (arg~9141) (match arg~9141 ((Heap _ _ a%) (ap (cl:cons a% nil)))))))
 
 (defunc toList (h)
-  (if (null h) nil (match (remove h) ((tuple x h*) (cl:cons x (toList h*))))))
+  (if (null h) nil (match (remove h) ((tuple x h%) (cl:cons x (toList h%))))))
 
 (defunc toString (h)
   (string-concat "Heap[" (string-concat (if (null h) "" (string-of-int (size h))) "]")))
@@ -15368,7 +15534,7 @@
 
 (defparameter prefix "_")
 
-(defunc numName (i*) (mkPrefix prefix (string-of-int i*)))
+(defunc numName (i%) (mkPrefix prefix (string-of-int i%)))
 
 (defunc newName (arg~9210)
   (match arg~9210 ((cl:type hol2cl.runtime::unit-value) (numName (newInt unit)))))
@@ -15376,20 +15542,22 @@
 (defunc newNames (n) (list-map #'numName (newInts n)))
 
 (defunc variantPrime (avoid)
-  (labelsc ((variant* (n) (if (funcall avoid n) (variant* (string-concat n "'")) n)))
-    #'variant*))
+  (labelsc ((variant% (n) (if (funcall avoid n) (variant% (string-concat n "'")) n)))
+    #'variant%))
 
 (defunc variantNum (avoid n)
-  (fletc ((isDigitOrPrime (c*) (cl:or (= c* (cl:code-char 39)) (isDigit c*))))
+  (fletc ((isDigitOrPrime (c%) (cl:or (= c% (cl:code-char 39)) (isDigit c%))))
     (if (not (funcall avoid n))
       n
-      (let ((n* (stripSuffix #'isDigitOrPrime n)))
+      (let ((n% (stripSuffix #'isDigitOrPrime n)))
+        (cl:declare (cl:ignorable n%))
         (labelsc
-          ((variant*
-            (i*)
-            (let ((n_i (string-concat n* (string-of-int i*))))
-              (if (funcall avoid n_i) (variant* (+ i* 1)) n_i))))
-          (variant* 0))))))
+          ((variant%
+            (i%)
+            (let ((n_i (string-concat n% (string-of-int i%))))
+              (cl:declare (cl:ignorable n_i))
+              (if (funcall avoid n_i) (variant% (+ i% 1)) n_i))))
+          (variant% 0))))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Parsing and pretty printing.                                              *)
@@ -15410,114 +15578,131 @@
 
 (in-package :hol2cl.metis.metis_prover.name.map.ma)
 
-(defvariant t* (Empty*) (Node (:record l v d r h)))
+(defvariant t% (Empty%) (Node (:record l v d r h)))
 
-(defunc height (arg~9296) (match arg~9296 ((Empty*) 0) ((Node :h h) h)))
+(defunc height (arg~9296) (match arg~9296 ((Empty%) 0) ((Node :h h) h)))
 
 (defunc create (l x d r)
   (let ((hl (height l)) (hr (height r)))
+    (cl:declare (cl:ignorable hl hr))
     (make-Node :l l :v x :d d :r r :h (if (>= hl hr) (+ hl 1) (+ hr 1)))))
 
-(defunc singleton (x d) (make-Node :l (make-Empty*) :v x :d d :r (make-Empty*) :h 1))
+(defunc singleton (x d) (make-Node :l (make-Empty%) :v x :d d :r (make-Empty%) :h 1))
 
 (defunc bal (l x d r)
   (let*
-    ((hl (match l ((Empty*) 0) ((Node :h h) h)))
-      (hr (match r ((Empty*) 0) ((Node :h h) h))))
+    ((hl (match l ((Empty%) 0) ((Node :h h) h)))
+      (hr (match r ((Empty%) 0) ((Node :h h) h))))
+    (cl:declare (cl:ignorable hl hr))
     (if (> hl (+ hr 2))
       (match l
-        ((Empty*) (invalid-arg "Map.bal"))
+        ((Empty%) (invalid-arg "Map.bal"))
         ((Node :l ll :v lv :d ld :r lr)
           (if (>= (height ll) (height lr))
             (create ll lv ld (create lr x d r))
             (match lr
-              ((Empty*) (invalid-arg "Map.bal"))
+              ((Empty%) (invalid-arg "Map.bal"))
               ((Node :l lrl :v lrv :d lrd :r lrr)
                 (create (create ll lv ld lrl) lrv lrd (create lrr x d r)))))))
       (if (> hr (+ hl 2))
         (match r
-          ((Empty*) (invalid-arg "Map.bal"))
+          ((Empty%) (invalid-arg "Map.bal"))
           ((Node :l rl :v rv :d rd :r rr)
             (if (>= (height rr) (height rl))
               (create (create l x d rl) rv rd rr)
               (match rl
-                ((Empty*) (invalid-arg "Map.bal"))
+                ((Empty%) (invalid-arg "Map.bal"))
                 ((Node :l rll :v rlv :d rld :r rlr)
                   (create (create l x d rll) rlv rld (create rlr rv rd rr)))))))
         (make-Node :l l :v x :d d :r r :h (if (>= hl hr) (+ hl 1) (+ hr 1)))))))
 
-(defparameter empty (make-Empty*))
+(defparameter empty (make-Empty%))
 
-(defunc is_empty (arg~9512) (match arg~9512 ((Empty*) cl:t) (_ cl:nil)))
+(defunc is_empty (arg~9512) (match arg~9512 ((Empty%) cl:t) (_ cl:nil)))
 
 (defunc add (x data arg~9522)
   (match arg~9522
-    ((Empty*) (make-Node :l (make-Empty*) :v x :d data :r (make-Empty*) :h 1))
+    ((Empty%) (make-Node :l (make-Empty%) :v x :d data :r (make-Empty%) :h 1))
     ((cl:and m (Node :l l :v v :d d :r r :h h))
       (let ((c (funcall compare x v)))
+        (cl:declare (cl:ignorable c))
         (if (= c 0)
           (if (== d data) m (make-Node :l l :v x :d data :r r :h h))
           (if (< c 0)
-            (let ((ll (add x data l))) (if (== l ll) m (bal ll v d r)))
-            (let ((rr (add x data r))) (if (== r rr) m (bal l v d rr)))))))))
+            (let ((ll (add x data l)))
+              (cl:declare (cl:ignorable ll))
+              (if (== l ll) m (bal ll v d r)))
+            (let ((rr (add x data r)))
+              (cl:declare (cl:ignorable rr))
+              (if (== r rr) m (bal l v d rr)))))))))
 
 (defunc find (x arg~9604)
   (match arg~9604
-    ((Empty*) (raise (make-Not_found)))
+    ((Empty%) (raise (make-Not_found)))
     ((Node :l l :v v :d d :r r)
-      (let ((c (funcall compare x v))) (if (= c 0) d (find x (if (< c 0) l r)))))))
+      (let ((c (funcall compare x v)))
+        (cl:declare (cl:ignorable c))
+        (if (= c 0) d (find x (if (< c 0) l r)))))))
 
 (defunc mem (x arg~9639)
   (match arg~9639
-    ((Empty*) cl:nil)
+    ((Empty%) cl:nil)
     ((Node :l l :v v :r r)
-      (let ((c (funcall compare x v))) (cl:or (= c 0) (mem x (if (< c 0) l r)))))))
+      (let ((c (funcall compare x v)))
+        (cl:declare (cl:ignorable c))
+        (cl:or (= c 0) (mem x (if (< c 0) l r)))))))
 
 (defunc min_binding (arg~9669)
   (match arg~9669
-    ((Empty*) (raise (make-Not_found)))
-    ((Node :l (Empty*) :v v :d d) (tuple v d))
+    ((Empty%) (raise (make-Not_found)))
+    ((Node :l (Empty%) :v v :d d) (tuple v d))
     ((Node :l l) (min_binding l))))
 
 (defunc remove_min_binding (arg~9690)
   (match arg~9690
-    ((Empty*) (invalid-arg "Map.remove_min_elt"))
-    ((Node :l (Empty*) :r r) r)
+    ((Empty%) (invalid-arg "Map.remove_min_elt"))
+    ((Node :l (Empty%) :r r) r)
     ((Node :l l :v v :d d :r r) (bal (remove_min_binding l) v d r))))
 
 (defunc merge~1 (t1 t2)
   (match (tuple t1 t2)
-    ((tuple (Empty*) t*) t*)
-    ((tuple t* (Empty*)) t*)
+    ((tuple (Empty%) t%) t%)
+    ((tuple t% (Empty%)) t%)
     ((tuple _ _)
       (match (min_binding t2) ((tuple x d) (bal t1 x d (remove_min_binding t2)))))))
 
 (defunc remove (x arg~9753)
   (match arg~9753
-    ((Empty*) (make-Empty*))
+    ((Empty%) (make-Empty%))
     ((cl:and m (Node :l l :v v :d d :r r))
       (let ((c (funcall compare x v)))
+        (cl:declare (cl:ignorable c))
         (if (= c 0)
           (merge~1 l r)
           (if (< c 0)
-            (let ((ll (remove x l))) (if (== l ll) m (bal ll v d r)))
-            (let ((rr (remove x r))) (if (== r rr) m (bal l v d rr)))))))))
+            (let ((ll (remove x l)))
+              (cl:declare (cl:ignorable ll))
+              (if (== l ll) m (bal ll v d r)))
+            (let ((rr (remove x r)))
+              (cl:declare (cl:ignorable rr))
+              (if (== r rr) m (bal l v d rr)))))))))
 
 (defunc map (f arg~9818)
   (match arg~9818
-    ((Empty*) (make-Empty*))
+    ((Empty%) (make-Empty%))
     ((Node :l l :v v :d d :r r :h h)
-      (let* ((l* (map f l)) (d* (funcall f d)) (r* (map f r)))
-        (make-Node :l l* :v v :d d* :r r* :h h)))))
+      (let* ((l% (map f l)) (d% (funcall f d)) (r% (map f r)))
+        (cl:declare (cl:ignorable l% d% r%))
+        (make-Node :l l% :v v :d d% :r r% :h h)))))
 
 (defunc fold (f m accu)
   (match m
-    ((Empty*) accu)
+    ((Empty%) accu)
     ((Node :l l :v v :d d :r r) (fold f r (funcall f v d (fold f l accu))))))
 
 (defunc exists (p arg~9884)
   (match arg~9884
-    ((Empty*) cl:nil)
+    ((Empty%) cl:nil)
     ((Node :l l :v v :d d :r r) (cl:or (funcall p v d) (cl:or (exists p l) (exists p r))))))
 
 ;; (* Beware: those two functions assume that the added k is *strictly*
@@ -15531,12 +15716,12 @@
 
 (defunc add_min_binding (k x arg~9912)
   (match arg~9912
-    ((Empty*) (singleton k x))
+    ((Empty%) (singleton k x))
     ((Node :l l :v v :d d :r r) (bal (add_min_binding k x l) v d r))))
 
 (defunc add_max_binding (k x arg~9939)
   (match arg~9939
-    ((Empty*) (singleton k x))
+    ((Empty%) (singleton k x))
     ((Node :l l :v v :d d :r r) (bal l v d (add_max_binding k x r)))))
 
 ;; (* Same as create and bal, but no assumptions are made on the
@@ -15545,8 +15730,8 @@
 
 (defunc join (l v d r)
   (match (tuple l r)
-    ((tuple (Empty*) _) (add_min_binding v d r))
-    ((tuple _ (Empty*)) (add_max_binding v d l))
+    ((tuple (Empty%) _) (add_min_binding v d r))
+    ((tuple _ (Empty%)) (add_max_binding v d l))
     ((tuple (Node :l ll :v lv :d ld :r lr :h lh) (Node :l rl :v rv :d rd :r rr :h rh))
       (if (> lh (+ rh 2))
         (bal ll lv ld (join lr v d r))
@@ -15559,19 +15744,20 @@
 
 (defunc concat (t1 t2)
   (match (tuple t1 t2)
-    ((tuple (Empty*) t*) t*)
-    ((tuple t* (Empty*)) t*)
+    ((tuple (Empty%) t%) t%)
+    ((tuple t% (Empty%)) t%)
     ((tuple _ _)
       (match (min_binding t2) ((tuple x d) (join t1 x d (remove_min_binding t2)))))))
 
 (defunc concat_or_join (t1 v d t2)
-  (match d ((Some d*) (join t1 v d* t2)) ((None) (concat t1 t2))))
+  (match d ((Some d%) (join t1 v d% t2)) ((None) (concat t1 t2))))
 
 (defunc split (x arg~10102)
   (match arg~10102
-    ((Empty*) (tuple (make-Empty*) (make-None) (make-Empty*)))
+    ((Empty%) (tuple (make-Empty%) (make-None) (make-Empty%)))
     ((Node :l l :v v :d d :r r)
       (let ((c (funcall compare x v)))
+        (cl:declare (cl:ignorable c))
         (if (= c 0)
           (tuple l (make-Some d) r)
           (if (< c 0)
@@ -15580,8 +15766,8 @@
 
 (defunc merge (f s1 s2)
   (match (tuple s1 s2)
-    ((tuple (Empty*) (Empty*)) (make-Empty*))
-    ((trivia:guard (tuple (Node :l l1 :v v1 :d d1 :r r1 :h h1) _) (>= h1 (height s2)))
+    ((tuple (Empty%) (Empty%)) (make-Empty%))
+    ((guard (tuple (Node :l l1 :v v1 :d d1 :r r1 :h h1) _) (>= h1 (height s2)))
       (match (split v1 s2)
         ((tuple l2 d2 r2)
           (concat_or_join
@@ -15601,37 +15787,40 @@
 
 (defunc union (f s1 s2)
   (match (tuple s1 s2)
-    ((cl:or (tuple (Empty*) s) (tuple s (Empty*))) s)
+    ((cl:or (tuple (Empty%) s) (tuple s (Empty%))) s)
     ((tuple (Node :l l1 :v v1 :d d1 :r r1 :h h1) (Node :l l2 :v v2 :d d2 :r r2 :h h2))
       (if (>= h1 h2)
         (match (split v1 s2)
-          ((tuple l2* d2* r2*)
-            (let ((l (union f l1 l2*)) (r (union f r1 r2*)))
-              (match d2*
+          ((tuple l2% d2% r2%)
+            (let ((l (union f l1 l2%)) (r (union f r1 r2%)))
+              (cl:declare (cl:ignorable l r))
+              (match d2%
                 ((None) (join l v1 d1 r))
                 ((Some d2) (concat_or_join l v1 (funcall f v1 d1 d2) r))))))
         (match (split v2 s1)
-          ((tuple l1* d1* r1*)
-            (let ((l (union f l1* l2)) (r (union f r1* r2)))
-              (match d1*
+          ((tuple l1% d1% r1%)
+            (let ((l (union f l1% l2)) (r (union f r1% r2)))
+              (cl:declare (cl:ignorable l r))
+              (match d1%
                 ((None) (join l v2 d2 r))
                 ((Some d1) (concat_or_join l v2 (funcall f v2 d1 d2) r))))))))))
 
 (defunc filter (p arg~10400)
   (match arg~10400
-    ((Empty*) (make-Empty*))
+    ((Empty%) (make-Empty%))
     ((cl:and m (Node :l l :v v :d d :r r))
-      (let* ((l* (filter p l)) (pvd (funcall p v d)) (r* (filter p r)))
-        (if pvd (if (cl:and (== l l*) (== r r*)) m (join l* v d r*)) (concat l* r*))))))
+      (let* ((l% (filter p l)) (pvd (funcall p v d)) (r% (filter p r)))
+        (cl:declare (cl:ignorable l% pvd r%))
+        (if pvd (if (cl:and (== l l%) (== r r%)) m (join l% v d r%)) (concat l% r%))))))
 
 (defvariant enumeration (End) (More field0 field1 field2 field3))
 
 (defunc cardinal (arg~10455)
-  (match arg~10455 ((Empty*) 0) ((Node :l l :r r) (+ (+ (cardinal l) 1) (cardinal r)))))
+  (match arg~10455 ((Empty%) 0) ((Node :l l :r r) (+ (+ (cardinal l) 1) (cardinal r)))))
 
 (defunc bindings_aux (accu arg~10474)
   (match arg~10474
-    ((Empty*) accu)
+    ((Empty%) accu)
     ((Node :l l :v v :d d :r r)
       (bindings_aux (cl:cons (tuple v d) (bindings_aux accu r)) l))))
 
@@ -15644,27 +15833,27 @@
 (defparameter null #'is_empty)
 
 (defunc singleton (arg~10513)
-  (match arg~10513 ((tuple k* x) (hol2cl.metis.metis_prover.name.map.ma:singleton k* x))))
+  (match arg~10513 ((tuple k% x) (hol2cl.metis.metis_prover.name.map.ma:singleton k% x))))
 
 (defparameter size #'cardinal)
 
-(defunc get (m k*)
+(defunc get (m k%)
   (handler-case
-    (find k* m)
+    (find k% m)
     (hol2cl.runtime:ocaml-condition
       (exception~10530)
       (match exception~10530
         ((Not_found) (failwith "Mmap.get: element not found"))
         (_ (raise exception~10530))))))
 
-(defunc peek (m k*)
+(defunc peek (m k%)
   (handler-case
-    (make-Some (find k* m))
+    (make-Some (find k% m))
     (hol2cl.runtime:ocaml-condition
       (exception~10542)
       (match exception~10542 ((Not_found) (make-None)) (_ (raise exception~10542))))))
 
-(defunc insert (m arg~10553) (match arg~10553 ((tuple k* v) (add k* v m))))
+(defunc insert (m arg~10553) (match arg~10553 ((tuple k% v) (add k% v m))))
 
 (defparameter toList #'bindings)
 
@@ -15674,10 +15863,10 @@
     l
     empty))
 
-(defunc foldl (f b* m)
+(defunc foldl (f b% m)
   (list-fold-left
     (lambdac (s arg~10590) (match arg~10590 ((tuple v tm) (funcall f (tuple v tm s)))))
-    b*
+    b%
     (bindings m)))
 
 (defparameter foldr #'foldl)
@@ -15689,28 +15878,28 @@
 
 (defunc union (f m1 m2)
   (fletc
-    ((f*
-      (k* arg~10631)
+    ((f%
+      (k% arg~10631)
       (match arg~10631
-        ((tuple (Some x) (Some y)) (funcall f (tuple (tuple k* x) (tuple k* y))))
+        ((tuple (Some x) (Some y)) (funcall f (tuple (tuple k% x) (tuple k% y))))
         ((tuple (Some x) (None)) (make-Some x))
         ((tuple (None) (Some y)) (make-Some y))
         ((tuple (None) (None)) (make-None)))))
-    (merge (lambdac (k* x y) (f* k* (tuple x y))) m1 m2)))
+    (merge (lambdac (k% x y) (f% k% (tuple x y))) m1 m2)))
 
-(defunc delete (m k*) (remove k* m))
+(defunc delete (m k%) (remove k% m))
 
 (defunc mapPartial (f m)
   (fold
-    (lambdac (k* x acc)
-      (match (funcall f (tuple k* x)) ((Some y) (add k* y acc)) ((None) acc)))
+    (lambdac (k% x acc)
+      (match (funcall f (tuple k% x)) ((Some y) (add k% y acc)) ((None) acc)))
     m
     empty))
 
 (defparameter transform #'map)
 
 (defunc exists (f)
-  (hol2cl.metis.metis_prover.name.map.ma:exists (lambdac (k* m) (funcall f (tuple k* m)))))
+  (hol2cl.metis.metis_prover.name.map.ma:exists (lambdac (k% m) (funcall f (tuple k% m)))))
 
 (in-package :hol2cl.metis.metis_prover.name)
 
@@ -15718,13 +15907,13 @@
 
 (in-package :hol2cl.metis.metis_prover.name.set.se)
 
-(defvariant t* (Empty*) (Node (:record l v r h)))
+(defvariant t% (Empty%) (Node (:record l v r h)))
 
 ;; (* Sets are represented by balanced binary trees (the heights of the
 ;;        children differ by at most 2 *)
 
 
-(defunc height (arg~10730) (match arg~10730 ((Empty*) 0) ((Node :h h) h)))
+(defunc height (arg~10730) (match arg~10730 ((Empty%) 0) ((Node :h h) h)))
 
 ;; (* Creates a new node with left son l, value v and right son r.
 ;;        We must have all elements of l < v < all elements of r.
@@ -15734,8 +15923,9 @@
 
 (defunc create (l v r)
   (let*
-    ((hl (match l ((Empty*) 0) ((Node :h h) h)))
-      (hr (match r ((Empty*) 0) ((Node :h h) h))))
+    ((hl (match l ((Empty%) 0) ((Node :h h) h)))
+      (hr (match r ((Empty%) 0) ((Node :h h) h))))
+    (cl:declare (cl:ignorable hl hr))
     (make-Node :l l :v v :r r :h (if (>= hl hr) (+ hl 1) (+ hr 1)))))
 
 ;; (* Same as create, but performs one step of rebalancing if necessary.
@@ -15746,26 +15936,27 @@
 
 (defunc bal (l v r)
   (let*
-    ((hl (match l ((Empty*) 0) ((Node :h h) h)))
-      (hr (match r ((Empty*) 0) ((Node :h h) h))))
+    ((hl (match l ((Empty%) 0) ((Node :h h) h)))
+      (hr (match r ((Empty%) 0) ((Node :h h) h))))
+    (cl:declare (cl:ignorable hl hr))
     (if (> hl (+ hr 2))
       (match l
-        ((Empty*) (invalid-arg "Set.bal"))
+        ((Empty%) (invalid-arg "Set.bal"))
         ((Node :l ll :v lv :r lr)
           (if (>= (height ll) (height lr))
             (create ll lv (create lr v r))
             (match lr
-              ((Empty*) (invalid-arg "Set.bal"))
+              ((Empty%) (invalid-arg "Set.bal"))
               ((Node :l lrl :v lrv :r lrr)
                 (create (create ll lv lrl) lrv (create lrr v r)))))))
       (if (> hr (+ hl 2))
         (match r
-          ((Empty*) (invalid-arg "Set.bal"))
+          ((Empty%) (invalid-arg "Set.bal"))
           ((Node :l rl :v rv :r rr)
             (if (>= (height rr) (height rl))
               (create (create l v rl) rv rr)
               (match rl
-                ((Empty*) (invalid-arg "Set.bal"))
+                ((Empty%) (invalid-arg "Set.bal"))
                 ((Node :l rll :v rlv :r rlr)
                   (create (create l v rll) rlv (create rlr rv rr)))))))
         (make-Node :l l :v v :r r :h (if (>= hl hr) (+ hl 1) (+ hr 1)))))))
@@ -15775,16 +15966,21 @@
 
 (defunc add (x arg~10925)
   (match arg~10925
-    ((Empty*) (make-Node :l (make-Empty*) :v x :r (make-Empty*) :h 1))
-    ((cl:and t* (Node :l l :v v :r r))
+    ((Empty%) (make-Node :l (make-Empty%) :v x :r (make-Empty%) :h 1))
+    ((cl:and t% (Node :l l :v v :r r))
       (let ((c (funcall hol2cl.metis.metis_prover.name.ordered:compare x v)))
+        (cl:declare (cl:ignorable c))
         (if (= c 0)
-          t*
+          t%
           (if (< c 0)
-            (let ((ll (add x l))) (if (== l ll) t* (bal ll v r)))
-            (let ((rr (add x r))) (if (== r rr) t* (bal l v rr)))))))))
+            (let ((ll (add x l)))
+              (cl:declare (cl:ignorable ll))
+              (if (== l ll) t% (bal ll v r)))
+            (let ((rr (add x r)))
+              (cl:declare (cl:ignorable rr))
+              (if (== r rr) t% (bal l v rr)))))))))
 
-(defunc singleton (x) (make-Node :l (make-Empty*) :v x :r (make-Empty*) :h 1))
+(defunc singleton (x) (make-Node :l (make-Empty%) :v x :r (make-Empty%) :h 1))
 
 ;; (* Beware: those two functions assume that the added v is *strictly*
 ;;        smaller (or bigger) than all the present elements in the tree; it
@@ -15796,12 +15992,12 @@
 
 (defunc add_min_element (x arg~10996)
   (match arg~10996
-    ((Empty*) (singleton x))
+    ((Empty%) (singleton x))
     ((Node :l l :v v :r r) (bal (add_min_element x l) v r))))
 
 (defunc add_max_element (x arg~11017)
   (match arg~11017
-    ((Empty*) (singleton x))
+    ((Empty%) (singleton x))
     ((Node :l l :v v :r r) (bal l v (add_max_element x r)))))
 
 ;; (* Same as create and bal, but no assumptions are made on the
@@ -15810,8 +16006,8 @@
 
 (defunc join (l v r)
   (match (tuple l r)
-    ((tuple (Empty*) _) (add_min_element v r))
-    ((tuple _ (Empty*)) (add_max_element v l))
+    ((tuple (Empty%) _) (add_min_element v r))
+    ((tuple _ (Empty%)) (add_max_element v l))
     ((tuple (Node :l ll :v lv :r lr :h lh) (Node :l rl :v rv :r rr :h rh))
       (if (> lh (+ rh 2))
         (bal ll lv (join lr v r))
@@ -15822,8 +16018,8 @@
 
 (defunc min_elt (arg~11107)
   (match arg~11107
-    ((Empty*) (raise (make-Not_found)))
-    ((Node :l (Empty*) :v v) v)
+    ((Empty%) (raise (make-Not_found)))
+    ((Node :l (Empty%) :v v) v)
     ((Node :l l) (min_elt l))))
 
 ;; (* Remove the smallest element of the given set *)
@@ -15831,8 +16027,8 @@
 
 (defunc remove_min_elt (arg~11124)
   (match arg~11124
-    ((Empty*) (invalid-arg "Set.remove_min_elt"))
-    ((Node :l (Empty*) :r r) r)
+    ((Empty%) (invalid-arg "Set.remove_min_elt"))
+    ((Node :l (Empty%) :r r) r)
     ((Node :l l :v v :r r) (bal (remove_min_elt l) v r))))
 
 ;; (* Merge two trees l and r into one.
@@ -15842,8 +16038,8 @@
 
 (defunc merge (t1 t2)
   (match (tuple t1 t2)
-    ((tuple (Empty*) t*) t*)
-    ((tuple t* (Empty*)) t*)
+    ((tuple (Empty%) t%) t%)
+    ((tuple t% (Empty%)) t%)
     ((tuple _ _) (bal t1 (min_elt t2) (remove_min_elt t2)))))
 
 ;; (* Merge two trees l and r into one.
@@ -15853,8 +16049,8 @@
 
 (defunc concat (t1 t2)
   (match (tuple t1 t2)
-    ((tuple (Empty*) t*) t*)
-    ((tuple t* (Empty*)) t*)
+    ((tuple (Empty%) t%) t%)
+    ((tuple t% (Empty%)) t%)
     ((tuple _ _) (join t1 (min_elt t2) (remove_min_elt t2)))))
 
 ;; (* Splitting.  split x s returns a triple (l, present, r) where
@@ -15866,9 +16062,10 @@
 
 (defunc split (x arg~11203)
   (match arg~11203
-    ((Empty*) (tuple (make-Empty*) cl:nil (make-Empty*)))
+    ((Empty%) (tuple (make-Empty%) cl:nil (make-Empty%)))
     ((Node :l l :v v :r r)
       (let ((c (funcall hol2cl.metis.metis_prover.name.ordered:compare x v)))
+        (cl:declare (cl:ignorable c))
         (if (= c 0)
           (tuple l cl:t r)
           (if (< c 0)
@@ -15878,47 +16075,53 @@
 ;; (* Implementation of the set operations *)
 
 
-(defparameter empty (make-Empty*))
+(defparameter empty (make-Empty%))
 
-(defunc is_empty (arg~11275) (match arg~11275 ((Empty*) cl:t) (_ cl:nil)))
+(defunc is_empty (arg~11275) (match arg~11275 ((Empty%) cl:t) (_ cl:nil)))
 
 (defunc mem (x arg~11284)
   (match arg~11284
-    ((Empty*) cl:nil)
+    ((Empty%) cl:nil)
     ((Node :l l :v v :r r)
       (let ((c (funcall hol2cl.metis.metis_prover.name.ordered:compare x v)))
+        (cl:declare (cl:ignorable c))
         (cl:or (= c 0) (mem x (if (< c 0) l r)))))))
 
 (defunc remove (x arg~11315)
   (match arg~11315
-    ((Empty*) (make-Empty*))
-    ((cl:and t* (Node :l l :v v :r r))
+    ((Empty%) (make-Empty%))
+    ((cl:and t% (Node :l l :v v :r r))
       (let ((c (funcall hol2cl.metis.metis_prover.name.ordered:compare x v)))
+        (cl:declare (cl:ignorable c))
         (if (= c 0)
           (merge l r)
           (if (< c 0)
-            (let ((ll (remove x l))) (if (== l ll) t* (bal ll v r)))
-            (let ((rr (remove x r))) (if (== r rr) t* (bal l v rr)))))))))
+            (let ((ll (remove x l)))
+              (cl:declare (cl:ignorable ll))
+              (if (== l ll) t% (bal ll v r)))
+            (let ((rr (remove x r)))
+              (cl:declare (cl:ignorable rr))
+              (if (== r rr) t% (bal l v rr)))))))))
 
 (defunc union (s1 s2)
   (match (tuple s1 s2)
-    ((tuple (Empty*) t2) t2)
-    ((tuple t1 (Empty*)) t1)
+    ((tuple (Empty%) t2) t2)
+    ((tuple t1 (Empty%)) t1)
     ((tuple (Node :l l1 :v v1 :r r1 :h h1) (Node :l l2 :v v2 :r r2 :h h2))
       (if (>= h1 h2)
         (if (= h2 1)
           (add v2 s1)
           (match (split v1 s2)
-            ((tuple l2* _ r2*) (join (union l1 l2*) v1 (union r1 r2*)))))
+            ((tuple l2% _ r2%) (join (union l1 l2%) v1 (union r1 r2%)))))
         (if (= h1 1)
           (add v1 s2)
           (match (split v2 s1)
-            ((tuple l1* _ r1*) (join (union l1* l2) v2 (union r1* r2)))))))))
+            ((tuple l1% _ r1%) (join (union l1% l2) v2 (union r1% r2)))))))))
 
 (defunc inter (s1 s2)
   (match (tuple s1 s2)
-    ((tuple (Empty*) _) (make-Empty*))
-    ((tuple _ (Empty*)) (make-Empty*))
+    ((tuple (Empty%) _) (make-Empty%))
+    ((tuple _ (Empty%)) (make-Empty%))
     ((tuple (Node :l l1 :v v1 :r r1) t2)
       (match (split v1 t2)
         ((tuple l2 cl:nil r2) (concat (inter l1 l2) (inter r1 r2)))
@@ -15928,8 +16131,8 @@
 
 (defunc diff (s1 s2)
   (match (tuple s1 s2)
-    ((tuple (Empty*) _) (make-Empty*))
-    ((tuple t1 (Empty*)) t1)
+    ((tuple (Empty%) _) (make-Empty%))
+    ((tuple t1 (Empty%)) t1)
     ((tuple (Node :l l1 :v v1 :r r1) t2)
       (match (split v1 t2)
         ((tuple l2 cl:nil r2) (join (diff l1 l2) v1 (diff r1 r2)))
@@ -15938,16 +16141,17 @@
 (defvariant enumeration (End) (More field0 field1 field2))
 
 (defunc cons_enum (s e)
-  (match s ((Empty*) e) ((Node :l l :v v :r r) (cons_enum l (make-More v r e)))))
+  (match s ((Empty%) e) ((Node :l l :v v :r r) (cons_enum l (make-More v r e)))))
 
 (defunc compare_aux (e1 e2)
   (match (tuple e1 e2)
     ((tuple (End) (End)) 0)
     ((tuple (End) _) (- 1))
     ((tuple _ (End)) 1)
-    ((tuple (More v1 r1 e1*) (More v2 r2 e2*))
+    ((tuple (More v1 r1 e1%) (More v2 r2 e2%))
       (let ((c (funcall hol2cl.metis.metis_prover.name.ordered:compare v1 v2)))
-        (if (<> c 0) c (compare_aux (cons_enum r1 e1*) (cons_enum r2 e2*)))))))
+        (cl:declare (cl:ignorable c))
+        (if (<> c 0) c (compare_aux (cons_enum r1 e1%) (cons_enum r2 e2%)))))))
 
 (defunc compare (s1 s2) (compare_aux (cons_enum s1 (make-End)) (cons_enum s2 (make-End))))
 
@@ -15955,41 +16159,42 @@
 
 (defunc subset (s1 s2)
   (match (tuple s1 s2)
-    ((tuple (Empty*) _) cl:t)
-    ((tuple _ (Empty*)) cl:nil)
+    ((tuple (Empty%) _) cl:t)
+    ((tuple _ (Empty%)) cl:nil)
     ((tuple (Node :l l1 :v v1 :r r1) (cl:and t2 (Node :l l2 :v v2 :r r2)))
       (let ((c (funcall hol2cl.metis.metis_prover.name.ordered:compare v1 v2)))
+        (cl:declare (cl:ignorable c))
         (if (= c 0)
           (cl:and (subset l1 l2) (subset r1 r2))
           (if (< c 0)
             (cl:and
-              (subset (make-Node :l l1 :v v1 :r (make-Empty*) :h 0) l2)
+              (subset (make-Node :l l1 :v v1 :r (make-Empty%) :h 0) l2)
               (subset r1 t2))
             (cl:and
-              (subset (make-Node :l (make-Empty*) :v v1 :r r1 :h 0) r2)
+              (subset (make-Node :l (make-Empty%) :v v1 :r r1 :h 0) r2)
               (subset l1 t2))))))))
 
 (defunc fold (f s accu)
   (match s
-    ((Empty*) accu)
+    ((Empty%) accu)
     ((Node :l l :v v :r r) (fold f r (funcall f v (fold f l accu))))))
 
 (defunc for_all (p arg~11783)
   (match arg~11783
-    ((Empty*) cl:t)
+    ((Empty%) cl:t)
     ((Node :l l :v v :r r) (cl:and (funcall p v) (cl:and (for_all p l) (for_all p r))))))
 
 (defunc exists (p arg~11807)
   (match arg~11807
-    ((Empty*) cl:nil)
+    ((Empty%) cl:nil)
     ((Node :l l :v v :r r) (cl:or (funcall p v) (cl:or (exists p l) (exists p r))))))
 
 (defunc cardinal (arg~11830)
-  (match arg~11830 ((Empty*) 0) ((Node :l l :r r) (+ (+ (cardinal l) 1) (cardinal r)))))
+  (match arg~11830 ((Empty%) 0) ((Node :l l :r r) (+ (+ (cardinal l) 1) (cardinal r)))))
 
 (defunc elements_aux (accu arg~11849)
   (match arg~11849
-    ((Empty*) accu)
+    ((Empty%) accu)
     ((Node :l l :v v :r r) (elements_aux (cl:cons v (elements_aux accu r)) l))))
 
 (defunc elements (s) (elements_aux nil s))
@@ -16002,7 +16207,7 @@
 
 (defunc add (s x) (hol2cl.metis.metis_prover.name.set.se:add x s))
 
-(defunc foldr (f a* s) (fold (lambdac (x acc) (funcall f (tuple x acc))) s a*))
+(defunc foldr (f a% s) (fold (lambdac (x acc) (funcall f (tuple x acc))) s a%))
 
 (defparameter foldl #'foldr)
 
@@ -16045,25 +16250,25 @@
     (nil hol2cl.metis.metis_prover.name.set.se:empty)
     ((cl:cons s ss) (list-fold-right #'inter ss s))))
 
-(defunc findl (p* s)
+(defunc findl (p% s)
   (fletc
     ((go
       (x arg~11978)
       (match arg~11978
-        ((cl:and s* (Some _)) s*)
-        ((None) (if (funcall p* x) (make-Some x) (make-None))))))
+        ((cl:and s% (Some _)) s%)
+        ((None) (if (funcall p% x) (make-Some x) (make-None))))))
     (fold #'go s (make-None))))
 
 (defunc firstl (f s)
   (fletc
-    ((go (x arg~12004) (match arg~12004 ((cl:and s* (Some _)) s*) ((None) (funcall f x)))))
+    ((go (x arg~12004) (match arg~12004 ((cl:and s% (Some _)) s%) ((None) (funcall f x)))))
     (fold #'go s (make-None))))
 
 (defunc transform (f s) (fold (lambdac (x acc) (cl:cons (funcall f x) acc)) s nil))
 
 (defparameter all #'for_all)
 
-(defunc count (p* s) (fold (lambdac (x c*) (if (funcall p* x) (+ c* 1) c*)) s 0))
+(defunc count (p% s) (fold (lambdac (x c%) (if (funcall p% x) (+ c% 1) c%)) s 0))
 
 (in-package :hol2cl.metis.metis_prover.name)
 
@@ -16073,14 +16278,14 @@
 
 (defunc name (arg~12056) (match arg~12056 ((tuple n _) n)))
 
-(defunc arity (arg~12065) (match arg~12065 ((tuple _ i*) i*)))
+(defunc arity (arg~12065) (match arg~12065 ((tuple _ i%) i%)))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Testing for different arities.                                            *)
 ;; (* ------------------------------------------------------------------------- *)
 
 
-(defunc nary (i* n_i) (= (arity n_i) i*))
+(defunc nary (i% n_i) (= (arity n_i) i%))
 
 (defparameter nullary (nary 0))
 
@@ -16100,8 +16305,9 @@
     ((tuple n1 i1)
       (match arg~12102
         ((tuple n2 i2)
-          (let ((c* (funcall hol2cl.metis.metis_prover.name:compare n1 n2)))
-            (if (<> c* 0) c* (intCompare i1 i2))))))))
+          (let ((c% (funcall hol2cl.metis.metis_prover.name:compare n1 n2)))
+            (cl:declare (cl:ignorable c%))
+            (if (<> c% 0) c% (intCompare i1 i2))))))))
 
 (defunc equal (arg~12127 arg~12131)
   (match arg~12127
@@ -16121,114 +16327,131 @@
 
 (in-package :hol2cl.metis.metis_prover.name_arity.map.include~12152.ma)
 
-(defvariant t* (Empty*) (Node (:record l v d r h)))
+(defvariant t% (Empty%) (Node (:record l v d r h)))
 
-(defunc height (arg~12157) (match arg~12157 ((Empty*) 0) ((Node :h h) h)))
+(defunc height (arg~12157) (match arg~12157 ((Empty%) 0) ((Node :h h) h)))
 
 (defunc create (l x d r)
   (let ((hl (height l)) (hr (height r)))
+    (cl:declare (cl:ignorable hl hr))
     (make-Node :l l :v x :d d :r r :h (if (>= hl hr) (+ hl 1) (+ hr 1)))))
 
-(defunc singleton (x d) (make-Node :l (make-Empty*) :v x :d d :r (make-Empty*) :h 1))
+(defunc singleton (x d) (make-Node :l (make-Empty%) :v x :d d :r (make-Empty%) :h 1))
 
 (defunc bal (l x d r)
   (let*
-    ((hl (match l ((Empty*) 0) ((Node :h h) h)))
-      (hr (match r ((Empty*) 0) ((Node :h h) h))))
+    ((hl (match l ((Empty%) 0) ((Node :h h) h)))
+      (hr (match r ((Empty%) 0) ((Node :h h) h))))
+    (cl:declare (cl:ignorable hl hr))
     (if (> hl (+ hr 2))
       (match l
-        ((Empty*) (invalid-arg "Map.bal"))
+        ((Empty%) (invalid-arg "Map.bal"))
         ((Node :l ll :v lv :d ld :r lr)
           (if (>= (height ll) (height lr))
             (create ll lv ld (create lr x d r))
             (match lr
-              ((Empty*) (invalid-arg "Map.bal"))
+              ((Empty%) (invalid-arg "Map.bal"))
               ((Node :l lrl :v lrv :d lrd :r lrr)
                 (create (create ll lv ld lrl) lrv lrd (create lrr x d r)))))))
       (if (> hr (+ hl 2))
         (match r
-          ((Empty*) (invalid-arg "Map.bal"))
+          ((Empty%) (invalid-arg "Map.bal"))
           ((Node :l rl :v rv :d rd :r rr)
             (if (>= (height rr) (height rl))
               (create (create l x d rl) rv rd rr)
               (match rl
-                ((Empty*) (invalid-arg "Map.bal"))
+                ((Empty%) (invalid-arg "Map.bal"))
                 ((Node :l rll :v rlv :d rld :r rlr)
                   (create (create l x d rll) rlv rld (create rlr rv rd rr)))))))
         (make-Node :l l :v x :d d :r r :h (if (>= hl hr) (+ hl 1) (+ hr 1)))))))
 
-(defparameter empty (make-Empty*))
+(defparameter empty (make-Empty%))
 
-(defunc is_empty (arg~12373) (match arg~12373 ((Empty*) cl:t) (_ cl:nil)))
+(defunc is_empty (arg~12373) (match arg~12373 ((Empty%) cl:t) (_ cl:nil)))
 
 (defunc add (x data arg~12383)
   (match arg~12383
-    ((Empty*) (make-Node :l (make-Empty*) :v x :d data :r (make-Empty*) :h 1))
+    ((Empty%) (make-Node :l (make-Empty%) :v x :d data :r (make-Empty%) :h 1))
     ((cl:and m (Node :l l :v v :d d :r r :h h))
       (let ((c (funcall compare x v)))
+        (cl:declare (cl:ignorable c))
         (if (= c 0)
           (if (== d data) m (make-Node :l l :v x :d data :r r :h h))
           (if (< c 0)
-            (let ((ll (add x data l))) (if (== l ll) m (bal ll v d r)))
-            (let ((rr (add x data r))) (if (== r rr) m (bal l v d rr)))))))))
+            (let ((ll (add x data l)))
+              (cl:declare (cl:ignorable ll))
+              (if (== l ll) m (bal ll v d r)))
+            (let ((rr (add x data r)))
+              (cl:declare (cl:ignorable rr))
+              (if (== r rr) m (bal l v d rr)))))))))
 
 (defunc find (x arg~12465)
   (match arg~12465
-    ((Empty*) (raise (make-Not_found)))
+    ((Empty%) (raise (make-Not_found)))
     ((Node :l l :v v :d d :r r)
-      (let ((c (funcall compare x v))) (if (= c 0) d (find x (if (< c 0) l r)))))))
+      (let ((c (funcall compare x v)))
+        (cl:declare (cl:ignorable c))
+        (if (= c 0) d (find x (if (< c 0) l r)))))))
 
 (defunc mem (x arg~12500)
   (match arg~12500
-    ((Empty*) cl:nil)
+    ((Empty%) cl:nil)
     ((Node :l l :v v :r r)
-      (let ((c (funcall compare x v))) (cl:or (= c 0) (mem x (if (< c 0) l r)))))))
+      (let ((c (funcall compare x v)))
+        (cl:declare (cl:ignorable c))
+        (cl:or (= c 0) (mem x (if (< c 0) l r)))))))
 
 (defunc min_binding (arg~12530)
   (match arg~12530
-    ((Empty*) (raise (make-Not_found)))
-    ((Node :l (Empty*) :v v :d d) (tuple v d))
+    ((Empty%) (raise (make-Not_found)))
+    ((Node :l (Empty%) :v v :d d) (tuple v d))
     ((Node :l l) (min_binding l))))
 
 (defunc remove_min_binding (arg~12551)
   (match arg~12551
-    ((Empty*) (invalid-arg "Map.remove_min_elt"))
-    ((Node :l (Empty*) :r r) r)
+    ((Empty%) (invalid-arg "Map.remove_min_elt"))
+    ((Node :l (Empty%) :r r) r)
     ((Node :l l :v v :d d :r r) (bal (remove_min_binding l) v d r))))
 
 (defunc merge~1 (t1 t2)
   (match (tuple t1 t2)
-    ((tuple (Empty*) t*) t*)
-    ((tuple t* (Empty*)) t*)
+    ((tuple (Empty%) t%) t%)
+    ((tuple t% (Empty%)) t%)
     ((tuple _ _)
       (match (min_binding t2) ((tuple x d) (bal t1 x d (remove_min_binding t2)))))))
 
 (defunc remove (x arg~12614)
   (match arg~12614
-    ((Empty*) (make-Empty*))
+    ((Empty%) (make-Empty%))
     ((cl:and m (Node :l l :v v :d d :r r))
       (let ((c (funcall compare x v)))
+        (cl:declare (cl:ignorable c))
         (if (= c 0)
           (merge~1 l r)
           (if (< c 0)
-            (let ((ll (remove x l))) (if (== l ll) m (bal ll v d r)))
-            (let ((rr (remove x r))) (if (== r rr) m (bal l v d rr)))))))))
+            (let ((ll (remove x l)))
+              (cl:declare (cl:ignorable ll))
+              (if (== l ll) m (bal ll v d r)))
+            (let ((rr (remove x r)))
+              (cl:declare (cl:ignorable rr))
+              (if (== r rr) m (bal l v d rr)))))))))
 
 (defunc map (f arg~12679)
   (match arg~12679
-    ((Empty*) (make-Empty*))
+    ((Empty%) (make-Empty%))
     ((Node :l l :v v :d d :r r :h h)
-      (let* ((l* (map f l)) (d* (funcall f d)) (r* (map f r)))
-        (make-Node :l l* :v v :d d* :r r* :h h)))))
+      (let* ((l% (map f l)) (d% (funcall f d)) (r% (map f r)))
+        (cl:declare (cl:ignorable l% d% r%))
+        (make-Node :l l% :v v :d d% :r r% :h h)))))
 
 (defunc fold (f m accu)
   (match m
-    ((Empty*) accu)
+    ((Empty%) accu)
     ((Node :l l :v v :d d :r r) (fold f r (funcall f v d (fold f l accu))))))
 
 (defunc exists (p arg~12745)
   (match arg~12745
-    ((Empty*) cl:nil)
+    ((Empty%) cl:nil)
     ((Node :l l :v v :d d :r r) (cl:or (funcall p v d) (cl:or (exists p l) (exists p r))))))
 
 ;; (* Beware: those two functions assume that the added k is *strictly*
@@ -16242,12 +16465,12 @@
 
 (defunc add_min_binding (k x arg~12773)
   (match arg~12773
-    ((Empty*) (singleton k x))
+    ((Empty%) (singleton k x))
     ((Node :l l :v v :d d :r r) (bal (add_min_binding k x l) v d r))))
 
 (defunc add_max_binding (k x arg~12800)
   (match arg~12800
-    ((Empty*) (singleton k x))
+    ((Empty%) (singleton k x))
     ((Node :l l :v v :d d :r r) (bal l v d (add_max_binding k x r)))))
 
 ;; (* Same as create and bal, but no assumptions are made on the
@@ -16256,8 +16479,8 @@
 
 (defunc join (l v d r)
   (match (tuple l r)
-    ((tuple (Empty*) _) (add_min_binding v d r))
-    ((tuple _ (Empty*)) (add_max_binding v d l))
+    ((tuple (Empty%) _) (add_min_binding v d r))
+    ((tuple _ (Empty%)) (add_max_binding v d l))
     ((tuple (Node :l ll :v lv :d ld :r lr :h lh) (Node :l rl :v rv :d rd :r rr :h rh))
       (if (> lh (+ rh 2))
         (bal ll lv ld (join lr v d r))
@@ -16270,19 +16493,20 @@
 
 (defunc concat (t1 t2)
   (match (tuple t1 t2)
-    ((tuple (Empty*) t*) t*)
-    ((tuple t* (Empty*)) t*)
+    ((tuple (Empty%) t%) t%)
+    ((tuple t% (Empty%)) t%)
     ((tuple _ _)
       (match (min_binding t2) ((tuple x d) (join t1 x d (remove_min_binding t2)))))))
 
 (defunc concat_or_join (t1 v d t2)
-  (match d ((Some d*) (join t1 v d* t2)) ((None) (concat t1 t2))))
+  (match d ((Some d%) (join t1 v d% t2)) ((None) (concat t1 t2))))
 
 (defunc split (x arg~12963)
   (match arg~12963
-    ((Empty*) (tuple (make-Empty*) (make-None) (make-Empty*)))
+    ((Empty%) (tuple (make-Empty%) (make-None) (make-Empty%)))
     ((Node :l l :v v :d d :r r)
       (let ((c (funcall compare x v)))
+        (cl:declare (cl:ignorable c))
         (if (= c 0)
           (tuple l (make-Some d) r)
           (if (< c 0)
@@ -16291,8 +16515,8 @@
 
 (defunc merge (f s1 s2)
   (match (tuple s1 s2)
-    ((tuple (Empty*) (Empty*)) (make-Empty*))
-    ((trivia:guard (tuple (Node :l l1 :v v1 :d d1 :r r1 :h h1) _) (>= h1 (height s2)))
+    ((tuple (Empty%) (Empty%)) (make-Empty%))
+    ((guard (tuple (Node :l l1 :v v1 :d d1 :r r1 :h h1) _) (>= h1 (height s2)))
       (match (split v1 s2)
         ((tuple l2 d2 r2)
           (concat_or_join
@@ -16312,37 +16536,40 @@
 
 (defunc union (f s1 s2)
   (match (tuple s1 s2)
-    ((cl:or (tuple (Empty*) s) (tuple s (Empty*))) s)
+    ((cl:or (tuple (Empty%) s) (tuple s (Empty%))) s)
     ((tuple (Node :l l1 :v v1 :d d1 :r r1 :h h1) (Node :l l2 :v v2 :d d2 :r r2 :h h2))
       (if (>= h1 h2)
         (match (split v1 s2)
-          ((tuple l2* d2* r2*)
-            (let ((l (union f l1 l2*)) (r (union f r1 r2*)))
-              (match d2*
+          ((tuple l2% d2% r2%)
+            (let ((l (union f l1 l2%)) (r (union f r1 r2%)))
+              (cl:declare (cl:ignorable l r))
+              (match d2%
                 ((None) (join l v1 d1 r))
                 ((Some d2) (concat_or_join l v1 (funcall f v1 d1 d2) r))))))
         (match (split v2 s1)
-          ((tuple l1* d1* r1*)
-            (let ((l (union f l1* l2)) (r (union f r1* r2)))
-              (match d1*
+          ((tuple l1% d1% r1%)
+            (let ((l (union f l1% l2)) (r (union f r1% r2)))
+              (cl:declare (cl:ignorable l r))
+              (match d1%
                 ((None) (join l v2 d2 r))
                 ((Some d1) (concat_or_join l v2 (funcall f v2 d1 d2) r))))))))))
 
 (defunc filter (p arg~13261)
   (match arg~13261
-    ((Empty*) (make-Empty*))
+    ((Empty%) (make-Empty%))
     ((cl:and m (Node :l l :v v :d d :r r))
-      (let* ((l* (filter p l)) (pvd (funcall p v d)) (r* (filter p r)))
-        (if pvd (if (cl:and (== l l*) (== r r*)) m (join l* v d r*)) (concat l* r*))))))
+      (let* ((l% (filter p l)) (pvd (funcall p v d)) (r% (filter p r)))
+        (cl:declare (cl:ignorable l% pvd r%))
+        (if pvd (if (cl:and (== l l%) (== r r%)) m (join l% v d r%)) (concat l% r%))))))
 
 (defvariant enumeration (End) (More field0 field1 field2 field3))
 
 (defunc cardinal (arg~13316)
-  (match arg~13316 ((Empty*) 0) ((Node :l l :r r) (+ (+ (cardinal l) 1) (cardinal r)))))
+  (match arg~13316 ((Empty%) 0) ((Node :l l :r r) (+ (+ (cardinal l) 1) (cardinal r)))))
 
 (defunc bindings_aux (accu arg~13335)
   (match arg~13335
-    ((Empty*) accu)
+    ((Empty%) accu)
     ((Node :l l :v v :d d :r r)
       (bindings_aux (cl:cons (tuple v d) (bindings_aux accu r)) l))))
 
@@ -16356,28 +16583,28 @@
 
 (defunc singleton (arg~13374)
   (match arg~13374
-    ((tuple k* x)
-      (hol2cl.metis.metis_prover.name_arity.map.include~12152.ma:singleton k* x))))
+    ((tuple k% x)
+      (hol2cl.metis.metis_prover.name_arity.map.include~12152.ma:singleton k% x))))
 
 (defparameter size #'cardinal)
 
-(defunc get (m k*)
+(defunc get (m k%)
   (handler-case
-    (find k* m)
+    (find k% m)
     (hol2cl.runtime:ocaml-condition
       (exception~13391)
       (match exception~13391
         ((Not_found) (failwith "Mmap.get: element not found"))
         (_ (raise exception~13391))))))
 
-(defunc peek (m k*)
+(defunc peek (m k%)
   (handler-case
-    (make-Some (find k* m))
+    (make-Some (find k% m))
     (hol2cl.runtime:ocaml-condition
       (exception~13403)
       (match exception~13403 ((Not_found) (make-None)) (_ (raise exception~13403))))))
 
-(defunc insert (m arg~13414) (match arg~13414 ((tuple k* v) (add k* v m))))
+(defunc insert (m arg~13414) (match arg~13414 ((tuple k% v) (add k% v m))))
 
 (defparameter toList #'bindings)
 
@@ -16387,10 +16614,10 @@
     l
     empty))
 
-(defunc foldl (f b* m)
+(defunc foldl (f b% m)
   (list-fold-left
     (lambdac (s arg~13451) (match arg~13451 ((tuple v tm) (funcall f (tuple v tm s)))))
-    b*
+    b%
     (bindings m)))
 
 (defparameter foldr #'foldl)
@@ -16403,21 +16630,21 @@
 
 (defunc union (f m1 m2)
   (fletc
-    ((f*
-      (k* arg~13492)
+    ((f%
+      (k% arg~13492)
       (match arg~13492
-        ((tuple (Some x) (Some y)) (funcall f (tuple (tuple k* x) (tuple k* y))))
+        ((tuple (Some x) (Some y)) (funcall f (tuple (tuple k% x) (tuple k% y))))
         ((tuple (Some x) (None)) (make-Some x))
         ((tuple (None) (Some y)) (make-Some y))
         ((tuple (None) (None)) (make-None)))))
-    (merge (lambdac (k* x y) (f* k* (tuple x y))) m1 m2)))
+    (merge (lambdac (k% x y) (f% k% (tuple x y))) m1 m2)))
 
-(defunc delete (m k*) (remove k* m))
+(defunc delete (m k%) (remove k% m))
 
 (defunc mapPartial (f m)
   (fold
-    (lambdac (k* x acc)
-      (match (funcall f (tuple k* x)) ((Some y) (add k* y acc)) ((None) acc)))
+    (lambdac (k% x acc)
+      (match (funcall f (tuple k% x)) ((Some y) (add k% y acc)) ((None) acc)))
     m
     empty))
 
@@ -16425,13 +16652,13 @@
 
 (defunc exists (f)
   (hol2cl.metis.metis_prover.name_arity.map.include~12152.ma:exists
-    (lambdac (k* m) (funcall f (tuple k* m)))))
+    (lambdac (k% m) (funcall f (tuple k% m)))))
 
 (in-package :hol2cl.metis.metis_prover.name_arity.map)
 
 (defunc compose (m1 m2)
   (fletc
-    ((pk (arg~13591) (match arg~13591 ((tuple (tuple _ a*) n) (peek m2 (tuple n a*))))))
+    ((pk (arg~13591) (match arg~13591 ((tuple (tuple _ a%) n) (peek m2 (tuple n a%))))))
     (mapPartial #'pk m1)))
 
 (in-package :hol2cl.metis.metis_prover.name_arity)
@@ -16442,13 +16669,13 @@
 
 (in-package :hol2cl.metis.metis_prover.name_arity.set.include~13610.se)
 
-(defvariant t* (Empty*) (Node (:record l v r h)))
+(defvariant t% (Empty%) (Node (:record l v r h)))
 
 ;; (* Sets are represented by balanced binary trees (the heights of the
 ;;        children differ by at most 2 *)
 
 
-(defunc height (arg~13615) (match arg~13615 ((Empty*) 0) ((Node :h h) h)))
+(defunc height (arg~13615) (match arg~13615 ((Empty%) 0) ((Node :h h) h)))
 
 ;; (* Creates a new node with left son l, value v and right son r.
 ;;        We must have all elements of l < v < all elements of r.
@@ -16458,8 +16685,9 @@
 
 (defunc create (l v r)
   (let*
-    ((hl (match l ((Empty*) 0) ((Node :h h) h)))
-      (hr (match r ((Empty*) 0) ((Node :h h) h))))
+    ((hl (match l ((Empty%) 0) ((Node :h h) h)))
+      (hr (match r ((Empty%) 0) ((Node :h h) h))))
+    (cl:declare (cl:ignorable hl hr))
     (make-Node :l l :v v :r r :h (if (>= hl hr) (+ hl 1) (+ hr 1)))))
 
 ;; (* Same as create, but performs one step of rebalancing if necessary.
@@ -16470,26 +16698,27 @@
 
 (defunc bal (l v r)
   (let*
-    ((hl (match l ((Empty*) 0) ((Node :h h) h)))
-      (hr (match r ((Empty*) 0) ((Node :h h) h))))
+    ((hl (match l ((Empty%) 0) ((Node :h h) h)))
+      (hr (match r ((Empty%) 0) ((Node :h h) h))))
+    (cl:declare (cl:ignorable hl hr))
     (if (> hl (+ hr 2))
       (match l
-        ((Empty*) (invalid-arg "Set.bal"))
+        ((Empty%) (invalid-arg "Set.bal"))
         ((Node :l ll :v lv :r lr)
           (if (>= (height ll) (height lr))
             (create ll lv (create lr v r))
             (match lr
-              ((Empty*) (invalid-arg "Set.bal"))
+              ((Empty%) (invalid-arg "Set.bal"))
               ((Node :l lrl :v lrv :r lrr)
                 (create (create ll lv lrl) lrv (create lrr v r)))))))
       (if (> hr (+ hl 2))
         (match r
-          ((Empty*) (invalid-arg "Set.bal"))
+          ((Empty%) (invalid-arg "Set.bal"))
           ((Node :l rl :v rv :r rr)
             (if (>= (height rr) (height rl))
               (create (create l v rl) rv rr)
               (match rl
-                ((Empty*) (invalid-arg "Set.bal"))
+                ((Empty%) (invalid-arg "Set.bal"))
                 ((Node :l rll :v rlv :r rlr)
                   (create (create l v rll) rlv (create rlr rv rr)))))))
         (make-Node :l l :v v :r r :h (if (>= hl hr) (+ hl 1) (+ hr 1)))))))
@@ -16499,16 +16728,21 @@
 
 (defunc add (x arg~13810)
   (match arg~13810
-    ((Empty*) (make-Node :l (make-Empty*) :v x :r (make-Empty*) :h 1))
-    ((cl:and t* (Node :l l :v v :r r))
+    ((Empty%) (make-Node :l (make-Empty%) :v x :r (make-Empty%) :h 1))
+    ((cl:and t% (Node :l l :v v :r r))
       (let ((c (funcall hol2cl.metis.metis_prover.name_arity.ordered:compare x v)))
+        (cl:declare (cl:ignorable c))
         (if (= c 0)
-          t*
+          t%
           (if (< c 0)
-            (let ((ll (add x l))) (if (== l ll) t* (bal ll v r)))
-            (let ((rr (add x r))) (if (== r rr) t* (bal l v rr)))))))))
+            (let ((ll (add x l)))
+              (cl:declare (cl:ignorable ll))
+              (if (== l ll) t% (bal ll v r)))
+            (let ((rr (add x r)))
+              (cl:declare (cl:ignorable rr))
+              (if (== r rr) t% (bal l v rr)))))))))
 
-(defunc singleton (x) (make-Node :l (make-Empty*) :v x :r (make-Empty*) :h 1))
+(defunc singleton (x) (make-Node :l (make-Empty%) :v x :r (make-Empty%) :h 1))
 
 ;; (* Beware: those two functions assume that the added v is *strictly*
 ;;        smaller (or bigger) than all the present elements in the tree; it
@@ -16520,12 +16754,12 @@
 
 (defunc add_min_element (x arg~13881)
   (match arg~13881
-    ((Empty*) (singleton x))
+    ((Empty%) (singleton x))
     ((Node :l l :v v :r r) (bal (add_min_element x l) v r))))
 
 (defunc add_max_element (x arg~13902)
   (match arg~13902
-    ((Empty*) (singleton x))
+    ((Empty%) (singleton x))
     ((Node :l l :v v :r r) (bal l v (add_max_element x r)))))
 
 ;; (* Same as create and bal, but no assumptions are made on the
@@ -16534,8 +16768,8 @@
 
 (defunc join (l v r)
   (match (tuple l r)
-    ((tuple (Empty*) _) (add_min_element v r))
-    ((tuple _ (Empty*)) (add_max_element v l))
+    ((tuple (Empty%) _) (add_min_element v r))
+    ((tuple _ (Empty%)) (add_max_element v l))
     ((tuple (Node :l ll :v lv :r lr :h lh) (Node :l rl :v rv :r rr :h rh))
       (if (> lh (+ rh 2))
         (bal ll lv (join lr v r))
@@ -16546,8 +16780,8 @@
 
 (defunc min_elt (arg~13992)
   (match arg~13992
-    ((Empty*) (raise (make-Not_found)))
-    ((Node :l (Empty*) :v v) v)
+    ((Empty%) (raise (make-Not_found)))
+    ((Node :l (Empty%) :v v) v)
     ((Node :l l) (min_elt l))))
 
 ;; (* Remove the smallest element of the given set *)
@@ -16555,8 +16789,8 @@
 
 (defunc remove_min_elt (arg~14009)
   (match arg~14009
-    ((Empty*) (invalid-arg "Set.remove_min_elt"))
-    ((Node :l (Empty*) :r r) r)
+    ((Empty%) (invalid-arg "Set.remove_min_elt"))
+    ((Node :l (Empty%) :r r) r)
     ((Node :l l :v v :r r) (bal (remove_min_elt l) v r))))
 
 ;; (* Merge two trees l and r into one.
@@ -16566,8 +16800,8 @@
 
 (defunc merge (t1 t2)
   (match (tuple t1 t2)
-    ((tuple (Empty*) t*) t*)
-    ((tuple t* (Empty*)) t*)
+    ((tuple (Empty%) t%) t%)
+    ((tuple t% (Empty%)) t%)
     ((tuple _ _) (bal t1 (min_elt t2) (remove_min_elt t2)))))
 
 ;; (* Merge two trees l and r into one.
@@ -16577,8 +16811,8 @@
 
 (defunc concat (t1 t2)
   (match (tuple t1 t2)
-    ((tuple (Empty*) t*) t*)
-    ((tuple t* (Empty*)) t*)
+    ((tuple (Empty%) t%) t%)
+    ((tuple t% (Empty%)) t%)
     ((tuple _ _) (join t1 (min_elt t2) (remove_min_elt t2)))))
 
 ;; (* Splitting.  split x s returns a triple (l, present, r) where
@@ -16590,9 +16824,10 @@
 
 (defunc split (x arg~14088)
   (match arg~14088
-    ((Empty*) (tuple (make-Empty*) cl:nil (make-Empty*)))
+    ((Empty%) (tuple (make-Empty%) cl:nil (make-Empty%)))
     ((Node :l l :v v :r r)
       (let ((c (funcall hol2cl.metis.metis_prover.name_arity.ordered:compare x v)))
+        (cl:declare (cl:ignorable c))
         (if (= c 0)
           (tuple l cl:t r)
           (if (< c 0)
@@ -16602,47 +16837,53 @@
 ;; (* Implementation of the set operations *)
 
 
-(defparameter empty (make-Empty*))
+(defparameter empty (make-Empty%))
 
-(defunc is_empty (arg~14160) (match arg~14160 ((Empty*) cl:t) (_ cl:nil)))
+(defunc is_empty (arg~14160) (match arg~14160 ((Empty%) cl:t) (_ cl:nil)))
 
 (defunc mem (x arg~14169)
   (match arg~14169
-    ((Empty*) cl:nil)
+    ((Empty%) cl:nil)
     ((Node :l l :v v :r r)
       (let ((c (funcall hol2cl.metis.metis_prover.name_arity.ordered:compare x v)))
+        (cl:declare (cl:ignorable c))
         (cl:or (= c 0) (mem x (if (< c 0) l r)))))))
 
 (defunc remove (x arg~14200)
   (match arg~14200
-    ((Empty*) (make-Empty*))
-    ((cl:and t* (Node :l l :v v :r r))
+    ((Empty%) (make-Empty%))
+    ((cl:and t% (Node :l l :v v :r r))
       (let ((c (funcall hol2cl.metis.metis_prover.name_arity.ordered:compare x v)))
+        (cl:declare (cl:ignorable c))
         (if (= c 0)
           (merge l r)
           (if (< c 0)
-            (let ((ll (remove x l))) (if (== l ll) t* (bal ll v r)))
-            (let ((rr (remove x r))) (if (== r rr) t* (bal l v rr)))))))))
+            (let ((ll (remove x l)))
+              (cl:declare (cl:ignorable ll))
+              (if (== l ll) t% (bal ll v r)))
+            (let ((rr (remove x r)))
+              (cl:declare (cl:ignorable rr))
+              (if (== r rr) t% (bal l v rr)))))))))
 
 (defunc union (s1 s2)
   (match (tuple s1 s2)
-    ((tuple (Empty*) t2) t2)
-    ((tuple t1 (Empty*)) t1)
+    ((tuple (Empty%) t2) t2)
+    ((tuple t1 (Empty%)) t1)
     ((tuple (Node :l l1 :v v1 :r r1 :h h1) (Node :l l2 :v v2 :r r2 :h h2))
       (if (>= h1 h2)
         (if (= h2 1)
           (add v2 s1)
           (match (split v1 s2)
-            ((tuple l2* _ r2*) (join (union l1 l2*) v1 (union r1 r2*)))))
+            ((tuple l2% _ r2%) (join (union l1 l2%) v1 (union r1 r2%)))))
         (if (= h1 1)
           (add v1 s2)
           (match (split v2 s1)
-            ((tuple l1* _ r1*) (join (union l1* l2) v2 (union r1* r2)))))))))
+            ((tuple l1% _ r1%) (join (union l1% l2) v2 (union r1% r2)))))))))
 
 (defunc inter (s1 s2)
   (match (tuple s1 s2)
-    ((tuple (Empty*) _) (make-Empty*))
-    ((tuple _ (Empty*)) (make-Empty*))
+    ((tuple (Empty%) _) (make-Empty%))
+    ((tuple _ (Empty%)) (make-Empty%))
     ((tuple (Node :l l1 :v v1 :r r1) t2)
       (match (split v1 t2)
         ((tuple l2 cl:nil r2) (concat (inter l1 l2) (inter r1 r2)))
@@ -16652,8 +16893,8 @@
 
 (defunc diff (s1 s2)
   (match (tuple s1 s2)
-    ((tuple (Empty*) _) (make-Empty*))
-    ((tuple t1 (Empty*)) t1)
+    ((tuple (Empty%) _) (make-Empty%))
+    ((tuple t1 (Empty%)) t1)
     ((tuple (Node :l l1 :v v1 :r r1) t2)
       (match (split v1 t2)
         ((tuple l2 cl:nil r2) (join (diff l1 l2) v1 (diff r1 r2)))
@@ -16662,16 +16903,17 @@
 (defvariant enumeration (End) (More field0 field1 field2))
 
 (defunc cons_enum (s e)
-  (match s ((Empty*) e) ((Node :l l :v v :r r) (cons_enum l (make-More v r e)))))
+  (match s ((Empty%) e) ((Node :l l :v v :r r) (cons_enum l (make-More v r e)))))
 
 (defunc compare_aux (e1 e2)
   (match (tuple e1 e2)
     ((tuple (End) (End)) 0)
     ((tuple (End) _) (- 1))
     ((tuple _ (End)) 1)
-    ((tuple (More v1 r1 e1*) (More v2 r2 e2*))
+    ((tuple (More v1 r1 e1%) (More v2 r2 e2%))
       (let ((c (funcall hol2cl.metis.metis_prover.name_arity.ordered:compare v1 v2)))
-        (if (<> c 0) c (compare_aux (cons_enum r1 e1*) (cons_enum r2 e2*)))))))
+        (cl:declare (cl:ignorable c))
+        (if (<> c 0) c (compare_aux (cons_enum r1 e1%) (cons_enum r2 e2%)))))))
 
 (defunc compare (s1 s2) (compare_aux (cons_enum s1 (make-End)) (cons_enum s2 (make-End))))
 
@@ -16679,41 +16921,42 @@
 
 (defunc subset (s1 s2)
   (match (tuple s1 s2)
-    ((tuple (Empty*) _) cl:t)
-    ((tuple _ (Empty*)) cl:nil)
+    ((tuple (Empty%) _) cl:t)
+    ((tuple _ (Empty%)) cl:nil)
     ((tuple (Node :l l1 :v v1 :r r1) (cl:and t2 (Node :l l2 :v v2 :r r2)))
       (let ((c (funcall hol2cl.metis.metis_prover.name_arity.ordered:compare v1 v2)))
+        (cl:declare (cl:ignorable c))
         (if (= c 0)
           (cl:and (subset l1 l2) (subset r1 r2))
           (if (< c 0)
             (cl:and
-              (subset (make-Node :l l1 :v v1 :r (make-Empty*) :h 0) l2)
+              (subset (make-Node :l l1 :v v1 :r (make-Empty%) :h 0) l2)
               (subset r1 t2))
             (cl:and
-              (subset (make-Node :l (make-Empty*) :v v1 :r r1 :h 0) r2)
+              (subset (make-Node :l (make-Empty%) :v v1 :r r1 :h 0) r2)
               (subset l1 t2))))))))
 
 (defunc fold (f s accu)
   (match s
-    ((Empty*) accu)
+    ((Empty%) accu)
     ((Node :l l :v v :r r) (fold f r (funcall f v (fold f l accu))))))
 
 (defunc for_all (p arg~14668)
   (match arg~14668
-    ((Empty*) cl:t)
+    ((Empty%) cl:t)
     ((Node :l l :v v :r r) (cl:and (funcall p v) (cl:and (for_all p l) (for_all p r))))))
 
 (defunc exists (p arg~14692)
   (match arg~14692
-    ((Empty*) cl:nil)
+    ((Empty%) cl:nil)
     ((Node :l l :v v :r r) (cl:or (funcall p v) (cl:or (exists p l) (exists p r))))))
 
 (defunc cardinal (arg~14715)
-  (match arg~14715 ((Empty*) 0) ((Node :l l :r r) (+ (+ (cardinal l) 1) (cardinal r)))))
+  (match arg~14715 ((Empty%) 0) ((Node :l l :r r) (+ (+ (cardinal l) 1) (cardinal r)))))
 
 (defunc elements_aux (accu arg~14734)
   (match arg~14734
-    ((Empty*) accu)
+    ((Empty%) accu)
     ((Node :l l :v v :r r) (elements_aux (cl:cons v (elements_aux accu r)) l))))
 
 (defunc elements (s) (elements_aux nil s))
@@ -16726,7 +16969,7 @@
 
 (defunc add (s x) (hol2cl.metis.metis_prover.name_arity.set.include~13610.se:add x s))
 
-(defunc foldr (f a* s) (fold (lambdac (x acc) (funcall f (tuple x acc))) s a*))
+(defunc foldr (f a% s) (fold (lambdac (x acc) (funcall f (tuple x acc))) s a%))
 
 (defparameter foldl #'foldr)
 
@@ -16770,25 +17013,25 @@
     (nil hol2cl.metis.metis_prover.name_arity.set.include~13610.se:empty)
     ((cl:cons s ss) (list-fold-right #'inter ss s))))
 
-(defunc findl (p* s)
+(defunc findl (p% s)
   (fletc
     ((go
       (x arg~14863)
       (match arg~14863
-        ((cl:and s* (Some _)) s*)
-        ((None) (if (funcall p* x) (make-Some x) (make-None))))))
+        ((cl:and s% (Some _)) s%)
+        ((None) (if (funcall p% x) (make-Some x) (make-None))))))
     (fold #'go s (make-None))))
 
 (defunc firstl (f s)
   (fletc
-    ((go (x arg~14889) (match arg~14889 ((cl:and s* (Some _)) s*) ((None) (funcall f x)))))
+    ((go (x arg~14889) (match arg~14889 ((cl:and s% (Some _)) s%) ((None) (funcall f x)))))
     (fold #'go s (make-None))))
 
 (defunc transform (f s) (fold (lambdac (x acc) (cl:cons (funcall f x) acc)) s nil))
 
 (defparameter all #'for_all)
 
-(defunc count (p* s) (fold (lambdac (x c*) (if (funcall p* x) (+ c* 1) c*)) s 0))
+(defunc count (p% s) (fold (lambdac (x c%) (if (funcall p% x) (+ c% 1) c%)) s 0))
 
 (in-package :hol2cl.metis.metis_prover.name_arity.set)
 
@@ -16814,7 +17057,7 @@
 (defparameter isVar (can #'destVar))
 
 (defunc equalVar (v arg~14965)
-  (match arg~14965 ((Var v*) (hol2cl.metis.metis_prover.name:equal v v*)) (_ cl:nil)))
+  (match arg~14965 ((Var v%) (hol2cl.metis.metis_prover.name:equal v v%)) (_ cl:nil)))
 
 ;; (* Functions *)
 
@@ -16856,10 +17099,10 @@
 ;; (* Constants *)
 
 
-(defunc mkConst (c*) (make-Fn (tuple c* nil)))
+(defunc mkConst (c%) (make-Fn (tuple c% nil)))
 
 (defunc destConst (arg~15107)
-  (match arg~15107 ((Fn (tuple c* nil)) c*) (_ (failwith "destConst"))))
+  (match arg~15107 ((Fn (tuple c% nil)) c%) (_ (failwith "destConst"))))
 
 (defparameter isConst (can #'destConst))
 
@@ -16867,13 +17110,13 @@
 
 
 (defunc mkBinop (f arg~15125)
-  (match arg~15125 ((tuple a* b*) (make-Fn (tuple f (cl:cons a* (cl:cons b* nil)))))))
+  (match arg~15125 ((tuple a% b%) (make-Fn (tuple f (cl:cons a% (cl:cons b% nil)))))))
 
 (defunc destBinop (f arg~15143)
   (match arg~15143
-    ((Fn (tuple x (cl:cons a* (cl:cons b* nil))))
+    ((Fn (tuple x (cl:cons a% (cl:cons b% nil))))
       (if (hol2cl.metis.metis_prover.name:equal x f)
-        (tuple a* b*)
+        (tuple a% b%)
         (failwith "Term.destBinop: wrong binop")))
     (_ (failwith "Term.destBinop: not a binop"))))
 
@@ -16909,36 +17152,39 @@
       (arg~15226)
       (match arg~15226
         ((tuple nil nil) 0)
-        ((tuple (cl:cons tm1* tms1) (cl:cons tm2* tms2))
-          (if (== tm1* tm2*)
+        ((tuple (cl:cons tm1% tms1) (cl:cons tm2% tms2))
+          (if (== tm1% tm2%)
             (cmp (tuple tms1 tms2))
-            (match (tuple tm1* tm2*)
+            (match (tuple tm1% tm2%)
               ((tuple (Var v1) (Var v2))
-                (let ((c* (funcall hol2cl.metis.metis_prover.name:compare v1 v2)))
-                  (if (<> c* 0) c* (cmp (tuple tms1 tms2)))))
+                (let ((c% (funcall hol2cl.metis.metis_prover.name:compare v1 v2)))
+                  (cl:declare (cl:ignorable c%))
+                  (if (<> c% 0) c% (cmp (tuple tms1 tms2)))))
               ((tuple (Var _) (Fn _)) (- 1))
               ((tuple (Fn _) (Var _)) 1)
               ((tuple (Fn (tuple f1 a1)) (Fn (tuple f2 a2)))
-                (let ((c* (funcall hol2cl.metis.metis_prover.name:compare f1 f2)))
-                  (if (<> c* 0)
-                    c*
-                    (let ((c** (intCompare (list-length a1) (list-length a2))))
-                      (if (<> c** 0) c** (cmp (tuple (append a1 tms1) (append a2 tms2)))))))))))
+                (let ((c% (funcall hol2cl.metis.metis_prover.name:compare f1 f2)))
+                  (cl:declare (cl:ignorable c%))
+                  (if (<> c% 0)
+                    c%
+                    (let ((c%% (intCompare (list-length a1) (list-length a2))))
+                      (cl:declare (cl:ignorable c%%))
+                      (if (<> c%% 0) c%% (cmp (tuple (append a1 tms1) (append a2 tms2)))))))))))
         (_ (raise (make-Bug "Term.compare"))))))
     (cmp (tuple (cl:cons tm1 nil) (cl:cons tm2 nil)))))
 
 (defunc equal (tm1 tm2) (= (compare tm1 tm2) 0))
 
-(defunc subterm* (arg~15356)
+(defunc subterm% (arg~15356)
   (match arg~15356
     ((tuple tm nil) tm)
     ((tuple (Var _) (cl:cons _ _)) (failwith "Term.subterm: Var"))
-    ((tuple (Fn (tuple _ tms)) (cl:cons h t*))
+    ((tuple (Fn (tuple _ tms)) (cl:cons h t%))
       (if (>= h (list-length tms))
         (failwith "Term.replace: Fn")
-        (subterm* (tuple (list-nth tms h) t*))))))
+        (subterm% (tuple (list-nth tms h) t%))))))
 
-(defunc subterm (s t*) (subterm* (tuple s t*)))
+(defunc subterm (s t%) (subterm% (tuple s t%)))
 
 (defunc subterms (tm)
   (labelsc
@@ -16946,29 +17192,31 @@
       (arg~15407)
       (match arg~15407
         ((tuple nil acc) acc)
-        ((tuple (cl:cons (tuple path tm*) rest) acc)
+        ((tuple (cl:cons (tuple path tm%) rest) acc)
           (let
             ((f
               (lambdac (arg~15427)
                 (match arg~15427 ((tuple n arg) (tuple (cl:cons n path) arg)))))
-              (acc* (cl:cons (tuple (list-rev path) tm*) acc)))
-            (match tm*
-              ((Var _) (subtms (tuple rest acc*)))
+              (acc% (cl:cons (tuple (list-rev path) tm%) acc)))
+            (cl:declare (cl:ignorable f acc%))
+            (match tm%
+              ((Var _) (subtms (tuple rest acc%)))
               ((Fn (tuple _ args))
-                (subtms (tuple (append (list-map f (enumerate args)) rest) acc*)))))))))
+                (subtms (tuple (append (list-map f (enumerate args)) rest) acc%)))))))))
     (subtms (tuple (cl:cons (tuple nil tm) nil) nil))))
 
 (defunc replace (tm arg~15481)
   (match arg~15481
     ((tuple nil res) (if (equal res tm) tm res))
-    ((tuple (cl:cons h t*) res)
+    ((tuple (cl:cons h t%) res)
       (match tm
         ((Var _) (failwith "Term.replace: Var"))
         ((Fn (tuple letc tms))
           (if (>= h (list-length tms))
             (failwith "Term.replace: Fn")
-            (let* ((arg (list-nth tms h)) (arg* (replace arg (tuple t* res))))
-              (if (== arg* arg) tm (make-Fn (tuple letc (updateNth (tuple h arg*) tms)))))))))))
+            (let* ((arg (list-nth tms h)) (arg% (replace arg (tuple t% res))))
+              (cl:declare (cl:ignorable arg arg%))
+              (if (== arg% arg) tm (make-Fn (tuple letc (updateNth (tuple h arg%) tms)))))))))))
 
 (defunc find (pred)
   (labelsc
@@ -16981,13 +17229,14 @@
             (make-Some (list-rev path))
             (match tm
               ((Var _) (search rest))
-              ((Fn (tuple _ a*))
+              ((Fn (tuple _ a%))
                 (let
                   ((subtms
                     (list-map
                       (lambdac (arg~15571)
-                        (match arg~15571 ((tuple i* t*) (tuple (cl:cons i* path) t*))))
-                      (enumerate a*))))
+                        (match arg~15571 ((tuple i% t%) (tuple (cl:cons i% path) t%))))
+                      (enumerate a%))))
+                  (cl:declare (cl:ignorable subtms))
                   (search (append subtms rest))))))))))
     (lambdac (tm) (search (cl:cons (tuple nil tm) nil)))))
 
@@ -16999,12 +17248,12 @@
 (defunc freeIn (v tm)
   (labelsc
     ((free
-      (v* arg~15615)
+      (v% arg~15615)
       (match arg~15615
         (nil cl:nil)
-        ((cl:cons (Var w*) tms)
-          (cl:or (hol2cl.metis.metis_prover.name:equal v* w*) (free v* tms)))
-        ((cl:cons (Fn (tuple _ args)) tms) (free v* (append args tms))))))
+        ((cl:cons (Var w%) tms)
+          (cl:or (hol2cl.metis.metis_prover.name:equal v% w%) (free v% tms)))
+        ((cl:cons (Fn (tuple _ args)) tms) (free v% (append args tms))))))
     (free v (cl:cons tm nil))))
 
 (defparameter freeVarsList
@@ -17046,10 +17295,10 @@
 
 (defunc destFnHasType (arg~15741)
   (match arg~15741
-    ((tuple f a*)
+    ((tuple f a%)
       (if (not (hol2cl.metis.metis_prover.name:equal f hasTypeFunctionName))
         (failwith "Term.destFnHasType")
-        (match a*
+        (match a%
           ((cl:cons tm (cl:cons ty nil)) (tuple tm ty))
           (_ (failwith "Term.destFnHasType")))))))
 
@@ -17067,13 +17316,13 @@
       (n arg~15802)
       (match arg~15802
         (nil n)
-        ((cl:cons tm* tms)
-          (match tm*
+        ((cl:cons tm% tms)
+          (match tm%
             ((Var _) (sz (+ n 1) tms))
             ((Fn letc)
               (match (total #'destFnHasType letc)
                 ((Some (tuple tm _)) (sz n (cl:cons tm tms)))
-                ((None) (match letc ((tuple _ a*) (sz (+ n 1) (append a* tms))))))))))))
+                ((None) (match letc ((tuple _ a%) (sz (+ n 1) (append a% tms))))))))))))
     (sz 0 (cl:cons tm nil))))
 
 (defunc nonVarTypedSubterms (tm)
@@ -17082,19 +17331,20 @@
       (arg~15861)
       (match arg~15861
         ((tuple nil acc) acc)
-        ((tuple (cl:cons (tuple path tm*) rest) acc)
-          (match tm*
+        ((tuple (cl:cons (tuple path tm%) rest) acc)
+          (match tm%
             ((Var _) (subtms (tuple rest acc)))
             ((Fn letc)
               (match (total #'destFnHasType letc)
-                ((Some (tuple t* _))
-                  (match t*
+                ((Some (tuple t% _))
+                  (match t%
                     ((Var _) (subtms (tuple rest acc)))
                     ((Fn _)
                       (let
-                        ((acc* (cl:cons (tuple (list-rev path) tm*) acc))
-                          (rest* (cl:cons (tuple (cl:cons 0 path) t*) rest)))
-                        (subtms (tuple rest* acc*))))))
+                        ((acc% (cl:cons (tuple (list-rev path) tm%) acc))
+                          (rest% (cl:cons (tuple (cl:cons 0 path) t%) rest)))
+                        (cl:declare (cl:ignorable acc% rest%))
+                        (subtms (tuple rest% acc%))))))
                 ((None)
                   (fletc
                     ((f
@@ -17103,9 +17353,10 @@
                     (match letc
                       ((tuple _ args)
                         (let*
-                          ((acc* (cl:cons (tuple (list-rev path) tm*) acc))
-                            (rest* (append (list-map #'f (enumerate args)) rest)))
-                          (subtms (tuple rest* acc*))))))))))))))
+                          ((acc% (cl:cons (tuple (list-rev path) tm%) acc))
+                            (rest% (append (list-map #'f (enumerate args)) rest)))
+                          (cl:declare (cl:ignorable acc% rest%))
+                          (subtms (tuple rest% acc%))))))))))))))
     (subtms (tuple (cl:cons (tuple nil tm) nil) nil))))
 
 ;; (* ------------------------------------------------------------------------- *)
@@ -17122,10 +17373,10 @@
 
 (defunc destFnApp (arg~16007)
   (match arg~16007
-    ((tuple f a*)
+    ((tuple f a%)
       (if (not (hol2cl.metis.metis_prover.name:equal f appName))
         (failwith "Term.destFnApp")
-        (match a*
+        (match a%
           ((cl:cons fTm (cl:cons aTm nil)) (tuple fTm aTm))
           (_ (failwith "Term.destFnApp")))))))
 
@@ -17143,10 +17394,10 @@
 (defunc stripApp (tm)
   (labelsc
     ((strip
-      (tms tm*)
-      (match (total #'destApp tm*)
-        ((Some (tuple f a*)) (strip (cl:cons a* tms) f))
-        ((None) (tuple tm* tms)))))
+      (tms tm%)
+      (match (total #'destApp tm%)
+        ((Some (tuple f a%)) (strip (cl:cons a% tms) f))
+        ((None) (tuple tm% tms)))))
     (strip nil tm)))
 
 ;; (* ------------------------------------------------------------------------- *)
@@ -17171,114 +17422,131 @@
 
 (in-package :hol2cl.metis.metis_prover.term.map)
 
-(defvariant t* (Empty*) (Node (:record l v d r h)))
+(defvariant t% (Empty%) (Node (:record l v d r h)))
 
-(defunc height (arg~16145) (match arg~16145 ((Empty*) 0) ((Node :h h) h)))
+(defunc height (arg~16145) (match arg~16145 ((Empty%) 0) ((Node :h h) h)))
 
 (defunc create (l x d r)
   (let ((hl (height l)) (hr (height r)))
+    (cl:declare (cl:ignorable hl hr))
     (make-Node :l l :v x :d d :r r :h (if (>= hl hr) (+ hl 1) (+ hr 1)))))
 
-(defunc singleton (x d) (make-Node :l (make-Empty*) :v x :d d :r (make-Empty*) :h 1))
+(defunc singleton (x d) (make-Node :l (make-Empty%) :v x :d d :r (make-Empty%) :h 1))
 
 (defunc bal (l x d r)
   (let*
-    ((hl (match l ((Empty*) 0) ((Node :h h) h)))
-      (hr (match r ((Empty*) 0) ((Node :h h) h))))
+    ((hl (match l ((Empty%) 0) ((Node :h h) h)))
+      (hr (match r ((Empty%) 0) ((Node :h h) h))))
+    (cl:declare (cl:ignorable hl hr))
     (if (> hl (+ hr 2))
       (match l
-        ((Empty*) (invalid-arg "Map.bal"))
+        ((Empty%) (invalid-arg "Map.bal"))
         ((Node :l ll :v lv :d ld :r lr)
           (if (>= (height ll) (height lr))
             (create ll lv ld (create lr x d r))
             (match lr
-              ((Empty*) (invalid-arg "Map.bal"))
+              ((Empty%) (invalid-arg "Map.bal"))
               ((Node :l lrl :v lrv :d lrd :r lrr)
                 (create (create ll lv ld lrl) lrv lrd (create lrr x d r)))))))
       (if (> hr (+ hl 2))
         (match r
-          ((Empty*) (invalid-arg "Map.bal"))
+          ((Empty%) (invalid-arg "Map.bal"))
           ((Node :l rl :v rv :d rd :r rr)
             (if (>= (height rr) (height rl))
               (create (create l x d rl) rv rd rr)
               (match rl
-                ((Empty*) (invalid-arg "Map.bal"))
+                ((Empty%) (invalid-arg "Map.bal"))
                 ((Node :l rll :v rlv :d rld :r rlr)
                   (create (create l x d rll) rlv rld (create rlr rv rd rr)))))))
         (make-Node :l l :v x :d d :r r :h (if (>= hl hr) (+ hl 1) (+ hr 1)))))))
 
-(defparameter empty (make-Empty*))
+(defparameter empty (make-Empty%))
 
-(defunc is_empty (arg~16361) (match arg~16361 ((Empty*) cl:t) (_ cl:nil)))
+(defunc is_empty (arg~16361) (match arg~16361 ((Empty%) cl:t) (_ cl:nil)))
 
 (defunc add (x data arg~16371)
   (match arg~16371
-    ((Empty*) (make-Node :l (make-Empty*) :v x :d data :r (make-Empty*) :h 1))
+    ((Empty%) (make-Node :l (make-Empty%) :v x :d data :r (make-Empty%) :h 1))
     ((cl:and m (Node :l l :v v :d d :r r :h h))
       (let ((c (funcall compare x v)))
+        (cl:declare (cl:ignorable c))
         (if (= c 0)
           (if (== d data) m (make-Node :l l :v x :d data :r r :h h))
           (if (< c 0)
-            (let ((ll (add x data l))) (if (== l ll) m (bal ll v d r)))
-            (let ((rr (add x data r))) (if (== r rr) m (bal l v d rr)))))))))
+            (let ((ll (add x data l)))
+              (cl:declare (cl:ignorable ll))
+              (if (== l ll) m (bal ll v d r)))
+            (let ((rr (add x data r)))
+              (cl:declare (cl:ignorable rr))
+              (if (== r rr) m (bal l v d rr)))))))))
 
 (defunc find (x arg~16453)
   (match arg~16453
-    ((Empty*) (raise (make-Not_found)))
+    ((Empty%) (raise (make-Not_found)))
     ((Node :l l :v v :d d :r r)
-      (let ((c (funcall compare x v))) (if (= c 0) d (find x (if (< c 0) l r)))))))
+      (let ((c (funcall compare x v)))
+        (cl:declare (cl:ignorable c))
+        (if (= c 0) d (find x (if (< c 0) l r)))))))
 
 (defunc mem (x arg~16488)
   (match arg~16488
-    ((Empty*) cl:nil)
+    ((Empty%) cl:nil)
     ((Node :l l :v v :r r)
-      (let ((c (funcall compare x v))) (cl:or (= c 0) (mem x (if (< c 0) l r)))))))
+      (let ((c (funcall compare x v)))
+        (cl:declare (cl:ignorable c))
+        (cl:or (= c 0) (mem x (if (< c 0) l r)))))))
 
 (defunc min_binding (arg~16518)
   (match arg~16518
-    ((Empty*) (raise (make-Not_found)))
-    ((Node :l (Empty*) :v v :d d) (tuple v d))
+    ((Empty%) (raise (make-Not_found)))
+    ((Node :l (Empty%) :v v :d d) (tuple v d))
     ((Node :l l) (min_binding l))))
 
 (defunc remove_min_binding (arg~16539)
   (match arg~16539
-    ((Empty*) (invalid-arg "Map.remove_min_elt"))
-    ((Node :l (Empty*) :r r) r)
+    ((Empty%) (invalid-arg "Map.remove_min_elt"))
+    ((Node :l (Empty%) :r r) r)
     ((Node :l l :v v :d d :r r) (bal (remove_min_binding l) v d r))))
 
 (defunc merge~1 (t1 t2)
   (match (tuple t1 t2)
-    ((tuple (Empty*) t*) t*)
-    ((tuple t* (Empty*)) t*)
+    ((tuple (Empty%) t%) t%)
+    ((tuple t% (Empty%)) t%)
     ((tuple _ _)
       (match (min_binding t2) ((tuple x d) (bal t1 x d (remove_min_binding t2)))))))
 
 (defunc remove (x arg~16602)
   (match arg~16602
-    ((Empty*) (make-Empty*))
+    ((Empty%) (make-Empty%))
     ((cl:and m (Node :l l :v v :d d :r r))
       (let ((c (funcall compare x v)))
+        (cl:declare (cl:ignorable c))
         (if (= c 0)
           (merge~1 l r)
           (if (< c 0)
-            (let ((ll (remove x l))) (if (== l ll) m (bal ll v d r)))
-            (let ((rr (remove x r))) (if (== r rr) m (bal l v d rr)))))))))
+            (let ((ll (remove x l)))
+              (cl:declare (cl:ignorable ll))
+              (if (== l ll) m (bal ll v d r)))
+            (let ((rr (remove x r)))
+              (cl:declare (cl:ignorable rr))
+              (if (== r rr) m (bal l v d rr)))))))))
 
 (defunc map (f arg~16667)
   (match arg~16667
-    ((Empty*) (make-Empty*))
+    ((Empty%) (make-Empty%))
     ((Node :l l :v v :d d :r r :h h)
-      (let* ((l* (map f l)) (d* (funcall f d)) (r* (map f r)))
-        (make-Node :l l* :v v :d d* :r r* :h h)))))
+      (let* ((l% (map f l)) (d% (funcall f d)) (r% (map f r)))
+        (cl:declare (cl:ignorable l% d% r%))
+        (make-Node :l l% :v v :d d% :r r% :h h)))))
 
 (defunc fold (f m accu)
   (match m
-    ((Empty*) accu)
+    ((Empty%) accu)
     ((Node :l l :v v :d d :r r) (fold f r (funcall f v d (fold f l accu))))))
 
 (defunc exists (p arg~16733)
   (match arg~16733
-    ((Empty*) cl:nil)
+    ((Empty%) cl:nil)
     ((Node :l l :v v :d d :r r) (cl:or (funcall p v d) (cl:or (exists p l) (exists p r))))))
 
 ;; (* Beware: those two functions assume that the added k is *strictly*
@@ -17292,12 +17560,12 @@
 
 (defunc add_min_binding (k x arg~16761)
   (match arg~16761
-    ((Empty*) (singleton k x))
+    ((Empty%) (singleton k x))
     ((Node :l l :v v :d d :r r) (bal (add_min_binding k x l) v d r))))
 
 (defunc add_max_binding (k x arg~16788)
   (match arg~16788
-    ((Empty*) (singleton k x))
+    ((Empty%) (singleton k x))
     ((Node :l l :v v :d d :r r) (bal l v d (add_max_binding k x r)))))
 
 ;; (* Same as create and bal, but no assumptions are made on the
@@ -17306,8 +17574,8 @@
 
 (defunc join (l v d r)
   (match (tuple l r)
-    ((tuple (Empty*) _) (add_min_binding v d r))
-    ((tuple _ (Empty*)) (add_max_binding v d l))
+    ((tuple (Empty%) _) (add_min_binding v d r))
+    ((tuple _ (Empty%)) (add_max_binding v d l))
     ((tuple (Node :l ll :v lv :d ld :r lr :h lh) (Node :l rl :v rv :d rd :r rr :h rh))
       (if (> lh (+ rh 2))
         (bal ll lv ld (join lr v d r))
@@ -17320,19 +17588,20 @@
 
 (defunc concat (t1 t2)
   (match (tuple t1 t2)
-    ((tuple (Empty*) t*) t*)
-    ((tuple t* (Empty*)) t*)
+    ((tuple (Empty%) t%) t%)
+    ((tuple t% (Empty%)) t%)
     ((tuple _ _)
       (match (min_binding t2) ((tuple x d) (join t1 x d (remove_min_binding t2)))))))
 
 (defunc concat_or_join (t1 v d t2)
-  (match d ((Some d*) (join t1 v d* t2)) ((None) (concat t1 t2))))
+  (match d ((Some d%) (join t1 v d% t2)) ((None) (concat t1 t2))))
 
 (defunc split (x arg~16951)
   (match arg~16951
-    ((Empty*) (tuple (make-Empty*) (make-None) (make-Empty*)))
+    ((Empty%) (tuple (make-Empty%) (make-None) (make-Empty%)))
     ((Node :l l :v v :d d :r r)
       (let ((c (funcall compare x v)))
+        (cl:declare (cl:ignorable c))
         (if (= c 0)
           (tuple l (make-Some d) r)
           (if (< c 0)
@@ -17341,8 +17610,8 @@
 
 (defunc merge (f s1 s2)
   (match (tuple s1 s2)
-    ((tuple (Empty*) (Empty*)) (make-Empty*))
-    ((trivia:guard (tuple (Node :l l1 :v v1 :d d1 :r r1 :h h1) _) (>= h1 (height s2)))
+    ((tuple (Empty%) (Empty%)) (make-Empty%))
+    ((guard (tuple (Node :l l1 :v v1 :d d1 :r r1 :h h1) _) (>= h1 (height s2)))
       (match (split v1 s2)
         ((tuple l2 d2 r2)
           (concat_or_join
@@ -17362,37 +17631,40 @@
 
 (defunc union (f s1 s2)
   (match (tuple s1 s2)
-    ((cl:or (tuple (Empty*) s) (tuple s (Empty*))) s)
+    ((cl:or (tuple (Empty%) s) (tuple s (Empty%))) s)
     ((tuple (Node :l l1 :v v1 :d d1 :r r1 :h h1) (Node :l l2 :v v2 :d d2 :r r2 :h h2))
       (if (>= h1 h2)
         (match (split v1 s2)
-          ((tuple l2* d2* r2*)
-            (let ((l (union f l1 l2*)) (r (union f r1 r2*)))
-              (match d2*
+          ((tuple l2% d2% r2%)
+            (let ((l (union f l1 l2%)) (r (union f r1 r2%)))
+              (cl:declare (cl:ignorable l r))
+              (match d2%
                 ((None) (join l v1 d1 r))
                 ((Some d2) (concat_or_join l v1 (funcall f v1 d1 d2) r))))))
         (match (split v2 s1)
-          ((tuple l1* d1* r1*)
-            (let ((l (union f l1* l2)) (r (union f r1* r2)))
-              (match d1*
+          ((tuple l1% d1% r1%)
+            (let ((l (union f l1% l2)) (r (union f r1% r2)))
+              (cl:declare (cl:ignorable l r))
+              (match d1%
                 ((None) (join l v2 d2 r))
                 ((Some d1) (concat_or_join l v2 (funcall f v2 d1 d2) r))))))))))
 
 (defunc filter (p arg~17249)
   (match arg~17249
-    ((Empty*) (make-Empty*))
+    ((Empty%) (make-Empty%))
     ((cl:and m (Node :l l :v v :d d :r r))
-      (let* ((l* (filter p l)) (pvd (funcall p v d)) (r* (filter p r)))
-        (if pvd (if (cl:and (== l l*) (== r r*)) m (join l* v d r*)) (concat l* r*))))))
+      (let* ((l% (filter p l)) (pvd (funcall p v d)) (r% (filter p r)))
+        (cl:declare (cl:ignorable l% pvd r%))
+        (if pvd (if (cl:and (== l l%) (== r r%)) m (join l% v d r%)) (concat l% r%))))))
 
 (defvariant enumeration (End) (More field0 field1 field2 field3))
 
 (defunc cardinal (arg~17304)
-  (match arg~17304 ((Empty*) 0) ((Node :l l :r r) (+ (+ (cardinal l) 1) (cardinal r)))))
+  (match arg~17304 ((Empty%) 0) ((Node :l l :r r) (+ (+ (cardinal l) 1) (cardinal r)))))
 
 (defunc bindings_aux (accu arg~17323)
   (match arg~17323
-    ((Empty*) accu)
+    ((Empty%) accu)
     ((Node :l l :v v :d d :r r)
       (bindings_aux (cl:cons (tuple v d) (bindings_aux accu r)) l))))
 
@@ -17402,13 +17674,13 @@
 
 (in-package :hol2cl.metis.metis_prover.term.set)
 
-(defvariant t* (Empty*) (Node (:record l v r h)))
+(defvariant t% (Empty%) (Node (:record l v r h)))
 
 ;; (* Sets are represented by balanced binary trees (the heights of the
 ;;        children differ by at most 2 *)
 
 
-(defunc height (arg~17356) (match arg~17356 ((Empty*) 0) ((Node :h h) h)))
+(defunc height (arg~17356) (match arg~17356 ((Empty%) 0) ((Node :h h) h)))
 
 ;; (* Creates a new node with left son l, value v and right son r.
 ;;        We must have all elements of l < v < all elements of r.
@@ -17418,8 +17690,9 @@
 
 (defunc create (l v r)
   (let*
-    ((hl (match l ((Empty*) 0) ((Node :h h) h)))
-      (hr (match r ((Empty*) 0) ((Node :h h) h))))
+    ((hl (match l ((Empty%) 0) ((Node :h h) h)))
+      (hr (match r ((Empty%) 0) ((Node :h h) h))))
+    (cl:declare (cl:ignorable hl hr))
     (make-Node :l l :v v :r r :h (if (>= hl hr) (+ hl 1) (+ hr 1)))))
 
 ;; (* Same as create, but performs one step of rebalancing if necessary.
@@ -17430,26 +17703,27 @@
 
 (defunc bal (l v r)
   (let*
-    ((hl (match l ((Empty*) 0) ((Node :h h) h)))
-      (hr (match r ((Empty*) 0) ((Node :h h) h))))
+    ((hl (match l ((Empty%) 0) ((Node :h h) h)))
+      (hr (match r ((Empty%) 0) ((Node :h h) h))))
+    (cl:declare (cl:ignorable hl hr))
     (if (> hl (+ hr 2))
       (match l
-        ((Empty*) (invalid-arg "Set.bal"))
+        ((Empty%) (invalid-arg "Set.bal"))
         ((Node :l ll :v lv :r lr)
           (if (>= (height ll) (height lr))
             (create ll lv (create lr v r))
             (match lr
-              ((Empty*) (invalid-arg "Set.bal"))
+              ((Empty%) (invalid-arg "Set.bal"))
               ((Node :l lrl :v lrv :r lrr)
                 (create (create ll lv lrl) lrv (create lrr v r)))))))
       (if (> hr (+ hl 2))
         (match r
-          ((Empty*) (invalid-arg "Set.bal"))
+          ((Empty%) (invalid-arg "Set.bal"))
           ((Node :l rl :v rv :r rr)
             (if (>= (height rr) (height rl))
               (create (create l v rl) rv rr)
               (match rl
-                ((Empty*) (invalid-arg "Set.bal"))
+                ((Empty%) (invalid-arg "Set.bal"))
                 ((Node :l rll :v rlv :r rlr)
                   (create (create l v rll) rlv (create rlr rv rr)))))))
         (make-Node :l l :v v :r r :h (if (>= hl hr) (+ hl 1) (+ hr 1)))))))
@@ -17459,16 +17733,21 @@
 
 (defunc add (x arg~17551)
   (match arg~17551
-    ((Empty*) (make-Node :l (make-Empty*) :v x :r (make-Empty*) :h 1))
-    ((cl:and t* (Node :l l :v v :r r))
+    ((Empty%) (make-Node :l (make-Empty%) :v x :r (make-Empty%) :h 1))
+    ((cl:and t% (Node :l l :v v :r r))
       (let ((c (funcall hol2cl.metis.metis_prover.term.ordered:compare x v)))
+        (cl:declare (cl:ignorable c))
         (if (= c 0)
-          t*
+          t%
           (if (< c 0)
-            (let ((ll (add x l))) (if (== l ll) t* (bal ll v r)))
-            (let ((rr (add x r))) (if (== r rr) t* (bal l v rr)))))))))
+            (let ((ll (add x l)))
+              (cl:declare (cl:ignorable ll))
+              (if (== l ll) t% (bal ll v r)))
+            (let ((rr (add x r)))
+              (cl:declare (cl:ignorable rr))
+              (if (== r rr) t% (bal l v rr)))))))))
 
-(defunc singleton (x) (make-Node :l (make-Empty*) :v x :r (make-Empty*) :h 1))
+(defunc singleton (x) (make-Node :l (make-Empty%) :v x :r (make-Empty%) :h 1))
 
 ;; (* Beware: those two functions assume that the added v is *strictly*
 ;;        smaller (or bigger) than all the present elements in the tree; it
@@ -17480,12 +17759,12 @@
 
 (defunc add_min_element (x arg~17622)
   (match arg~17622
-    ((Empty*) (singleton x))
+    ((Empty%) (singleton x))
     ((Node :l l :v v :r r) (bal (add_min_element x l) v r))))
 
 (defunc add_max_element (x arg~17643)
   (match arg~17643
-    ((Empty*) (singleton x))
+    ((Empty%) (singleton x))
     ((Node :l l :v v :r r) (bal l v (add_max_element x r)))))
 
 ;; (* Same as create and bal, but no assumptions are made on the
@@ -17494,8 +17773,8 @@
 
 (defunc join (l v r)
   (match (tuple l r)
-    ((tuple (Empty*) _) (add_min_element v r))
-    ((tuple _ (Empty*)) (add_max_element v l))
+    ((tuple (Empty%) _) (add_min_element v r))
+    ((tuple _ (Empty%)) (add_max_element v l))
     ((tuple (Node :l ll :v lv :r lr :h lh) (Node :l rl :v rv :r rr :h rh))
       (if (> lh (+ rh 2))
         (bal ll lv (join lr v r))
@@ -17506,8 +17785,8 @@
 
 (defunc min_elt (arg~17733)
   (match arg~17733
-    ((Empty*) (raise (make-Not_found)))
-    ((Node :l (Empty*) :v v) v)
+    ((Empty%) (raise (make-Not_found)))
+    ((Node :l (Empty%) :v v) v)
     ((Node :l l) (min_elt l))))
 
 ;; (* Remove the smallest element of the given set *)
@@ -17515,8 +17794,8 @@
 
 (defunc remove_min_elt (arg~17750)
   (match arg~17750
-    ((Empty*) (invalid-arg "Set.remove_min_elt"))
-    ((Node :l (Empty*) :r r) r)
+    ((Empty%) (invalid-arg "Set.remove_min_elt"))
+    ((Node :l (Empty%) :r r) r)
     ((Node :l l :v v :r r) (bal (remove_min_elt l) v r))))
 
 ;; (* Merge two trees l and r into one.
@@ -17526,8 +17805,8 @@
 
 (defunc merge (t1 t2)
   (match (tuple t1 t2)
-    ((tuple (Empty*) t*) t*)
-    ((tuple t* (Empty*)) t*)
+    ((tuple (Empty%) t%) t%)
+    ((tuple t% (Empty%)) t%)
     ((tuple _ _) (bal t1 (min_elt t2) (remove_min_elt t2)))))
 
 ;; (* Merge two trees l and r into one.
@@ -17537,8 +17816,8 @@
 
 (defunc concat (t1 t2)
   (match (tuple t1 t2)
-    ((tuple (Empty*) t*) t*)
-    ((tuple t* (Empty*)) t*)
+    ((tuple (Empty%) t%) t%)
+    ((tuple t% (Empty%)) t%)
     ((tuple _ _) (join t1 (min_elt t2) (remove_min_elt t2)))))
 
 ;; (* Splitting.  split x s returns a triple (l, present, r) where
@@ -17550,9 +17829,10 @@
 
 (defunc split (x arg~17829)
   (match arg~17829
-    ((Empty*) (tuple (make-Empty*) cl:nil (make-Empty*)))
+    ((Empty%) (tuple (make-Empty%) cl:nil (make-Empty%)))
     ((Node :l l :v v :r r)
       (let ((c (funcall hol2cl.metis.metis_prover.term.ordered:compare x v)))
+        (cl:declare (cl:ignorable c))
         (if (= c 0)
           (tuple l cl:t r)
           (if (< c 0)
@@ -17562,47 +17842,53 @@
 ;; (* Implementation of the set operations *)
 
 
-(defparameter empty (make-Empty*))
+(defparameter empty (make-Empty%))
 
-(defunc is_empty (arg~17901) (match arg~17901 ((Empty*) cl:t) (_ cl:nil)))
+(defunc is_empty (arg~17901) (match arg~17901 ((Empty%) cl:t) (_ cl:nil)))
 
 (defunc mem (x arg~17910)
   (match arg~17910
-    ((Empty*) cl:nil)
+    ((Empty%) cl:nil)
     ((Node :l l :v v :r r)
       (let ((c (funcall hol2cl.metis.metis_prover.term.ordered:compare x v)))
+        (cl:declare (cl:ignorable c))
         (cl:or (= c 0) (mem x (if (< c 0) l r)))))))
 
 (defunc remove (x arg~17941)
   (match arg~17941
-    ((Empty*) (make-Empty*))
-    ((cl:and t* (Node :l l :v v :r r))
+    ((Empty%) (make-Empty%))
+    ((cl:and t% (Node :l l :v v :r r))
       (let ((c (funcall hol2cl.metis.metis_prover.term.ordered:compare x v)))
+        (cl:declare (cl:ignorable c))
         (if (= c 0)
           (merge l r)
           (if (< c 0)
-            (let ((ll (remove x l))) (if (== l ll) t* (bal ll v r)))
-            (let ((rr (remove x r))) (if (== r rr) t* (bal l v rr)))))))))
+            (let ((ll (remove x l)))
+              (cl:declare (cl:ignorable ll))
+              (if (== l ll) t% (bal ll v r)))
+            (let ((rr (remove x r)))
+              (cl:declare (cl:ignorable rr))
+              (if (== r rr) t% (bal l v rr)))))))))
 
 (defunc union (s1 s2)
   (match (tuple s1 s2)
-    ((tuple (Empty*) t2) t2)
-    ((tuple t1 (Empty*)) t1)
+    ((tuple (Empty%) t2) t2)
+    ((tuple t1 (Empty%)) t1)
     ((tuple (Node :l l1 :v v1 :r r1 :h h1) (Node :l l2 :v v2 :r r2 :h h2))
       (if (>= h1 h2)
         (if (= h2 1)
           (add v2 s1)
           (match (split v1 s2)
-            ((tuple l2* _ r2*) (join (union l1 l2*) v1 (union r1 r2*)))))
+            ((tuple l2% _ r2%) (join (union l1 l2%) v1 (union r1 r2%)))))
         (if (= h1 1)
           (add v1 s2)
           (match (split v2 s1)
-            ((tuple l1* _ r1*) (join (union l1* l2) v2 (union r1* r2)))))))))
+            ((tuple l1% _ r1%) (join (union l1% l2) v2 (union r1% r2)))))))))
 
 (defunc inter (s1 s2)
   (match (tuple s1 s2)
-    ((tuple (Empty*) _) (make-Empty*))
-    ((tuple _ (Empty*)) (make-Empty*))
+    ((tuple (Empty%) _) (make-Empty%))
+    ((tuple _ (Empty%)) (make-Empty%))
     ((tuple (Node :l l1 :v v1 :r r1) t2)
       (match (split v1 t2)
         ((tuple l2 cl:nil r2) (concat (inter l1 l2) (inter r1 r2)))
@@ -17612,8 +17898,8 @@
 
 (defunc diff (s1 s2)
   (match (tuple s1 s2)
-    ((tuple (Empty*) _) (make-Empty*))
-    ((tuple t1 (Empty*)) t1)
+    ((tuple (Empty%) _) (make-Empty%))
+    ((tuple t1 (Empty%)) t1)
     ((tuple (Node :l l1 :v v1 :r r1) t2)
       (match (split v1 t2)
         ((tuple l2 cl:nil r2) (join (diff l1 l2) v1 (diff r1 r2)))
@@ -17622,16 +17908,17 @@
 (defvariant enumeration (End) (More field0 field1 field2))
 
 (defunc cons_enum (s e)
-  (match s ((Empty*) e) ((Node :l l :v v :r r) (cons_enum l (make-More v r e)))))
+  (match s ((Empty%) e) ((Node :l l :v v :r r) (cons_enum l (make-More v r e)))))
 
 (defunc compare_aux (e1 e2)
   (match (tuple e1 e2)
     ((tuple (End) (End)) 0)
     ((tuple (End) _) (- 1))
     ((tuple _ (End)) 1)
-    ((tuple (More v1 r1 e1*) (More v2 r2 e2*))
+    ((tuple (More v1 r1 e1%) (More v2 r2 e2%))
       (let ((c (funcall hol2cl.metis.metis_prover.term.ordered:compare v1 v2)))
-        (if (<> c 0) c (compare_aux (cons_enum r1 e1*) (cons_enum r2 e2*)))))))
+        (cl:declare (cl:ignorable c))
+        (if (<> c 0) c (compare_aux (cons_enum r1 e1%) (cons_enum r2 e2%)))))))
 
 (defunc compare (s1 s2) (compare_aux (cons_enum s1 (make-End)) (cons_enum s2 (make-End))))
 
@@ -17639,41 +17926,42 @@
 
 (defunc subset (s1 s2)
   (match (tuple s1 s2)
-    ((tuple (Empty*) _) cl:t)
-    ((tuple _ (Empty*)) cl:nil)
+    ((tuple (Empty%) _) cl:t)
+    ((tuple _ (Empty%)) cl:nil)
     ((tuple (Node :l l1 :v v1 :r r1) (cl:and t2 (Node :l l2 :v v2 :r r2)))
       (let ((c (funcall hol2cl.metis.metis_prover.term.ordered:compare v1 v2)))
+        (cl:declare (cl:ignorable c))
         (if (= c 0)
           (cl:and (subset l1 l2) (subset r1 r2))
           (if (< c 0)
             (cl:and
-              (subset (make-Node :l l1 :v v1 :r (make-Empty*) :h 0) l2)
+              (subset (make-Node :l l1 :v v1 :r (make-Empty%) :h 0) l2)
               (subset r1 t2))
             (cl:and
-              (subset (make-Node :l (make-Empty*) :v v1 :r r1 :h 0) r2)
+              (subset (make-Node :l (make-Empty%) :v v1 :r r1 :h 0) r2)
               (subset l1 t2))))))))
 
 (defunc fold (f s accu)
   (match s
-    ((Empty*) accu)
+    ((Empty%) accu)
     ((Node :l l :v v :r r) (fold f r (funcall f v (fold f l accu))))))
 
 (defunc for_all (p arg~18409)
   (match arg~18409
-    ((Empty*) cl:t)
+    ((Empty%) cl:t)
     ((Node :l l :v v :r r) (cl:and (funcall p v) (cl:and (for_all p l) (for_all p r))))))
 
 (defunc exists (p arg~18433)
   (match arg~18433
-    ((Empty*) cl:nil)
+    ((Empty%) cl:nil)
     ((Node :l l :v v :r r) (cl:or (funcall p v) (cl:or (exists p l) (exists p r))))))
 
 (defunc cardinal (arg~18456)
-  (match arg~18456 ((Empty*) 0) ((Node :l l :r r) (+ (+ (cardinal l) 1) (cardinal r)))))
+  (match arg~18456 ((Empty%) 0) ((Node :l l :r r) (+ (+ (cardinal l) 1) (cardinal r)))))
 
 (defunc elements_aux (accu arg~18475)
   (match arg~18475
-    ((Empty*) accu)
+    ((Empty%) accu)
     ((Node :l l :v v :r r) (elements_aux (cl:cons v (elements_aux accu r)) l))))
 
 (defunc elements (s) (elements_aux nil s))
@@ -17686,40 +17974,40 @@
 
 (in-package :hol2cl.metis.metis_prover.substitute)
 
-(defvariant subst (Subst* field0))
+(defvariant subst (Subst% field0))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Basic operations.                                                         *)
 ;; (* ------------------------------------------------------------------------- *)
 
 
-(defparameter empty (make-Subst* (newMap unit)))
+(defparameter empty (make-Subst% (newMap unit)))
 
 (defunc null (arg~18511)
-  (match arg~18511 ((Subst* m) (funcall hol2cl.metis.metis_prover.name.map:null m))))
+  (match arg~18511 ((Subst% m) (funcall hol2cl.metis.metis_prover.name.map:null m))))
 
 (defunc size (arg~18520)
-  (match arg~18520 ((Subst* m) (funcall hol2cl.metis.metis_prover.name.map:size m))))
+  (match arg~18520 ((Subst% m) (funcall hol2cl.metis.metis_prover.name.map:size m))))
 
 (defunc peek (arg~18529 v)
-  (match arg~18529 ((Subst* m) (hol2cl.metis.metis_prover.name.map:peek m v))))
+  (match arg~18529 ((Subst% m) (hol2cl.metis.metis_prover.name.map:peek m v))))
 
 (defunc insert (arg~18540 v_tm)
   (match arg~18540
-    ((Subst* m) (make-Subst* (hol2cl.metis.metis_prover.name.map:insert m v_tm)))))
+    ((Subst% m) (make-Subst% (hol2cl.metis.metis_prover.name.map:insert m v_tm)))))
 
 (defunc singleton (v_tm) (insert empty v_tm))
 
 (defunc toList (arg~18558)
-  (match arg~18558 ((Subst* m) (funcall hol2cl.metis.metis_prover.name.map:toList m))))
+  (match arg~18558 ((Subst% m) (funcall hol2cl.metis.metis_prover.name.map:toList m))))
 
-(defunc fromList (l) (make-Subst* (hol2cl.metis.metis_prover.name.map:fromList l)))
+(defunc fromList (l) (make-Subst% (hol2cl.metis.metis_prover.name.map:fromList l)))
 
-(defunc foldl (f b* arg~18575)
-  (match arg~18575 ((Subst* m) (hol2cl.metis.metis_prover.name.map:foldl f b* m))))
+(defunc foldl (f b% arg~18575)
+  (match arg~18575 ((Subst% m) (hol2cl.metis.metis_prover.name.map:foldl f b% m))))
 
-(defunc foldr (f b* arg~18588)
-  (match arg~18588 ((Subst* m) (funcall hol2cl.metis.metis_prover.name.map:foldr f b* m))))
+(defunc foldr (f b% arg~18588)
+  (match arg~18588 ((Subst% m) (funcall hol2cl.metis.metis_prover.name.map:foldr f b% m))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Normalizing removes identity substitutions.                               *)
@@ -17728,16 +18016,17 @@
 
 (defunc normalize (arg~18599)
   (match arg~18599
-    ((cl:and sub (Subst* m))
+    ((cl:and sub (Subst% m))
       (fletc
         ((isNotId (arg~18604) (match arg~18604 ((tuple v tm) (not (equalVar v tm))))))
-        (let ((m* (filter #'isNotId m)))
+        (let ((m% (filter #'isNotId m)))
+          (cl:declare (cl:ignorable m%))
           (if
             (=
               (funcall hol2cl.metis.metis_prover.name.map:size m)
-              (funcall hol2cl.metis.metis_prover.name.map:size m*))
+              (funcall hol2cl.metis.metis_prover.name.map:size m%))
             sub
-            (make-Subst* m*)))))))
+            (make-Subst% m%)))))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Applying a substitution to a first order logic term.                      *)
@@ -17750,10 +18039,11 @@
       (arg~18638)
       (match arg~18638
         ((cl:and tm (Var v))
-          (match (peek sub v) ((Some tm*) (if (== tm tm*) tm tm*)) ((None) tm)))
+          (match (peek sub v) ((Some tm%) (if (== tm tm%) tm tm%)) ((None) tm)))
         ((cl:and tm (Fn (tuple f args)))
-          (let ((args* (list-map #'tmSub args)))
-            (if (== args args*) tm (make-Fn (tuple f args*))))))))
+          (let ((args% (list-map #'tmSub args)))
+            (cl:declare (cl:ignorable args%))
+            (if (== args args%) tm (make-Fn (tuple f args%))))))))
     (lambdac (tm) (if (null sub) tm (tmSub tm)))))
 
 ;; (* ------------------------------------------------------------------------- *)
@@ -17763,33 +18053,35 @@
 
 (defunc restrict (arg~18695 varSet)
   (match arg~18695
-    ((cl:and sub (Subst* m))
+    ((cl:and sub (Subst% m))
       (fletc
         ((isRestrictedVar
           (arg~18701)
           (match arg~18701 ((tuple v _) (funcall member v varSet)))))
-        (let ((m* (filter #'isRestrictedVar m)))
+        (let ((m% (filter #'isRestrictedVar m)))
+          (cl:declare (cl:ignorable m%))
           (if
             (=
               (funcall hol2cl.metis.metis_prover.name.map:size m)
-              (funcall hol2cl.metis.metis_prover.name.map:size m*))
+              (funcall hol2cl.metis.metis_prover.name.map:size m%))
             sub
-            (make-Subst* m*)))))))
+            (make-Subst% m%)))))))
 
 (defunc remove (arg~18731 varSet)
   (match arg~18731
-    ((cl:and sub (Subst* m))
+    ((cl:and sub (Subst% m))
       (fletc
         ((isRestrictedVar
           (arg~18737)
           (match arg~18737 ((tuple v _) (not (funcall member v varSet))))))
-        (let ((m* (filter #'isRestrictedVar m)))
+        (let ((m% (filter #'isRestrictedVar m)))
+          (cl:declare (cl:ignorable m%))
           (if
             (=
               (funcall hol2cl.metis.metis_prover.name.map:size m)
-              (funcall hol2cl.metis.metis_prover.name.map:size m*))
+              (funcall hol2cl.metis.metis_prover.name.map:size m%))
             sub
-            (make-Subst* m*)))))))
+            (make-Subst% m%)))))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Composing two substitutions so that the following identity holds:         *)
@@ -17800,7 +18092,7 @@
 
 (defunc compose (arg~18768 sub2)
   (match arg~18768
-    ((cl:and sub1 (Subst* m1))
+    ((cl:and sub1 (Subst% m1))
       (fletc
         ((f
           (arg~18774)
@@ -17814,9 +18106,9 @@
 
 (defunc union (arg~18805 arg~18809)
   (match arg~18805
-    ((cl:and s1 (Subst* m1))
+    ((cl:and s1 (Subst% m1))
       (match arg~18809
-        ((cl:and s2 (Subst* m2))
+        ((cl:and s2 (Subst% m2))
           (fletc
             ((compatible
               (arg~18814)
@@ -17829,7 +18121,7 @@
               s2
               (if (funcall hol2cl.metis.metis_prover.name.map:null m2)
                 s1
-                (make-Subst*
+                (make-Subst%
                   (hol2cl.metis.metis_prover.name.map:union #'compatible m1 m2))))))))))
 
 ;; (* ------------------------------------------------------------------------- *)
@@ -17839,17 +18131,17 @@
 
 (defunc invert (arg~18857)
   (match arg~18857
-    ((Subst* m)
+    ((Subst% m)
       (fletc
         ((inv
           (arg~18861)
           (match arg~18861
-            ((tuple v (Var w*) s)
-              (if (funcall inDomain w* s)
+            ((tuple v (Var w%) s)
+              (if (funcall inDomain w% s)
                 (failwith "Substitute.invert: non-injective")
-                (hol2cl.metis.metis_prover.name.map:insert s (tuple w* (make-Var v)))))
+                (hol2cl.metis.metis_prover.name.map:insert s (tuple w% (make-Var v)))))
             ((tuple _ (Fn _) _) (failwith "Substitute.invert: non-variable")))))
-        (make-Subst* (hol2cl.metis.metis_prover.name.map:foldl #'inv (newMap unit) m))))))
+        (make-Subst% (hol2cl.metis.metis_prover.name.map:foldl #'inv (newMap unit) m))))))
 
 (defparameter isRenaming (can #'invert))
 
@@ -17880,11 +18172,11 @@
     ((add
       (arg~18946)
       (match arg~18946
-        ((tuple _ t* s)
+        ((tuple _ t% s)
           (funcall
             hol2cl.metis.metis_prover.name.set:union
             s
-            (hol2cl.metis.metis_prover.term:freeVars t*))))))
+            (hol2cl.metis.metis_prover.term:freeVars t%))))))
     (foldl #'add hol2cl.metis.metis_prover.name.set:empty)))
 
 (defparameter freeVars
@@ -17892,11 +18184,11 @@
     ((add
       (arg~18965)
       (match arg~18965
-        ((tuple v t* s)
+        ((tuple v t% s)
           (funcall
             hol2cl.metis.metis_prover.name.set:union
             (hol2cl.metis.metis_prover.name.set:add s v)
-            (hol2cl.metis.metis_prover.term:freeVars t*))))))
+            (hol2cl.metis.metis_prover.term:freeVars t%))))))
     (foldl #'add hol2cl.metis.metis_prover.name.set:empty)))
 
 ;; (* ------------------------------------------------------------------------- *)
@@ -17909,11 +18201,11 @@
     ((add
       (arg~18987)
       (match arg~18987
-        ((tuple _ t* s)
+        ((tuple _ t% s)
           (funcall
             hol2cl.metis.metis_prover.name_arity.set.include~13610:union
             s
-            (hol2cl.metis.metis_prover.term:functions t*))))))
+            (hol2cl.metis.metis_prover.term:functions t%))))))
     (foldl #'add hol2cl.metis.metis_prover.name_arity.set.include~13610:empty)))
 
 ;; (* ------------------------------------------------------------------------- *)
@@ -17924,25 +18216,26 @@
 (defunc matchTerms (sub tm1 tm2)
   (labelsc
     ((matchList
-      (sub* arg~19010)
+      (sub% arg~19010)
       (match arg~19010
-        (nil sub*)
+        (nil sub%)
         ((cl:cons (tuple (Var v) tm) rest)
           (let
             ((sub
-              (match (peek sub* v)
-                ((None) (insert sub* (tuple v tm)))
-                ((Some tm*)
-                  (if (equal tm tm*)
-                    sub*
+              (match (peek sub% v)
+                ((None) (insert sub% (tuple v tm)))
+                ((Some tm%)
+                  (if (equal tm tm%)
+                    sub%
                     (failwith "Substitute.match: incompatible matches"))))))
+            (cl:declare (cl:ignorable sub))
             (matchList sub rest)))
         ((cl:cons (tuple (Fn (tuple f1 args1)) (Fn (tuple f2 args2))) rest)
           (if
             (cl:and
               (hol2cl.metis.metis_prover.name:equal f1 f2)
               (= (funcall length args1) (funcall length args2)))
-            (matchList sub* (append (zip args1 args2) rest))
+            (matchList sub% (append (zip args1 args2) rest))
             (failwith "Substitute.match: different structure")))
         (_ (failwith "Substitute.match: functions can't match vars")))))
     (matchList sub (cl:cons (tuple tm1 tm2) nil))))
@@ -17955,31 +18248,31 @@
 (defunc unify (sub tm1 tm2)
   (labelsc
     ((solve
-      (sub* arg~19102)
+      (sub% arg~19102)
       (match arg~19102
-        (nil sub*)
-        ((cl:cons (tuple tm1* tm2*) rest)
-          (if (== tm1* tm2*)
-            (solve sub* rest)
-            (solve* sub* (tuple (subst sub* tm1*) (subst sub* tm2*) rest))))))
-      (solve*
-        (sub* arg~19132)
+        (nil sub%)
+        ((cl:cons (tuple tm1% tm2%) rest)
+          (if (== tm1% tm2%)
+            (solve sub% rest)
+            (solve% sub% (tuple (subst sub% tm1%) (subst sub% tm2%) rest))))))
+      (solve%
+        (sub% arg~19132)
         (match arg~19132
           ((tuple (Var v) tm rest)
             (if (equalVar v tm)
-              (solve sub* rest)
+              (solve sub% rest)
               (if (freeIn v tm)
                 (failwith "Substitute.unify: occurs check")
-                (match (peek sub* v)
-                  ((None) (solve (compose sub* (singleton (tuple v tm))) rest))
-                  ((Some tm*) (solve* sub* (tuple tm* tm rest)))))))
-          ((tuple tm1* (cl:and tm2* (Var _)) rest) (solve* sub* (tuple tm2* tm1* rest)))
+                (match (peek sub% v)
+                  ((None) (solve (compose sub% (singleton (tuple v tm))) rest))
+                  ((Some tm%) (solve% sub% (tuple tm% tm rest)))))))
+          ((tuple tm1% (cl:and tm2% (Var _)) rest) (solve% sub% (tuple tm2% tm1% rest)))
           ((tuple (Fn (tuple f1 args1)) (Fn (tuple f2 args2)) rest)
             (if
               (cl:and
                 (hol2cl.metis.metis_prover.name:equal f1 f2)
                 (= (funcall length args1) (funcall length args2)))
-              (solve sub* (append (zip args1 args2) rest))
+              (solve sub% (append (zip args1 args2) rest))
               (failwith "Substitute.unify: different structure"))))))
     (solve sub (cl:cons (tuple tm1 tm2) nil))))
 
@@ -18023,18 +18316,18 @@
 ;; (* Binary relations *)
 
 
-(defunc mkBinop (p* arg~19314)
-  (match arg~19314 ((tuple a* b*) (tuple p* (cl:cons a* (cl:cons b* nil))))))
+(defunc mkBinop (p% arg~19314)
+  (match arg~19314 ((tuple a% b%) (tuple p% (cl:cons a% (cl:cons b% nil))))))
 
-(defunc destBinop (p* arg~19331)
+(defunc destBinop (p% arg~19331)
   (match arg~19331
-    ((tuple x (cl:cons a* (cl:cons b* nil)))
-      (if (hol2cl.metis.metis_prover.name:equal x p*)
-        (tuple a* b*)
+    ((tuple x (cl:cons a% (cl:cons b% nil)))
+      (if (hol2cl.metis.metis_prover.name:equal x p%)
+        (tuple a% b%)
         (failwith "Atom.destBinop: wrong binop")))
     (_ (failwith "Atom.destBinop: not a binop"))))
 
-(defunc isBinop (p*) (can (destBinop p*)))
+(defunc isBinop (p%) (can (destBinop p%)))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* The size of an atom in symbols.                                           *)
@@ -18058,9 +18351,10 @@
     ((tuple p1 tms1)
       (match arg~19386
         ((tuple p2 tms2)
-          (let ((c* (funcall hol2cl.metis.metis_prover.name:compare p1 p2)))
-            (if (<> c* 0)
-              c*
+          (let ((c% (funcall hol2cl.metis.metis_prover.name:compare p1 p2)))
+            (cl:declare (cl:ignorable c%))
+            (if (<> c% 0)
+              c%
               (lexCompare #'hol2cl.metis.metis_prover.term:compare tms1 tms2))))))))
 
 (defunc equal (atm1 atm2) (= (compare atm1 atm2) 0))
@@ -18072,15 +18366,15 @@
 
 (defparameter subterm
   (fletc
-    ((subterm*
+    ((subterm%
       (arg~19422)
       (match arg~19422
         ((tuple _ nil) (raise (make-Bug "Atom.subterm: empty path")))
-        ((tuple (tuple _ tms) (cl:cons h t*))
+        ((tuple (tuple _ tms) (cl:cons h t%))
           (if (>= h (funcall length tms))
             (failwith "Atom.subterm: bad path")
-            (hol2cl.metis.metis_prover.term:subterm (list-nth tms h) t*))))))
-    (lambdac (x y) (subterm* (tuple x y)))))
+            (hol2cl.metis.metis_prover.term:subterm (list-nth tms h) t%))))))
+    (lambdac (x y) (subterm% (tuple x y)))))
 
 (defunc subterms (arg~19462)
   (match arg~19462
@@ -18093,7 +18387,7 @@
               (append
                 (list-map
                   (lambdac (arg~19471)
-                    (match arg~19471 ((tuple p* s) (tuple (cl:cons n p*) s))))
+                    (match arg~19471 ((tuple p% s) (tuple (cl:cons n p%) s))))
                   (hol2cl.metis.metis_prover.term:subterms tm))
                 l)))))
         (foldl #'f nil (enumerate tms))))))
@@ -18103,22 +18397,23 @@
     ((cl:and atm (tuple rel tms))
       (match arg~19510
         ((tuple nil _) (raise (make-Bug "Atom.replace: empty path")))
-        ((tuple (cl:cons h t*) res)
+        ((tuple (cl:cons h t%) res)
           (if (>= h (funcall length tms))
             (failwith "Atom.replace: bad path")
             (let*
               ((tm (list-nth tms h))
-                (tm* (hol2cl.metis.metis_prover.term:replace tm (tuple t* res))))
-              (if (== tm tm*) atm (tuple rel (updateNth (tuple h tm*) tms))))))))))
+                (tm% (hol2cl.metis.metis_prover.term:replace tm (tuple t% res))))
+              (cl:declare (cl:ignorable tm tm%))
+              (if (== tm tm%) atm (tuple rel (updateNth (tuple h tm%) tms))))))))))
 
 (defunc find (pred)
   (fletc
     ((f
       (arg~19566)
       (match arg~19566
-        ((tuple i* tm)
+        ((tuple i% tm)
           (match (hol2cl.metis.metis_prover.term:find pred tm)
-            ((Some path) (make-Some (cl:cons i* path)))
+            ((Some path) (make-Some (cl:cons i% path)))
             ((None) (make-None)))))))
     (lambdac (arg~19586) (match arg~19586 ((tuple _ tms) (first #'f (enumerate tms)))))))
 
@@ -18149,9 +18444,10 @@
 
 (defunc subst (sub arg~19632)
   (match arg~19632
-    ((cl:and atm (tuple p* tms))
-      (let ((tms* (list-map (hol2cl.metis.metis_prover.substitute:subst sub) tms)))
-        (if (== tms* tms) atm (tuple p* tms*))))))
+    ((cl:and atm (tuple p% tms))
+      (let ((tms% (list-map (hol2cl.metis.metis_prover.substitute:subst sub) tms)))
+        (cl:declare (cl:ignorable tms%))
+        (if (== tms% tms) atm (tuple p% tms%))))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Matching.                                                                 *)
@@ -18166,7 +18462,7 @@
           (fletc
             ((matchArg
               (arg~19668)
-              (match arg~19668 ((tuple (tuple tm1 tm2) sub*) (matchTerms sub* tm1 tm2)))))
+              (match arg~19668 ((tuple (tuple tm1 tm2) sub%) (matchTerms sub% tm1 tm2)))))
             (match
               (cl:or
                 (cl:and
@@ -18189,8 +18485,8 @@
             ((unifyArg
               (arg~19721)
               (match arg~19721
-                ((tuple (tuple tm1 tm2) sub*)
-                  (hol2cl.metis.metis_prover.substitute:unify sub* tm1 tm2)))))
+                ((tuple (tuple tm1 tm2) sub%)
+                  (hol2cl.metis.metis_prover.substitute:unify sub% tm1 tm2)))))
             (match
               (cl:or
                 (cl:and
@@ -18220,21 +18516,21 @@
 
 (defunc destRefl (atm)
   (match (destEq atm)
-    ((tuple l r*)
+    ((tuple l r%)
       (match
-        (cl:or (hol2cl.metis.metis_prover.term:equal l r*) (failwith "Atom.destRefl"))
+        (cl:or (hol2cl.metis.metis_prover.term:equal l r%) (failwith "Atom.destRefl"))
         (_ l)))))
 
 (defunc isRefl (x) (can #'destRefl x))
 
 (defunc sym (atm)
   (match (destEq atm)
-    ((tuple l r*)
+    ((tuple l r%)
       (match
         (cl:or
-          (not (hol2cl.metis.metis_prover.term:equal l r*))
+          (not (hol2cl.metis.metis_prover.term:equal l r%))
           (failwith "Atom.sym: refl"))
-        (_ (funcall mkEq (tuple r* l)))))))
+        (_ (funcall mkEq (tuple r% l)))))))
 
 (defunc lhs (atm) (fst (destEq atm)))
 
@@ -18267,8 +18563,8 @@
                 ((addTm
                   (arg~19894)
                   (match arg~19894
-                    ((tuple (tuple path tm) acc*)
-                      (cl:cons (tuple (cl:cons n path) tm) acc*)))))
+                    ((tuple (tuple path tm) acc%)
+                      (cl:cons (tuple (cl:cons n path) tm) acc%)))))
                 (foldl
                   #'addTm
                   acc
@@ -18285,114 +18581,131 @@
 
 (in-package :hol2cl.metis.metis_prover.atom.map.ma)
 
-(defvariant t* (Empty*) (Node (:record l v d r h)))
+(defvariant t% (Empty%) (Node (:record l v d r h)))
 
-(defunc height (arg~19939) (match arg~19939 ((Empty*) 0) ((Node :h h) h)))
+(defunc height (arg~19939) (match arg~19939 ((Empty%) 0) ((Node :h h) h)))
 
 (defunc create (l x d r)
   (let ((hl (height l)) (hr (height r)))
+    (cl:declare (cl:ignorable hl hr))
     (make-Node :l l :v x :d d :r r :h (if (>= hl hr) (+ hl 1) (+ hr 1)))))
 
-(defunc singleton (x d) (make-Node :l (make-Empty*) :v x :d d :r (make-Empty*) :h 1))
+(defunc singleton (x d) (make-Node :l (make-Empty%) :v x :d d :r (make-Empty%) :h 1))
 
 (defunc bal (l x d r)
   (let*
-    ((hl (match l ((Empty*) 0) ((Node :h h) h)))
-      (hr (match r ((Empty*) 0) ((Node :h h) h))))
+    ((hl (match l ((Empty%) 0) ((Node :h h) h)))
+      (hr (match r ((Empty%) 0) ((Node :h h) h))))
+    (cl:declare (cl:ignorable hl hr))
     (if (> hl (+ hr 2))
       (match l
-        ((Empty*) (invalid-arg "Map.bal"))
+        ((Empty%) (invalid-arg "Map.bal"))
         ((Node :l ll :v lv :d ld :r lr)
           (if (>= (height ll) (height lr))
             (create ll lv ld (create lr x d r))
             (match lr
-              ((Empty*) (invalid-arg "Map.bal"))
+              ((Empty%) (invalid-arg "Map.bal"))
               ((Node :l lrl :v lrv :d lrd :r lrr)
                 (create (create ll lv ld lrl) lrv lrd (create lrr x d r)))))))
       (if (> hr (+ hl 2))
         (match r
-          ((Empty*) (invalid-arg "Map.bal"))
+          ((Empty%) (invalid-arg "Map.bal"))
           ((Node :l rl :v rv :d rd :r rr)
             (if (>= (height rr) (height rl))
               (create (create l x d rl) rv rd rr)
               (match rl
-                ((Empty*) (invalid-arg "Map.bal"))
+                ((Empty%) (invalid-arg "Map.bal"))
                 ((Node :l rll :v rlv :d rld :r rlr)
                   (create (create l x d rll) rlv rld (create rlr rv rd rr)))))))
         (make-Node :l l :v x :d d :r r :h (if (>= hl hr) (+ hl 1) (+ hr 1)))))))
 
-(defparameter empty (make-Empty*))
+(defparameter empty (make-Empty%))
 
-(defunc is_empty (arg~20155) (match arg~20155 ((Empty*) cl:t) (_ cl:nil)))
+(defunc is_empty (arg~20155) (match arg~20155 ((Empty%) cl:t) (_ cl:nil)))
 
 (defunc add (x data arg~20165)
   (match arg~20165
-    ((Empty*) (make-Node :l (make-Empty*) :v x :d data :r (make-Empty*) :h 1))
+    ((Empty%) (make-Node :l (make-Empty%) :v x :d data :r (make-Empty%) :h 1))
     ((cl:and m (Node :l l :v v :d d :r r :h h))
       (let ((c (funcall compare x v)))
+        (cl:declare (cl:ignorable c))
         (if (= c 0)
           (if (== d data) m (make-Node :l l :v x :d data :r r :h h))
           (if (< c 0)
-            (let ((ll (add x data l))) (if (== l ll) m (bal ll v d r)))
-            (let ((rr (add x data r))) (if (== r rr) m (bal l v d rr)))))))))
+            (let ((ll (add x data l)))
+              (cl:declare (cl:ignorable ll))
+              (if (== l ll) m (bal ll v d r)))
+            (let ((rr (add x data r)))
+              (cl:declare (cl:ignorable rr))
+              (if (== r rr) m (bal l v d rr)))))))))
 
 (defunc find (x arg~20247)
   (match arg~20247
-    ((Empty*) (raise (make-Not_found)))
+    ((Empty%) (raise (make-Not_found)))
     ((Node :l l :v v :d d :r r)
-      (let ((c (funcall compare x v))) (if (= c 0) d (find x (if (< c 0) l r)))))))
+      (let ((c (funcall compare x v)))
+        (cl:declare (cl:ignorable c))
+        (if (= c 0) d (find x (if (< c 0) l r)))))))
 
 (defunc mem (x arg~20282)
   (match arg~20282
-    ((Empty*) cl:nil)
+    ((Empty%) cl:nil)
     ((Node :l l :v v :r r)
-      (let ((c (funcall compare x v))) (cl:or (= c 0) (mem x (if (< c 0) l r)))))))
+      (let ((c (funcall compare x v)))
+        (cl:declare (cl:ignorable c))
+        (cl:or (= c 0) (mem x (if (< c 0) l r)))))))
 
 (defunc min_binding (arg~20312)
   (match arg~20312
-    ((Empty*) (raise (make-Not_found)))
-    ((Node :l (Empty*) :v v :d d) (tuple v d))
+    ((Empty%) (raise (make-Not_found)))
+    ((Node :l (Empty%) :v v :d d) (tuple v d))
     ((Node :l l) (min_binding l))))
 
 (defunc remove_min_binding (arg~20333)
   (match arg~20333
-    ((Empty*) (invalid-arg "Map.remove_min_elt"))
-    ((Node :l (Empty*) :r r) r)
+    ((Empty%) (invalid-arg "Map.remove_min_elt"))
+    ((Node :l (Empty%) :r r) r)
     ((Node :l l :v v :d d :r r) (bal (remove_min_binding l) v d r))))
 
 (defunc merge~1 (t1 t2)
   (match (tuple t1 t2)
-    ((tuple (Empty*) t*) t*)
-    ((tuple t* (Empty*)) t*)
+    ((tuple (Empty%) t%) t%)
+    ((tuple t% (Empty%)) t%)
     ((tuple _ _)
       (match (min_binding t2) ((tuple x d) (bal t1 x d (remove_min_binding t2)))))))
 
 (defunc remove (x arg~20396)
   (match arg~20396
-    ((Empty*) (make-Empty*))
+    ((Empty%) (make-Empty%))
     ((cl:and m (Node :l l :v v :d d :r r))
       (let ((c (funcall compare x v)))
+        (cl:declare (cl:ignorable c))
         (if (= c 0)
           (merge~1 l r)
           (if (< c 0)
-            (let ((ll (remove x l))) (if (== l ll) m (bal ll v d r)))
-            (let ((rr (remove x r))) (if (== r rr) m (bal l v d rr)))))))))
+            (let ((ll (remove x l)))
+              (cl:declare (cl:ignorable ll))
+              (if (== l ll) m (bal ll v d r)))
+            (let ((rr (remove x r)))
+              (cl:declare (cl:ignorable rr))
+              (if (== r rr) m (bal l v d rr)))))))))
 
 (defunc map (f arg~20461)
   (match arg~20461
-    ((Empty*) (make-Empty*))
+    ((Empty%) (make-Empty%))
     ((Node :l l :v v :d d :r r :h h)
-      (let* ((l* (map f l)) (d* (funcall f d)) (r* (map f r)))
-        (make-Node :l l* :v v :d d* :r r* :h h)))))
+      (let* ((l% (map f l)) (d% (funcall f d)) (r% (map f r)))
+        (cl:declare (cl:ignorable l% d% r%))
+        (make-Node :l l% :v v :d d% :r r% :h h)))))
 
 (defunc fold (f m accu)
   (match m
-    ((Empty*) accu)
+    ((Empty%) accu)
     ((Node :l l :v v :d d :r r) (fold f r (funcall f v d (fold f l accu))))))
 
 (defunc exists (p arg~20527)
   (match arg~20527
-    ((Empty*) cl:nil)
+    ((Empty%) cl:nil)
     ((Node :l l :v v :d d :r r) (cl:or (funcall p v d) (cl:or (exists p l) (exists p r))))))
 
 ;; (* Beware: those two functions assume that the added k is *strictly*
@@ -18406,12 +18719,12 @@
 
 (defunc add_min_binding (k x arg~20555)
   (match arg~20555
-    ((Empty*) (singleton k x))
+    ((Empty%) (singleton k x))
     ((Node :l l :v v :d d :r r) (bal (add_min_binding k x l) v d r))))
 
 (defunc add_max_binding (k x arg~20582)
   (match arg~20582
-    ((Empty*) (singleton k x))
+    ((Empty%) (singleton k x))
     ((Node :l l :v v :d d :r r) (bal l v d (add_max_binding k x r)))))
 
 ;; (* Same as create and bal, but no assumptions are made on the
@@ -18420,8 +18733,8 @@
 
 (defunc join (l v d r)
   (match (tuple l r)
-    ((tuple (Empty*) _) (add_min_binding v d r))
-    ((tuple _ (Empty*)) (add_max_binding v d l))
+    ((tuple (Empty%) _) (add_min_binding v d r))
+    ((tuple _ (Empty%)) (add_max_binding v d l))
     ((tuple (Node :l ll :v lv :d ld :r lr :h lh) (Node :l rl :v rv :d rd :r rr :h rh))
       (if (> lh (+ rh 2))
         (bal ll lv ld (join lr v d r))
@@ -18434,19 +18747,20 @@
 
 (defunc concat (t1 t2)
   (match (tuple t1 t2)
-    ((tuple (Empty*) t*) t*)
-    ((tuple t* (Empty*)) t*)
+    ((tuple (Empty%) t%) t%)
+    ((tuple t% (Empty%)) t%)
     ((tuple _ _)
       (match (min_binding t2) ((tuple x d) (join t1 x d (remove_min_binding t2)))))))
 
 (defunc concat_or_join (t1 v d t2)
-  (match d ((Some d*) (join t1 v d* t2)) ((None) (concat t1 t2))))
+  (match d ((Some d%) (join t1 v d% t2)) ((None) (concat t1 t2))))
 
 (defunc split (x arg~20745)
   (match arg~20745
-    ((Empty*) (tuple (make-Empty*) (make-None) (make-Empty*)))
+    ((Empty%) (tuple (make-Empty%) (make-None) (make-Empty%)))
     ((Node :l l :v v :d d :r r)
       (let ((c (funcall compare x v)))
+        (cl:declare (cl:ignorable c))
         (if (= c 0)
           (tuple l (make-Some d) r)
           (if (< c 0)
@@ -18455,8 +18769,8 @@
 
 (defunc merge (f s1 s2)
   (match (tuple s1 s2)
-    ((tuple (Empty*) (Empty*)) (make-Empty*))
-    ((trivia:guard (tuple (Node :l l1 :v v1 :d d1 :r r1 :h h1) _) (>= h1 (height s2)))
+    ((tuple (Empty%) (Empty%)) (make-Empty%))
+    ((guard (tuple (Node :l l1 :v v1 :d d1 :r r1 :h h1) _) (>= h1 (height s2)))
       (match (split v1 s2)
         ((tuple l2 d2 r2)
           (concat_or_join
@@ -18476,37 +18790,40 @@
 
 (defunc union (f s1 s2)
   (match (tuple s1 s2)
-    ((cl:or (tuple (Empty*) s) (tuple s (Empty*))) s)
+    ((cl:or (tuple (Empty%) s) (tuple s (Empty%))) s)
     ((tuple (Node :l l1 :v v1 :d d1 :r r1 :h h1) (Node :l l2 :v v2 :d d2 :r r2 :h h2))
       (if (>= h1 h2)
         (match (split v1 s2)
-          ((tuple l2* d2* r2*)
-            (let ((l (union f l1 l2*)) (r (union f r1 r2*)))
-              (match d2*
+          ((tuple l2% d2% r2%)
+            (let ((l (union f l1 l2%)) (r (union f r1 r2%)))
+              (cl:declare (cl:ignorable l r))
+              (match d2%
                 ((None) (join l v1 d1 r))
                 ((Some d2) (concat_or_join l v1 (funcall f v1 d1 d2) r))))))
         (match (split v2 s1)
-          ((tuple l1* d1* r1*)
-            (let ((l (union f l1* l2)) (r (union f r1* r2)))
-              (match d1*
+          ((tuple l1% d1% r1%)
+            (let ((l (union f l1% l2)) (r (union f r1% r2)))
+              (cl:declare (cl:ignorable l r))
+              (match d1%
                 ((None) (join l v2 d2 r))
                 ((Some d1) (concat_or_join l v2 (funcall f v2 d1 d2) r))))))))))
 
 (defunc filter (p arg~21043)
   (match arg~21043
-    ((Empty*) (make-Empty*))
+    ((Empty%) (make-Empty%))
     ((cl:and m (Node :l l :v v :d d :r r))
-      (let* ((l* (filter p l)) (pvd (funcall p v d)) (r* (filter p r)))
-        (if pvd (if (cl:and (== l l*) (== r r*)) m (join l* v d r*)) (concat l* r*))))))
+      (let* ((l% (filter p l)) (pvd (funcall p v d)) (r% (filter p r)))
+        (cl:declare (cl:ignorable l% pvd r%))
+        (if pvd (if (cl:and (== l l%) (== r r%)) m (join l% v d r%)) (concat l% r%))))))
 
 (defvariant enumeration (End) (More field0 field1 field2 field3))
 
 (defunc cardinal (arg~21098)
-  (match arg~21098 ((Empty*) 0) ((Node :l l :r r) (+ (+ (cardinal l) 1) (cardinal r)))))
+  (match arg~21098 ((Empty%) 0) ((Node :l l :r r) (+ (+ (cardinal l) 1) (cardinal r)))))
 
 (defunc bindings_aux (accu arg~21117)
   (match arg~21117
-    ((Empty*) accu)
+    ((Empty%) accu)
     ((Node :l l :v v :d d :r r)
       (bindings_aux (cl:cons (tuple v d) (bindings_aux accu r)) l))))
 
@@ -18519,27 +18836,27 @@
 (defparameter null #'is_empty)
 
 (defunc singleton (arg~21156)
-  (match arg~21156 ((tuple k* x) (hol2cl.metis.metis_prover.atom.map.ma:singleton k* x))))
+  (match arg~21156 ((tuple k% x) (hol2cl.metis.metis_prover.atom.map.ma:singleton k% x))))
 
 (defparameter size #'cardinal)
 
-(defunc get (m k*)
+(defunc get (m k%)
   (handler-case
-    (find k* m)
+    (find k% m)
     (hol2cl.runtime:ocaml-condition
       (exception~21173)
       (match exception~21173
         ((Not_found) (failwith "Mmap.get: element not found"))
         (_ (raise exception~21173))))))
 
-(defunc peek (m k*)
+(defunc peek (m k%)
   (handler-case
-    (make-Some (find k* m))
+    (make-Some (find k% m))
     (hol2cl.runtime:ocaml-condition
       (exception~21185)
       (match exception~21185 ((Not_found) (make-None)) (_ (raise exception~21185))))))
 
-(defunc insert (m arg~21196) (match arg~21196 ((tuple k* v) (add k* v m))))
+(defunc insert (m arg~21196) (match arg~21196 ((tuple k% v) (add k% v m))))
 
 (defparameter toList #'bindings)
 
@@ -18549,10 +18866,10 @@
     l
     empty))
 
-(defunc foldl (f b* m)
+(defunc foldl (f b% m)
   (list-fold-left
     (lambdac (s arg~21233) (match arg~21233 ((tuple v tm) (funcall f (tuple v tm s)))))
-    b*
+    b%
     (bindings m)))
 
 (defparameter foldr #'foldl)
@@ -18564,28 +18881,28 @@
 
 (defunc union (f m1 m2)
   (fletc
-    ((f*
-      (k* arg~21274)
+    ((f%
+      (k% arg~21274)
       (match arg~21274
-        ((tuple (Some x) (Some y)) (funcall f (tuple (tuple k* x) (tuple k* y))))
+        ((tuple (Some x) (Some y)) (funcall f (tuple (tuple k% x) (tuple k% y))))
         ((tuple (Some x) (None)) (make-Some x))
         ((tuple (None) (Some y)) (make-Some y))
         ((tuple (None) (None)) (make-None)))))
-    (merge (lambdac (k* x y) (f* k* (tuple x y))) m1 m2)))
+    (merge (lambdac (k% x y) (f% k% (tuple x y))) m1 m2)))
 
-(defunc delete (m k*) (remove k* m))
+(defunc delete (m k%) (remove k% m))
 
 (defunc mapPartial (f m)
   (fold
-    (lambdac (k* x acc)
-      (match (funcall f (tuple k* x)) ((Some y) (add k* y acc)) ((None) acc)))
+    (lambdac (k% x acc)
+      (match (funcall f (tuple k% x)) ((Some y) (add k% y acc)) ((None) acc)))
     m
     empty))
 
 (defparameter transform #'map)
 
 (defunc exists (f)
-  (hol2cl.metis.metis_prover.atom.map.ma:exists (lambdac (k* m) (funcall f (tuple k* m)))))
+  (hol2cl.metis.metis_prover.atom.map.ma:exists (lambdac (k% m) (funcall f (tuple k% m)))))
 
 (in-package :hol2cl.metis.metis_prover.atom)
 
@@ -18593,13 +18910,13 @@
 
 (in-package :hol2cl.metis.metis_prover.atom.set.se)
 
-(defvariant t* (Empty*) (Node (:record l v r h)))
+(defvariant t% (Empty%) (Node (:record l v r h)))
 
 ;; (* Sets are represented by balanced binary trees (the heights of the
 ;;        children differ by at most 2 *)
 
 
-(defunc height (arg~21373) (match arg~21373 ((Empty*) 0) ((Node :h h) h)))
+(defunc height (arg~21373) (match arg~21373 ((Empty%) 0) ((Node :h h) h)))
 
 ;; (* Creates a new node with left son l, value v and right son r.
 ;;        We must have all elements of l < v < all elements of r.
@@ -18609,8 +18926,9 @@
 
 (defunc create (l v r)
   (let*
-    ((hl (match l ((Empty*) 0) ((Node :h h) h)))
-      (hr (match r ((Empty*) 0) ((Node :h h) h))))
+    ((hl (match l ((Empty%) 0) ((Node :h h) h)))
+      (hr (match r ((Empty%) 0) ((Node :h h) h))))
+    (cl:declare (cl:ignorable hl hr))
     (make-Node :l l :v v :r r :h (if (>= hl hr) (+ hl 1) (+ hr 1)))))
 
 ;; (* Same as create, but performs one step of rebalancing if necessary.
@@ -18621,26 +18939,27 @@
 
 (defunc bal (l v r)
   (let*
-    ((hl (match l ((Empty*) 0) ((Node :h h) h)))
-      (hr (match r ((Empty*) 0) ((Node :h h) h))))
+    ((hl (match l ((Empty%) 0) ((Node :h h) h)))
+      (hr (match r ((Empty%) 0) ((Node :h h) h))))
+    (cl:declare (cl:ignorable hl hr))
     (if (> hl (+ hr 2))
       (match l
-        ((Empty*) (invalid-arg "Set.bal"))
+        ((Empty%) (invalid-arg "Set.bal"))
         ((Node :l ll :v lv :r lr)
           (if (>= (height ll) (height lr))
             (create ll lv (create lr v r))
             (match lr
-              ((Empty*) (invalid-arg "Set.bal"))
+              ((Empty%) (invalid-arg "Set.bal"))
               ((Node :l lrl :v lrv :r lrr)
                 (create (create ll lv lrl) lrv (create lrr v r)))))))
       (if (> hr (+ hl 2))
         (match r
-          ((Empty*) (invalid-arg "Set.bal"))
+          ((Empty%) (invalid-arg "Set.bal"))
           ((Node :l rl :v rv :r rr)
             (if (>= (height rr) (height rl))
               (create (create l v rl) rv rr)
               (match rl
-                ((Empty*) (invalid-arg "Set.bal"))
+                ((Empty%) (invalid-arg "Set.bal"))
                 ((Node :l rll :v rlv :r rlr)
                   (create (create l v rll) rlv (create rlr rv rr)))))))
         (make-Node :l l :v v :r r :h (if (>= hl hr) (+ hl 1) (+ hr 1)))))))
@@ -18650,16 +18969,21 @@
 
 (defunc add (x arg~21568)
   (match arg~21568
-    ((Empty*) (make-Node :l (make-Empty*) :v x :r (make-Empty*) :h 1))
-    ((cl:and t* (Node :l l :v v :r r))
+    ((Empty%) (make-Node :l (make-Empty%) :v x :r (make-Empty%) :h 1))
+    ((cl:and t% (Node :l l :v v :r r))
       (let ((c (funcall hol2cl.metis.metis_prover.atom.ordered:compare x v)))
+        (cl:declare (cl:ignorable c))
         (if (= c 0)
-          t*
+          t%
           (if (< c 0)
-            (let ((ll (add x l))) (if (== l ll) t* (bal ll v r)))
-            (let ((rr (add x r))) (if (== r rr) t* (bal l v rr)))))))))
+            (let ((ll (add x l)))
+              (cl:declare (cl:ignorable ll))
+              (if (== l ll) t% (bal ll v r)))
+            (let ((rr (add x r)))
+              (cl:declare (cl:ignorable rr))
+              (if (== r rr) t% (bal l v rr)))))))))
 
-(defunc singleton (x) (make-Node :l (make-Empty*) :v x :r (make-Empty*) :h 1))
+(defunc singleton (x) (make-Node :l (make-Empty%) :v x :r (make-Empty%) :h 1))
 
 ;; (* Beware: those two functions assume that the added v is *strictly*
 ;;        smaller (or bigger) than all the present elements in the tree; it
@@ -18671,12 +18995,12 @@
 
 (defunc add_min_element (x arg~21639)
   (match arg~21639
-    ((Empty*) (singleton x))
+    ((Empty%) (singleton x))
     ((Node :l l :v v :r r) (bal (add_min_element x l) v r))))
 
 (defunc add_max_element (x arg~21660)
   (match arg~21660
-    ((Empty*) (singleton x))
+    ((Empty%) (singleton x))
     ((Node :l l :v v :r r) (bal l v (add_max_element x r)))))
 
 ;; (* Same as create and bal, but no assumptions are made on the
@@ -18685,8 +19009,8 @@
 
 (defunc join (l v r)
   (match (tuple l r)
-    ((tuple (Empty*) _) (add_min_element v r))
-    ((tuple _ (Empty*)) (add_max_element v l))
+    ((tuple (Empty%) _) (add_min_element v r))
+    ((tuple _ (Empty%)) (add_max_element v l))
     ((tuple (Node :l ll :v lv :r lr :h lh) (Node :l rl :v rv :r rr :h rh))
       (if (> lh (+ rh 2))
         (bal ll lv (join lr v r))
@@ -18697,8 +19021,8 @@
 
 (defunc min_elt (arg~21750)
   (match arg~21750
-    ((Empty*) (raise (make-Not_found)))
-    ((Node :l (Empty*) :v v) v)
+    ((Empty%) (raise (make-Not_found)))
+    ((Node :l (Empty%) :v v) v)
     ((Node :l l) (min_elt l))))
 
 ;; (* Remove the smallest element of the given set *)
@@ -18706,8 +19030,8 @@
 
 (defunc remove_min_elt (arg~21767)
   (match arg~21767
-    ((Empty*) (invalid-arg "Set.remove_min_elt"))
-    ((Node :l (Empty*) :r r) r)
+    ((Empty%) (invalid-arg "Set.remove_min_elt"))
+    ((Node :l (Empty%) :r r) r)
     ((Node :l l :v v :r r) (bal (remove_min_elt l) v r))))
 
 ;; (* Merge two trees l and r into one.
@@ -18717,8 +19041,8 @@
 
 (defunc merge (t1 t2)
   (match (tuple t1 t2)
-    ((tuple (Empty*) t*) t*)
-    ((tuple t* (Empty*)) t*)
+    ((tuple (Empty%) t%) t%)
+    ((tuple t% (Empty%)) t%)
     ((tuple _ _) (bal t1 (min_elt t2) (remove_min_elt t2)))))
 
 ;; (* Merge two trees l and r into one.
@@ -18728,8 +19052,8 @@
 
 (defunc concat (t1 t2)
   (match (tuple t1 t2)
-    ((tuple (Empty*) t*) t*)
-    ((tuple t* (Empty*)) t*)
+    ((tuple (Empty%) t%) t%)
+    ((tuple t% (Empty%)) t%)
     ((tuple _ _) (join t1 (min_elt t2) (remove_min_elt t2)))))
 
 ;; (* Splitting.  split x s returns a triple (l, present, r) where
@@ -18741,9 +19065,10 @@
 
 (defunc split (x arg~21846)
   (match arg~21846
-    ((Empty*) (tuple (make-Empty*) cl:nil (make-Empty*)))
+    ((Empty%) (tuple (make-Empty%) cl:nil (make-Empty%)))
     ((Node :l l :v v :r r)
       (let ((c (funcall hol2cl.metis.metis_prover.atom.ordered:compare x v)))
+        (cl:declare (cl:ignorable c))
         (if (= c 0)
           (tuple l cl:t r)
           (if (< c 0)
@@ -18753,47 +19078,53 @@
 ;; (* Implementation of the set operations *)
 
 
-(defparameter empty (make-Empty*))
+(defparameter empty (make-Empty%))
 
-(defunc is_empty (arg~21918) (match arg~21918 ((Empty*) cl:t) (_ cl:nil)))
+(defunc is_empty (arg~21918) (match arg~21918 ((Empty%) cl:t) (_ cl:nil)))
 
 (defunc mem (x arg~21927)
   (match arg~21927
-    ((Empty*) cl:nil)
+    ((Empty%) cl:nil)
     ((Node :l l :v v :r r)
       (let ((c (funcall hol2cl.metis.metis_prover.atom.ordered:compare x v)))
+        (cl:declare (cl:ignorable c))
         (cl:or (= c 0) (mem x (if (< c 0) l r)))))))
 
 (defunc remove (x arg~21958)
   (match arg~21958
-    ((Empty*) (make-Empty*))
-    ((cl:and t* (Node :l l :v v :r r))
+    ((Empty%) (make-Empty%))
+    ((cl:and t% (Node :l l :v v :r r))
       (let ((c (funcall hol2cl.metis.metis_prover.atom.ordered:compare x v)))
+        (cl:declare (cl:ignorable c))
         (if (= c 0)
           (merge l r)
           (if (< c 0)
-            (let ((ll (remove x l))) (if (== l ll) t* (bal ll v r)))
-            (let ((rr (remove x r))) (if (== r rr) t* (bal l v rr)))))))))
+            (let ((ll (remove x l)))
+              (cl:declare (cl:ignorable ll))
+              (if (== l ll) t% (bal ll v r)))
+            (let ((rr (remove x r)))
+              (cl:declare (cl:ignorable rr))
+              (if (== r rr) t% (bal l v rr)))))))))
 
 (defunc union (s1 s2)
   (match (tuple s1 s2)
-    ((tuple (Empty*) t2) t2)
-    ((tuple t1 (Empty*)) t1)
+    ((tuple (Empty%) t2) t2)
+    ((tuple t1 (Empty%)) t1)
     ((tuple (Node :l l1 :v v1 :r r1 :h h1) (Node :l l2 :v v2 :r r2 :h h2))
       (if (>= h1 h2)
         (if (= h2 1)
           (add v2 s1)
           (match (split v1 s2)
-            ((tuple l2* _ r2*) (join (union l1 l2*) v1 (union r1 r2*)))))
+            ((tuple l2% _ r2%) (join (union l1 l2%) v1 (union r1 r2%)))))
         (if (= h1 1)
           (add v1 s2)
           (match (split v2 s1)
-            ((tuple l1* _ r1*) (join (union l1* l2) v2 (union r1* r2)))))))))
+            ((tuple l1% _ r1%) (join (union l1% l2) v2 (union r1% r2)))))))))
 
 (defunc inter (s1 s2)
   (match (tuple s1 s2)
-    ((tuple (Empty*) _) (make-Empty*))
-    ((tuple _ (Empty*)) (make-Empty*))
+    ((tuple (Empty%) _) (make-Empty%))
+    ((tuple _ (Empty%)) (make-Empty%))
     ((tuple (Node :l l1 :v v1 :r r1) t2)
       (match (split v1 t2)
         ((tuple l2 cl:nil r2) (concat (inter l1 l2) (inter r1 r2)))
@@ -18803,8 +19134,8 @@
 
 (defunc diff (s1 s2)
   (match (tuple s1 s2)
-    ((tuple (Empty*) _) (make-Empty*))
-    ((tuple t1 (Empty*)) t1)
+    ((tuple (Empty%) _) (make-Empty%))
+    ((tuple t1 (Empty%)) t1)
     ((tuple (Node :l l1 :v v1 :r r1) t2)
       (match (split v1 t2)
         ((tuple l2 cl:nil r2) (join (diff l1 l2) v1 (diff r1 r2)))
@@ -18813,16 +19144,17 @@
 (defvariant enumeration (End) (More field0 field1 field2))
 
 (defunc cons_enum (s e)
-  (match s ((Empty*) e) ((Node :l l :v v :r r) (cons_enum l (make-More v r e)))))
+  (match s ((Empty%) e) ((Node :l l :v v :r r) (cons_enum l (make-More v r e)))))
 
 (defunc compare_aux (e1 e2)
   (match (tuple e1 e2)
     ((tuple (End) (End)) 0)
     ((tuple (End) _) (- 1))
     ((tuple _ (End)) 1)
-    ((tuple (More v1 r1 e1*) (More v2 r2 e2*))
+    ((tuple (More v1 r1 e1%) (More v2 r2 e2%))
       (let ((c (funcall hol2cl.metis.metis_prover.atom.ordered:compare v1 v2)))
-        (if (<> c 0) c (compare_aux (cons_enum r1 e1*) (cons_enum r2 e2*)))))))
+        (cl:declare (cl:ignorable c))
+        (if (<> c 0) c (compare_aux (cons_enum r1 e1%) (cons_enum r2 e2%)))))))
 
 (defunc compare (s1 s2) (compare_aux (cons_enum s1 (make-End)) (cons_enum s2 (make-End))))
 
@@ -18830,41 +19162,42 @@
 
 (defunc subset (s1 s2)
   (match (tuple s1 s2)
-    ((tuple (Empty*) _) cl:t)
-    ((tuple _ (Empty*)) cl:nil)
+    ((tuple (Empty%) _) cl:t)
+    ((tuple _ (Empty%)) cl:nil)
     ((tuple (Node :l l1 :v v1 :r r1) (cl:and t2 (Node :l l2 :v v2 :r r2)))
       (let ((c (funcall hol2cl.metis.metis_prover.atom.ordered:compare v1 v2)))
+        (cl:declare (cl:ignorable c))
         (if (= c 0)
           (cl:and (subset l1 l2) (subset r1 r2))
           (if (< c 0)
             (cl:and
-              (subset (make-Node :l l1 :v v1 :r (make-Empty*) :h 0) l2)
+              (subset (make-Node :l l1 :v v1 :r (make-Empty%) :h 0) l2)
               (subset r1 t2))
             (cl:and
-              (subset (make-Node :l (make-Empty*) :v v1 :r r1 :h 0) r2)
+              (subset (make-Node :l (make-Empty%) :v v1 :r r1 :h 0) r2)
               (subset l1 t2))))))))
 
 (defunc fold (f s accu)
   (match s
-    ((Empty*) accu)
+    ((Empty%) accu)
     ((Node :l l :v v :r r) (fold f r (funcall f v (fold f l accu))))))
 
 (defunc for_all (p arg~22426)
   (match arg~22426
-    ((Empty*) cl:t)
+    ((Empty%) cl:t)
     ((Node :l l :v v :r r) (cl:and (funcall p v) (cl:and (for_all p l) (for_all p r))))))
 
 (defunc exists (p arg~22450)
   (match arg~22450
-    ((Empty*) cl:nil)
+    ((Empty%) cl:nil)
     ((Node :l l :v v :r r) (cl:or (funcall p v) (cl:or (exists p l) (exists p r))))))
 
 (defunc cardinal (arg~22473)
-  (match arg~22473 ((Empty*) 0) ((Node :l l :r r) (+ (+ (cardinal l) 1) (cardinal r)))))
+  (match arg~22473 ((Empty%) 0) ((Node :l l :r r) (+ (+ (cardinal l) 1) (cardinal r)))))
 
 (defunc elements_aux (accu arg~22492)
   (match arg~22492
-    ((Empty*) accu)
+    ((Empty%) accu)
     ((Node :l l :v v :r r) (elements_aux (cl:cons v (elements_aux accu r)) l))))
 
 (defunc elements (s) (elements_aux nil s))
@@ -18877,7 +19210,7 @@
 
 (defunc add (s x) (hol2cl.metis.metis_prover.atom.set.se:add x s))
 
-(defunc foldr (f a* s) (fold (lambdac (x acc) (funcall f (tuple x acc))) s a*))
+(defunc foldr (f a% s) (fold (lambdac (x acc) (funcall f (tuple x acc))) s a%))
 
 (defparameter foldl #'foldr)
 
@@ -18920,25 +19253,25 @@
     (nil hol2cl.metis.metis_prover.atom.set.se:empty)
     ((cl:cons s ss) (list-fold-right #'inter ss s))))
 
-(defunc findl (p* s)
+(defunc findl (p% s)
   (fletc
     ((go
       (x arg~22621)
       (match arg~22621
-        ((cl:and s* (Some _)) s*)
-        ((None) (if (funcall p* x) (make-Some x) (make-None))))))
+        ((cl:and s% (Some _)) s%)
+        ((None) (if (funcall p% x) (make-Some x) (make-None))))))
     (fold #'go s (make-None))))
 
 (defunc firstl (f s)
   (fletc
-    ((go (x arg~22647) (match arg~22647 ((cl:and s* (Some _)) s*) ((None) (funcall f x)))))
+    ((go (x arg~22647) (match arg~22647 ((cl:and s% (Some _)) s%) ((None) (funcall f x)))))
     (fold #'go s (make-None))))
 
 (defunc transform (f s) (fold (lambdac (x acc) (cl:cons (funcall f x) acc)) s nil))
 
 (defparameter all #'for_all)
 
-(defunc count (p* s) (fold (lambdac (x c*) (if (funcall p* x) (+ c* 1) c*)) s 0))
+(defunc count (p% s) (fold (lambdac (x c%) (if (funcall p% x) (+ c% 1) c%)) s 0))
 
 (in-package :hol2cl.metis.metis_prover.atom)
 
@@ -18992,13 +19325,13 @@
           (funcs
             (funcall union (funcall hol2cl.metis.metis_prover.atom:functions atm) fs)
             fms))
-        ((cl:cons (Not p*) fms) (funcs fs (cl:cons p* fms)))
-        ((cl:cons (And p* q) fms) (funcs fs (cl:cons p* (cl:cons q fms))))
-        ((cl:cons (Or p* q) fms) (funcs fs (cl:cons p* (cl:cons q fms))))
-        ((cl:cons (Imp p* q) fms) (funcs fs (cl:cons p* (cl:cons q fms))))
-        ((cl:cons (Iff p* q) fms) (funcs fs (cl:cons p* (cl:cons q fms))))
-        ((cl:cons (Forall _ p*) fms) (funcs fs (cl:cons p* fms)))
-        ((cl:cons (Exists _ p*) fms) (funcs fs (cl:cons p* fms))))))
+        ((cl:cons (Not p%) fms) (funcs fs (cl:cons p% fms)))
+        ((cl:cons (And p% q) fms) (funcs fs (cl:cons p% (cl:cons q fms))))
+        ((cl:cons (Or p% q) fms) (funcs fs (cl:cons p% (cl:cons q fms))))
+        ((cl:cons (Imp p% q) fms) (funcs fs (cl:cons p% (cl:cons q fms))))
+        ((cl:cons (Iff p% q) fms) (funcs fs (cl:cons p% (cl:cons q fms))))
+        ((cl:cons (Forall _ p%) fms) (funcs fs (cl:cons p% fms)))
+        ((cl:cons (Exists _ p%) fms) (funcs fs (cl:cons p% fms))))))
     (funcs empty (cl:cons fm nil))))
 
 (defunc functionNames (fm)
@@ -19016,13 +19349,13 @@
               (funcall hol2cl.metis.metis_prover.atom:functionNames atm)
               fs)
             fms))
-        ((cl:cons (Not p*) fms) (funcs fs (cl:cons p* fms)))
-        ((cl:cons (And p* q) fms) (funcs fs (cl:cons p* (cl:cons q fms))))
-        ((cl:cons (Or p* q) fms) (funcs fs (cl:cons p* (cl:cons q fms))))
-        ((cl:cons (Imp p* q) fms) (funcs fs (cl:cons p* (cl:cons q fms))))
-        ((cl:cons (Iff p* q) fms) (funcs fs (cl:cons p* (cl:cons q fms))))
-        ((cl:cons (Forall _ p*) fms) (funcs fs (cl:cons p* fms)))
-        ((cl:cons (Exists _ p*) fms) (funcs fs (cl:cons p* fms))))))
+        ((cl:cons (Not p%) fms) (funcs fs (cl:cons p% fms)))
+        ((cl:cons (And p% q) fms) (funcs fs (cl:cons p% (cl:cons q fms))))
+        ((cl:cons (Or p% q) fms) (funcs fs (cl:cons p% (cl:cons q fms))))
+        ((cl:cons (Imp p% q) fms) (funcs fs (cl:cons p% (cl:cons q fms))))
+        ((cl:cons (Iff p% q) fms) (funcs fs (cl:cons p% (cl:cons q fms))))
+        ((cl:cons (Forall _ p%) fms) (funcs fs (cl:cons p% fms)))
+        ((cl:cons (Exists _ p%) fms) (funcs fs (cl:cons p% fms))))))
     (funcs hol2cl.metis.metis_prover.name.set:empty (cl:cons fm nil))))
 
 ;; (* Relations *)
@@ -19040,13 +19373,13 @@
           (rels
             (hol2cl.metis.metis_prover.name_arity.set.include~13610:add fs (relation atm))
             fms))
-        ((cl:cons (Not p*) fms) (rels fs (cl:cons p* fms)))
-        ((cl:cons (And p* q) fms) (rels fs (cl:cons p* (cl:cons q fms))))
-        ((cl:cons (Or p* q) fms) (rels fs (cl:cons p* (cl:cons q fms))))
-        ((cl:cons (Imp p* q) fms) (rels fs (cl:cons p* (cl:cons q fms))))
-        ((cl:cons (Iff p* q) fms) (rels fs (cl:cons p* (cl:cons q fms))))
-        ((cl:cons (Forall _ p*) fms) (rels fs (cl:cons p* fms)))
-        ((cl:cons (Exists _ p*) fms) (rels fs (cl:cons p* fms))))))
+        ((cl:cons (Not p%) fms) (rels fs (cl:cons p% fms)))
+        ((cl:cons (And p% q) fms) (rels fs (cl:cons p% (cl:cons q fms))))
+        ((cl:cons (Or p% q) fms) (rels fs (cl:cons p% (cl:cons q fms))))
+        ((cl:cons (Imp p% q) fms) (rels fs (cl:cons p% (cl:cons q fms))))
+        ((cl:cons (Iff p% q) fms) (rels fs (cl:cons p% (cl:cons q fms))))
+        ((cl:cons (Forall _ p%) fms) (rels fs (cl:cons p% fms)))
+        ((cl:cons (Exists _ p%) fms) (rels fs (cl:cons p% fms))))))
     (rels empty (cl:cons fm nil))))
 
 (defunc relationNames (fm)
@@ -19059,13 +19392,13 @@
         ((cl:cons (False_) fms) (rels fs fms))
         ((cl:cons (Atom atm) fms)
           (rels (hol2cl.metis.metis_prover.name.set:add fs (name atm)) fms))
-        ((cl:cons (Not p*) fms) (rels fs (cl:cons p* fms)))
-        ((cl:cons (And p* q) fms) (rels fs (cl:cons p* (cl:cons q fms))))
-        ((cl:cons (Or p* q) fms) (rels fs (cl:cons p* (cl:cons q fms))))
-        ((cl:cons (Imp p* q) fms) (rels fs (cl:cons p* (cl:cons q fms))))
-        ((cl:cons (Iff p* q) fms) (rels fs (cl:cons p* (cl:cons q fms))))
-        ((cl:cons (Forall _ p*) fms) (rels fs (cl:cons p* fms)))
-        ((cl:cons (Exists _ p*) fms) (rels fs (cl:cons p* fms))))))
+        ((cl:cons (Not p%) fms) (rels fs (cl:cons p% fms)))
+        ((cl:cons (And p% q) fms) (rels fs (cl:cons p% (cl:cons q fms))))
+        ((cl:cons (Or p% q) fms) (rels fs (cl:cons p% (cl:cons q fms))))
+        ((cl:cons (Imp p% q) fms) (rels fs (cl:cons p% (cl:cons q fms))))
+        ((cl:cons (Iff p% q) fms) (rels fs (cl:cons p% (cl:cons q fms))))
+        ((cl:cons (Forall _ p%) fms) (rels fs (cl:cons p% fms)))
+        ((cl:cons (Exists _ p%) fms) (rels fs (cl:cons p% fms))))))
     (rels hol2cl.metis.metis_prover.name.set:empty (cl:cons fm nil))))
 
 ;; (* Atoms *)
@@ -19080,7 +19413,7 @@
 
 
 (defunc destNeg (arg~23310)
-  (match arg~23310 ((Not p*) p*) (_ (failwith "Formula.destNeg"))))
+  (match arg~23310 ((Not p%) p%) (_ (failwith "Formula.destNeg"))))
 
 (defparameter isNeg (can #'destNeg))
 
@@ -19097,28 +19430,28 @@
 (defunc listMkConj (fms)
   (match (list-rev fms)
     (nil (make-True_))
-    ((cl:cons fm fms*)
-      (foldl (lambdac (arg~23355) (match arg~23355 ((tuple x y) (make-And x y)))) fm fms*))))
+    ((cl:cons fm fms%)
+      (foldl (lambdac (arg~23355) (match arg~23355 ((tuple x y) (make-And x y)))) fm fms%))))
 
 (defparameter stripConj
   (labelsc
     ((strip
       (cs arg~23376)
       (match arg~23376
-        ((And p* q) (strip (cl:cons p* cs) q))
+        ((And p% q) (strip (cl:cons p% cs) q))
         (fm (list-rev (cl:cons fm cs))))))
     (lambdac (arg~23394) (match arg~23394 ((True_) nil) (fm (strip nil fm))))))
 
 (defparameter flattenConj
   (labelsc
-    ((flat*
+    ((flat%
       (acc arg~23409)
       (match arg~23409
         (nil acc)
-        ((cl:cons (And p* q) fms) (flat* acc (cl:cons q (cl:cons p* fms))))
-        ((cl:cons (True_) fms) (flat* acc fms))
-        ((cl:cons fm fms) (flat* (cl:cons fm acc) fms)))))
-    (lambdac (fm) (flat* nil (cl:cons fm nil)))))
+        ((cl:cons (And p% q) fms) (flat% acc (cl:cons q (cl:cons p% fms))))
+        ((cl:cons (True_) fms) (flat% acc fms))
+        ((cl:cons fm fms) (flat% (cl:cons fm acc) fms)))))
+    (lambdac (fm) (flat% nil (cl:cons fm nil)))))
 
 ;; (* Disjunctions *)
 
@@ -19126,28 +19459,28 @@
 (defunc listMkDisj (fms)
   (match (list-rev fms)
     (nil (make-False_))
-    ((cl:cons fm fms*)
-      (foldl (lambdac (arg~23463) (match arg~23463 ((tuple x y) (make-Or x y)))) fm fms*))))
+    ((cl:cons fm fms%)
+      (foldl (lambdac (arg~23463) (match arg~23463 ((tuple x y) (make-Or x y)))) fm fms%))))
 
 (defparameter stripDisj
   (labelsc
     ((strip
       (cs arg~23484)
       (match arg~23484
-        ((Or p* q) (strip (cl:cons p* cs) q))
+        ((Or p% q) (strip (cl:cons p% cs) q))
         (fm (list-rev (cl:cons fm cs))))))
     (lambdac (arg~23502) (match arg~23502 ((False_) nil) (fm (strip nil fm))))))
 
 (defparameter flattenDisj
   (labelsc
-    ((flat*
+    ((flat%
       (acc arg~23517)
       (match arg~23517
         (nil acc)
-        ((cl:cons (Or p* q) fms) (flat* acc (cl:cons q (cl:cons p* fms))))
-        ((cl:cons (False_) fms) (flat* acc fms))
-        ((cl:cons fm fms) (flat* (cl:cons fm acc) fms)))))
-    (lambdac (fm) (flat* nil (cl:cons fm nil)))))
+        ((cl:cons (Or p% q) fms) (flat% acc (cl:cons q (cl:cons p% fms))))
+        ((cl:cons (False_) fms) (flat% acc fms))
+        ((cl:cons fm fms) (flat% (cl:cons fm acc) fms)))))
+    (lambdac (fm) (flat% nil (cl:cons fm nil)))))
 
 ;; (* Equivalences *)
 
@@ -19155,28 +19488,28 @@
 (defunc listMkEquiv (fms)
   (match (list-rev fms)
     (nil (make-True_))
-    ((cl:cons fm fms*)
-      (foldl (lambdac (arg~23571) (match arg~23571 ((tuple x y) (make-Iff x y)))) fm fms*))))
+    ((cl:cons fm fms%)
+      (foldl (lambdac (arg~23571) (match arg~23571 ((tuple x y) (make-Iff x y)))) fm fms%))))
 
 (defparameter stripEquiv
   (labelsc
     ((strip
       (cs arg~23592)
       (match arg~23592
-        ((Iff p* q) (strip (cl:cons p* cs) q))
+        ((Iff p% q) (strip (cl:cons p% cs) q))
         (fm (list-rev (cl:cons fm cs))))))
     (lambdac (arg~23610) (match arg~23610 ((True_) nil) (fm (strip nil fm))))))
 
 (defparameter flattenEquiv
   (labelsc
-    ((flat*
+    ((flat%
       (acc arg~23625)
       (match arg~23625
         (nil acc)
-        ((cl:cons (Iff p* q) fms) (flat* acc (cl:cons q (cl:cons p* fms))))
-        ((cl:cons (True_) fms) (flat* acc fms))
-        ((cl:cons fm fms) (flat* (cl:cons fm acc) fms)))))
-    (lambdac (fm) (flat* nil (cl:cons fm nil)))))
+        ((cl:cons (Iff p% q) fms) (flat% acc (cl:cons q (cl:cons p% fms))))
+        ((cl:cons (True_) fms) (flat% acc fms))
+        ((cl:cons fm fms) (flat% (cl:cons fm acc) fms)))))
+    (lambdac (fm) (flat% nil (cl:cons fm nil)))))
 
 ;; (* Universal quantifiers *)
 
@@ -19188,15 +19521,15 @@
 
 (defunc listMkForall (arg~23690)
   (match arg~23690
-    ((tuple nil body*) body*)
-    ((tuple (cl:cons v vs) body*) (make-Forall v (listMkForall (tuple vs body*))))))
+    ((tuple nil body%) body%)
+    ((tuple (cl:cons v vs) body%) (make-Forall v (listMkForall (tuple vs body%))))))
 
 (defunc setMkForall (arg~23713)
   (match arg~23713
-    ((tuple vs body*)
+    ((tuple vs body%)
       (foldr
         (lambdac (arg~23717) (match arg~23717 ((tuple x y) (make-Forall x y))))
-        body*
+        body%
         vs))))
 
 (defparameter stripForall
@@ -19204,7 +19537,7 @@
     ((strip
       (vs arg~23738)
       (match arg~23738
-        ((Forall v b*) (strip (cl:cons v vs) b*))
+        ((Forall v b%) (strip (cl:cons v vs) b%))
         (tm (tuple (list-rev vs) tm)))))
     (strip nil)))
 
@@ -19218,15 +19551,15 @@
 
 (defunc listMkExists (arg~23780)
   (match arg~23780
-    ((tuple nil body*) body*)
-    ((tuple (cl:cons v vs) body*) (make-Exists v (listMkExists (tuple vs body*))))))
+    ((tuple nil body%) body%)
+    ((tuple (cl:cons v vs) body%) (make-Exists v (listMkExists (tuple vs body%))))))
 
 (defunc setMkExists (arg~23803)
   (match arg~23803
-    ((tuple vs body*)
+    ((tuple vs body%)
       (foldr
         (lambdac (arg~23807) (match arg~23807 ((tuple x y) (make-Exists x y))))
-        body*
+        body%
         vs))))
 
 (defparameter stripExists
@@ -19234,7 +19567,7 @@
     ((strip
       (vs arg~23828)
       (match arg~23828
-        ((Exists v b*) (strip (cl:cons v vs) b*))
+        ((Exists v b%) (strip (cl:cons v vs) b%))
         (tm (tuple (list-rev vs) tm)))))
     (strip nil)))
 
@@ -19253,13 +19586,13 @@
         ((cl:cons (False_) fms) (sz (+ n 1) fms))
         ((cl:cons (Atom atm) fms)
           (sz (+ n (hol2cl.metis.metis_prover.atom:symbols atm)) fms))
-        ((cl:cons (Not p*) fms) (sz (+ n 1) (cl:cons p* fms)))
-        ((cl:cons (And p* q) fms) (sz (+ n 1) (cl:cons p* (cl:cons q fms))))
-        ((cl:cons (Or p* q) fms) (sz (+ n 1) (cl:cons p* (cl:cons q fms))))
-        ((cl:cons (Imp p* q) fms) (sz (+ n 1) (cl:cons p* (cl:cons q fms))))
-        ((cl:cons (Iff p* q) fms) (sz (+ n 1) (cl:cons p* (cl:cons q fms))))
-        ((cl:cons (Forall _ p*) fms) (sz (+ n 1) (cl:cons p* fms)))
-        ((cl:cons (Exists _ p*) fms) (sz (+ n 1) (cl:cons p* fms))))))
+        ((cl:cons (Not p%) fms) (sz (+ n 1) (cl:cons p% fms)))
+        ((cl:cons (And p% q) fms) (sz (+ n 1) (cl:cons p% (cl:cons q fms))))
+        ((cl:cons (Or p% q) fms) (sz (+ n 1) (cl:cons p% (cl:cons q fms))))
+        ((cl:cons (Imp p% q) fms) (sz (+ n 1) (cl:cons p% (cl:cons q fms))))
+        ((cl:cons (Iff p% q) fms) (sz (+ n 1) (cl:cons p% (cl:cons q fms))))
+        ((cl:cons (Forall _ p%) fms) (sz (+ n 1) (cl:cons p% fms)))
+        ((cl:cons (Exists _ p%) fms) (sz (+ n 1) (cl:cons p% fms))))))
     (sz 0 (cl:cons fm nil))))
 
 ;; (* ------------------------------------------------------------------------- *)
@@ -19284,8 +19617,9 @@
               ((tuple (False_) _) (- 1))
               ((tuple _ (False_)) 1)
               ((tuple (Atom atm1) (Atom atm2))
-                (let ((c* (hol2cl.metis.metis_prover.atom:compare atm1 atm2)))
-                  (if (<> c* 0) c* (cmp fs))))
+                (let ((c% (hol2cl.metis.metis_prover.atom:compare atm1 atm2)))
+                  (cl:declare (cl:ignorable c%))
+                  (if (<> c% 0) c% (cmp fs))))
               ((tuple (Atom _) _) (- 1))
               ((tuple _ (Atom _)) 1)
               ((tuple (Not p1) (Not p2)) (cmp (cl:cons (tuple p1 p2) fs)))
@@ -19308,13 +19642,15 @@
               ((tuple (Iff _) _) (- 1))
               ((tuple _ (Iff _)) 1)
               ((tuple (Forall v1 p1) (Forall v2 p2))
-                (let ((c* (funcall hol2cl.metis.metis_prover.name:compare v1 v2)))
-                  (if (<> c* 0) c* (cmp (cl:cons (tuple p1 p2) fs)))))
+                (let ((c% (funcall hol2cl.metis.metis_prover.name:compare v1 v2)))
+                  (cl:declare (cl:ignorable c%))
+                  (if (<> c% 0) c% (cmp (cl:cons (tuple p1 p2) fs)))))
               ((tuple (Forall _) (Exists _)) (- 1))
               ((tuple (Exists _) (Forall _)) 1)
               ((tuple (Exists v1 p1) (Exists v2 p2))
-                (let ((c* (funcall hol2cl.metis.metis_prover.name:compare v1 v2)))
-                  (if (<> c* 0) c* (cmp (cl:cons (tuple p1 p2) fs)))))))))))
+                (let ((c% (funcall hol2cl.metis.metis_prover.name:compare v1 v2)))
+                  (cl:declare (cl:ignorable c%))
+                  (if (<> c% 0) c% (cmp (cl:cons (tuple p1 p2) fs)))))))))))
     (cmp (cl:cons (tuple fm1 fm2) nil))))
 
 (defunc equal (fm1 fm2) (= (compare fm1 fm2) 0))
@@ -19334,15 +19670,15 @@
         ((cl:cons (False_) fms) (f fms))
         ((cl:cons (Atom atm) fms)
           (cl:or (hol2cl.metis.metis_prover.atom:freeIn v atm) (f fms)))
-        ((cl:cons (Not p*) fms) (f (cl:cons p* fms)))
-        ((cl:cons (And p* q) fms) (f (cl:cons p* (cl:cons q fms))))
-        ((cl:cons (Or p* q) fms) (f (cl:cons p* (cl:cons q fms))))
-        ((cl:cons (Imp p* q) fms) (f (cl:cons p* (cl:cons q fms))))
-        ((cl:cons (Iff p* q) fms) (f (cl:cons p* (cl:cons q fms))))
-        ((cl:cons (Forall w* p*) fms)
-          (if (hol2cl.metis.metis_prover.name:equal v w*) (f fms) (f (cl:cons p* fms))))
-        ((cl:cons (Exists w* p*) fms)
-          (if (hol2cl.metis.metis_prover.name:equal v w*) (f fms) (f (cl:cons p* fms)))))))
+        ((cl:cons (Not p%) fms) (f (cl:cons p% fms)))
+        ((cl:cons (And p% q) fms) (f (cl:cons p% (cl:cons q fms))))
+        ((cl:cons (Or p% q) fms) (f (cl:cons p% (cl:cons q fms))))
+        ((cl:cons (Imp p% q) fms) (f (cl:cons p% (cl:cons q fms))))
+        ((cl:cons (Iff p% q) fms) (f (cl:cons p% (cl:cons q fms))))
+        ((cl:cons (Forall w% p%) fms)
+          (if (hol2cl.metis.metis_prover.name:equal v w%) (f fms) (f (cl:cons p% fms))))
+        ((cl:cons (Exists w% p%) fms)
+          (if (hol2cl.metis.metis_prover.name:equal v w%) (f fms) (f (cl:cons p% fms)))))))
     (lambdac (fm) (f (cl:cons fm nil)))))
 
 (defunc add (arg~24455)
@@ -19350,38 +19686,38 @@
     ((tuple fm vs)
       (labelsc
         ((fv
-          (vs* arg~24461)
+          (vs% arg~24461)
           (match arg~24461
-            (nil vs*)
-            ((cl:cons (tuple _ (True_)) fms) (fv vs* fms))
-            ((cl:cons (tuple _ (False_)) fms) (fv vs* fms))
+            (nil vs%)
+            ((cl:cons (tuple _ (True_)) fms) (fv vs% fms))
+            ((cl:cons (tuple _ (False_)) fms) (fv vs% fms))
             ((cl:cons (tuple bv (Atom atm)) fms)
               (fv
                 (funcall
                   hol2cl.metis.metis_prover.name.set:union
-                  vs*
+                  vs%
                   (funcall
                     difference
                     (funcall hol2cl.metis.metis_prover.atom:freeVars atm)
                     bv))
                 fms))
-            ((cl:cons (tuple bv (Not p*)) fms) (fv vs* (cl:cons (tuple bv p*) fms)))
-            ((cl:cons (tuple bv (And p* q)) fms)
-              (fv vs* (cl:cons (tuple bv p*) (cl:cons (tuple bv q) fms))))
-            ((cl:cons (tuple bv (Or p* q)) fms)
-              (fv vs* (cl:cons (tuple bv p*) (cl:cons (tuple bv q) fms))))
-            ((cl:cons (tuple bv (Imp p* q)) fms)
-              (fv vs* (cl:cons (tuple bv p*) (cl:cons (tuple bv q) fms))))
-            ((cl:cons (tuple bv (Iff p* q)) fms)
-              (fv vs* (cl:cons (tuple bv p*) (cl:cons (tuple bv q) fms))))
-            ((cl:cons (tuple bv (Forall v p*)) fms)
+            ((cl:cons (tuple bv (Not p%)) fms) (fv vs% (cl:cons (tuple bv p%) fms)))
+            ((cl:cons (tuple bv (And p% q)) fms)
+              (fv vs% (cl:cons (tuple bv p%) (cl:cons (tuple bv q) fms))))
+            ((cl:cons (tuple bv (Or p% q)) fms)
+              (fv vs% (cl:cons (tuple bv p%) (cl:cons (tuple bv q) fms))))
+            ((cl:cons (tuple bv (Imp p% q)) fms)
+              (fv vs% (cl:cons (tuple bv p%) (cl:cons (tuple bv q) fms))))
+            ((cl:cons (tuple bv (Iff p% q)) fms)
+              (fv vs% (cl:cons (tuple bv p%) (cl:cons (tuple bv q) fms))))
+            ((cl:cons (tuple bv (Forall v p%)) fms)
               (fv
-                vs*
-                (cl:cons (tuple (hol2cl.metis.metis_prover.name.set:add bv v) p*) fms)))
-            ((cl:cons (tuple bv (Exists v p*)) fms)
+                vs%
+                (cl:cons (tuple (hol2cl.metis.metis_prover.name.set:add bv v) p%) fms)))
+            ((cl:cons (tuple bv (Exists v p%)) fms)
               (fv
-                vs*
-                (cl:cons (tuple (hol2cl.metis.metis_prover.name.set:add bv v) p*) fms))))))
+                vs%
+                (cl:cons (tuple (hol2cl.metis.metis_prover.name.set:add bv v) p%) fms))))))
         (fv vs (cl:cons (tuple hol2cl.metis.metis_prover.name.set:empty fm) nil))))))
 
 (defunc freeVars (fm) (add (tuple fm hol2cl.metis.metis_prover.name.set:empty)))
@@ -19403,91 +19739,98 @@
   (match fm
     ((True_) fm)
     ((False_) fm)
-    ((Atom (tuple p* tms))
-      (let ((tms* (list-map (hol2cl.metis.metis_prover.substitute:subst sub) tms)))
-        (if (== tms tms*) fm (make-Atom (tuple p* tms*)))))
-    ((Not p*) (let ((p** (substFm sub p*))) (if (== p* p**) fm (make-Not p**))))
-    ((And p* q)
+    ((Atom (tuple p% tms))
+      (let ((tms% (list-map (hol2cl.metis.metis_prover.substitute:subst sub) tms)))
+        (cl:declare (cl:ignorable tms%))
+        (if (== tms tms%) fm (make-Atom (tuple p% tms%)))))
+    ((Not p%)
+      (let ((p%% (substFm sub p%)))
+        (cl:declare (cl:ignorable p%%))
+        (if (== p% p%%) fm (make-Not p%%))))
+    ((And p% q)
       (substConn
         sub
         fm
         (lambdac (arg~24748) (match arg~24748 ((tuple x y) (make-And x y))))
-        p*
+        p%
         q))
-    ((Or p* q)
+    ((Or p% q)
       (substConn
         sub
         fm
         (lambdac (arg~24769) (match arg~24769 ((tuple x y) (make-Or x y))))
-        p*
+        p%
         q))
-    ((Imp p* q)
+    ((Imp p% q)
       (substConn
         sub
         fm
         (lambdac (arg~24790) (match arg~24790 ((tuple x y) (make-Imp x y))))
-        p*
+        p%
         q))
-    ((Iff p* q)
+    ((Iff p% q)
       (substConn
         sub
         fm
         (lambdac (arg~24811) (match arg~24811 ((tuple x y) (make-Iff x y))))
-        p*
+        p%
         q))
-    ((Forall v p*)
+    ((Forall v p%)
       (substQuant
         sub
         fm
         (lambdac (arg~24832) (match arg~24832 ((tuple x y) (make-Forall x y))))
         v
-        p*))
-    ((Exists v p*)
+        p%))
+    ((Exists v p%)
       (substQuant
         sub
         fm
         (lambdac (arg~24853) (match arg~24853 ((tuple x y) (make-Exists x y))))
         v
-        p*))))
+        p%))))
 
-(defunc substConn (sub fm conn p* q)
-  (let ((p** (substFm sub p*)) (q* (substFm sub q)))
-    (if (cl:and (== p* p**) (== q q*)) fm (funcall conn (tuple p** q*)))))
+(defunc substConn (sub fm conn p% q)
+  (let ((p%% (substFm sub p%)) (q% (substFm sub q)))
+    (cl:declare (cl:ignorable p%% q%))
+    (if (cl:and (== p% p%%) (== q q%)) fm (funcall conn (tuple p%% q%)))))
 
-(defunc substQuant (sub fm quant v p*)
+(defunc substQuant (sub fm quant v p%)
   (let*
-    ((v*
+    ((v%
       (fletc
         ((f
           (arg~24905)
           (match arg~24905
-            ((tuple w* s)
-              (if (hol2cl.metis.metis_prover.name:equal w* v)
+            ((tuple w% s)
+              (if (hol2cl.metis.metis_prover.name:equal w% v)
                 s
-                (match (peek sub w*)
-                  ((None) (hol2cl.metis.metis_prover.name.set:add s w*))
+                (match (peek sub w%)
+                  ((None) (hol2cl.metis.metis_prover.name.set:add s w%))
                   ((Some tm)
                     (funcall
                       hol2cl.metis.metis_prover.name.set:union
                       s
                       (hol2cl.metis.metis_prover.term:freeVars tm)))))))))
         (let*
-          ((vars (freeVars p*))
-            (vars*
+          ((vars (freeVars p%))
+            (vars%
               (funcall
                 hol2cl.metis.metis_prover.name.set:foldl
                 #'f
                 hol2cl.metis.metis_prover.name.set:empty
                 vars)))
-          (variantPrime vars* v))))
-      (sub*
-        (if (hol2cl.metis.metis_prover.name:equal v v*)
+          (cl:declare (cl:ignorable vars vars%))
+          (variantPrime vars% v))))
+      (sub%
+        (if (hol2cl.metis.metis_prover.name:equal v v%)
           (remove sub (funcall singleton v))
-          (insert sub (tuple v (make-Var v*)))))
-      (p** (substCheck sub* p*)))
-    (if (cl:and (hol2cl.metis.metis_prover.name:equal v v*) (== p* p**))
+          (insert sub (tuple v (make-Var v%)))))
+      (p%% (substCheck sub% p%)))
+    (cl:declare (cl:ignorable v% sub% p%%))
+    (if (cl:and (hol2cl.metis.metis_prover.name:equal v v%) (== p% p%%))
       fm
-      (funcall quant (tuple v* p**)))))
+      (funcall quant (tuple v% p%%)))))
 
 (defparameter subst #'substCheck)
 
@@ -19546,20 +19889,23 @@
   (match arg~25091
     ((True_) (make-Fn (tuple truthName nil)))
     ((False_) (make-Fn (tuple falsityName nil)))
-    ((Atom (tuple p* tms)) (make-Fn (tuple p* tms)))
-    ((Not p*) (let ((s "~")) (make-Fn (tuple (fromString s) (cl:cons (demote p*) nil)))))
-    ((And p* q)
-      (make-Fn (tuple conjunctionName (cl:cons (demote p*) (cl:cons (demote q) nil)))))
-    ((Or p* q)
-      (make-Fn (tuple disjunctionName (cl:cons (demote p*) (cl:cons (demote q) nil)))))
-    ((Imp p* q)
-      (make-Fn (tuple implicationName (cl:cons (demote p*) (cl:cons (demote q) nil)))))
-    ((Iff p* q)
-      (make-Fn (tuple equivalenceName (cl:cons (demote p*) (cl:cons (demote q) nil)))))
-    ((Forall v b*)
-      (make-Fn (tuple universalName (cl:cons (make-Var v) (cl:cons (demote b*) nil)))))
-    ((Exists v b*)
-      (make-Fn (tuple existentialName (cl:cons (make-Var v) (cl:cons (demote b*) nil)))))))
+    ((Atom (tuple p% tms)) (make-Fn (tuple p% tms)))
+    ((Not p%)
+      (let ((s "~"))
+        (cl:declare (cl:ignorable s))
+        (make-Fn (tuple (fromString s) (cl:cons (demote p%) nil)))))
+    ((And p% q)
+      (make-Fn (tuple conjunctionName (cl:cons (demote p%) (cl:cons (demote q) nil)))))
+    ((Or p% q)
+      (make-Fn (tuple disjunctionName (cl:cons (demote p%) (cl:cons (demote q) nil)))))
+    ((Imp p% q)
+      (make-Fn (tuple implicationName (cl:cons (demote p%) (cl:cons (demote q) nil)))))
+    ((Iff p% q)
+      (make-Fn (tuple equivalenceName (cl:cons (demote p%) (cl:cons (demote q) nil)))))
+    ((Forall v b%)
+      (make-Fn (tuple universalName (cl:cons (make-Var v) (cl:cons (demote b%) nil)))))
+    ((Exists v b%)
+      (make-Fn (tuple existentialName (cl:cons (make-Var v) (cl:cons (demote b%) nil)))))))
 
 (defunc toString (fm) (hol2cl.metis.metis_prover.term:toString (demote fm)))
 
@@ -19612,114 +19958,131 @@
 
 (in-package :hol2cl.metis.metis_prover.formula.map.ma)
 
-(defvariant t* (Empty*) (Node (:record l v d r h)))
+(defvariant t% (Empty%) (Node (:record l v d r h)))
 
-(defunc height (arg~25472) (match arg~25472 ((Empty*) 0) ((Node :h h) h)))
+(defunc height (arg~25472) (match arg~25472 ((Empty%) 0) ((Node :h h) h)))
 
 (defunc create (l x d r)
   (let ((hl (height l)) (hr (height r)))
+    (cl:declare (cl:ignorable hl hr))
     (make-Node :l l :v x :d d :r r :h (if (>= hl hr) (+ hl 1) (+ hr 1)))))
 
-(defunc singleton (x d) (make-Node :l (make-Empty*) :v x :d d :r (make-Empty*) :h 1))
+(defunc singleton (x d) (make-Node :l (make-Empty%) :v x :d d :r (make-Empty%) :h 1))
 
 (defunc bal (l x d r)
   (let*
-    ((hl (match l ((Empty*) 0) ((Node :h h) h)))
-      (hr (match r ((Empty*) 0) ((Node :h h) h))))
+    ((hl (match l ((Empty%) 0) ((Node :h h) h)))
+      (hr (match r ((Empty%) 0) ((Node :h h) h))))
+    (cl:declare (cl:ignorable hl hr))
     (if (> hl (+ hr 2))
       (match l
-        ((Empty*) (invalid-arg "Map.bal"))
+        ((Empty%) (invalid-arg "Map.bal"))
         ((Node :l ll :v lv :d ld :r lr)
           (if (>= (height ll) (height lr))
             (create ll lv ld (create lr x d r))
             (match lr
-              ((Empty*) (invalid-arg "Map.bal"))
+              ((Empty%) (invalid-arg "Map.bal"))
               ((Node :l lrl :v lrv :d lrd :r lrr)
                 (create (create ll lv ld lrl) lrv lrd (create lrr x d r)))))))
       (if (> hr (+ hl 2))
         (match r
-          ((Empty*) (invalid-arg "Map.bal"))
+          ((Empty%) (invalid-arg "Map.bal"))
           ((Node :l rl :v rv :d rd :r rr)
             (if (>= (height rr) (height rl))
               (create (create l x d rl) rv rd rr)
               (match rl
-                ((Empty*) (invalid-arg "Map.bal"))
+                ((Empty%) (invalid-arg "Map.bal"))
                 ((Node :l rll :v rlv :d rld :r rlr)
                   (create (create l x d rll) rlv rld (create rlr rv rd rr)))))))
         (make-Node :l l :v x :d d :r r :h (if (>= hl hr) (+ hl 1) (+ hr 1)))))))
 
-(defparameter empty (make-Empty*))
+(defparameter empty (make-Empty%))
 
-(defunc is_empty (arg~25688) (match arg~25688 ((Empty*) cl:t) (_ cl:nil)))
+(defunc is_empty (arg~25688) (match arg~25688 ((Empty%) cl:t) (_ cl:nil)))
 
 (defunc add (x data arg~25698)
   (match arg~25698
-    ((Empty*) (make-Node :l (make-Empty*) :v x :d data :r (make-Empty*) :h 1))
+    ((Empty%) (make-Node :l (make-Empty%) :v x :d data :r (make-Empty%) :h 1))
     ((cl:and m (Node :l l :v v :d d :r r :h h))
       (let ((c (funcall compare x v)))
+        (cl:declare (cl:ignorable c))
         (if (= c 0)
           (if (== d data) m (make-Node :l l :v x :d data :r r :h h))
           (if (< c 0)
-            (let ((ll (add x data l))) (if (== l ll) m (bal ll v d r)))
-            (let ((rr (add x data r))) (if (== r rr) m (bal l v d rr)))))))))
+            (let ((ll (add x data l)))
+              (cl:declare (cl:ignorable ll))
+              (if (== l ll) m (bal ll v d r)))
+            (let ((rr (add x data r)))
+              (cl:declare (cl:ignorable rr))
+              (if (== r rr) m (bal l v d rr)))))))))
 
 (defunc find (x arg~25780)
   (match arg~25780
-    ((Empty*) (raise (make-Not_found)))
+    ((Empty%) (raise (make-Not_found)))
     ((Node :l l :v v :d d :r r)
-      (let ((c (funcall compare x v))) (if (= c 0) d (find x (if (< c 0) l r)))))))
+      (let ((c (funcall compare x v)))
+        (cl:declare (cl:ignorable c))
+        (if (= c 0) d (find x (if (< c 0) l r)))))))
 
 (defunc mem (x arg~25815)
   (match arg~25815
-    ((Empty*) cl:nil)
+    ((Empty%) cl:nil)
     ((Node :l l :v v :r r)
-      (let ((c (funcall compare x v))) (cl:or (= c 0) (mem x (if (< c 0) l r)))))))
+      (let ((c (funcall compare x v)))
+        (cl:declare (cl:ignorable c))
+        (cl:or (= c 0) (mem x (if (< c 0) l r)))))))
 
 (defunc min_binding (arg~25845)
   (match arg~25845
-    ((Empty*) (raise (make-Not_found)))
-    ((Node :l (Empty*) :v v :d d) (tuple v d))
+    ((Empty%) (raise (make-Not_found)))
+    ((Node :l (Empty%) :v v :d d) (tuple v d))
     ((Node :l l) (min_binding l))))
 
 (defunc remove_min_binding (arg~25866)
   (match arg~25866
-    ((Empty*) (invalid-arg "Map.remove_min_elt"))
-    ((Node :l (Empty*) :r r) r)
+    ((Empty%) (invalid-arg "Map.remove_min_elt"))
+    ((Node :l (Empty%) :r r) r)
     ((Node :l l :v v :d d :r r) (bal (remove_min_binding l) v d r))))
 
 (defunc merge~1 (t1 t2)
   (match (tuple t1 t2)
-    ((tuple (Empty*) t*) t*)
-    ((tuple t* (Empty*)) t*)
+    ((tuple (Empty%) t%) t%)
+    ((tuple t% (Empty%)) t%)
     ((tuple _ _)
       (match (min_binding t2) ((tuple x d) (bal t1 x d (remove_min_binding t2)))))))
 
 (defunc remove (x arg~25929)
   (match arg~25929
-    ((Empty*) (make-Empty*))
+    ((Empty%) (make-Empty%))
     ((cl:and m (Node :l l :v v :d d :r r))
       (let ((c (funcall compare x v)))
+        (cl:declare (cl:ignorable c))
         (if (= c 0)
           (merge~1 l r)
           (if (< c 0)
-            (let ((ll (remove x l))) (if (== l ll) m (bal ll v d r)))
-            (let ((rr (remove x r))) (if (== r rr) m (bal l v d rr)))))))))
+            (let ((ll (remove x l)))
+              (cl:declare (cl:ignorable ll))
+              (if (== l ll) m (bal ll v d r)))
+            (let ((rr (remove x r)))
+              (cl:declare (cl:ignorable rr))
+              (if (== r rr) m (bal l v d rr)))))))))
 
 (defunc map (f arg~25994)
   (match arg~25994
-    ((Empty*) (make-Empty*))
+    ((Empty%) (make-Empty%))
     ((Node :l l :v v :d d :r r :h h)
-      (let* ((l* (map f l)) (d* (funcall f d)) (r* (map f r)))
-        (make-Node :l l* :v v :d d* :r r* :h h)))))
+      (let* ((l% (map f l)) (d% (funcall f d)) (r% (map f r)))
+        (cl:declare (cl:ignorable l% d% r%))
+        (make-Node :l l% :v v :d d% :r r% :h h)))))
 
 (defunc fold (f m accu)
   (match m
-    ((Empty*) accu)
+    ((Empty%) accu)
     ((Node :l l :v v :d d :r r) (fold f r (funcall f v d (fold f l accu))))))
 
 (defunc exists (p arg~26060)
   (match arg~26060
-    ((Empty*) cl:nil)
+    ((Empty%) cl:nil)
     ((Node :l l :v v :d d :r r) (cl:or (funcall p v d) (cl:or (exists p l) (exists p r))))))
 
 ;; (* Beware: those two functions assume that the added k is *strictly*
@@ -19733,12 +20096,12 @@
 
 (defunc add_min_binding (k x arg~26088)
   (match arg~26088
-    ((Empty*) (singleton k x))
+    ((Empty%) (singleton k x))
     ((Node :l l :v v :d d :r r) (bal (add_min_binding k x l) v d r))))
 
 (defunc add_max_binding (k x arg~26115)
   (match arg~26115
-    ((Empty*) (singleton k x))
+    ((Empty%) (singleton k x))
     ((Node :l l :v v :d d :r r) (bal l v d (add_max_binding k x r)))))
 
 ;; (* Same as create and bal, but no assumptions are made on the
@@ -19747,8 +20110,8 @@
 
 (defunc join (l v d r)
   (match (tuple l r)
-    ((tuple (Empty*) _) (add_min_binding v d r))
-    ((tuple _ (Empty*)) (add_max_binding v d l))
+    ((tuple (Empty%) _) (add_min_binding v d r))
+    ((tuple _ (Empty%)) (add_max_binding v d l))
     ((tuple (Node :l ll :v lv :d ld :r lr :h lh) (Node :l rl :v rv :d rd :r rr :h rh))
       (if (> lh (+ rh 2))
         (bal ll lv ld (join lr v d r))
@@ -19761,19 +20124,20 @@
 
 (defunc concat (t1 t2)
   (match (tuple t1 t2)
-    ((tuple (Empty*) t*) t*)
-    ((tuple t* (Empty*)) t*)
+    ((tuple (Empty%) t%) t%)
+    ((tuple t% (Empty%)) t%)
     ((tuple _ _)
       (match (min_binding t2) ((tuple x d) (join t1 x d (remove_min_binding t2)))))))
 
 (defunc concat_or_join (t1 v d t2)
-  (match d ((Some d*) (join t1 v d* t2)) ((None) (concat t1 t2))))
+  (match d ((Some d%) (join t1 v d% t2)) ((None) (concat t1 t2))))
 
 (defunc split (x arg~26278)
   (match arg~26278
-    ((Empty*) (tuple (make-Empty*) (make-None) (make-Empty*)))
+    ((Empty%) (tuple (make-Empty%) (make-None) (make-Empty%)))
     ((Node :l l :v v :d d :r r)
       (let ((c (funcall compare x v)))
+        (cl:declare (cl:ignorable c))
         (if (= c 0)
           (tuple l (make-Some d) r)
           (if (< c 0)
@@ -19782,8 +20146,8 @@
 
 (defunc merge (f s1 s2)
   (match (tuple s1 s2)
-    ((tuple (Empty*) (Empty*)) (make-Empty*))
-    ((trivia:guard (tuple (Node :l l1 :v v1 :d d1 :r r1 :h h1) _) (>= h1 (height s2)))
+    ((tuple (Empty%) (Empty%)) (make-Empty%))
+    ((guard (tuple (Node :l l1 :v v1 :d d1 :r r1 :h h1) _) (>= h1 (height s2)))
       (match (split v1 s2)
         ((tuple l2 d2 r2)
           (concat_or_join
@@ -19803,37 +20167,40 @@
 
 (defunc union (f s1 s2)
   (match (tuple s1 s2)
-    ((cl:or (tuple (Empty*) s) (tuple s (Empty*))) s)
+    ((cl:or (tuple (Empty%) s) (tuple s (Empty%))) s)
     ((tuple (Node :l l1 :v v1 :d d1 :r r1 :h h1) (Node :l l2 :v v2 :d d2 :r r2 :h h2))
       (if (>= h1 h2)
         (match (split v1 s2)
-          ((tuple l2* d2* r2*)
-            (let ((l (union f l1 l2*)) (r (union f r1 r2*)))
-              (match d2*
+          ((tuple l2% d2% r2%)
+            (let ((l (union f l1 l2%)) (r (union f r1 r2%)))
+              (cl:declare (cl:ignorable l r))
+              (match d2%
                 ((None) (join l v1 d1 r))
                 ((Some d2) (concat_or_join l v1 (funcall f v1 d1 d2) r))))))
         (match (split v2 s1)
-          ((tuple l1* d1* r1*)
-            (let ((l (union f l1* l2)) (r (union f r1* r2)))
-              (match d1*
+          ((tuple l1% d1% r1%)
+            (let ((l (union f l1% l2)) (r (union f r1% r2)))
+              (cl:declare (cl:ignorable l r))
+              (match d1%
                 ((None) (join l v2 d2 r))
                 ((Some d1) (concat_or_join l v2 (funcall f v2 d1 d2) r))))))))))
 
 (defunc filter (p arg~26576)
   (match arg~26576
-    ((Empty*) (make-Empty*))
+    ((Empty%) (make-Empty%))
     ((cl:and m (Node :l l :v v :d d :r r))
-      (let* ((l* (filter p l)) (pvd (funcall p v d)) (r* (filter p r)))
-        (if pvd (if (cl:and (== l l*) (== r r*)) m (join l* v d r*)) (concat l* r*))))))
+      (let* ((l% (filter p l)) (pvd (funcall p v d)) (r% (filter p r)))
+        (cl:declare (cl:ignorable l% pvd r%))
+        (if pvd (if (cl:and (== l l%) (== r r%)) m (join l% v d r%)) (concat l% r%))))))
 
 (defvariant enumeration (End) (More field0 field1 field2 field3))
 
 (defunc cardinal (arg~26631)
-  (match arg~26631 ((Empty*) 0) ((Node :l l :r r) (+ (+ (cardinal l) 1) (cardinal r)))))
+  (match arg~26631 ((Empty%) 0) ((Node :l l :r r) (+ (+ (cardinal l) 1) (cardinal r)))))
 
 (defunc bindings_aux (accu arg~26650)
   (match arg~26650
-    ((Empty*) accu)
+    ((Empty%) accu)
     ((Node :l l :v v :d d :r r)
       (bindings_aux (cl:cons (tuple v d) (bindings_aux accu r)) l))))
 
@@ -19847,27 +20214,27 @@
 
 (defunc singleton (arg~26689)
   (match arg~26689
-    ((tuple k* x) (hol2cl.metis.metis_prover.formula.map.ma:singleton k* x))))
+    ((tuple k% x) (hol2cl.metis.metis_prover.formula.map.ma:singleton k% x))))
 
 (defparameter size #'cardinal)
 
-(defunc get (m k*)
+(defunc get (m k%)
   (handler-case
-    (find k* m)
+    (find k% m)
     (hol2cl.runtime:ocaml-condition
       (exception~26706)
       (match exception~26706
         ((Not_found) (failwith "Mmap.get: element not found"))
         (_ (raise exception~26706))))))
 
-(defunc peek (m k*)
+(defunc peek (m k%)
   (handler-case
-    (make-Some (find k* m))
+    (make-Some (find k% m))
     (hol2cl.runtime:ocaml-condition
       (exception~26718)
       (match exception~26718 ((Not_found) (make-None)) (_ (raise exception~26718))))))
 
-(defunc insert (m arg~26729) (match arg~26729 ((tuple k* v) (add k* v m))))
+(defunc insert (m arg~26729) (match arg~26729 ((tuple k% v) (add k% v m))))
 
 (defparameter toList #'bindings)
 
@@ -19877,10 +20244,10 @@
     l
     empty))
 
-(defunc foldl (f b* m)
+(defunc foldl (f b% m)
   (list-fold-left
     (lambdac (s arg~26766) (match arg~26766 ((tuple v tm) (funcall f (tuple v tm s)))))
-    b*
+    b%
     (bindings m)))
 
 (defparameter foldr #'foldl)
@@ -19893,21 +20260,21 @@
 
 (defunc union (f m1 m2)
   (fletc
-    ((f*
-      (k* arg~26807)
+    ((f%
+      (k% arg~26807)
       (match arg~26807
-        ((tuple (Some x) (Some y)) (funcall f (tuple (tuple k* x) (tuple k* y))))
+        ((tuple (Some x) (Some y)) (funcall f (tuple (tuple k% x) (tuple k% y))))
         ((tuple (Some x) (None)) (make-Some x))
         ((tuple (None) (Some y)) (make-Some y))
         ((tuple (None) (None)) (make-None)))))
-    (merge (lambdac (k* x y) (f* k* (tuple x y))) m1 m2)))
+    (merge (lambdac (k% x y) (f% k% (tuple x y))) m1 m2)))
 
-(defunc delete (m k*) (remove k* m))
+(defunc delete (m k%) (remove k% m))
 
 (defunc mapPartial (f m)
   (fold
-    (lambdac (k* x acc)
-      (match (funcall f (tuple k* x)) ((Some y) (add k* y acc)) ((None) acc)))
+    (lambdac (k% x acc)
+      (match (funcall f (tuple k% x)) ((Some y) (add k% y acc)) ((None) acc)))
     m
     empty))
 
@@ -19915,7 +20282,7 @@
 
 (defunc exists (f)
   (hol2cl.metis.metis_prover.formula.map.ma:exists
-    (lambdac (k* m) (funcall f (tuple k* m)))))
+    (lambdac (k% m) (funcall f (tuple k% m)))))
 
 (in-package :hol2cl.metis.metis_prover.formula)
 
@@ -19923,13 +20290,13 @@
 
 (in-package :hol2cl.metis.metis_prover.formula.set.se)
 
-(defvariant t* (Empty*) (Node (:record l v r h)))
+(defvariant t% (Empty%) (Node (:record l v r h)))
 
 ;; (* Sets are represented by balanced binary trees (the heights of the
 ;;        children differ by at most 2 *)
 
 
-(defunc height (arg~26906) (match arg~26906 ((Empty*) 0) ((Node :h h) h)))
+(defunc height (arg~26906) (match arg~26906 ((Empty%) 0) ((Node :h h) h)))
 
 ;; (* Creates a new node with left son l, value v and right son r.
 ;;        We must have all elements of l < v < all elements of r.
@@ -19939,8 +20306,9 @@
 
 (defunc create (l v r)
   (let*
-    ((hl (match l ((Empty*) 0) ((Node :h h) h)))
-      (hr (match r ((Empty*) 0) ((Node :h h) h))))
+    ((hl (match l ((Empty%) 0) ((Node :h h) h)))
+      (hr (match r ((Empty%) 0) ((Node :h h) h))))
+    (cl:declare (cl:ignorable hl hr))
     (make-Node :l l :v v :r r :h (if (>= hl hr) (+ hl 1) (+ hr 1)))))
 
 ;; (* Same as create, but performs one step of rebalancing if necessary.
@@ -19951,26 +20319,27 @@
 
 (defunc bal (l v r)
   (let*
-    ((hl (match l ((Empty*) 0) ((Node :h h) h)))
-      (hr (match r ((Empty*) 0) ((Node :h h) h))))
+    ((hl (match l ((Empty%) 0) ((Node :h h) h)))
+      (hr (match r ((Empty%) 0) ((Node :h h) h))))
+    (cl:declare (cl:ignorable hl hr))
     (if (> hl (+ hr 2))
       (match l
-        ((Empty*) (invalid-arg "Set.bal"))
+        ((Empty%) (invalid-arg "Set.bal"))
         ((Node :l ll :v lv :r lr)
           (if (>= (height ll) (height lr))
             (create ll lv (create lr v r))
             (match lr
-              ((Empty*) (invalid-arg "Set.bal"))
+              ((Empty%) (invalid-arg "Set.bal"))
               ((Node :l lrl :v lrv :r lrr)
                 (create (create ll lv lrl) lrv (create lrr v r)))))))
       (if (> hr (+ hl 2))
         (match r
-          ((Empty*) (invalid-arg "Set.bal"))
+          ((Empty%) (invalid-arg "Set.bal"))
           ((Node :l rl :v rv :r rr)
             (if (>= (height rr) (height rl))
               (create (create l v rl) rv rr)
               (match rl
-                ((Empty*) (invalid-arg "Set.bal"))
+                ((Empty%) (invalid-arg "Set.bal"))
                 ((Node :l rll :v rlv :r rlr)
                   (create (create l v rll) rlv (create rlr rv rr)))))))
         (make-Node :l l :v v :r r :h (if (>= hl hr) (+ hl 1) (+ hr 1)))))))
@@ -19980,16 +20349,21 @@
 
 (defunc add (x arg~27101)
   (match arg~27101
-    ((Empty*) (make-Node :l (make-Empty*) :v x :r (make-Empty*) :h 1))
-    ((cl:and t* (Node :l l :v v :r r))
+    ((Empty%) (make-Node :l (make-Empty%) :v x :r (make-Empty%) :h 1))
+    ((cl:and t% (Node :l l :v v :r r))
       (let ((c (funcall hol2cl.metis.metis_prover.formula.ordered:compare x v)))
+        (cl:declare (cl:ignorable c))
         (if (= c 0)
-          t*
+          t%
           (if (< c 0)
-            (let ((ll (add x l))) (if (== l ll) t* (bal ll v r)))
-            (let ((rr (add x r))) (if (== r rr) t* (bal l v rr)))))))))
+            (let ((ll (add x l)))
+              (cl:declare (cl:ignorable ll))
+              (if (== l ll) t% (bal ll v r)))
+            (let ((rr (add x r)))
+              (cl:declare (cl:ignorable rr))
+              (if (== r rr) t% (bal l v rr)))))))))
 
-(defunc singleton (x) (make-Node :l (make-Empty*) :v x :r (make-Empty*) :h 1))
+(defunc singleton (x) (make-Node :l (make-Empty%) :v x :r (make-Empty%) :h 1))
 
 ;; (* Beware: those two functions assume that the added v is *strictly*
 ;;        smaller (or bigger) than all the present elements in the tree; it
@@ -20001,12 +20375,12 @@
 
 (defunc add_min_element (x arg~27172)
   (match arg~27172
-    ((Empty*) (singleton x))
+    ((Empty%) (singleton x))
     ((Node :l l :v v :r r) (bal (add_min_element x l) v r))))
 
 (defunc add_max_element (x arg~27193)
   (match arg~27193
-    ((Empty*) (singleton x))
+    ((Empty%) (singleton x))
     ((Node :l l :v v :r r) (bal l v (add_max_element x r)))))
 
 ;; (* Same as create and bal, but no assumptions are made on the
@@ -20015,8 +20389,8 @@
 
 (defunc join (l v r)
   (match (tuple l r)
-    ((tuple (Empty*) _) (add_min_element v r))
-    ((tuple _ (Empty*)) (add_max_element v l))
+    ((tuple (Empty%) _) (add_min_element v r))
+    ((tuple _ (Empty%)) (add_max_element v l))
     ((tuple (Node :l ll :v lv :r lr :h lh) (Node :l rl :v rv :r rr :h rh))
       (if (> lh (+ rh 2))
         (bal ll lv (join lr v r))
@@ -20027,8 +20401,8 @@
 
 (defunc min_elt (arg~27283)
   (match arg~27283
-    ((Empty*) (raise (make-Not_found)))
-    ((Node :l (Empty*) :v v) v)
+    ((Empty%) (raise (make-Not_found)))
+    ((Node :l (Empty%) :v v) v)
     ((Node :l l) (min_elt l))))
 
 ;; (* Remove the smallest element of the given set *)
@@ -20036,8 +20410,8 @@
 
 (defunc remove_min_elt (arg~27300)
   (match arg~27300
-    ((Empty*) (invalid-arg "Set.remove_min_elt"))
-    ((Node :l (Empty*) :r r) r)
+    ((Empty%) (invalid-arg "Set.remove_min_elt"))
+    ((Node :l (Empty%) :r r) r)
     ((Node :l l :v v :r r) (bal (remove_min_elt l) v r))))
 
 ;; (* Merge two trees l and r into one.
@@ -20047,8 +20421,8 @@
 
 (defunc merge (t1 t2)
   (match (tuple t1 t2)
-    ((tuple (Empty*) t*) t*)
-    ((tuple t* (Empty*)) t*)
+    ((tuple (Empty%) t%) t%)
+    ((tuple t% (Empty%)) t%)
     ((tuple _ _) (bal t1 (min_elt t2) (remove_min_elt t2)))))
 
 ;; (* Merge two trees l and r into one.
@@ -20058,8 +20432,8 @@
 
 (defunc concat (t1 t2)
   (match (tuple t1 t2)
-    ((tuple (Empty*) t*) t*)
-    ((tuple t* (Empty*)) t*)
+    ((tuple (Empty%) t%) t%)
+    ((tuple t% (Empty%)) t%)
     ((tuple _ _) (join t1 (min_elt t2) (remove_min_elt t2)))))
 
 ;; (* Splitting.  split x s returns a triple (l, present, r) where
@@ -20071,9 +20445,10 @@
 
 (defunc split (x arg~27379)
   (match arg~27379
-    ((Empty*) (tuple (make-Empty*) cl:nil (make-Empty*)))
+    ((Empty%) (tuple (make-Empty%) cl:nil (make-Empty%)))
     ((Node :l l :v v :r r)
       (let ((c (funcall hol2cl.metis.metis_prover.formula.ordered:compare x v)))
+        (cl:declare (cl:ignorable c))
         (if (= c 0)
           (tuple l cl:t r)
           (if (< c 0)
@@ -20083,47 +20458,53 @@
 ;; (* Implementation of the set operations *)
 
 
-(defparameter empty (make-Empty*))
+(defparameter empty (make-Empty%))
 
-(defunc is_empty (arg~27451) (match arg~27451 ((Empty*) cl:t) (_ cl:nil)))
+(defunc is_empty (arg~27451) (match arg~27451 ((Empty%) cl:t) (_ cl:nil)))
 
 (defunc mem (x arg~27460)
   (match arg~27460
-    ((Empty*) cl:nil)
+    ((Empty%) cl:nil)
     ((Node :l l :v v :r r)
       (let ((c (funcall hol2cl.metis.metis_prover.formula.ordered:compare x v)))
+        (cl:declare (cl:ignorable c))
         (cl:or (= c 0) (mem x (if (< c 0) l r)))))))
 
 (defunc remove (x arg~27491)
   (match arg~27491
-    ((Empty*) (make-Empty*))
-    ((cl:and t* (Node :l l :v v :r r))
+    ((Empty%) (make-Empty%))
+    ((cl:and t% (Node :l l :v v :r r))
       (let ((c (funcall hol2cl.metis.metis_prover.formula.ordered:compare x v)))
+        (cl:declare (cl:ignorable c))
         (if (= c 0)
           (merge l r)
           (if (< c 0)
-            (let ((ll (remove x l))) (if (== l ll) t* (bal ll v r)))
-            (let ((rr (remove x r))) (if (== r rr) t* (bal l v rr)))))))))
+            (let ((ll (remove x l)))
+              (cl:declare (cl:ignorable ll))
+              (if (== l ll) t% (bal ll v r)))
+            (let ((rr (remove x r)))
+              (cl:declare (cl:ignorable rr))
+              (if (== r rr) t% (bal l v rr)))))))))
 
 (defunc union (s1 s2)
   (match (tuple s1 s2)
-    ((tuple (Empty*) t2) t2)
-    ((tuple t1 (Empty*)) t1)
+    ((tuple (Empty%) t2) t2)
+    ((tuple t1 (Empty%)) t1)
     ((tuple (Node :l l1 :v v1 :r r1 :h h1) (Node :l l2 :v v2 :r r2 :h h2))
       (if (>= h1 h2)
         (if (= h2 1)
           (add v2 s1)
           (match (split v1 s2)
-            ((tuple l2* _ r2*) (join (union l1 l2*) v1 (union r1 r2*)))))
+            ((tuple l2% _ r2%) (join (union l1 l2%) v1 (union r1 r2%)))))
         (if (= h1 1)
           (add v1 s2)
           (match (split v2 s1)
-            ((tuple l1* _ r1*) (join (union l1* l2) v2 (union r1* r2)))))))))
+            ((tuple l1% _ r1%) (join (union l1% l2) v2 (union r1% r2)))))))))
 
 (defunc inter (s1 s2)
   (match (tuple s1 s2)
-    ((tuple (Empty*) _) (make-Empty*))
-    ((tuple _ (Empty*)) (make-Empty*))
+    ((tuple (Empty%) _) (make-Empty%))
+    ((tuple _ (Empty%)) (make-Empty%))
     ((tuple (Node :l l1 :v v1 :r r1) t2)
       (match (split v1 t2)
         ((tuple l2 cl:nil r2) (concat (inter l1 l2) (inter r1 r2)))
@@ -20133,8 +20514,8 @@
 
 (defunc diff (s1 s2)
   (match (tuple s1 s2)
-    ((tuple (Empty*) _) (make-Empty*))
-    ((tuple t1 (Empty*)) t1)
+    ((tuple (Empty%) _) (make-Empty%))
+    ((tuple t1 (Empty%)) t1)
     ((tuple (Node :l l1 :v v1 :r r1) t2)
       (match (split v1 t2)
         ((tuple l2 cl:nil r2) (join (diff l1 l2) v1 (diff r1 r2)))
@@ -20143,16 +20524,17 @@
 (defvariant enumeration (End) (More field0 field1 field2))
 
 (defunc cons_enum (s e)
-  (match s ((Empty*) e) ((Node :l l :v v :r r) (cons_enum l (make-More v r e)))))
+  (match s ((Empty%) e) ((Node :l l :v v :r r) (cons_enum l (make-More v r e)))))
 
 (defunc compare_aux (e1 e2)
   (match (tuple e1 e2)
     ((tuple (End) (End)) 0)
     ((tuple (End) _) (- 1))
     ((tuple _ (End)) 1)
-    ((tuple (More v1 r1 e1*) (More v2 r2 e2*))
+    ((tuple (More v1 r1 e1%) (More v2 r2 e2%))
       (let ((c (funcall hol2cl.metis.metis_prover.formula.ordered:compare v1 v2)))
-        (if (<> c 0) c (compare_aux (cons_enum r1 e1*) (cons_enum r2 e2*)))))))
+        (cl:declare (cl:ignorable c))
+        (if (<> c 0) c (compare_aux (cons_enum r1 e1%) (cons_enum r2 e2%)))))))
 
 (defunc compare (s1 s2) (compare_aux (cons_enum s1 (make-End)) (cons_enum s2 (make-End))))
 
@@ -20160,41 +20542,42 @@
 
 (defunc subset (s1 s2)
   (match (tuple s1 s2)
-    ((tuple (Empty*) _) cl:t)
-    ((tuple _ (Empty*)) cl:nil)
+    ((tuple (Empty%) _) cl:t)
+    ((tuple _ (Empty%)) cl:nil)
     ((tuple (Node :l l1 :v v1 :r r1) (cl:and t2 (Node :l l2 :v v2 :r r2)))
       (let ((c (funcall hol2cl.metis.metis_prover.formula.ordered:compare v1 v2)))
+        (cl:declare (cl:ignorable c))
         (if (= c 0)
           (cl:and (subset l1 l2) (subset r1 r2))
           (if (< c 0)
             (cl:and
-              (subset (make-Node :l l1 :v v1 :r (make-Empty*) :h 0) l2)
+              (subset (make-Node :l l1 :v v1 :r (make-Empty%) :h 0) l2)
               (subset r1 t2))
             (cl:and
-              (subset (make-Node :l (make-Empty*) :v v1 :r r1 :h 0) r2)
+              (subset (make-Node :l (make-Empty%) :v v1 :r r1 :h 0) r2)
               (subset l1 t2))))))))
 
 (defunc fold (f s accu)
   (match s
-    ((Empty*) accu)
+    ((Empty%) accu)
     ((Node :l l :v v :r r) (fold f r (funcall f v (fold f l accu))))))
 
 (defunc for_all (p arg~27959)
   (match arg~27959
-    ((Empty*) cl:t)
+    ((Empty%) cl:t)
     ((Node :l l :v v :r r) (cl:and (funcall p v) (cl:and (for_all p l) (for_all p r))))))
 
 (defunc exists (p arg~27983)
   (match arg~27983
-    ((Empty*) cl:nil)
+    ((Empty%) cl:nil)
     ((Node :l l :v v :r r) (cl:or (funcall p v) (cl:or (exists p l) (exists p r))))))
 
 (defunc cardinal (arg~28006)
-  (match arg~28006 ((Empty*) 0) ((Node :l l :r r) (+ (+ (cardinal l) 1) (cardinal r)))))
+  (match arg~28006 ((Empty%) 0) ((Node :l l :r r) (+ (+ (cardinal l) 1) (cardinal r)))))
 
 (defunc elements_aux (accu arg~28025)
   (match arg~28025
-    ((Empty*) accu)
+    ((Empty%) accu)
     ((Node :l l :v v :r r) (elements_aux (cl:cons v (elements_aux accu r)) l))))
 
 (defunc elements (s) (elements_aux nil s))
@@ -20207,7 +20590,7 @@
 
 (defunc add (s x) (hol2cl.metis.metis_prover.formula.set.se:add x s))
 
-(defunc foldr (f a* s) (fold (lambdac (x acc) (funcall f (tuple x acc))) s a*))
+(defunc foldr (f a% s) (fold (lambdac (x acc) (funcall f (tuple x acc))) s a%))
 
 (defparameter foldl #'foldr)
 
@@ -20250,25 +20633,25 @@
     (nil hol2cl.metis.metis_prover.formula.set.se:empty)
     ((cl:cons s ss) (list-fold-right #'inter ss s))))
 
-(defunc findl (p* s)
+(defunc findl (p% s)
   (fletc
     ((go
       (x arg~28154)
       (match arg~28154
-        ((cl:and s* (Some _)) s*)
-        ((None) (if (funcall p* x) (make-Some x) (make-None))))))
+        ((cl:and s% (Some _)) s%)
+        ((None) (if (funcall p% x) (make-Some x) (make-None))))))
     (fold #'go s (make-None))))
 
 (defunc firstl (f s)
   (fletc
-    ((go (x arg~28180) (match arg~28180 ((cl:and s* (Some _)) s*) ((None) (funcall f x)))))
+    ((go (x arg~28180) (match arg~28180 ((cl:and s% (Some _)) s%) ((None) (funcall f x)))))
     (fold #'go s (make-None))))
 
 (defunc transform (f s) (fold (lambdac (x acc) (cl:cons (funcall f x) acc)) s nil))
 
 (defparameter all #'for_all)
 
-(defunc count (p* s) (fold (lambdac (x c*) (if (funcall p* x) (+ c* 1) c*)) s 0))
+(defunc count (p% s) (fold (lambdac (x c%) (if (funcall p% x) (+ c% 1) c%)) s 0))
 
 (in-package :hol2cl.metis.metis_prover.formula)
 
@@ -20309,14 +20692,14 @@
 
 (defunc mkBinop (rel arg~28311)
   (match arg~28311
-    ((tuple pol a* b*)
-      (tuple pol (hol2cl.metis.metis_prover.atom:mkBinop rel (tuple a* b*))))))
+    ((tuple pol a% b%)
+      (tuple pol (hol2cl.metis.metis_prover.atom:mkBinop rel (tuple a% b%))))))
 
 (defunc destBinop (rel arg~28330)
   (match arg~28330
     ((tuple pol atm)
       (match (hol2cl.metis.metis_prover.atom:destBinop rel atm)
-        ((tuple a* b*) (tuple pol a* b*))))))
+        ((tuple a% b%) (tuple pol a% b%))))))
 
 (defunc isBinop (rel) (can (destBinop rel)))
 
@@ -20371,8 +20754,9 @@
 (defunc replace (arg~28447 path_tm)
   (match arg~28447
     ((cl:and lit (tuple pol atm))
-      (let ((atm* (hol2cl.metis.metis_prover.atom:replace atm path_tm)))
-        (if (== atm atm*) lit (tuple pol atm*))))))
+      (let ((atm% (hol2cl.metis.metis_prover.atom:replace atm path_tm)))
+        (cl:declare (cl:ignorable atm%))
+        (if (== atm atm%) lit (tuple pol atm%))))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Free variables.                                                           *)
@@ -20391,8 +20775,9 @@
 (defunc subst (sub arg~28488)
   (match arg~28488
     ((cl:and lit (tuple pol atm))
-      (let ((atm* (hol2cl.metis.metis_prover.atom:subst sub atm)))
-        (if (== atm* atm) lit (tuple pol atm*))))))
+      (let ((atm% (hol2cl.metis.metis_prover.atom:subst sub atm)))
+        (cl:declare (cl:ignorable atm%))
+        (if (== atm% atm) lit (tuple pol atm%))))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Matching.                                                                 *)
@@ -20500,114 +20885,131 @@
 
 (in-package :hol2cl.metis.metis_prover.literal.map.ma)
 
-(defvariant t* (Empty*) (Node (:record l v d r h)))
+(defvariant t% (Empty%) (Node (:record l v d r h)))
 
-(defunc height (arg~28742) (match arg~28742 ((Empty*) 0) ((Node :h h) h)))
+(defunc height (arg~28742) (match arg~28742 ((Empty%) 0) ((Node :h h) h)))
 
 (defunc create (l x d r)
   (let ((hl (height l)) (hr (height r)))
+    (cl:declare (cl:ignorable hl hr))
     (make-Node :l l :v x :d d :r r :h (if (>= hl hr) (+ hl 1) (+ hr 1)))))
 
-(defunc singleton (x d) (make-Node :l (make-Empty*) :v x :d d :r (make-Empty*) :h 1))
+(defunc singleton (x d) (make-Node :l (make-Empty%) :v x :d d :r (make-Empty%) :h 1))
 
 (defunc bal (l x d r)
   (let*
-    ((hl (match l ((Empty*) 0) ((Node :h h) h)))
-      (hr (match r ((Empty*) 0) ((Node :h h) h))))
+    ((hl (match l ((Empty%) 0) ((Node :h h) h)))
+      (hr (match r ((Empty%) 0) ((Node :h h) h))))
+    (cl:declare (cl:ignorable hl hr))
     (if (> hl (+ hr 2))
       (match l
-        ((Empty*) (invalid-arg "Map.bal"))
+        ((Empty%) (invalid-arg "Map.bal"))
         ((Node :l ll :v lv :d ld :r lr)
           (if (>= (height ll) (height lr))
             (create ll lv ld (create lr x d r))
             (match lr
-              ((Empty*) (invalid-arg "Map.bal"))
+              ((Empty%) (invalid-arg "Map.bal"))
               ((Node :l lrl :v lrv :d lrd :r lrr)
                 (create (create ll lv ld lrl) lrv lrd (create lrr x d r)))))))
       (if (> hr (+ hl 2))
         (match r
-          ((Empty*) (invalid-arg "Map.bal"))
+          ((Empty%) (invalid-arg "Map.bal"))
           ((Node :l rl :v rv :d rd :r rr)
             (if (>= (height rr) (height rl))
               (create (create l x d rl) rv rd rr)
               (match rl
-                ((Empty*) (invalid-arg "Map.bal"))
+                ((Empty%) (invalid-arg "Map.bal"))
                 ((Node :l rll :v rlv :d rld :r rlr)
                   (create (create l x d rll) rlv rld (create rlr rv rd rr)))))))
         (make-Node :l l :v x :d d :r r :h (if (>= hl hr) (+ hl 1) (+ hr 1)))))))
 
-(defparameter empty (make-Empty*))
+(defparameter empty (make-Empty%))
 
-(defunc is_empty (arg~28958) (match arg~28958 ((Empty*) cl:t) (_ cl:nil)))
+(defunc is_empty (arg~28958) (match arg~28958 ((Empty%) cl:t) (_ cl:nil)))
 
 (defunc add (x data arg~28968)
   (match arg~28968
-    ((Empty*) (make-Node :l (make-Empty*) :v x :d data :r (make-Empty*) :h 1))
+    ((Empty%) (make-Node :l (make-Empty%) :v x :d data :r (make-Empty%) :h 1))
     ((cl:and m (Node :l l :v v :d d :r r :h h))
       (let ((c (funcall compare x v)))
+        (cl:declare (cl:ignorable c))
         (if (= c 0)
           (if (== d data) m (make-Node :l l :v x :d data :r r :h h))
           (if (< c 0)
-            (let ((ll (add x data l))) (if (== l ll) m (bal ll v d r)))
-            (let ((rr (add x data r))) (if (== r rr) m (bal l v d rr)))))))))
+            (let ((ll (add x data l)))
+              (cl:declare (cl:ignorable ll))
+              (if (== l ll) m (bal ll v d r)))
+            (let ((rr (add x data r)))
+              (cl:declare (cl:ignorable rr))
+              (if (== r rr) m (bal l v d rr)))))))))
 
 (defunc find (x arg~29050)
   (match arg~29050
-    ((Empty*) (raise (make-Not_found)))
+    ((Empty%) (raise (make-Not_found)))
     ((Node :l l :v v :d d :r r)
-      (let ((c (funcall compare x v))) (if (= c 0) d (find x (if (< c 0) l r)))))))
+      (let ((c (funcall compare x v)))
+        (cl:declare (cl:ignorable c))
+        (if (= c 0) d (find x (if (< c 0) l r)))))))
 
 (defunc mem (x arg~29085)
   (match arg~29085
-    ((Empty*) cl:nil)
+    ((Empty%) cl:nil)
     ((Node :l l :v v :r r)
-      (let ((c (funcall compare x v))) (cl:or (= c 0) (mem x (if (< c 0) l r)))))))
+      (let ((c (funcall compare x v)))
+        (cl:declare (cl:ignorable c))
+        (cl:or (= c 0) (mem x (if (< c 0) l r)))))))
 
 (defunc min_binding (arg~29115)
   (match arg~29115
-    ((Empty*) (raise (make-Not_found)))
-    ((Node :l (Empty*) :v v :d d) (tuple v d))
+    ((Empty%) (raise (make-Not_found)))
+    ((Node :l (Empty%) :v v :d d) (tuple v d))
     ((Node :l l) (min_binding l))))
 
 (defunc remove_min_binding (arg~29136)
   (match arg~29136
-    ((Empty*) (invalid-arg "Map.remove_min_elt"))
-    ((Node :l (Empty*) :r r) r)
+    ((Empty%) (invalid-arg "Map.remove_min_elt"))
+    ((Node :l (Empty%) :r r) r)
     ((Node :l l :v v :d d :r r) (bal (remove_min_binding l) v d r))))
 
 (defunc merge~1 (t1 t2)
   (match (tuple t1 t2)
-    ((tuple (Empty*) t*) t*)
-    ((tuple t* (Empty*)) t*)
+    ((tuple (Empty%) t%) t%)
+    ((tuple t% (Empty%)) t%)
     ((tuple _ _)
       (match (min_binding t2) ((tuple x d) (bal t1 x d (remove_min_binding t2)))))))
 
 (defunc remove (x arg~29199)
   (match arg~29199
-    ((Empty*) (make-Empty*))
+    ((Empty%) (make-Empty%))
     ((cl:and m (Node :l l :v v :d d :r r))
       (let ((c (funcall compare x v)))
+        (cl:declare (cl:ignorable c))
         (if (= c 0)
           (merge~1 l r)
           (if (< c 0)
-            (let ((ll (remove x l))) (if (== l ll) m (bal ll v d r)))
-            (let ((rr (remove x r))) (if (== r rr) m (bal l v d rr)))))))))
+            (let ((ll (remove x l)))
+              (cl:declare (cl:ignorable ll))
+              (if (== l ll) m (bal ll v d r)))
+            (let ((rr (remove x r)))
+              (cl:declare (cl:ignorable rr))
+              (if (== r rr) m (bal l v d rr)))))))))
 
 (defunc map (f arg~29264)
   (match arg~29264
-    ((Empty*) (make-Empty*))
+    ((Empty%) (make-Empty%))
     ((Node :l l :v v :d d :r r :h h)
-      (let* ((l* (map f l)) (d* (funcall f d)) (r* (map f r)))
-        (make-Node :l l* :v v :d d* :r r* :h h)))))
+      (let* ((l% (map f l)) (d% (funcall f d)) (r% (map f r)))
+        (cl:declare (cl:ignorable l% d% r%))
+        (make-Node :l l% :v v :d d% :r r% :h h)))))
 
 (defunc fold (f m accu)
   (match m
-    ((Empty*) accu)
+    ((Empty%) accu)
     ((Node :l l :v v :d d :r r) (fold f r (funcall f v d (fold f l accu))))))
 
 (defunc exists (p arg~29330)
   (match arg~29330
-    ((Empty*) cl:nil)
+    ((Empty%) cl:nil)
     ((Node :l l :v v :d d :r r) (cl:or (funcall p v d) (cl:or (exists p l) (exists p r))))))
 
 ;; (* Beware: those two functions assume that the added k is *strictly*
@@ -20621,12 +21023,12 @@
 
 (defunc add_min_binding (k x arg~29358)
   (match arg~29358
-    ((Empty*) (singleton k x))
+    ((Empty%) (singleton k x))
     ((Node :l l :v v :d d :r r) (bal (add_min_binding k x l) v d r))))
 
 (defunc add_max_binding (k x arg~29385)
   (match arg~29385
-    ((Empty*) (singleton k x))
+    ((Empty%) (singleton k x))
     ((Node :l l :v v :d d :r r) (bal l v d (add_max_binding k x r)))))
 
 ;; (* Same as create and bal, but no assumptions are made on the
@@ -20635,8 +21037,8 @@
 
 (defunc join (l v d r)
   (match (tuple l r)
-    ((tuple (Empty*) _) (add_min_binding v d r))
-    ((tuple _ (Empty*)) (add_max_binding v d l))
+    ((tuple (Empty%) _) (add_min_binding v d r))
+    ((tuple _ (Empty%)) (add_max_binding v d l))
     ((tuple (Node :l ll :v lv :d ld :r lr :h lh) (Node :l rl :v rv :d rd :r rr :h rh))
       (if (> lh (+ rh 2))
         (bal ll lv ld (join lr v d r))
@@ -20649,19 +21051,20 @@
 
 (defunc concat (t1 t2)
   (match (tuple t1 t2)
-    ((tuple (Empty*) t*) t*)
-    ((tuple t* (Empty*)) t*)
+    ((tuple (Empty%) t%) t%)
+    ((tuple t% (Empty%)) t%)
     ((tuple _ _)
       (match (min_binding t2) ((tuple x d) (join t1 x d (remove_min_binding t2)))))))
 
 (defunc concat_or_join (t1 v d t2)
-  (match d ((Some d*) (join t1 v d* t2)) ((None) (concat t1 t2))))
+  (match d ((Some d%) (join t1 v d% t2)) ((None) (concat t1 t2))))
 
 (defunc split (x arg~29548)
   (match arg~29548
-    ((Empty*) (tuple (make-Empty*) (make-None) (make-Empty*)))
+    ((Empty%) (tuple (make-Empty%) (make-None) (make-Empty%)))
     ((Node :l l :v v :d d :r r)
       (let ((c (funcall compare x v)))
+        (cl:declare (cl:ignorable c))
         (if (= c 0)
           (tuple l (make-Some d) r)
           (if (< c 0)
@@ -20670,8 +21073,8 @@
 
 (defunc merge (f s1 s2)
   (match (tuple s1 s2)
-    ((tuple (Empty*) (Empty*)) (make-Empty*))
-    ((trivia:guard (tuple (Node :l l1 :v v1 :d d1 :r r1 :h h1) _) (>= h1 (height s2)))
+    ((tuple (Empty%) (Empty%)) (make-Empty%))
+    ((guard (tuple (Node :l l1 :v v1 :d d1 :r r1 :h h1) _) (>= h1 (height s2)))
       (match (split v1 s2)
         ((tuple l2 d2 r2)
           (concat_or_join
@@ -20691,37 +21094,40 @@
 
 (defunc union (f s1 s2)
   (match (tuple s1 s2)
-    ((cl:or (tuple (Empty*) s) (tuple s (Empty*))) s)
+    ((cl:or (tuple (Empty%) s) (tuple s (Empty%))) s)
     ((tuple (Node :l l1 :v v1 :d d1 :r r1 :h h1) (Node :l l2 :v v2 :d d2 :r r2 :h h2))
       (if (>= h1 h2)
         (match (split v1 s2)
-          ((tuple l2* d2* r2*)
-            (let ((l (union f l1 l2*)) (r (union f r1 r2*)))
-              (match d2*
+          ((tuple l2% d2% r2%)
+            (let ((l (union f l1 l2%)) (r (union f r1 r2%)))
+              (cl:declare (cl:ignorable l r))
+              (match d2%
                 ((None) (join l v1 d1 r))
                 ((Some d2) (concat_or_join l v1 (funcall f v1 d1 d2) r))))))
         (match (split v2 s1)
-          ((tuple l1* d1* r1*)
-            (let ((l (union f l1* l2)) (r (union f r1* r2)))
-              (match d1*
+          ((tuple l1% d1% r1%)
+            (let ((l (union f l1% l2)) (r (union f r1% r2)))
+              (cl:declare (cl:ignorable l r))
+              (match d1%
                 ((None) (join l v2 d2 r))
                 ((Some d1) (concat_or_join l v2 (funcall f v2 d1 d2) r))))))))))
 
 (defunc filter (p arg~29846)
   (match arg~29846
-    ((Empty*) (make-Empty*))
+    ((Empty%) (make-Empty%))
     ((cl:and m (Node :l l :v v :d d :r r))
-      (let* ((l* (filter p l)) (pvd (funcall p v d)) (r* (filter p r)))
-        (if pvd (if (cl:and (== l l*) (== r r*)) m (join l* v d r*)) (concat l* r*))))))
+      (let* ((l% (filter p l)) (pvd (funcall p v d)) (r% (filter p r)))
+        (cl:declare (cl:ignorable l% pvd r%))
+        (if pvd (if (cl:and (== l l%) (== r r%)) m (join l% v d r%)) (concat l% r%))))))
 
 (defvariant enumeration (End) (More field0 field1 field2 field3))
 
 (defunc cardinal (arg~29901)
-  (match arg~29901 ((Empty*) 0) ((Node :l l :r r) (+ (+ (cardinal l) 1) (cardinal r)))))
+  (match arg~29901 ((Empty%) 0) ((Node :l l :r r) (+ (+ (cardinal l) 1) (cardinal r)))))
 
 (defunc bindings_aux (accu arg~29920)
   (match arg~29920
-    ((Empty*) accu)
+    ((Empty%) accu)
     ((Node :l l :v v :d d :r r)
       (bindings_aux (cl:cons (tuple v d) (bindings_aux accu r)) l))))
 
@@ -20735,27 +21141,27 @@
 
 (defunc singleton (arg~29959)
   (match arg~29959
-    ((tuple k* x) (hol2cl.metis.metis_prover.literal.map.ma:singleton k* x))))
+    ((tuple k% x) (hol2cl.metis.metis_prover.literal.map.ma:singleton k% x))))
 
 (defparameter size #'cardinal)
 
-(defunc get (m k*)
+(defunc get (m k%)
   (handler-case
-    (find k* m)
+    (find k% m)
     (hol2cl.runtime:ocaml-condition
       (exception~29976)
       (match exception~29976
         ((Not_found) (failwith "Mmap.get: element not found"))
         (_ (raise exception~29976))))))
 
-(defunc peek (m k*)
+(defunc peek (m k%)
   (handler-case
-    (make-Some (find k* m))
+    (make-Some (find k% m))
     (hol2cl.runtime:ocaml-condition
       (exception~29988)
       (match exception~29988 ((Not_found) (make-None)) (_ (raise exception~29988))))))
 
-(defunc insert (m arg~29999) (match arg~29999 ((tuple k* v) (add k* v m))))
+(defunc insert (m arg~29999) (match arg~29999 ((tuple k% v) (add k% v m))))
 
 (defparameter toList #'bindings)
 
@@ -20765,10 +21171,10 @@
     l
     empty))
 
-(defunc foldl (f b* m)
+(defunc foldl (f b% m)
   (list-fold-left
     (lambdac (s arg~30036) (match arg~30036 ((tuple v tm) (funcall f (tuple v tm s)))))
-    b*
+    b%
     (bindings m)))
 
 (defparameter foldr #'foldl)
@@ -20781,21 +21187,21 @@
 
 (defunc union (f m1 m2)
   (fletc
-    ((f*
-      (k* arg~30077)
+    ((f%
+      (k% arg~30077)
       (match arg~30077
-        ((tuple (Some x) (Some y)) (funcall f (tuple (tuple k* x) (tuple k* y))))
+        ((tuple (Some x) (Some y)) (funcall f (tuple (tuple k% x) (tuple k% y))))
         ((tuple (Some x) (None)) (make-Some x))
         ((tuple (None) (Some y)) (make-Some y))
         ((tuple (None) (None)) (make-None)))))
-    (merge (lambdac (k* x y) (f* k* (tuple x y))) m1 m2)))
+    (merge (lambdac (k% x y) (f% k% (tuple x y))) m1 m2)))
 
-(defunc delete (m k*) (remove k* m))
+(defunc delete (m k%) (remove k% m))
 
 (defunc mapPartial (f m)
   (fold
-    (lambdac (k* x acc)
-      (match (funcall f (tuple k* x)) ((Some y) (add k* y acc)) ((None) acc)))
+    (lambdac (k% x acc)
+      (match (funcall f (tuple k% x)) ((Some y) (add k% y acc)) ((None) acc)))
     m
     empty))
 
@@ -20803,7 +21209,7 @@
 
 (defunc exists (f)
   (hol2cl.metis.metis_prover.literal.map.ma:exists
-    (lambdac (k* m) (funcall f (tuple k* m)))))
+    (lambdac (k% m) (funcall f (tuple k% m)))))
 
 (in-package :hol2cl.metis.metis_prover.literal)
 
@@ -20813,13 +21219,13 @@
 
 (in-package :hol2cl.metis.metis_prover.literal.set.include~30172.se)
 
-(defvariant t* (Empty*) (Node (:record l v r h)))
+(defvariant t% (Empty%) (Node (:record l v r h)))
 
 ;; (* Sets are represented by balanced binary trees (the heights of the
 ;;        children differ by at most 2 *)
 
 
-(defunc height (arg~30177) (match arg~30177 ((Empty*) 0) ((Node :h h) h)))
+(defunc height (arg~30177) (match arg~30177 ((Empty%) 0) ((Node :h h) h)))
 
 ;; (* Creates a new node with left son l, value v and right son r.
 ;;        We must have all elements of l < v < all elements of r.
@@ -20829,8 +21235,9 @@
 
 (defunc create (l v r)
   (let*
-    ((hl (match l ((Empty*) 0) ((Node :h h) h)))
-      (hr (match r ((Empty*) 0) ((Node :h h) h))))
+    ((hl (match l ((Empty%) 0) ((Node :h h) h)))
+      (hr (match r ((Empty%) 0) ((Node :h h) h))))
+    (cl:declare (cl:ignorable hl hr))
     (make-Node :l l :v v :r r :h (if (>= hl hr) (+ hl 1) (+ hr 1)))))
 
 ;; (* Same as create, but performs one step of rebalancing if necessary.
@@ -20841,26 +21248,27 @@
 
 (defunc bal (l v r)
   (let*
-    ((hl (match l ((Empty*) 0) ((Node :h h) h)))
-      (hr (match r ((Empty*) 0) ((Node :h h) h))))
+    ((hl (match l ((Empty%) 0) ((Node :h h) h)))
+      (hr (match r ((Empty%) 0) ((Node :h h) h))))
+    (cl:declare (cl:ignorable hl hr))
     (if (> hl (+ hr 2))
       (match l
-        ((Empty*) (invalid-arg "Set.bal"))
+        ((Empty%) (invalid-arg "Set.bal"))
         ((Node :l ll :v lv :r lr)
           (if (>= (height ll) (height lr))
             (create ll lv (create lr v r))
             (match lr
-              ((Empty*) (invalid-arg "Set.bal"))
+              ((Empty%) (invalid-arg "Set.bal"))
               ((Node :l lrl :v lrv :r lrr)
                 (create (create ll lv lrl) lrv (create lrr v r)))))))
       (if (> hr (+ hl 2))
         (match r
-          ((Empty*) (invalid-arg "Set.bal"))
+          ((Empty%) (invalid-arg "Set.bal"))
           ((Node :l rl :v rv :r rr)
             (if (>= (height rr) (height rl))
               (create (create l v rl) rv rr)
               (match rl
-                ((Empty*) (invalid-arg "Set.bal"))
+                ((Empty%) (invalid-arg "Set.bal"))
                 ((Node :l rll :v rlv :r rlr)
                   (create (create l v rll) rlv (create rlr rv rr)))))))
         (make-Node :l l :v v :r r :h (if (>= hl hr) (+ hl 1) (+ hr 1)))))))
@@ -20870,16 +21278,21 @@
 
 (defunc add (x arg~30372)
   (match arg~30372
-    ((Empty*) (make-Node :l (make-Empty*) :v x :r (make-Empty*) :h 1))
-    ((cl:and t* (Node :l l :v v :r r))
+    ((Empty%) (make-Node :l (make-Empty%) :v x :r (make-Empty%) :h 1))
+    ((cl:and t% (Node :l l :v v :r r))
       (let ((c (funcall hol2cl.metis.metis_prover.literal.ordered:compare x v)))
+        (cl:declare (cl:ignorable c))
         (if (= c 0)
-          t*
+          t%
           (if (< c 0)
-            (let ((ll (add x l))) (if (== l ll) t* (bal ll v r)))
-            (let ((rr (add x r))) (if (== r rr) t* (bal l v rr)))))))))
+            (let ((ll (add x l)))
+              (cl:declare (cl:ignorable ll))
+              (if (== l ll) t% (bal ll v r)))
+            (let ((rr (add x r)))
+              (cl:declare (cl:ignorable rr))
+              (if (== r rr) t% (bal l v rr)))))))))
 
-(defunc singleton (x) (make-Node :l (make-Empty*) :v x :r (make-Empty*) :h 1))
+(defunc singleton (x) (make-Node :l (make-Empty%) :v x :r (make-Empty%) :h 1))
 
 ;; (* Beware: those two functions assume that the added v is *strictly*
 ;;        smaller (or bigger) than all the present elements in the tree; it
@@ -20891,12 +21304,12 @@
 
 (defunc add_min_element (x arg~30443)
   (match arg~30443
-    ((Empty*) (singleton x))
+    ((Empty%) (singleton x))
     ((Node :l l :v v :r r) (bal (add_min_element x l) v r))))
 
 (defunc add_max_element (x arg~30464)
   (match arg~30464
-    ((Empty*) (singleton x))
+    ((Empty%) (singleton x))
     ((Node :l l :v v :r r) (bal l v (add_max_element x r)))))
 
 ;; (* Same as create and bal, but no assumptions are made on the
@@ -20905,8 +21318,8 @@
 
 (defunc join (l v r)
   (match (tuple l r)
-    ((tuple (Empty*) _) (add_min_element v r))
-    ((tuple _ (Empty*)) (add_max_element v l))
+    ((tuple (Empty%) _) (add_min_element v r))
+    ((tuple _ (Empty%)) (add_max_element v l))
     ((tuple (Node :l ll :v lv :r lr :h lh) (Node :l rl :v rv :r rr :h rh))
       (if (> lh (+ rh 2))
         (bal ll lv (join lr v r))
@@ -20917,8 +21330,8 @@
 
 (defunc min_elt (arg~30554)
   (match arg~30554
-    ((Empty*) (raise (make-Not_found)))
-    ((Node :l (Empty*) :v v) v)
+    ((Empty%) (raise (make-Not_found)))
+    ((Node :l (Empty%) :v v) v)
     ((Node :l l) (min_elt l))))
 
 ;; (* Remove the smallest element of the given set *)
@@ -20926,8 +21339,8 @@
 
 (defunc remove_min_elt (arg~30571)
   (match arg~30571
-    ((Empty*) (invalid-arg "Set.remove_min_elt"))
-    ((Node :l (Empty*) :r r) r)
+    ((Empty%) (invalid-arg "Set.remove_min_elt"))
+    ((Node :l (Empty%) :r r) r)
     ((Node :l l :v v :r r) (bal (remove_min_elt l) v r))))
 
 ;; (* Merge two trees l and r into one.
@@ -20937,8 +21350,8 @@
 
 (defunc merge (t1 t2)
   (match (tuple t1 t2)
-    ((tuple (Empty*) t*) t*)
-    ((tuple t* (Empty*)) t*)
+    ((tuple (Empty%) t%) t%)
+    ((tuple t% (Empty%)) t%)
     ((tuple _ _) (bal t1 (min_elt t2) (remove_min_elt t2)))))
 
 ;; (* Merge two trees l and r into one.
@@ -20948,8 +21361,8 @@
 
 (defunc concat (t1 t2)
   (match (tuple t1 t2)
-    ((tuple (Empty*) t*) t*)
-    ((tuple t* (Empty*)) t*)
+    ((tuple (Empty%) t%) t%)
+    ((tuple t% (Empty%)) t%)
     ((tuple _ _) (join t1 (min_elt t2) (remove_min_elt t2)))))
 
 ;; (* Splitting.  split x s returns a triple (l, present, r) where
@@ -20961,9 +21374,10 @@
 
 (defunc split (x arg~30650)
   (match arg~30650
-    ((Empty*) (tuple (make-Empty*) cl:nil (make-Empty*)))
+    ((Empty%) (tuple (make-Empty%) cl:nil (make-Empty%)))
     ((Node :l l :v v :r r)
       (let ((c (funcall hol2cl.metis.metis_prover.literal.ordered:compare x v)))
+        (cl:declare (cl:ignorable c))
         (if (= c 0)
           (tuple l cl:t r)
           (if (< c 0)
@@ -20973,47 +21387,53 @@
 ;; (* Implementation of the set operations *)
 
 
-(defparameter empty (make-Empty*))
+(defparameter empty (make-Empty%))
 
-(defunc is_empty (arg~30722) (match arg~30722 ((Empty*) cl:t) (_ cl:nil)))
+(defunc is_empty (arg~30722) (match arg~30722 ((Empty%) cl:t) (_ cl:nil)))
 
 (defunc mem (x arg~30731)
   (match arg~30731
-    ((Empty*) cl:nil)
+    ((Empty%) cl:nil)
     ((Node :l l :v v :r r)
       (let ((c (funcall hol2cl.metis.metis_prover.literal.ordered:compare x v)))
+        (cl:declare (cl:ignorable c))
         (cl:or (= c 0) (mem x (if (< c 0) l r)))))))
 
 (defunc remove (x arg~30762)
   (match arg~30762
-    ((Empty*) (make-Empty*))
-    ((cl:and t* (Node :l l :v v :r r))
+    ((Empty%) (make-Empty%))
+    ((cl:and t% (Node :l l :v v :r r))
       (let ((c (funcall hol2cl.metis.metis_prover.literal.ordered:compare x v)))
+        (cl:declare (cl:ignorable c))
         (if (= c 0)
           (merge l r)
           (if (< c 0)
-            (let ((ll (remove x l))) (if (== l ll) t* (bal ll v r)))
-            (let ((rr (remove x r))) (if (== r rr) t* (bal l v rr)))))))))
+            (let ((ll (remove x l)))
+              (cl:declare (cl:ignorable ll))
+              (if (== l ll) t% (bal ll v r)))
+            (let ((rr (remove x r)))
+              (cl:declare (cl:ignorable rr))
+              (if (== r rr) t% (bal l v rr)))))))))
 
 (defunc union (s1 s2)
   (match (tuple s1 s2)
-    ((tuple (Empty*) t2) t2)
-    ((tuple t1 (Empty*)) t1)
+    ((tuple (Empty%) t2) t2)
+    ((tuple t1 (Empty%)) t1)
     ((tuple (Node :l l1 :v v1 :r r1 :h h1) (Node :l l2 :v v2 :r r2 :h h2))
       (if (>= h1 h2)
         (if (= h2 1)
           (add v2 s1)
           (match (split v1 s2)
-            ((tuple l2* _ r2*) (join (union l1 l2*) v1 (union r1 r2*)))))
+            ((tuple l2% _ r2%) (join (union l1 l2%) v1 (union r1 r2%)))))
         (if (= h1 1)
           (add v1 s2)
           (match (split v2 s1)
-            ((tuple l1* _ r1*) (join (union l1* l2) v2 (union r1* r2)))))))))
+            ((tuple l1% _ r1%) (join (union l1% l2) v2 (union r1% r2)))))))))
 
 (defunc inter (s1 s2)
   (match (tuple s1 s2)
-    ((tuple (Empty*) _) (make-Empty*))
-    ((tuple _ (Empty*)) (make-Empty*))
+    ((tuple (Empty%) _) (make-Empty%))
+    ((tuple _ (Empty%)) (make-Empty%))
     ((tuple (Node :l l1 :v v1 :r r1) t2)
       (match (split v1 t2)
         ((tuple l2 cl:nil r2) (concat (inter l1 l2) (inter r1 r2)))
@@ -21023,8 +21443,8 @@
 
 (defunc diff (s1 s2)
   (match (tuple s1 s2)
-    ((tuple (Empty*) _) (make-Empty*))
-    ((tuple t1 (Empty*)) t1)
+    ((tuple (Empty%) _) (make-Empty%))
+    ((tuple t1 (Empty%)) t1)
     ((tuple (Node :l l1 :v v1 :r r1) t2)
       (match (split v1 t2)
         ((tuple l2 cl:nil r2) (join (diff l1 l2) v1 (diff r1 r2)))
@@ -21033,16 +21453,17 @@
 (defvariant enumeration (End) (More field0 field1 field2))
 
 (defunc cons_enum (s e)
-  (match s ((Empty*) e) ((Node :l l :v v :r r) (cons_enum l (make-More v r e)))))
+  (match s ((Empty%) e) ((Node :l l :v v :r r) (cons_enum l (make-More v r e)))))
 
 (defunc compare_aux (e1 e2)
   (match (tuple e1 e2)
     ((tuple (End) (End)) 0)
     ((tuple (End) _) (- 1))
     ((tuple _ (End)) 1)
-    ((tuple (More v1 r1 e1*) (More v2 r2 e2*))
+    ((tuple (More v1 r1 e1%) (More v2 r2 e2%))
       (let ((c (funcall hol2cl.metis.metis_prover.literal.ordered:compare v1 v2)))
-        (if (<> c 0) c (compare_aux (cons_enum r1 e1*) (cons_enum r2 e2*)))))))
+        (cl:declare (cl:ignorable c))
+        (if (<> c 0) c (compare_aux (cons_enum r1 e1%) (cons_enum r2 e2%)))))))
 
 (defunc compare (s1 s2) (compare_aux (cons_enum s1 (make-End)) (cons_enum s2 (make-End))))
 
@@ -21050,41 +21471,42 @@
 
 (defunc subset (s1 s2)
   (match (tuple s1 s2)
-    ((tuple (Empty*) _) cl:t)
-    ((tuple _ (Empty*)) cl:nil)
+    ((tuple (Empty%) _) cl:t)
+    ((tuple _ (Empty%)) cl:nil)
     ((tuple (Node :l l1 :v v1 :r r1) (cl:and t2 (Node :l l2 :v v2 :r r2)))
       (let ((c (funcall hol2cl.metis.metis_prover.literal.ordered:compare v1 v2)))
+        (cl:declare (cl:ignorable c))
         (if (= c 0)
           (cl:and (subset l1 l2) (subset r1 r2))
           (if (< c 0)
             (cl:and
-              (subset (make-Node :l l1 :v v1 :r (make-Empty*) :h 0) l2)
+              (subset (make-Node :l l1 :v v1 :r (make-Empty%) :h 0) l2)
               (subset r1 t2))
             (cl:and
-              (subset (make-Node :l (make-Empty*) :v v1 :r r1 :h 0) r2)
+              (subset (make-Node :l (make-Empty%) :v v1 :r r1 :h 0) r2)
               (subset l1 t2))))))))
 
 (defunc fold (f s accu)
   (match s
-    ((Empty*) accu)
+    ((Empty%) accu)
     ((Node :l l :v v :r r) (fold f r (funcall f v (fold f l accu))))))
 
 (defunc for_all (p arg~31230)
   (match arg~31230
-    ((Empty*) cl:t)
+    ((Empty%) cl:t)
     ((Node :l l :v v :r r) (cl:and (funcall p v) (cl:and (for_all p l) (for_all p r))))))
 
 (defunc exists (p arg~31254)
   (match arg~31254
-    ((Empty*) cl:nil)
+    ((Empty%) cl:nil)
     ((Node :l l :v v :r r) (cl:or (funcall p v) (cl:or (exists p l) (exists p r))))))
 
 (defunc cardinal (arg~31277)
-  (match arg~31277 ((Empty*) 0) ((Node :l l :r r) (+ (+ (cardinal l) 1) (cardinal r)))))
+  (match arg~31277 ((Empty%) 0) ((Node :l l :r r) (+ (+ (cardinal l) 1) (cardinal r)))))
 
 (defunc elements_aux (accu arg~31296)
   (match arg~31296
-    ((Empty*) accu)
+    ((Empty%) accu)
     ((Node :l l :v v :r r) (elements_aux (cl:cons v (elements_aux accu r)) l))))
 
 (defunc elements (s) (elements_aux nil s))
@@ -21097,7 +21519,7 @@
 
 (defunc add (s x) (hol2cl.metis.metis_prover.literal.set.include~30172.se:add x s))
 
-(defunc foldr (f a* s) (fold (lambdac (x acc) (funcall f (tuple x acc))) s a*))
+(defunc foldr (f a% s) (fold (lambdac (x acc) (funcall f (tuple x acc))) s a%))
 
 (defparameter foldl #'foldr)
 
@@ -21141,25 +21563,25 @@
     (nil hol2cl.metis.metis_prover.literal.set.include~30172.se:empty)
     ((cl:cons s ss) (list-fold-right #'inter ss s))))
 
-(defunc findl (p* s)
+(defunc findl (p% s)
   (fletc
     ((go
       (x arg~31425)
       (match arg~31425
-        ((cl:and s* (Some _)) s*)
-        ((None) (if (funcall p* x) (make-Some x) (make-None))))))
+        ((cl:and s% (Some _)) s%)
+        ((None) (if (funcall p% x) (make-Some x) (make-None))))))
     (fold #'go s (make-None))))
 
 (defunc firstl (f s)
   (fletc
-    ((go (x arg~31451) (match arg~31451 ((cl:and s* (Some _)) s*) ((None) (funcall f x)))))
+    ((go (x arg~31451) (match arg~31451 ((cl:and s% (Some _)) s%) ((None) (funcall f x)))))
     (fold #'go s (make-None))))
 
 (defunc transform (f s) (fold (lambdac (x acc) (cl:cons (funcall f x) acc)) s nil))
 
 (defparameter all #'for_all)
 
-(defunc count (p* s) (fold (lambdac (x c*) (if (funcall p* x) (+ c* 1) c*)) s 0))
+(defunc count (p% s) (fold (lambdac (x c%) (if (funcall p% x) (+ c% 1) c%)) s 0))
 
 (in-package :hol2cl.metis.metis_prover.literal.set)
 
@@ -21239,13 +21661,14 @@
     ((substLit
       (arg~31646)
       (match arg~31646
-        ((tuple lit (tuple eq lits*))
+        ((tuple lit (tuple eq lits%))
           (let*
-            ((lit* (hol2cl.metis.metis_prover.literal:subst sub lit))
-              (eq* (cl:and eq (== lit lit*))))
-            (tuple eq* (add lits* lit*)))))))
+            ((lit% (hol2cl.metis.metis_prover.literal:subst sub lit))
+              (eq% (cl:and eq (== lit lit%))))
+            (cl:declare (cl:ignorable lit% eq%))
+            (tuple eq% (add lits% lit%)))))))
     (match (funcall foldl #'substLit (tuple cl:t empty) lits)
-      ((tuple eq lits*) (if eq lits lits*)))))
+      ((tuple eq lits%) (if eq lits lits%)))))
 
 (defunc conjoin (set) (listMkConj (list-map #'toFormula (funcall toList set))))
 
@@ -21272,114 +21695,131 @@
 
 (in-package :hol2cl.metis.metis_prover.literal.set_map.ma)
 
-(defvariant t* (Empty*) (Node (:record l v d r h)))
+(defvariant t% (Empty%) (Node (:record l v d r h)))
 
-(defunc height (arg~31727) (match arg~31727 ((Empty*) 0) ((Node :h h) h)))
+(defunc height (arg~31727) (match arg~31727 ((Empty%) 0) ((Node :h h) h)))
 
 (defunc create (l x d r)
   (let ((hl (height l)) (hr (height r)))
+    (cl:declare (cl:ignorable hl hr))
     (make-Node :l l :v x :d d :r r :h (if (>= hl hr) (+ hl 1) (+ hr 1)))))
 
-(defunc singleton (x d) (make-Node :l (make-Empty*) :v x :d d :r (make-Empty*) :h 1))
+(defunc singleton (x d) (make-Node :l (make-Empty%) :v x :d d :r (make-Empty%) :h 1))
 
 (defunc bal (l x d r)
   (let*
-    ((hl (match l ((Empty*) 0) ((Node :h h) h)))
-      (hr (match r ((Empty*) 0) ((Node :h h) h))))
+    ((hl (match l ((Empty%) 0) ((Node :h h) h)))
+      (hr (match r ((Empty%) 0) ((Node :h h) h))))
+    (cl:declare (cl:ignorable hl hr))
     (if (> hl (+ hr 2))
       (match l
-        ((Empty*) (invalid-arg "Map.bal"))
+        ((Empty%) (invalid-arg "Map.bal"))
         ((Node :l ll :v lv :d ld :r lr)
           (if (>= (height ll) (height lr))
             (create ll lv ld (create lr x d r))
             (match lr
-              ((Empty*) (invalid-arg "Map.bal"))
+              ((Empty%) (invalid-arg "Map.bal"))
               ((Node :l lrl :v lrv :d lrd :r lrr)
                 (create (create ll lv ld lrl) lrv lrd (create lrr x d r)))))))
       (if (> hr (+ hl 2))
         (match r
-          ((Empty*) (invalid-arg "Map.bal"))
+          ((Empty%) (invalid-arg "Map.bal"))
           ((Node :l rl :v rv :d rd :r rr)
             (if (>= (height rr) (height rl))
               (create (create l x d rl) rv rd rr)
               (match rl
-                ((Empty*) (invalid-arg "Map.bal"))
+                ((Empty%) (invalid-arg "Map.bal"))
                 ((Node :l rll :v rlv :d rld :r rlr)
                   (create (create l x d rll) rlv rld (create rlr rv rd rr)))))))
         (make-Node :l l :v x :d d :r r :h (if (>= hl hr) (+ hl 1) (+ hr 1)))))))
 
-(defparameter empty (make-Empty*))
+(defparameter empty (make-Empty%))
 
-(defunc is_empty (arg~31943) (match arg~31943 ((Empty*) cl:t) (_ cl:nil)))
+(defunc is_empty (arg~31943) (match arg~31943 ((Empty%) cl:t) (_ cl:nil)))
 
 (defunc add (x data arg~31953)
   (match arg~31953
-    ((Empty*) (make-Node :l (make-Empty*) :v x :d data :r (make-Empty*) :h 1))
+    ((Empty%) (make-Node :l (make-Empty%) :v x :d data :r (make-Empty%) :h 1))
     ((cl:and m (Node :l l :v v :d d :r r :h h))
       (let ((c (funcall compare x v)))
+        (cl:declare (cl:ignorable c))
         (if (= c 0)
           (if (== d data) m (make-Node :l l :v x :d data :r r :h h))
           (if (< c 0)
-            (let ((ll (add x data l))) (if (== l ll) m (bal ll v d r)))
-            (let ((rr (add x data r))) (if (== r rr) m (bal l v d rr)))))))))
+            (let ((ll (add x data l)))
+              (cl:declare (cl:ignorable ll))
+              (if (== l ll) m (bal ll v d r)))
+            (let ((rr (add x data r)))
+              (cl:declare (cl:ignorable rr))
+              (if (== r rr) m (bal l v d rr)))))))))
 
 (defunc find (x arg~32035)
   (match arg~32035
-    ((Empty*) (raise (make-Not_found)))
+    ((Empty%) (raise (make-Not_found)))
     ((Node :l l :v v :d d :r r)
-      (let ((c (funcall compare x v))) (if (= c 0) d (find x (if (< c 0) l r)))))))
+      (let ((c (funcall compare x v)))
+        (cl:declare (cl:ignorable c))
+        (if (= c 0) d (find x (if (< c 0) l r)))))))
 
 (defunc mem (x arg~32070)
   (match arg~32070
-    ((Empty*) cl:nil)
+    ((Empty%) cl:nil)
     ((Node :l l :v v :r r)
-      (let ((c (funcall compare x v))) (cl:or (= c 0) (mem x (if (< c 0) l r)))))))
+      (let ((c (funcall compare x v)))
+        (cl:declare (cl:ignorable c))
+        (cl:or (= c 0) (mem x (if (< c 0) l r)))))))
 
 (defunc min_binding (arg~32100)
   (match arg~32100
-    ((Empty*) (raise (make-Not_found)))
-    ((Node :l (Empty*) :v v :d d) (tuple v d))
+    ((Empty%) (raise (make-Not_found)))
+    ((Node :l (Empty%) :v v :d d) (tuple v d))
     ((Node :l l) (min_binding l))))
 
 (defunc remove_min_binding (arg~32121)
   (match arg~32121
-    ((Empty*) (invalid-arg "Map.remove_min_elt"))
-    ((Node :l (Empty*) :r r) r)
+    ((Empty%) (invalid-arg "Map.remove_min_elt"))
+    ((Node :l (Empty%) :r r) r)
     ((Node :l l :v v :d d :r r) (bal (remove_min_binding l) v d r))))
 
 (defunc merge~1 (t1 t2)
   (match (tuple t1 t2)
-    ((tuple (Empty*) t*) t*)
-    ((tuple t* (Empty*)) t*)
+    ((tuple (Empty%) t%) t%)
+    ((tuple t% (Empty%)) t%)
     ((tuple _ _)
       (match (min_binding t2) ((tuple x d) (bal t1 x d (remove_min_binding t2)))))))
 
 (defunc remove (x arg~32184)
   (match arg~32184
-    ((Empty*) (make-Empty*))
+    ((Empty%) (make-Empty%))
     ((cl:and m (Node :l l :v v :d d :r r))
       (let ((c (funcall compare x v)))
+        (cl:declare (cl:ignorable c))
         (if (= c 0)
           (merge~1 l r)
           (if (< c 0)
-            (let ((ll (remove x l))) (if (== l ll) m (bal ll v d r)))
-            (let ((rr (remove x r))) (if (== r rr) m (bal l v d rr)))))))))
+            (let ((ll (remove x l)))
+              (cl:declare (cl:ignorable ll))
+              (if (== l ll) m (bal ll v d r)))
+            (let ((rr (remove x r)))
+              (cl:declare (cl:ignorable rr))
+              (if (== r rr) m (bal l v d rr)))))))))
 
 (defunc map (f arg~32249)
   (match arg~32249
-    ((Empty*) (make-Empty*))
+    ((Empty%) (make-Empty%))
     ((Node :l l :v v :d d :r r :h h)
-      (let* ((l* (map f l)) (d* (funcall f d)) (r* (map f r)))
-        (make-Node :l l* :v v :d d* :r r* :h h)))))
+      (let* ((l% (map f l)) (d% (funcall f d)) (r% (map f r)))
+        (cl:declare (cl:ignorable l% d% r%))
+        (make-Node :l l% :v v :d d% :r r% :h h)))))
 
 (defunc fold (f m accu)
   (match m
-    ((Empty*) accu)
+    ((Empty%) accu)
     ((Node :l l :v v :d d :r r) (fold f r (funcall f v d (fold f l accu))))))
 
 (defunc exists (p arg~32315)
   (match arg~32315
-    ((Empty*) cl:nil)
+    ((Empty%) cl:nil)
     ((Node :l l :v v :d d :r r) (cl:or (funcall p v d) (cl:or (exists p l) (exists p r))))))
 
 ;; (* Beware: those two functions assume that the added k is *strictly*
@@ -21393,12 +21833,12 @@
 
 (defunc add_min_binding (k x arg~32343)
   (match arg~32343
-    ((Empty*) (singleton k x))
+    ((Empty%) (singleton k x))
     ((Node :l l :v v :d d :r r) (bal (add_min_binding k x l) v d r))))
 
 (defunc add_max_binding (k x arg~32370)
   (match arg~32370
-    ((Empty*) (singleton k x))
+    ((Empty%) (singleton k x))
     ((Node :l l :v v :d d :r r) (bal l v d (add_max_binding k x r)))))
 
 ;; (* Same as create and bal, but no assumptions are made on the
@@ -21407,8 +21847,8 @@
 
 (defunc join (l v d r)
   (match (tuple l r)
-    ((tuple (Empty*) _) (add_min_binding v d r))
-    ((tuple _ (Empty*)) (add_max_binding v d l))
+    ((tuple (Empty%) _) (add_min_binding v d r))
+    ((tuple _ (Empty%)) (add_max_binding v d l))
     ((tuple (Node :l ll :v lv :d ld :r lr :h lh) (Node :l rl :v rv :d rd :r rr :h rh))
       (if (> lh (+ rh 2))
         (bal ll lv ld (join lr v d r))
@@ -21421,19 +21861,20 @@
 
 (defunc concat (t1 t2)
   (match (tuple t1 t2)
-    ((tuple (Empty*) t*) t*)
-    ((tuple t* (Empty*)) t*)
+    ((tuple (Empty%) t%) t%)
+    ((tuple t% (Empty%)) t%)
     ((tuple _ _)
       (match (min_binding t2) ((tuple x d) (join t1 x d (remove_min_binding t2)))))))
 
 (defunc concat_or_join (t1 v d t2)
-  (match d ((Some d*) (join t1 v d* t2)) ((None) (concat t1 t2))))
+  (match d ((Some d%) (join t1 v d% t2)) ((None) (concat t1 t2))))
 
 (defunc split (x arg~32533)
   (match arg~32533
-    ((Empty*) (tuple (make-Empty*) (make-None) (make-Empty*)))
+    ((Empty%) (tuple (make-Empty%) (make-None) (make-Empty%)))
     ((Node :l l :v v :d d :r r)
       (let ((c (funcall compare x v)))
+        (cl:declare (cl:ignorable c))
         (if (= c 0)
           (tuple l (make-Some d) r)
           (if (< c 0)
@@ -21442,8 +21883,8 @@
 
 (defunc merge (f s1 s2)
   (match (tuple s1 s2)
-    ((tuple (Empty*) (Empty*)) (make-Empty*))
-    ((trivia:guard (tuple (Node :l l1 :v v1 :d d1 :r r1 :h h1) _) (>= h1 (height s2)))
+    ((tuple (Empty%) (Empty%)) (make-Empty%))
+    ((guard (tuple (Node :l l1 :v v1 :d d1 :r r1 :h h1) _) (>= h1 (height s2)))
       (match (split v1 s2)
         ((tuple l2 d2 r2)
           (concat_or_join
@@ -21463,37 +21904,40 @@
 
 (defunc union (f s1 s2)
   (match (tuple s1 s2)
-    ((cl:or (tuple (Empty*) s) (tuple s (Empty*))) s)
+    ((cl:or (tuple (Empty%) s) (tuple s (Empty%))) s)
     ((tuple (Node :l l1 :v v1 :d d1 :r r1 :h h1) (Node :l l2 :v v2 :d d2 :r r2 :h h2))
       (if (>= h1 h2)
         (match (split v1 s2)
-          ((tuple l2* d2* r2*)
-            (let ((l (union f l1 l2*)) (r (union f r1 r2*)))
-              (match d2*
+          ((tuple l2% d2% r2%)
+            (let ((l (union f l1 l2%)) (r (union f r1 r2%)))
+              (cl:declare (cl:ignorable l r))
+              (match d2%
                 ((None) (join l v1 d1 r))
                 ((Some d2) (concat_or_join l v1 (funcall f v1 d1 d2) r))))))
         (match (split v2 s1)
-          ((tuple l1* d1* r1*)
-            (let ((l (union f l1* l2)) (r (union f r1* r2)))
-              (match d1*
+          ((tuple l1% d1% r1%)
+            (let ((l (union f l1% l2)) (r (union f r1% r2)))
+              (cl:declare (cl:ignorable l r))
+              (match d1%
                 ((None) (join l v2 d2 r))
                 ((Some d1) (concat_or_join l v2 (funcall f v2 d1 d2) r))))))))))
 
 (defunc filter (p arg~32831)
   (match arg~32831
-    ((Empty*) (make-Empty*))
+    ((Empty%) (make-Empty%))
     ((cl:and m (Node :l l :v v :d d :r r))
-      (let* ((l* (filter p l)) (pvd (funcall p v d)) (r* (filter p r)))
-        (if pvd (if (cl:and (== l l*) (== r r*)) m (join l* v d r*)) (concat l* r*))))))
+      (let* ((l% (filter p l)) (pvd (funcall p v d)) (r% (filter p r)))
+        (cl:declare (cl:ignorable l% pvd r%))
+        (if pvd (if (cl:and (== l l%) (== r r%)) m (join l% v d r%)) (concat l% r%))))))
 
 (defvariant enumeration (End) (More field0 field1 field2 field3))
 
 (defunc cardinal (arg~32886)
-  (match arg~32886 ((Empty*) 0) ((Node :l l :r r) (+ (+ (cardinal l) 1) (cardinal r)))))
+  (match arg~32886 ((Empty%) 0) ((Node :l l :r r) (+ (+ (cardinal l) 1) (cardinal r)))))
 
 (defunc bindings_aux (accu arg~32905)
   (match arg~32905
-    ((Empty*) accu)
+    ((Empty%) accu)
     ((Node :l l :v v :d d :r r)
       (bindings_aux (cl:cons (tuple v d) (bindings_aux accu r)) l))))
 
@@ -21507,27 +21951,27 @@
 
 (defunc singleton (arg~32944)
   (match arg~32944
-    ((tuple k* x) (hol2cl.metis.metis_prover.literal.set_map.ma:singleton k* x))))
+    ((tuple k% x) (hol2cl.metis.metis_prover.literal.set_map.ma:singleton k% x))))
 
 (defparameter size #'cardinal)
 
-(defunc get (m k*)
+(defunc get (m k%)
   (handler-case
-    (find k* m)
+    (find k% m)
     (hol2cl.runtime:ocaml-condition
       (exception~32961)
       (match exception~32961
         ((Not_found) (failwith "Mmap.get: element not found"))
         (_ (raise exception~32961))))))
 
-(defunc peek (m k*)
+(defunc peek (m k%)
   (handler-case
-    (make-Some (find k* m))
+    (make-Some (find k% m))
     (hol2cl.runtime:ocaml-condition
       (exception~32973)
       (match exception~32973 ((Not_found) (make-None)) (_ (raise exception~32973))))))
 
-(defunc insert (m arg~32984) (match arg~32984 ((tuple k* v) (add k* v m))))
+(defunc insert (m arg~32984) (match arg~32984 ((tuple k% v) (add k% v m))))
 
 (defparameter toList #'bindings)
 
@@ -21537,10 +21981,10 @@
     l
     empty))
 
-(defunc foldl (f b* m)
+(defunc foldl (f b% m)
   (list-fold-left
     (lambdac (s arg~33021) (match arg~33021 ((tuple v tm) (funcall f (tuple v tm s)))))
-    b*
+    b%
     (bindings m)))
 
 (defparameter foldr #'foldl)
@@ -21553,21 +21997,21 @@
 
 (defunc union (f m1 m2)
   (fletc
-    ((f*
-      (k* arg~33062)
+    ((f%
+      (k% arg~33062)
       (match arg~33062
-        ((tuple (Some x) (Some y)) (funcall f (tuple (tuple k* x) (tuple k* y))))
+        ((tuple (Some x) (Some y)) (funcall f (tuple (tuple k% x) (tuple k% y))))
         ((tuple (Some x) (None)) (make-Some x))
         ((tuple (None) (Some y)) (make-Some y))
         ((tuple (None) (None)) (make-None)))))
-    (merge (lambdac (k* x y) (f* k* (tuple x y))) m1 m2)))
+    (merge (lambdac (k% x y) (f% k% (tuple x y))) m1 m2)))
 
-(defunc delete (m k*) (remove k* m))
+(defunc delete (m k%) (remove k% m))
 
 (defunc mapPartial (f m)
   (fold
-    (lambdac (k* x acc)
-      (match (funcall f (tuple k* x)) ((Some y) (add k* y acc)) ((None) acc)))
+    (lambdac (k% x acc)
+      (match (funcall f (tuple k% x)) ((Some y) (add k% y acc)) ((None) acc)))
     m
     empty))
 
@@ -21575,7 +22019,7 @@
 
 (defunc exists (f)
   (hol2cl.metis.metis_prover.literal.set_map.ma:exists
-    (lambdac (k* m) (funcall f (tuple k* m)))))
+    (lambdac (k% m) (funcall f (tuple k% m)))))
 
 (in-package :hol2cl.metis.metis_prover.literal)
 
@@ -21583,13 +22027,13 @@
 
 (in-package :hol2cl.metis.metis_prover.literal.set_set.se)
 
-(defvariant t* (Empty*) (Node (:record l v r h)))
+(defvariant t% (Empty%) (Node (:record l v r h)))
 
 ;; (* Sets are represented by balanced binary trees (the heights of the
 ;;        children differ by at most 2 *)
 
 
-(defunc height (arg~33161) (match arg~33161 ((Empty*) 0) ((Node :h h) h)))
+(defunc height (arg~33161) (match arg~33161 ((Empty%) 0) ((Node :h h) h)))
 
 ;; (* Creates a new node with left son l, value v and right son r.
 ;;        We must have all elements of l < v < all elements of r.
@@ -21599,8 +22043,9 @@
 
 (defunc create (l v r)
   (let*
-    ((hl (match l ((Empty*) 0) ((Node :h h) h)))
-      (hr (match r ((Empty*) 0) ((Node :h h) h))))
+    ((hl (match l ((Empty%) 0) ((Node :h h) h)))
+      (hr (match r ((Empty%) 0) ((Node :h h) h))))
+    (cl:declare (cl:ignorable hl hr))
     (make-Node :l l :v v :r r :h (if (>= hl hr) (+ hl 1) (+ hr 1)))))
 
 ;; (* Same as create, but performs one step of rebalancing if necessary.
@@ -21611,26 +22056,27 @@
 
 (defunc bal (l v r)
   (let*
-    ((hl (match l ((Empty*) 0) ((Node :h h) h)))
-      (hr (match r ((Empty*) 0) ((Node :h h) h))))
+    ((hl (match l ((Empty%) 0) ((Node :h h) h)))
+      (hr (match r ((Empty%) 0) ((Node :h h) h))))
+    (cl:declare (cl:ignorable hl hr))
     (if (> hl (+ hr 2))
       (match l
-        ((Empty*) (invalid-arg "Set.bal"))
+        ((Empty%) (invalid-arg "Set.bal"))
         ((Node :l ll :v lv :r lr)
           (if (>= (height ll) (height lr))
             (create ll lv (create lr v r))
             (match lr
-              ((Empty*) (invalid-arg "Set.bal"))
+              ((Empty%) (invalid-arg "Set.bal"))
               ((Node :l lrl :v lrv :r lrr)
                 (create (create ll lv lrl) lrv (create lrr v r)))))))
       (if (> hr (+ hl 2))
         (match r
-          ((Empty*) (invalid-arg "Set.bal"))
+          ((Empty%) (invalid-arg "Set.bal"))
           ((Node :l rl :v rv :r rr)
             (if (>= (height rr) (height rl))
               (create (create l v rl) rv rr)
               (match rl
-                ((Empty*) (invalid-arg "Set.bal"))
+                ((Empty%) (invalid-arg "Set.bal"))
                 ((Node :l rll :v rlv :r rlr)
                   (create (create l v rll) rlv (create rlr rv rr)))))))
         (make-Node :l l :v v :r r :h (if (>= hl hr) (+ hl 1) (+ hr 1)))))))
@@ -21640,16 +22086,21 @@
 
 (defunc add (x arg~33356)
   (match arg~33356
-    ((Empty*) (make-Node :l (make-Empty*) :v x :r (make-Empty*) :h 1))
-    ((cl:and t* (Node :l l :v v :r r))
+    ((Empty%) (make-Node :l (make-Empty%) :v x :r (make-Empty%) :h 1))
+    ((cl:and t% (Node :l l :v v :r r))
       (let ((c (funcall hol2cl.metis.metis_prover.literal.set_ordered:compare x v)))
+        (cl:declare (cl:ignorable c))
         (if (= c 0)
-          t*
+          t%
           (if (< c 0)
-            (let ((ll (add x l))) (if (== l ll) t* (bal ll v r)))
-            (let ((rr (add x r))) (if (== r rr) t* (bal l v rr)))))))))
+            (let ((ll (add x l)))
+              (cl:declare (cl:ignorable ll))
+              (if (== l ll) t% (bal ll v r)))
+            (let ((rr (add x r)))
+              (cl:declare (cl:ignorable rr))
+              (if (== r rr) t% (bal l v rr)))))))))
 
-(defunc singleton (x) (make-Node :l (make-Empty*) :v x :r (make-Empty*) :h 1))
+(defunc singleton (x) (make-Node :l (make-Empty%) :v x :r (make-Empty%) :h 1))
 
 ;; (* Beware: those two functions assume that the added v is *strictly*
 ;;        smaller (or bigger) than all the present elements in the tree; it
@@ -21661,12 +22112,12 @@
 
 (defunc add_min_element (x arg~33427)
   (match arg~33427
-    ((Empty*) (singleton x))
+    ((Empty%) (singleton x))
     ((Node :l l :v v :r r) (bal (add_min_element x l) v r))))
 
 (defunc add_max_element (x arg~33448)
   (match arg~33448
-    ((Empty*) (singleton x))
+    ((Empty%) (singleton x))
     ((Node :l l :v v :r r) (bal l v (add_max_element x r)))))
 
 ;; (* Same as create and bal, but no assumptions are made on the
@@ -21675,8 +22126,8 @@
 
 (defunc join (l v r)
   (match (tuple l r)
-    ((tuple (Empty*) _) (add_min_element v r))
-    ((tuple _ (Empty*)) (add_max_element v l))
+    ((tuple (Empty%) _) (add_min_element v r))
+    ((tuple _ (Empty%)) (add_max_element v l))
     ((tuple (Node :l ll :v lv :r lr :h lh) (Node :l rl :v rv :r rr :h rh))
       (if (> lh (+ rh 2))
         (bal ll lv (join lr v r))
@@ -21687,8 +22138,8 @@
 
 (defunc min_elt (arg~33538)
   (match arg~33538
-    ((Empty*) (raise (make-Not_found)))
-    ((Node :l (Empty*) :v v) v)
+    ((Empty%) (raise (make-Not_found)))
+    ((Node :l (Empty%) :v v) v)
     ((Node :l l) (min_elt l))))
 
 ;; (* Remove the smallest element of the given set *)
@@ -21696,8 +22147,8 @@
 
 (defunc remove_min_elt (arg~33555)
   (match arg~33555
-    ((Empty*) (invalid-arg "Set.remove_min_elt"))
-    ((Node :l (Empty*) :r r) r)
+    ((Empty%) (invalid-arg "Set.remove_min_elt"))
+    ((Node :l (Empty%) :r r) r)
     ((Node :l l :v v :r r) (bal (remove_min_elt l) v r))))
 
 ;; (* Merge two trees l and r into one.
@@ -21707,8 +22158,8 @@
 
 (defunc merge (t1 t2)
   (match (tuple t1 t2)
-    ((tuple (Empty*) t*) t*)
-    ((tuple t* (Empty*)) t*)
+    ((tuple (Empty%) t%) t%)
+    ((tuple t% (Empty%)) t%)
     ((tuple _ _) (bal t1 (min_elt t2) (remove_min_elt t2)))))
 
 ;; (* Merge two trees l and r into one.
@@ -21718,8 +22169,8 @@
 
 (defunc concat (t1 t2)
   (match (tuple t1 t2)
-    ((tuple (Empty*) t*) t*)
-    ((tuple t* (Empty*)) t*)
+    ((tuple (Empty%) t%) t%)
+    ((tuple t% (Empty%)) t%)
     ((tuple _ _) (join t1 (min_elt t2) (remove_min_elt t2)))))
 
 ;; (* Splitting.  split x s returns a triple (l, present, r) where
@@ -21731,9 +22182,10 @@
 
 (defunc split (x arg~33634)
   (match arg~33634
-    ((Empty*) (tuple (make-Empty*) cl:nil (make-Empty*)))
+    ((Empty%) (tuple (make-Empty%) cl:nil (make-Empty%)))
     ((Node :l l :v v :r r)
       (let ((c (funcall hol2cl.metis.metis_prover.literal.set_ordered:compare x v)))
+        (cl:declare (cl:ignorable c))
         (if (= c 0)
           (tuple l cl:t r)
           (if (< c 0)
@@ -21743,47 +22195,53 @@
 ;; (* Implementation of the set operations *)
 
 
-(defparameter empty (make-Empty*))
+(defparameter empty (make-Empty%))
 
-(defunc is_empty (arg~33706) (match arg~33706 ((Empty*) cl:t) (_ cl:nil)))
+(defunc is_empty (arg~33706) (match arg~33706 ((Empty%) cl:t) (_ cl:nil)))
 
 (defunc mem (x arg~33715)
   (match arg~33715
-    ((Empty*) cl:nil)
+    ((Empty%) cl:nil)
     ((Node :l l :v v :r r)
       (let ((c (funcall hol2cl.metis.metis_prover.literal.set_ordered:compare x v)))
+        (cl:declare (cl:ignorable c))
         (cl:or (= c 0) (mem x (if (< c 0) l r)))))))
 
 (defunc remove (x arg~33746)
   (match arg~33746
-    ((Empty*) (make-Empty*))
-    ((cl:and t* (Node :l l :v v :r r))
+    ((Empty%) (make-Empty%))
+    ((cl:and t% (Node :l l :v v :r r))
       (let ((c (funcall hol2cl.metis.metis_prover.literal.set_ordered:compare x v)))
+        (cl:declare (cl:ignorable c))
         (if (= c 0)
           (merge l r)
           (if (< c 0)
-            (let ((ll (remove x l))) (if (== l ll) t* (bal ll v r)))
-            (let ((rr (remove x r))) (if (== r rr) t* (bal l v rr)))))))))
+            (let ((ll (remove x l)))
+              (cl:declare (cl:ignorable ll))
+              (if (== l ll) t% (bal ll v r)))
+            (let ((rr (remove x r)))
+              (cl:declare (cl:ignorable rr))
+              (if (== r rr) t% (bal l v rr)))))))))
 
 (defunc union (s1 s2)
   (match (tuple s1 s2)
-    ((tuple (Empty*) t2) t2)
-    ((tuple t1 (Empty*)) t1)
+    ((tuple (Empty%) t2) t2)
+    ((tuple t1 (Empty%)) t1)
     ((tuple (Node :l l1 :v v1 :r r1 :h h1) (Node :l l2 :v v2 :r r2 :h h2))
       (if (>= h1 h2)
         (if (= h2 1)
           (add v2 s1)
           (match (split v1 s2)
-            ((tuple l2* _ r2*) (join (union l1 l2*) v1 (union r1 r2*)))))
+            ((tuple l2% _ r2%) (join (union l1 l2%) v1 (union r1 r2%)))))
         (if (= h1 1)
           (add v1 s2)
           (match (split v2 s1)
-            ((tuple l1* _ r1*) (join (union l1* l2) v2 (union r1* r2)))))))))
+            ((tuple l1% _ r1%) (join (union l1% l2) v2 (union r1% r2)))))))))
 
 (defunc inter (s1 s2)
   (match (tuple s1 s2)
-    ((tuple (Empty*) _) (make-Empty*))
-    ((tuple _ (Empty*)) (make-Empty*))
+    ((tuple (Empty%) _) (make-Empty%))
+    ((tuple _ (Empty%)) (make-Empty%))
     ((tuple (Node :l l1 :v v1 :r r1) t2)
       (match (split v1 t2)
         ((tuple l2 cl:nil r2) (concat (inter l1 l2) (inter r1 r2)))
@@ -21793,8 +22251,8 @@
 
 (defunc diff (s1 s2)
   (match (tuple s1 s2)
-    ((tuple (Empty*) _) (make-Empty*))
-    ((tuple t1 (Empty*)) t1)
+    ((tuple (Empty%) _) (make-Empty%))
+    ((tuple t1 (Empty%)) t1)
     ((tuple (Node :l l1 :v v1 :r r1) t2)
       (match (split v1 t2)
         ((tuple l2 cl:nil r2) (join (diff l1 l2) v1 (diff r1 r2)))
@@ -21803,16 +22261,17 @@
 (defvariant enumeration (End) (More field0 field1 field2))
 
 (defunc cons_enum (s e)
-  (match s ((Empty*) e) ((Node :l l :v v :r r) (cons_enum l (make-More v r e)))))
+  (match s ((Empty%) e) ((Node :l l :v v :r r) (cons_enum l (make-More v r e)))))
 
 (defunc compare_aux (e1 e2)
   (match (tuple e1 e2)
     ((tuple (End) (End)) 0)
     ((tuple (End) _) (- 1))
     ((tuple _ (End)) 1)
-    ((tuple (More v1 r1 e1*) (More v2 r2 e2*))
+    ((tuple (More v1 r1 e1%) (More v2 r2 e2%))
       (let ((c (funcall hol2cl.metis.metis_prover.literal.set_ordered:compare v1 v2)))
-        (if (<> c 0) c (compare_aux (cons_enum r1 e1*) (cons_enum r2 e2*)))))))
+        (cl:declare (cl:ignorable c))
+        (if (<> c 0) c (compare_aux (cons_enum r1 e1%) (cons_enum r2 e2%)))))))
 
 (defunc compare (s1 s2) (compare_aux (cons_enum s1 (make-End)) (cons_enum s2 (make-End))))
 
@@ -21820,41 +22279,42 @@
 
 (defunc subset (s1 s2)
   (match (tuple s1 s2)
-    ((tuple (Empty*) _) cl:t)
-    ((tuple _ (Empty*)) cl:nil)
+    ((tuple (Empty%) _) cl:t)
+    ((tuple _ (Empty%)) cl:nil)
     ((tuple (Node :l l1 :v v1 :r r1) (cl:and t2 (Node :l l2 :v v2 :r r2)))
       (let ((c (funcall hol2cl.metis.metis_prover.literal.set_ordered:compare v1 v2)))
+        (cl:declare (cl:ignorable c))
         (if (= c 0)
           (cl:and (subset l1 l2) (subset r1 r2))
           (if (< c 0)
             (cl:and
-              (subset (make-Node :l l1 :v v1 :r (make-Empty*) :h 0) l2)
+              (subset (make-Node :l l1 :v v1 :r (make-Empty%) :h 0) l2)
               (subset r1 t2))
             (cl:and
-              (subset (make-Node :l (make-Empty*) :v v1 :r r1 :h 0) r2)
+              (subset (make-Node :l (make-Empty%) :v v1 :r r1 :h 0) r2)
               (subset l1 t2))))))))
 
 (defunc fold (f s accu)
   (match s
-    ((Empty*) accu)
+    ((Empty%) accu)
     ((Node :l l :v v :r r) (fold f r (funcall f v (fold f l accu))))))
 
 (defunc for_all (p arg~34214)
   (match arg~34214
-    ((Empty*) cl:t)
+    ((Empty%) cl:t)
     ((Node :l l :v v :r r) (cl:and (funcall p v) (cl:and (for_all p l) (for_all p r))))))
 
 (defunc exists (p arg~34238)
   (match arg~34238
-    ((Empty*) cl:nil)
+    ((Empty%) cl:nil)
     ((Node :l l :v v :r r) (cl:or (funcall p v) (cl:or (exists p l) (exists p r))))))
 
 (defunc cardinal (arg~34261)
-  (match arg~34261 ((Empty*) 0) ((Node :l l :r r) (+ (+ (cardinal l) 1) (cardinal r)))))
+  (match arg~34261 ((Empty%) 0) ((Node :l l :r r) (+ (+ (cardinal l) 1) (cardinal r)))))
 
 (defunc elements_aux (accu arg~34280)
   (match arg~34280
-    ((Empty*) accu)
+    ((Empty%) accu)
     ((Node :l l :v v :r r) (elements_aux (cl:cons v (elements_aux accu r)) l))))
 
 (defunc elements (s) (elements_aux nil s))
@@ -21867,7 +22327,7 @@
 
 (defunc add (s x) (hol2cl.metis.metis_prover.literal.set_set.se:add x s))
 
-(defunc foldr (f a* s) (fold (lambdac (x acc) (funcall f (tuple x acc))) s a*))
+(defunc foldr (f a% s) (fold (lambdac (x acc) (funcall f (tuple x acc))) s a%))
 
 (defparameter foldl #'foldr)
 
@@ -21910,25 +22370,25 @@
     (nil hol2cl.metis.metis_prover.literal.set_set.se:empty)
     ((cl:cons s ss) (list-fold-right #'inter ss s))))
 
-(defunc findl (p* s)
+(defunc findl (p% s)
   (fletc
     ((go
       (x arg~34409)
       (match arg~34409
-        ((cl:and s* (Some _)) s*)
-        ((None) (if (funcall p* x) (make-Some x) (make-None))))))
+        ((cl:and s% (Some _)) s%)
+        ((None) (if (funcall p% x) (make-Some x) (make-None))))))
     (fold #'go s (make-None))))
 
 (defunc firstl (f s)
   (fletc
-    ((go (x arg~34435) (match arg~34435 ((cl:and s* (Some _)) s*) ((None) (funcall f x)))))
+    ((go (x arg~34435) (match arg~34435 ((cl:and s% (Some _)) s%) ((None) (funcall f x)))))
     (fold #'go s (make-None))))
 
 (defunc transform (f s) (fold (lambdac (x acc) (cl:cons (funcall f x) acc)) s nil))
 
 (defparameter all #'for_all)
 
-(defunc count (p* s) (fold (lambdac (x c*) (if (funcall p* x) (+ c* 1) c*)) s 0))
+(defunc count (p% s) (fold (lambdac (x c%) (if (funcall p% x) (+ c% 1) c%)) s 0))
 
 (in-package :hol2cl.metis.metis_prover.literal)
 
@@ -21937,13 +22397,13 @@
 (in-package :hol2cl.metis.metis_prover.thm)
 
 (defvariant inferenceType
-  (Axiom*)
-  (Assume*)
-  (Subst*)
+  (Axiom%)
+  (Assume%)
+  (Subst%)
   (Factor)
-  (Resolve*)
-  (Refl*)
-  (Equality*))
+  (Resolve%)
+  (Refl%)
+  (Equality%))
 
 (defvariant thm (Thm field0 field1))
 
@@ -21954,7 +22414,7 @@
 
 (defunc clause (arg~34497) (match arg~34497 ((Thm cl _) cl)))
 
-(defunc inference (arg~34506) (match arg~34506 ((Thm _ inf*) inf*)))
+(defunc inference (arg~34506) (match arg~34506 ((Thm _ inf%) inf%)))
 
 ;; (* Tautologies *)
 
@@ -22040,13 +22500,13 @@
 
 (defunc inferenceTypeToString (arg~34662)
   (match arg~34662
-    ((Axiom*) "axiom")
-    ((Assume*) "assume")
-    ((Subst*) "subst")
+    ((Axiom%) "axiom")
+    ((Assume%) "assume")
+    ((Subst%) "subst")
     ((Factor) "factor")
-    ((Resolve*) "resolve")
-    ((Refl*) "refl")
-    ((Equality*) "equality")))
+    ((Resolve%) "resolve")
+    ((Refl%) "refl")
+    ((Equality%) "equality")))
 
 (defunc toString (arg~34680)
   (match arg~34680
@@ -22086,7 +22546,7 @@
 ;; (* ------------------------------------------------------------------------- *)
 
 
-(defunc axiom (cl) (make-Thm cl (tuple (make-Axiom*) nil)))
+(defunc axiom (cl) (make-Thm cl (tuple (make-Axiom%) nil)))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (*                                                                           *)
@@ -22098,7 +22558,7 @@
 (defunc assume (lit)
   (make-Thm
     (fromList (cl:cons lit (cl:cons (negate lit) nil)))
-    (tuple (make-Assume*) nil)))
+    (tuple (make-Assume%) nil)))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (*    C                                                                      *)
@@ -22109,13 +22569,14 @@
 
 (defunc subst (sub arg~34776)
   (match arg~34776
-    ((cl:and th (Thm cl inf*))
-      (let ((cl* (hol2cl.metis.metis_prover.literal.set:subst sub cl)))
-        (if (== cl cl*)
+    ((cl:and th (Thm cl inf%))
+      (let ((cl% (hol2cl.metis.metis_prover.literal.set:subst sub cl)))
+        (cl:declare (cl:ignorable cl%))
+        (if (== cl cl%)
           th
-          (match inf*
-            ((tuple (Subst*) _) (make-Thm cl* inf*))
-            (_ (make-Thm cl* (tuple (make-Subst*) (cl:cons th nil))))))))))
+          (match inf%
+            ((tuple (Subst%) _) (make-Thm cl% inf%))
+            (_ (make-Thm cl% (tuple (make-Subst%) (cl:cons th nil))))))))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (*   L \/ C    ~L \/ D                                                       *)
@@ -22132,10 +22593,11 @@
     ((cl:and th1 (Thm cl1 _))
       (match arg~34819
         ((cl:and th2 (Thm cl2 _))
-          (let ((cl1* (delete cl1 lit)) (cl2* (delete cl2 (negate lit))))
+          (let ((cl1% (delete cl1 lit)) (cl2% (delete cl2 (negate lit))))
+            (cl:declare (cl:ignorable cl1% cl2%))
             (make-Thm
-              (funcall union cl1* cl2*)
-              (tuple (make-Resolve*) (cl:cons th1 (cl:cons th2 nil))))))))))
+              (funcall union cl1% cl2%)
+              (tuple (make-Resolve%) (cl:cons th1 (cl:cons th2 nil))))))))))
 
 ;; (*MetisDebug
 ;; let resolve = fun lit -> fun pos -> fun neg ->
@@ -22154,7 +22616,7 @@
 
 
 (defunc refl (tm)
-  (make-Thm (funcall singleton (tuple cl:t (mkRefl tm))) (tuple (make-Refl*) nil)))
+  (make-Thm (funcall singleton (tuple cl:t (mkRefl tm))) (tuple (make-Refl%) nil)))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (*                                                                           *)
@@ -22166,13 +22628,14 @@
 ;; (* ------------------------------------------------------------------------- *)
 
 
-(defunc equality (lit path t*)
+(defunc equality (lit path t%)
   (let*
     ((s (subterm lit path))
-      (lit* (replace lit (tuple path t*)))
-      (eqLit (mkNeq (tuple s t*)))
-      (cl (fromList (cl:cons eqLit (cl:cons (negate lit) (cl:cons lit* nil))))))
-    (make-Thm cl (tuple (make-Equality*) nil))))
+      (lit% (replace lit (tuple path t%)))
+      (eqLit (mkNeq (tuple s t%)))
+      (cl (fromList (cl:cons eqLit (cl:cons (negate lit) (cl:cons lit% nil))))))
+    (cl:declare (cl:ignorable s lit% eqLit cl))
+    (make-Thm cl (tuple (make-Equality%) nil))))
 
 (in-package :hol2cl.metis.metis_prover)
 
@@ -22196,7 +22659,7 @@
     ((Axiom _) nil)
     ((Assume _) nil)
     ((Subst _ th) (cl:cons th nil))
-    ((Resolve _ th th*) (cl:cons th (cl:cons th* nil)))
+    ((Resolve _ th th%) (cl:cons th (cl:cons th% nil)))
     ((Refl _) nil)
     ((Equality _) nil)))
 
@@ -22205,18 +22668,18 @@
     ((Axiom cl) (hol2cl.metis.metis_prover.thm:axiom cl))
     ((Assume atm) (hol2cl.metis.metis_prover.thm:assume (tuple cl:t atm)))
     ((Subst sub th) (hol2cl.metis.metis_prover.thm:subst sub th))
-    ((Resolve atm th th*) (hol2cl.metis.metis_prover.thm:resolve (tuple cl:t atm) th th*))
+    ((Resolve atm th th%) (hol2cl.metis.metis_prover.thm:resolve (tuple cl:t atm) th th%))
     ((Refl tm) (hol2cl.metis.metis_prover.thm:refl tm))
-    ((Equality lit path r*) (hol2cl.metis.metis_prover.thm:equality lit path r*))))
+    ((Equality lit path r%) (hol2cl.metis.metis_prover.thm:equality lit path r%))))
 
-(defunc reconstructSubst (cl cl*)
+(defunc reconstructSubst (cl cl%)
   (labelsc
     ((recon
       (arg~35003)
       (match arg~35003
         (nil (raise (make-Bug "can't reconstruct Subst rule")))
         ((cl:cons (tuple nil sub) others)
-          (if (funcall equal (hol2cl.metis.metis_prover.literal.set:subst sub cl) cl*)
+          (if (funcall equal (hol2cl.metis.metis_prover.literal.set:subst sub cl) cl%)
             sub
             (recon others)))
         ((cl:cons (tuple (cl:cons lit lits) sub) others)
@@ -22224,11 +22687,11 @@
             ((checkLit
               (arg~35037)
               (match arg~35037
-                ((tuple lit* acc)
-                  (match (total (matchLiterals sub lit) lit*)
+                ((tuple lit% acc)
+                  (match (total (matchLiterals sub lit) lit%)
                     ((None) acc)
-                    ((Some sub*) (cl:cons (tuple lits sub*) acc)))))))
-            (recon (funcall foldl #'checkLit others cl*)))))))
+                    ((Some sub%) (cl:cons (tuple lits sub%) acc)))))))
+            (recon (funcall foldl #'checkLit others cl%)))))))
     (normalize (recon (cl:cons (tuple (funcall toList cl) empty) nil)))))
 
 ;; (*MetisDebug
@@ -22243,10 +22706,12 @@
     (if (not (funcall subset cl2 cl))
       (hol2cl.metis.metis_prover.literal:negate
         (funcall pick (funcall difference cl2 cl)))
-      (let ((cl1* (funcall negate cl1)) (cl2* (funcall negate cl2)))
+      (let ((cl1% (funcall negate cl1)) (cl2% (funcall negate cl2)))
+        (cl:declare (cl:ignorable cl1% cl2%))
         (let
           ((lits
-            (intersectList (cl:cons cl1 (cl:cons cl1* (cl:cons cl2 (cl:cons cl2* nil)))))))
+            (intersectList (cl:cons cl1 (cl:cons cl1% (cl:cons cl2 (cl:cons cl2% nil)))))))
+          (cl:declare (cl:ignorable lits))
           (if (not (funcall null lits))
             (funcall pick lits)
             (raise (make-Bug "can't reconstruct Resolve rule"))))))))
@@ -22260,52 +22725,55 @@
 (defunc reconstructEquality (cl)
   (labelsc
     ((sync
-      (s t* path arg~35134 arg~35138)
+      (s t% path arg~35134 arg~35138)
       (match arg~35134
-        ((tuple f a*)
+        ((tuple f a%)
           (match arg~35138
-            ((tuple f* a**)
+            ((tuple f% a%%)
               (if
                 (not
                   (cl:and
-                    (hol2cl.metis.metis_prover.name:equal f f*)
-                    (= (funcall length a*) (funcall length a**))))
+                    (hol2cl.metis.metis_prover.name:equal f f%)
+                    (= (funcall length a%) (funcall length a%%))))
                 (make-None)
-                (let ((itms (enumerate (zip a* a**))))
+                (let ((itms (enumerate (zip a% a%%))))
+                  (cl:declare (cl:ignorable itms))
                   (match
                     (list-filter
                       (lambdac (x)
                         (not (uncurry #'hol2cl.metis.metis_prover.term:equal (snd x))))
                       itms)
-                    ((cl:cons (tuple i* (tuple tm tm*)) nil)
-                      (let ((path* (cl:cons i* path)))
+                    ((cl:cons (tuple i% (tuple tm tm%)) nil)
+                      (let ((path% (cl:cons i% path)))
+                        (cl:declare (cl:ignorable path%))
                         (if
                           (cl:and
                             (hol2cl.metis.metis_prover.term:equal tm s)
-                            (hol2cl.metis.metis_prover.term:equal tm* t*))
-                          (make-Some (list-rev path*))
-                          (match (tuple tm tm*)
-                            ((tuple (Fn f_a) (Fn f_a*)) (sync s t* path* f_a f_a*))
+                            (hol2cl.metis.metis_prover.term:equal tm% t%))
+                          (make-Some (list-rev path%))
+                          (match (tuple tm tm%)
+                            ((tuple (Fn f_a) (Fn f_a%)) (sync s t% path% f_a f_a%))
                             (_ (make-None))))))
                     (_ (make-None)))))))))))
     (fletc
       ((recon
         (arg~35224)
         (match arg~35224
-          ((tuple neq (tuple pol atm) (tuple pol* atm*))
-            (if (= pol pol*)
+          ((tuple neq (tuple pol atm) (tuple pol% atm%))
+            (if (= pol pol%)
               (make-None)
               (match (destNeq neq)
-                ((tuple s t*)
+                ((tuple s t%)
                   (let
                     ((path
-                      (if (not (hol2cl.metis.metis_prover.term:equal s t*))
-                        (sync s t* nil atm atm*)
-                        (if (not (hol2cl.metis.metis_prover.atom:equal atm atm*))
+                      (if (not (hol2cl.metis.metis_prover.term:equal s t%))
+                        (sync s t% nil atm atm%)
+                        (if (not (hol2cl.metis.metis_prover.atom:equal atm atm%))
                           (make-None)
                           (find (hol2cl.metis.metis_prover.term:equal s) atm)))))
+                    (cl:declare (cl:ignorable path))
                     (match path
-                      ((Some path*) (make-Some (tuple (tuple pol* atm) path* t*)))
+                      ((Some path%) (make-Some (tuple (tuple pol% atm) path% t%)))
                       ((None) (make-None)))))))))))
       (let
         ((candidates
@@ -22321,6 +22789,7 @@
             ((tuple (cl:cons l1 nil) (cl:cons l2 nil))
               (cl:cons (tuple l1 l1 l2) (cl:cons (tuple l1 l2 l1) nil)))
             (_ (raise (make-Bug "reconstructEquality: malformed"))))))
+        (cl:declare (cl:ignorable candidates))
         (match (first #'recon candidates)
           ((Some info) info)
           ((None) (raise (make-Bug "can't reconstruct Equality rule"))))))))
@@ -22333,26 +22802,29 @@
 
 (defunc reconstruct (cl arg~35393)
   (match arg~35393
-    ((tuple (Axiom*) nil) (make-Axiom cl))
-    ((tuple (Assume*) nil)
+    ((tuple (Axiom%) nil) (make-Axiom cl))
+    ((tuple (Assume%) nil)
       (match (findl #'positive cl)
         ((Some (tuple _ atm)) (make-Assume atm))
         ((None) (raise (make-Bug "malformed Assume inference")))))
-    ((tuple (Subst*) (cl:cons th nil)) (make-Subst (reconstructSubst (clause th) cl) th))
-    ((tuple (Resolve*) (cl:cons th1 (cl:cons th2 nil)))
+    ((tuple (Subst%) (cl:cons th nil)) (make-Subst (reconstructSubst (clause th) cl) th))
+    ((tuple (Resolve%) (cl:cons th1 (cl:cons th2 nil)))
       (let ((cl1 (clause th1)) (cl2 (clause th2)))
+        (cl:declare (cl:ignorable cl1 cl2))
         (match (reconstructResolvant cl1 cl2 cl)
           ((tuple pol atm) (if pol (make-Resolve atm th1 th2) (make-Resolve atm th2 th1))))))
-    ((tuple (Refl*) nil)
+    ((tuple (Refl%) nil)
       (match (findl (K cl:t) cl)
         ((Some lit) (make-Refl (destRefl lit)))
         ((None) (raise (make-Bug "malformed Refl inference")))))
-    ((tuple (Equality*) nil)
+    ((tuple (Equality%) nil)
       (match (reconstructEquality cl) ((tuple x y z) (make-Equality x y z))))
     (_ (raise (make-Bug "malformed inference")))))
 
 (defunc thmToInference (th)
-  (let* ((cl (clause th)) (thmInf (inference th)) (inf* (reconstruct cl thmInf))) inf*))
+  (let* ((cl (clause th)) (thmInf (inference th)) (inf% (reconstruct cl thmInf)))
+    (cl:declare (cl:ignorable cl thmInf inf%))
+    inf%))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Reconstructing whole proofs.                                              *)
@@ -22361,26 +22833,30 @@
 
 (defunc proof (th)
   (let ((emptyThms (newMap unit)))
+    (cl:declare (cl:ignorable emptyThms))
     (labelsc
       ((addThms
         (arg~35529)
         (match arg~35529
-          ((tuple th* ths)
-            (let ((cl (clause th*)))
+          ((tuple th% ths)
+            (let ((cl (clause th%)))
+              (cl:declare (cl:ignorable cl))
               (if (funcall inDomain cl ths)
                 ths
-                (match (inference th*)
+                (match (inference th%)
                   ((tuple _ pars)
                     (let
-                      ((ths* (hol2cl.metis.metis_prover.mlist:foldl #'addThms ths pars)))
-                      (if (funcall inDomain cl ths*) ths* (insert ths* (tuple cl th*))))))))))))
-      (fletc ((mkThms (th*) (addThms (tuple th* emptyThms))))
+                      ((ths% (hol2cl.metis.metis_prover.mlist:foldl #'addThms ths pars)))
+                      (cl:declare (cl:ignorable ths%))
+                      (if (funcall inDomain cl ths%) ths% (insert ths% (tuple cl th%))))))))))))
+      (fletc ((mkThms (th%) (addThms (tuple th% emptyThms))))
         (labelsc
           ((addProof
             (arg~35575)
             (match arg~35575
-              ((tuple th* (tuple ths acc))
-                (let ((cl (clause th*)))
+              ((tuple th% (tuple ths acc))
+                (let ((cl (clause th%)))
+                  (cl:declare (cl:ignorable cl))
                   (match (peek ths cl)
                     ((None) (tuple ths acc))
                     ((Some th)
@@ -22391,17 +22867,20 @@
                               #'addProof
                               (tuple ths acc)
                               pars)
-                            ((tuple ths* acc*)
+                            ((tuple ths% acc%)
                               (let*
-                                ((ths (delete ths* cl))
-                                  (acc (cl:cons (tuple th (thmToInference th)) acc*)))
+                                ((ths (delete ths% cl))
+                                  (acc (cl:cons (tuple th (thmToInference th)) acc%)))
+                                (cl:declare (cl:ignorable ths acc))
                                 (tuple ths acc)))))))))))))
           (fletc
             ((mkProof
-              (ths th*)
-              (match (addProof (tuple th* (tuple ths nil)))
-                ((tuple ths* acc) (list-rev acc)))))
-            (let* ((ths (mkThms th)) (infs (mkProof ths th))) infs)))))))
+              (ths th%)
+              (match (addProof (tuple th% (tuple ths nil)))
+                ((tuple ths% acc) (list-rev acc)))))
+            (let* ((ths (mkThms th)) (infs (mkProof ths th)))
+              (cl:declare (cl:ignorable ths infs))
+              infs)))))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Free variables.                                                           *)
@@ -22469,13 +22948,13 @@
 
 (defparameter zVar (make-Var zVarName))
 
-(defunc xIVarName (i*) (fromString (string-concat "x" (string-of-int i*))))
+(defunc xIVarName (i%) (fromString (string-concat "x" (string-of-int i%))))
 
-(defunc xIVar (i*) (make-Var (xIVarName i*)))
+(defunc xIVar (i%) (make-Var (xIVarName i%)))
 
-(defunc yIVarName (i*) (fromString (string-concat "y" (string-of-int i*))))
+(defunc yIVarName (i%) (fromString (string-concat "y" (string-of-int i%))))
 
-(defunc yIVar (i*) (make-Var (yIVarName i*)))
+(defunc yIVar (i%) (make-Var (yIVarName i%)))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (*                                                                           *)
@@ -22500,6 +22979,7 @@
     ((reflTh (reflexivityRule x))
       (reflLit (destUnit reflTh))
       (eqTh (equality reflLit (cl:cons 0 nil) y)))
+    (cl:declare (cl:ignorable reflTh reflLit eqTh))
     (resolve reflLit reflTh eqTh)))
 
 (defparameter symmetry (symmetryRule xVar yVar))
@@ -22513,6 +22993,7 @@
 
 (defparameter transitivity
   (let ((eqTh (equality (mkEq (tuple yVar zVar)) (cl:cons 0 nil) xVar)))
+    (cl:declare (cl:ignorable eqTh))
     (resolve (mkEq (tuple yVar xVar)) symmetry eqTh)))
 
 ;; (* ------------------------------------------------------------------------- *)
@@ -22530,23 +23011,25 @@
         (let*
           ((sub (fromList (cl:cons (tuple xVarName x) (cl:cons (tuple yVarName y) nil))))
             (symTh (subst sub symmetry)))
+          (cl:declare (cl:ignorable sub symTh))
           (resolve lit th symTh))))))
 
 (defunc equationLiteral (arg~35939)
   (match arg~35939
     ((tuple t_u th)
       (let ((lit (mkEq t_u)))
+        (cl:declare (cl:ignorable lit))
         (if (funcall member lit (clause th)) (make-Some lit) (make-None))))))
 
-(defunc reflEqn (t*) (tuple (tuple t* t*) (refl t*)))
+(defunc reflEqn (t%) (tuple (tuple t% t%) (refl t%)))
 
 (defunc symEqn (arg~35969)
   (match arg~35969
-    ((cl:and eqn (tuple (tuple t* u) th))
-      (if (equal t* u)
+    ((cl:and eqn (tuple (tuple t% u) th))
+      (if (equal t% u)
         eqn
         (tuple
-          (tuple u t*)
+          (tuple u t%)
           (match (equationLiteral eqn) ((Some t_u) (symEq t_u th)) ((None) th)))))))
 
 (defunc transEqn (arg~36004 arg~36010)
@@ -22577,8 +23060,9 @@
                                     (tuple yVarName y)
                                     (cl:cons (tuple zVarName z) nil)))))
                               (th (subst sub transitivity))
-                              (th* (resolve x_y th1 th))
-                              (th (resolve y_z th2 th*)))
+                              (th% (resolve x_y th1 th))
+                              (th (resolve y_z th2 th%)))
+                            (cl:declare (cl:ignorable sub th th% th))
                             th))))))))))))))
 
 (defunc allConv (tm) (tuple tm (refl tm)))
@@ -22602,16 +23086,19 @@
 
 (defunc thenConvTrans (tm arg~36115 arg~36119)
   (match arg~36115
-    ((tuple tm* th1)
+    ((tuple tm% th1)
       (match arg~36119
-        ((tuple tm** th2)
-          (let ((eqn1 (tuple (tuple tm tm*) th1)) (eqn2 (tuple (tuple tm* tm**) th2)))
-            (match (transEqn eqn1 eqn2) ((tuple _ th) (tuple tm** th)))))))))
+        ((tuple tm%% th2)
+          (let ((eqn1 (tuple (tuple tm tm%) th1)) (eqn2 (tuple (tuple tm% tm%%) th2)))
+            (cl:declare (cl:ignorable eqn1 eqn2))
+            (match (transEqn eqn1 eqn2) ((tuple _ th) (tuple tm%% th)))))))))
 
 (defunc thenConv (conv1 conv2 tm)
   (match (funcall conv1 tm)
-    ((cl:and res1 (tuple tm* _))
-      (let ((res2 (funcall conv2 tm*))) (thenConvTrans tm res1 res2)))))
+    ((cl:and res1 (tuple tm% _))
+      (let ((res2 (funcall conv2 tm%)))
+        (cl:declare (cl:ignorable res2))
+        (thenConvTrans tm res1 res2)))))
 
 (defunc orelseConv (conv1 conv2 tm)
   (handler-case
@@ -22624,7 +23111,7 @@
 
 (defunc changedConv (conv tm)
   (match (funcall conv tm)
-    ((cl:and res (tuple tm* _)) (if (= tm tm*) (failwith "changedConv") res))))
+    ((cl:and res (tuple tm% _)) (if (= tm tm%) (failwith "changedConv") res))))
 
 (defunc repeatConv (conv tm) (tryConv (thenConv conv (repeatConv conv)) tm))
 
@@ -22657,13 +23144,14 @@
             ((reflTh (refl tm))
               (reflLit (destUnit reflTh))
               (th (equality reflLit (cl:cons 1 path) y))
-              (th* (resolve reflLit reflTh th))
+              (th% (resolve reflLit reflTh th))
               (th
                 (match (equationLiteral eqn)
-                  ((None) th*)
-                  ((Some x_y) (resolve x_y eqTh th*))))
-              (tm* (replace tm (tuple path y))))
-            (tuple tm* th)))))))
+                  ((None) th%)
+                  ((Some x_y) (resolve x_y eqTh th%))))
+              (tm% (replace tm (tuple path y))))
+            (cl:declare (cl:ignorable reflTh reflLit th th% th tm%))
+            (tuple tm% th)))))))
 
 ;; (*MetisDebug
 ;; let rewrConv = fun eqn as ((x,y),eqTh) -> fun path -> fun tm ->
@@ -22679,15 +23167,16 @@
 
 (defunc pathConv (conv path tm)
   (let ((x (subterm tm path)))
+    (cl:declare (cl:ignorable x))
     (match (funcall conv x) ((tuple y th) (rewrConv (tuple (tuple x y) th) path tm)))))
 
-(defunc subtermConv (conv i*) (pathConv conv (cl:cons i* nil)))
+(defunc subtermConv (conv i%) (pathConv conv (cl:cons i% nil)))
 
 (defunc subtermsConv (conv arg~36411)
   (match arg~36411
     ((cl:and tm (Var _)) (allConv tm))
-    ((cl:and tm (Fn (tuple _ a*)))
-      (everyConv (list-map (subtermConv conv) (interval 0 (funcall length a*))) tm))))
+    ((cl:and tm (Fn (tuple _ a%)))
+      (everyConv (list-map (subtermConv conv) (interval 0 (funcall length a%))) tm))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Applying a conversion to every subterm, with some traversal strategy.     *)
@@ -22702,8 +23191,8 @@
 
 (defunc repeatTopDownConv (conv)
   (labelsc
-    ((f (tm) (thenConv (repeatConv conv) #'g* tm))
-      (g* (tm) (thenConv (subtermsConv #'f) #'h tm))
+    ((f (tm) (thenConv (repeatConv conv) #'g% tm))
+      (g% (tm) (thenConv (subtermsConv #'f) #'h tm))
       (h (tm) (tryConv (thenConv conv #'f) tm)))
     #'f))
 
@@ -22713,20 +23202,20 @@
 
 (defunc thenLiterule (literule1 literule2 lit)
   (match (funcall literule1 lit)
-    ((cl:and res1 (tuple lit* th1))
-      (match (funcall literule2 lit*)
-        ((cl:and res2 (tuple lit** th2))
-          (if (hol2cl.metis.metis_prover.literal:equal lit lit*)
+    ((cl:and res1 (tuple lit% th1))
+      (match (funcall literule2 lit%)
+        ((cl:and res2 (tuple lit%% th2))
+          (if (hol2cl.metis.metis_prover.literal:equal lit lit%)
             res2
-            (if (hol2cl.metis.metis_prover.literal:equal lit* lit**)
+            (if (hol2cl.metis.metis_prover.literal:equal lit% lit%%)
               res1
-              (if (hol2cl.metis.metis_prover.literal:equal lit lit**)
+              (if (hol2cl.metis.metis_prover.literal:equal lit lit%%)
                 (allLiterule lit)
                 (tuple
-                  lit**
-                  (if (not (hol2cl.metis.metis_prover.thm:member lit* th1))
+                  lit%%
+                  (if (not (hol2cl.metis.metis_prover.thm:member lit% th1))
                     th1
-                    (if (not (negateMember lit* th2)) th2 (resolve lit* th1 th2))))))))))))
+                    (if (not (negateMember lit% th2)) th2 (resolve lit% th1 th2))))))))))))
 
 (defunc orelseLiterule (literule1 literule2 lit)
   (handler-case
@@ -22741,7 +23230,7 @@
 
 (defunc changedLiterule (literule lit)
   (match (funcall literule lit)
-    ((cl:and res (tuple lit* _)) (if (= lit lit*) (failwith "changedLiterule") res))))
+    ((cl:and res (tuple lit% _)) (if (= lit lit%) (failwith "changedLiterule") res))))
 
 (defunc repeatLiterule (literule lit)
   (tryLiterule (thenLiterule literule (repeatLiterule literule)) lit))
@@ -22771,10 +23260,11 @@
         (allLiterule lit)
         (let*
           ((th (equality lit path y))
-            (th*
+            (th%
               (match (equationLiteral eqn) ((None) th) ((Some x_y) (resolve x_y eqTh th))))
-            (lit* (hol2cl.metis.metis_prover.literal:replace lit (tuple path y))))
-          (tuple lit* th*))))))
+            (lit% (hol2cl.metis.metis_prover.literal:replace lit (tuple path y))))
+          (cl:declare (cl:ignorable th th% lit%))
+          (tuple lit% th%))))))
 
 ;; (*MetisDebug
 ;; let rewrLiterule = fun eqn -> fun path -> fun lit ->
@@ -22788,10 +23278,11 @@
 
 (defunc pathLiterule (conv path lit)
   (let ((tm (hol2cl.metis.metis_prover.literal:subterm lit path)))
+    (cl:declare (cl:ignorable tm))
     (match (funcall conv tm)
-      ((tuple tm* th) (rewrLiterule (tuple (tuple tm tm*) th) path lit)))))
+      ((tuple tm% th) (rewrLiterule (tuple (tuple tm tm%) th) path lit)))))
 
-(defunc argumentLiterule (conv i*) (pathLiterule conv (cl:cons i* nil)))
+(defunc argumentLiterule (conv i%) (pathLiterule conv (cl:cons i% nil)))
 
 (defunc allArgumentsLiterule (conv lit)
   (everyLiterule (list-map (argumentLiterule conv) (interval 0 (arity lit))) lit))
@@ -22812,14 +23303,15 @@
 (defunc tryRule (rule) (orelseRule rule #'allRule))
 
 (defunc changedRule (rule th)
-  (let ((th* (funcall rule th)))
+  (let ((th% (funcall rule th)))
+    (cl:declare (cl:ignorable th%))
     (if
       (not
         (funcall
           hol2cl.metis.metis_prover.literal.set.include~30172:equal
           (clause th)
-          (clause th*)))
-      th*
+          (clause th%)))
+      th%
       (failwith "changedRule"))))
 
 (defunc repeatRule (rule lit) (tryRule (thenRule rule (repeatRule rule)) lit))
@@ -22842,8 +23334,8 @@
 
 (defunc literalRule (literule lit th)
   (match (funcall literule lit)
-    ((tuple lit* litTh)
-      (if (hol2cl.metis.metis_prover.literal:equal lit lit*)
+    ((tuple lit% litTh)
+      (if (hol2cl.metis.metis_prover.literal:equal lit lit%)
         th
         (if (not (negateMember lit litTh)) litTh (resolve lit th litTh))))))
 
@@ -22887,17 +23379,20 @@
   (match arg~36996
     ((tuple f n)
       (let ((xs (tabulate (tuple n #'xIVar))) (ys (tabulate (tuple n #'yIVar))))
+        (cl:declare (cl:ignorable xs ys))
         (fletc
           ((cong
             (arg~37011)
             (match arg~37011
-              ((tuple (tuple i* yi) (tuple th lit))
+              ((tuple (tuple i% yi) (tuple th lit))
                 (let*
-                  ((path (cl:cons 1 (cl:cons i* nil)))
-                    (th* (resolve lit th (equality lit path yi)))
-                    (lit* (hol2cl.metis.metis_prover.literal:replace lit (tuple path yi))))
-                  (tuple th* lit*))))))
+                  ((path (cl:cons 1 (cl:cons i% nil)))
+                    (th% (resolve lit th (equality lit path yi)))
+                    (lit% (hol2cl.metis.metis_prover.literal:replace lit (tuple path yi))))
+                  (cl:declare (cl:ignorable path th% lit%))
+                  (tuple th% lit%))))))
           (let* ((reflTh (refl (make-Fn (tuple f xs)))) (reflLit (destUnit reflTh)))
+            (cl:declare (cl:ignorable reflTh reflLit))
             (fst
               (hol2cl.metis.metis_prover.mlist:foldl
                 #'cong
@@ -22914,19 +23409,22 @@
 
 (defunc relationCongruence (arg~37076)
   (match arg~37076
-    ((tuple r* n)
+    ((tuple r% n)
       (let ((xs (tabulate (tuple n #'xIVar))) (ys (tabulate (tuple n #'yIVar))))
+        (cl:declare (cl:ignorable xs ys))
         (fletc
           ((cong
             (arg~37091)
             (match arg~37091
-              ((tuple (tuple i* yi) (tuple th lit))
+              ((tuple (tuple i% yi) (tuple th lit))
                 (let*
-                  ((path (cl:cons i* nil))
-                    (th* (resolve lit th (equality lit path yi)))
-                    (lit* (hol2cl.metis.metis_prover.literal:replace lit (tuple path yi))))
-                  (tuple th* lit*))))))
-          (let* ((assumeLit (tuple cl:nil (tuple r* xs))) (assumeTh (assume assumeLit)))
+                  ((path (cl:cons i% nil))
+                    (th% (resolve lit th (equality lit path yi)))
+                    (lit% (hol2cl.metis.metis_prover.literal:replace lit (tuple path yi))))
+                  (cl:declare (cl:ignorable path th% lit%))
+                  (tuple th% lit%))))))
+          (let* ((assumeLit (tuple cl:nil (tuple r% xs))) (assumeTh (assume assumeLit)))
+            (cl:declare (cl:ignorable assumeLit assumeTh))
             (fst
               (hol2cl.metis.metis_prover.mlist:foldl
                 #'cong
@@ -22948,6 +23446,7 @@
         (let*
           ((sub (fromList (cl:cons (tuple xVarName y) (cl:cons (tuple yVarName x) nil))))
             (symTh (subst sub symmetry)))
+          (cl:declare (cl:ignorable sub symTh))
           (resolve lit th symTh))))))
 
 ;; (* ------------------------------------------------------------------------- *)
@@ -22972,11 +23471,11 @@
     ((irrefl
       (arg~37214)
       (match arg~37214
-        ((tuple (tuple cl:t _) th*) th*)
-        ((tuple (cl:and lit (tuple cl:nil atm)) th*)
+        ((tuple (tuple cl:t _) th%) th%)
+        ((tuple (cl:and lit (tuple cl:nil atm)) th%)
           (match (total #'destRefl atm)
-            ((Some x) (resolve lit th* (refl x)))
-            ((None) th*))))))
+            ((Some x) (resolve lit th% (refl x)))
+            ((None) th%))))))
     (funcall foldl #'irrefl th (clause th))))
 
 ;; (* ------------------------------------------------------------------------- *)
@@ -22993,13 +23492,13 @@
     ((rem
       (arg~37257)
       (match arg~37257
-        ((tuple (cl:and lit (tuple pol atm)) (tuple eqs th*))
+        ((tuple (cl:and lit (tuple pol atm)) (tuple eqs th%))
           (match (total #'hol2cl.metis.metis_prover.atom:sym atm)
-            ((None) (tuple eqs th*))
-            ((Some atm*)
+            ((None) (tuple eqs th%))
+            ((Some atm%)
               (if (funcall member lit eqs)
-                (tuple eqs (if pol (symEq lit th*) (symNeq lit th*)))
-                (tuple (add eqs (tuple pol atm*)) th*))))))))
+                (tuple eqs (if pol (symEq lit th%) (symNeq lit th%)))
+                (tuple (add eqs (tuple pol atm%)) th%))))))))
     (snd (funcall foldl #'rem (tuple empty th) (clause th)))))
 
 ;; (* ------------------------------------------------------------------------- *)
@@ -23036,8 +23535,9 @@
 (defunc simplify (th)
   (if (isTautology th)
     (make-None)
-    (let* ((th* th) (th** (expandAbbrevs th*)) (th* (removeSym th**)))
-      (if (hol2cl.metis.metis_prover.thm:equal th th*) (make-Some th) (simplify th*)))))
+    (let* ((th% th) (th%% (expandAbbrevs th%)) (th% (removeSym th%%)))
+      (cl:declare (cl:ignorable th% th%% th%))
+      (if (hol2cl.metis.metis_prover.thm:equal th th%) (make-Some th) (simplify th%)))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (*    C                                                                      *)
@@ -23060,12 +23560,13 @@
   (let
     ((result
       (match edge
-        ((Factor_edge atm atm*)
-          (total (hol2cl.metis.metis_prover.atom:unify sub atm) atm*))
-        ((Refl_edge tm tm*) (total (unify sub tm) tm*)))))
+        ((Factor_edge atm atm%)
+          (total (hol2cl.metis.metis_prover.atom:unify sub atm) atm%))
+        ((Refl_edge tm tm%) (total (unify sub tm) tm%)))))
+    (cl:declare (cl:ignorable result))
     (match result
       ((None) (make-Apart))
-      ((Some sub*) (if (== sub sub*) (make-Joined) (make-Joinable sub*))))))
+      ((Some sub%) (if (== sub sub%) (make-Joined) (make-Joinable sub%))))))
 
 (defunc updateApart (sub)
   (labelsc
@@ -23084,10 +23585,11 @@
   (match arg~37487
     ((tuple pol atm)
       (match arg~37491
-        ((tuple (tuple pol* atm*) acc)
-          (if (<> pol pol*)
+        ((tuple (tuple pol% atm%) acc)
+          (if (<> pol pol%)
             acc
-            (let ((edge (make-Factor_edge atm atm*)))
+            (let ((edge (make-Factor_edge atm atm%)))
+              (cl:declare (cl:ignorable edge))
               (match (joinEdge hol2cl.metis.metis_prover.substitute:empty edge)
                 ((Joined) (raise (make-Bug "addFactorEdge: joined")))
                 ((Joinable sub) (cl:cons (tuple sub edge) acc))
@@ -23101,6 +23603,7 @@
         ((edge
           (match (hol2cl.metis.metis_prover.atom:destEq atm)
             ((tuple x y) (make-Refl_edge x y)))))
+        (cl:declare (cl:ignorable edge))
         (match (joinEdge hol2cl.metis.metis_prover.substitute:empty edge)
           ((Joined) (raise (make-Bug "addRefl: joined")))
           ((Joinable _) (cl:cons edge acc))
@@ -23116,6 +23619,7 @@
         ((edge
           (match (hol2cl.metis.metis_prover.atom:destEq atm)
             ((tuple x y) (make-Refl_edge x y)))))
+        (cl:declare (cl:ignorable edge))
         (match (joinEdge hol2cl.metis.metis_prover.substitute:empty edge)
           ((Joined) (raise (make-Bug "addRefl: joined")))
           ((Joinable sub) (cl:cons (tuple sub edge) acc))
@@ -23123,68 +23627,74 @@
 
 (defparameter addIrreflEdge (curry #'addIrreflEdge~1))
 
-(defunc init_edges (acc apart* arg~37639)
+(defunc init_edges (acc apart% arg~37639)
   (match arg~37639
     (nil
       (fletc
         ((init
           (arg~37643)
           (match arg~37643
-            ((tuple (tuple apart** sub edge) (tuple edges acc*))
-              (tuple (cl:cons edge edges) (cl:cons (tuple apart** sub edges) acc*))))))
+            ((tuple (tuple apart%% sub edge) (tuple edges acc%))
+              (tuple (cl:cons edge edges) (cl:cons (tuple apart%% sub edges) acc%))))))
         (snd (hol2cl.metis.metis_prover.mlist:foldl #'init (tuple nil nil) acc))))
     ((cl:cons (tuple sub edge) sub_edges)
       (match
-        (match (updateApart sub apart*)
-          ((Some apart**)
-            (tuple (cl:cons (tuple apart** sub edge) acc) (cl:cons edge apart*)))
-          ((None) (tuple acc apart*)))
-        ((tuple acc* apart**) (init_edges acc* apart** sub_edges))))))
+        (match (updateApart sub apart%)
+          ((Some apart%%)
+            (tuple (cl:cons (tuple apart%% sub edge) acc) (cl:cons edge apart%)))
+          ((None) (tuple acc apart%)))
+        ((tuple acc% apart%%) (init_edges acc% apart%% sub_edges))))))
 
-(defunc mk_edges (apart* sub_edges arg~37719)
+(defunc mk_edges (apart% sub_edges arg~37719)
   (match arg~37719
-    (nil (init_edges nil apart* sub_edges))
+    (nil (init_edges nil apart% sub_edges))
     ((cl:cons lit lits)
       (let
-        ((sub_edges*
+        ((sub_edges%
           (hol2cl.metis.metis_prover.mlist:foldl (addFactorEdge lit) sub_edges lits)))
+        (cl:declare (cl:ignorable sub_edges%))
         (match
           (match (total #'hol2cl.metis.metis_prover.literal:sym lit)
-            ((None) (tuple apart* sub_edges*))
-            ((Some lit*)
+            ((None) (tuple apart% sub_edges%))
+            ((Some lit%)
               (let*
-                ((apart** (funcall addReflEdge lit apart*))
-                  (sub_edges (funcall addIrreflEdge lit sub_edges*))
-                  (sub_edges*
+                ((apart%% (funcall addReflEdge lit apart%))
+                  (sub_edges (funcall addIrreflEdge lit sub_edges%))
+                  (sub_edges%
                     (hol2cl.metis.metis_prover.mlist:foldl
-                      (addFactorEdge lit*)
+                      (addFactorEdge lit%)
                       sub_edges
                       lits)))
-                (tuple apart** sub_edges*))))
-          ((tuple apart** sub_edges) (mk_edges apart** sub_edges lits)))))))
+                (cl:declare (cl:ignorable apart%% sub_edges sub_edges%))
+                (tuple apart%% sub_edges%))))
+          ((tuple apart%% sub_edges) (mk_edges apart%% sub_edges lits)))))))
 
 (defunc fact (acc arg~37782)
   (match arg~37782
     (nil acc)
     ((cl:cons (tuple _ sub nil) others) (fact (cl:cons sub acc) others))
-    ((cl:cons (tuple apart* sub (cl:cons edge edges)) others)
+    ((cl:cons (tuple apart% sub (cl:cons edge edges)) others)
       (let
-        ((others*
+        ((others%
           (match (joinEdge sub edge)
-            ((Joinable sub*)
-              (let ((others* (cl:cons (tuple (cl:cons edge apart*) sub edges) others)))
-                (match (updateApart sub* apart*)
-                  ((None) others*)
-                  ((Some apart**) (cl:cons (tuple apart** sub* edges) others*)))))
-            (_ (cl:cons (tuple apart* sub edges) others)))))
-        (fact acc others*)))))
+            ((Joinable sub%)
+              (let ((others% (cl:cons (tuple (cl:cons edge apart%) sub edges) others)))
+                (cl:declare (cl:ignorable others%))
+                (match (updateApart sub% apart%)
+                  ((None) others%)
+                  ((Some apart%%) (cl:cons (tuple apart%% sub% edges) others%)))))
+            (_ (cl:cons (tuple apart% sub edges) others)))))
+        (cl:declare (cl:ignorable others%))
+        (fact acc others%)))))
 
-(defunc factor* (cl)
-  (let* ((edges (mk_edges nil nil (funcall toList cl))) (result (fact nil edges))) result))
+(defunc factor% (cl)
+  (let* ((edges (mk_edges nil nil (funcall toList cl))) (result (fact nil edges)))
+    (cl:declare (cl:ignorable edges result))
+    result))
 
 (defunc factor (th)
-  (fletc ((fact* (sub) (removeIrrefl (removeSym (subst sub th)))))
-    (list-map #'fact* (factor* (clause th)))))
+  (fletc ((fact% (sub) (removeIrrefl (removeSym (subst sub th)))))
+    (list-map #'fact% (factor% (clause th)))))
 
 (in-package :hol2cl.metis.metis_prover)
 
@@ -23204,18 +23714,20 @@
 
 (defunc multInt (x y)
   (let ((m (int-of-float (float-floor (sqrt (float-of-int ocaml-max-int))))))
+    (cl:declare (cl:ignorable m))
     (if (cl:and (<= x m) (<= y m)) (make-Some (* x y)) (make-None))))
 
 (defunc iexp (x y acc)
   (if (= (int-mod y 2) 0)
-    (iexp* x y acc)
-    (match (multInt acc x) ((Some acc*) (iexp* x y acc*)) ((None) (make-None)))))
+    (iexp% x y acc)
+    (match (multInt acc x) ((Some acc%) (iexp% x y acc%)) ((None) (make-None)))))
 
-(defunc iexp* (x y acc)
+(defunc iexp% (x y acc)
   (if (= y 1)
     (make-Some acc)
-    (let ((y* (int-div y 2)))
-      (match (multInt x x) ((Some x*) (iexp x* y* acc)) ((None) (make-None))))))
+    (let ((y% (int-div y 2)))
+      (cl:declare (cl:ignorable y%))
+      (match (multInt x x) ((Some x%) (iexp x% y% acc)) ((None) (make-None))))))
 
 (defunc expInt (x y)
   (if (<= y 1)
@@ -23231,15 +23743,18 @@
 (defunc intToBool (arg~38022)
   (match arg~38022 (1 cl:t) (0 cl:nil) (_ (raise (make-Bug "Model.intToBool")))))
 
-(defunc minMaxInterval (i* j) (interval i* (- (+ 1 j) i*)))
+(defunc minMaxInterval (i% j) (interval i% (- (+ 1 j) i%)))
 
 (defrecord size size)
 
 (defparameter zeroElement 0)
 
-(defunc incrementElement (arg~38050 i*)
+(defunc incrementElement (arg~38050 i%)
   (match arg~38050
-    ((size :size n) (let ((i** (+ i* 1))) (if (= i** n) (make-None) (make-Some i**))))))
+    ((size :size n)
+      (let ((i%% (+ i% 1)))
+        (cl:declare (cl:ignorable i%%))
+        (if (= i%% n) (make-None) (make-Some i%%))))))
 
 (defunc elementListSpace (arg~38070 arity)
   (match arg~38070
@@ -23254,7 +23769,7 @@
       (labelsc
         ((f
           (acc elts)
-          (match elts (nil acc) ((cl:cons elt elts*) (f (+ (* n acc) elt) elts*)))))
+          (match elts (nil acc) ((cl:cons elt elts%) (f (+ (* n acc) elt) elts%)))))
         (f 0)))))
 
 (defrecord fixed functions relations)
@@ -23282,33 +23797,36 @@
 
 (defparameter emptyFixed
   (let ((fns emptyFunctions) (rels emptyRelations))
+    (cl:declare (cl:ignorable fns rels))
     (make-fixed :functions fns :relations rels)))
 
-(defunc peekFunctionFixed (fix* name_arity)
-  (match fix* ((fixed :functions fns) (peek fns name_arity))))
+(defunc peekFunctionFixed (fix% name_arity)
+  (match fix% ((fixed :functions fns) (peek fns name_arity))))
 
-(defunc peekRelationFixed (fix* name_arity)
-  (match fix* ((fixed :relations rels) (peek rels name_arity))))
+(defunc peekRelationFixed (fix% name_arity)
+  (match fix% ((fixed :relations rels) (peek rels name_arity))))
 
-(defunc getFunctionFixed (fix* name_arity)
-  (match (peekFunctionFixed fix* name_arity) ((Some f) f) ((None) uselessFixedFunction)))
+(defunc getFunctionFixed (fix% name_arity)
+  (match (peekFunctionFixed fix% name_arity) ((Some f) f) ((None) uselessFixedFunction)))
 
-(defunc getRelationFixed (fix* name_arity)
-  (match (peekRelationFixed fix* name_arity)
+(defunc getRelationFixed (fix% name_arity)
+  (match (peekRelationFixed fix% name_arity)
     ((Some rel) rel)
     ((None) uselessFixedRelation)))
 
-(defunc insertFunctionFixed (fix* name_arity_fun)
-  (match fix*
+(defunc insertFunctionFixed (fix% name_arity_fun)
+  (match fix%
     ((fixed :functions fns :relations rels)
-      (let ((fns* (insert fns name_arity_fun)))
-        (make-fixed :functions fns* :relations rels)))))
+      (let ((fns% (insert fns name_arity_fun)))
+        (cl:declare (cl:ignorable fns%))
+        (make-fixed :functions fns% :relations rels)))))
 
-(defunc insertRelationFixed (fix* name_arity_rel)
-  (match fix*
+(defunc insertRelationFixed (fix% name_arity_rel)
+  (match fix%
     ((fixed :functions fns :relations rels)
-      (let ((rels* (insert rels name_arity_rel)))
-        (make-fixed :functions fns :relations rels*)))))
+      (let ((rels% (insert rels name_arity_rel)))
+        (cl:declare (cl:ignorable rels%))
+        (make-fixed :functions fns :relations rels%)))))
 
 (defunc union (arg~38299) (raise (make-Bug "Model.unionFixed: nameArity clash")))
 
@@ -23325,12 +23843,13 @@
               #'union
               rels1
               rels2)))
+        (cl:declare (cl:ignorable fns rels))
         (make-fixed :functions fns :relations rels)))))
 
 (defparameter unionListFixed
   (fletc
-    ((union** (arg~38339) (match arg~38339 ((tuple fix* acc) (unionFixed acc fix*)))))
-    (foldl #'union** emptyFixed)))
+    ((union%% (arg~38339) (match arg~38339 ((tuple fix% acc) (unionFixed acc fix%)))))
+    (foldl #'union%% emptyFixed)))
 
 (defunc hasTypeFn (arg~38355 elts)
   (match elts
@@ -23346,17 +23865,19 @@
   (let*
     ((fns (singleton (tuple hasTypeFunction #'hasTypeFn)))
       (rels (singleton (tuple eqRelation #'eqRel))))
+    (cl:declare (cl:ignorable fns rels))
     (make-fixed :functions fns :relations rels)))
 
 (defrecord fixedMap functionMap relationMap)
 
-(defunc mapFixed (fixMap* fix*)
-  (match (tuple fixMap* fix*)
+(defunc mapFixed (fixMap% fix%)
+  (match (tuple fixMap% fix%)
     ((tuple
       (fixedMap :functionMap fnMap :relationMap relMap)
       (fixed :functions fns :relations rels))
-      (let* ((fns* (compose fnMap fns)) (rels* (compose relMap rels)))
-        (make-fixed :functions fns* :relations rels*)))))
+      (let* ((fns% (compose fnMap fns)) (rels% (compose relMap rels)))
+        (cl:declare (cl:ignorable fns% rels%))
+        (make-fixed :functions fns% :relations rels%)))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Standard fixed model parts.                                               *)
@@ -23371,27 +23892,28 @@
 
 (defparameter projectionList (minMaxInterval projectionMin projectionMax))
 
-(defunc projectionName (i*)
+(defunc projectionName (i%)
   (match
     (cl:or
-      (<= projectionMin i*)
+      (<= projectionMin i%)
       (raise (make-Bug "Model.projectionName: less than projectionMin")))
     (_
       (match
         (cl:or
-          (<= i* projectionMax)
+          (<= i% projectionMax)
           (raise (make-Bug "Model.projectionName: greater than projectionMax")))
-        (_ (fromString (string-concat "project" (string-of-int i*))))))))
+        (_ (fromString (string-concat "project" (string-of-int i%))))))))
 
-(defunc projectionFn (i* arg~38483 elts) (make-Some (list-nth elts (- i* 1))))
+(defunc projectionFn (i% arg~38483 elts) (make-Some (list-nth elts (- i% 1))))
 
 (defunc arityProjectionFixed (arity)
-  (fletc ((mkProj (i*) (tuple (tuple (projectionName i*) arity) (projectionFn i*))))
+  (fletc ((mkProj (i%) (tuple (tuple (projectionName i%) arity) (projectionFn i%))))
     (labelsc
       ((addProj
-        (i* acc)
-        (if (> i* arity) acc (addProj (+ i* 1) (insert acc (mkProj i*))))))
+        (i% acc)
+        (if (> i% arity) acc (addProj (+ i% 1) (insert acc (mkProj i%))))))
       (let* ((fns (addProj projectionMin emptyFunctions)) (rels emptyRelations))
+        (cl:declare (cl:ignorable fns rels))
         (make-fixed :functions fns :relations rels)))))
 
 (defparameter projectionFixed
@@ -23406,22 +23928,23 @@
 
 (defparameter numeralList (minMaxInterval numeralMin numeralMax))
 
-(defunc numeralName (i*)
+(defunc numeralName (i%)
   (match
     (cl:or
-      (<= numeralMin i*)
+      (<= numeralMin i%)
       (raise (make-Bug "Model.numeralName: less than numeralMin")))
     (_
       (match
         (cl:or
-          (<= i* numeralMax)
+          (<= i% numeralMax)
           (raise (make-Bug "Model.numeralName: greater than numeralMax")))
         (_
           (let
             ((s
-              (if (< i* 0)
-                (string-concat "negative" (string-of-int (- i*)))
-                (string-of-int i*))))
+              (if (< i% 0)
+                (string-concat "negative" (string-of-int (- i%)))
+                (string-of-int i%))))
+            (cl:declare (cl:ignorable s))
             (fromString s)))))))
 
 (defparameter addName (fromString "+"))
@@ -23470,19 +23993,25 @@
 ;; (* Functions *)
 
 
-(defunc numeralFn~1 (i* sz) (make-Some (modN sz i*)))
+(defunc numeralFn~1 (i% sz) (make-Some (modN sz i%)))
 
 (defunc addFn~1 (sz x y) (make-Some (modN sz (+ x y))))
 
 (defunc divFn~1 (arg~38708 x y)
   (match arg~38708
-    ((size :size n) (let ((y* (if (= y 0) n y))) (make-Some (int-div x y*))))))
+    ((size :size n)
+      (let ((y% (if (= y 0) n y)))
+        (cl:declare (cl:ignorable y%))
+        (make-Some (int-div x y%))))))
 
 (defunc expFn~1 (sz x y) (make-Some (exp (multN~1 sz) x y (oneN~1 sz))))
 
 (defunc modFn~1 (arg~38742 x y)
   (match arg~38742
-    ((size :size n) (let ((y* (if (= y 0) n y))) (make-Some (int-mod x y*))))))
+    ((size :size n)
+      (let ((y% (if (= y 0) n y)))
+        (cl:declare (cl:ignorable y%))
+        (make-Some (int-mod x y%))))))
 
 (defunc multFn~1 (sz x y) (make-Some (multN~1 sz (tuple x y))))
 
@@ -23523,7 +24052,7 @@
       (fromList
         (append
           (list-map
-            (lambdac (i*) (tuple (tuple (numeralName i*) 0) (fixed0 (numeralFn~1 i*))))
+            (lambdac (i%) (tuple (tuple (numeralName i%) 0) (fixed0 (numeralFn~1 i%))))
             numeralList)
           (cl:cons
             (tuple (tuple addName 2) (fixed2 #'addFn~1))
@@ -23559,6 +24088,7 @@
                       (cl:cons
                         (tuple (tuple ltName 2) (fixed2 #'ltRel~1))
                         (cl:cons (tuple (tuple oddName 1) (fixed1 #'oddRel~1)) nil)))))))))))
+    (cl:declare (cl:ignorable fns rels))
     (make-fixed :functions fns :relations rels)))
 
 ;; (* Support *)
@@ -23573,7 +24103,7 @@
 ;; (* Functions *)
 
 
-(defunc numeralFn (i* sz) (if (< i* 0) (make-None) (make-Some (cutN sz i*))))
+(defunc numeralFn (i% sz) (if (< i% 0) (make-None) (make-Some (cutN sz i%))))
 
 (defunc addFn (sz x y) (make-Some (cutN sz (+ x y))))
 
@@ -23657,7 +24187,7 @@
       (fromList
         (append
           (list-map
-            (lambdac (i*) (tuple (tuple (numeralName i*) 0) (fixed0 (numeralFn i*))))
+            (lambdac (i%) (tuple (tuple (numeralName i%) 0) (fixed0 (numeralFn i%))))
             numeralList)
           (cl:cons
             (tuple (tuple addName 2) (fixed2 #'addFn))
@@ -23693,6 +24223,7 @@
                       (cl:cons
                         (tuple (tuple ltName 2) (fixed2 #'ltRel))
                         (cl:cons (tuple (tuple oddName 1) (fixed1 #'oddRel)) nil)))))))))))
+    (cl:declare (cl:ignorable fns rels))
     (make-fixed :functions fns :relations rels)))
 
 ;; (* Sets *)
@@ -23732,7 +24263,7 @@
         ((f (acc arg~39696) (match arg~39696 (0 acc) (x (f (+ acc 1) (int-div x 2))))))
         (f (- 1) n)))))
 
-(defunc posN (i*) (shiftLeft (tuple 1 (fromInt i*))))
+(defunc posN (i%) (shiftLeft (tuple 1 (fromInt i%))))
 
 (defunc univN (sz) (minus (tuple (posN (eltN sz)) 1)))
 
@@ -23748,29 +24279,36 @@
       (match arg~39749
         (0 acc)
         (s
-          (let ((acc* (if (= (andb (tuple s 1)) 0) acc (+ acc 1))))
-            (f acc* (shiftRight (tuple s 1))))))))
+          (let ((acc% (if (= (andb (tuple s 1)) 0) acc (+ acc 1))))
+            (cl:declare (cl:ignorable acc%))
+            (f acc% (shiftRight (tuple s 1))))))))
     (make-Some (f (setN sz x) 0))))
 
 (defunc complementFn (sz x) (make-Some (toInt (xorb (tuple (univN sz) (setN sz x))))))
 
 (defunc differenceFn (sz x y)
-  (let ((x* (setN sz x)) (y* (setN sz y)))
-    (make-Some (toInt (andb (tuple x* (notb y*)))))))
+  (let ((x% (setN sz x)) (y% (setN sz y)))
+    (cl:declare (cl:ignorable x% y%))
+    (make-Some (toInt (andb (tuple x% (notb y%)))))))
 
 (defunc emptyFn (arg~39817) (make-Some 0))
 
 (defunc insertFn (sz x y)
-  (let ((x* (int-mod x (eltN sz))) (y* (setN sz y)))
-    (make-Some (toInt (orb (tuple (posN x*) y*))))))
+  (let ((x% (int-mod x (eltN sz))) (y% (setN sz y)))
+    (cl:declare (cl:ignorable x% y%))
+    (make-Some (toInt (orb (tuple (posN x%) y%))))))
 
 (defunc intersectFn (sz x y) (make-Some (toInt (andb (tuple (setN sz x) (setN sz y))))))
 
 (defunc singletonFn (sz x)
-  (let ((x* (int-mod x (eltN sz)))) (make-Some (toInt (posN x*)))))
+  (let ((x% (int-mod x (eltN sz))))
+    (cl:declare (cl:ignorable x%))
+    (make-Some (toInt (posN x%)))))
 
 (defunc symmetricDifferenceFn (sz x y)
-  (let ((x* (setN sz x)) (y* (setN sz y))) (make-Some (toInt (xorb (tuple x* y*))))))
+  (let ((x% (setN sz x)) (y% (setN sz y)))
+    (cl:declare (cl:ignorable x% y%))
+    (make-Some (toInt (xorb (tuple x% y%))))))
 
 (defunc unionFn (sz x y) (make-Some (toInt (orb (tuple (setN sz x) (setN sz y))))))
 
@@ -23780,11 +24318,14 @@
 
 
 (defunc memberRel (sz x y)
-  (let ((x* (int-mod x (eltN sz))) (y* (setN sz y)))
-    (make-Some (<> (andb (tuple (posN x*) y*)) 0))))
+  (let ((x% (int-mod x (eltN sz))) (y% (setN sz y)))
+    (cl:declare (cl:ignorable x% y%))
+    (make-Some (<> (andb (tuple (posN x%) y%)) 0))))
 
 (defunc subsetRel (sz x y)
-  (let ((x* (setN sz x)) (y* (setN sz y))) (make-Some (= (andb (tuple x* (notb y*))) 0))))
+  (let ((x% (setN sz x)) (y% (setN sz y)))
+    (cl:declare (cl:ignorable x% y%))
+    (make-Some (= (andb (tuple x% (notb y%))) 0))))
 
 (defparameter setFixed
   (let*
@@ -23818,6 +24359,7 @@
           (cl:cons
             (tuple (tuple memberName 2) (fixed2 #'memberRel))
             (cl:cons (tuple (tuple subsetName 2) (fixed2 #'subsetRel)) nil)))))
+    (cl:declare (cl:ignorable fns rels))
     (make-fixed :functions fns :relations rels)))
 
 ;; (* Lists *)
@@ -23837,10 +24379,11 @@
 
 (defparameter baseFix
   (let*
-    ((fix* (unionFixed projectionFixed overflowFixed))
-      (sucFn* (getFunctionFixed fix* (tuple sucName 1))))
-    (fletc ((suc2Fn (sz arg~40094 x) (funcall sucFn* sz (cl:cons x nil))))
-      (insertFunctionFixed fix* (tuple (tuple sucName 2) (fixed2 #'suc2Fn))))))
+    ((fix% (unionFixed projectionFixed overflowFixed))
+      (sucFn% (getFunctionFixed fix% (tuple sucName 1))))
+    (cl:declare (cl:ignorable fix% sucFn%))
+    (fletc ((suc2Fn (sz arg~40094 x) (funcall sucFn% sz (cl:cons x nil))))
+      (insertFunctionFixed fix% (tuple (tuple sucName 2) (fixed2 #'suc2Fn))))))
 
 (defparameter fixMap
   (make-fixedMap
@@ -23872,16 +24415,16 @@
 (defunc peekValuation (arg~40184 v)
   (match arg~40184 ((Valuation m) (hol2cl.metis.metis_prover.name.map:peek m v))))
 
-(defunc constantValuation (i*)
+(defunc constantValuation (i%)
   (fletc
-    ((add (arg~40197) (match arg~40197 ((tuple v v*) (insertValuation v* (tuple v i*))))))
+    ((add (arg~40197) (match arg~40197 ((tuple v v%) (insertValuation v% (tuple v i%))))))
     (funcall hol2cl.metis.metis_prover.name.set:foldl #'add emptyValuation)))
 
 (defparameter zeroValuation (constantValuation zeroElement))
 
-(defunc getValuation (v* v)
-  (match (peekValuation v* v)
-    ((Some i*) i*)
+(defunc getValuation (v% v)
+  (match (peekValuation v% v)
+    ((Some i%) i%)
     ((None) (failwith "Model.getValuation: incomplete valuation"))))
 
 (defunc randomValuation (arg~40234 vs)
@@ -23890,33 +24433,38 @@
       (fletc
         ((f
           (arg~40239)
-          (match arg~40239 ((tuple v v*) (insertValuation v* (tuple v (random-int n)))))))
+          (match arg~40239 ((tuple v v%) (insertValuation v% (tuple v (random-int n)))))))
         (funcall hol2cl.metis.metis_prover.name.set:foldl #'f emptyValuation vs)))))
 
 (defunc incrementValuation (n vars)
   (labelsc
     ((inc
-      (vs v*)
+      (vs v%)
       (match vs
         (nil (make-None))
-        ((cl:cons v vs*)
+        ((cl:cons v vs%)
           (match
-            (match (incrementElement n (getValuation v* v))
-              ((Some i*) (tuple cl:nil i*))
+            (match (incrementElement n (getValuation v% v))
+              ((Some i%) (tuple cl:nil i%))
               ((None) (tuple cl:t zeroElement)))
-            ((tuple carry i*)
-              (let ((v** (insertValuation v* (tuple v i*))))
-                (if carry (inc vs* v**) (make-Some v**)))))))))
+            ((tuple carry i%)
+              (let ((v%% (insertValuation v% (tuple v i%))))
+                (cl:declare (cl:ignorable v%%))
+                (if carry (inc vs% v%%) (make-Some v%%)))))))))
     (inc (funcall toList vars))))
 
 (defunc foldValuation (n vars f)
   (let ((inc (incrementValuation n vars)))
+    (cl:declare (cl:ignorable inc))
     (labelsc
       ((fold
-        (v* acc)
-        (let ((acc* (funcall f (tuple v* acc))))
-          (match (funcall inc v*) ((None) acc*) ((Some v**) (fold v** acc*))))))
-      (let ((zero (funcall zeroValuation vars))) (fold zero)))))
+        (v% acc)
+        (let ((acc% (funcall f (tuple v% acc))))
+          (cl:declare (cl:ignorable acc%))
+          (match (funcall inc v%) ((None) acc%) ((Some v%%) (fold v%% acc%))))))
+      (let ((zero (funcall zeroValuation vars)))
+        (cl:declare (cl:ignorable zero))
+        (fold zero)))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* A type of random finite mapping Z^n -> Z.                                 *)
@@ -23932,59 +24480,66 @@
     ((None) (make-Forgetful_table))
     ((Some space) (make-Array_table (array-make space cUNKNOWN)))))
 
-(defunc randomResult (r*) (random-int r*))
+(defunc randomResult (r%) (random-int r%))
 
 (defunc lookupTable (n vR table elts)
   (match table
     ((Forgetful_table) (randomResult vR))
-    ((Array_table a*)
-      (let* ((i* (elementListIndex (make-size :size n) elts)) (r* (array-get a* i*)))
-        (if (<> r* cUNKNOWN)
-          r*
+    ((Array_table a%)
+      (let* ((i% (elementListIndex (make-size :size n) elts)) (r% (array-get a% i%)))
+        (cl:declare (cl:ignorable i% r%))
+        (if (<> r% cUNKNOWN)
+          r%
           (let ((r (randomResult vR)))
-            (match (array-set a* i* r) ((cl:type hol2cl.runtime::unit-value) r))))))))
+            (cl:declare (cl:ignorable r))
+            (match (array-set a% i% r) ((cl:type hol2cl.runtime::unit-value) r))))))))
 
 (defunc updateTable (n table arg~40427)
   (match arg~40427
-    ((tuple elts r*)
+    ((tuple elts r%)
       (match table
         ((Forgetful_table) unit)
-        ((Array_table a*)
-          (let ((i* (elementListIndex (make-size :size n) elts)))
-            (match (array-set a* i* r*) ((cl:type hol2cl.runtime::unit-value) unit))))))))
+        ((Array_table a%)
+          (let ((i% (elementListIndex (make-size :size n) elts)))
+            (cl:declare (cl:ignorable i%))
+            (match (array-set a% i% r%) ((cl:type hol2cl.runtime::unit-value) unit))))))))
 
 (defrecord tables domainSize rangeSize tableMap)
 
 (defunc newTables (n vR)
   (make-tables :domainSize n :rangeSize vR :tableMap (ref (newMap unit))))
 
-(defunc getTables (tables* n_a)
-  (match tables*
+(defunc getTables (tables% n_a)
+  (match tables%
     ((tables :domainSize n :rangeSize _ :tableMap tm)
       (let ((m (deref tm)))
+        (cl:declare (cl:ignorable m))
         (match (peek m n_a)
-          ((Some t*) t*)
+          ((Some t%) t%)
           ((None)
             (match n_a
-              ((tuple _ a*)
-                (let* ((t* (newTable n a*)) (m* (insert m (tuple n_a t*))))
-                  (match (assign tm m*) ((cl:type hol2cl.runtime::unit-value) t*)))))))))))
+              ((tuple _ a%)
+                (let* ((t% (newTable n a%)) (m% (insert m (tuple n_a t%))))
+                  (cl:declare (cl:ignorable t% m%))
+                  (match (assign tm m%) ((cl:type hol2cl.runtime::unit-value) t%)))))))))))
 
-(defunc lookupTables (tables* arg~40518)
+(defunc lookupTables (tables% arg~40518)
   (match arg~40518
     ((tuple n elts)
-      (match tables*
+      (match tables%
         ((tables :domainSize vN :rangeSize vR)
-          (let* ((a* (funcall length elts)) (table (getTables tables* (tuple n a*))))
+          (let* ((a% (funcall length elts)) (table (getTables tables% (tuple n a%))))
+            (cl:declare (cl:ignorable a% table))
             (lookupTable vN vR table elts)))))))
 
-(defunc updateTables (tables* arg~40551)
+(defunc updateTables (tables% arg~40551)
   (match arg~40551
-    ((tuple (tuple n elts) r*)
-      (match tables*
+    ((tuple (tuple n elts) r%)
+      (match tables%
         ((tables :domainSize vN)
-          (let* ((a* (funcall length elts)) (table (getTables tables* (tuple n a*))))
-            (updateTable vN table (tuple elts r*))))))))
+          (let* ((a% (funcall length elts)) (table (getTables tables% (tuple n a%))))
+            (cl:declare (cl:ignorable a% table))
+            (updateTable vN table (tuple elts r%))))))))
 
 (defrecord parameters sizep fixed)
 
@@ -23992,15 +24547,17 @@
 
 (defunc newModel (arg~40589)
   (match arg~40589
-    ((parameters :sizep vN :fixed fixed*)
-      (match fixed*
+    ((parameters :sizep vN :fixed fixed%)
+      (match fixed%
         ((fixed :functions fns :relations rels)
           (let
             ((fixFns
               (funcall transform (lambdac (f) (funcall f (make-size :size vN))) fns))
               (fixRels
-                (funcall transform (lambdac (r*) (funcall r* (make-size :size vN))) rels)))
+                (funcall transform (lambdac (r%) (funcall r% (make-size :size vN))) rels)))
+            (cl:declare (cl:ignorable fixFns fixRels))
             (let ((rndFns (newTables vN vN)) (rndRels (newTables vN 2)))
+              (cl:declare (cl:ignorable rndFns rndRels))
               (make-model
                 :sizem
                 vN
@@ -24067,7 +24624,7 @@
       (match (stripApp tm)
         ((tuple _ nil) tm)
         ((tuple (cl:and v (Var _)) tms) (make-Fn (tuple appName (cl:cons v tms))))
-        ((tuple (Fn (tuple f tms)) tms*) (make-Fn (tuple f (append tms tms*))))))))
+        ((tuple (Fn (tuple f tms)) tms%) (make-Fn (tuple f (append tms tms%))))))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Interpreting terms and formulas in the model.                             *)
@@ -24076,12 +24633,12 @@
 
 (defunc interpretFunction (vM n_elts)
   (match (peekFixedFunction vM n_elts)
-    ((Some r*) r*)
+    ((Some r%) r%)
     ((None) (match vM ((model :randomFunctions rndFns) (lookupTables rndFns n_elts))))))
 
 (defunc interpretRelation (vM n_elts)
   (match (peekFixedRelation vM n_elts)
-    ((Some r*) r*)
+    ((Some r%) r%)
     ((None)
       (match vM
         ((model :randomRelations rndRels) (intToBool (lookupTables rndRels n_elts)))))))
@@ -24097,11 +24654,12 @@
 
 (defunc interpretAtom (vM vV arg~40871)
   (match arg~40871
-    ((tuple r* tms)
-      (interpretRelation vM (tuple r* (list-map (interpretTerm vM vV) tms))))))
+    ((tuple r% tms)
+      (interpretRelation vM (tuple r% (list-map (interpretTerm vM vV) tms))))))
 
 (defunc interpretFormula (vM)
   (let ((vN (msize vM)))
+    (cl:declare (cl:ignorable vN))
     (labelsc
       ((interpret
         (vV fm)
@@ -24109,24 +24667,28 @@
           ((True_) cl:t)
           ((False_) cl:nil)
           ((Atom atm) (interpretAtom vM vV atm))
-          ((Not p*) (cl:not (interpret vV p*)))
-          ((Or p* q) (cl:or (interpret vV p*) (interpret vV q)))
-          ((And p* q) (cl:and (interpret vV p*) (interpret vV q)))
-          ((Imp p* q) (interpret vV (make-Or (make-Not p*) q)))
-          ((Iff p* q) (= (interpret vV p*) (interpret vV q)))
-          ((Forall v p*) (interpret* vV p* v vN))
-          ((Exists v p*) (interpret vV (make-Not (make-Forall v (make-Not p*)))))))
-        (interpret*
-          (vV fm v i*)
+          ((Not p%) (cl:not (interpret vV p%)))
+          ((Or p% q) (cl:or (interpret vV p%) (interpret vV q)))
+          ((And p% q) (cl:and (interpret vV p%) (interpret vV q)))
+          ((Imp p% q) (interpret vV (make-Or (make-Not p%) q)))
+          ((Iff p% q) (= (interpret vV p%) (interpret vV q)))
+          ((Forall v p%) (interpret% vV p% v vN))
+          ((Exists v p%) (interpret vV (make-Not (make-Forall v (make-Not p%)))))))
+        (interpret%
+          (vV fm v i%)
           (cl:or
-            (= i* 0)
-            (let* ((i** (- i* 1)) (vV* (insertValuation vV (tuple v i**))))
-              (cl:and (interpret vV* fm) (interpret* vV fm v i**))))))
+            (= i% 0)
+            (let* ((i%% (- i% 1)) (vV% (insertValuation vV (tuple v i%%))))
+              (cl:declare (cl:ignorable i%% vV%))
+              (cl:and (interpret vV% fm) (interpret% vV fm v i%%))))))
       #'interpret)))
 
 (defunc interpretLiteral (vM vV arg~41022)
   (match arg~41022
-    ((tuple pol atm) (let ((b* (interpretAtom vM vV atm))) (if pol b* (cl:not b*))))))
+    ((tuple pol atm)
+      (let ((b% (interpretAtom vM vV atm)))
+        (cl:declare (cl:ignorable b%))
+        (if pol b% (cl:not b%))))))
 
 (defunc interpretClause (vM vV cl)
   (funcall
@@ -24142,6 +24704,7 @@
 
 (defunc check (interpret maxChecks vM fv x)
   (let ((vN (msize vM)))
+    (cl:declare (cl:ignorable vN))
     (fletc
       ((score
         (arg~41061)
@@ -24151,14 +24714,15 @@
       (fletc
         ((randomCheck (acc) (score (tuple (randomValuation (make-size :size vN) fv) acc))))
         (let
-          ((maxChecks*
+          ((maxChecks%
             (match maxChecks
               ((None) maxChecks)
               ((Some m)
                 (match (expInt vN (funcall hol2cl.metis.metis_prover.name.set:size fv))
                   ((Some n) (if (<= n m) (make-None) maxChecks))
                   ((None) maxChecks))))))
-          (match maxChecks*
+          (cl:declare (cl:ignorable maxChecks%))
+          (match maxChecks%
             ((Some m) (funpow m #'randomCheck (tuple 0 0)))
             ((None) (foldValuation (make-size :size vN) fv #'score (tuple 0 0)))))))))
 
@@ -24218,8 +24782,8 @@
         ((Var v) (tuple (make-Model_var) (getValuation vV v)))
         ((Fn (tuple f tms))
           (match (unzip (list-map #'modelTm tms))
-            ((tuple tms* xs)
-              (tuple (make-Model_fn f tms* xs) (interpretFunction vM (tuple f xs)))))))))
+            ((tuple tms% xs)
+              (tuple (make-Model_fn f tms% xs) (interpretFunction vM (tuple f xs)))))))))
     #'modelTm))
 
 (defvariant perturbation
@@ -24244,32 +24808,35 @@
             ((onTarget (ys) (list-mem (interpretFunction vM (tuple func ys)) target)))
             (let*
               ((func_xs (tuple func xs))
-                (acc*
+                (acc%
                   (if (isFixedFunction vM func_xs)
                     acc
                     (fletc
                       ((add
                         (arg~41351)
                         (match arg~41351
-                          ((tuple y acc*)
-                            (cl:cons (make-Function_perturbation func_xs y) acc*)))))
+                          ((tuple y acc%)
+                            (cl:cons (make-Function_perturbation func_xs y) acc%)))))
                       (foldl #'add acc target)))))
-              (pertTerms vM #'onTarget tms xs acc*))))))))
+              (cl:declare (cl:ignorable func_xs acc%))
+              (pertTerms vM #'onTarget tms xs acc%))))))))
 
 (defunc pertTerms (vM onTarget)
   (let ((vN (msize vM)))
+    (cl:declare (cl:ignorable vN))
     (fletc
       ((filterElements
         (pred)
         (labelsc
           ((filt
-            (i* acc)
-            (match i*
+            (i% acc)
+            (match i%
               (0 acc)
               (_
                 (let*
-                  ((i** (- i* 1)) (acc* (if (funcall pred i**) (cl:cons i** acc) acc)))
-                  (filt i** acc*))))))
+                  ((i%% (- i% 1)) (acc% (if (funcall pred i%%) (cl:cons i%% acc) acc)))
+                  (cl:declare (cl:ignorable i%% acc%))
+                  (filt i%% acc%))))))
           (filt vN nil))))
       (labelsc
         ((pert
@@ -24282,8 +24849,9 @@
                   (y)
                   (cl:and (<> y x) (funcall onTarget (list-rev-append ys (cl:cons y xs))))))
                 (let*
-                  ((target (filterElements #'pred)) (acc* (pertTerm vM target tm acc)))
-                  (pert (tuple (cl:cons x ys) tms xs acc*)))))
+                  ((target (filterElements #'pred)) (acc% (pertTerm vM target tm acc)))
+                  (cl:declare (cl:ignorable target acc%))
+                  (pert (tuple (cl:cons x ys) tms xs acc%)))))
             ((tuple _ _ _ _) (raise (make-Bug "Model.pertTerms.pert"))))))
         (lambdac (x y z) (pert (tuple nil x y z)))))))
 
@@ -24292,14 +24860,15 @@
     ((tuple rel tms)
       (fletc ((onTarget (ys) (= (interpretRelation vM (tuple rel ys)) target)))
         (match (unzip (list-map (modelTerm vM vV) tms))
-          ((tuple tms* xs)
+          ((tuple tms% xs)
             (let*
               ((rel_xs (tuple rel xs))
-                (acc*
+                (acc%
                   (if (isFixedRelation vM rel_xs)
                     acc
                     (cl:cons (make-Relation_perturbation rel_xs target) acc))))
-              (pertTerms vM #'onTarget tms* xs acc*))))))))
+              (cl:declare (cl:ignorable rel_xs acc%))
+              (pertTerms vM #'onTarget tms% xs acc%))))))))
 
 (defunc pertLiteral (vM vV arg~41563)
   (match arg~41563 ((tuple (tuple pol atm) acc) (pertAtom vM vV pol atm acc))))
@@ -24351,14 +24920,16 @@
           ((tuple (Var) (Var)) 0)
           ((tuple (Var) (Fn _)) (- 1))
           ((tuple (Fn _) (Var)) 1)
-          ((tuple (Fn f1 f1*) (Fn f2 f2*)) (fnCmp (tuple f1 f1*) (tuple f2 f2*) qs)))))))
+          ((tuple (Fn f1 f1%) (Fn f2 f2%)) (fnCmp (tuple f1 f1%) (tuple f2 f2%) qs)))))))
 
 (defunc fnCmp (arg~41742 arg~41746 qs)
   (match arg~41742
     ((tuple n1 q1)
       (match arg~41746
         ((tuple n2 q2)
-          (let ((c* (compare n1 n2))) (if (<> c* 0) c* (cmp (append (zip q1 q2) qs)))))))))
+          (let ((c% (compare n1 n2)))
+            (cl:declare (cl:ignorable c%))
+            (if (<> c% 0) c% (cmp (append (zip q1 q2) qs)))))))))
 
 (defunc compareQterm (q1 q2) (cmp (cl:cons (tuple q1 q2) nil)))
 
@@ -24379,10 +24950,10 @@
     (nil cl:t)
     ((cl:cons (tuple (Var) _) rest) (qm~1 rest))
     ((cl:cons (tuple (Fn _) (Var)) _) cl:nil)
-    ((cl:cons (tuple (Fn f a*) (Fn g* b*)) rest)
-      (cl:and (equal f g*) (qm~1 (append (zip a* b*) rest))))))
+    ((cl:cons (tuple (Fn f a%) (Fn g% b%)) rest)
+      (cl:and (equal f g%) (qm~1 (append (zip a% b%) rest))))))
 
-(defunc matchQtermQterm (qtm qtm*) (qm~1 (cl:cons (tuple qtm qtm*) nil)))
+(defunc matchQtermQterm (qtm qtm%) (qm~1 (cl:cons (tuple qtm qtm%) nil)))
 
 (defunc qm (arg~41886)
   (match arg~41886
@@ -24390,11 +24961,11 @@
     ((cl:cons (tuple (Var) _) rest) (qm rest))
     ((cl:cons (tuple (Fn _) (hol2cl.metis.metis_prover.term:Var _)) _) cl:nil)
     ((cl:cons
-      (tuple (Fn (tuple f n) a*) (hol2cl.metis.metis_prover.term:Fn (tuple g* b*)))
+      (tuple (Fn (tuple f n) a%) (hol2cl.metis.metis_prover.term:Fn (tuple g% b%)))
       rest)
       (cl:and
-        (hol2cl.metis.metis_prover.name:equal f g*)
-        (cl:and (= n (funcall length b*)) (qm (append (zip a* b*) rest)))))))
+        (hol2cl.metis.metis_prover.name:equal f g%)
+        (cl:and (= n (funcall length b%)) (qm (append (zip a% b%) rest)))))))
 
 (defunc matchQtermTerm (qtm tm) (qm (cl:cons (tuple qtm tm) nil)))
 
@@ -24404,40 +24975,41 @@
     ((cl:cons (tuple (hol2cl.metis.metis_prover.term:Var v) qtm) rest)
       (match (peek qsub v)
         ((None) (qn (hol2cl.metis.metis_prover.name.map:insert qsub (tuple v qtm)) rest))
-        ((Some qtm*) (if (equalQterm qtm qtm*) (qn qsub rest) (make-None)))))
+        ((Some qtm%) (if (equalQterm qtm qtm%) (qn qsub rest) (make-None)))))
     ((cl:cons (tuple (hol2cl.metis.metis_prover.term:Fn _) (Var)) _) (make-None))
     ((cl:cons
-      (tuple (hol2cl.metis.metis_prover.term:Fn (tuple f a*)) (Fn (tuple g* n) b*))
+      (tuple (hol2cl.metis.metis_prover.term:Fn (tuple f a%)) (Fn (tuple g% n) b%))
       rest)
-      (if (cl:and (hol2cl.metis.metis_prover.name:equal f g*) (= (funcall length a*) n))
-        (qn qsub (append (zip a* b*) rest))
+      (if (cl:and (hol2cl.metis.metis_prover.name:equal f g%) (= (funcall length a%) n))
+        (qn qsub (append (zip a% b%) rest))
         (make-None)))))
 
 (defunc matchTermQterm (qsub tm qtm) (qn qsub (cl:cons (tuple tm qtm) nil)))
 
-(defunc qv (s t*)
-  (match (tuple s t*)
+(defunc qv (s t%)
+  (match (tuple s t%)
     ((tuple (Var) x) x)
     ((tuple x (Var)) x)
-    ((tuple (Fn f a*) (Fn g* b*))
-      (match (cl:or (equal f g*) (failwith "Term_net.qv"))
-        (_ (make-Fn f (map2 #'qv a* b*)))))))
+    ((tuple (Fn f a%) (Fn g% b%))
+      (match (cl:or (equal f g%) (failwith "Term_net.qv"))
+        (_ (make-Fn f (map2 #'qv a% b%)))))))
 
 (defunc qu (qsub arg~42088)
   (match arg~42088
     (nil qsub)
     ((cl:cons (tuple (Var) _) rest) (qu qsub rest))
     ((cl:cons (tuple qtm (hol2cl.metis.metis_prover.term:Var v)) rest)
-      (let ((qtm* (match (peek qsub v) ((None) qtm) ((Some qtm*) (qv qtm qtm*)))))
-        (qu (hol2cl.metis.metis_prover.name.map:insert qsub (tuple v qtm*)) rest)))
+      (let ((qtm% (match (peek qsub v) ((None) qtm) ((Some qtm%) (qv qtm qtm%)))))
+        (cl:declare (cl:ignorable qtm%))
+        (qu (hol2cl.metis.metis_prover.name.map:insert qsub (tuple v qtm%)) rest)))
     ((cl:cons
-      (tuple (Fn (tuple f n) a*) (hol2cl.metis.metis_prover.term:Fn (tuple g* b*)))
+      (tuple (Fn (tuple f n) a%) (hol2cl.metis.metis_prover.term:Fn (tuple g% b%)))
       rest)
-      (if (cl:and (hol2cl.metis.metis_prover.name:equal f g*) (= n (funcall length b*)))
-        (qu qsub (append (zip a* b*) rest))
+      (if (cl:and (hol2cl.metis.metis_prover.name:equal f g%) (= n (funcall length b%)))
+        (qu qsub (append (zip a% b%) rest))
         (failwith "Term_net.qu")))))
 
-(defunc unifyQtermQterm (qtm qtm*) (total (qv qtm) qtm*))
+(defunc unifyQtermQterm (qtm qtm%) (total (qv qtm) qtm%))
 
 (defunc unifyQtermTerm (qsub qtm tm) (total (qu qsub) (cl:cons (tuple qtm tm) nil)))
 
@@ -24474,32 +25046,33 @@
   (match arg~42268 ((None) (make-None)) ((Some n) (make-Some (tuple (computeSize n) n)))))
 
 (defunc size (arg~42282)
-  (match arg~42282 ((Net _ _ (None)) 0) ((Net _ _ (Some (tuple i* _))) i*)))
+  (match arg~42282 ((Net _ _ (None)) 0) ((Net _ _ (Some (tuple i% _))) i%)))
 
-(defunc null (net*) (= (size net*) 0))
+(defunc null (net%) (= (size net%) 0))
 
-(defunc singles (qtms a*)
-  (foldr (lambdac (arg~42309) (match arg~42309 ((tuple x y) (make-Single x y)))) a* qtms))
+(defunc singles (qtms a%)
+  (foldr (lambdac (arg~42309) (match arg~42309 ((tuple x y) (make-Single x y)))) a% qtms))
 
 (defunc pre (arg~42325)
   (match arg~42325
     ((None) (tuple 0 (make-None)))
-    ((Some (tuple i* n)) (tuple i* (make-Some n)))))
+    ((Some (tuple i% n)) (tuple i% (make-Some n)))))
 
-(defunc add (a* b* c*)
-  (match (tuple a* b* c*)
-    ((tuple (Result l) nil (Result l*)) (make-Result (append l l*)))
-    ((tuple a (cl:and input1 (cl:cons qtm qtms)) (Single qtm* n))
-      (if (equalQterm qtm qtm*)
+(defunc add (a% b% c%)
+  (match (tuple a% b% c%)
+    ((tuple (Result l) nil (Result l%)) (make-Result (append l l%)))
+    ((tuple a (cl:and input1 (cl:cons qtm qtms)) (Single qtm% n))
+      (if (equalQterm qtm qtm%)
         (make-Single qtm (add a qtms n))
         (add
           a
           input1
-          (add n (cl:cons qtm* nil) (make-Multiple (make-None) (newMap unit))))))
+          (add n (cl:cons qtm% nil) (make-Multiple (make-None) (newMap unit))))))
     ((tuple a (cl:cons (Var) qtms) (Multiple vs fs))
       (make-Multiple (make-Some (oadd a qtms vs)) fs))
     ((tuple a (cl:cons (Fn f l) qtms) (Multiple vs fs))
       (let ((n (hol2cl.metis.metis_prover.name_arity.map.include~12152:peek fs f)))
+        (cl:declare (cl:ignorable n))
         (make-Multiple
           vs
           (hol2cl.metis.metis_prover.name_arity.map.include~12152:insert
@@ -24507,22 +25080,22 @@
             (tuple f (oadd a (append l qtms) n))))))
     (_ (raise (make-Bug "Term_net.insert: Match")))))
 
-(defunc oadd (a* qtms arg~42461)
-  (match arg~42461 ((None) (singles qtms a*)) ((Some n) (add a* qtms n))))
+(defunc oadd (a% qtms arg~42461)
+  (match arg~42461 ((None) (singles qtms a%)) ((Some n) (add a% qtms n))))
 
-(defunc ins (a* qtm arg~42478)
+(defunc ins (a% qtm arg~42478)
   (match arg~42478
-    ((tuple i* n)
+    ((tuple i% n)
       (make-Some
-        (tuple (+ i* 1) (oadd (make-Result (cl:cons a* nil)) (cl:cons qtm nil) n))))))
+        (tuple (+ i% 1) (oadd (make-Result (cl:cons a% nil)) (cl:cons qtm nil) n))))))
 
 (defunc insert (arg~42501 arg~42506)
   (match arg~42501
-    ((Net p* k* n)
+    ((Net p% k% n)
       (match arg~42506
-        ((tuple tm a*)
+        ((tuple tm a%)
           (handler-case
-            (make-Net p* (+ k* 1) (ins (tuple k* a*) (termToQterm tm) (pre n)))
+            (make-Net p% (+ k% 1) (ins (tuple k% a%) (termToQterm tm) (pre n)))
             (hol2cl.runtime:ocaml-condition
               (exception~42510)
               (match exception~42510
@@ -24543,40 +25116,41 @@
         ((Result l)
           (match
             (list-filter
-              (lambdac (arg~42572) (match arg~42572 ((tuple _ a*) (funcall pred a*))))
+              (lambdac (arg~42572) (match arg~42572 ((tuple _ a%) (funcall pred a%))))
               l)
             (nil (make-None))
-            (l* (make-Some (make-Result l*)))))
+            (l% (make-Some (make-Result l%)))))
         ((Single qtm n)
           (match (filt n)
             ((None) (make-None))
-            ((Some n*) (make-Some (make-Single qtm n*)))))
+            ((Some n%) (make-Some (make-Single qtm n%)))))
         ((Multiple vs fs)
           (let*
-            ((vs* (bind vs #'filt))
-              (fs*
+            ((vs% (bind vs #'filt))
+              (fs%
                 (mapPartial
                   (lambdac (arg~42611) (match arg~42611 ((tuple _ n) (filt n))))
                   fs)))
+            (cl:declare (cl:ignorable vs% fs%))
             (if
               (cl:and
-                (not (is_some vs*))
-                (funcall hol2cl.metis.metis_prover.name_arity.map.include~12152:null fs*))
+                (not (is_some vs%))
+                (funcall hol2cl.metis.metis_prover.name_arity.map.include~12152:null fs%))
               (make-None)
-              (make-Some (make-Multiple vs* fs*))))))))
+              (make-Some (make-Multiple vs% fs%))))))))
     (handler-case
       (lambdac (arg~42642)
         (match arg~42642
-          ((cl:and net* (Net _ _ (None))) net*)
-          ((Net p* k* (Some (tuple _ n))) (make-Net p* k* (netSize (filt n))))))
+          ((cl:and net% (Net _ _ (None))) net%)
+          ((Net p% k% (Some (tuple _ n))) (make-Net p% k% (netSize (filt n))))))
       (hol2cl.runtime:ocaml-condition
         (exception~42636)
         (match exception~42636
           ((Failure _) (raise (make-Bug "Term_net.filter: should never fail")))
           (_ (raise exception~42636)))))))
 
-(defunc toString (net*)
-  (string-concat "Term_net[" (string-concat (string-of-int (size net*)) "]")))
+(defunc toString (net%)
+  (string-concat "Term_net[" (string-concat (string-of-int (size net%)) "]")))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Specialized fold operations to support matching and unification.          *)
@@ -24587,14 +25161,15 @@
   (match arg~42685
     ((tuple (cl:cons 0 ks) (cl:cons (cl:and f (tuple _ n)) fs) qtms)
       (match (revDivide qtms n)
-        ((tuple a* qtms*) (addQterm (make-Fn f a*) (tuple ks fs qtms*)))))
+        ((tuple a% qtms%) (addQterm (make-Fn f a%) (tuple ks fs qtms%)))))
     (stack stack)))
 
 (defunc addQterm (qtm arg~42726)
   (match arg~42726
     ((tuple ks fs qtms)
-      (let ((ks* (match ks (nil nil) ((cl:cons k* ks*) (cl:cons (- k* 1) ks*)))))
-        (norm (tuple ks* fs (cl:cons qtm qtms)))))))
+      (let ((ks% (match ks (nil nil) ((cl:cons k% ks%) (cl:cons (- k% 1) ks%)))))
+        (cl:declare (cl:ignorable ks%))
+        (norm (tuple ks% fs (cl:cons qtm qtms)))))))
 
 (defunc addFn (arg~42759 arg~42763)
   (match arg~42759
@@ -24613,97 +25188,99 @@
     ((tuple nil nil (cl:cons qtm nil)) qtm)
     (_ (raise (make-Bug "Term_net.stackValue")))))
 
-(defunc fold~1 (inc* acc arg~42818)
+(defunc fold~1 (inc% acc arg~42818)
   (match arg~42818
     (nil acc)
-    ((cl:cons (tuple 0 stack net*) rest)
-      (fold~1 inc* (funcall inc* (tuple (stackValue stack) net* acc)) rest))
-    ((cl:cons (tuple n stack (Single qtm net*)) rest)
+    ((cl:cons (tuple 0 stack net%) rest)
+      (fold~1 inc% (funcall inc% (tuple (stackValue stack) net% acc)) rest))
+    ((cl:cons (tuple n stack (Single qtm net%)) rest)
       (fold~1
-        inc*
+        inc%
         acc
-        (cl:cons (tuple (- n 1) (funcall stackAddQterm qtm stack) net*) rest)))
+        (cl:cons (tuple (- n 1) (funcall stackAddQterm qtm stack) net%) rest)))
     ((cl:cons (tuple n stack (Multiple v fns)) rest)
       (let*
-        ((n* (- n 1))
-          (rest*
+        ((n% (- n 1))
+          (rest%
             (match v
               ((None) rest)
-              ((Some net*)
-                (cl:cons (tuple n* (funcall stackAddQterm (make-Var) stack) net*) rest)))))
+              ((Some net%)
+                (cl:cons (tuple n% (funcall stackAddQterm (make-Var) stack) net%) rest)))))
+        (cl:declare (cl:ignorable n% rest%))
         (fletc
           ((getFns
             (arg~42900)
             (match arg~42900
-              ((tuple (cl:and f (tuple _ k*)) net* x)
-                (cl:cons (tuple (+ k* n*) (funcall stackAddFn f stack) net*) x)))))
+              ((tuple (cl:and f (tuple _ k%)) net% x)
+                (cl:cons (tuple (+ k% n%) (funcall stackAddFn f stack) net%) x)))))
           (fold~1
-            inc*
+            inc%
             acc
             (funcall
               hol2cl.metis.metis_prover.name_arity.map.include~12152:foldr
               #'getFns
-              rest*
+              rest%
               fns)))))
     (_ (raise (make-Bug "Term_net.foldTerms.fold")))))
 
-(defunc foldTerms (inc* acc net*)
-  (fold~1 inc* acc (cl:cons (tuple 1 stackEmpty net*) nil)))
+(defunc foldTerms (inc% acc net%)
+  (fold~1 inc% acc (cl:cons (tuple 1 stackEmpty net%) nil)))
 
-(defunc foldEqualTerms (pat inc* acc)
+(defunc foldEqualTerms (pat inc% acc)
   (labelsc
-    ((fold*
+    ((fold%
       (arg~42958)
       (match arg~42958
-        ((tuple nil net*) (funcall inc* (tuple pat net* acc)))
-        ((tuple (cl:cons pat* pats) (Single qtm net*))
-          (if (equalQterm pat* qtm) (fold* (tuple pats net*)) acc))
+        ((tuple nil net%) (funcall inc% (tuple pat net% acc)))
+        ((tuple (cl:cons pat% pats) (Single qtm net%))
+          (if (equalQterm pat% qtm) (fold% (tuple pats net%)) acc))
         ((tuple (cl:cons (Var) pats) (Multiple v _))
-          (match v ((None) acc) ((Some net*) (fold* (tuple pats net*)))))
-        ((tuple (cl:cons (Fn f a*) pats) (Multiple _ fns))
+          (match v ((None) acc) ((Some net%) (fold% (tuple pats net%)))))
+        ((tuple (cl:cons (Fn f a%) pats) (Multiple _ fns))
           (match (hol2cl.metis.metis_prover.name_arity.map.include~12152:peek fns f)
             ((None) acc)
-            ((Some net*) (fold* (tuple (append a* pats) net*)))))
+            ((Some net%) (fold% (tuple (append a% pats) net%)))))
         (_ (raise (make-Bug "Term_net.foldEqualTerms.fold"))))))
-    (lambdac (net*) (fold* (tuple (cl:cons pat nil) net*)))))
+    (lambdac (net%) (fold% (tuple (cl:cons pat nil) net%)))))
 
-(defunc fold (inc* acc arg~43054)
+(defunc fold (inc% acc arg~43054)
   (match arg~43054
     (nil acc)
-    ((cl:cons (tuple nil stack net*) rest)
-      (fold inc* (funcall inc* (tuple (stackValue stack) net* acc)) rest))
-    ((cl:cons (tuple (cl:cons (Var) pats) stack net*) rest)
+    ((cl:cons (tuple nil stack net%) rest)
+      (fold inc% (funcall inc% (tuple (stackValue stack) net% acc)) rest))
+    ((cl:cons (tuple (cl:cons (Var) pats) stack net%) rest)
       (fletc
         ((harvest
           (arg~43089)
           (match arg~43089
             ((tuple qtm n l) (cl:cons (tuple pats (funcall stackAddQterm qtm stack) n) l)))))
-        (fold inc* acc (foldTerms #'harvest rest net*))))
-    ((cl:cons (tuple (cl:cons pat pats) stack (Single qtm net*)) rest)
+        (fold inc% acc (foldTerms #'harvest rest net%))))
+    ((cl:cons (tuple (cl:cons pat pats) stack (Single qtm net%)) rest)
       (match (unifyQtermQterm pat qtm)
-        ((None) (fold inc* acc rest))
-        ((Some qtm*)
+        ((None) (fold inc% acc rest))
+        ((Some qtm%)
           (fold
-            inc*
+            inc%
             acc
-            (cl:cons (tuple pats (funcall stackAddQterm qtm* stack) net*) rest)))))
-    ((cl:cons (tuple (cl:cons (cl:and pat (Fn f a*)) pats) stack (Multiple v fns)) rest)
+            (cl:cons (tuple pats (funcall stackAddQterm qtm% stack) net%) rest)))))
+    ((cl:cons (tuple (cl:cons (cl:and pat (Fn f a%)) pats) stack (Multiple v fns)) rest)
       (let*
-        ((rest*
+        ((rest%
           (match v
             ((None) rest)
-            ((Some net*)
-              (cl:cons (tuple pats (funcall stackAddQterm pat stack) net*) rest))))
+            ((Some net%)
+              (cl:cons (tuple pats (funcall stackAddQterm pat stack) net%) rest))))
           (rest
             (match (hol2cl.metis.metis_prover.name_arity.map.include~12152:peek fns f)
-              ((None) rest*)
-              ((Some net*)
-                (cl:cons (tuple (append a* pats) (funcall stackAddFn f stack) net*) rest*)))))
-        (fold inc* acc rest)))
+              ((None) rest%)
+              ((Some net%)
+                (cl:cons (tuple (append a% pats) (funcall stackAddFn f stack) net%) rest%)))))
+        (cl:declare (cl:ignorable rest% rest))
+        (fold inc% acc rest)))
     (_ (raise (make-Bug "Term_net.foldUnifiableTerms.fold")))))
 
-(defunc foldUnifiableTerms (pat inc* acc net*)
-  (fold inc* acc (cl:cons (tuple (cl:cons pat nil) stackEmpty net*) nil)))
+(defunc foldUnifiableTerms (pat inc% acc net%)
+  (fold inc% acc (cl:cons (tuple (cl:cons pat nil) stackEmpty net%) nil)))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Matching and unification queries.                                         *)
@@ -24729,26 +25306,27 @@
       (mat~1 acc (if (matchQtermTerm qtm tm) (cl:cons (tuple n tms) rest) rest)))
     ((cl:cons (tuple (Multiple vs fs) (cl:cons tm tms)) rest)
       (let*
-        ((rest* (match vs ((None) rest) ((Some n) (cl:cons (tuple n tms) rest))))
+        ((rest% (match vs ((None) rest) ((Some n) (cl:cons (tuple n tms) rest))))
           (rest
             (match tm
-              ((hol2cl.metis.metis_prover.term:Var _) rest*)
+              ((hol2cl.metis.metis_prover.term:Var _) rest%)
               ((hol2cl.metis.metis_prover.term:Fn (tuple f l))
                 (match
                   (hol2cl.metis.metis_prover.name_arity.map.include~12152:peek
                     fs
                     (tuple f (funcall length l)))
-                  ((None) rest*)
-                  ((Some n) (cl:cons (tuple n (append l tms)) rest*)))))))
+                  ((None) rest%)
+                  ((Some n) (cl:cons (tuple n (append l tms)) rest%)))))))
+        (cl:declare (cl:ignorable rest% rest))
         (mat~1 acc rest)))
     (_ (raise (make-Bug "Term_net.match: Match")))))
 
 (defunc matchNet (x y)
   (match (tuple x y)
     ((tuple (Net _ _ (None)) _) nil)
-    ((tuple (Net p* _ (Some (tuple _ n))) tm)
+    ((tuple (Net p% _ (Some (tuple _ n))) tm)
       (handler-case
-        (finally p* (mat~1 nil (cl:cons (tuple n (cl:cons tm nil)) nil)))
+        (finally p% (mat~1 nil (cl:cons (tuple n (cl:cons tm nil)) nil)))
         (hol2cl.runtime:ocaml-condition
           (exception~43414)
           (match exception~43414
@@ -24757,52 +25335,53 @@
 
 (defunc unseenInc (qsub v tms arg~43441)
   (match arg~43441
-    ((tuple qtm net* rest)
+    ((tuple qtm net% rest)
       (cl:cons
-        (tuple (hol2cl.metis.metis_prover.name.map:insert qsub (tuple v qtm)) net* tms)
+        (tuple (hol2cl.metis.metis_prover.name.map:insert qsub (tuple v qtm)) net% tms)
         rest))))
 
 (defunc seenInc (qsub tms arg~43464)
-  (match arg~43464 ((tuple _ net* rest) (cl:cons (tuple qsub net* tms) rest))))
+  (match arg~43464 ((tuple _ net% rest) (cl:cons (tuple qsub net% tms) rest))))
 
 (defunc mat~2 (acc arg~43481)
   (match arg~43481
     (nil acc)
     ((cl:cons (tuple _ (Result l) nil) rest) (mat~2 (append l acc) rest))
-    ((cl:cons (tuple qsub (Single qtm net*) (cl:cons tm tms)) rest)
+    ((cl:cons (tuple qsub (Single qtm net%) (cl:cons tm tms)) rest)
       (match (matchTermQterm qsub tm qtm)
         ((None) (mat~2 acc rest))
-        ((Some qsub*) (mat~2 acc (cl:cons (tuple qsub* net* tms) rest)))))
+        ((Some qsub%) (mat~2 acc (cl:cons (tuple qsub% net% tms) rest)))))
     ((cl:cons
       (tuple
         qsub
-        (cl:and net* (Multiple _))
+        (cl:and net% (Multiple _))
         (cl:cons (hol2cl.metis.metis_prover.term:Var v) tms))
       rest)
       (match (peek qsub v)
-        ((None) (mat~2 acc (foldTerms (unseenInc qsub v tms) rest net*)))
-        ((Some qtm) (mat~2 acc (foldEqualTerms qtm (seenInc qsub tms) rest net*)))))
+        ((None) (mat~2 acc (foldTerms (unseenInc qsub v tms) rest net%)))
+        ((Some qtm) (mat~2 acc (foldEqualTerms qtm (seenInc qsub tms) rest net%)))))
     ((cl:cons
       (tuple
         qsub
         (Multiple _ fns)
-        (cl:cons (hol2cl.metis.metis_prover.term:Fn (tuple f a*)) tms))
+        (cl:cons (hol2cl.metis.metis_prover.term:Fn (tuple f a%)) tms))
       rest)
       (let
-        ((rest*
+        ((rest%
           (match
             (hol2cl.metis.metis_prover.name_arity.map.include~12152:peek
               fns
-              (tuple f (funcall length a*)))
+              (tuple f (funcall length a%)))
             ((None) rest)
-            ((Some net*) (cl:cons (tuple qsub net* (append a* tms)) rest)))))
-        (mat~2 acc rest*)))
+            ((Some net%) (cl:cons (tuple qsub net% (append a% tms)) rest)))))
+        (cl:declare (cl:ignorable rest%))
+        (mat~2 acc rest%)))
     (_ (raise (make-Bug "Term_net.matched.mat")))))
 
 (defunc matched (x tm)
   (match x
     ((Net _ _ (None)) nil)
-    ((Net parm _ (Some (tuple _ net*)))
+    ((Net parm _ (Some (tuple _ net%)))
       (handler-case
         (finally
           parm
@@ -24811,7 +25390,7 @@
             (cl:cons
               (tuple
                 (hol2cl.metis.metis_prover.name.map:newMap unit)
-                net*
+                net%
                 (cl:cons tm nil))
               nil)))
         (hol2cl.runtime:ocaml-condition
@@ -24822,51 +25401,52 @@
 
 (defunc inc (qsub v tms arg~43670)
   (match arg~43670
-    ((tuple qtm net* rest)
+    ((tuple qtm net% rest)
       (cl:cons
-        (tuple (hol2cl.metis.metis_prover.name.map:insert qsub (tuple v qtm)) net* tms)
+        (tuple (hol2cl.metis.metis_prover.name.map:insert qsub (tuple v qtm)) net% tms)
         rest))))
 
 (defunc mat (acc arg~43692)
   (match arg~43692
     (nil acc)
     ((cl:cons (tuple _ (Result l) nil) rest) (mat (append l acc) rest))
-    ((cl:cons (tuple qsub (Single qtm net*) (cl:cons tm tms)) rest)
+    ((cl:cons (tuple qsub (Single qtm net%) (cl:cons tm tms)) rest)
       (match (unifyQtermTerm qsub qtm tm)
         ((None) (mat acc rest))
-        ((Some qsub*) (mat acc (cl:cons (tuple qsub* net* tms) rest)))))
+        ((Some qsub%) (mat acc (cl:cons (tuple qsub% net% tms) rest)))))
     ((cl:cons
       (tuple
         qsub
-        (cl:and net* (Multiple _))
+        (cl:and net% (Multiple _))
         (cl:cons (hol2cl.metis.metis_prover.term:Var v) tms))
       rest)
       (match (peek qsub v)
-        ((None) (mat acc (foldTerms (inc qsub v tms) rest net*)))
-        ((Some qtm) (mat acc (foldUnifiableTerms qtm (inc qsub v tms) rest net*)))))
+        ((None) (mat acc (foldTerms (inc qsub v tms) rest net%)))
+        ((Some qtm) (mat acc (foldUnifiableTerms qtm (inc qsub v tms) rest net%)))))
     ((cl:cons
       (tuple
         qsub
         (Multiple v fns)
-        (cl:cons (hol2cl.metis.metis_prover.term:Fn (tuple f a*)) tms))
+        (cl:cons (hol2cl.metis.metis_prover.term:Fn (tuple f a%)) tms))
       rest)
       (let*
-        ((rest*
-          (match v ((None) rest) ((Some net*) (cl:cons (tuple qsub net* tms) rest))))
+        ((rest%
+          (match v ((None) rest) ((Some net%) (cl:cons (tuple qsub net% tms) rest))))
           (rest
             (match
               (hol2cl.metis.metis_prover.name_arity.map.include~12152:peek
                 fns
-                (tuple f (funcall length a*)))
-              ((None) rest*)
-              ((Some net*) (cl:cons (tuple qsub net* (append a* tms)) rest*)))))
+                (tuple f (funcall length a%)))
+              ((None) rest%)
+              ((Some net%) (cl:cons (tuple qsub net% (append a% tms)) rest%)))))
+        (cl:declare (cl:ignorable rest% rest))
         (mat acc rest)))
     (_ (raise (make-Bug "Term_net.unify.mat")))))
 
 (defunc unify (x tm)
   (match x
     ((Net _ _ (None)) nil)
-    ((Net parm _ (Some (tuple _ net*)))
+    ((Net parm _ (Some (tuple _ net%)))
       (handler-case
         (finally
           parm
@@ -24875,7 +25455,7 @@
             (cl:cons
               (tuple
                 (hol2cl.metis.metis_prover.name.map:newMap unit)
-                net*
+                net%
                 (cl:cons tm nil))
               nil)))
         (hol2cl.runtime:ocaml-condition
@@ -24893,10 +25473,10 @@
 ;; (* ------------------------------------------------------------------------- *)
 
 
-(defunc atomToTerm (atom*) (make-Fn atom*))
+(defunc atomToTerm (atom%) (make-Fn atom%))
 
 (defunc termToAtom (arg~43900)
-  (match arg~43900 ((Var _) (raise (make-Bug "Atom_net.termToAtom"))) ((Fn atom*) atom*)))
+  (match arg~43900 ((Var _) (raise (make-Bug "Atom_net.termToAtom"))) ((Fn atom%) atom%)))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Basic operations.                                                         *)
@@ -24909,8 +25489,8 @@
 
 (defunc insert (net arg~43920)
   (match arg~43920
-    ((tuple atm a*)
-      (hol2cl.metis.metis_prover.term_net:insert net (tuple (atomToTerm atm) a*)))))
+    ((tuple atm a%)
+      (hol2cl.metis.metis_prover.term_net:insert net (tuple (atomToTerm atm) a%)))))
 
 (defunc fromList (parm l)
   (foldl
@@ -24976,18 +25556,18 @@
   (match arg~44027
     ((literalNet :positive positive :negative negative)
       (match arg~44031
-        ((tuple (tuple cl:t atm) a*)
+        ((tuple (tuple cl:t atm) a%)
           (make-literalNet
             :positive
-            (hol2cl.metis.metis_prover.atom_net:insert positive (tuple atm a*))
+            (hol2cl.metis.metis_prover.atom_net:insert positive (tuple atm a%))
             :negative
             negative))
-        ((tuple (tuple cl:nil atm) a*)
+        ((tuple (tuple cl:nil atm) a%)
           (make-literalNet
             :positive
             positive
             :negative
-            (hol2cl.metis.metis_prover.atom_net:insert negative (tuple atm a*))))))))
+            (hol2cl.metis.metis_prover.atom_net:insert negative (tuple atm a%))))))))
 
 (defunc fromList (parm l)
   (foldl
@@ -25060,32 +25640,36 @@
 (defunc addSym (arg~44218)
   (match arg~44218
     ((tuple lit acc)
-      (match (total #'sym lit) ((None) acc) ((Some lit*) (cl:cons lit* acc))))))
+      (match (total #'sym lit) ((None) acc) ((Some lit%) (cl:cons lit% acc))))))
 
 (defunc clauseSym (lits) (foldl #'addSym lits lits))
 
 (defunc sortClause (cl)
   (let ((lits (funcall toList cl)))
+    (cl:declare (cl:ignorable lits))
     (sortMap #'typedSymbols (revCompare #'intCompare) lits)))
 
 (defunc incompatible (lit)
   (let ((lits (clauseSym (cl:cons lit nil))))
-    (lambdac (lit*) (not (list-exists (can (unify empty lit*)) lits)))))
+    (cl:declare (cl:ignorable lits))
+    (lambdac (lit%) (not (list-exists (can (unify empty lit%)) lits)))))
 
 (defunc idCompare (arg~44276 arg~44280)
   (match arg~44276
     ((tuple id1 len1)
       (match arg~44280
         ((tuple id2 len2)
-          (let ((c* (intCompare len1 len2))) (if (<> c* 0) c* (intCompare id1 id2))))))))
+          (let ((c% (intCompare len1 len2)))
+            (cl:declare (cl:ignorable c%))
+            (if (<> c% 0) c% (intCompare id1 id2))))))))
 
 (defparameter idSetEmpty (hol2cl.metis.metis_prover.pset:empty #'idCompare))
 
 (defunc idSetAdd (arg~44309) (match arg~44309 ((tuple id_len set) (add set id_len))))
 
-(defunc idSetAddMax (max* arg~44322)
+(defunc idSetAddMax (max% arg~44322)
   (match arg~44322
-    ((tuple (cl:and id_len (tuple _ len)) set) (if (<= len max*) (add set id_len) set))))
+    ((tuple (cl:and id_len (tuple _ len)) set) (if (<= len max%) (add set id_len) set))))
 
 (defunc idSetIntersect (set1 set2) (intersect set1 set2))
 
@@ -25114,27 +25698,29 @@
 
 (defunc size (arg~44375)
   (match arg~44375
-    ((subsume :empty empty* :unitn unitn :nonunit (nonunit_t :clauses clauses))
+    ((subsume :empty empty% :unitn unitn :nonunit (nonunit_t :clauses clauses))
       (+
-        (+ (funcall length empty*) (hol2cl.metis.metis_prover.literal_net:size unitn))
+        (+ (funcall length empty%) (hol2cl.metis.metis_prover.literal_net:size unitn))
         (funcall hol2cl.metis.metis_prover.intmap.include~4681:size clauses)))))
 
 (defunc insert (arg~44395 arg~44400)
   (match arg~44395
-    ((subsume :empty empty* :unitn unitn :nonunit nonunit)
+    ((subsume :empty empty% :unitn unitn :nonunit nonunit)
       (match arg~44400
-        ((tuple cl* a*)
-          (match (sortClause cl*)
+        ((tuple cl% a%)
+          (match (sortClause cl%)
             (nil
-              (let ((empty** (cl:cons (tuple cl* empty a*) empty*)))
-                (make-subsume :empty empty** :unitn unitn :nonunit nonunit)))
+              (let ((empty%% (cl:cons (tuple cl% empty a%) empty%)))
+                (cl:declare (cl:ignorable empty%%))
+                (make-subsume :empty empty%% :unitn unitn :nonunit nonunit)))
             ((cl:cons lit nil)
               (let
-                ((unitn*
+                ((unitn%
                   (hol2cl.metis.metis_prover.literal_net:insert
                     unitn
-                    (tuple lit (tuple lit cl* a*)))))
-                (make-subsume :empty empty* :unitn unitn* :nonunit nonunit)))
+                    (tuple lit (tuple lit cl% a%)))))
+                (cl:declare (cl:ignorable unitn%))
+                (make-subsume :empty empty% :unitn unitn% :nonunit nonunit)))
             ((cl:cons fstLit (cl:and nonFstLits (cl:cons sndLit otherLits)))
               (match nonunit
                 ((nonunit_t
@@ -25152,48 +25738,51 @@
                         nextId
                         (funcall
                           hol2cl.metis.metis_prover.literal.set.include~30172:size
-                          cl*)))
-                      (fstLits*
+                          cl%)))
+                      (fstLits%
                         (hol2cl.metis.metis_prover.literal_net:insert
                           fstLits
                           (tuple fstLit id_length))))
+                    (cl:declare (cl:ignorable id_length fstLits%))
                     (match
                       (match (findRest (incompatible fstLit) nonFstLits)
                         ((Some sndLit_otherLits) sndLit_otherLits)
                         ((None) (tuple sndLit otherLits)))
-                      ((tuple sndLit* otherLits*)
+                      ((tuple sndLit% otherLits%)
                         (let*
-                          ((sndLits*
+                          ((sndLits%
                             (hol2cl.metis.metis_prover.literal_net:insert
                               sndLits
-                              (tuple sndLit* id_length)))
-                            (lits*
-                              (append otherLits* (cl:cons fstLit (cl:cons sndLit* nil))))
-                            (clauses*
+                              (tuple sndLit% id_length)))
+                            (lits%
+                              (append otherLits% (cl:cons fstLit (cl:cons sndLit% nil))))
+                            (clauses%
                               (hol2cl.metis.metis_prover.intmap.include~4681:insert
                                 clauses
-                                (tuple nextId (tuple lits* cl* a*))))
-                            (nextId* (+ nextId 1))
-                            (nonunit*
+                                (tuple nextId (tuple lits% cl% a%))))
+                            (nextId% (+ nextId 1))
+                            (nonunit%
                               (make-nonunit_t
                                 :nextId
-                                nextId*
+                                nextId%
                                 :clauses
-                                clauses*
+                                clauses%
                                 :fstLits
-                                fstLits*
+                                fstLits%
                                 :sndLits
-                                sndLits*)))
-                          (make-subsume :empty empty* :unitn unitn :nonunit nonunit*))))))))))))))
+                                sndLits%)))
+                          (cl:declare
+                            (cl:ignorable sndLits% lits% clauses% nextId% nonunit%))
+                          (make-subsume :empty empty% :unitn unitn :nonunit nonunit%))))))))))))))
 
 (defunc filter (pred arg~44544)
   (match arg~44544
-    ((subsume :empty empty* :unitn unitn :nonunit nonunit)
+    ((subsume :empty empty% :unitn unitn :nonunit nonunit)
       (fletc ((pred3 (arg~44550) (match arg~44550 ((tuple _ _ x) (funcall pred x)))))
         (let*
-          ((empty** (list-filter #'pred3 empty*))
-            (unitn* (hol2cl.metis.metis_prover.literal_net:filter #'pred3 unitn))
-            (nonunit*
+          ((empty%% (list-filter #'pred3 empty%))
+            (unitn% (hol2cl.metis.metis_prover.literal_net:filter #'pred3 unitn))
+            (nonunit%
               (match nonunit
                 ((nonunit_t
                   :nextId
@@ -25205,10 +25794,11 @@
                   :sndLits
                   sndLits)
                   (let
-                    ((clauses*
+                    ((clauses%
                       (hol2cl.metis.metis_prover.intmap.include~4681:filter
                         (lambdac (x) (pred3 (snd x)))
                         clauses)))
+                    (cl:declare (cl:ignorable clauses%))
                     (if
                       (=
                         (funcall
@@ -25216,80 +25806,84 @@
                           clauses)
                         (funcall
                           hol2cl.metis.metis_prover.intmap.include~4681:size
-                          clauses*))
+                          clauses%))
                       nonunit
                       (fletc
                         ((predId
                           (arg~44581)
-                          (match arg~44581 ((tuple id _) (funcall inDomain id clauses*)))))
+                          (match arg~44581 ((tuple id _) (funcall inDomain id clauses%)))))
                         (let
-                          ((fstLits*
+                          ((fstLits%
                             (hol2cl.metis.metis_prover.literal_net:filter
                               #'predId
                               fstLits))
-                            (sndLits*
+                            (sndLits%
                               (hol2cl.metis.metis_prover.literal_net:filter
                                 #'predId
                                 sndLits)))
+                          (cl:declare (cl:ignorable fstLits% sndLits%))
                           (make-nonunit_t
                             :nextId
                             nextId
                             :clauses
-                            clauses*
+                            clauses%
                             :fstLits
-                            fstLits*
+                            fstLits%
                             :sndLits
-                            sndLits*)))))))))
-          (make-subsume :empty empty** :unitn unitn* :nonunit nonunit*))))))
+                            sndLits%)))))))))
+          (cl:declare (cl:ignorable empty%% unitn% nonunit%))
+          (make-subsume :empty empty%% :unitn unitn% :nonunit nonunit%))))))
 
-(defunc toString (subsume*)
-  (string-concat "Subsume{" (string-concat (string-of-int (size subsume*)) "}")))
+(defunc toString (subsume%)
+  (string-concat "Subsume{" (string-concat (string-of-int (size subsume%)) "}")))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Subsumption checking.                                                     *)
 ;; (* ------------------------------------------------------------------------- *)
 
 
-(defunc matchLit (lit* arg~44645)
+(defunc matchLit (lit% arg~44645)
   (match arg~44645
     ((tuple lit acc)
-      (match (total (matchLiterals empty lit*) lit)
+      (match (total (matchLiterals empty lit%) lit)
         ((Some sub) (cl:cons sub acc))
         ((None) acc)))))
 
-(defunc genClauseSubsumes (pred cl* lits* cl a*)
+(defunc genClauseSubsumes (pred cl% lits% cl a%)
   (labelsc
     ((mkSubsl
       (acc sub arg~44676)
       (match arg~44676
         (nil (make-Some (tuple sub (sortMap length #'intCompare acc))))
-        ((cl:cons lit* lits**)
-          (match (foldl (matchLit lit*) nil cl)
+        ((cl:cons lit% lits%%)
+          (match (foldl (matchLit lit%) nil cl)
             (nil (make-None))
-            ((cl:cons sub* nil)
-              (match (total (union sub) sub*)
+            ((cl:cons sub% nil)
+              (match (total (union sub) sub%)
                 ((None) (make-None))
-                ((Some sub**) (mkSubsl acc sub** lits**))))
-            (subs* (mkSubsl (cl:cons subs* acc) sub lits**)))))))
+                ((Some sub%%) (mkSubsl acc sub%% lits%%))))
+            (subs% (mkSubsl (cl:cons subs% acc) sub lits%%)))))))
     (labelsc
       ((search
         (arg~44726)
         (match arg~44726
           (nil (make-None))
           ((cl:cons (tuple sub nil) others)
-            (let ((x (tuple cl* sub a*)))
+            (let ((x (tuple cl% sub a%)))
+              (cl:declare (cl:ignorable x))
               (if (funcall pred x) (make-Some x) (search others))))
           ((cl:cons (tuple _ (cl:cons nil _)) others) (search others))
-          ((cl:cons (tuple sub (cl:cons (cl:cons sub* subs*) subsl)) others)
-            (let ((others* (cl:cons (tuple sub (cl:cons subs* subsl)) others)))
-              (match (total (union sub) sub*)
-                ((None) (search others*))
-                ((Some sub**) (search (cl:cons (tuple sub** subsl) others*)))))))))
-      (match (mkSubsl nil empty lits*)
+          ((cl:cons (tuple sub (cl:cons (cl:cons sub% subs%) subsl)) others)
+            (let ((others% (cl:cons (tuple sub (cl:cons subs% subsl)) others)))
+              (cl:declare (cl:ignorable others%))
+              (match (total (union sub) sub%)
+                ((None) (search others%))
+                ((Some sub%%) (search (cl:cons (tuple sub%% subsl) others%)))))))))
+      (match (mkSubsl nil empty lits%)
         ((None) (make-None))
         ((Some sub_subsl) (search (cl:cons sub_subsl nil)))))))
 
-(defunc emptySubsumes (pred empty*) (find pred empty*))
+(defunc emptySubsumes (pred empty%) (find pred empty%))
 
 (defunc unitSubsumes (pred unitn)
   (fletc
@@ -25299,17 +25893,19 @@
         ((subUnit
           (arg~44830)
           (match arg~44830
-            ((tuple lit* cl* a*)
-              (match (total (matchLiterals empty lit*) lit)
+            ((tuple lit% cl% a%)
+              (match (total (matchLiterals empty lit%) lit)
                 ((None) (make-None))
                 ((Some sub)
-                  (let ((x (tuple cl* sub a*)))
+                  (let ((x (tuple cl% sub a%)))
+                    (cl:declare (cl:ignorable x))
                     (if (funcall pred x) (make-Some x) (make-None)))))))))
         (first #'subUnit (matchNet unitn lit)))))
     (first #'subLit)))
 
-(defunc nonunitSubsumes (pred nonunit max* cl)
-  (let ((addId (match max* ((None) #'idSetAdd) ((Some n) (idSetAddMax n)))))
+(defunc nonunitSubsumes (pred nonunit max% cl)
+  (let ((addId (match max% ((None) #'idSetAdd) ((Some n) (idSetAddMax n)))))
+    (cl:declare (cl:ignorable addId))
     (fletc
       ((subLit
         (lits arg~44889)
@@ -25317,40 +25913,42 @@
       (match nonunit
         ((nonunit_t :nextId _ :clauses clauses :fstLits fstLits :sndLits sndLits)
           (fletc
-            ((subCl*
+            ((subCl%
               (arg~44906)
               (match arg~44906
                 ((tuple id _)
                   (match (get clauses id)
-                    ((tuple lits* cl* a*) (genClauseSubsumes pred cl* lits* cl a*)))))))
+                    ((tuple lits% cl% a%) (genClauseSubsumes pred cl% lits% cl a%)))))))
             (let*
               ((fstCands (foldl (subLit fstLits) idSetEmpty cl))
                 (sndCands (foldl (subLit sndLits) idSetEmpty cl))
                 (cands (idSetIntersect fstCands sndCands)))
-              (firstl #'subCl* cands))))))))
+              (cl:declare (cl:ignorable fstCands sndCands cands))
+              (firstl #'subCl% cands))))))))
 
-(defunc genSubsumes (pred arg~44964 max* cl)
+(defunc genSubsumes (pred arg~44964 max% cl)
   (match arg~44964
-    ((subsume :empty empty* :unitn unitn :nonunit nonunit)
-      (match (emptySubsumes pred empty*)
+    ((subsume :empty empty% :unitn unitn :nonunit nonunit)
+      (match (emptySubsumes pred empty%)
         ((cl:and s (Some _)) s)
         ((None)
-          (if (= max* (make-Some 0))
+          (if (= max% (make-Some 0))
             (make-None)
-            (let ((cl* (clauseSym (funcall toList cl))))
-              (match (unitSubsumes pred unitn cl*)
+            (let ((cl% (clauseSym (funcall toList cl))))
+              (cl:declare (cl:ignorable cl%))
+              (match (unitSubsumes pred unitn cl%)
                 ((cl:and s (Some _)) s)
                 ((None)
-                  (if (= max* (make-Some 1))
+                  (if (= max% (make-Some 1))
                     (make-None)
-                    (nonunitSubsumes pred nonunit max* cl*)))))))))))
+                    (nonunitSubsumes pred nonunit max% cl%)))))))))))
 
-(defunc subsumes (pred subsume* cl) (genSubsumes pred subsume* (make-None) cl))
+(defunc subsumes (pred subsume% cl) (genSubsumes pred subsume% (make-None) cl))
 
-(defunc strictlySubsumes (pred subsume* cl)
+(defunc strictlySubsumes (pred subsume% cl)
   (genSubsumes
     pred
-    subsume*
+    subsume%
     (make-Some (funcall hol2cl.metis.metis_prover.literal.set.include~30172:size cl))
     cl))
 
@@ -25389,28 +25987,29 @@
 ;; *)
 
 
-(defunc isSubsumed (subs* cl) (is_some (subsumes (K cl:t) subs* cl)))
+(defunc isSubsumed (subs% cl) (is_some (subsumes (K cl:t) subs% cl)))
 
-(defunc isStrictlySubsumed (subs* cl) (is_some (strictlySubsumes (K cl:t) subs* cl)))
+(defunc isStrictlySubsumed (subs% cl) (is_some (strictlySubsumes (K cl:t) subs% cl)))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Single clause versions.                                                   *)
 ;; (* ------------------------------------------------------------------------- *)
 
 
-(defunc clauseSubsumes (cl* cl)
-  (let ((lits* (sortClause cl*)) (lits (clauseSym (funcall toList cl))))
-    (match (genClauseSubsumes (K cl:t) cl* lits* lits unit)
+(defunc clauseSubsumes (cl% cl)
+  (let ((lits% (sortClause cl%)) (lits (clauseSym (funcall toList cl))))
+    (cl:declare (cl:ignorable lits% lits))
+    (match (genClauseSubsumes (K cl:t) cl% lits% lits unit)
       ((Some (tuple _ sub (cl:type hol2cl.runtime::unit-value))) (make-Some sub))
       ((None) (make-None)))))
 
-(defunc clauseStrictlySubsumes (cl* cl)
+(defunc clauseStrictlySubsumes (cl% cl)
   (if
     (>
-      (funcall hol2cl.metis.metis_prover.literal.set.include~30172:size cl*)
+      (funcall hol2cl.metis.metis_prover.literal.set.include~30172:size cl%)
       (funcall hol2cl.metis.metis_prover.literal.set.include~30172:size cl))
     (make-None)
-    (clauseSubsumes cl* cl)))
+    (clauseSubsumes cl% cl)))
 
 (in-package :hol2cl.metis.metis_prover)
 
@@ -25443,8 +26042,9 @@
     ((tuple f1 n1)
       (match arg~45152
         ((tuple f2 n2)
-          (let ((c* (intCompare n1 n2)))
-            (if (<> c* 0) c* (funcall hol2cl.metis.metis_prover.name:compare f1 f2))))))))
+          (let ((c% (intCompare n1 n2)))
+            (cl:declare (cl:ignorable c%))
+            (if (<> c% 0) c% (funcall hol2cl.metis.metis_prover.name:compare f1 f2))))))))
 
 ;; (* The default order *)
 
@@ -25458,16 +26058,18 @@
 (defparameter weightZero (make-Weight weightEmpty 0))
 
 (defunc weightIsZero (arg~45193)
-  (match arg~45193 ((Weight m c*) (cl:and (= c* 0) (funcall null m)))))
+  (match arg~45193 ((Weight m c%) (cl:and (= c% 0) (funcall null m)))))
 
 (defunc weightNeg (arg~45208)
   (match arg~45208
-    ((Weight m c*) (make-Weight (funcall transform (lambdac (x) (- x)) m) (- c*)))))
+    ((Weight m c%) (make-Weight (funcall transform (lambdac (x) (- x)) m) (- c%)))))
 
 (defunc add (arg~45226)
   (match arg~45226
     ((tuple (tuple _ n1) (tuple _ n2))
-      (let ((n (+ n1 n2))) (if (= n 0) (make-None) (make-Some n))))))
+      (let ((n (+ n1 n2)))
+        (cl:declare (cl:ignorable n))
+        (if (= n 0) (make-None) (make-Some n))))))
 
 (defunc weightAdd (arg~45251 arg~45255)
   (match arg~45251
@@ -25476,24 +26078,26 @@
 
 (defunc weightSubtract (w1 w2) (weightAdd w1 (weightNeg w2)))
 
-(defunc weightTerm (weight*)
+(defunc weightTerm (weight%)
   (labelsc
     ((wt
-      (m c* arg~45287)
+      (m c% arg~45287)
       (match arg~45287
-        (nil (make-Weight m c*))
+        (nil (make-Weight m c%))
         ((cl:cons (Var v) tms)
-          (let ((n (value (peek m v) 0))) (wt (insert m (tuple v (+ n 1))) (+ c* 1) tms)))
-        ((cl:cons (Fn (tuple f a*)) tms)
-          (wt m (+ c* (funcall weight* (tuple f (funcall length a*)))) (append a* tms))))))
+          (let ((n (value (peek m v) 0)))
+            (cl:declare (cl:ignorable n))
+            (wt (insert m (tuple v (+ n 1))) (+ c% 1) tms)))
+        ((cl:cons (Fn (tuple f a%)) tms)
+          (wt m (+ c% (funcall weight% (tuple f (funcall length a%)))) (append a% tms))))))
     (lambdac (tm) (wt weightEmpty (- 1) (cl:cons tm nil)))))
 
 (defunc weightLowerBound (arg~45351)
   (match arg~45351
-    ((Weight m c*)
+    ((Weight m c%)
       (if (exists (lambdac (arg~45358) (match arg~45358 ((tuple _ n) (< n 0)))) m)
         (make-None)
-        (make-Some c*)))))
+        (make-Some c%)))))
 
 ;; (*MetisDebug
 ;; let ppWeightList =
@@ -25529,20 +26133,22 @@
 
 (defunc compare (arg~45376)
   (match arg~45376
-    ((kbo :weight weight* :precedence precedence)
+    ((kbo :weight weight% :precedence precedence)
       (fletc
         ((weightDifference
           (tm1 tm2)
-          (let ((w1 (weightTerm weight* tm1)) (w2 (weightTerm weight* tm2)))
+          (let ((w1 (weightTerm weight% tm1)) (w2 (weightTerm weight% tm2)))
+            (cl:declare (cl:ignorable w1 w2))
             (weightSubtract w2 w1))))
         (labelsc
           ((weightLess
             (tm1 tm2)
-            (let ((w* (weightDifference tm1 tm2)))
-              (if (weightIsZero w*) (precedenceLess tm1 tm2) (weightDiffLess w* tm1 tm2))))
+            (let ((w% (weightDifference tm1 tm2)))
+              (cl:declare (cl:ignorable w%))
+              (if (weightIsZero w%) (precedenceLess tm1 tm2) (weightDiffLess w% tm1 tm2))))
             (weightDiffLess
-              (w* tm1 tm2)
-              (match (weightLowerBound w*)
+              (w% tm1 tm2)
+              (match (weightLowerBound w%)
                 ((None) cl:nil)
                 ((Some 0) (precedenceLess tm1 tm2))
                 ((Some n) (> n 0))))
@@ -25551,39 +26157,42 @@
               (match (tuple x y)
                 ((tuple (Fn (tuple f1 a1)) (Fn (tuple f2 a2)))
                   (let
-                    ((c*
+                    ((c%
                       (funcall
                         precedence
                         (tuple f1 (funcall length a1))
                         (tuple f2 (funcall length a2)))))
-                    (if (< c* 0)
+                    (cl:declare (cl:ignorable c%))
+                    (if (< c% 0)
                       cl:t
-                      (if (= c* 0) (firstNotEqualTerm #'weightLess (zip a1 a2)) cl:nil))))
+                      (if (= c% 0) (firstNotEqualTerm #'weightLess (zip a1 a2)) cl:nil))))
                 (_ cl:nil))))
           (fletc
-            ((weightDiffGreater (w* tm1 tm2) (weightDiffLess (weightNeg w*) tm2 tm1)))
+            ((weightDiffGreater (w% tm1 tm2) (weightDiffLess (weightNeg w%) tm2 tm1)))
             (labelsc
               ((weightCmp
                 (tm1 tm2)
-                (let ((w* (weightDifference tm1 tm2)))
-                  (if (weightIsZero w*)
+                (let ((w% (weightDifference tm1 tm2)))
+                  (cl:declare (cl:ignorable w%))
+                  (if (weightIsZero w%)
                     (precedenceCmp tm1 tm2)
-                    (if (weightDiffLess w* tm1 tm2)
+                    (if (weightDiffLess w% tm1 tm2)
                       (make-Some (- 1))
-                      (if (weightDiffGreater w* tm1 tm2) (make-Some 1) (make-None))))))
+                      (if (weightDiffGreater w% tm1 tm2) (make-Some 1) (make-None))))))
                 (precedenceCmp
                   (x y)
                   (match (tuple x y)
                     ((tuple (Fn (tuple f1 a1)) (Fn (tuple f2 a2)))
                       (let
-                        ((c*
+                        ((c%
                           (funcall
                             precedence
                             (tuple f1 (funcall length a1))
                             (tuple f2 (funcall length a2)))))
-                        (if (< c* 0)
+                        (cl:declare (cl:ignorable c%))
+                        (if (< c% 0)
                           (make-Some (- 1))
-                          (if (= c* 0)
+                          (if (= c% 0)
                             (firstNotEqualTerm #'weightCmp (zip a1 a2))
                             (make-Some 1)))))
                     (_ (raise (make-Bug "kboOrder.precendenceCmp"))))))
@@ -25602,14 +26211,14 @@
 
 (defrecord rewrite_t order known redexes subterms waiting)
 
-(defvariant rewrite (Rewrite* field0))
+(defvariant rewrite (Rewrite% field0))
 
 (defunc updateWaiting (rw waiting)
   (match rw
-    ((Rewrite*
+    ((Rewrite%
       (rewrite_t
         :order
-        order*
+        order%
         :known
         known
         :redexes
@@ -25618,10 +26227,10 @@
         subterms
         :waiting
         _))
-      (make-Rewrite*
+      (make-Rewrite%
         (make-rewrite_t
           :order
-          order*
+          order%
           :known
           known
           :redexes
@@ -25633,14 +26242,14 @@
 
 (defunc deleteWaiting (arg~45646 id)
   (match arg~45646
-    ((cl:and rw (Rewrite* (rewrite_t :waiting waiting)))
+    ((cl:and rw (Rewrite% (rewrite_t :waiting waiting)))
       (updateWaiting rw (delete waiting id)))))
 
-(defunc newRewrite (order*)
-  (make-Rewrite*
+(defunc newRewrite (order%)
+  (make-Rewrite%
     (make-rewrite_t
       :order
-      order*
+      order%
       :known
       (newMap unit)
       :redexes
@@ -25652,17 +26261,17 @@
 
 (defunc peek (arg~45678 id)
   (match arg~45678
-    ((Rewrite* (rewrite_t :known known))
+    ((Rewrite% (rewrite_t :known known))
       (hol2cl.metis.metis_prover.intmap.include~4681:peek known id))))
 
 (defunc size (arg~45690)
   (match arg~45690
-    ((Rewrite* (rewrite_t :known known))
+    ((Rewrite% (rewrite_t :known known))
       (funcall hol2cl.metis.metis_prover.intmap.include~4681:size known))))
 
 (defunc equations (arg~45700)
   (match arg~45700
-    ((Rewrite* (rewrite_t :known known))
+    ((Rewrite% (rewrite_t :known known))
       (funcall
         foldr
         (lambdac (arg~45703)
@@ -25730,15 +26339,15 @@
 ;; (* ------------------------------------------------------------------------- *)
 
 
-(defunc termReducible (order* known id)
+(defunc termReducible (order% known id)
   (fletc
     ((eqnRed
       (arg~45729 tm)
       (match arg~45729
-        ((tuple (tuple l r*) _)
+        ((tuple (tuple l r%) _)
           (match (total (matchTerms hol2cl.metis.metis_prover.substitute:empty l) tm)
             ((None) cl:nil)
-            ((Some sub) (= (funcall order* tm (subst (normalize sub) r*)) (make-Some 1))))))))
+            ((Some sub) (= (funcall order% tm (subst (normalize sub) r%)) (make-Some 1))))))))
     (fletc
       ((knownRed
         (tm arg~45761)
@@ -25760,16 +26369,16 @@
               ((Fn (tuple _ tms)) (list-exists #'termRed tms)))))
         #'termRed))))
 
-(defunc literalReducible (order* known id lit)
-  (list-exists (termReducible order* known id) (arguments lit)))
+(defunc literalReducible (order% known id lit)
+  (list-exists (termReducible order% known id) (arguments lit)))
 
-(defunc literalsReducible (order* known id lits)
+(defunc literalsReducible (order% known id lits)
   (funcall
     hol2cl.metis.metis_prover.literal.set.include~30172:exists
-    (literalReducible order* known id)
+    (literalReducible order% known id)
     lits))
 
-(defunc thmReducible (order* known id th) (literalsReducible order* known id (clause th)))
+(defunc thmReducible (order% known id th) (literalsReducible order% known id (clause th)))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Add equations into the system.                                            *)
@@ -25779,7 +26388,7 @@
 (defunc orderToOrient (arg~45859)
   (match arg~45859
     ((Some 0) (failwith "Rewrite.orient: reflexive"))
-    ((trivia:guard (Some c*) (> c* 0)) (make-Some (make-Left_to_right)))
+    ((guard (Some c%) (> c% 0)) (make-Some (make-Left_to_right)))
     ((Some _) (make-Some (make-Right_to_left)))
     ((None) (make-None))))
 
@@ -25787,24 +26396,24 @@
 
 (defunc addRedexes (id arg~45895 redexes)
   (match arg~45895
-    ((tuple (tuple (tuple l r*) _) ort)
+    ((tuple (tuple (tuple l r%) _) ort)
       (match ort
         ((Some (Left_to_right)) (ins redexes l id (make-Left_to_right)))
-        ((Some (Right_to_left)) (ins redexes r* id (make-Right_to_left)))
-        ((None) (ins (ins redexes l id (make-Left_to_right)) r* id (make-Right_to_left)))))))
+        ((Some (Right_to_left)) (ins redexes r% id (make-Right_to_left)))
+        ((None) (ins (ins redexes l id (make-Left_to_right)) r% id (make-Right_to_left)))))))
 
 (defunc add (arg~45936 arg~45940)
   (match arg~45936
-    ((cl:and rw (Rewrite* (rewrite_t :known known)))
+    ((cl:and rw (Rewrite% (rewrite_t :known known)))
       (match arg~45940
         ((tuple id eqn)
           (if (funcall inDomain id known)
             rw
             (match rw
-              ((Rewrite*
+              ((Rewrite%
                 (rewrite_t
                   :order
-                  order*
+                  order%
                   :redexes
                   redexes
                   :subterms
@@ -25813,28 +26422,29 @@
                   waiting))
                 (let*
                   ((ort
-                    (match (fst eqn) ((tuple l r*) (orderToOrient (funcall order* l r*)))))
-                    (known*
+                    (match (fst eqn) ((tuple l r%) (orderToOrient (funcall order% l r%)))))
+                    (known%
                       (hol2cl.metis.metis_prover.intmap.include~4681:insert
                         known
                         (tuple id (tuple eqn ort))))
-                    (redexes* (addRedexes id (tuple eqn ort) redexes))
-                    (waiting*
+                    (redexes% (addRedexes id (tuple eqn ort) redexes))
+                    (waiting%
                       (hol2cl.metis.metis_prover.intset.include~7557:add waiting id))
-                    (rw*
-                      (make-Rewrite*
+                    (rw%
+                      (make-Rewrite%
                         (make-rewrite_t
                           :order
-                          order*
+                          order%
                           :known
-                          known*
+                          known%
                           :redexes
-                          redexes*
+                          redexes%
                           :subterms
                           subterms
                           :waiting
-                          waiting*))))
-                  rw*)))))))))
+                          waiting%))))
+                  (cl:declare (cl:ignorable ort known% redexes% waiting% rw%))
+                  rw%)))))))))
 
 (defunc uncurriedAdd (arg~46017) (match arg~46017 ((tuple eqn rw) (add rw eqn))))
 
@@ -25846,7 +26456,7 @@
 
 
 (defunc reorder (arg~46035 arg~46038)
-  (match arg~46035 ((tuple i* _) (match arg~46038 ((tuple j _) (intCompare j i*))))))
+  (match arg~46035 ((tuple i% _) (match arg~46038 ((tuple j _) (intCompare j i%))))))
 
 (defunc matchingRedexes (redexes tm) (list-sort #'reorder (matchNet redexes tm)))
 
@@ -25860,25 +26470,25 @@
 (defunc redexResidue (x y)
   (match (tuple x y)
     ((tuple (Left_to_right) (tuple l_r _)) l_r)
-    ((tuple (Right_to_left) (tuple (tuple l r*) _)) (tuple r* l))))
+    ((tuple (Right_to_left) (tuple (tuple l r%) _)) (tuple r% l))))
 
 (defunc orientedEquation (dir eqn)
   (match dir ((Left_to_right) eqn) ((Right_to_left) (symEqn eqn))))
 
-(defunc rewrIdConv* (order* known redexes id tm)
+(defunc rewrIdConv% (order% known redexes id tm)
   (fletc
     ((rewr
       (arg~46130)
       (match arg~46130
-        ((tuple id* lr)
-          (match (cl:or (<> id id*) (failwith "same theorem"))
+        ((tuple id% lr)
+          (match (cl:or (<> id id%) (failwith "same theorem"))
             (_
-              (match (get known id*)
+              (match (get known id%)
                 ((tuple eqn ort)
                   (match (cl:or (wellOriented ort lr) (failwith "orientation"))
                     (_
                       (match (redexResidue lr eqn)
-                        ((tuple l r*)
+                        ((tuple l r%)
                           (let*
                             ((sub
                               (normalize
@@ -25886,40 +26496,43 @@
                                   hol2cl.metis.metis_prover.substitute:empty
                                   l
                                   tm)))
-                              (tm* (subst sub r*)))
+                              (tm% (subst sub r%)))
+                            (cl:declare (cl:ignorable sub tm%))
                             (match
                               (cl:or
                                 (is_some ort)
                                 (cl:or
-                                  (= (funcall order* tm tm*) (make-Some 1))
+                                  (= (funcall order% tm tm%) (make-Some 1))
                                   (failwith "order")))
                               (_
                                 (match (orientedEquation lr eqn)
                                   ((tuple _ th)
                                     (tuple
-                                      tm*
+                                      tm%
                                       (hol2cl.metis.metis_prover.thm:subst sub th)))))))))))))))))))
     (match (first (total #'rewr) (matchingRedexes redexes tm))
       ((None) (failwith "Rewrite.rewrIdConv: no matching rewrites"))
       ((Some res) res))))
 
-(defunc rewriteIdConv* (order* known redexes id)
+(defunc rewriteIdConv% (order% known redexes id)
   (if (funcall null known)
     #'allConv
-    (repeatTopDownConv (rewrIdConv* order* known redexes id))))
+    (repeatTopDownConv (rewrIdConv% order% known redexes id))))
 
-(defunc mkNeqConv (order* lit)
+(defunc mkNeqConv (order% lit)
   (match (destNeq lit)
-    ((tuple l r*)
-      (match (funcall order* l r*)
+    ((tuple l r%)
+      (match (funcall order% l r%)
         ((None) (failwith "incomparable"))
-        ((trivia:guard (Some c*) (< c* 0))
-          (let ((th (symmetryRule l r*)))
-            (lambdac (tm) (if (equal tm r*) (tuple l th) (failwith "mkNeqConv: RL")))))
+        ((guard (Some c%) (< c% 0))
+          (let ((th (symmetryRule l r%)))
+            (cl:declare (cl:ignorable th))
+            (lambdac (tm) (if (equal tm r%) (tuple l th) (failwith "mkNeqConv: RL")))))
         ((Some 0) (failwith "irreflexive"))
         ((Some _)
           (let ((th (assume lit)))
-            (lambdac (tm) (if (equal tm l) (tuple r* th) (failwith "mkNeqConv: LR")))))))))
+            (cl:declare (cl:ignorable th))
+            (lambdac (tm) (if (equal tm l) (tuple r% th) (failwith "mkNeqConv: LR")))))))))
 
 (defvariant neqConvs (Neq_convs field0))
 
@@ -25929,31 +26542,31 @@
 (defunc neqConvsNull (arg~46312)
   (match arg~46312 ((Neq_convs m) (funcall hol2cl.metis.metis_prover.literal.map:null m))))
 
-(defunc neqConvsAdd (order* arg~46322 lit)
+(defunc neqConvsAdd (order% arg~46322 lit)
   (match arg~46322
     ((Neq_convs m)
-      (match (total (mkNeqConv order*) lit)
+      (match (total (mkNeqConv order%) lit)
         ((None) (make-None))
         ((Some conv)
           (make-Some
             (make-Neq_convs
               (hol2cl.metis.metis_prover.literal.map:insert m (tuple lit conv)))))))))
 
-(defunc mkNeqConvs (order*)
+(defunc mkNeqConvs (order%)
   (fletc
-    ((add*
+    ((add%
       (arg~46349)
       (match arg~46349
         ((tuple lit (tuple neq lits))
-          (match (neqConvsAdd order* neq lit)
-            ((Some neq*) (tuple neq* lits))
+          (match (neqConvsAdd order% neq lit)
+            ((Some neq%) (tuple neq% lits))
             ((None)
               (tuple
                 neq
                 (hol2cl.metis.metis_prover.literal.set.include~30172:add lits lit))))))))
     (funcall
       hol2cl.metis.metis_prover.literal.set.include~30172:foldl
-      #'add*
+      #'add%
       (tuple neqConvsEmpty hol2cl.metis.metis_prover.literal.set.include~30172:empty))))
 
 (defunc neqConvsDelete (arg~46384 lit)
@@ -25966,45 +26579,47 @@
       (firstConv
         (funcall
           hol2cl.metis.metis_prover.literal.map:foldr
-          (lambdac (arg~46399) (match arg~46399 ((tuple _ c* l) (cl:cons c* l))))
+          (lambdac (arg~46399) (match arg~46399 ((tuple _ c% l) (cl:cons c% l))))
           nil
           m)))))
 
-(defunc neqConvsFoldl (f b* arg~46421)
+(defunc neqConvsFoldl (f b% arg~46421)
   (match arg~46421
     ((Neq_convs m)
       (hol2cl.metis.metis_prover.literal.map:foldl
         (lambdac (arg~46424) (match arg~46424 ((tuple l _ z) (funcall f (tuple l z)))))
-        b*
+        b%
         m))))
 
-(defunc neqConvsRewrIdLiterule (order* known redexes id neq)
+(defunc neqConvsRewrIdLiterule (order% known redexes id neq)
   (if (cl:and (funcall null known) (neqConvsNull neq))
     #'allLiterule
     (let*
       ((neq_conv (neqConvsToConv neq))
-        (rewr_conv* (rewrIdConv* order* known redexes id))
-        (conv (orelseConv neq_conv rewr_conv*))
-        (conv* (repeatTopDownConv conv)))
-      (allArgumentsLiterule conv*))))
+        (rewr_conv% (rewrIdConv% order% known redexes id))
+        (conv (orelseConv neq_conv rewr_conv%))
+        (conv% (repeatTopDownConv conv)))
+      (cl:declare (cl:ignorable neq_conv rewr_conv% conv conv%))
+      (allArgumentsLiterule conv%))))
 
-(defunc rewriteIdEqn* (order* known redexes id arg~46484)
+(defunc rewriteIdEqn% (order% known redexes id arg~46484)
   (match arg~46484
     ((cl:and eqn (tuple l_r th))
-      (match (mkNeqConvs order* (clause th))
+      (match (mkNeqConvs order% (clause th))
         ((tuple neq _)
-          (let ((literule (neqConvsRewrIdLiterule order* known redexes id neq)))
+          (let ((literule (neqConvsRewrIdLiterule order% known redexes id neq)))
+            (cl:declare (cl:ignorable literule))
             (match
               (match (equationLiteral eqn)
                 ((None) (tuple cl:t (mkEq l_r)))
                 ((Some lit) (tuple cl:nil lit)))
               ((tuple strongEqn lit)
                 (match (funcall literule lit)
-                  ((tuple lit* litTh)
-                    (if (hol2cl.metis.metis_prover.literal:equal lit lit*)
+                  ((tuple lit% litTh)
+                    (if (hol2cl.metis.metis_prover.literal:equal lit lit%)
                       eqn
                       (tuple
-                        (destEq lit*)
+                        (destEq lit%)
                         (if strongEqn
                           th
                           (if (not (negateMember lit litTh)) litTh (resolve lit th litTh)))))))))))))))
@@ -26014,40 +26629,44 @@
 ;; *)
 
 
-(defunc rewriteIdLiteralsRule* (order* known redexes id lits th)
-  (let ((mk_literule (neqConvsRewrIdLiterule order* known redexes id)))
+(defunc rewriteIdLiteralsRule% (order% known redexes id lits th)
+  (let ((mk_literule (neqConvsRewrIdLiterule order% known redexes id)))
+    (cl:declare (cl:ignorable mk_literule))
     (fletc
       ((rewr_neq_lit
         (arg~46575)
         (match arg~46575
-          ((tuple lit (cl:and acc (tuple changed neq lits* th*)))
-            (let ((neq* (neqConvsDelete neq lit)))
-              (match (funcall mk_literule neq* lit)
-                ((tuple lit* litTh)
-                  (if (hol2cl.metis.metis_prover.literal:equal lit lit*)
+          ((tuple lit (cl:and acc (tuple changed neq lits% th%)))
+            (let ((neq% (neqConvsDelete neq lit)))
+              (cl:declare (cl:ignorable neq%))
+              (match (funcall mk_literule neq% lit)
+                ((tuple lit% litTh)
+                  (if (hol2cl.metis.metis_prover.literal:equal lit lit%)
                     acc
-                    (let ((th (if (member lit th*) (resolve lit th* litTh) th*)))
-                      (match (neqConvsAdd order* neq* lit*)
-                        ((Some neq) (tuple cl:t neq lits* th))
+                    (let ((th (if (member lit th%) (resolve lit th% litTh) th%)))
+                      (cl:declare (cl:ignorable th))
+                      (match (neqConvsAdd order% neq% lit%)
+                        ((Some neq) (tuple cl:t neq lits% th))
                         ((None)
                           (tuple
                             changed
-                            neq*
+                            neq%
                             (hol2cl.metis.metis_prover.literal.set.include~30172:add
-                              lits*
-                              lit*)
+                              lits%
+                              lit%)
                             th))))))))))))
       (labelsc
         ((rewr_neq_lits
-          (neq lits* th*)
-          (match (neqConvsFoldl #'rewr_neq_lit (tuple cl:nil neq lits* th*) neq)
-            ((tuple changed neq* lits th)
-              (if changed (rewr_neq_lits neq* lits th) (tuple neq* lits th))))))
-        (match (mkNeqConvs order* lits)
-          ((tuple neq lits*)
-            (match (rewr_neq_lits neq lits* th)
-              ((tuple neq* lits th*)
-                (let ((rewr_literule (funcall mk_literule neq*)))
+          (neq lits% th%)
+          (match (neqConvsFoldl #'rewr_neq_lit (tuple cl:nil neq lits% th%) neq)
+            ((tuple changed neq% lits th)
+              (if changed (rewr_neq_lits neq% lits th) (tuple neq% lits th))))))
+        (match (mkNeqConvs order% lits)
+          ((tuple neq lits%)
+            (match (rewr_neq_lits neq lits% th)
+              ((tuple neq% lits th%)
+                (let ((rewr_literule (funcall mk_literule neq%)))
+                  (cl:declare (cl:ignorable rewr_literule))
                   (fletc
                     ((rewr_lit
                       (arg~46684)
@@ -26057,11 +26676,11 @@
                     (funcall
                       hol2cl.metis.metis_prover.literal.set.include~30172:foldl
                       #'rewr_lit
-                      th*
+                      th%
                       lits)))))))))))
 
-(defunc rewriteIdRule* (order* known redexes id th)
-  (rewriteIdLiteralsRule* order* known redexes id (clause th) th))
+(defunc rewriteIdRule% (order% known redexes id th)
+  (rewriteIdLiteralsRule% order% known redexes id (clause th) th))
 
 ;; (*MetisDebug
 ;; let rewriteIdRule' = fun order -> fun known -> fun redexes -> fun id -> fun th ->
@@ -26082,34 +26701,34 @@
 ;; *)
 
 
-(defunc rewrIdConv (arg~46742 order*)
+(defunc rewrIdConv (arg~46742 order%)
   (match arg~46742
-    ((Rewrite* (rewrite_t :known known :redexes redexes))
-      (rewrIdConv* order* known redexes))))
+    ((Rewrite% (rewrite_t :known known :redexes redexes))
+      (rewrIdConv% order% known redexes))))
 
-(defunc rewrConv (rewrite** order*) (rewrIdConv rewrite** order* (- 1)))
+(defunc rewrConv (rewrite%% order%) (rewrIdConv rewrite%% order% (- 1)))
 
-(defunc rewriteIdConv (arg~46766 order*)
+(defunc rewriteIdConv (arg~46766 order%)
   (match arg~46766
-    ((Rewrite* (rewrite_t :known known :redexes redexes))
-      (rewriteIdConv* order* known redexes))))
+    ((Rewrite% (rewrite_t :known known :redexes redexes))
+      (rewriteIdConv% order% known redexes))))
 
-(defunc rewriteConv (rewrite** order*) (rewriteIdConv rewrite** order* (- 1)))
+(defunc rewriteConv (rewrite%% order%) (rewriteIdConv rewrite%% order% (- 1)))
 
-(defunc rewriteIdLiteralsRule (arg~46790 order*)
+(defunc rewriteIdLiteralsRule (arg~46790 order%)
   (match arg~46790
-    ((Rewrite* (rewrite_t :known known :redexes redexes))
-      (rewriteIdLiteralsRule* order* known redexes))))
+    ((Rewrite% (rewrite_t :known known :redexes redexes))
+      (rewriteIdLiteralsRule% order% known redexes))))
 
-(defunc rewriteLiteralsRule (rewrite** order*)
-  (rewriteIdLiteralsRule rewrite** order* (- 1)))
+(defunc rewriteLiteralsRule (rewrite%% order%)
+  (rewriteIdLiteralsRule rewrite%% order% (- 1)))
 
-(defunc rewriteIdRule (arg~46814 order*)
+(defunc rewriteIdRule (arg~46814 order%)
   (match arg~46814
-    ((Rewrite* (rewrite_t :known known :redexes redexes))
-      (rewriteIdRule* order* known redexes))))
+    ((Rewrite% (rewrite_t :known known :redexes redexes))
+      (rewriteIdRule% order% known redexes))))
 
-(defunc rewriteRule (rewrite** order*) (rewriteIdRule rewrite** order* (- 1)))
+(defunc rewriteRule (rewrite%% order%) (rewriteIdRule rewrite%% order% (- 1)))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Inter-reduce the equations in the system.                                 *)
@@ -26118,67 +26737,70 @@
 
 (defunc addSubterms (id arg~46839 subterms)
   (match arg~46839
-    ((tuple (tuple l r*) _)
+    ((tuple (tuple l r%) _)
       (fletc
         ((addSubterm
-          (b* arg~46846)
+          (b% arg~46846)
           (match arg~46846
-            ((tuple (tuple path tm) net*) (insert net* (tuple tm (tuple id b* path)))))))
+            ((tuple (tuple path tm) net%) (insert net% (tuple tm (tuple id b% path)))))))
         (let*
-          ((subterms*
+          ((subterms%
             (foldl (addSubterm cl:t) subterms (hol2cl.metis.metis_prover.term:subterms l)))
             (subterms
               (foldl
                 (addSubterm cl:nil)
-                subterms*
-                (hol2cl.metis.metis_prover.term:subterms r*))))
+                subterms%
+                (hol2cl.metis.metis_prover.term:subterms r%))))
+          (cl:declare (cl:ignorable subterms% subterms))
           subterms)))))
 
 (defunc sameRedexes (x y z)
   (match (tuple x y z)
     ((tuple (None) _ _) cl:nil)
     ((tuple (Some (Left_to_right)) (tuple l0 _) (tuple l _)) (equal l0 l))
-    ((tuple (Some (Right_to_left)) (tuple _ r0) (tuple _ r*)) (equal r0 r*))))
+    ((tuple (Some (Right_to_left)) (tuple _ r0) (tuple _ r%)) (equal r0 r%))))
 
 (defunc redexResidues (x arg~46933)
   (match arg~46933
-    ((tuple l r*)
+    ((tuple l r%)
       (match x
-        ((None) (cl:cons (tuple l r* cl:nil) (cl:cons (tuple r* l cl:nil) nil)))
-        ((Some (Left_to_right)) (cl:cons (tuple l r* cl:t) nil))
-        ((Some (Right_to_left)) (cl:cons (tuple r* l cl:t) nil))))))
+        ((None) (cl:cons (tuple l r% cl:nil) (cl:cons (tuple r% l cl:nil) nil)))
+        ((Some (Left_to_right)) (cl:cons (tuple l r% cl:t) nil))
+        ((Some (Right_to_left)) (cl:cons (tuple r% l cl:t) nil))))))
 
-(defunc findReducibles (order* known subterms id)
+(defunc findReducibles (order% known subterms id)
   (fletc
     ((checkValidRewr
-      (arg~46977 id* left path)
+      (arg~46977 id% left path)
       (match arg~46977
-        ((tuple l r* ord)
-          (match (get known id*)
+        ((tuple l r% ord)
+          (match (get known id%)
             ((tuple (tuple (tuple x y) _) _)
               (let*
                 ((tm (subterm (if left x y) path))
                   (sub (matchTerms hol2cl.metis.metis_prover.substitute:empty l tm)))
+                (cl:declare (cl:ignorable tm sub))
                 (if ord
                   unit
-                  (let ((tm* (subst (normalize sub) r*)))
-                    (if (= (funcall order* tm tm*) (make-Some 1)) unit (failwith "order")))))))))))
+                  (let ((tm% (subst (normalize sub) r%)))
+                    (cl:declare (cl:ignorable tm%))
+                    (if (= (funcall order% tm tm%) (make-Some 1)) unit (failwith "order")))))))))))
     (fletc
       ((addRed
         (lr arg~47037)
         (match arg~47037
-          ((tuple (tuple id* left path) todo)
+          ((tuple (tuple id% left path) todo)
             (if
               (cl:and
-                (<> id id*)
+                (<> id id%)
                 (cl:and
                   (not
                     (funcall
                       hol2cl.metis.metis_prover.intset.include~7557:member
-                      id*
+                      id%
                       todo))
-                  (can (checkValidRewr lr id* left) path)))
-              (hol2cl.metis.metis_prover.intset.include~7557:add todo id*)
+                  (can (checkValidRewr lr id% left) path)))
+              (hol2cl.metis.metis_prover.intset.include~7557:add todo id%)
               todo)))))
       (fletc
         ((findRed
@@ -26196,10 +26818,10 @@
           (match eqn0
             ((tuple eq0 _)
               (match rw
-                ((Rewrite*
+                ((Rewrite%
                   (rewrite_t
                     :order
-                    order*
+                    order%
                     :known
                     known
                     :redexes
@@ -26208,23 +26830,23 @@
                     subterms
                     :waiting
                     waiting))
-                  (match (rewriteIdEqn* order* known redexes id eqn0)
+                  (match (rewriteIdEqn% order% known redexes id eqn0)
                     ((cl:and eqn (tuple eq _))
                       (let*
                         ((identical
                           (match (tuple eq0 eq)
-                            ((tuple (tuple l0 r0) (tuple l r*))
-                              (cl:and (equal l l0) (equal r* r0)))))
+                            ((tuple (tuple l0 r0) (tuple l r%))
+                              (cl:and (equal l l0) (equal r% r0)))))
                           (same_redexes (cl:or identical (sameRedexes ort0 eq0 eq)))
-                          (rpl*
+                          (rpl%
                             (if same_redexes
                               rpl
                               (hol2cl.metis.metis_prover.intset.include~7557:add rpl id)))
-                          (spl*
+                          (spl%
                             (if (cl:or newx identical)
                               spl
                               (hol2cl.metis.metis_prover.intset.include~7557:add spl id)))
-                          (changed*
+                          (changed%
                             (if (cl:and (not newx) identical)
                               changed
                               (hol2cl.metis.metis_prover.intset.include~7557:add
@@ -26234,69 +26856,74 @@
                             (if same_redexes
                               (make-Some ort0)
                               (match eq
-                                ((tuple l r*)
-                                  (total #'orderToOrient (funcall order* l r*)))))))
+                                ((tuple l r%)
+                                  (total #'orderToOrient (funcall order% l r%)))))))
+                        (cl:declare
+                          (cl:ignorable identical same_redexes rpl% spl% changed% ort))
                         (match ort
                           ((None)
                             (let*
-                              ((known*
+                              ((known%
                                 (hol2cl.metis.metis_prover.intmap.include~4681:delete
                                   known
                                   id))
-                                (rw*
-                                  (make-Rewrite*
+                                (rw%
+                                  (make-Rewrite%
                                     (make-rewrite_t
                                       :order
-                                      order*
+                                      order%
                                       :known
-                                      known*
+                                      known%
                                       :redexes
                                       redexes
                                       :subterms
                                       subterms
                                       :waiting
                                       waiting))))
-                              (tuple rpl* spl* todo rw* changed*)))
-                          ((Some ort*)
+                              (cl:declare (cl:ignorable known% rw%))
+                              (tuple rpl% spl% todo rw% changed%)))
+                          ((Some ort%)
                             (let*
-                              ((todo*
+                              ((todo%
                                 (if (cl:and (not newx) same_redexes)
                                   todo
                                   (findReducibles
-                                    order*
+                                    order%
                                     known
                                     subterms
                                     id
                                     todo
-                                    (redexResidues ort* eq))))
-                                (known*
+                                    (redexResidues ort% eq))))
+                                (known%
                                   (if identical
                                     known
                                     (hol2cl.metis.metis_prover.intmap.include~4681:insert
                                       known
-                                      (tuple id (tuple eqn ort*)))))
-                                (redexes*
+                                      (tuple id (tuple eqn ort%)))))
+                                (redexes%
                                   (if same_redexes
                                     redexes
-                                    (addRedexes id (tuple eqn ort*) redexes)))
-                                (subterms*
+                                    (addRedexes id (tuple eqn ort%) redexes)))
+                                (subterms%
                                   (if (cl:or newx (not identical))
                                     (addSubterms id eqn subterms)
                                     subterms))
-                                (rw*
-                                  (make-Rewrite*
+                                (rw%
+                                  (make-Rewrite%
                                     (make-rewrite_t
                                       :order
-                                      order*
+                                      order%
                                       :known
-                                      known*
+                                      known%
                                       :redexes
-                                      redexes*
+                                      redexes%
                                       :subterms
-                                      subterms*
+                                      subterms%
                                       :waiting
                                       waiting))))
-                              (tuple rpl* spl* todo* rw* changed*))))))))))))))))
+                              (cl:declare
+                                (cl:ignorable todo% known% redexes% subterms% rw%))
+                              (tuple rpl% spl% todo% rw% changed%))))))))))))))))
 
 (defunc pick (known set)
   (fletc
@@ -26331,13 +26958,14 @@
                 ((None) reds)
                 ((Some eqn_ort) (addRedexes id eqn_ort reds)))))))
         (let*
-          ((redexes* (filter #'filt redexes))
+          ((redexes% (filter #'filt redexes))
             (redexes
               (funcall
                 hol2cl.metis.metis_prover.intset.include~7557:foldl
                 #'addReds
-                redexes*
+                redexes%
                 rpl)))
+          (cl:declare (cl:ignorable redexes% redexes))
           redexes)))))
 
 (defunc cleanSubterms (known subterms spl)
@@ -26358,21 +26986,22 @@
                 ((None) subtms)
                 ((Some (tuple eqn _)) (addSubterms id eqn subtms)))))))
         (let*
-          ((subterms* (filter #'filt subterms))
+          ((subterms% (filter #'filt subterms))
             (subterms
               (funcall
                 hol2cl.metis.metis_prover.intset.include~7557:foldl
                 #'addSubtms
-                subterms*
+                subterms%
                 spl)))
+          (cl:declare (cl:ignorable subterms% subterms))
           subterms)))))
 
 (defunc rebuild (rpl spl rw)
   (match rw
-    ((Rewrite*
+    ((Rewrite%
       (rewrite_t
         :order
-        order*
+        order%
         :known
         known
         :redexes
@@ -26382,18 +27011,19 @@
         :waiting
         waiting))
       (let*
-        ((redexes* (cleanRedexes known redexes rpl))
-          (subterms* (cleanSubterms known subterms spl)))
-        (make-Rewrite*
+        ((redexes% (cleanRedexes known redexes rpl))
+          (subterms% (cleanSubterms known subterms spl)))
+        (cl:declare (cl:ignorable redexes% subterms%))
+        (make-Rewrite%
           (make-rewrite_t
             :order
-            order*
+            order%
             :known
             known
             :redexes
-            redexes*
+            redexes%
             :subterms
-            subterms*
+            subterms%
             :waiting
             waiting))))))
 
@@ -26403,25 +27033,27 @@
       rpl
       spl
       todo
-      (cl:and rw (Rewrite* (rewrite_t :known known :waiting waiting)))
+      (cl:and rw (Rewrite% (rewrite_t :known known :waiting waiting)))
       changed)
       (match (pick known todo)
         ((Some (tuple id eqn_ort))
-          (let ((todo* (delete todo id)))
-            (reduceAcc (reduce1 cl:nil id eqn_ort (tuple rpl spl todo* rw changed)))))
+          (let ((todo% (delete todo id)))
+            (cl:declare (cl:ignorable todo%))
+            (reduceAcc (reduce1 cl:nil id eqn_ort (tuple rpl spl todo% rw changed)))))
         ((None)
           (match (pick known waiting)
             ((Some (tuple id eqn_ort))
-              (let ((rw* (deleteWaiting rw id)))
-                (reduceAcc (reduce1 cl:t id eqn_ort (tuple rpl spl todo rw* changed)))))
+              (let ((rw% (deleteWaiting rw id)))
+                (cl:declare (cl:ignorable rw%))
+                (reduceAcc (reduce1 cl:t id eqn_ort (tuple rpl spl todo rw% changed)))))
             ((None) (tuple (rebuild rpl spl rw) (funcall toList changed)))))))))
 
 (defunc isReduced (arg~47614)
   (match arg~47614
-    ((Rewrite* (rewrite_t :waiting waiting))
+    ((Rewrite% (rewrite_t :waiting waiting))
       (funcall hol2cl.metis.metis_prover.intset.include~7557:null waiting))))
 
-(defunc reduce* (rw)
+(defunc reduce% (rw)
   (if (isReduced rw) (tuple rw nil) (reduceAcc (tuple empty empty empty rw empty))))
 
 ;; (*MetisDebug
@@ -26447,7 +27079,7 @@
 ;; *)
 
 
-(defunc reduce (rw) (fst (reduce* rw)))
+(defunc reduce (rw) (fst (reduce% rw)))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Rewriting as a derived rule.                                              *)
@@ -26456,9 +27088,10 @@
 
 (defunc addEqn (arg~47646) (match arg~47646 ((tuple id_eqn rw) (add rw id_eqn))))
 
-(defunc orderedRewrite (order* ths)
-  (let ((rw (foldl #'addEqn (newRewrite order*) (enumerate ths))))
-    (rewriteRule rw order*)))
+(defunc orderedRewrite (order% ths)
+  (let ((rw (foldl #'addEqn (newRewrite order%) (enumerate ths))))
+    (cl:declare (cl:ignorable rw))
+    (rewriteRule rw order%)))
 
 (defunc order (arg~47673 arg~47675) (make-Some 1))
 
@@ -26473,10 +27106,10 @@
 (defparameter empty (make-Units (newNet (make-parameters :fifo cl:nil))))
 
 (defunc size (arg~47693)
-  (match arg~47693 ((Units net*) (hol2cl.metis.metis_prover.literal_net:size net*))))
+  (match arg~47693 ((Units net%) (hol2cl.metis.metis_prover.literal_net:size net%))))
 
-(defunc toString (units*)
-  (string-concat "U{" (string-concat (string-of-int (size units*)) "}")))
+(defunc toString (units%)
+  (string-concat "U{" (string-concat (string-of-int (size units%)) "}")))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Add units into the store.                                                 *)
@@ -26485,17 +27118,19 @@
 
 (defunc add (arg~47712 arg~47715)
   (match arg~47712
-    ((Units net*)
+    ((Units net%)
       (match arg~47715
         ((cl:and uTh (tuple lit th))
-          (let ((net** (insert net* (tuple lit uTh))))
+          (let ((net%% (insert net% (tuple lit uTh))))
+            (cl:declare (cl:ignorable net%%))
             (match (total #'sym lit)
-              ((None) (make-Units net**))
-              ((Some (cl:and lit* (tuple pol _)))
+              ((None) (make-Units net%%))
+              ((Some (cl:and lit% (tuple pol _)))
                 (let*
-                  ((th* (funcall (if pol #'symEq #'symNeq) lit th))
-                    (net* (insert net** (tuple lit* (tuple lit* th*)))))
-                  (make-Units net*))))))))))
+                  ((th% (funcall (if pol #'symEq #'symNeq) lit th))
+                    (net% (insert net%% (tuple lit% (tuple lit% th%)))))
+                  (cl:declare (cl:ignorable th% net%))
+                  (make-Units net%))))))))))
 
 (defparameter addList
   (foldl (lambdac (arg~47771) (match arg~47771 ((tuple th u) (add u th))))))
@@ -26507,26 +27142,26 @@
 
 (defunc matchUnits (arg~47785 lit)
   (match arg~47785
-    ((Units net*)
+    ((Units net%)
       (fletc
-        ((check*
+        ((check%
           (arg~47790)
           (match arg~47790
-            ((cl:and uTh (tuple lit* _))
+            ((cl:and uTh (tuple lit% _))
               (match
                 (total
-                  (matchLiterals hol2cl.metis.metis_prover.substitute:empty lit*)
+                  (matchLiterals hol2cl.metis.metis_prover.substitute:empty lit%)
                   lit)
                 ((None) (make-None))
                 ((Some sub) (make-Some (tuple uTh sub))))))))
-        (first #'check* (matchNet net* lit))))))
+        (first #'check% (matchNet net% lit))))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Reducing by repeated matching and resolution.                             *)
 ;; (* ------------------------------------------------------------------------- *)
 
 
-(defunc reduce (units*)
+(defunc reduce (units%)
   (fletc
     ((red1
       (arg~47826)
@@ -26536,20 +27171,24 @@
             ((Some tm)
               (match news_th
                 ((tuple news th)
-                  (let ((th* (resolve lit th (refl tm)))) (tuple news th*)))))
+                  (let ((th% (resolve lit th (refl tm))))
+                    (cl:declare (cl:ignorable th%))
+                    (tuple news th%)))))
             ((None)
-              (let ((lit* (negate lit)))
-                (match (matchUnits units* lit*)
+              (let ((lit% (negate lit)))
+                (cl:declare (cl:ignorable lit%))
+                (match (matchUnits units% lit%)
                   ((None) news_th)
                   ((Some (tuple (tuple _ rth) sub))
                     (match news_th
                       ((tuple news th)
                         (let*
-                          ((rth* (subst sub rth))
-                            (th* (resolve lit th rth*))
-                            (newLits (delete (clause rth*) lit*))
-                            (news* (funcall union newLits news)))
-                          (tuple news* th*)))))))))))))
+                          ((rth% (subst sub rth))
+                            (th% (resolve lit th rth%))
+                            (newLits (delete (clause rth%) lit%))
+                            (news% (funcall union newLits news)))
+                          (cl:declare (cl:ignorable rth% th% newLits news%))
+                          (tuple news% th%)))))))))))))
     (labelsc
       ((red
         (arg~47909)
@@ -26575,14 +27214,16 @@
 
 
 (defparameter newId
-  (let ((r* (ref 0)))
+  (let ((r% (ref 0)))
+    (cl:declare (cl:ignorable r%))
     (fletc
       ((newI
         (arg~47943)
         (match arg~47943
           ((cl:type hol2cl.runtime::unit-value)
-            (let ((n (deref r*)))
-              (match (assign r* (+ n 1)) ((cl:type hol2cl.runtime::unit-value) n)))))))
+            (let ((n (deref r%)))
+              (cl:declare (cl:ignorable n))
+              (match (assign r% (+ n 1)) ((cl:type hol2cl.runtime::unit-value) n)))))))
       (lambdac (arg~47958)
         (match arg~47958 ((cl:type hol2cl.runtime::unit-value) (critical #'newI unit)))))))
 
@@ -26604,8 +27245,8 @@
 
 (defunc toString (arg~47979)
   (match arg~47979
-    ((Clause (clauseInfo :id id* :thm thm*))
-      (hol2cl.metis.metis_prover.thm:toString thm*))))
+    ((Clause (clauseInfo :id id% :thm thm%))
+      (hol2cl.metis.metis_prover.thm:toString thm%))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Basic operations.                                                         *)
@@ -26625,25 +27266,25 @@
 
 (defunc dest (arg~48002) (match arg~48002 ((Clause info) info)))
 
-(defunc id (arg~48010) (match arg~48010 ((Clause (clauseInfo :id i*)) i*)))
+(defunc id (arg~48010) (match arg~48010 ((Clause (clauseInfo :id i%)) i%)))
 
 (defunc thm (arg~48019) (match arg~48019 ((Clause (clauseInfo :thm th)) th)))
 
-(defunc equalThms (cl cl*) (equal (thm cl) (thm cl*)))
+(defunc equalThms (cl cl%) (equal (thm cl) (thm cl%)))
 
-(defunc newClause (parameters* thm*)
+(defunc newClause (parameters% thm%)
   (make-Clause
-    (make-clauseInfo :parameters parameters* :id (funcall newId unit) :thm thm*)))
+    (make-clauseInfo :parameters parameters% :id (funcall newId unit) :thm thm%)))
 
 (defunc literals (cl) (hol2cl.metis.metis_prover.thm:clause (thm cl)))
 
 (defunc isTautology (arg~48053)
   (match arg~48053
-    ((Clause (clauseInfo :thm thm*)) (hol2cl.metis.metis_prover.thm:isTautology thm*))))
+    ((Clause (clauseInfo :thm thm%)) (hol2cl.metis.metis_prover.thm:isTautology thm%))))
 
 (defunc isContradiction (arg~48063)
   (match arg~48063
-    ((Clause (clauseInfo :thm thm*)) (hol2cl.metis.metis_prover.thm:isContradiction thm*))))
+    ((Clause (clauseInfo :thm thm%)) (hol2cl.metis.metis_prover.thm:isContradiction thm%))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* The term ordering is used to cut down inferences.                         *)
@@ -26651,18 +27292,18 @@
 
 
 (defunc strictlyLess (ordering x y)
-  (match (compare ordering x y) ((trivia:guard (Some c*) (< c* 0)) cl:t) (_ cl:nil)))
+  (match (compare ordering x y) ((guard (Some c%) (< c% 0)) cl:t) (_ cl:nil)))
 
 (defunc isLargerTerm (arg~48092 arg~48096)
   (match arg~48092
     ((parameters :ordering ordering :orderTerms orderTerms)
       (match arg~48096
-        ((tuple l r*) (cl:or (not orderTerms) (not (strictlyLess ordering l r*))))))))
+        ((tuple l r%) (cl:or (not orderTerms) (not (strictlyLess ordering l r%))))))))
 
 (defunc atomToTerms (atm)
   (match (total #'destEq atm)
     ((None) (cl:cons (make-Fn atm) nil))
-    ((Some (tuple l r*)) (cl:cons l (cl:cons r* nil)))))
+    ((Some (tuple l r%)) (cl:cons l (cl:cons r% nil)))))
 
 (defunc notStrictlyLess (ordering arg~48140)
   (match arg~48140
@@ -26677,43 +27318,46 @@
         ((No_literal_order) (K cl:t))
         ((Unsigned_literal_order)
           (fletc
-            ((addLit*
+            ((addLit%
               (arg~48174)
               (match arg~48174 ((tuple (tuple _ atm) acc) (append (atomToTerms atm) acc)))))
-            (let ((tms (funcall foldl #'addLit* nil lits)))
+            (let ((tms (funcall foldl #'addLit% nil lits)))
+              (cl:declare (cl:ignorable tms))
               (lambdac (arg~48192)
                 (match arg~48192
-                  ((tuple _ atm*)
-                    (notStrictlyLess ordering (tuple (atomToTerms atm*) tms))))))))
+                  ((tuple _ atm%)
+                    (notStrictlyLess ordering (tuple (atomToTerms atm%) tms))))))))
         ((Positive_literal_order)
           (match (findl (K cl:t) lits)
             ((None) (K cl:t))
             ((Some (tuple pol _))
               (fletc
-                ((addLit*
+                ((addLit%
                   (arg~48217)
                   (match arg~48217
-                    ((tuple (tuple p* atm) acc)
-                      (if (= p* pol) (append (atomToTerms atm) acc) acc)))))
-                (let ((tms (funcall foldl #'addLit* nil lits)))
+                    ((tuple (tuple p% atm) acc)
+                      (if (= p% pol) (append (atomToTerms atm) acc) acc)))))
+                (let ((tms (funcall foldl #'addLit% nil lits)))
+                  (cl:declare (cl:ignorable tms))
                   (lambdac (arg~48241)
                     (match arg~48241
-                      ((tuple pol* atm*)
-                        (if (<> pol pol*)
+                      ((tuple pol% atm%)
+                        (if (<> pol pol%)
                           pol
-                          (notStrictlyLess ordering (tuple (atomToTerms atm*) tms)))))))))))))))
+                          (notStrictlyLess ordering (tuple (atomToTerms atm%) tms)))))))))))))))
 
 (defunc largestLiterals (arg~48274)
   (match arg~48274
-    ((Clause (clauseInfo :parameters parameters* :thm thm*))
+    ((Clause (clauseInfo :parameters parameters% :thm thm%))
       (let*
-        ((litSet (hol2cl.metis.metis_prover.thm:clause thm*))
-          (isLarger (isLargerLiteral parameters* litSet)))
+        ((litSet (hol2cl.metis.metis_prover.thm:clause thm%))
+          (isLarger (isLargerLiteral parameters% litSet)))
+        (cl:declare (cl:ignorable litSet isLarger))
         (fletc
-          ((addLit*
+          ((addLit%
             (arg~48286)
             (match arg~48286 ((tuple lit s) (if (funcall isLarger lit) (add s lit) s)))))
-          (foldr #'addLit* empty litSet))))))
+          (foldr #'addLit% empty litSet))))))
 
 ;; (*MetisTrace6
 ;; let largestLiterals = fun cl ->
@@ -26730,26 +27374,27 @@
 
 (defunc largestEquations (arg~48313)
   (match arg~48313
-    ((cl:and cl (Clause (clauseInfo :parameters parameters*)))
+    ((cl:and cl (Clause (clauseInfo :parameters parameters%)))
       (fletc
         ((addEq
           (lit ort arg~48320 acc)
           (match arg~48320
             ((cl:and l_r (tuple l _))
-              (if (isLargerTerm parameters* l_r) (cl:cons (tuple lit ort l) acc) acc)))))
+              (if (isLargerTerm parameters% l_r) (cl:cons (tuple lit ort l) acc) acc)))))
         (fletc
-          ((addLit*
+          ((addLit%
             (arg~48342)
             (match arg~48342
               ((tuple lit acc)
                 (match (total #'hol2cl.metis.metis_prover.literal:destEq lit)
                   ((None) acc)
-                  ((Some (tuple l r*))
+                  ((Some (tuple l r%))
                     (let*
-                      ((acc* (addEq lit (make-Right_to_left) (tuple r* l) acc))
-                        (acc (addEq lit (make-Left_to_right) (tuple l r*) acc*)))
+                      ((acc% (addEq lit (make-Right_to_left) (tuple r% l) acc))
+                        (acc (addEq lit (make-Left_to_right) (tuple l r%) acc%)))
+                      (cl:declare (cl:ignorable acc% acc))
                       acc)))))))
-          (foldr #'addLit* nil (largestLiterals cl)))))))
+          (foldr #'addLit% nil (largestLiterals cl)))))))
 
 (defunc addLit (arg~48394)
   (match arg~48394
@@ -26758,7 +27403,7 @@
         ((addTm
           (arg~48399)
           (match arg~48399
-            ((tuple (tuple path tm) acc*) (cl:cons (tuple lit path tm) acc*)))))
+            ((tuple (tuple path tm) acc%) (cl:cons (tuple lit path tm) acc%)))))
         (hol2cl.metis.metis_prover.mlist:foldl #'addTm acc (nonVarTypedSubterms lit))))))
 
 (defunc largestSubterms (cl) (funcall foldl #'addLit nil (largestLiterals cl)))
@@ -26770,7 +27415,7 @@
 ;; (* ------------------------------------------------------------------------- *)
 
 
-(defunc subsumes (subs* cl) (isStrictlySubsumed subs* (literals cl)))
+(defunc subsumes (subs% cl) (isStrictlySubsumed subs% (literals cl)))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Simplifying rules: these preserve the clause id.                          *)
@@ -26779,53 +27424,56 @@
 
 (defunc freshVars (arg~48450)
   (match arg~48450
-    ((Clause (clauseInfo :parameters parameters* :id id* :thm thm*))
+    ((Clause (clauseInfo :parameters parameters% :id id% :thm thm%))
       (make-Clause
         (make-clauseInfo
           :parameters
-          parameters*
+          parameters%
           :id
-          id*
+          id%
           :thm
-          (hol2cl.metis.metis_prover.rule:freshVars thm*))))))
+          (hol2cl.metis.metis_prover.rule:freshVars thm%))))))
 
 (defunc simplify (arg~48468)
   (match arg~48468
-    ((Clause (clauseInfo :parameters parameters* :id id* :thm thm*))
-      (match (hol2cl.metis.metis_prover.rule:simplify thm*)
+    ((Clause (clauseInfo :parameters parameters% :id id% :thm thm%))
+      (match (hol2cl.metis.metis_prover.rule:simplify thm%)
         ((None) (make-None))
-        ((Some thm**)
+        ((Some thm%%)
           (make-Some
-            (make-Clause (make-clauseInfo :parameters parameters* :id id* :thm thm**))))))))
+            (make-Clause (make-clauseInfo :parameters parameters% :id id% :thm thm%%))))))))
 
 (defunc reduce (units arg~48495)
   (match arg~48495
-    ((Clause (clauseInfo :parameters parameters* :id id* :thm thm*))
+    ((Clause (clauseInfo :parameters parameters% :id id% :thm thm%))
       (make-Clause
         (make-clauseInfo
           :parameters
-          parameters*
+          parameters%
           :id
-          id*
+          id%
           :thm
-          (hol2cl.metis.metis_prover.units:reduce units thm*))))))
+          (hol2cl.metis.metis_prover.units:reduce units thm%))))))
 
 (defunc rewrite (rewr arg~48515)
   (match arg~48515
-    ((Clause (clauseInfo :parameters parameters* :id id* :thm thm*))
+    ((Clause (clauseInfo :parameters parameters% :id id% :thm thm%))
       (fletc
         ((simp
           (th)
-          (match parameters*
+          (match parameters%
             ((parameters :ordering ordering)
-              (let ((cmp (compare ordering))) (rewriteIdRule rewr cmp id* th))))))
+              (let ((cmp (compare ordering)))
+                (cl:declare (cl:ignorable cmp))
+                (rewriteIdRule rewr cmp id% th))))))
         (let*
-          ((thm**
-            (match (peek rewr id*)
-              ((None) (simp thm*))
-              ((Some (tuple (tuple _ thm**) _)) (if (isReduced rewr) thm** (simp thm**)))))
+          ((thm%%
+            (match (peek rewr id%)
+              ((None) (simp thm%))
+              ((Some (tuple (tuple _ thm%%) _)) (if (isReduced rewr) thm%% (simp thm%%)))))
             (result
-              (make-Clause (make-clauseInfo :parameters parameters* :id id* :thm thm**))))
+              (make-Clause (make-clauseInfo :parameters parameters% :id id% :thm thm%%))))
+          (cl:declare (cl:ignorable thm%% result))
           result)))))
 
 ;; (*MetisDebug
@@ -26839,10 +27487,11 @@
 
 (defunc factor (arg~48574)
   (match arg~48574
-    ((cl:and cl (Clause (clauseInfo :parameters parameters* :thm thm*)))
+    ((cl:and cl (Clause (clauseInfo :parameters parameters% :thm thm%)))
       (let ((lits (largestLiterals cl)))
-        (fletc ((apply* (sub) (newClause parameters* (subst sub thm*))))
-          (list-map #'apply* (factor* lits)))))))
+        (cl:declare (cl:ignorable lits))
+        (fletc ((apply% (sub) (newClause parameters% (subst sub thm%))))
+          (list-map #'apply% (factor% lits)))))))
 
 ;; (*MetisTrace5
 ;; let factor = fun cl ->
@@ -26863,42 +27512,44 @@
         ((tuple cl2 lit2)
           (match (tuple cl1 cl2)
             ((tuple
-              (Clause (clauseInfo :parameters parameters* :thm th1))
+              (Clause (clauseInfo :parameters parameters% :thm th1))
               (Clause (clauseInfo :thm th2)))
               (let*
                 ((sub
                   (unify hol2cl.metis.metis_prover.substitute:empty lit1 (negate lit2)))
-                  (lit1* (hol2cl.metis.metis_prover.literal:subst sub lit1))
-                  (lit2* (negate lit1*))
-                  (th1* (subst sub th1))
-                  (th2* (subst sub th2)))
+                  (lit1% (hol2cl.metis.metis_prover.literal:subst sub lit1))
+                  (lit2% (negate lit1%))
+                  (th1% (subst sub th1))
+                  (th2% (subst sub th2)))
+                (cl:declare (cl:ignorable sub lit1% lit2% th1% th2%))
                 (match
                   (cl:or
                     (isLargerLiteral
-                      parameters*
-                      (hol2cl.metis.metis_prover.thm:clause th1*)
-                      lit1*)
+                      parameters%
+                      (hol2cl.metis.metis_prover.thm:clause th1%)
+                      lit1%)
                     (failwith "resolve: clause1: ordering constraints"))
                   (_
                     (match
                       (cl:or
                         (isLargerLiteral
-                          parameters*
-                          (hol2cl.metis.metis_prover.thm:clause th2*)
-                          lit2*)
+                          parameters%
+                          (hol2cl.metis.metis_prover.thm:clause th2%)
+                          lit2%)
                         (failwith "resolve: clause2: ordering constraints"))
                       (_
                         (let*
-                          ((th (hol2cl.metis.metis_prover.thm:resolve lit1* th1* th2*))
+                          ((th (hol2cl.metis.metis_prover.thm:resolve lit1% th1% th2%))
                             (cl
                               (make-Clause
                                 (make-clauseInfo
                                   :parameters
-                                  parameters*
+                                  parameters%
                                   :id
                                   (funcall newId unit)
                                   :thm
                                   th))))
+                          (cl:declare (cl:ignorable th cl))
                           cl)))))))))))))
 
 (defunc paramodulate (arg~48692 arg~48698)
@@ -26908,7 +27559,7 @@
         ((tuple cl2 lit2 path2 tm2)
           (match (tuple cl1 cl2)
             ((tuple
-              (Clause (clauseInfo :parameters parameters* :thm th1))
+              (Clause (clauseInfo :parameters parameters% :thm th1))
               (Clause (clauseInfo :thm th2)))
               (let*
                 ((sub
@@ -26916,45 +27567,48 @@
                     hol2cl.metis.metis_prover.substitute:empty
                     tm1
                     tm2))
-                  (lit1* (hol2cl.metis.metis_prover.literal:subst sub lit1))
-                  (lit2* (hol2cl.metis.metis_prover.literal:subst sub lit2))
-                  (th1* (subst sub th1))
-                  (th2* (subst sub th2)))
+                  (lit1% (hol2cl.metis.metis_prover.literal:subst sub lit1))
+                  (lit2% (hol2cl.metis.metis_prover.literal:subst sub lit2))
+                  (th1% (subst sub th1))
+                  (th2% (subst sub th2)))
+                (cl:declare (cl:ignorable sub lit1% lit2% th1% th2%))
                 (match
                   (cl:or
                     (isLargerLiteral
-                      parameters*
-                      (hol2cl.metis.metis_prover.thm:clause th1*)
-                      lit1*)
+                      parameters%
+                      (hol2cl.metis.metis_prover.thm:clause th1%)
+                      lit1%)
                     (failwith "Clause.paramodulate: with clause: ordering"))
                   (_
                     (match
                       (cl:or
                         (isLargerLiteral
-                          parameters*
-                          (hol2cl.metis.metis_prover.thm:clause th2*)
-                          lit2*)
+                          parameters%
+                          (hol2cl.metis.metis_prover.thm:clause th2%)
+                          lit2%)
                         (failwith "Clause.paramodulate: into clause: ordering"))
                       (_
                         (let
                           ((eqn
-                            (tuple (hol2cl.metis.metis_prover.literal:destEq lit1*) th1*)))
+                            (tuple (hol2cl.metis.metis_prover.literal:destEq lit1%) th1%)))
+                          (cl:declare (cl:ignorable eqn))
                           (match
                             (match ort1
                               ((Left_to_right) eqn)
                               ((Right_to_left) (symEqn eqn)))
-                            ((cl:and eqn* (tuple l_r _))
+                            ((cl:and eqn% (tuple l_r _))
                               (match
                                 (cl:or
-                                  (isLargerTerm parameters* l_r)
+                                  (isLargerTerm parameters% l_r)
                                   (failwith
                                     "Clause.paramodulate: equation: ordering constraints"))
                                 (_
-                                  (let ((th (rewrRule eqn* lit2* path2 th2*)))
+                                  (let ((th (rewrRule eqn% lit2% path2 th2%)))
+                                    (cl:declare (cl:ignorable th))
                                     (make-Clause
                                       (make-clauseInfo
                                         :parameters
-                                        parameters*
+                                        parameters%
                                         :id
                                         (funcall newId unit)
                                         :thm
@@ -26992,14 +27646,14 @@
 
 (defunc getSubsume (arg~48826) (match arg~48826 ((Active (active_t :subsume s)) s)))
 
-(defunc setRewrite (active* rewrite)
-  (match active*
+(defunc setRewrite (active% rewrite)
+  (match active%
     ((Active
       (active_t
         :parameters
-        parameters*
+        parameters%
         :clauses
-        clauses*
+        clauses%
         :units
         units
         :subsume
@@ -27015,9 +27669,9 @@
       (make-Active
         (make-active_t
           :parameters
-          parameters*
+          parameters%
           :clauses
-          clauses*
+          clauses%
           :units
           units
           :rewrite
@@ -27049,15 +27703,15 @@
     :postfactor
     maxSimplify))
 
-(defunc empty (parameters*)
-  (match parameters*
+(defunc empty (parameters%)
+  (match parameters%
     ((parameters :clause clause)
       (match clause
         ((hol2cl.metis.metis_prover.clause:parameters :ordering ordering)
           (make-Active
             (make-active_t
               :parameters
-              parameters*
+              parameters%
               :clauses
               (newMap unit)
               :units
@@ -27080,65 +27734,69 @@
 
 (defunc size (arg~48918)
   (match arg~48918
-    ((Active (active_t :clauses clauses*))
-      (funcall hol2cl.metis.metis_prover.intmap.include~4681:size clauses*))))
+    ((Active (active_t :clauses clauses%))
+      (funcall hol2cl.metis.metis_prover.intmap.include~4681:size clauses%))))
 
 (defunc clauses (arg~48928)
   (match arg~48928
     ((Active (active_t :clauses cls))
-      (fletc ((add* (arg~48932) (match arg~48932 ((tuple _ cl acc) (cl:cons cl acc)))))
-        (funcall foldr #'add* nil cls)))))
+      (fletc ((add% (arg~48932) (match arg~48932 ((tuple _ cl acc) (cl:cons cl acc)))))
+        (funcall foldr #'add% nil cls)))))
 
-(defunc saturation (active*)
+(defunc saturation (active%)
   (fletc
-    ((remove*
+    ((remove%
       (arg~48955)
       (match arg~48955
-        ((tuple cl (tuple cls subs*))
+        ((tuple cl (tuple cls subs%))
           (let ((lits (hol2cl.metis.metis_prover.clause:literals cl)))
-            (if (isStrictlySubsumed subs* lits)
-              (tuple cls subs*)
-              (tuple (cl:cons cl cls) (insert subs* (tuple lits unit)))))))))
-    (let ((cls (clauses active*)))
-      (match (foldl #'remove* (tuple nil (newSubsume unit)) cls)
-        ((tuple cls* _)
-          (match (foldl #'remove* (tuple nil (newSubsume unit)) cls*)
-            ((tuple cls subs*) cls)))))))
+            (cl:declare (cl:ignorable lits))
+            (if (isStrictlySubsumed subs% lits)
+              (tuple cls subs%)
+              (tuple (cl:cons cl cls) (insert subs% (tuple lits unit)))))))))
+    (let ((cls (clauses active%)))
+      (cl:declare (cl:ignorable cls))
+      (match (foldl #'remove% (tuple nil (newSubsume unit)) cls)
+        ((tuple cls% _)
+          (match (foldl #'remove% (tuple nil (newSubsume unit)) cls%)
+            ((tuple cls subs%) cls)))))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Pretty printing.                                                          *)
 ;; (* ------------------------------------------------------------------------- *)
 
 
-(defunc toString (active*)
-  (string-concat "Active{" (string-concat (string-of-int (size active*)) "}")))
+(defunc toString (active%)
+  (string-concat "Active{" (string-concat (string-of-int (size active%)) "}")))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Simplify clauses.                                                         *)
 ;; (* ------------------------------------------------------------------------- *)
 
 
-(defunc simplify (simp units rewr subs*)
+(defunc simplify (simp units rewr subs%)
   (match simp
-    ((simplify~1 :subsumes s :reduce r* :rewrites w*)
+    ((simplify~1 :subsumes s :reduce r% :rewrites w%)
       (labelsc
         ((rewrite
           (cl)
-          (let ((cl* (hol2cl.metis.metis_prover.clause:rewrite rewr cl)))
-            (if (equalThms cl cl*)
+          (let ((cl% (hol2cl.metis.metis_prover.clause:rewrite rewr cl)))
+            (cl:declare (cl:ignorable cl%))
+            (if (equalThms cl cl%)
               (make-Some cl)
-              (match (hol2cl.metis.metis_prover.clause:simplify cl*)
+              (match (hol2cl.metis.metis_prover.clause:simplify cl%)
                 ((None) (make-None))
-                ((Some cl**) (if (equalThms cl* cl**) (make-Some cl*) (rewrite cl**))))))))
+                ((Some cl%%) (if (equalThms cl% cl%%) (make-Some cl%) (rewrite cl%%))))))))
         (lambdac (cl)
           (match (hol2cl.metis.metis_prover.clause:simplify cl)
             ((None) (make-None))
-            ((Some cl*)
-              (match (if w* (rewrite cl*) (make-Some cl*))
+            ((Some cl%)
+              (match (if w% (rewrite cl%) (make-Some cl%))
                 ((None) (make-None))
                 ((Some cl)
-                  (let ((cl* (if r* (reduce units cl) cl)))
-                    (if (cl:and s (subsumes subs* cl*)) (make-None) (make-Some cl*))))))))))))
+                  (let ((cl% (if r% (reduce units cl) cl)))
+                    (cl:declare (cl:ignorable cl%))
+                    (if (cl:and s (subsumes subs% cl%)) (make-None) (make-Some cl%))))))))))))
 
 ;; (*MetisDebug
 ;; let simplify = fun simp -> fun units -> fun rewr -> fun subs -> fun cl ->
@@ -27179,8 +27837,8 @@
 ;; *)
 
 
-(defunc simplifyActive (simp active*)
-  (match active*
+(defunc simplifyActive (simp active%)
+  (match active%
     ((Active (active_t :units units :rewrite rewrite :subsume subsume))
       (simplify simp units rewrite subsume))))
 
@@ -27191,12 +27849,14 @@
 
 (defunc addUnit (units cl)
   (let ((th (thm cl)))
+    (cl:declare (cl:ignorable th))
     (match (total #'destUnit th)
       ((Some lit) (hol2cl.metis.metis_prover.units:add units (tuple lit th)))
       ((None) units))))
 
 (defunc addRewrite (rewrite cl)
   (let ((th (thm cl)))
+    (cl:declare (cl:ignorable th))
     (match (total #'destUnitEq th)
       ((Some l_r)
         (hol2cl.metis.metis_prover.rewrite:add rewrite (tuple (id cl) (tuple l_r th))))
@@ -27207,62 +27867,62 @@
 
 (defunc addLiterals (literals cl)
   (fletc
-    ((add*
+    ((add%
       (arg~49191)
       (match arg~49191
-        ((tuple (cl:and lit (tuple _ atm)) literals*)
+        ((tuple (cl:and lit (tuple _ atm)) literals%)
           (if (isEq atm)
-            literals*
+            literals%
             (hol2cl.metis.metis_prover.literal_net:insert
-              literals*
+              literals%
               (tuple lit (tuple cl lit))))))))
     (funcall
       hol2cl.metis.metis_prover.literal.set.include~30172:foldl
-      #'add*
+      #'add%
       literals
       (largestLiterals cl))))
 
 (defunc addEquations (equations cl)
   (fletc
-    ((add*
+    ((add%
       (arg~49225)
       (match arg~49225
-        ((tuple (tuple lit ort tm) equations*)
+        ((tuple (tuple lit ort tm) equations%)
           (hol2cl.metis.metis_prover.term_net:insert
-            equations*
+            equations%
             (tuple tm (tuple cl lit ort tm)))))))
-    (foldl #'add* equations (largestEquations cl))))
+    (foldl #'add% equations (largestEquations cl))))
 
 (defunc addSubterms (subterms cl)
   (fletc
-    ((add*
+    ((add%
       (arg~49257)
       (match arg~49257
-        ((tuple (tuple lit path tm) subterms*)
+        ((tuple (tuple lit path tm) subterms%)
           (hol2cl.metis.metis_prover.term_net:insert
-            subterms*
+            subterms%
             (tuple tm (tuple cl lit path tm)))))))
-    (foldl #'add* subterms (largestSubterms cl))))
+    (foldl #'add% subterms (largestSubterms cl))))
 
 (defunc addAllSubterms (allSubterms cl)
   (fletc
-    ((add*
+    ((add%
       (arg~49289)
       (match arg~49289
-        ((tuple (tuple _ _ tm) allSubterms*)
+        ((tuple (tuple _ _ tm) allSubterms%)
           (hol2cl.metis.metis_prover.term_net:insert
-            allSubterms*
+            allSubterms%
             (tuple tm (tuple cl tm)))))))
-    (foldl #'add* allSubterms (hol2cl.metis.metis_prover.clause:allSubterms cl))))
+    (foldl #'add% allSubterms (hol2cl.metis.metis_prover.clause:allSubterms cl))))
 
-(defunc addClause (active* cl)
-  (match active*
+(defunc addClause (active% cl)
+  (match active%
     ((Active
       (active_t
         :parameters
-        parameters*
+        parameters%
         :clauses
-        clauses*
+        clauses%
         :units
         units
         :rewrite
@@ -27278,44 +27938,46 @@
         :allSubterms
         allSubterms))
       (let
-        ((clauses**
+        ((clauses%%
           (hol2cl.metis.metis_prover.intmap.include~4681:insert
-            clauses*
+            clauses%
             (tuple (id cl) cl)))
-          (subsume* (addSubsume subsume cl))
-          (literals* (addLiterals literals cl))
-          (equations* (addEquations equations cl))
-          (subterms* (addSubterms subterms cl))
-          (allSubterms* (addAllSubterms allSubterms cl)))
+          (subsume% (addSubsume subsume cl))
+          (literals% (addLiterals literals cl))
+          (equations% (addEquations equations cl))
+          (subterms% (addSubterms subterms cl))
+          (allSubterms% (addAllSubterms allSubterms cl)))
+        (cl:declare
+          (cl:ignorable clauses%% subsume% literals% equations% subterms% allSubterms%))
         (make-Active
           (make-active_t
             :parameters
-            parameters*
+            parameters%
             :clauses
-            clauses**
+            clauses%%
             :units
             units
             :rewrite
             rewrite
             :subsume
-            subsume*
+            subsume%
             :literals
-            literals*
+            literals%
             :equations
-            equations*
+            equations%
             :subterms
-            subterms*
+            subterms%
             :allSubterms
-            allSubterms*))))))
+            allSubterms%))))))
 
-(defunc addFactorClause (active* cl)
-  (match active*
+(defunc addFactorClause (active% cl)
+  (match active%
     ((Active
       (active_t
         :parameters
-        parameters*
+        parameters%
         :clauses
-        clauses*
+        clauses%
         :units
         units
         :rewrite
@@ -27330,17 +27992,18 @@
         subterms
         :allSubterms
         allSubterms))
-      (let ((units* (addUnit units cl)) (rewrite* (addRewrite rewrite cl)))
+      (let ((units% (addUnit units cl)) (rewrite% (addRewrite rewrite cl)))
+        (cl:declare (cl:ignorable units% rewrite%))
         (make-Active
           (make-active_t
             :parameters
-            parameters*
+            parameters%
             :clauses
-            clauses*
+            clauses%
             :units
-            units*
+            units%
             :rewrite
-            rewrite*
+            rewrite%
             :subsume
             subsume
             :literals
@@ -27364,11 +28027,11 @@
         ((resolve
           (arg~49433)
           (match arg~49433
-            ((tuple cl_lit acc*)
+            ((tuple cl_lit acc%)
               (match
                 (total (hol2cl.metis.metis_prover.clause:resolve cl_lit) (tuple cl lit))
-                ((Some cl*) (cl:cons cl* acc*))
-                ((None) acc*))))))
+                ((Some cl%) (cl:cons cl% acc%))
+                ((None) acc%))))))
         (if (isEq atm) acc (foldl #'resolve acc (unify literals (negate lit))))))))
 
 (defunc deduceParamodulationWith (subterms cl arg~49478)
@@ -27378,10 +28041,10 @@
         ((para
           (arg~49485)
           (match arg~49485
-            ((tuple cl_lit_path_tm acc*)
+            ((tuple cl_lit_path_tm acc%)
               (match (total (paramodulate (tuple cl lit ort tm)) cl_lit_path_tm)
-                ((Some cl*) (cl:cons cl* acc*))
-                ((None) acc*))))))
+                ((Some cl%) (cl:cons cl% acc%))
+                ((None) acc%))))))
         (foldl #'para acc (hol2cl.metis.metis_prover.term_net:unify subterms tm))))))
 
 (defunc deduceParamodulationInto (equations cl arg~49526)
@@ -27391,18 +28054,18 @@
         ((para
           (arg~49533)
           (match arg~49533
-            ((tuple cl_lit_ort_tm acc*)
+            ((tuple cl_lit_ort_tm acc%)
               (match (total (paramodulate cl_lit_ort_tm) (tuple cl lit path tm))
-                ((Some cl*) (cl:cons cl* acc*))
-                ((None) acc*))))))
+                ((Some cl%) (cl:cons cl% acc%))
+                ((None) acc%))))))
         (foldl #'para acc (hol2cl.metis.metis_prover.term_net:unify equations tm))))))
 
-(defunc deduce (active* cl)
-  (match active*
+(defunc deduce (active% cl)
+  (match active%
     ((Active
       (active_t
         :parameters
-        parameters*
+        parameters%
         :literals
         literals
         :equations
@@ -27414,15 +28077,16 @@
           (eqns (largestEquations cl))
           (subtms (if (null equations) nil (largestSubterms cl)))
           (acc nil)
-          (acc*
+          (acc%
             (funcall
               hol2cl.metis.metis_prover.literal.set.include~30172:foldl
               (deduceResolution literals cl)
               acc
               lits))
-          (acc (foldl (deduceParamodulationWith subterms cl) acc* eqns))
-          (acc* (foldl (deduceParamodulationInto equations cl) acc subtms))
-          (acc (list-rev acc*)))
+          (acc (foldl (deduceParamodulationWith subterms cl) acc% eqns))
+          (acc% (foldl (deduceParamodulationInto equations cl) acc subtms))
+          (acc (list-rev acc%)))
+        (cl:declare (cl:ignorable lits eqns subtms acc acc% acc acc% acc))
         acc))))
 
 ;; (* ------------------------------------------------------------------------- *)
@@ -27430,69 +28094,71 @@
 ;; (* ------------------------------------------------------------------------- *)
 
 
-(defunc clause_rewritables (active*)
-  (match active*
-    ((Active (active_t :clauses clauses* :rewrite rewrite))
+(defunc clause_rewritables (active%)
+  (match active%
+    ((Active (active_t :clauses clauses% :rewrite rewrite))
       (fletc
         ((rewr
           (arg~49640)
           (match arg~49640
-            ((tuple id* cl ids)
-              (let ((cl* (hol2cl.metis.metis_prover.clause:rewrite rewrite cl)))
-                (if (equalThms cl cl*)
+            ((tuple id% cl ids)
+              (let ((cl% (hol2cl.metis.metis_prover.clause:rewrite rewrite cl)))
+                (cl:declare (cl:ignorable cl%))
+                (if (equalThms cl cl%)
                   ids
-                  (hol2cl.metis.metis_prover.intset.include~7557:add ids id*)))))))
+                  (hol2cl.metis.metis_prover.intset.include~7557:add ids id%)))))))
         (funcall
           foldr
           #'rewr
           hol2cl.metis.metis_prover.intset.include~7557:empty
-          clauses*)))))
+          clauses%)))))
 
 (defunc orderedRedexResidues (arg~49675)
   (match arg~49675
-    ((tuple (tuple (tuple l r*) _) ort)
+    ((tuple (tuple (tuple l r%) _) ort)
       (match ort
         ((None) nil)
-        ((Some (Left_to_right)) (cl:cons (tuple l r* cl:t) nil))
-        ((Some (Right_to_left)) (cl:cons (tuple r* l cl:t) nil))))))
+        ((Some (Left_to_right)) (cl:cons (tuple l r% cl:t) nil))
+        ((Some (Right_to_left)) (cl:cons (tuple r% l cl:t) nil))))))
 
 (defunc unorderedRedexResidues (arg~49709)
   (match arg~49709
-    ((tuple (tuple (tuple l r*) _) ort)
+    ((tuple (tuple (tuple l r%) _) ort)
       (match ort
-        ((None) (cl:cons (tuple l r* cl:nil) (cl:cons (tuple r* l cl:nil) nil)))
+        ((None) (cl:cons (tuple l r% cl:nil) (cl:cons (tuple r% l cl:nil) nil)))
         ((Some _) nil)))))
 
-(defunc rewrite_rewritables (active* rewr_ids)
-  (match active*
+(defunc rewrite_rewritables (active% rewr_ids)
+  (match active%
     ((Active
       (active_t
         :parameters
-        parameters*
+        parameters%
         :rewrite
         rewrite
         :clauses
-        clauses*
+        clauses%
         :allSubterms
         allSubterms))
-      (match parameters*
+      (match parameters%
         ((parameters
           :clause
           (hol2cl.metis.metis_prover.clause:parameters :ordering ordering))
           (let ((order (compare ordering)))
+            (cl:declare (cl:ignorable order))
             (fletc
               ((addRewr
                 (arg~49751)
                 (match arg~49751
-                  ((tuple id* acc)
-                    (if (funcall inDomain id* clauses*)
-                      (hol2cl.metis.metis_prover.intset.include~7557:add acc id*)
+                  ((tuple id% acc)
+                    (if (funcall inDomain id% clauses%)
+                      (hol2cl.metis.metis_prover.intset.include~7557:add acc id%)
                       acc)))))
               (fletc
                 ((addReduce
                   (arg~49767)
                   (match arg~49767
-                    ((tuple (tuple l r* ord) acc)
+                    ((tuple (tuple l r% ord) acc)
                       (fletc
                         ((isValidRewr
                           (tm)
@@ -27504,28 +28170,30 @@
                             ((Some sub)
                               (cl:or
                                 ord
-                                (let ((tm* (subst (normalize sub) r*)))
-                                  (= (funcall order tm tm*) (make-Some 1))))))))
+                                (let ((tm% (subst (normalize sub) r%)))
+                                  (cl:declare (cl:ignorable tm%))
+                                  (= (funcall order tm tm%) (make-Some 1))))))))
                         (fletc
                           ((addRed
                             (arg~49801)
                             (match arg~49801
-                              ((tuple (tuple cl tm) acc*)
-                                (let ((id* (id cl)))
-                                  (if (funcall member id* acc*)
-                                    acc*
+                              ((tuple (tuple cl tm) acc%)
+                                (let ((id% (id cl)))
+                                  (cl:declare (cl:ignorable id%))
+                                  (if (funcall member id% acc%)
+                                    acc%
                                     (if (not (isValidRewr tm))
-                                      acc*
+                                      acc%
                                       (hol2cl.metis.metis_prover.intset.include~7557:add
-                                        acc*
-                                        id*))))))))
+                                        acc%
+                                        id%))))))))
                           (foldl #'addRed acc (matched allSubterms l))))))))
                 (fletc
                   ((addEquation
                     (redexResidues arg~49844)
                     (match arg~49844
-                      ((tuple id* acc)
-                        (match (peek rewrite id*)
+                      ((tuple id% acc)
+                        (match (peek rewrite id%)
                           ((None) acc)
                           ((Some eqn_ort)
                             (foldl #'addReduce acc (funcall redexResidues eqn_ort))))))))
@@ -27533,17 +28201,18 @@
                     ((addOrdered (addEquation #'orderedRedexResidues))
                       (addUnordered (addEquation #'unorderedRedexResidues))
                       (ids hol2cl.metis.metis_prover.intset.include~7557:empty)
-                      (ids* (foldl #'addRewr ids rewr_ids))
-                      (ids (foldl addOrdered ids* rewr_ids))
-                      (ids* (foldl addUnordered ids rewr_ids)))
-                    ids*))))))))))
+                      (ids% (foldl #'addRewr ids rewr_ids))
+                      (ids (foldl addOrdered ids% rewr_ids))
+                      (ids% (foldl addUnordered ids rewr_ids)))
+                    (cl:declare (cl:ignorable addOrdered addUnordered ids ids% ids ids%))
+                    ids%))))))))))
 
-(defunc choose_clause_rewritables (active* ids) (<= (size active*) (funcall length ids)))
+(defunc choose_clause_rewritables (active% ids) (<= (size active%) (funcall length ids)))
 
-(defunc rewritables (active* ids)
-  (if (choose_clause_rewritables active* ids)
-    (clause_rewritables active*)
-    (rewrite_rewritables active* ids)))
+(defunc rewritables (active% ids)
+  (if (choose_clause_rewritables active% ids)
+    (clause_rewritables active%)
+    (rewrite_rewritables active% ids)))
 
 ;; (*MetisDebug
 ;;   let rewritables = fun active -> fun ids ->
@@ -27572,18 +28241,18 @@
 ;; *)
 
 
-(defunc delete (active* ids)
+(defunc delete (active% ids)
   (if (funcall hol2cl.metis.metis_prover.intset.include~7557:null ids)
-    active*
-    (fletc ((idPred (id*) (not (funcall member id* ids))))
+    active%
+    (fletc ((idPred (id%) (not (funcall member id% ids))))
       (fletc ((clausePred (cl) (idPred (id cl))))
-        (match active*
+        (match active%
           ((Active
             (active_t
               :parameters
-              parameters*
+              parameters%
               :clauses
-              clauses*
+              clauses%
               :units
               units
               :rewrite
@@ -27602,66 +28271,75 @@
               (fletc
                 ((cP1_4 (arg~49968) (match arg~49968 ((tuple x _ _ _) (clausePred x)))))
                 (let
-                  ((clauses** (filter (lambdac (x) (idPred (fst x))) clauses*))
-                    (subsume*
+                  ((clauses%% (filter (lambdac (x) (idPred (fst x))) clauses%))
+                    (subsume%
                       (hol2cl.metis.metis_prover.subsume:filter #'clausePred subsume))
-                    (literals*
+                    (literals%
                       (hol2cl.metis.metis_prover.literal_net:filter #'cP1 literals))
-                    (equations*
+                    (equations%
                       (hol2cl.metis.metis_prover.term_net:filter #'cP1_4 equations))
-                    (subterms*
+                    (subterms%
                       (hol2cl.metis.metis_prover.term_net:filter #'cP1_4 subterms))
-                    (allSubterms*
+                    (allSubterms%
                       (hol2cl.metis.metis_prover.term_net:filter #'cP1 allSubterms)))
+                  (cl:declare
+                    (cl:ignorable
+                      clauses%%
+                      subsume%
+                      literals%
+                      equations%
+                      subterms%
+                      allSubterms%))
                   (make-Active
                     (make-active_t
                       :parameters
-                      parameters*
+                      parameters%
                       :clauses
-                      clauses**
+                      clauses%%
                       :units
                       units
                       :rewrite
                       rewrite
                       :subsume
-                      subsume*
+                      subsume%
                       :literals
-                      literals*
+                      literals%
                       :equations
-                      equations*
+                      equations%
                       :subterms
-                      subterms*
+                      subterms%
                       :allSubterms
-                      allSubterms*)))))))))))
+                      allSubterms%)))))))))))
 
 (defunc extract_rewritables (arg~50041)
   (match arg~50041
-    ((cl:and active* (Active (active_t :clauses clauses* :rewrite rewrite)))
+    ((cl:and active% (Active (active_t :clauses clauses% :rewrite rewrite)))
       (if (isReduced rewrite)
-        (tuple active* nil)
-        (match (reduce* rewrite)
-          ((tuple rewrite* ids)
+        (tuple active% nil)
+        (match (reduce% rewrite)
+          ((tuple rewrite% ids)
             (let*
-              ((active** (setRewrite active* rewrite*))
-                (ids* (rewritables active** ids))
-                (cls (transform (get clauses*) ids*)))
-              (tuple (delete active** ids*) cls))))))))
+              ((active%% (setRewrite active% rewrite%))
+                (ids% (rewritables active%% ids))
+                (cls (transform (get clauses%) ids%)))
+              (cl:declare (cl:ignorable active%% ids% cls))
+              (tuple (delete active%% ids%) cls))))))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Factor clauses.                                                           *)
 ;; (* ------------------------------------------------------------------------- *)
 
 
-(defunc prefactor_simplify (active* subsume)
-  (match active*
-    ((Active (active_t :parameters parameters* :units units :rewrite rewrite))
-      (match parameters*
+(defunc prefactor_simplify (active% subsume)
+  (match active%
+    ((Active (active_t :parameters parameters% :units units :rewrite rewrite))
+      (match parameters%
         ((parameters :prefactor prefactor) (simplify prefactor units rewrite subsume))))))
 
-(defunc postfactor_simplify (active* subsume)
-  (match active*
-    ((Active (active_t :parameters parameters* :units units :rewrite rewrite))
-      (match parameters*
+(defunc postfactor_simplify (active% subsume)
+  (match active%
+    ((Active (active_t :parameters parameters% :units units :rewrite rewrite))
+      (match parameters%
         ((parameters :postfactor postfactor) (simplify postfactor units rewrite subsume))))))
 
 (defparameter sort_utilitywise
@@ -27679,17 +28357,18 @@
 
 (defunc post_factor (arg~50163)
   (match arg~50163
-    ((tuple cl (cl:and active_subsume_acc (tuple active* subsume acc)))
-      (match (postfactor_simplify active* subsume cl)
+    ((tuple cl (cl:and active_subsume_acc (tuple active% subsume acc)))
+      (match (postfactor_simplify active% subsume cl)
         ((None) active_subsume_acc)
-        ((Some cl*)
-          (if (equalThms cl* cl)
+        ((Some cl%)
+          (if (equalThms cl% cl)
             (let
-              ((active** (addFactorClause active* cl))
-                (subsume* (addSubsume subsume cl))
-                (acc* (cl:cons cl acc)))
-              (tuple active** subsume* acc*))
-            (factor1 (tuple cl* active_subsume_acc))))))))
+              ((active%% (addFactorClause active% cl))
+                (subsume% (addSubsume subsume cl))
+                (acc% (cl:cons cl acc)))
+              (cl:declare (cl:ignorable active%% subsume% acc%))
+              (tuple active%% subsume% acc%))
+            (factor1 (tuple cl% active_subsume_acc))))))))
 
 (defunc factor1 (arg~50214)
   (match arg~50214
@@ -27699,26 +28378,28 @@
           (funcall
             sort_utilitywise
             (cl:cons cl (hol2cl.metis.metis_prover.clause:factor cl)))))
+        (cl:declare (cl:ignorable cls))
         (foldl #'post_factor active_subsume_acc cls)))))
 
 (defunc pre_factor (arg~50234)
   (match arg~50234
-    ((tuple cl (cl:and active_subsume_acc (tuple active* subsume _)))
-      (match (prefactor_simplify active* subsume cl)
+    ((tuple cl (cl:and active_subsume_acc (tuple active% subsume _)))
+      (match (prefactor_simplify active% subsume cl)
         ((None) active_subsume_acc)
-        ((Some cl*) (factor1 (tuple cl* active_subsume_acc)))))))
+        ((Some cl%) (factor1 (tuple cl% active_subsume_acc)))))))
 
-(defunc factor* (active* acc arg~50266)
+(defunc factor% (active% acc arg~50266)
   (match arg~50266
-    (nil (tuple active* (list-rev acc)))
+    (nil (tuple active% (list-rev acc)))
     (cls
-      (let* ((cls* (funcall sort_utilitywise cls)) (subsume (getSubsume active*)))
-        (match (foldl #'pre_factor (tuple active* subsume acc) cls*)
-          ((tuple active** _ acc*)
-            (match (extract_rewritables active**)
-              ((tuple active* cls) (factor* active* acc* cls)))))))))
+      (let* ((cls% (funcall sort_utilitywise cls)) (subsume (getSubsume active%)))
+        (cl:declare (cl:ignorable cls% subsume))
+        (match (foldl #'pre_factor (tuple active% subsume acc) cls%)
+          ((tuple active%% _ acc%)
+            (match (extract_rewritables active%%)
+              ((tuple active% cls) (factor% active% acc% cls)))))))))
 
-(defunc factor (active* cls) (factor* active* nil cls))
+(defunc factor (active% cls) (factor% active% nil cls))
 
 ;; (*let factor active cls =
 ;;   let str cl = String.concat "\n" (List.map Clause.toString cl) in
@@ -27748,38 +28429,40 @@
 (defunc mk_clause (params th)
   (mk (make-clauseInfo :parameters params :id (funcall newId unit) :thm th)))
 
-(defunc newActive (parameters* arg~50330)
+(defunc newActive (parameters% arg~50330)
   (match arg~50330
     ((ax_cj_thm :axioms_thm axioms_thm :conjecture_thm conjecture_thm)
-      (match parameters*
+      (match parameters%
         ((parameters :clause clause)
-          (let* ((mk_clause* (mk_clause clause)) (active* (empty parameters*)))
-            (match (factor active* (list-map mk_clause* axioms_thm))
-              ((tuple active** axioms*)
-                (match (factor active** (list-map mk_clause* conjecture_thm))
-                  ((tuple active* conjecture)
+          (let* ((mk_clause% (mk_clause clause)) (active% (empty parameters%)))
+            (cl:declare (cl:ignorable mk_clause% active%))
+            (match (factor active% (list-map mk_clause% axioms_thm))
+              ((tuple active%% axioms%)
+                (match (factor active%% (list-map mk_clause% conjecture_thm))
+                  ((tuple active% conjecture)
                     (tuple
-                      active*
-                      (make-ax_cj_cl :axioms_cl axioms* :conjecture_cl conjecture))))))))))))
+                      active%
+                      (make-ax_cj_cl :axioms_cl axioms% :conjecture_cl conjecture))))))))))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Add a clause into the active set and deduce all consequences.             *)
 ;; (* ------------------------------------------------------------------------- *)
 
 
-(defunc add (active* cl)
-  (match (simplifyActive maxSimplify active* cl)
-    ((None) (tuple active* nil))
-    ((Some cl*)
-      (if (isContradiction cl*)
-        (tuple active* (cl:cons cl* nil))
-        (if (not (equalThms cl cl*))
-          (factor active* (cl:cons cl* nil))
+(defunc add (active% cl)
+  (match (simplifyActive maxSimplify active% cl)
+    ((None) (tuple active% nil))
+    ((Some cl%)
+      (if (isContradiction cl%)
+        (tuple active% (cl:cons cl% nil))
+        (if (not (equalThms cl cl%))
+          (factor active% (cl:cons cl% nil))
           (let*
-            ((active** (addClause active* cl))
-              (cl** (freshVars cl))
-              (cls (deduce active** cl**)))
-            (match (factor active** cls) ((tuple active* cls*) (tuple active* cls*)))))))))
+            ((active%% (addClause active% cl))
+              (cl%% (freshVars cl))
+              (cls (deduce active%% cl%%)))
+            (cl:declare (cl:ignorable active%% cl%% cls))
+            (match (factor active%% cls) ((tuple active% cls%) (tuple active% cls%)))))))))
 
 (in-package :hol2cl.metis.metis_prover)
 
@@ -27828,11 +28511,13 @@
   (match arg~50465
     ((Waiting (waiting_t :clauses clauses)) (hol2cl.metis.metis_prover.heap:size clauses))))
 
-(defunc toString (w*)
-  (string-concat "Waiting{" (string-concat (string-of-int (size w*)) "}")))
+(defunc toString (w%)
+  (string-concat "Waiting{" (string-concat (string-of-int (size w%)) "}")))
 
 (defunc mkModelClause (cl)
-  (let* ((lits (literals cl)) (fvs (funcall freeVars lits))) (tuple fvs lits)))
+  (let* ((lits (literals cl)) (fvs (funcall freeVars lits)))
+    (cl:declare (cl:ignorable lits fvs))
+    (tuple fvs lits)))
 
 (defparameter mkModelClauses (partial (function-value #'list-map 2) #'mkModelClause))
 
@@ -27840,12 +28525,14 @@
   (if (null cls)
     (K unit)
     (let ((vN (hol2cl.metis.metis_prover.model:make-size :size (msize vM))))
+      (cl:declare (cl:ignorable vN))
       (fletc
         ((perturbClause
           (arg~50510)
           (match arg~50510
             ((tuple fv cl)
               (let ((vV (randomValuation vN fv)))
+                (cl:declare (cl:ignorable vV))
                 (if (interpretClause vM vV cl)
                   unit
                   (hol2cl.metis.metis_prover.model:perturbClause vM vV cl)))))))
@@ -27856,26 +28543,28 @@
               ((cl:type hol2cl.runtime::unit-value) (list-iter #'perturbClause cls)))))
           (lambdac (n) (funpow n #'perturbClauses unit)))))))
 
-(defunc initialModel (axioms* conjecture parm)
+(defunc initialModel (axioms% conjecture parm)
   (match parm
     ((modelParameters :model model :initialPerturbations initialPerturbations)
       (let ((m (newModel model)))
+        (cl:declare (cl:ignorable m))
         (match (perturbModel m conjecture initialPerturbations)
           ((cl:type hol2cl.runtime::unit-value)
-            (match (perturbModel m axioms* initialPerturbations)
+            (match (perturbModel m axioms% initialPerturbations)
               ((cl:type hol2cl.runtime::unit-value) m))))))))
 
 (defunc checkModels (parms models arg~50586)
   (match arg~50586
     ((tuple fv cl)
       (fletc
-        ((check*
+        ((check%
           (arg~50591)
           (match arg~50591
             ((tuple (tuple parm model) z)
               (match parm
                 ((modelParameters :maxChecks maxChecks :weight weight)
                   (let ((n maxChecks))
+                    (cl:declare (cl:ignorable n))
                     (match (check #'interpretClause n model fv cl)
                       ((tuple vT vF)
                         (*
@@ -27883,7 +28572,7 @@
                             1.0d0
                             (/ (float-of-int vT) (expt (float-of-int (+ vT vF)) weight)))
                           z))))))))))
-        (foldl #'check* 1.0d0 (zip parms models))))))
+        (foldl #'check% 1.0d0 (zip parms models))))))
 
 (defunc perturbModels (parms models cls)
   (fletc
@@ -27930,72 +28619,81 @@
           (literalsW (expt (clauseLiterals lits) literalsWeight))
           (modelsW (checkModels modelsP mods mcl))
           (weight (* (* (* (* dist symbolsW) variablesW) literalsW) modelsW))
-          (weight* (+ weight (clausePriority cl))))
-        weight*))))
+          (weight% (+ weight (clausePriority cl))))
+        (cl:declare
+          (cl:ignorable lits symbolsW variablesW literalsW modelsW weight weight%))
+        weight%))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Adding new clauses.                                                       *)
 ;; (* ------------------------------------------------------------------------- *)
 
 
-(defunc add* (waiting* dist mcls cls)
-  (match waiting*
-    ((Waiting (waiting_t :parameters parameters* :clauses clauses :models models))
-      (match parameters*
-        ((parameters :modelsP modelParameters*)
-          (let ((dist* (+ dist (log (float-of-int (funcall length cls))))))
+(defunc add% (waiting% dist mcls cls)
+  (match waiting%
+    ((Waiting (waiting_t :parameters parameters% :clauses clauses :models models))
+      (match parameters%
+        ((parameters :modelsP modelParameters%)
+          (let ((dist% (+ dist (log (float-of-int (funcall length cls))))))
+            (cl:declare (cl:ignorable dist%))
             (fletc
               ((addCl
                 (arg~50785)
                 (match arg~50785
                   ((tuple (tuple mcl cl) acc)
-                    (let ((weight (clauseWeight parameters* models dist* mcl cl)))
+                    (let ((weight (clauseWeight parameters% models dist% mcl cl)))
+                      (cl:declare (cl:ignorable weight))
                       (hol2cl.metis.metis_prover.heap:add
                         acc
-                        (tuple weight (tuple dist* cl))))))))
-              (let ((clauses* (foldl #'addCl clauses (zip mcls cls))))
-                (match (perturbModels modelParameters* models mcls)
+                        (tuple weight (tuple dist% cl))))))))
+              (let ((clauses% (foldl #'addCl clauses (zip mcls cls))))
+                (cl:declare (cl:ignorable clauses%))
+                (match (perturbModels modelParameters% models mcls)
                   ((cl:type hol2cl.runtime::unit-value)
                     (make-Waiting
                       (make-waiting_t
                         :parameters
-                        parameters*
+                        parameters%
                         :clauses
-                        clauses*
+                        clauses%
                         :models
                         models))))))))))))
 
-(defunc add (waiting* arg~50845)
+(defunc add (waiting% arg~50845)
   (match arg~50845
     ((tuple dist cls)
       (if (null cls)
-        waiting*
-        (let ((waiting** (add* waiting* dist (funcall mkModelClauses cls) cls)))
-          waiting**)))))
+        waiting%
+        (let ((waiting%% (add% waiting% dist (funcall mkModelClauses cls) cls)))
+          (cl:declare (cl:ignorable waiting%%))
+          waiting%%)))))
 
 (defunc cmp (arg~50867 arg~50870)
   (match arg~50867 ((tuple w1 _) (match arg~50870 ((tuple w2 _) (compare w1 w2))))))
 
-(defunc empty (parameters* axioms* conjecture)
-  (match parameters*
-    ((parameters :modelsP modelParameters*)
+(defunc empty (parameters% axioms% conjecture)
+  (match parameters%
+    ((parameters :modelsP modelParameters%)
       (let
         ((clauses (newHeap #'cmp))
-          (models (list-map (initialModel axioms* conjecture) modelParameters*)))
+          (models (list-map (initialModel axioms% conjecture) modelParameters%)))
+        (cl:declare (cl:ignorable clauses models))
         (make-Waiting
-          (make-waiting_t :parameters parameters* :clauses clauses :models models))))))
+          (make-waiting_t :parameters parameters% :clauses clauses :models models))))))
 
-(defunc newWaiting (parameters* arg~50911)
+(defunc newWaiting (parameters% arg~50911)
   (match arg~50911
     ((ax_cj_cl :axioms_cl axioms_cl :conjecture_cl conjecture_cl)
       (let
         ((mAxioms (funcall mkModelClauses axioms_cl))
           (mConjecture (funcall mkModelClauses conjecture_cl)))
-        (let ((waiting* (empty parameters* mAxioms mConjecture)))
+        (cl:declare (cl:ignorable mAxioms mConjecture))
+        (let ((waiting% (empty parameters% mAxioms mConjecture)))
+          (cl:declare (cl:ignorable waiting%))
           (if (cl:and (null axioms_cl) (null conjecture_cl))
-            waiting*
-            (add*
-              waiting*
+            waiting%
+            (add%
+              waiting%
               0.0d0
               (append mAxioms mConjecture)
               (append axioms_cl conjecture_cl))))))))
@@ -28016,22 +28714,23 @@
 
 (defunc remove (arg~50949)
   (match arg~50949
-    ((Waiting (waiting_t :parameters parameters* :clauses clauses :models models))
+    ((Waiting (waiting_t :parameters parameters% :clauses clauses :models models))
       (if (hol2cl.metis.metis_prover.heap:null clauses)
         (make-None)
         (match (hol2cl.metis.metis_prover.heap:remove clauses)
-          ((tuple (tuple _ dcl) clauses*)
+          ((tuple (tuple _ dcl) clauses%)
             (let
-              ((waiting*
+              ((waiting%
                 (make-Waiting
                   (make-waiting_t
                     :parameters
-                    parameters*
+                    parameters%
                     :clauses
-                    clauses*
+                    clauses%
                     :models
                     models))))
-              (make-Some (tuple dcl waiting*)))))))))
+              (cl:declare (cl:ignorable waiting%))
+              (make-Some (tuple dcl waiting%)))))))))
 
 (in-package :hol2cl.metis.metis_prover)
 
@@ -28055,20 +28754,21 @@
     :waitingP
     hol2cl.metis.metis_prover.waiting:default))
 
-(defunc newResolution (parameters* ths)
-  (match parameters*
+(defunc newResolution (parameters% ths)
+  (match parameters%
     ((parameters :activeP activeParm :waitingP waitingParm)
       (match (newActive activeParm ths)
-        ((tuple active* cls)
-          (let ((waiting* (newWaiting waitingParm cls)))
+        ((tuple active% cls)
+          (let ((waiting% (newWaiting waitingParm cls)))
+            (cl:declare (cl:ignorable waiting%))
             (make-Resolution
               (make-resolution_t
                 :parameters
-                parameters*
+                parameters%
                 :active
-                active*
+                active%
                 :waiting
-                waiting*))))))))
+                waiting%))))))))
 
 ;; (*MetisDebug
 ;;     handle e ->
@@ -28080,10 +28780,10 @@
 ;; *)
 
 
-(defunc active (arg~51027) (match arg~51027 ((Resolution (resolution_t :active a*)) a*)))
+(defunc active (arg~51027) (match arg~51027 ((Resolution (resolution_t :active a%)) a%)))
 
 (defunc waiting (arg~51036)
-  (match arg~51036 ((Resolution (resolution_t :waiting w*)) w*)))
+  (match arg~51036 ((Resolution (resolution_t :waiting w%)) w%)))
 
 (defvariant decision (Contradiction field0) (Satisfiable field0))
 
@@ -28091,43 +28791,46 @@
 
 (defunc iterate (res)
   (match res
-    ((Resolution (resolution_t :parameters parameters* :active active* :waiting waiting*))
-      (match (remove waiting*)
+    ((Resolution (resolution_t :parameters parameters% :active active% :waiting waiting%))
+      (match (remove waiting%)
         ((None)
-          (let ((sat (make-Satisfiable (list-map #'thm (saturation active*)))))
+          (let ((sat (make-Satisfiable (list-map #'thm (saturation active%)))))
+            (cl:declare (cl:ignorable sat))
             (make-Decided sat)))
-        ((Some (tuple (tuple d cl) waiting**))
+        ((Some (tuple (tuple d cl) waiting%%))
           (if (isContradiction cl)
             (make-Decided (make-Contradiction (thm cl)))
-            (match (hol2cl.metis.metis_prover.active:add active* cl)
-              ((tuple active** cls)
+            (match (hol2cl.metis.metis_prover.active:add active% cl)
+              ((tuple active%% cls)
                 (let*
-                  ((waiting* (add waiting** (tuple d cls)))
-                    (res*
+                  ((waiting% (add waiting%% (tuple d cls)))
+                    (res%
                       (make-Resolution
                         (make-resolution_t
                           :parameters
-                          parameters*
+                          parameters%
                           :active
-                          active**
+                          active%%
                           :waiting
-                          waiting*))))
-                  (make-Undecided res*))))))))))
+                          waiting%))))
+                  (cl:declare (cl:ignorable waiting% res%))
+                  (make-Undecided res%))))))))))
 
 (defunc loop (res)
-  (match (iterate res) ((Decided dec) dec) ((Undecided res*) (loop res*))))
+  (match (iterate res) ((Decided dec) dec) ((Undecided res%) (loop res%))))
 
 (in-package :hol2cl.metis.metis_prover)
 
 (in-package :hol2cl.metis.metis_prover.loop)
 
 (defunc loop (res)
-  (match (iterate res) ((Decided dec) (make-Some dec)) ((Undecided res*) (loop res*))))
+  (match (iterate res) ((Decided dec) (make-Some dec)) ((Undecided res%) (loop res%))))
 
 (defunc run (rules)
   (let*
     ((ths (make-ax_cj_thm :axioms_thm rules :conjecture_thm nil))
       (res (newResolution default ths)))
+    (cl:declare (cl:ignorable ths res))
     (match (loop res)
       ((None) (failwith "metis: timeout"))
       ((Some (Contradiction thm)) thm)
@@ -28146,6 +28849,7 @@
   (match (funcall strip_comb tm)
     ((tuple hop args)
       (let ((s (name_of hop)) (ty (type_of hop)))
+        (cl:declare (cl:ignorable s ty))
         (if (cl:and (is_var hop) (= args nil))
           (progn
             (pp-print-string fmt "(")
@@ -28176,7 +28880,7 @@
                 ((Failure _)
                   (failwith (string-concat "hide_types: " "Types are already hidden.")))
                 (_ (raise exception~51240)))))))))
-  ((tuple show_types* hide_types*) (setf hide_types hide_types* show_types show_types*)))
+  ((tuple show_types% hide_types%) (setf hide_types hide_types% show_types show_types%)))
 
 (in-package :hol2cl.metis)
 
@@ -28196,7 +28900,7 @@
     ((tuple ps pt) (make-Combp (make-Combp (preterm_of_term (parse_term "\\/")) ps) pt))))
 
 (defunc list_mk_combp (arg~51311)
-  (match arg~51311 ((tuple h t*) (rev_itlist (lambdac (x acc) (make-Combp acc x)) t* h))))
+  (match arg~51311 ((tuple h t%) (rev_itlist (lambdac (x acc) (make-Combp acc x)) t% h))))
 
 (assert-true
   (=
@@ -28216,7 +28920,7 @@
 (defunc list_mk_disjp (arg~51363)
   (match arg~51363
     (nil (preterm_of_term (parse_term "F")))
-    ((cl:cons h t*) (itlist (curry #'mk_disjp) t* h))))
+    ((cl:cons h t%) (itlist (curry #'mk_disjp) t% h))))
 
 ;; (* typechecking a preterm with constants fails,
 ;;    therefore we convert constants to variables before type checking
@@ -28228,7 +28932,7 @@
   (match arg~51381
     ((Varp s pty) (make-Varp s pty))
     ((Constp s pty) (make-Varp s pty))
-    ((Combp l r*) (make-Combp (unconst_preterm l) (unconst_preterm r*)))
+    ((Combp l r%) (make-Combp (unconst_preterm l) (unconst_preterm r%)))
     ((Typing ptm pty) (make-Typing (unconst_preterm ptm) pty))
     (_ (failwith "unconst_preterm"))))
 
@@ -28236,7 +28940,7 @@
   (match arg~51423
     ((Varp s pty) (cl:cons (tuple s pty) nil))
     ((Constp s pty) nil)
-    ((Combp l r*) (append (env_of_preterm l) (env_of_preterm r*)))
+    ((Combp l r%) (append (env_of_preterm l) (env_of_preterm r%)))
     ((Typing ptm pty) (env_of_preterm ptm))
     (_ (failwith "env_of_preterm"))))
 
@@ -28260,14 +28964,14 @@
     hol2cl.meson.meson:reset_consts
     hol2cl.meson.meson:fol_of_const
     hol2cl.meson.meson:hol_of_const)
-  ((tuple reset_consts* fol_of_const* hol_of_const*)
+  ((tuple reset_consts% fol_of_const% hol_of_const%)
     (setf
       fol_of_const
-      fol_of_const*
+      fol_of_const%
       hol_of_const
-      hol_of_const*
+      hol_of_const%
       reset_consts
-      reset_consts*)))
+      reset_consts%)))
 
 (defparameter preterm_of_const
   (o (o #'preterm_of_term hol_of_const) (function-value #'int-of-string 1)))
@@ -28280,30 +28984,35 @@
     ((Fn (tuple f args))
       (let*
         ((pf (funcall preterm_of_const f)) (pargs (list-map #'preterm_of_fol_term args)))
+        (cl:declare (cl:ignorable pf pargs))
         (list_mk_combp (tuple pf pargs))))))
 
 (defunc preterm_of_predicate (arg~51537)
-  (match arg~51537 ("=" (make-Constp "=" dpty)) (p* (funcall preterm_of_const p*))))
+  (match arg~51537 ("=" (make-Constp "=" dpty)) (p% (funcall preterm_of_const p%))))
 
 (defunc preterm_of_atom (arg~51549)
   (match arg~51549
-    ((tuple p* args)
-      (let* ((pp (preterm_of_predicate p*)) (pargs (list-map #'preterm_of_fol_term args)))
+    ((tuple p% args)
+      (let* ((pp (preterm_of_predicate p%)) (pargs (list-map #'preterm_of_fol_term args)))
+        (cl:declare (cl:ignorable pp pargs))
         (make-Typing (list_mk_combp (tuple pp pargs)) (pretype_of_type bool_ty))))))
 
 (defunc preterm_of_literal (arg~51574)
   (match arg~51574
-    ((tuple pol fat) (let ((pat (preterm_of_atom fat))) (if pol pat (mk_negp pat))))))
+    ((tuple pol fat)
+      (let ((pat (preterm_of_atom fat)))
+        (cl:declare (cl:ignorable pat))
+        (if pol pat (mk_negp pat))))))
 
 (defunc preterm_of_eq (arg~51592)
   (match arg~51592
-    ((tuple s t*) (mk_eqp (tuple (preterm_of_fol_term s) (preterm_of_fol_term t*))))))
+    ((tuple s t%) (mk_eqp (tuple (preterm_of_fol_term s) (preterm_of_fol_term t%))))))
 
 (defunc typecheck (env)
   (o (o term_of_preterm (funcall retypecheck env)) #'unconst_preterm))
 
 (defunc typecheckl (env arg~51617)
-  (match arg~51617 (nil nil) (xs (*> (*> (list_mk_disjp xs) (typecheck env)) disjuncts))))
+  (match arg~51617 (nil nil) (xs (%> (%> (list_mk_disjp xs) (typecheck env)) disjuncts))))
 
 (defunc hol_of_term (env) (o (typecheck env) #'preterm_of_fol_term))
 
@@ -28336,28 +29045,29 @@
 
 (defunc hol_of_term_path (tm path)
   (match (tuple tm path)
-    ((tuple tm* nil) (tuple tm* ""))
-    ((tuple (Fn (tuple f args)) (cl:cons i* is))
+    ((tuple tm% nil) (tuple tm% ""))
+    ((tuple (Fn (tuple f args)) (cl:cons i% is))
       (let ((arity (funcall length args)))
+        (cl:declare (cl:ignorable arity))
         (progn
-          (assert-true (< i* arity) "metis.ml" 9629 6)
-          (match (hol_of_term_path (list-nth args i*) is)
-            ((tuple tm* path*)
+          (assert-true (< i% arity) "metis.ml" 9629 6)
+          (match (hol_of_term_path (list-nth args i%) is)
+            ((tuple tm% path%)
               (tuple
-                tm*
+                tm%
                 (string-concat
-                  (string-make (- (- arity i*) 1) (cl:code-char 108))
-                  (string-concat "r" path*))))))))
+                  (string-make (- (- arity i%) 1) (cl:code-char 108))
+                  (string-concat "r" path%))))))))
     (_ (failwith "hol_of_term_path"))))
 
 (defunc hol_of_atom_path (arg~51737)
-  (match arg~51737 ((tuple p* args) (hol_of_term_path (make-Fn (tuple p* args))))))
+  (match arg~51737 ((tuple p% args) (hol_of_term_path (make-Fn (tuple p% args))))))
 
 (defunc hol_of_literal_path (arg~51751 path)
   (match arg~51751
-    ((tuple pol atom*)
-      (match (hol_of_atom_path atom* path)
-        ((tuple s path*) (tuple s (if pol path* (string-concat "r" path*))))))))
+    ((tuple pol atom%)
+      (match (hol_of_atom_path atom% path)
+        ((tuple s path%) (tuple s (if pol path% (string-concat "r" path%))))))))
 
 (in-package :hol2cl.metis)
 
@@ -28377,11 +29087,13 @@
         (funcall string_of_term tm))
       unit)
     (match fat
-      ((trivia:guard (Var v) (list-mem-assoc v m))
+      ((guard (Var v) (list-mem-assoc v m))
         (progn
           (if (deref verb) (format-printf "var_assoc
 %!") unit)
-          (let ((tm* (list-assoc v m))) (if (= tm tm*) m (raise (make-Unify))))))
+          (let ((tm% (list-assoc v m)))
+            (cl:declare (cl:ignorable tm%))
+            (if (= tm tm%) m (raise (make-Unify))))))
       ((Var v)
         (progn
           (if (deref verb) (format-printf "var
@@ -28422,8 +29134,8 @@
 
 (defunc unify_fo_ho_atom (vars arg~51925 htm m)
   (match arg~51925
-    ((tuple p* args)
-      (if (= p* "=")
+    ((tuple p% args)
+      (if (= p% "=")
         (handler-case
           (match (dest_eq htm)
             ((tuple hl hr)
@@ -28433,13 +29145,13 @@
             (match exception~51939
               ((Failure _) (raise (make-Unify)))
               (_ (raise exception~51939)))))
-        (unify_fo_ho_term vars (make-Fn (tuple p* args)) htm m)))))
+        (unify_fo_ho_term vars (make-Fn (tuple p% args)) htm m)))))
 
 (defunc unify_fo_ho_literal (vars arg~51973 htm m)
   (match arg~51973
-    ((tuple pol atom*)
+    ((tuple pol atom%)
       (let
-        ((htm*
+        ((htm%
           (if pol
             htm
             (handler-case
@@ -28449,7 +29161,8 @@
                 (match exception~51980
                   ((Failure _) (raise (make-Unify)))
                   (_ (raise exception~51980))))))))
-        (unify_fo_ho_atom vars atom* htm* m)))))
+        (cl:declare (cl:ignorable htm%))
+        (unify_fo_ho_atom vars atom% htm% m)))))
 
 (in-package :hol2cl.metis)
 
@@ -28462,14 +29175,15 @@
 (defunc FRONT (lit thm)
   (let*
     ((conc (concl thm))
-      (disj* (funcall disjuncts (concl thm)))
+      (disj% (funcall disjuncts (concl thm)))
       (rest
-        (match (partition (lambdac (l) (= l lit)) disj*)
+        (match (partition (lambdac (l) (= l lit)) disj%)
           ((tuple nil _) (failwith "FRONT: literal not in disjunction"))
-          ((tuple _ r*) r*)))
-      (disj** (cl:cons lit rest))
-      (conc* (funcall list_mk_disj disj**))
-      (eq (funcall DISJ_ACI_RULE (funcall mk_eq (tuple conc conc*)))))
+          ((tuple _ r%) r%)))
+      (disj%% (cl:cons lit rest))
+      (conc% (funcall list_mk_disj disj%%))
+      (eq (funcall DISJ_ACI_RULE (funcall mk_eq (tuple conc conc%)))))
+    (cl:declare (cl:ignorable conc disj% rest disj%% conc% eq))
     (tuple (PURE_ONCE_REWRITE_RULE (cl:cons eq nil) thm) rest)))
 
 ;; (* resolve two clauses, where atom has to appear at the first position of
@@ -28482,17 +29196,18 @@
       (RESOLVE_2L (funcall TAUT (parse_term "!a b. a \\/ b ==> ~a ==> b")))
       (RESOLVE_2R (funcall TAUT (parse_term "!a c. a ==> ~a \\/ c ==> c")))
       (RESOLVE_3 (funcall TAUT (parse_term "!a b c. a \\/ b ==> ~a \\/ c ==> b \\/ c"))))
-    (lambdac (atom* arg~52075)
+    (cl:declare (cl:ignorable RESOLVE_1 RESOLVE_2L RESOLVE_2R RESOLVE_3))
+    (lambdac (atom% arg~52075)
       (match arg~52075
-        ((tuple nil nil) (funcall SPEC atom* RESOLVE_1))
+        ((tuple nil nil) (funcall SPEC atom% RESOLVE_1))
         ((tuple r1 nil)
-          (SPECL (cl:cons atom* (cl:cons (funcall list_mk_disj r1) nil)) RESOLVE_2L))
+          (SPECL (cl:cons atom% (cl:cons (funcall list_mk_disj r1) nil)) RESOLVE_2L))
         ((tuple nil r2)
-          (SPECL (cl:cons atom* (cl:cons (funcall list_mk_disj r2) nil)) RESOLVE_2R))
+          (SPECL (cl:cons atom% (cl:cons (funcall list_mk_disj r2) nil)) RESOLVE_2R))
         ((tuple r1 r2)
           (SPECL
             (cl:cons
-              atom*
+              atom%
               (cl:cons (funcall list_mk_disj r1) (cl:cons (funcall list_mk_disj r2) nil)))
             RESOLVE_3))))))
 
@@ -28500,12 +29215,13 @@
 ;;    positive in th1 and negative in th2 *)
 
 
-(defunc RESOLVE (atom* th1 th2)
+(defunc RESOLVE (atom% th1 th2)
   (handler-case
-    (match (tuple (FRONT atom* th1) (FRONT (funcall mk_neg atom*) th2))
-      ((tuple (tuple th1* r1) (tuple th2* r2))
-        (let ((res (funcall RESOLVE_N atom* (tuple r1 r2))))
-          (funcall MP (funcall MP res th1*) th2*))))
+    (match (tuple (FRONT atom% th1) (FRONT (funcall mk_neg atom%) th2))
+      ((tuple (tuple th1% r1) (tuple th2% r2))
+        (let ((res (funcall RESOLVE_N atom% (tuple r1 r2))))
+          (cl:declare (cl:ignorable res))
+          (funcall MP (funcall MP res th1%) th2%))))
     (hol2cl.runtime:ocaml-condition
       (exception~52130)
       (match exception~52130
@@ -28520,6 +29236,7 @@
   (let
     ((IMPL_NOT_L (funcall TAUT (parse_term "!a b. ~a ==> b <=>  a \\/ b")))
       (IMPL_NOT_R (funcall TAUT (parse_term "!a b.  a ==> b <=> ~a \\/ b"))))
+    (cl:declare (cl:ignorable IMPL_NOT_L IMPL_NOT_R))
     (lambdac (tm th)
       (match
         (tuple
@@ -28531,8 +29248,9 @@
               (match exception~52203
                 ((Failure _) (tuple tm IMPL_NOT_R))
                 (_ (raise exception~52203))))))
-        ((tuple impl (tuple tm* IMPL_NOT))
-          (let ((eq (SPECL (cl:cons tm* (cl:cons (concl th) nil)) IMPL_NOT)))
+        ((tuple impl (tuple tm% IMPL_NOT))
+          (let ((eq (SPECL (cl:cons tm% (cl:cons (concl th) nil)) IMPL_NOT)))
+            (cl:declare (cl:ignorable eq))
             (PURE_ONCE_REWRITE_RULE (cl:cons eq nil) impl)))))))
 
 ;; (* given A, tm1, .., tmn |- th, prove A |- ~tm1 \/ .. \/ ~tmn \/ th *)
@@ -28547,7 +29265,7 @@
 (defunc term_eq_mod_type (t1 t2 tyinsts)
   (handler-case
     (match (funcall term_type_unify t1 t2 (tuple nil nil tyinsts))
-      ((tuple _ tminsts tyinsts*)
+      ((tuple _ tminsts tyinsts%)
         (progn
           (if (deref metisverb)
             (progn
@@ -28558,15 +29276,15 @@
               (list-iter
                 (lambdac (arg~52241)
                   (match arg~52241
-                    ((tuple t1* t2*)
+                    ((tuple t1% t2%)
                       (funcall
                         (format-printf "%s <- %s
 %!")
-                        (funcall string_of_term t1*)
-                        (funcall string_of_term t2*)))))
+                        (funcall string_of_term t1%)
+                        (funcall string_of_term t2%)))))
                 tminsts))
             unit)
-          (if (= tminsts nil) (make-Some tyinsts*) (make-None)))))
+          (if (= tminsts nil) (make-Some tyinsts%) (make-None)))))
     (hol2cl.runtime:ocaml-condition
       (exception~52230)
       (match exception~52230 ((Failure _) (make-None)) (_ (raise exception~52230))))))
@@ -28576,14 +29294,14 @@
     ((tuple nil nil) (cl:cons m nil))
     ((tuple nil _) nil)
     ((tuple (cl:cons x xs) ys)
-      (*>
+      (%>
         (list-map
           (lambdac (y)
             (match (funcall f x y m)
-              ((Some m*)
+              ((Some m%)
                 (match_elems
                   f
-                  m*
+                  m%
                   (tuple xs (list-filter (partial (function-value #'!= 2) y) ys))))
               ((None) nil)))
           ys)
@@ -28632,7 +29350,7 @@
 
 (defunc reorient_tysubst (vars sub)
   (let
-    ((sub*
+    ((sub%
       (map
         (lambdac (arg~52419)
           (match arg~52419
@@ -28641,18 +29359,19 @@
                 (tuple v ty)
                 (tuple ty v)))))
         sub)))
+    (cl:declare (cl:ignorable sub%))
     (map
-      (lambdac (arg~52442) (match arg~52442 ((tuple ty v) (tuple (tysubst sub* ty) v))))
-      sub*)))
+      (lambdac (arg~52442) (match arg~52442 ((tuple ty v) (tuple (tysubst sub% ty) v))))
+      sub%)))
 
-(defunc hol_of_thm (axioms* fth)
+(defunc hol_of_thm (axioms% fth)
   (progn
     (if (deref metisverb)
       (funcall (format-printf "hol_of_thm: %s
 %!") (toString fth))
       unit)
     (let*
-      ((env (funcall env_of_ths axioms*))
+      ((env (funcall env_of_ths axioms%))
         (hth
           (match (thmToInference fth)
             ((Axiom clause)
@@ -28662,11 +29381,13 @@
                     (concat_map
                       (lambdac (ax)
                         (let*
-                          ((disjs (*> (concl ax) (striplist dest_disj)))
+                          ((disjs (%> (concl ax) (striplist dest_disj)))
                             (tmvars (freesl (hyp ax)))
                             (ms (match_fo_ho_clause tmvars (tuple clausel disjs))))
+                          (cl:declare (cl:ignorable disjs tmvars ms))
                           (map (lambdac (m) (tuple m ax)) ms)))
-                      axioms*)))
+                      axioms%)))
+                (cl:declare (cl:ignorable clausel maxs))
                 (progn
                   (assert-true (> (list-length maxs) 0) "metis.ml" 9802 6)
                   (let
@@ -28677,6 +29398,7 @@
                           (match arg~52517
                             ((tuple v tm)
                               (tuple (mk_var (tuple (prefix v) (type_of tm))) tm)))))))
+                    (cl:declare (cl:ignorable tminst))
                     (progn
                       (if (deref metisverb)
                         (funcall (format-printf "length maxs = %d
@@ -28694,9 +29416,10 @@
                                   (funcall string_of_tminst (funcall tminst m))))))
                           maxs)
                         unit)
-                      (match (list-hd maxs) ((tuple m ax) (INST* (funcall tminst m) ax))))))))
+                      (match (list-hd maxs) ((tuple m ax) (INST% (funcall tminst m) ax))))))))
             ((Subst fsub fth1)
-              (let ((th1 (hol_of_thm axioms* fth1)))
+              (let ((th1 (hol_of_thm axioms% fth1)))
+                (cl:declare (cl:ignorable th1))
                 (progn
                   (if (deref metisverb)
                     (funcall
@@ -28705,6 +29428,7 @@
                       (funcall string_of_thm th1))
                     unit)
                   (let ((fsubl (hol2cl.metis.metis_prover.substitute:toList fsub)))
+                    (cl:declare (cl:ignorable fsubl))
                     (progn
                       (if (deref metisverb)
                         (format-printf "before substitution lifting
@@ -28712,12 +29436,13 @@
                         unit)
                       (let
                         ((hsub
-                          (*>
+                          (%>
                             (map
                               (lambdac (arg~52607)
-                                (match arg~52607 ((tuple v t*) (tuple t* (make-Var v)))))
+                                (match arg~52607 ((tuple v t%) (tuple t% (make-Var v)))))
                               fsubl)
                             (hol_of_substitution env))))
+                        (cl:declare (cl:ignorable hsub))
                         (progn
                           (if (deref metisverb)
                             (funcall
@@ -28730,24 +29455,26 @@
                               (itlist
                                 (lambdac (arg~52633 m)
                                   (match arg~52633
-                                    ((tuple t* v)
+                                    ((tuple t% v)
                                       (let
-                                        ((v*
+                                        ((v%
                                           (find
-                                            (lambdac (v*) (= (name_of v*) (name_of v)))
+                                            (lambdac (v%) (= (name_of v%) (name_of v)))
                                             (frees (concl th1)))))
-                                        (funcall type_unify (type_of v) (type_of v*) m)))))
+                                        (cl:declare (cl:ignorable v%))
+                                        (funcall type_unify (type_of v) (type_of v%) m)))))
                                 hsub
                                 nil))
                               (tminst
                                 (map
                                   (lambdac (arg~52665)
                                     (match arg~52665
-                                      ((tuple t* v)
+                                      ((tuple t% v)
                                         (tuple
-                                          (funcall inst tyinst t*)
+                                          (funcall inst tyinst t%)
                                           (funcall inst tyinst v)))))
                                   hsub)))
+                            (cl:declare (cl:ignorable tyinst tminst))
                             (progn
                               (if (deref metisverb)
                                 (funcall
@@ -28757,12 +29484,14 @@
                                   (funcall string_of_thm th1)
                                   (string_of_instantiation (tuple nil tminst tyinst)))
                                 unit)
-                              (funcall INSTANTIATE* (tuple nil tminst tyinst) th1))))))))))
-            ((Resolve atom* fth1 fth2)
-              (let ((th1 (hol_of_thm axioms* fth1)) (th2 (hol_of_thm axioms* fth2)))
+                              (funcall INSTANTIATE% (tuple nil tminst tyinst) th1))))))))))
+            ((Resolve atom% fth1 fth2)
+              (let ((th1 (hol_of_thm axioms% fth1)) (th2 (hol_of_thm axioms% fth2)))
+                (cl:declare (cl:ignorable th1 th2))
                 (let
-                  ((env*
+                  ((env%
                     (append (funcall env_of_ths (cl:cons th1 (cl:cons th2 nil))) env)))
+                  (cl:declare (cl:ignorable env%))
                   (progn
                     (if (deref metisverb)
                       (list-iter
@@ -28774,7 +29503,7 @@
 %!")
                                 s
                                 (funcall string_of_type (funcall type_of_pretype pty))))))
-                        env*)
+                        env%)
                       unit)
                     (if (deref metisverb) (format-printf "before resolving
 %!") unit)
@@ -28788,17 +29517,18 @@
                       unit)
                     (let
                       ((tm1
-                        (*>
+                        (%>
                           (striplist dest_disj (concl th1))
                           (partial
                             (function-value #'list-filter 2)
                             (o (function-value #'not 1) #'is_neg))))
                         (tm2
-                          (*>
-                            (*>
+                          (%>
+                            (%>
                               (striplist dest_disj (concl th2))
                               (partial (function-value #'list-filter 2) #'is_neg))
                             (partial (function-value #'list-map 2) #'dest_neg))))
+                      (cl:declare (cl:ignorable tm1 tm2))
                       (progn
                         (if (deref metisverb)
                           (list-iter (o (format-printf "tm1: %s
@@ -28808,7 +29538,8 @@
                           (list-iter (o (format-printf "tm2: %s
 %!") string_of_term) tm2)
                           unit)
-                        (let ((hatom (hol_of_atom env* atom*)))
+                        (let ((hatom (hol_of_atom env% atom%)))
+                          (cl:declare (cl:ignorable hatom))
                           (progn
                             (if (deref metisverb)
                               (funcall
@@ -28827,6 +29558,7 @@
                                           (lambdac (y) (term_eq_mod_type hatom y m))
                                           tm2))))
                                   tm1)))
+                              (cl:declare (cl:ignorable cands))
                               (progn
                                 (if (deref metisverb)
                                   (funcall
@@ -28837,6 +29569,7 @@
                                 (assert-true (> (list-length cands) 0) "metis.ml" 9847 6)
                                 (assert-true
                                   (let ((h (list-hd cands)))
+                                    (cl:declare (cl:ignorable h))
                                     (list-for-all
                                       (partial (function-value #'= 2) h)
                                       cands))
@@ -28845,46 +29578,50 @@
                                   6)
                                 (let*
                                   ((tyinsts (list-hd cands))
-                                    (tyvars*
-                                      (*>
-                                        (*>
-                                          (*>
-                                            (map #'hyp axioms*)
+                                    (tyvars%
+                                      (%>
+                                        (%>
+                                          (%>
+                                            (map #'hyp axioms%)
                                             (function-value #'list-concat 1))
                                           (map #'type_vars_in_term))
                                         (function-value #'list-concat 1))))
+                                  (cl:declare (cl:ignorable tyinsts tyvars%))
                                   (progn
                                     (if (deref metisverb)
                                       (format-printf
                                         "Reorienting type substitution ...
 %!")
                                       unit)
-                                    (let ((tyinsts* (reorient_tysubst tyvars* tyinsts)))
+                                    (let ((tyinsts% (reorient_tysubst tyvars% tyinsts)))
+                                      (cl:declare (cl:ignorable tyinsts%))
                                       (progn
                                         (if (deref metisverb)
                                           (format-printf "Resolving ...
 %!")
                                           unit)
                                         (hol2cl.metis.metis_rules:RESOLVE
-                                          (funcall inst tyinsts* hatom)
-                                          (INST_TYPE tyinsts* th1)
-                                          (INST_TYPE tyinsts* th2))))))))))))))))
+                                          (funcall inst tyinsts% hatom)
+                                          (INST_TYPE tyinsts% th1)
+                                          (INST_TYPE tyinsts% th2))))))))))))))))
             ((Refl term) (hol2cl.fusion.hol:REFL (hol_of_term env term)))
-            ((Assume atom*) (funcall SPEC (hol_of_atom env atom*) EXCLUDED_MIDDLE))
+            ((Assume atom%) (funcall SPEC (hol_of_atom env atom%) EXCLUDED_MIDDLE))
             ((Equality flit fpath ft)
               (let ((hlit (hol_of_literal env flit)))
+                (cl:declare (cl:ignorable hlit))
                 (match (hol_of_literal_path flit fpath)
                   ((tuple fs hpath)
                     (let*
                       ((hs (funcall follow_path hpath hlit))
                         (ht (hol_of_term env ft))
                         (m (funcall type_unify (type_of ht) (type_of hs) nil)))
+                      (cl:declare (cl:ignorable hs ht m))
                       (match
                         (tuple
                           (funcall inst m hlit)
                           (funcall inst m hs)
                           (funcall inst m ht))
-                        ((tuple hlit* hs* ht*)
+                        ((tuple hlit% hs% ht%)
                           (progn
                             (if (deref metisverb)
                               (progn
@@ -28892,67 +29629,70 @@
                                   (format-printf
                                     "Trying to replace %s : %s with %s : %s
 %!")
-                                  (funcall string_of_term hs*)
-                                  (funcall string_of_type (type_of hs*))
-                                  (funcall string_of_term ht*)
-                                  (funcall string_of_type (type_of ht*)))
+                                  (funcall string_of_term hs%)
+                                  (funcall string_of_type (type_of hs%))
+                                  (funcall string_of_term ht%)
+                                  (funcall string_of_type (type_of ht%)))
                                 (funcall
                                   (format-printf "In %s
 %!")
-                                  (funcall string_of_term hlit*)))
+                                  (funcall string_of_term hlit%)))
                               unit)
                             (let*
-                              ((heq (funcall mk_eq (tuple hs* ht*)))
+                              ((heq (funcall mk_eq (tuple hs% ht%)))
                                 (conv
                                   (funcall
                                     PATH_CONV
                                     hpath
                                     (PURE_ONCE_REWRITE_CONV
                                       (cl:cons (hol2cl.fusion.hol:ASSUME heq) nil))))
-                                (hlit** (CONV_RULE conv (hol2cl.fusion.hol:ASSUME hlit*))))
+                                (hlit%% (CONV_RULE conv (hol2cl.fusion.hol:ASSUME hlit%))))
+                              (cl:declare (cl:ignorable heq conv hlit%%))
                               (progn
                                 (if (deref metisverb)
                                   (funcall
                                     (format-printf "hlit = %s, hlit' = %s
 %!")
-                                    (funcall string_of_term hlit*)
-                                    (funcall string_of_thm hlit**))
+                                    (funcall string_of_term hlit%)
+                                    (funcall string_of_thm hlit%%))
                                   unit)
-                                (if (<> hs* ht*)
+                                (if (<> hs% ht%)
                                   (assert-true
-                                    (<> (concl hlit**) hlit*)
+                                    (<> (concl hlit%%) hlit%)
                                     "metis.ml"
                                     9882
                                     23)
                                   unit)
                                 (handler-case
-                                  (DISCH_DISJS (cl:cons heq (cl:cons hlit* nil)) hlit**)
+                                  (DISCH_DISJS (cl:cons heq (cl:cons hlit% nil)) hlit%%)
                                   (hol2cl.runtime:ocaml-condition
                                     (exception~53033)
                                     (match exception~53033
                                       ((Failure _) (failwith "equality"))
                                       (_ (raise exception~53033)))))))))))))))))
-        (hth* (CONV_RULE #'DISJ_CANON_CONV hth)))
+        (hth% (CONV_RULE #'DISJ_CANON_CONV hth)))
+      (cl:declare (cl:ignorable env hth hth%))
       (progn
         (if (deref metisverb)
           (progn
             (format-printf "hol_of_thm finished
 %!")
             (let
-              ((hth**
-                (*>
-                  (*> (hol2cl.metis.metis_prover.thm:clause fth) toList)
+              ((hth%%
+                (%>
+                  (%> (hol2cl.metis.metis_prover.thm:clause fth) toList)
                   (hol_of_clause env))))
+              (cl:declare (cl:ignorable hth%%))
               (funcall
                 (format-printf "hol_of_thm returned:
 %s
  for
 %s
 %!")
-                (funcall string_of_term (concl hth*))
-                (funcall string_of_term hth**))))
+                (funcall string_of_term (concl hth%))
+                (funcall string_of_term hth%%))))
           unit)
-        hth*))))
+        hth%))))
 
 (in-package :hol2cl.metis)
 
@@ -28968,15 +29708,17 @@
         (if (list-mem f env)
           (failwith "metis_of_term: higher order")
           (let ((ff (funcall fol_of_const f)))
+            (cl:declare (cl:ignorable ff))
             (make-Fn
               (tuple (funcall metis_name ff) (map (metis_of_term env consts) args)))))))))
 
 (defunc metis_of_atom (env consts tm)
   (handler-case
     (match (dest_eq tm)
-      ((tuple l r*)
-        (let ((l* (metis_of_term env consts l)) (r** (metis_of_term env consts r*)))
-          (funcall mkEq (tuple l* r**)))))
+      ((tuple l r%)
+        (let ((l% (metis_of_term env consts l)) (r%% (metis_of_term env consts r%)))
+          (cl:declare (cl:ignorable l% r%%))
+          (funcall mkEq (tuple l% r%%)))))
     (hol2cl.runtime:ocaml-condition
       (exception~53165)
       (match exception~53165
@@ -28986,6 +29728,7 @@
               (if (list-mem f env)
                 (failwith "metis_of_atom: higher order")
                 (let ((ff (funcall fol_of_const f)))
+                  (cl:declare (cl:ignorable ff))
                   (tuple (funcall metis_name ff) (map (metis_of_term env consts) args)))))))
         (_ (raise exception~53165))))))
 
@@ -28996,7 +29739,7 @@
       (hol2cl.runtime:ocaml-condition
         (exception~53234)
         (match exception~53234 ((Failure _) (tuple cl:t tm)) (_ (raise exception~53234)))))
-    ((tuple pol tm*) (tuple pol (metis_of_atom env consts tm*)))))
+    ((tuple pol tm%) (tuple pol (metis_of_atom env consts tm%)))))
 
 (defunc metis_of_clause (th)
   (let*
@@ -29005,6 +29748,7 @@
       (hlits (funcall disjuncts tm))
       (flits (map (metis_of_literal nil lconsts) hlits))
       (set (fromList flits)))
+    (cl:declare (cl:ignorable lconsts tm hlits flits set))
     (axiom set)))
 
 (defparameter metis_of_clauses (map #'metis_of_clause))
@@ -29029,9 +29773,9 @@
 ;; (* Debugging tactic. *)
 
 
-(defunc PRINT_TAC (g*) (progn (funcall print_goal g*) (ALL_TAC g*)))
+(defunc PRINT_TAC (g%) (progn (funcall print_goal g%) (ALL_TAC g%)))
 
-(defunc PRINT_ID_TAC (s g*) (progn (print-endline s) (PRINT_TAC g*)))
+(defunc PRINT_ID_TAC (s g%) (progn (print-endline s) (PRINT_TAC g%)))
 
 ;; (* Slightly modified tactic from meson.ml. *)
 
@@ -29078,10 +29822,10 @@
                           (W
                             (lambdac (arg~53322)
                               (match arg~53322
-                                ((tuple asl w*)
+                                ((tuple asl w%)
                                   (MAP_EVERY
                                     (lambdac (v) (SPEC_TAC (tuple v v)))
-                                    (frees w*)))))))
+                                    (frees w%)))))))
                         (funcall
                           CONV_TAC
                           (THENC
@@ -29105,7 +29849,7 @@
                 SPEC
                 (funcall genvar (type_of (fst (funcall dest_forall (concl th)))))
                 th)))))
-      (REPEAT (FIRST_X_ASSUM (CONJUNCTS_THEN* ASSUME_TAC))))
+      (REPEAT (FIRST_X_ASSUM (CONJUNCTS_THEN% ASSUME_TAC))))
     (RULE_ASSUM_TAC (CONV_RULE (ASSOC_CONV DISJ_ASSOC)))))
 
 ;; (* associate disjunctions to the right *)
@@ -29115,6 +29859,7 @@
 
 (defunc without_warnings (f)
   (let ((tiv (deref type_invention_warning)))
+    (cl:declare (cl:ignorable tiv))
     (fletc
       ((reset
         (arg~53413)
@@ -29123,11 +29868,13 @@
       (progn
         (assign type_invention_warning cl:nil)
         (handler-case
-          (let ((y (funcall f unit))) (progn (reset unit) y))
+          (let ((y (funcall f unit)))
+            (cl:declare (cl:ignorable y))
+            (progn (reset unit) y))
           (hol2cl.runtime:ocaml-condition
             (exception~53422)
             (match exception~53422
-              (e* (progn (reset unit) (raise e*)))
+              (e% (progn (reset unit) (raise e%)))
               (_ (raise exception~53422)))))))))
 
 (defunc SIMPLE_METIS_REFUTE (ths)
@@ -29135,6 +29882,7 @@
     (funcall clear_contrapos_cache unit)
     (random-init 0)
     (let ((rules (funcall metis_of_clauses ths)))
+      (cl:declare (cl:ignorable rules))
       (progn
         (if (deref metisverb)
           (progn
@@ -29144,31 +29892,34 @@
 %!") string_of_thm) ths))
           unit)
         (let ((res (run rules)))
+          (cl:declare (cl:ignorable res))
           (progn
             (if (deref metisverb) (print_proof res) unit)
             (let*
-              ((ths* (map (CONV_RULE #'DISJ_CANON_CONV) ths))
+              ((ths% (map (CONV_RULE #'DISJ_CANON_CONV) ths))
                 (proof
                   (without_warnings
                     (lambdac (arg~53480)
                       (match arg~53480
-                        ((cl:type hol2cl.runtime::unit-value) (hol_of_thm ths* res)))))))
+                        ((cl:type hol2cl.runtime::unit-value) (hol_of_thm ths% res)))))))
+              (cl:declare (cl:ignorable ths% proof))
               (progn
                 (if (deref metisverb)
                   (progn
                     (format-printf "ths:
 %!")
                     (list-iter
-                      (lambdac (t*) (progn (funcall print_thm t*) (format-printf "
+                      (lambdac (t%) (progn (funcall print_thm t%) (format-printf "
 %!")))
-                      ths*)
+                      ths%)
                     (format-printf "Metis theorem:
 %!")
                     (funcall print_thm proof)
                     (format-printf "Metis end.
 %!"))
                   unit)
-                (let ((allhyps (list-concat (list-map #'hyp ths*))))
+                (let ((allhyps (list-concat (list-map #'hyp ths%))))
+                  (cl:declare (cl:ignorable allhyps))
                   (progn
                     (assert-true
                       (forall (lambdac (h) (list-mem h allhyps)) (hyp proof))
@@ -29178,7 +29929,7 @@
                     (assert-true (= (concl proof) (parse_term "F")) "metis.ml" 10072 2)
                     proof))))))))))
 
-(defunc PURE_METIS_TAC (g*)
+(defunc PURE_METIS_TAC (g%)
   (progn
     (funcall reset_vars unit)
     (funcall reset_consts unit)
@@ -29188,7 +29939,7 @@
         (o
           (o (o ACCEPT_TAC #'SIMPLE_METIS_REFUTE) (map (function-value #'snd 1)))
           (function-value #'fst 1)))
-      g*)))
+      g%)))
 
 (defunc GEN_METIS_TAC (ths) (funcall THEN (FOL_PREPARE_TAC ths) #'PURE_METIS_TAC))
 

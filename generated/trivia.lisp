@@ -28,7 +28,7 @@
         o_DEF
         o_THM
         one
-        one_Axiom*
+        one_Axiom%
         one_DEF
         one_INDUCT
         one_RECURSION
@@ -46,7 +46,7 @@
         o_DEF
         o_THM
         one
-        one_Axiom*
+        one_Axiom%
         one_DEF
         one_INDUCT
         one_RECURSION
@@ -67,7 +67,7 @@
     o_DEF
     o_THM
     one
-    one_Axiom*
+    one_Axiom%
     one_DEF
     one_INDUCT
     one_RECURSION
@@ -124,7 +124,7 @@
     o_DEF
     o_THM
     one
-    one_Axiom*
+    one_Axiom%
     one_DEF
     one_INDUCT
     one_RECURSION
@@ -250,7 +250,7 @@
           BETA_TAC)
         #'REFL_TAC))))
 
-(defparameter one_Axiom*
+(defparameter one_Axiom%
   (prove
     (tuple
       (parse_term "!e:A. ?!fn. fn one = e")

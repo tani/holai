@@ -12,8 +12,8 @@ readable OCaml-to-Lisp translation, even when argument evaluation order differs.
   evaluation-order temporaries. Preserve source bindings, aliases, and scopes.
 - Reject unsupported syntax and unresolved references with source locations.
   Parsed, translated, compiled, and differential-tested are distinct states.
-- Use real Camlp5 pa_j and real Trivia. Never substitute a toy parser or a
-  hand-written pattern matcher while describing it as those dependencies.
+- Use real Camlp5 pa_j. Production matching uses the standard-CL static
+  compiler specified in DESIGN30; do not describe it as Trivia.
 - Compile the translator and generated files; run the applicable fixture,
   kernel, differential, source-map, and regeneration checks before release.
 - Keep original licensing in pinned and generated inputs, and pin dependencies.
@@ -103,7 +103,7 @@ readable OCaml-to-Lisp translation, even when argument evaluation order differs.
   MOD_DOWN_CONV/NUM_CANCEL_CONV/BITS_ELIM_CONV algorithms. Keep the 44 arithmetic
   observations' literal names and require closed expected conversion equations.
   The 1.0 completion includes wf.ml, calc_num.ml and all later manifest files.
-- Reference-record contents uses the existing ref cell and a real Trivia
+- Reference-record contents uses the existing ref cell and a structural
   pattern. Field access is independent of a rebound !. Copy/update allocates a
   fresh cell. Ambiguous unqualified contents patterns/literals must reject.
 - Sibling root record labels may uniquely select a partial record pattern.
@@ -174,7 +174,7 @@ readable OCaml-to-Lisp translation, even when argument evaluation order differs.
   Include reports and matching observation streams in the package; keep
   parsed/lowered/compiled/differential-corpus states distinct.
 - `make test` needs Camlp5 8.02, OCaml Num for the original-execution oracle,
-  SBCL, and the vendored actual Trivia sources.
+  SBCL; production runtime has no external pattern-library dependency.
 - Do not publish or push anywhere unless the user requests that destination.
 - Further agents should work independently only if the user explicitly asks
   for delegation. This file does not request multi-agent work.
@@ -182,7 +182,7 @@ readable OCaml-to-Lisp translation, even when argument evaluation order differs.
 
 ## Current implementation and repository policy
 
-- Production variant: 1.0.0-star-names. Shared OPTIONAL/supplied-p entries
+- Production variant: 1.0.0-percent-names. Shared OPTIONAL/supplied-p entries
   across defunc/lambdac/labelsc/fletc; no fixed worker, callc or call-site routing.
   Keep NIL-vs-omitted, primary return, body-once, partial/excess, old-function
   capture and fletc outer-RHS scope. rt:funcall and list tuples remain unchanged.
@@ -208,9 +208,41 @@ readable OCaml-to-Lisp translation, even when argument evaluation order differs.
   Prime/reserved-name atom encoding must also be consistent for record fields.
   Do not change readtable-case, HOL string literals or runtime algorithms.
 
-- Current naming variant1.0.0-star-names: ordinary CL reader atoms, star suffixes
+- Naming inherited from 1.0.0-star-names: ordinary CL reader atoms, star suffixes
   for primes/reserved stems/collisions. No readtable changes; foreign names and
   HOL strings stay native/original. Public source symbol spellings change.
   19allocator checks,9additional OCaml/SBCL observations,9export checks and no
   escaped symbols in46core files. Full1124-row corpus and94clean outputs pass.
   Earlier OPTIONAL performance measurements are historical after this rename.
+
+- DESIGN30 authorizes replacing Trivia with static structural matching. Keep
+  data representations unchanged; validate OR joins, guard once/next-clause
+  semantics and descriptor compile/load visibility. Rebuild dependent FASLs
+  after declaration ABI changes. Historical benchmark baselines are separate.
+
+- Structural backend validated on all46 unchanged inputs,122native checks,
+  1124 differential rows and94 clean regenerated files. Additional46 pattern
+  checks cover OR/guard, literals, stale FASL detection and registry-independent
+  execution, plus wide/deep patterns. Production runtime/src/generated contain
+  no Trivia references. Historical dependencies remain licensed and vendored.
+
+- Final structural-backend single-run comparison: compile operations33.857→
+  24.181s; cold compile/load peakRSS1822.102→1079.875MiB; fresh startup80.927→
+  82.044s, peakRSS239.762→205.594MiB. Allocation effectively unchanged. Cold
+  RSS includes initialization; do not call it compile-only. Startup speedup is
+  not demonstrated. See reports/PATTERN-MATCH.md and its one-run limitations.
+
+- DESIGN31: user authorizes replacing translator-added stars with percent
+  suffixes and adding IGNORABLE at curried parameter/input binding sites.
+  Preserve literal/operator stars, native special names, source scopes and
+  algorithm behavior. Regenerate all naming references/keywords/makers; do not
+  mute warnings globally or convert lexical bindings into special variables.
+
+- Percent naming validated:21 allocator/native-target checks,9 naming rows,
+  full46-file/1124-row corpus and94 clean outputs. Fresh-cache production audit
+  compiles51units with0 errors,0 warnings and0 style warnings. make release
+  requires that audit and checks the compiled source fingerprints. Historical
+  percent-predecessor timing data do not describe the new naming variant.
+
+- User explicitly authorizes pushing the structural-match and percent-naming
+  implementation together to tani/holai main after successful validation.

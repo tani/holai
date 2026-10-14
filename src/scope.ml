@@ -70,10 +70,10 @@ let name_priority s =
 let compare_source_names a b =
  let p=compare (name_priority a) (name_priority b) in
  if p=0 then String.compare a b else p
-let allocate_star forbidden printed =
+let allocate_suffix forbidden printed =
  let rec choose printed =
    let logical=String.uppercase_ascii printed in
-   if forbidden logical then choose (printed^"*") else printed,logical in
+   if forbidden logical then choose (printed^"%") else printed,logical in
  choose printed
 let control_names = ["LAMBDA";"FUNCTION";"PROGN";"FLET";"LABELS";"QUOTE";
  "BLOCK";"RETURN-FROM";"CATCH";"THROW";"UNWIND-PROTECT";"HANDLER-CASE";
@@ -92,7 +92,7 @@ let context ?(counter=ref 0) ?(reference_observer=ref (fun (_:binding) -> ())) ?
  let own=own_names items in
  let totals=List.fold_left (fun m s -> SM.add s (1+Option.value (SM.find_opt s m) ~default:0) m) SM.empty own in
  let spellings,_=List.fold_left (fun (names,used) source ->
-   let printed,logical=allocate_star (fun logical -> SS.mem logical used || List.mem logical control_names)
+   let printed,logical=allocate_suffix (fun logical -> SS.mem logical used || List.mem logical control_names)
        (Sexp.symbol (source_spelling source)) in
    SM.add source (printed,logical) names,SS.add logical used)
    (SM.empty,SS.empty) (List.sort_uniq compare_source_names own) in
@@ -119,7 +119,7 @@ let local c env source_name kind =
    List.mem logical control_names || SS.mem logical c.globals || SM.mem logical c.imports ||
    SM.exists (fun _ (b:binding) -> b.logical=logical) env.values ||
    List.exists (fun source -> snd (spelling c source)=logical) c.own in
- let printed,logical=allocate_star forbidden printed in
+ let printed,logical=allocate_suffix forbidden printed in
  (match kind with Function _ -> c.local_functions<-SS.add printed c.local_functions | _ -> ());
  c.local_symbols<-SS.add logical c.local_symbols;
  incr c.next; {id= !(c.next);source_name;package="";printed;logical;kind;labels=[]}

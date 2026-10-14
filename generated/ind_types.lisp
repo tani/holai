@@ -31,7 +31,7 @@
         FNIL
         FORALL_OPTION_THM
         FORALL_UNWIND_CONV
-        FORALL_UNWIND_CONV*
+        FORALL_UNWIND_CONV%
         INJA
         INJA_INJ
         INJF
@@ -61,7 +61,7 @@
         SCRUB_EQUATION
         TRIV_IMP_CONV
         UNWIND_CONV
-        UNWIND_CONV*
+        UNWIND_CONV%
         ZBOT
         ZCONSTR
         ZCONSTR_ZBOT
@@ -106,7 +106,7 @@
         mk_exclauses
         mk_injector
         mk_inls
-        mk_inls*
+        mk_inls%
         mk_newcon
         mk_newfun
         mk_rule
@@ -229,7 +229,7 @@
     FNIL
     FORALL_OPTION_THM
     FORALL_UNWIND_CONV
-    FORALL_UNWIND_CONV*
+    FORALL_UNWIND_CONV%
     INJA
     INJA_INJ
     INJF
@@ -259,7 +259,7 @@
     SCRUB_EQUATION
     TRIV_IMP_CONV
     UNWIND_CONV
-    UNWIND_CONV*
+    UNWIND_CONV%
     ZBOT
     ZCONSTR
     ZCONSTR_ZBOT
@@ -304,7 +304,7 @@
     mk_exclauses
     mk_injector
     mk_inls
-    mk_inls*
+    mk_inls%
     mk_newcon
     mk_newfun
     mk_rule
@@ -442,7 +442,7 @@
     MK_FORALL
     MK_EXISTS
     MATCH_MP
-    INSTANTIATE*)
+    INSTANTIATE%)
   (:shadowing-import-from
     :hol2cl.equal
     TRY_CONV
@@ -485,14 +485,14 @@
     mk_var
     mk_type
     mk_const
-    MK_COMB*
+    MK_COMB%
     mk_comb
     mk_abs
     is_vartype
     is_var
     is_comb
     INST_TYPE
-    INST*
+    INST%
     inst
     hyp
     get_type_arity
@@ -1143,14 +1143,14 @@
     (parse_term
       "ZRECSPACE (ZBOT:num->A->bool) /\\
     (!c i r. (!n. ZRECSPACE (r n)) ==> ZRECSPACE (ZCONSTR c i r))"))
-  ((tuple ZRECSPACE_RULES* ZRECSPACE_INDUCT* ZRECSPACE_CASES*)
+  ((tuple ZRECSPACE_RULES% ZRECSPACE_INDUCT% ZRECSPACE_CASES%)
     (setf
       ZRECSPACE_CASES
-      ZRECSPACE_CASES*
+      ZRECSPACE_CASES%
       ZRECSPACE_INDUCT
-      ZRECSPACE_INDUCT*
+      ZRECSPACE_INDUCT%
       ZRECSPACE_RULES
-      ZRECSPACE_RULES*)))
+      ZRECSPACE_RULES%)))
 
 (defparameter recspace_tydef
   (new_basic_type_definition
@@ -1419,8 +1419,8 @@
               (funcall
                 THEN
                 (FIRST_ASSUM
-                  (lambdac (t*)
-                    (GEN_REWRITE_TAC #'BINDER_CONV (cl:cons (funcall GSYM t*) nil))))
+                  (lambdac (t%)
+                    (GEN_REWRITE_TAC #'BINDER_CONV (cl:cons (funcall GSYM t%) nil))))
                 (REWRITE_TAC
                   (cl:cons (funcall GSYM CONSTR_BOT) (cl:cons EXISTS_UNIQUE_REFL nil))))
               (cl:cons
@@ -1584,40 +1584,45 @@
   (let
     ((sucivate
       (let ((zero (parse_term "0")) (suc (parse_term "SUC")))
+        (cl:declare (cl:ignorable zero suc))
         (lambdac (n) (funpow n (curry #'mk_comb suc) zero)))))
+    (cl:declare (cl:ignorable sucivate))
     (fletc
       ((SCRUB_EQUATION
         (eq arg~1107)
         (match arg~1107
           ((tuple th insts)
-            (let ((eq* (itlist subst (map (lambdac (t*) (cl:cons t* nil)) insts) eq)))
-              (match (dest_eq eq*)
-                ((tuple l r*)
+            (let ((eq% (itlist subst (map (lambdac (t%) (cl:cons t% nil)) insts) eq)))
+              (cl:declare (cl:ignorable eq%))
+              (match (dest_eq eq%)
+                ((tuple l r%)
                   (tuple
                     (funcall
                       MP
-                      (INST* (cl:cons (tuple r* l) nil) (funcall DISCH eq* th))
-                      (REFL r*))
-                    (cl:cons (tuple r* l) insts)))))))))
+                      (INST% (cl:cons (tuple r% l) nil) (funcall DISCH eq% th))
+                      (REFL r%))
+                    (cl:cons (tuple r% l) insts)))))))))
       (let
         ((justify_inductive_type_model
           (let
             ((t_tm (parse_term "T"))
               (n_tm (parse_term "n:num"))
               (beps_tm (parse_term "@x:bool. T")))
+            (cl:declare (cl:ignorable t_tm n_tm beps_tm))
             (labelsc
               ((munion
                 (s1 s2)
                 (if (= s1 nil)
                   s2
-                  (let ((h1 (hd s1)) (s1* (tl s1)))
+                  (let ((h1 (hd s1)) (s1% (tl s1)))
+                    (cl:declare (cl:ignorable h1 s1%))
                     (handler-case
                       (match (remove (lambdac (h2) (= h2 h1)) s2)
-                        ((tuple _ s2*) (cl:cons h1 (munion s1* s2*))))
+                        ((tuple _ s2%) (cl:cons h1 (munion s1% s2%))))
                       (hol2cl.runtime:ocaml-condition
                         (exception~1171)
                         (match exception~1171
-                          ((Failure _) (cl:cons h1 (munion s1* s2)))
+                          ((Failure _) (cl:cons h1 (munion s1% s2)))
                           (_ (raise exception~1171)))))))))
               (lambdac (def)
                 (match (unzip def)
@@ -1646,12 +1651,23 @@
                                 ((Failure _) bool_ty)
                                 (_ (raise exception~1236))))))
                         (recty (mk_type (tuple "recspace" (cl:cons pty nil))))
-                        (constr*
+                        (constr%
                           (mk_const (tuple "CONSTR" (cl:cons (tuple pty aty) nil))))
-                        (fcons*
+                        (fcons%
                           (mk_const (tuple "FCONS" (cl:cons (tuple recty aty) nil))))
                         (bot (mk_const (tuple "BOTTOM" (cl:cons (tuple pty aty) nil))))
                         (bottail (mk_abs (tuple n_tm bot))))
+                      (cl:declare
+                        (cl:ignorable
+                          tyargls
+                          alltys
+                          epstms
+                          pty
+                          recty
+                          constr%
+                          fcons%
+                          bot
+                          bottail))
                       (fletc
                         ((mk_constructor
                           (n arg~1295)
@@ -1661,37 +1677,39 @@
                                 ((ttys
                                   (map (lambdac (ty) (if (mem ty newtys) recty ty)) cargs))
                                   (args (funcall make_args "a" nil ttys)))
+                                (cl:declare (cl:ignorable ttys args))
                                 (match
-                                  (partition (lambdac (t*) (= (type_of t*) recty)) args)
+                                  (partition (lambdac (t%) (= (type_of t%) recty)) args)
                                   ((tuple rargs iargs)
                                     (labelsc
                                       ((mk_injector
-                                        (epstms* alltys* iargs*)
-                                        (if (= alltys* nil)
+                                        (epstms% alltys% iargs%)
+                                        (if (= alltys% nil)
                                           nil
-                                          (let ((ty (hd alltys*)))
+                                          (let ((ty (hd alltys%)))
+                                            (cl:declare (cl:ignorable ty))
                                             (handler-case
                                               (match
                                                 (remove
-                                                  (lambdac (t*) (= (type_of t*) ty))
-                                                  iargs*)
-                                                ((tuple a* iargs**)
+                                                  (lambdac (t%) (= (type_of t%) ty))
+                                                  iargs%)
+                                                ((tuple a% iargs%%)
                                                   (cl:cons
-                                                    a*
+                                                    a%
                                                     (mk_injector
-                                                      (tl epstms*)
-                                                      (tl alltys*)
-                                                      iargs**))))
+                                                      (tl epstms%)
+                                                      (tl alltys%)
+                                                      iargs%%))))
                                               (hol2cl.runtime:ocaml-condition
                                                 (exception~1324)
                                                 (match exception~1324
                                                   ((Failure _)
                                                     (cl:cons
-                                                      (hd epstms*)
+                                                      (hd epstms%)
                                                       (mk_injector
-                                                        (tl epstms*)
-                                                        (tl alltys*)
-                                                        iargs*)))
+                                                        (tl epstms%)
+                                                        (tl alltys%)
+                                                        iargs%)))
                                                   (_ (raise exception~1324)))))))))
                                       (let*
                                         ((iarg
@@ -1704,7 +1722,7 @@
                                               (match exception~1366
                                                 ((Failure _) beps_tm)
                                                 (_ (raise exception~1366))))))
-                                          (rarg (itlist (mk_binop fcons*) rargs bottail))
+                                          (rarg (itlist (mk_binop fcons%) rargs bottail))
                                           (conty
                                             (itlist
                                               #'mk_fun_ty
@@ -1713,10 +1731,11 @@
                                           (condef
                                             (list_mk_comb
                                               (tuple
-                                                constr*
+                                                constr%
                                                 (cl:cons
                                                   (funcall sucivate n)
                                                   (cl:cons iarg (cl:cons rarg nil)))))))
+                                        (cl:declare (cl:ignorable iarg rarg conty condef))
                                         (funcall
                                           mk_eq
                                           (tuple
@@ -1724,12 +1743,12 @@
                                             (list_mk_abs (tuple args condef)))))))))))))
                         (labelsc
                           ((mk_constructors
-                            (n rights*)
-                            (if (= rights* nil)
+                            (n rights%)
+                            (if (= rights% nil)
                               nil
                               (cl:cons
-                                (mk_constructor n (hd rights*))
-                                (mk_constructors (+ n 1) (tl rights*))))))
+                                (mk_constructor n (hd rights%))
+                                (mk_constructors (+ n 1) (tl rights%))))))
                           (let*
                             ((condefs
                               (mk_constructors
@@ -1742,22 +1761,23 @@
                                   (lambdac (arg~1470 acc)
                                     (match arg~1470
                                       ((tuple x l)
-                                        (append (map (lambdac (t*) (tuple x t*)) l) acc))))
+                                        (append (map (lambdac (t%) (tuple x t%)) l) acc))))
                                   def
                                   nil))
                               (idefs
                                 (map2
-                                  (lambdac (arg~1492 def*)
+                                  (lambdac (arg~1492 def%)
                                     (match arg~1492
-                                      ((tuple r* (tuple _ atys))
-                                        (tuple (tuple r* atys) def*))))
+                                      ((tuple r% (tuple _ atys))
+                                        (tuple (tuple r% atys) def%))))
                                   edefs
                                   condefs)))
+                            (cl:declare (cl:ignorable condefs conths predty edefs idefs))
                             (fletc
                               ((mk_rule
                                 (arg~1512)
                                 (match arg~1512
-                                  ((tuple (tuple r* a*) condef)
+                                  ((tuple (tuple r% a%) condef)
                                     (match (dest_eq condef)
                                       ((tuple left right)
                                         (match (funcall strip_abs right)
@@ -1779,13 +1799,13 @@
                                                           sofar)
                                                         sofar))
                                                     args
-                                                    a*
+                                                    a%
                                                     nil))
                                                 (conc
                                                   (mk_comb
                                                     (tuple
                                                       (mk_var
-                                                        (tuple (dest_vartype r*) predty))
+                                                        (tuple (dest_vartype r%) predty))
                                                       lapp)))
                                                 (rule
                                                   (if (= conds nil)
@@ -1795,6 +1815,8 @@
                                                       (tuple
                                                         (funcall list_mk_conj conds)
                                                         conc)))))
+                                              (cl:declare
+                                                (cl:ignorable lapp conds conc rule))
                                               (list_mk_forall (tuple args rule)))))))))))
                               (let*
                                 ((rules (funcall list_mk_conj (map #'mk_rule idefs)))
@@ -1803,19 +1825,24 @@
                                       derive_nonschematic_inductive_relations
                                       rules))
                                   (th1 (funcall prove_monotonicity_hyps th0)))
+                                (cl:declare (cl:ignorable rules th0 th1))
                                 (match (CONJ_PAIR th1)
                                   ((tuple th2a th2bc)
                                     (let ((th2b (funcall CONJUNCT1 th2bc)))
+                                      (cl:declare (cl:ignorable th2b))
                                       (tuple conths th2a th2b)))))))))))))))))
+        (cl:declare (cl:ignorable justify_inductive_type_model))
         (fletc
           ((prove_model_inhabitation
             (rth)
             (let ((srules (map #'SPEC_ALL (funcall CONJUNCTS rth))))
+              (cl:declare (cl:ignorable srules))
               (match (partition (o is_imp #'concl) srules)
                 ((tuple imps bases)
                   (let*
                     ((concs (append (map #'concl bases) (map (o #'rand #'concl) imps)))
                       (preds (setify (map (hol2cl.lib:repeat #'rator) concs))))
+                    (cl:declare (cl:ignorable concs preds))
                     (labelsc
                       ((exhaust_inhabitations
                         (ths sofar)
@@ -1833,13 +1860,14 @@
                                       (fst (funcall strip_comb (rand (concl th))))
                                       dunnit)))
                                 ths)))
+                          (cl:declare (cl:ignorable dunnit useful))
                           (if (= useful nil)
                             sofar
                             (fletc
                               ((follow_horn
                                 (thm)
                                 (let*
-                                  ((preds*
+                                  ((preds%
                                     (map
                                       (o (function-value #'fst 1) strip_comb)
                                       (funcall
@@ -1847,25 +1875,28 @@
                                         (funcall lhand (concl thm)))))
                                     (asms
                                       (map
-                                        (lambdac (p*)
+                                        (lambdac (p%)
                                           (find
                                             (lambdac (th)
-                                              (= (fst (funcall strip_comb (concl th))) p*))
+                                              (= (fst (funcall strip_comb (concl th))) p%))
                                             sofar))
-                                        preds*)))
+                                        preds%)))
+                                  (cl:declare (cl:ignorable preds% asms))
                                   (MATCH_MP thm (end_itlist CONJ asms)))))
                               (let ((newth (tryfind #'follow_horn useful)))
+                                (cl:declare (cl:ignorable newth))
                                 (exhaust_inhabitations ths (cl:cons newth sofar))))))))
                       (let*
                         ((ithms (exhaust_inhabitations imps bases))
                           (exths
                             (map
-                              (lambdac (p*)
+                              (lambdac (p%)
                                 (find
                                   (lambdac (th)
-                                    (= (fst (funcall strip_comb (concl th))) p*))
+                                    (= (fst (funcall strip_comb (concl th))) p%))
                                   ithms))
                               preds)))
+                        (cl:declare (cl:ignorable ithms exths))
                         exths))))))))
           (fletc
             ((define_inductive_type
@@ -1878,16 +1909,19 @@
                     (ASSUME (find (lambdac (eq) (= (funcall lhand eq) epred)) (hyp exth))))
                   (th2 (TRANS th1 (SUBS_CONV cdefs (rand (concl th1)))))
                   (th3 (EQ_MP (AP_THM th2 (rand extm)) exth)))
+                (cl:declare (cl:ignorable extm epred ename th1 th2 th3))
                 (match (itlist #'SCRUB_EQUATION (hyp th3) (tuple th3 nil))
                   ((tuple th4 _)
                     (let
                       ((mkname (string-concat "_mk_" ename))
                         (destname (string-concat "_dest_" ename)))
+                      (cl:declare (cl:ignorable mkname destname))
                       (match (new_basic_type_definition ename (tuple mkname destname) th4)
                         ((tuple bij1 bij2)
                           (let*
                             ((bij2a (AP_THM th2 (rand (rand (concl bij2)))))
                               (bij2b (TRANS bij2a bij2)))
+                            (cl:declare (cl:ignorable bij2a bij2b))
                             (tuple bij1 bij2b))))))))))
             (fletc
               ((define_inductive_type_constructor
@@ -1902,6 +1936,7 @@
                         (tuple nil bod))
                       ((tuple asms conc)
                         (let ((asmlist (map #'dest_comb asms)))
+                          (cl:declare (cl:ignorable asmlist))
                           (match (dest_comb conc)
                             ((tuple cpred cterm)
                               (match (funcall strip_comb cterm)
@@ -1913,9 +1948,10 @@
                                         (let*
                                           ((dest
                                             (snd (assoc (rev_assoc v asmlist) consindex)))
-                                            (ty* (hd (snd (dest_type (type_of dest)))))
-                                            (v* (mk_var (tuple (fst (dest_var v)) ty*))))
-                                          (tuple (mk_comb (tuple dest v*)) v*))
+                                            (ty% (hd (snd (dest_type (type_of dest)))))
+                                            (v% (mk_var (tuple (fst (dest_var v)) ty%))))
+                                          (cl:declare (cl:ignorable dest ty% v%))
+                                          (tuple (mk_comb (tuple dest v%)) v%))
                                         (hol2cl.runtime:ocaml-condition
                                           (exception~1900)
                                           (match exception~1900
@@ -1933,8 +1969,8 @@
                                             (defrt (list_mk_abs (tuple newargs defbod)))
                                             (expth
                                               (find
-                                                (lambdac (th*)
-                                                  (= (funcall lhand (concl th*)) oldcon))
+                                                (lambdac (th%)
+                                                  (= (funcall lhand (concl th%)) oldcon))
                                                 defs))
                                             (rexpth (SUBS_CONV (cl:cons expth nil) defrt))
                                             (deflf
@@ -1948,6 +1984,15 @@
                                                 (funcall
                                                   mk_eq
                                                   (tuple deflf (rand (concl rexpth)))))))
+                                          (cl:declare
+                                            (cl:ignorable
+                                              retmk
+                                              defbod
+                                              defrt
+                                              expth
+                                              rexpth
+                                              deflf
+                                              defth))
                                           (TRANS defth (SYM rexpth)))))))))))))))))
               (fletc
                 ((instantiate_induction_theorem
@@ -1967,11 +2012,12 @@
                                 #'body)
                               #'rand)
                             (funcall hol2cl.basics:conjuncts (rand bod))))
-                          (consindex*
+                          (consindex%
                             (map
                               (lambdac (v)
-                                (let ((w* (rev_assoc v corlist)))
-                                  (tuple w* (assoc w* consindex))))
+                                (let ((w% (rev_assoc v corlist)))
+                                  (cl:declare (cl:ignorable w%))
+                                  (tuple w% (assoc w% consindex))))
                               avs))
                           (recty
                             (o
@@ -1993,7 +2039,7 @@
                                     #'type_of)
                                   (function-value #'snd 1))
                                 (function-value #'snd 1))
-                              consindex*))
+                              consindex%))
                           (ptypes (map (C #'mk_fun_ty bool_ty) newtys))
                           (preds (funcall make_args "P" nil ptypes))
                           (args (funcall make_args "x" nil (map (K recty) preds)))
@@ -2001,20 +2047,30 @@
                             (map2
                               (lambdac (arg~2129 arg~2134)
                                 (match arg~2129
-                                  ((tuple r* (tuple m d))
+                                  ((tuple r% (tuple m d))
                                     (match arg~2134
-                                      ((tuple p* a*)
+                                      ((tuple p% a%)
                                         (mk_abs
                                           (tuple
-                                            a*
+                                            a%
                                             (funcall
                                               mk_conj
                                               (tuple
-                                                (mk_comb (tuple r* a*))
+                                                (mk_comb (tuple r% a%))
                                                 (mk_comb
-                                                  (tuple p* (mk_comb (tuple m a*)))))))))))))
-                              consindex*
+                                                  (tuple p% (mk_comb (tuple m a%)))))))))))))
+                              consindex%
                               (zip preds args))))
+                        (cl:declare
+                          (cl:ignorable
+                            corlist
+                            consindex%
+                            recty
+                            newtys
+                            ptypes
+                            preds
+                            args
+                            lambs))
                         (SPECL lambs ith))))))
                 (fletc
                   ((pullback_induction_clause
@@ -2028,6 +2084,7 @@
                             (GEN_REWRITE_RULE
                               #'I
                               (map (function-value #'snd 1) tybijpairs)))))
+                      (cl:declare (cl:ignorable PRERULE IPRULE))
                       (lambdac (rthm tm)
                         (match (funcall strip_forall tm)
                           ((tuple avs bimp)
@@ -2039,6 +2096,7 @@
                                       (map
                                         (CONV_RULE #'BETA_CONV)
                                         (funcall CONJUNCTS (ASSUME ant)))))
+                                    (cl:declare (cl:ignorable ths))
                                     (match (unzip (map #'CONJ_PAIR ths))
                                       ((tuple tths pths)
                                         (let*
@@ -2071,11 +2129,11 @@
                                                   (funcall lhand asmin))))
                                             (argsgen
                                               (map
-                                                (lambdac (tm*)
+                                                (lambdac (tm%)
                                                   (mk_var
                                                     (tuple
-                                                      (fst (dest_var (rand tm*)))
-                                                      (type_of tm*))))
+                                                      (fst (dest_var (rand tm%)))
+                                                      (type_of tm%))))
                                                 argsin))
                                             (asmgen
                                               (funcall subst (zip argsgen argsin) asmin))
@@ -2088,12 +2146,29 @@
                                                       (rand (rand asmgen))))
                                                   asmgen)))
                                             (th1
-                                              (INST*
+                                              (INST%
                                                 (zip argsin argsgen)
                                                 (SPEC_ALL (ASSUME asmquant))))
                                             (th2 (funcall MP th1 (end_itlist CONJ pths)))
                                             (th3
                                               (EQ_MP (SYM conth3) (funcall CONJ tth th2))))
+                                          (cl:declare
+                                            (cl:ignorable
+                                              tth
+                                              mths
+                                              conth1
+                                              contm1
+                                              conth2
+                                              conth3
+                                              lctms
+                                              asmin
+                                              argsin
+                                              argsgen
+                                              asmgen
+                                              asmquant
+                                              th1
+                                              th2
+                                              th3))
                                           (funcall
                                             DISCH
                                             asmquant
@@ -2116,6 +2191,16 @@
                                         asmgen)))
                                   (th2 (SPEC_ALL (ASSUME asmquant)))
                                   (th3 (EQ_MP (SYM conth3) (funcall CONJ tth th2))))
+                                (cl:declare
+                                  (cl:ignorable
+                                    con
+                                    conth2
+                                    tth
+                                    conth3
+                                    asmgen
+                                    asmquant
+                                    th2
+                                    th3))
                                 (funcall DISCH asmquant (funcall GENL avs th3))))))))))
                   (fletc
                     ((finish_induction_conclusion
@@ -2130,19 +2215,21 @@
                                   tybij1)
                                 (GEN_REWRITE_RULE LAND_CONV tybij2)))
                               (FINRULE (GEN_REWRITE_RULE #'RAND_CONV tybij1)))
+                            (cl:declare (cl:ignorable PRERULE FINRULE))
                             (lambdac (th)
                               (match (funcall dest_forall (concl th))
                                 ((tuple av bimp)
                                   (let ((pv (funcall lhand (body (rator (rand bimp))))))
+                                    (cl:declare (cl:ignorable pv))
                                     (match (dest_comb pv)
-                                      ((tuple p* v)
-                                        (match (assoc p* consindex)
+                                      ((tuple p% v)
+                                        (match (assoc p% consindex)
                                           ((tuple mk dest)
                                             (let*
                                               ((ty (hd (snd (dest_type (type_of dest)))))
-                                                (v*
+                                                (v%
                                                   (mk_var (tuple (fst (dest_var v)) ty)))
-                                                (dv (mk_comb (tuple dest v*)))
+                                                (dv (mk_comb (tuple dest v%)))
                                                 (th1
                                                   (funcall PRERULE (funcall SPEC dv th)))
                                                 (th2
@@ -2152,9 +2239,11 @@
                                                     (REFL
                                                       (rand (funcall lhand (concl th1))))))
                                                 (th3 (CONV_RULE #'BETA_CONV th2)))
+                                              (cl:declare
+                                                (cl:ignorable ty v% dv th1 th2 th3))
                                               (funcall
                                                 GEN
-                                                v*
+                                                v%
                                                 (funcall FINRULE (funcall CONJUNCT2 th3)))))))))))))))))
                     (fletc
                       ((derive_induction_theorem
@@ -2167,8 +2256,8 @@
                               (funcall
                                 hol2cl.basics:conjuncts
                                 (funcall lhand (concl iith)))))
-                            (asm* (funcall list_mk_conj (map (o lhand #'concl) bths)))
-                            (ths (map2 MP bths (funcall CONJUNCTS (ASSUME asm*))))
+                            (asm% (funcall list_mk_conj (map (o lhand #'concl) bths)))
+                            (ths (map2 MP bths (funcall CONJUNCTS (ASSUME asm%))))
                             (th1 (funcall MP iith (end_itlist CONJ ths)))
                             (th2
                               (end_itlist
@@ -2176,7 +2265,7 @@
                                 (map
                                   (finish_induction_conclusion consindex tybijpairs)
                                   (funcall CONJUNCTS th1))))
-                            (th3 (funcall DISCH asm* th2))
+                            (th3 (funcall DISCH asm% th2))
                             (preds
                               (map
                                 (o (o #'rator #'body) #'rand)
@@ -2189,9 +2278,12 @@
                                   lhand)
                                 (hyp th4)))
                             (th5 (itlist DISCH pasms th4)))
+                          (cl:declare
+                            (cl:ignorable bths asm% ths th1 th2 th3 preds th4 pasms th5))
                           (match (itlist #'SCRUB_EQUATION (hyp th5) (tuple th5 nil))
                             ((tuple th6 _)
                               (let ((th7 (UNDISCH_ALL th6)))
+                                (cl:declare (cl:ignorable th7))
                                 (fst (itlist #'SCRUB_EQUATION (hyp th7) (tuple th7 nil)))))))))
                       (fletc
                         ((create_recursive_functions
@@ -2226,17 +2318,18 @@
                                   "fn"
                                   nil
                                   (map (C #'mk_fun_ty ranty) domtys))))
+                            (cl:declare (cl:ignorable domtys recty ranty fn fns))
                             (let*
                               ((args (funcall make_args "a" nil domtys))
                                 (rights
                                   (map2
-                                    (lambdac (arg~2707 a*)
+                                    (lambdac (arg~2707 a%)
                                       (match arg~2707
                                         ((tuple _ (tuple _ d))
                                           (mk_abs
                                             (tuple
-                                              a*
-                                              (mk_comb (tuple fn (mk_comb (tuple d a*)))))))))
+                                              a%
+                                              (mk_comb (tuple fn (mk_comb (tuple d a%)))))))))
                                     consindex
                                     args))
                                 (eqs (map2 (curry mk_eq) fns rights))
@@ -2245,7 +2338,7 @@
                                   (map
                                     (lambdac (th1)
                                       (tryfind
-                                        (lambdac (th2) (MK_COMB* (tuple th2 th1)))
+                                        (lambdac (th2) (MK_COMB% (tuple th2 th1)))
                                         fdefs))
                                     conthms))
                                 (fxths2
@@ -2253,6 +2346,8 @@
                                     (lambdac (th)
                                       (TRANS th (BETA_CONV (rand (concl th)))))
                                     fxths1)))
+                              (cl:declare
+                                (cl:ignorable args rights eqs fdefs fxths1 fxths2))
                               (fletc
                                 ((mk_tybijcons
                                   (arg~2765)
@@ -2260,7 +2355,7 @@
                                     ((tuple th1 th2)
                                       (let*
                                         ((th3
-                                          (INST*
+                                          (INST%
                                             (cl:cons
                                               (tuple
                                                 (rand (funcall lhand (concl th1)))
@@ -2271,6 +2366,7 @@
                                             (AP_TERM
                                               (rator (funcall lhand (rand (concl th2))))
                                               th1)))
+                                        (cl:declare (cl:ignorable th3 th4))
                                         (EQ_MP (SYM th3) th4))))))
                                 (let
                                   ((SCONV
@@ -2279,10 +2375,12 @@
                                       (GEN_REWRITE_RULE
                                         #'I
                                         (map (function-value #'snd 1) tybijpairs))))
+                                  (cl:declare (cl:ignorable SCONV ERULE))
                                   (fletc
                                     ((simplify_fxthm
                                       (rthm fxth)
                                       (let ((pat (funpow 4 #'rand (concl fxth))))
+                                        (cl:declare (cl:ignorable pat))
                                         (if
                                           (funcall
                                             is_imp
@@ -2302,9 +2400,10 @@
                                                   (funcall lhand (concl th1))))
                                               (ths2
                                                 (map
-                                                  (lambdac (t*)
-                                                    (EQ_MP (SYM (funcall SCONV t*)) TRUTH))
+                                                  (lambdac (t%)
+                                                    (EQ_MP (SYM (funcall SCONV t%)) TRUTH))
                                                   tms1)))
+                                            (cl:declare (cl:ignorable th1 tms1 ths2))
                                             (funcall
                                               ERULE
                                               (funcall MP th1 (end_itlist CONJ ths2))))
@@ -2322,6 +2421,7 @@
                                             (lambdac (th1) (o (TRANS th1) (AP_TERM fn)))
                                             fxths2
                                             fxths3)))
+                                      (cl:declare (cl:ignorable fxths3 fxths4))
                                       (fletc
                                         ((cleanup_fxthm
                                           (cth fxth)
@@ -2336,6 +2436,7 @@
                                                   RIGHT_BETAS
                                                   tms
                                                   (ASSUME (hd (hyp cth))))))
+                                            (cl:declare (cl:ignorable tms kth))
                                             (TRANS fxth (AP_TERM fn kth)))))
                                         (let*
                                           ((fxth5
@@ -2353,6 +2454,7 @@
                                                   lhand)
                                                 (hyp fxth5)))
                                             (fxth6 (itlist DISCH pasms fxth5)))
+                                          (cl:declare (cl:ignorable fxth5 pasms fxth6))
                                           (match
                                             (itlist
                                               #'SCRUB_EQUATION
@@ -2360,6 +2462,7 @@
                                               (tuple fxth6 nil))
                                             ((tuple fxth7 _)
                                               (let ((fxth8 (UNDISCH_ALL fxth7)))
+                                                (cl:declare (cl:ignorable fxth8))
                                                 (fst
                                                   (itlist
                                                     #'SCRUB_EQUATION
@@ -2371,6 +2474,7 @@
                               ((s (parse_term "s:num->Z"))
                                 (zty (parse_type "Z"))
                                 (numty (parse_type "num")))
+                              (cl:declare (cl:ignorable s zty numty))
                               (labelsc
                                 ((extract_arg
                                   (tup v)
@@ -2385,11 +2489,13 @@
                                               (if (free_in v t1)
                                                 hol2cl.pair:FST
                                                 hol2cl.pair:SND)))
-                                            (tup* (rand (concl PAIR_th))))
-                                          (if (= tup* v)
+                                            (tup% (rand (concl PAIR_th))))
+                                          (cl:declare (cl:ignorable PAIR_th tup%))
+                                          (if (= tup% v)
                                             PAIR_th
                                             (let
                                               ((th (extract_arg (rand (concl PAIR_th)) v)))
+                                              (cl:declare (cl:ignorable th))
                                               (SUBS (cl:cons (SYM PAIR_th) nil) th)))))))))
                                 (lambdac (consindex)
                                   (let*
@@ -2397,8 +2503,9 @@
                                       (hd
                                         (snd (dest_type (type_of (fst (hd consindex)))))))
                                       (domty (hd (snd (dest_type recty))))
-                                      (i* (mk_var (tuple "i" domty)))
-                                      (r* (mk_var (tuple "r" (mk_fun_ty numty recty)))))
+                                      (i% (mk_var (tuple "i" domty)))
+                                      (r% (mk_var (tuple "r" (mk_fun_ty numty recty)))))
+                                    (cl:declare (cl:ignorable recty domty i% r%))
                                     (let*
                                       ((mks
                                         (map
@@ -2408,11 +2515,12 @@
                                           consindex))
                                         (mkindex
                                           (map
-                                            (lambdac (t*)
+                                            (lambdac (t%)
                                               (tuple
-                                                (hd (tl (snd (dest_type (type_of t*)))))
-                                                t*))
+                                                (hd (tl (snd (dest_type (type_of t%)))))
+                                                t%))
                                             mks)))
+                                      (cl:declare (cl:ignorable mks mkindex))
                                       (lambdac (cth)
                                         (let*
                                           ((artms
@@ -2421,6 +2529,7 @@
                                                 strip_comb
                                                 (rand (rand (concl cth))))))
                                             (artys (mapfilter (o #'type_of #'rand) artms)))
+                                          (cl:declare (cl:ignorable artms artys))
                                           (match (funcall strip_abs (rand (hd (hyp cth))))
                                             ((tuple args bod)
                                               (match (dest_comb bod)
@@ -2435,14 +2544,14 @@
                                                               (map
                                                                 (extract_arg itm)
                                                                 iargs))
-                                                              (cargs*
+                                                              (cargs%
                                                                 (map
                                                                   (o
                                                                     (o
                                                                       (funcall
                                                                         subst
                                                                         (cl:cons
-                                                                          (tuple i* itm)
+                                                                          (tuple i% itm)
                                                                           nil))
                                                                       lhand)
                                                                     #'concl)
@@ -2459,25 +2568,25 @@
                                                                       1))))
                                                               (rindexed
                                                                 (map
-                                                                  (curry #'mk_comb r*)
+                                                                  (curry #'mk_comb r%)
                                                                   indices))
-                                                              (rargs*
+                                                              (rargs%
                                                                 (map2
-                                                                  (lambdac (a* rx)
+                                                                  (lambdac (a% rx)
                                                                     (mk_comb
                                                                       (tuple
-                                                                        (assoc a* mkindex)
+                                                                        (assoc a% mkindex)
                                                                         rx)))
                                                                   artys
                                                                   rindexed))
-                                                              (sargs*
+                                                              (sargs%
                                                                 (map
                                                                   (curry #'mk_comb s)
                                                                   indices))
                                                               (allargs
                                                                 (append
-                                                                  cargs*
-                                                                  (append rargs* sargs*)))
+                                                                  cargs%
+                                                                  (append rargs% sargs%)))
                                                               (funty
                                                                 (itlist
                                                                   (o
@@ -2498,12 +2607,24 @@
                                                               (funarg
                                                                 (mk_var
                                                                   (tuple funname funty))))
+                                                            (cl:declare
+                                                              (cl:ignorable
+                                                                xths
+                                                                cargs%
+                                                                indices
+                                                                rindexed
+                                                                rargs%
+                                                                sargs%
+                                                                allargs
+                                                                funty
+                                                                funname
+                                                                funarg))
                                                             (list_mk_abs
                                                               (tuple
                                                                 (cl:cons
-                                                                  i*
+                                                                  i%
                                                                   (cl:cons
-                                                                    r*
+                                                                    r%
                                                                     (cl:cons s nil)))
                                                                 (list_mk_comb
                                                                   (tuple funarg allargs)))))))))))))))))))))
@@ -2516,6 +2637,7 @@
                                     (funcall
                                       REPEATC
                                       (GEN_REWRITE_CONV #'I (cl:cons FCONS nil))))))
+                                (cl:declare (cl:ignorable CCONV))
                                 (lambdac (tybijpairs consindex conthms rath)
                                   (let*
                                     ((isocons
@@ -2525,14 +2647,15 @@
                                           consindex)
                                         conthms))
                                       (ty (type_of (hd isocons)))
-                                      (fcons*
+                                      (fcons%
                                         (mk_const
                                           (tuple "FCONS" (cl:cons (tuple ty aty) nil))))
-                                      (fnil*
+                                      (fnil%
                                         (mk_const
                                           (tuple "FNIL" (cl:cons (tuple ty aty) nil)))))
+                                    (cl:declare (cl:ignorable isocons ty fcons% fnil%))
                                     (let*
-                                      ((bigfun (itlist (mk_binop fcons*) isocons fnil*))
+                                      ((bigfun (itlist (mk_binop fcons%) isocons fnil%))
                                         (eth (ISPEC bigfun CONSTR_REC))
                                         (fn
                                           (rator
@@ -2551,11 +2674,11 @@
                                         (LCONV (funcall REWR_CONV (ASSUME betm)))
                                         (fnths
                                           (map
-                                            (lambdac (t*)
+                                            (lambdac (t%)
                                               (funcall
                                                 RIGHT_BETAS
-                                                (cl:cons (bndvar (rand t*)) nil)
-                                                (ASSUME t*)))
+                                                (cl:cons (bndvar (rand t%)) nil)
+                                                (ASSUME t%)))
                                             (hyp rath)))
                                         (SIMPER
                                           (PURE_REWRITE_RULE
@@ -2568,6 +2691,15 @@
                                                   (cl:cons
                                                     hol2cl.pair:SND
                                                     (cl:cons FCONS (cl:cons BETA_THM nil)))))))))
+                                      (cl:declare
+                                        (cl:ignorable
+                                          bigfun
+                                          eth
+                                          fn
+                                          betm
+                                          LCONV
+                                          fnths
+                                          SIMPER))
                                       (fletc
                                         ((hackdown_rath
                                           (th)
@@ -2599,6 +2731,8 @@
                                                     (TRANS
                                                       th4
                                                       (BETA_CONV (rand (concl th4))))))
+                                                (cl:declare
+                                                  (cl:ignorable wargs th1 th2 th3 th4 th5))
                                                 (funcall GENL wargs (funcall SIMPER th5)))))))
                                         (let*
                                           ((rthm
@@ -2624,17 +2758,18 @@
                                                           (function-value #'snd 1))
                                                         (function-value #'snd 1))
                                                       consindex)))
+                                                (cl:declare (cl:ignorable unseqs tys))
                                                 (map
-                                                  (lambdac (ty*)
+                                                  (lambdac (ty%)
                                                     (find
-                                                      (lambdac (t*)
+                                                      (lambdac (t%)
                                                         (=
                                                           (hd
                                                             (snd
                                                               (dest_type
                                                                 (type_of
-                                                                  (funcall lhand t*)))))
-                                                          ty*))
+                                                                  (funcall lhand t%)))))
+                                                          ty%))
                                                       unseqs))
                                                   tys)))
                                             (rethm (itlist EXISTS_EQUATION seqs rthm))
@@ -2650,7 +2785,13 @@
                                                 (funcall
                                                   hol2cl.basics:conjuncts
                                                   (concl rthm)))))
+                                          (cl:declare
+                                            (cl:ignorable rthm seqs rethm fethm pcons))
                                           (funcall GENL pcons fethm)))))))))
+                          (cl:declare
+                            (cl:ignorable
+                              create_recursion_iso_constructor
+                              derive_recursion_theorem))
                           (lambdac (def)
                             (match (funcall justify_inductive_type_model def)
                               ((tuple defs rth ith)
@@ -2665,6 +2806,7 @@
                                           (match arg~3544
                                             ((tuple th _)
                                               (let ((tm (funcall lhand (concl th))))
+                                                (cl:declare (cl:ignorable tm))
                                                 (tuple (rator tm) (rator (rand tm)))))))
                                         tybijpairs))
                                     (consindex (zip preds mkdests))
@@ -2678,6 +2820,7 @@
                                           (let
                                             ((args
                                               (fst (funcall strip_abs (rand (concl th))))))
+                                            (cl:declare (cl:ignorable args))
                                             (funcall RIGHT_BETAS args th)))
                                         condefs))
                                     (iith (instantiate_induction_theorem consindex ith))
@@ -2701,6 +2844,19 @@
                                         consindex
                                         conthms
                                         rath)))
+                                  (cl:declare
+                                    (cl:ignorable
+                                      neths
+                                      tybijpairs
+                                      preds
+                                      mkdests
+                                      consindex
+                                      condefs
+                                      conthms
+                                      iith
+                                      fth
+                                      rath
+                                      kth))
                                   (tuple fth kth))))))))))))))))))
 
 ;; (* ------------------------------------------------------------------------- *)
@@ -2740,11 +2896,12 @@
         (let
           ((parse_type_definition
             (listof #'parse_type_clause (a (make-Resword ";")) "type definition")))
+          (cl:declare (cl:ignorable parse_type_definition))
           (lambdac (s)
             (match (o (o parse_type_definition lex) #'explode s)
-              ((tuple spec* rst)
+              ((tuple spec% rst)
                 (if (= rst nil)
-                  spec*
+                  spec%
                   (failwith "parse_inductive_type_specification: junk after def"))))))))))
 
 ;; (* ------------------------------------------------------------------------- *)
@@ -2760,8 +2917,8 @@
   (funcall
     define_type_raw~1
     (funcall parse_inductive_type_specification "sum = INL A | INR B"))
-  ((tuple sum_INDUCT* sum_RECURSION*)
-    (setf sum_INDUCT sum_INDUCT* sum_RECURSION sum_RECURSION*)))
+  ((tuple sum_INDUCT% sum_RECURSION%)
+    (setf sum_INDUCT sum_INDUCT% sum_RECURSION sum_RECURSION%)))
 
 (defparameter OUTL
   (funcall new_recursive_definition sum_RECURSION (parse_term "OUTL (INL x :A+B) = x")))
@@ -2784,13 +2941,15 @@
       (let
         ((ELIM_OUTCOMBS
           (GEN_REWRITE_RULE TOP_DEPTH_CONV (cl:cons OUTL (cl:cons OUTR nil)))))
+        (cl:declare (cl:ignorable ELIM_OUTCOMBS))
         (labelsc
           ((mk_sum
             (tys)
-            (let ((k* (funcall length tys)))
-              (if (= k* 1)
+            (let ((k% (funcall length tys)))
+              (cl:declare (cl:ignorable k%))
+              (if (= k% 1)
                 (hd tys)
-                (match (chop_list (int-div k* 2) tys)
+                (match (chop_list (int-div k% 2) tys)
                   ((tuple tys1 tys2)
                     (mk_type
                       (tuple "sum" (cl:cons (mk_sum tys1) (cl:cons (mk_sum tys2) nil))))))))))
@@ -2804,6 +2963,7 @@
                     (match (dest_type ty)
                       ((tuple _ (cl:cons ty1 (cl:cons ty2 nil)))
                         (let ((inls1 (mk_inls ty1)) (inls2 (mk_inls ty2)))
+                          (cl:declare (cl:ignorable inls1 inls2))
                           (let
                             ((inl
                               (mk_const
@@ -2817,49 +2977,55 @@
                                     (cl:cons
                                       (tuple ty1 aty)
                                       (cl:cons (tuple ty2 bty) nil))))))
+                            (cl:declare (cl:ignorable inl inr))
                             (append
                               (map (curry #'mk_comb inl) inls1)
                               (map (curry #'mk_comb inr) inls2)))))))))
                 (lambdac (ty)
                   (let ((bods (mk_inls ty)))
-                    (map (lambdac (t*) (mk_abs (tuple (find_term #'is_var t*) t*))) bods)))))
+                    (cl:declare (cl:ignorable bods))
+                    (map (lambdac (t%) (mk_abs (tuple (find_term #'is_var t%) t%))) bods)))))
               (mk_outls
                 (labelsc
-                  ((mk_inls*
+                  ((mk_inls%
                     (sof ty)
                     (if (funcall is_vartype ty)
                       (cl:cons sof nil)
                       (match (dest_type ty)
                         ((tuple _ (cl:cons ty1 (cl:cons ty2 nil)))
                           (let
-                            ((outl*
+                            ((outl%
                               (mk_const
                                 (tuple
                                   "OUTL"
                                   (cl:cons (tuple ty1 aty) (cl:cons (tuple ty2 bty) nil)))))
-                              (outr*
+                              (outr%
                                 (mk_const
                                   (tuple
                                     "OUTR"
                                     (cl:cons
                                       (tuple ty1 aty)
                                       (cl:cons (tuple ty2 bty) nil))))))
+                            (cl:declare (cl:ignorable outl% outr%))
                             (append
-                              (mk_inls* (mk_comb (tuple outl* sof)) ty1)
-                              (mk_inls* (mk_comb (tuple outr* sof)) ty2))))))))
+                              (mk_inls% (mk_comb (tuple outl% sof)) ty1)
+                              (mk_inls% (mk_comb (tuple outr% sof)) ty2))))))))
                   (lambdac (ty)
                     (let ((x (mk_var (tuple "x" ty))))
-                      (map (curry #'mk_abs x) (mk_inls* x ty)))))))
+                      (cl:declare (cl:ignorable x))
+                      (map (curry #'mk_abs x) (mk_inls% x ty)))))))
+            (cl:declare (cl:ignorable mk_inls mk_outls))
             (fletc
               ((mk_newfun
-                (fn outl*)
+                (fn outl%)
                 (match (dest_var fn)
                   ((tuple s ty)
                     (let* ((dty (hd (snd (dest_type ty)))) (x (mk_var (tuple "x" dty))))
-                      (match (dest_abs outl*)
+                      (cl:declare (cl:ignorable dty x))
+                      (match (dest_abs outl%)
                         ((tuple y bod)
                           (let*
-                            ((r*
+                            ((r%
                               (mk_abs
                                 (tuple
                                   x
@@ -2867,8 +3033,9 @@
                                     vsubst
                                     (cl:cons (tuple (mk_comb (tuple fn x)) y) nil)
                                     bod))))
-                              (l (mk_var (tuple s (type_of r*))))
-                              (th1 (ASSUME (funcall mk_eq (tuple l r*)))))
+                              (l (mk_var (tuple s (type_of r%))))
+                              (th1 (ASSUME (funcall mk_eq (tuple l r%)))))
+                            (cl:declare (cl:ignorable r% l th1))
                             (funcall RIGHT_BETAS (cl:cons x nil) th1)))))))))
               (lambdac (th)
                 (match (funcall strip_forall (concl th))
@@ -2876,17 +3043,19 @@
                     (match (funcall strip_exists ebod)
                       ((tuple evs bod)
                         (let ((n (funcall length evs)))
+                          (cl:declare (cl:ignorable n))
                           (if (= n 1)
                             th
                             (let*
                               ((tys
                                 (map
-                                  (lambdac (i*)
-                                    (mk_vartype (string-concat "Z" (string-of-int i*))))
+                                  (lambdac (i%)
+                                    (mk_vartype (string-concat "Z" (string-of-int i%))))
                                   (-- 0 (- n 1))))
                                 (sty (mk_sum tys))
                                 (inls (funcall mk_inls sty))
                                 (outls (funcall mk_outls sty)))
+                              (cl:declare (cl:ignorable tys sty inls outls))
                               (let*
                                 ((zty
                                   (type_of
@@ -2896,52 +3065,62 @@
                                           strip_forall
                                           (hd (funcall hol2cl.basics:conjuncts bod)))))))
                                   (ith (INST_TYPE (cl:cons (tuple sty zty) nil) th)))
+                                (cl:declare (cl:ignorable zty ith))
                                 (match (funcall strip_forall (concl ith))
-                                  ((tuple avs* ebod*)
-                                    (match (funcall strip_exists ebod*)
-                                      ((tuple evs* bod*)
+                                  ((tuple avs% ebod%)
+                                    (match (funcall strip_exists ebod%)
+                                      ((tuple evs% bod%)
                                         (let*
-                                          ((fns* (map2 #'mk_newfun evs* outls))
+                                          ((fns% (map2 #'mk_newfun evs% outls))
                                             (fnalist
                                               (zip
-                                                evs*
-                                                (map (o (o #'rator lhs) #'concl) fns*)))
-                                            (inlalist (zip evs* inls))
-                                            (outlalist (zip evs* outls)))
+                                                evs%
+                                                (map (o (o #'rator lhs) #'concl) fns%)))
+                                            (inlalist (zip evs% inls))
+                                            (outlalist (zip evs% outls)))
+                                          (cl:declare
+                                            (cl:ignorable fns% fnalist inlalist outlalist))
                                           (fletc
                                             ((hack_clause
                                               (tm)
                                               (match (funcall strip_forall tm)
                                                 ((tuple avs bod)
                                                   (match (dest_eq bod)
-                                                    ((tuple l r*)
-                                                      (match (funcall strip_comb r*)
+                                                    ((tuple l r%)
+                                                      (match (funcall strip_comb r%)
                                                         ((tuple fn args)
                                                           (let
                                                             ((pargs
                                                               (map
-                                                                (lambdac (a*)
+                                                                (lambdac (a%)
                                                                   (let
-                                                                    ((g*
+                                                                    ((g%
                                                                       (funcall
                                                                         genvar
-                                                                        (type_of a*))))
-                                                                    (if (is_var a*)
-                                                                      (tuple g* g*)
+                                                                        (type_of a%))))
+                                                                    (cl:declare
+                                                                      (cl:ignorable g%))
+                                                                    (if (is_var a%)
+                                                                      (tuple g% g%)
                                                                       (let
-                                                                        ((outl*
+                                                                        ((outl%
                                                                           (assoc
-                                                                            (rator a*)
+                                                                            (rator a%)
                                                                             outlalist)))
+                                                                        (cl:declare
+                                                                          (cl:ignorable
+                                                                            outl%))
                                                                         (tuple
                                                                           (mk_comb
                                                                             (tuple
-                                                                              outl*
-                                                                              g*))
-                                                                          g*)))))
+                                                                              outl%
+                                                                              g%))
+                                                                          g%)))))
                                                                 args)))
+                                                            (cl:declare
+                                                              (cl:ignorable pargs))
                                                             (match (unzip pargs)
-                                                              ((tuple args* args**)
+                                                              ((tuple args% args%%)
                                                                 (let*
                                                                   ((inl
                                                                     (assoc
@@ -2957,31 +3136,38 @@
                                                                         (o
                                                                           #'mk_fun_ty
                                                                           #'type_of)
-                                                                        args*
+                                                                        args%
                                                                         rty))
-                                                                    (fn*
+                                                                    (fn%
                                                                       (mk_var
                                                                         (tuple
                                                                           (fst
                                                                             (dest_var fn))
                                                                           nty)))
-                                                                    (r**
+                                                                    (r%%
                                                                       (list_mk_abs
                                                                         (tuple
-                                                                          args**
+                                                                          args%%
                                                                           (mk_comb
                                                                             (tuple
                                                                               inl
                                                                               (list_mk_comb
                                                                                 (tuple
-                                                                                  fn*
-                                                                                  args*))))))))
-                                                                  (tuple r** fn)))))))))))))
+                                                                                  fn%
+                                                                                  args%))))))))
+                                                                  (cl:declare
+                                                                    (cl:ignorable
+                                                                      inl
+                                                                      rty
+                                                                      nty
+                                                                      fn%
+                                                                      r%%))
+                                                                  (tuple r%% fn)))))))))))))
                                             (let*
                                               ((defs
                                                 (map
                                                   #'hack_clause
-                                                  (funcall hol2cl.basics:conjuncts bod*)))
+                                                  (funcall hol2cl.basics:conjuncts bod%)))
                                                 (jth
                                                   (funcall
                                                     BETA_RULE
@@ -2992,25 +3178,27 @@
                                                   (ASSUME
                                                     (snd
                                                       (funcall strip_exists (concl jth))))))
+                                              (cl:declare (cl:ignorable defs jth bth))
                                               (fletc
                                                 ((finish_clause
-                                                  (th*)
+                                                  (th%)
                                                   (match
-                                                    (funcall strip_forall (concl th*))
+                                                    (funcall strip_forall (concl th%))
                                                     ((tuple avs bod)
                                                       (let
-                                                        ((outl*
+                                                        ((outl%
                                                           (assoc
                                                             (rator (funcall lhand bod))
                                                             outlalist)))
+                                                        (cl:declare (cl:ignorable outl%))
                                                         (funcall
                                                           GENL
                                                           avs
                                                           (funcall
                                                             BETA_RULE
                                                             (AP_TERM
-                                                              outl*
-                                                              (SPECL avs th*)))))))))
+                                                              outl%
+                                                              (SPECL avs th%)))))))))
                                                 (let*
                                                   ((cth
                                                     (end_itlist
@@ -3022,7 +3210,7 @@
                                                     (eth
                                                       (GEN_REWRITE_RULE
                                                         ONCE_DEPTH_CONV
-                                                        (map #'SYM fns*)
+                                                        (map #'SYM fns%)
                                                         dth))
                                                     (fth
                                                       (itlist
@@ -3031,26 +3219,26 @@
                                                           (function-value #'snd 1)
                                                           fnalist)
                                                         eth))
-                                                    (dtms (map (o #'hd #'hyp) fns*))
+                                                    (dtms (map (o #'hd #'hyp) fns%))
                                                     (gth
                                                       (itlist
-                                                        (lambdac (e* th*)
-                                                          (match (dest_eq e*)
-                                                            ((tuple l r*)
+                                                        (lambdac (e% th%)
+                                                          (match (dest_eq e%)
+                                                            ((tuple l r%)
                                                               (funcall
                                                                 MP
-                                                                (INST*
+                                                                (INST%
                                                                   (cl:cons
-                                                                    (tuple r* l)
+                                                                    (tuple r% l)
                                                                     nil)
-                                                                  (funcall DISCH e* th*))
-                                                                (REFL r*)))))
+                                                                  (funcall DISCH e% th%))
+                                                                (REFL r%)))))
                                                         dtms
                                                         fth))
                                                     (hth
                                                       (PROVE_HYP
                                                         jth
-                                                        (itlist #'SIMPLE_CHOOSE evs* gth)))
+                                                        (itlist #'SIMPLE_CHOOSE evs% gth)))
                                                     (xvs
                                                       (map
                                                         (o
@@ -3065,7 +3253,18 @@
                                                         (funcall
                                                           hol2cl.basics:conjuncts
                                                           (concl eth)))))
+                                                  (cl:declare
+                                                    (cl:ignorable
+                                                      cth
+                                                      dth
+                                                      eth
+                                                      fth
+                                                      dtms
+                                                      gth
+                                                      hth
+                                                      xvs))
                                                   (funcall GENL xvs hth)))))))))))))))))))))))))
+    (cl:declare (cl:ignorable generalize_recursion_theorem))
     (lambdac (def)
       (match (funcall define_type_raw~1 def)
         ((tuple ith rth) (tuple ith (funcall generalize_recursion_theorem rth)))))))
@@ -3083,8 +3282,8 @@
   (funcall
     define_type_raw~2
     (funcall parse_inductive_type_specification "option = NONE | SOME A"))
-  ((tuple option_INDUCT* option_RECURSION*)
-    (setf option_INDUCT option_INDUCT* option_RECURSION option_RECURSION*)))
+  ((tuple option_INDUCT% option_RECURSION%)
+    (setf option_INDUCT option_INDUCT% option_RECURSION option_RECURSION%)))
 
 (defparameter list_INDUCT nil)
 
@@ -3094,8 +3293,8 @@
   (funcall
     define_type_raw~2
     (funcall parse_inductive_type_specification "list = NIL | CONS A list"))
-  ((tuple list_INDUCT* list_RECURSION*)
-    (setf list_INDUCT list_INDUCT* list_RECURSION list_RECURSION*)))
+  ((tuple list_INDUCT% list_RECURSION%)
+    (setf list_INDUCT list_INDUCT% list_RECURSION list_RECURSION%)))
 
 (defparameter FORALL_OPTION_THM
   (prove
@@ -3132,6 +3331,7 @@
 
 (defparameter prove_constructors_injective
   (let ((DEPAIR (GEN_REWRITE_RULE TOP_SWEEP_CONV (cl:cons PAIR_EQ nil))))
+    (cl:declare (cl:ignorable DEPAIR))
     (fletc
       ((prove_distinctness
         (ax pat)
@@ -3147,18 +3347,18 @@
                     prove_recursive_functions_exist
                     ax
                     (list_mk_forall (tuple args dtm))))
-                (args* (variants args args))
-                (atm (funcall mk_eq (tuple pat (list_mk_comb (tuple f args*)))))
+                (args% (variants args args))
+                (atm (funcall mk_eq (tuple pat (list_mk_comb (tuple f args%)))))
                 (ath (ASSUME atm))
                 (bth (AP_TERM fn ath))
                 (cth1 (SPECL args (ASSUME (snd (funcall dest_exists (concl eth))))))
-                (cth2 (INST* (zip args* args) cth1))
+                (cth2 (INST% (zip args% args) cth1))
                 (pth (TRANS (TRANS (SYM cth1) bth) cth2))
                 (qth (funcall DEPAIR pth))
                 (qtm (concl qth))
                 (rth
                   (rev_itlist
-                    (C (curry #'MK_COMB*))
+                    (C (curry #'MK_COMB%))
                     (funcall CONJUNCTS (ASSUME qtm))
                     (REFL f)))
                 (tth
@@ -3166,7 +3366,26 @@
                     IMP_ANTISYM_RULE
                     (funcall DISCH atm qth)
                     (funcall DISCH qtm rth)))
-                (uth (funcall GENL args (funcall GENL args* tth))))
+                (uth (funcall GENL args (funcall GENL args% tth))))
+              (cl:declare
+                (cl:ignorable
+                  rt
+                  ty
+                  fn
+                  dtm
+                  eth
+                  args%
+                  atm
+                  ath
+                  bth
+                  cth1
+                  cth2
+                  pth
+                  qth
+                  qtm
+                  rth
+                  tth
+                  uth))
               (PROVE_HYP eth (SIMPLE_CHOOSE fn uth)))))))
       (lambdac (ax)
         (let*
@@ -3176,10 +3395,12 @@
               (snd (funcall strip_exists (snd (funcall strip_forall (concl ax)))))))
             (pats
               (map (o (o (o #'rand lhand) (function-value #'snd 1)) strip_forall) cls)))
+          (cl:declare (cl:ignorable cls pats))
           (end_itlist CONJ (mapfilter (prove_distinctness ax) pats)))))))
 
 (defparameter prove_constructors_distinct
   (let ((num_ty (parse_type "num")))
+    (cl:declare (cl:ignorable num_ty))
     (labelsc
       ((allopairs
         (f l m)
@@ -3191,6 +3412,7 @@
           (o
             #'GEN_ALL
             (CONV_RULE (funcall REWR_CONV (funcall TAUT (parse_term "a ==> F <=> ~a")))))))
+        (cl:declare (cl:ignorable NEGATE))
         (fletc
           ((prove_distinct
             (ax pat)
@@ -3204,36 +3426,38 @@
                 (ls (map (curry #'mk_comb fn) pat))
                 (defs
                   (map2
-                    (lambdac (l r*)
+                    (lambdac (l r%)
                       (list_mk_forall
-                        (tuple (frees (rand l)) (funcall mk_eq (tuple l r*)))))
+                        (tuple (frees (rand l)) (funcall mk_eq (tuple l r%)))))
                     ls
                     nums))
                 (eth
                   (funcall prove_recursive_functions_exist ax (funcall list_mk_conj defs))))
+              (cl:declare (cl:ignorable nums fn ls defs eth))
               (match (funcall dest_exists (concl eth))
                 ((tuple ev bod)
                   (let*
                     ((REWRITE
                       (GEN_REWRITE_RULE ONCE_DEPTH_CONV (funcall CONJUNCTS (ASSUME bod))))
-                      (pat*
+                      (pat%
                         (map
-                          (lambdac (t*)
+                          (lambdac (t%)
                             (match
-                              (if (funcall is_numeral t*)
-                                (tuple t* nil)
-                                (funcall strip_comb t*))
+                              (if (funcall is_numeral t%)
+                                (tuple t% nil)
+                                (funcall strip_comb t%))
                               ((tuple f args)
                                 (list_mk_comb (tuple f (variants args args))))))
                           pat))
-                      (pairs (allopairs (curry mk_eq) pat pat*))
+                      (pairs (allopairs (curry mk_eq) pat pat%))
                       (nths (map (o (o REWRITE (AP_TERM fn)) #'ASSUME) pairs))
                       (fths
                         (map2
-                          (lambdac (t* th)
-                            (funcall NEGATE (funcall DISCH t* (CONV_RULE NUM_EQ_CONV th))))
+                          (lambdac (t% th)
+                            (funcall NEGATE (funcall DISCH t% (CONV_RULE NUM_EQ_CONV th))))
                           pairs
                           nths)))
+                    (cl:declare (cl:ignorable REWRITE pat% pairs nths fths))
                     (funcall
                       CONJUNCTS
                       (PROVE_HYP eth (SIMPLE_CHOOSE ev (end_itlist CONJ fths))))))))))
@@ -3257,6 +3481,7 @@
                           (o (partial (function-value #'= 2) f) (function-value #'fst 1))
                           lefts)))
                     fns)))
+              (cl:declare (cl:ignorable cls lefts fns pats))
               (end_itlist
                 CONJ
                 (end_itlist
@@ -3275,9 +3500,10 @@
       (let
         ((xts
           (map
-            (lambdac (t*)
-              (list_mk_exists (tuple (frees t*) (funcall mk_eq (tuple x t*)))))
+            (lambdac (t%)
+              (list_mk_exists (tuple (frees t%) (funcall mk_eq (tuple x t%)))))
             rpats)))
+        (cl:declare (cl:ignorable xts))
         (mk_abs (tuple x (funcall list_mk_disj xts))))))
     (fletc
       ((prove_triv
@@ -3285,15 +3511,16 @@
         (match (funcall strip_exists tm)
           ((tuple evs bod)
             (match (dest_eq bod)
-              ((tuple l r*)
-                (if (= l r*)
+              ((tuple l r%)
+                (if (= l r%)
                   (REFL l)
-                  (match (tuple (funcall strip_comb l) (funcall strip_comb r*))
+                  (match (tuple (funcall strip_comb l) (funcall strip_comb r%))
                     ((tuple (tuple lf largs) (tuple rf rargs))
                       (if (= lf rf)
                         (let*
                           ((ths (map (o #'ASSUME mk_eq) (zip rargs largs)))
-                            (th1 (rev_itlist (C (curry #'MK_COMB*)) ths (REFL lf))))
+                            (th1 (rev_itlist (C (curry #'MK_COMB%)) ths (REFL lf))))
+                          (cl:declare (cl:ignorable ths th1))
                           (itlist EXISTS_EQUATION (map #'concl ths) (SYM th1)))
                         (failwith "prove_triv")))))))))))
       (labelsc
@@ -3301,13 +3528,13 @@
           (tm)
           (if (funcall is_disj tm)
             (match (funcall dest_disj tm)
-              ((tuple l r*)
+              ((tuple l r%)
                 (handler-case
-                  (funcall DISJ1 (prove_triv l) r*)
+                  (funcall DISJ1 (prove_triv l) r%)
                   (hol2cl.runtime:ocaml-condition
                     (exception~5020)
                     (match exception~5020
-                      ((Failure _) (funcall DISJ2 l (prove_disj r*)))
+                      ((Failure _) (funcall DISJ2 l (prove_disj r%)))
                       (_ (raise exception~5020)))))))
             (prove_triv tm))))
         (fletc
@@ -3322,6 +3549,7 @@
                       (if (funcall is_imp bod)
                         (funcall DISCH (funcall lhand bod) cth)
                         cth)))
+                  (cl:declare (cl:ignorable ctm cth dth))
                   (funcall GENL avs dth))))))
           (lambdac (th)
             (match (funcall strip_forall (concl th))
@@ -3331,7 +3559,7 @@
                     (map
                       (o (function-value #'snd 1) strip_forall)
                       (funcall hol2cl.basics:conjuncts (funcall lhand bod))))
-                    (pats (map (lambdac (t*) (if (funcall is_imp t*) (rand t*) t*)) cls))
+                    (pats (map (lambdac (t%) (if (funcall is_imp t%) (rand t%) t%)) cls))
                     (spats (map #'dest_comb pats))
                     (preds (itlist (o #'insert (function-value #'fst 1)) spats nil))
                     (rpatlist
@@ -3341,7 +3569,7 @@
                             (function-value #'snd 1)
                             (filter
                               (lambdac (arg~5112)
-                                (match arg~5112 ((tuple p* x) (= p* pr))))
+                                (match arg~5112 ((tuple p% x) (= p% pr))))
                               spats)))
                         preds))
                     (xs
@@ -3351,11 +3579,13 @@
                         (freesl pats)
                         (map (o #'type_of #'hd) rpatlist)))
                     (xpreds (map2 #'mk_exclauses xs rpatlist))
-                    (ith (funcall BETA_RULE (INST* (zip xpreds preds) (SPEC_ALL th))))
+                    (ith (funcall BETA_RULE (INST% (zip xpreds preds) (SPEC_ALL th))))
                     (eclauses
                       (funcall
                         hol2cl.basics:conjuncts
                         (fst (funcall dest_imp (concl ith))))))
+                  (cl:declare
+                    (cl:ignorable cls pats spats preds rpatlist xs xpreds ith eclauses))
                   (funcall MP ith (end_itlist CONJ (map #'prove_eclause eclauses))))))))))))
 
 (assign
@@ -3398,7 +3628,9 @@
               (hol2cl.runtime:ocaml-condition
                 (exception~5249)
                 (match exception~5249 ((Failure _) nil) (_ (raise exception~5249)))))))
+        (cl:declare (cl:ignorable ths1 ths2))
         (let ((canon_thl (itlist (funcall mk_rewrites cl:nil) (append ths1 ths2) nil)))
+          (cl:declare (cl:ignorable canon_thl))
           (progn
             (assign
               distinctness_store
@@ -3496,19 +3728,24 @@
                         (let
                           ((ith
                             (SUBS_CONV (funcall CONJUNCTS (ASSUME ant)) (funcall lhs con))))
+                          (cl:declare (cl:ignorable ith))
                           (funcall DISCH ant ith)))))))
+                (cl:declare (cl:ignorable bth))
                 (funcall GENL avs bth))))))
         (lambdac (th)
           (let ((tm (concl th)))
+            (cl:declare (cl:ignorable tm))
             (if (funcall is_imp tm)
               (match (funcall dest_imp (concl th))
                 ((tuple ant con)
                   (let*
                     ((cjs (funcall hol2cl.basics:conjuncts ant))
                       (cths (map #'TRIV_IMP_CONV cjs)))
+                    (cl:declare (cl:ignorable cjs cths))
                     (funcall MP th (end_itlist CONJ cths)))))
               th)))))
       (ISO_EXPAND_CONV (PURE_ONCE_REWRITE_CONV (cl:cons ISO nil))))
+    (cl:declare (cl:ignorable TRIV_ANTE_RULE ISO_EXPAND_CONV))
     (labelsc
       ((lift_type_bijections
         (iths cty)
@@ -3519,6 +3756,7 @@
                 (o (o (o (o #'hd (function-value #'snd 1)) #'dest_type) #'type_of) lhand)
                 #'concl)
               iths)))
+          (cl:declare (cl:ignorable itys))
           (handler-case
             (assoc cty (zip itys iths))
             (hol2cl.runtime:ocaml-condition
@@ -3561,6 +3799,7 @@
                       (MATCH_MP_TAC SELECT_AX))
                     (POP_ASSUM ACCEPT_TAC)))))
               (USE_PTH (MATCH_MP pth)))
+            (cl:declare (cl:ignorable pth USE_PTH))
             (labelsc
               ((DE_EXISTENTIALIZE_RULE
                 (th)
@@ -3573,30 +3812,34 @@
                       (th2
                         (CONV_RULE
                           #'BETA_CONV
-                          (UNDISCH (INST* (cl:cons (tuple gv v1) nil) th1)))))
+                          (UNDISCH (INST% (cl:cons (tuple gv v1) nil) th1)))))
+                    (cl:declare (cl:ignorable th1 v1 gv th2))
                     (match (DE_EXISTENTIALIZE_RULE th2)
                       ((tuple vs th3) (tuple (cl:cons gv vs) th3)))))))
               #'DE_EXISTENTIALIZE_RULE)))
           (grab_type
             (o (o (o (o #'type_of #'rand) lhand) (function-value #'snd 1)) strip_forall)))
+        (cl:declare (cl:ignorable DE_EXISTENTIALIZE_RULE grab_type))
         (fletc
           ((clause_corresponds
             (cl0)
             (match (dest_comb (funcall lhs cl0))
               ((tuple f0 ctm0)
                 (let ((c0 (fst (dest_const (fst (funcall strip_comb ctm0))))))
+                  (cl:declare (cl:ignorable c0))
                   (match (dest_fun_ty (type_of f0))
                     ((tuple dty0 rty0)
                       (lambdac (cl1)
                         (match (dest_comb (funcall lhs cl1))
                           ((tuple f1 ctm1)
                             (let ((c1 (fst (dest_const (fst (funcall strip_comb ctm1))))))
+                              (cl:declare (cl:ignorable c1))
                               (match (dest_fun_ty (type_of f1))
                                 ((tuple dty1 rty1)
                                   (cl:and (= c0 c1) (cl:and (= dty0 rty1) (= rty0 dty1))))))))))))))))
           (fletc
             ((prove_inductive_types_isomorphic
-              (n k* arg~5722 arg~5726)
+              (n k% arg~5722 arg~5726)
               (match arg~5722
                 ((tuple ith0 rth0)
                   (match arg~5726
@@ -3605,6 +3848,7 @@
                         ((sth0 (SPEC_ALL rth0))
                           (sth1 (SPEC_ALL rth1))
                           (t_tm (concl TRUTH)))
+                        (cl:declare (cl:ignorable sth0 sth1 t_tm))
                         (match
                           (tuple
                             (funcall strip_exists (concl sth0))
@@ -3612,9 +3856,9 @@
                           ((tuple (tuple pevs0 pbod0) (tuple pevs1 pbod1))
                             (match
                               (tuple
-                                (chop_list k* (funcall hol2cl.basics:conjuncts pbod0))
+                                (chop_list k% (funcall hol2cl.basics:conjuncts pbod0))
                                 (chop_list
-                                  k*
+                                  k%
                                   (snd
                                     (chop_list n (funcall hol2cl.basics:conjuncts pbod1)))))
                               ((tuple (tuple pcjs0 qcjs0) (tuple pcjs1 qcjs1))
@@ -3625,7 +3869,7 @@
                                     (tyal1
                                       (map
                                         (lambdac (arg~5757)
-                                          (match arg~5757 ((tuple a* b*) (tuple b* a*))))
+                                          (match arg~5757 ((tuple a% b%) (tuple b% a%))))
                                         tyal0))
                                     (tyins0
                                       (map
@@ -3641,9 +3885,11 @@
                                             ((tuple domty ranty)
                                               (tuple (tysubst tyal1 domty) ranty))))
                                         pevs1)))
+                                  (cl:declare (cl:ignorable tyal0 tyal1 tyins0 tyins1))
                                   (let
                                     ((tth0 (INST_TYPE tyins0 sth0))
                                       (tth1 (INST_TYPE tyins1 sth1)))
+                                    (cl:declare (cl:ignorable tth0 tth1))
                                     (match
                                       (tuple
                                         (funcall strip_exists (concl tth0))
@@ -3652,12 +3898,12 @@
                                         (match
                                           (tuple
                                             (chop_list
-                                              k*
+                                              k%
                                               (map
                                                 (o (function-value #'snd 1) strip_forall)
                                                 (funcall hol2cl.basics:conjuncts bod0)))
                                             (chop_list
-                                              k*
+                                              k%
                                               (map
                                                 (o (function-value #'snd 1) strip_forall)
                                                 (snd
@@ -3668,9 +3914,10 @@
                                             (let
                                               ((rcjs1
                                                 (map
-                                                  (lambdac (t*)
-                                                    (find (clause_corresponds t*) rcjsx))
+                                                  (lambdac (t%)
+                                                    (find (clause_corresponds t%) rcjsx))
                                                   rcjs0)))
+                                              (cl:declare (cl:ignorable rcjs1))
                                               (fletc
                                                 ((proc_clause
                                                   (tm0 tm1)
@@ -3689,34 +3936,34 @@
                                                                     wargs0))
                                                                   (nestf0
                                                                     (map
-                                                                      (lambdac (a*)
+                                                                      (lambdac (a%)
                                                                         (can
                                                                           (find
-                                                                            (lambdac (t*)
+                                                                            (lambdac (t%)
                                                                               (cl:and
                                                                                 (is_comb
-                                                                                  t*)
+                                                                                  t%)
                                                                                 (=
                                                                                   (rand
-                                                                                    t*)
-                                                                                  a*))))
+                                                                                    t%)
+                                                                                  a%))))
                                                                           wargs0))
                                                                       vargs0))
                                                                   (targs0
                                                                     (map2
-                                                                      (lambdac (a* f)
+                                                                      (lambdac (a% f)
                                                                         (if f
                                                                           (find
-                                                                            (lambdac (t*)
+                                                                            (lambdac (t%)
                                                                               (cl:and
                                                                                 (is_comb
-                                                                                  t*)
+                                                                                  t%)
                                                                                 (=
                                                                                   (rand
-                                                                                    t*)
-                                                                                  a*)))
+                                                                                    t%)
+                                                                                  a%)))
                                                                             wargs0)
-                                                                          a*))
+                                                                          a%))
                                                                       vargs0
                                                                       nestf0))
                                                                   (gvlist0
@@ -3740,6 +3987,14 @@
                                                                                     l1)))
                                                                               xargs))))
                                                                       vc0)))
+                                                                (cl:declare
+                                                                  (cl:ignorable
+                                                                    gargs0
+                                                                    nestf0
+                                                                    targs0
+                                                                    gvlist0
+                                                                    xargs
+                                                                    inst0))
                                                                 (match
                                                                   (funcall strip_comb r1)
                                                                   ((tuple vc1 wargs1)
@@ -3758,27 +4013,27 @@
                                                                             (targs1
                                                                               (map2
                                                                                 (lambdac
-                                                                                  (a* f)
+                                                                                  (a% f)
                                                                                   (if f
                                                                                     (find
                                                                                       (lambdac
-                                                                                        (t*)
+                                                                                        (t%)
                                                                                         (cl:and
                                                                                           (is_comb
-                                                                                            t*)
+                                                                                            t%)
                                                                                           (=
                                                                                             (rand
-                                                                                              t*)
-                                                                                            a*)))
+                                                                                              t%)
+                                                                                            a%)))
                                                                                       wargs1)
-                                                                                    a*))
+                                                                                    a%))
                                                                                 vargs1
                                                                                 nestf0))
                                                                             (gvlist1
                                                                               (zip
                                                                                 wargs1
                                                                                 gargs1))
-                                                                            (xargs*
+                                                                            (xargs%
                                                                               (map
                                                                                 (lambdac
                                                                                   (v)
@@ -3798,8 +4053,15 @@
                                                                                             strip_comb
                                                                                             (rand
                                                                                               l0)))
-                                                                                        xargs*))))
+                                                                                        xargs%))))
                                                                                 vc1)))
+                                                                          (cl:declare
+                                                                            (cl:ignorable
+                                                                              gargs1
+                                                                              targs1
+                                                                              gvlist1
+                                                                              xargs%
+                                                                              inst1))
                                                                           (tuple
                                                                             inst0
                                                                             inst1)))))))))))))))
@@ -3814,11 +4076,13 @@
                                                       ((uth0
                                                         (funcall
                                                           BETA_RULE
-                                                          (INST* insts0 tth0)))
+                                                          (INST% insts0 tth0)))
                                                         (uth1
                                                           (funcall
                                                             BETA_RULE
-                                                            (INST* insts1 tth1))))
+                                                            (INST% insts1 tth1))))
+                                                      (cl:declare
+                                                        (cl:ignorable uth0 uth1))
                                                       (match
                                                         (tuple
                                                           (funcall
@@ -3828,8 +4092,8 @@
                                                             DE_EXISTENTIALIZE_RULE
                                                             uth1))
                                                         ((tuple
-                                                          (tuple efvs0 sth0*)
-                                                          (tuple efvs1 sth1*))
+                                                          (tuple efvs0 sth0%)
+                                                          (tuple efvs1 sth1%))
                                                           (let*
                                                             ((efvs2
                                                               (map
@@ -3874,13 +4138,22 @@
                                                                   ctm1))
                                                               (eee
                                                                 (map
-                                                                  (lambdac (n*)
-                                                                    (= (int-mod n* 2) 0))
+                                                                  (lambdac (n%)
+                                                                    (= (int-mod n% 2) 0))
                                                                   (--
                                                                     0
                                                                     (-
                                                                       (funcall length cjs)
                                                                       1)))))
+                                                            (cl:declare
+                                                              (cl:ignorable
+                                                                efvs2
+                                                                isotms
+                                                                ctm
+                                                                cth1
+                                                                ctm1
+                                                                cjs
+                                                                eee))
                                                             (match
                                                               (partition
                                                                 (function-value #'fst 1)
@@ -3910,9 +4183,9 @@
                                                                         TRIV_ANTE_RULE
                                                                         (REWRITE_RULE
                                                                           (cl:cons
-                                                                            sth0*
+                                                                            sth0%
                                                                             (cl:cons
-                                                                              sth1*
+                                                                              sth1%
                                                                               nil)))))
                                                                     (jth0
                                                                       (let*
@@ -3968,7 +4241,7 @@
                                                                           (ctvs
                                                                             (map
                                                                               (lambdac
-                                                                                (p*)
+                                                                                (p%)
                                                                                 (let
                                                                                   ((x
                                                                                     (mk_var
@@ -3978,20 +4251,30 @@
                                                                                           (snd
                                                                                             (dest_type
                                                                                               (type_of
-                                                                                                p*))))))))
+                                                                                                p%))))))))
+                                                                                  (cl:declare
+                                                                                    (cl:ignorable
+                                                                                      x))
                                                                                   (tuple
                                                                                     (mk_abs
                                                                                       (tuple
                                                                                         x
                                                                                         t_tm))
-                                                                                    p*)))
+                                                                                    p%)))
                                                                               tvs)))
+                                                                        (cl:declare
+                                                                          (cl:ignorable
+                                                                            itha
+                                                                            icjs
+                                                                            cinsts
+                                                                            tvs
+                                                                            ctvs))
                                                                         (funcall
                                                                           DETRIV_RULE
-                                                                          (INST*
+                                                                          (INST%
                                                                             ctvs
                                                                             (itlist
-                                                                              INSTANTIATE*
+                                                                              INSTANTIATE%
                                                                               cinsts
                                                                               itha)))))
                                                                     (jth1
@@ -4049,7 +4332,7 @@
                                                                           (ctvs
                                                                             (map
                                                                               (lambdac
-                                                                                (p*)
+                                                                                (p%)
                                                                                 (let
                                                                                   ((x
                                                                                     (mk_var
@@ -4059,22 +4342,38 @@
                                                                                           (snd
                                                                                             (dest_type
                                                                                               (type_of
-                                                                                                p*))))))))
+                                                                                                p%))))))))
+                                                                                  (cl:declare
+                                                                                    (cl:ignorable
+                                                                                      x))
                                                                                   (tuple
                                                                                     (mk_abs
                                                                                       (tuple
                                                                                         x
                                                                                         t_tm))
-                                                                                    p*)))
+                                                                                    p%)))
                                                                               tvs)))
+                                                                        (cl:declare
+                                                                          (cl:ignorable
+                                                                            itha
+                                                                            icjs
+                                                                            cinsts
+                                                                            tvs
+                                                                            ctvs))
                                                                         (funcall
                                                                           DETRIV_RULE
-                                                                          (INST*
+                                                                          (INST%
                                                                             ctvs
                                                                             (itlist
-                                                                              INSTANTIATE*
+                                                                              INSTANTIATE%
                                                                               cinsts
                                                                               itha))))))
+                                                                  (cl:declare
+                                                                    (cl:ignorable
+                                                                      ctm2
+                                                                      DETRIV_RULE
+                                                                      jth0
+                                                                      jth1))
                                                                   (let*
                                                                     ((cths4
                                                                       (map2
@@ -4098,12 +4397,17 @@
                                                                         (end_itlist
                                                                           CONJ
                                                                           cths5)))
+                                                                    (cl:declare
+                                                                      (cl:ignorable
+                                                                        cths4
+                                                                        cths5
+                                                                        cth6))
                                                                     (tuple
                                                                       cth6
                                                                       (funcall
                                                                         CONJ
-                                                                        sth0*
-                                                                        sth1*)))))))))))))))))))))))))))))))
+                                                                        sth0%
+                                                                        sth1%)))))))))))))))))))))))))))))))
             (fletc
               ((SCRUB_ASSUMPTION
                 (th)
@@ -4111,22 +4415,25 @@
                   ((hyps (hyp th))
                     (eqn
                       (find
-                        (lambdac (t*)
-                          (let ((x (funcall lhs t*)))
+                        (lambdac (t%)
+                          (let ((x (funcall lhs t%)))
+                            (cl:declare (cl:ignorable x))
                             (forall (lambdac (u) (not (free_in x (rand u)))) hyps)))
                         hyps)))
+                  (cl:declare (cl:ignorable hyps eqn))
                   (match (dest_eq eqn)
-                    ((tuple l r*)
+                    ((tuple l r%)
                       (funcall
                         MP
-                        (INST* (cl:cons (tuple r* l) nil) (funcall DISCH eqn th))
-                        (REFL r*)))))))
+                        (INST% (cl:cons (tuple r% l) nil) (funcall DISCH eqn th))
+                        (REFL r%)))))))
               (fletc
                 ((define_type_basecase
                   (def)
                   (fletc ((add_id (s) (fst (dest_var (funcall genvar bool_ty)))))
-                    (let ((def* (map (F_F #'I (map (F_F #'add_id #'I))) def)))
-                      (funcall define_type_raw~2 def*)))))
+                    (let ((def% (map (F_F #'I (map (F_F #'add_id #'I))) def)))
+                      (cl:declare (cl:ignorable def%))
+                      (funcall define_type_raw~2 def%)))))
                 (let*
                   ((SIMPLE_BETA_RULE
                     (o
@@ -4142,7 +4449,14 @@
                             (cl:cons FUN_EQ_THM nil)
                             nil))
                           (net (itlist (net_of_thm cl:nil) ths (funcall basic_net unit))))
+                        (cl:declare (cl:ignorable ths net))
                         (o #'CONV_RULE (GENERAL_REWRITE_CONV cl:t TOP_DEPTH_CONV net)))))
+                  (cl:declare
+                    (cl:ignorable
+                      SIMPLE_BETA_RULE
+                      ISO_USAGE_RULE
+                      SIMPLE_ISO_EXPAND_RULE
+                      REWRITE_FUN_EQ_RULE))
                   (fletc
                     ((is_nested
                       (vs ty)
@@ -4191,6 +4505,7 @@
                               ((create_auxiliary_clauses
                                 (nty)
                                 (let ((id (fst (dest_var (funcall genvar bool_ty)))))
+                                  (cl:declare (cl:ignorable id))
                                   (match (dest_type nty)
                                     ((tuple tycon tyargs)
                                       (match
@@ -4205,7 +4520,7 @@
                                                     "Can't find definition for nested type: "
                                                     tycon)))
                                               (_ (raise exception~6765)))))
-                                        ((tuple k* ith rth)
+                                        ((tuple k% ith rth)
                                           (match
                                             (funcall
                                               strip_exists
@@ -4233,24 +4548,24 @@
                                                       (lambdac (vty)
                                                         (type_match vty nty nil))
                                                       rtys))
-                                                  (cjs*
+                                                  (cjs%
                                                     (map
                                                       (o (funcall inst tyins) #'rand)
-                                                      (fst (chop_list k* cjs))))
+                                                      (fst (chop_list k% cjs))))
                                                   (mtys
                                                     (itlist
                                                       (o #'insert #'type_of)
-                                                      cjs*
+                                                      cjs%
                                                       nil))
                                                   (pcons
                                                     (map
                                                       (lambdac (ty)
                                                         (filter
-                                                          (lambdac (t*)
-                                                            (= (type_of t*) ty))
-                                                          cjs*))
+                                                          (lambdac (t%)
+                                                            (= (type_of t%) ty))
+                                                          cjs%))
                                                       mtys))
-                                                  (cls*
+                                                  (cls%
                                                     (zip
                                                       mtys
                                                       (map
@@ -4266,16 +4581,27 @@
                                                               id))
                                                           ty))
                                                       mtys))
-                                                  (cls**
+                                                  (cls%%
                                                     (map
                                                       (F_F
                                                         (modify_type tyal)
                                                         (map (modify_item tyal)))
-                                                      cls*)))
+                                                      cls%)))
+                                                (cl:declare
+                                                  (cl:ignorable
+                                                    cjs
+                                                    rtys
+                                                    tyins
+                                                    cjs%
+                                                    mtys
+                                                    pcons
+                                                    cls%
+                                                    tyal
+                                                    cls%%))
                                                 (tuple
-                                                  k*
+                                                  k%
                                                   tyal
-                                                  cls**
+                                                  cls%%
                                                   (INST_TYPE tyins ith)
                                                   (INST_TYPE tyins rth))))))))))))
                               (labelsc
@@ -4303,6 +4629,7 @@
                                             def
                                             nil)))
                                       (rectys (filter (is_nested newtys) utys)))
+                                    (cl:declare (cl:ignorable n newtys utys rectys))
                                     (if (= rectys nil)
                                       (match (define_type_basecase def)
                                         ((tuple th1 th2) (tuple n th1 th2)))
@@ -4312,13 +4639,15 @@
                                             (sort
                                               (lambdac (t1 t2) (occurs_in t2 t1))
                                               rectys))))
+                                        (cl:declare (cl:ignorable nty))
                                         (match (create_auxiliary_clauses nty)
-                                          ((tuple k* tyal ncls ith rth)
+                                          ((tuple k% tyal ncls ith rth)
                                             (let
                                               ((cls
                                                 (append
                                                   (map (modify_clause tyal) def)
                                                   ncls)))
+                                              (cl:declare (cl:ignorable cls))
                                               (match (define_type_nested cls)
                                                 ((tuple _ ith1 rth1)
                                                   (let*
@@ -4342,11 +4671,13 @@
                                                         (map
                                                           (lambdac (ty)
                                                             (let ((s (dest_vartype ty)))
+                                                              (cl:declare
+                                                                (cl:ignorable s))
                                                               (tuple
                                                                 (find
-                                                                  (lambdac (t*)
+                                                                  (lambdac (t%)
                                                                     (=
-                                                                      (fst (dest_type t*))
+                                                                      (fst (dest_type t%))
                                                                       s))
                                                                   xnewtys)
                                                                 ty)))
@@ -4355,10 +4686,16 @@
                                                             cls)))
                                                       (ith0 (INST_TYPE xtyal ith))
                                                       (rth0 (INST_TYPE xtyal rth)))
+                                                    (cl:declare
+                                                      (cl:ignorable
+                                                        xnewtys
+                                                        xtyal
+                                                        ith0
+                                                        rth0))
                                                     (match
                                                       (prove_inductive_types_isomorphic
                                                         n
-                                                        k*
+                                                        k%
                                                         (tuple ith0 rth0)
                                                         (tuple ith1 rth1))
                                                       ((tuple isoth rclauses)
@@ -4394,8 +4731,8 @@
                                                               (filter
                                                                 (lambdac (ty)
                                                                   (exists
-                                                                    (lambdac (t*)
-                                                                      (occurs_in t* ty))
+                                                                    (lambdac (t%)
+                                                                      (occurs_in t% ty))
                                                                     isotys))
                                                                 vtylist))
                                                             (atylist
@@ -4406,15 +4743,15 @@
                                                                     #'dest_fun_ty))
                                                                 ctylist
                                                                 nil))
-                                                            (isoths*
+                                                            (isoths%
                                                               (map
                                                                 (lift_type_bijections
                                                                   isoths)
                                                                 (filter
                                                                   (lambdac (ty)
                                                                     (exists
-                                                                      (lambdac (t*)
-                                                                        (occurs_in t* ty))
+                                                                      (lambdac (t%)
+                                                                        (occurs_in t% ty))
                                                                       isotys))
                                                                   atylist)))
                                                             (cisoths
@@ -4422,7 +4759,7 @@
                                                                 (o
                                                                   BETA_RULE
                                                                   (lift_type_bijections
-                                                                    isoths*))
+                                                                    isoths%))
                                                                 ctylist))
                                                             (uisoths
                                                               (map ISO_USAGE_RULE cisoths))
@@ -4444,7 +4781,7 @@
                                                                   rclauses
                                                                   (map
                                                                     SIMPLE_ISO_EXPAND_RULE
-                                                                    isoths*))
+                                                                    isoths%))
                                                                 irth4))
                                                             (irth6
                                                               (hol2cl.lib:repeat
@@ -4452,7 +4789,7 @@
                                                                 irth5))
                                                             (ncjs
                                                               (filter
-                                                                (lambdac (t*)
+                                                                (lambdac (t%)
                                                                   (exists
                                                                     (lambdac (v)
                                                                       (not (is_var v)))
@@ -4465,7 +4802,7 @@
                                                                             (snd
                                                                               (funcall
                                                                                 strip_forall
-                                                                                t*))))))))
+                                                                                t%))))))))
                                                                 (funcall
                                                                   hol2cl.basics:conjuncts
                                                                   (snd
@@ -4476,6 +4813,22 @@
                                                                           strip_forall
                                                                           (rand
                                                                             (concl irth6))))))))))
+                                                          (cl:declare
+                                                            (cl:ignorable
+                                                              irth3
+                                                              vtylist
+                                                              isoths
+                                                              isotys
+                                                              ctylist
+                                                              atylist
+                                                              isoths%
+                                                              cisoths
+                                                              uisoths
+                                                              visoths
+                                                              irth4
+                                                              irth5
+                                                              irth6
+                                                              ncjs))
                                                           (fletc
                                                             ((mk_newcon
                                                               (tm)
@@ -4495,7 +4848,7 @@
                                                                             (funcall
                                                                               genvar
                                                                               bool_ty))))
-                                                                      (def*
+                                                                      (def%
                                                                         (funcall
                                                                           mk_eq
                                                                           (tuple
@@ -4508,13 +4861,22 @@
                                                                       (dth
                                                                         (funcall
                                                                           new_definition
-                                                                          def*)))
+                                                                          def%)))
+                                                                    (cl:declare
+                                                                      (cl:ignorable
+                                                                        rdeb
+                                                                        rdef
+                                                                        newname
+                                                                        def%
+                                                                        dth))
                                                                     (funcall
                                                                       SIMPLE_BETA_RULE
                                                                       dth))))))
                                                             (let
                                                               ((dths
                                                                 (map #'mk_newcon ncjs)))
+                                                              (cl:declare
+                                                                (cl:ignorable dths))
                                                               (match
                                                                 (CONJ_PAIR
                                                                   (PURE_REWRITE_RULE
@@ -4534,8 +4896,9 @@
                                               (function-value #'snd 1))
                                             def)
                                           nil)))
+                                    (cl:declare (cl:ignorable newtys truecons))
                                     (match (define_type_nested def)
-                                      ((tuple p* ith0 rth0)
+                                      ((tuple p% ith0 rth0)
                                         (match (funcall strip_forall (concl rth0))
                                           ((tuple avs etm)
                                             (let*
@@ -4562,7 +4925,7 @@
                                                     relcls))
                                                 (cdefs
                                                   (map2
-                                                    (lambdac (s r*)
+                                                    (lambdac (s r%)
                                                       (SYM
                                                         (funcall
                                                           new_definition
@@ -4570,8 +4933,8 @@
                                                             mk_eq
                                                             (tuple
                                                               (mk_var
-                                                                (tuple s (type_of r*)))
-                                                              r*)))))
+                                                                (tuple s (type_of r%)))
+                                                              r%)))))
                                                     truecons
                                                     gencons))
                                                 (tavs
@@ -4586,13 +4949,24 @@
                                                     GENL
                                                     tavs
                                                     (SUBS cdefs (SPECL tavs rth0)))))
+                                              (cl:declare
+                                                (cl:ignorable
+                                                  allcls
+                                                  relcls
+                                                  gencons
+                                                  cdefs
+                                                  tavs
+                                                  ith1
+                                                  rth1))
                                               (let*
-                                                ((retval (tuple p* ith1 rth1))
+                                                ((retval (tuple p% ith1 rth1))
                                                   (newentries
                                                     (map
                                                       (lambdac (s)
                                                         (tuple (dest_vartype s) retval))
                                                       newtys)))
+                                                (cl:declare
+                                                  (cl:ignorable retval newentries))
                                                 (progn
                                                   (assign
                                                     inductive_type_store
@@ -4620,6 +4994,7 @@
 (defunc define_type (s)
   (handler-case
     (let ((retval (assoc s (deref the_inductive_types))))
+      (cl:declare (cl:ignorable retval))
       (progn (warn cl:t "Benign redefinition of inductive type") retval))
     (hol2cl.runtime:ocaml-condition
       (exception~7323)
@@ -4633,6 +5008,7 @@
                   (o (function-value #'append 2) (map (function-value #'fst 1)))
                   (map (function-value #'snd 1) defspec)
                   nil)))
+            (cl:declare (cl:ignorable defspec newtypes constructors))
             (if (not (= (funcall length (setify newtypes)) (funcall length newtypes)))
               (failwith "define_type: multiple definitions of a type")
               (if
@@ -4640,18 +5016,21 @@
                   (= (funcall length (setify constructors)) (funcall length constructors)))
                 (failwith "define_type: multiple instances of a constructor")
                 (if (exists (o (can #'get_type_arity) #'dest_vartype) newtypes)
-                  (let ((t* (find (can #'get_type_arity) (map #'dest_vartype newtypes))))
+                  (let ((t% (find (can #'get_type_arity) (map #'dest_vartype newtypes))))
+                    (cl:declare (cl:ignorable t%))
                     (failwith
                       (string-concat
                         "define_type: type :"
-                        (string-concat t* " already defined"))))
+                        (string-concat t% " already defined"))))
                   (if (exists (can #'get_const_type) constructors)
-                    (let ((t* (find (can #'get_const_type) constructors)))
+                    (let ((t% (find (can #'get_const_type) constructors)))
+                      (cl:declare (cl:ignorable t%))
                       (failwith
                         (string-concat
                           "define_type: constant "
-                          (string-concat t* " already defined"))))
+                          (string-concat t% " already defined"))))
                     (let ((retval (funcall define_type_raw defspec)))
+                      (cl:declare (cl:ignorable retval))
                       (progn
                         (assign
                           the_inductive_types
@@ -4733,6 +5112,7 @@
           (tuple
             (parse_term "(if ?!z. z = k then @z. z = k else @x. F) = k")
             (MESON_TAC nil)))))
+    (cl:declare (cl:ignorable pth_0 pth_1 pth_2 pth_3 pth_4 pth_5))
     (labelsc
       ((INSIDE_EXISTS_CONV
         (conv tm)
@@ -4742,6 +5122,7 @@
       (let*
         ((PUSH_EXISTS_CONV
           (let ((econv (funcall REWR_CONV SWAP_EXISTS_THM)))
+            (cl:declare (cl:ignorable econv))
             (labelsc
               ((conv
                 (bc tm)
@@ -4761,13 +5142,15 @@
                     DEPTH_CONV
                     (cl:cons AND_CLAUSES (cl:cons OR_CLAUSES nil)))
                   (ASSOC_CONV CONJ_ASSOC))))
+              (cl:declare (cl:ignorable conv2))
               (lambdac (tm)
                 (let*
                   ((conv0
                     (funcall TOP_SWEEP_CONV (REWRITES_CONV (deref basic_rectype_net))))
                     (conv1 (if (funcall is_conj tm) (funcall LAND_CONV conv0) conv0)))
+                  (cl:declare (cl:ignorable conv0 conv1))
                   (THENC conv1 conv2 tm)))))
-          (UNWIND_CONV*
+          (UNWIND_CONV%
             (let
               ((baseconv
                 (GEN_REWRITE_CONV
@@ -4781,30 +5164,33 @@
                         (cl:cons
                           (funcall EQT_INTRO (funcall GSYM (SPEC_ALL EXISTS_REFL)))
                           nil)))))))
+              (cl:declare (cl:ignorable baseconv))
               (labelsc
-                ((UNWIND_CONV*
+                ((UNWIND_CONV%
                   (tm)
                   (match (funcall strip_exists tm)
                     ((tuple evs bod)
                       (let ((eqs (funcall hol2cl.basics:conjuncts bod)))
+                        (cl:declare (cl:ignorable eqs))
                         (handler-case
                           (let
                             ((eq
                               (find
-                                (lambdac (tm*)
+                                (lambdac (tm%)
                                   (cl:and
-                                    (is_eq tm*)
-                                    (match (dest_eq tm*)
-                                      ((tuple l r*)
+                                    (is_eq tm%)
+                                    (match (dest_eq tm%)
+                                      ((tuple l r%)
                                         (cl:or
-                                          (cl:and (mem l evs) (not (free_in l r*)))
-                                          (cl:and (mem r* evs) (not (free_in r* l))))))))
+                                          (cl:and (mem l evs) (not (free_in l r%)))
+                                          (cl:and (mem r% evs) (not (free_in r% l))))))))
                                 eqs)))
+                            (cl:declare (cl:ignorable eq))
                             (match (dest_eq eq)
-                              ((tuple l r*)
+                              ((tuple l r%)
                                 (let*
-                                  ((v (if (cl:and (mem l evs) (not (free_in l r*))) l r*))
-                                    (cjs* (cl:cons eq (subtract eqs (cl:cons eq nil))))
+                                  ((v (if (cl:and (mem l evs) (not (free_in l r%))) l r%))
+                                    (cjs% (cl:cons eq (subtract eqs (cl:cons eq nil))))
                                     (n
                                       (-
                                         (funcall length evs)
@@ -4814,7 +5200,7 @@
                                         CONJ_ACI_RULE
                                         (funcall
                                           mk_eq
-                                          (tuple bod (funcall list_mk_conj cjs*)))))
+                                          (tuple bod (funcall list_mk_conj cjs%)))))
                                     (th2 (itlist MK_EXISTS evs th1))
                                     (th3
                                       (funpow
@@ -4822,13 +5208,14 @@
                                         #'BINDER_CONV
                                         (funcall PUSH_EXISTS_CONV baseconv)
                                         (rand (concl th2)))))
-                                  (CONV_RULE (RAND_CONV #'UNWIND_CONV*) (TRANS th2 th3))))))
+                                  (cl:declare (cl:ignorable v cjs% n th1 th2 th3))
+                                  (CONV_RULE (RAND_CONV #'UNWIND_CONV%) (TRANS th2 th3))))))
                           (hol2cl.runtime:ocaml-condition
                             (exception~7613)
                             (match exception~7613
                               ((Failure _) (REFL tm))
                               (_ (raise exception~7613))))))))))
-                #'UNWIND_CONV*)))
+                #'UNWIND_CONV%)))
           (MATCH_SEQPATTERN_CONV
             (THENC
               (GEN_REWRITE_CONV #'I (cl:cons pth_1 nil))
@@ -4845,7 +5232,7 @@
                             (THENC
                               (GEN_REWRITE_CONV #'I (cl:cons pth_2 nil))
                               BREAK_CONS_CONV)))
-                        UNWIND_CONV*)
+                        UNWIND_CONV%)
                       (GEN_REWRITE_CONV
                         DEPTH_CONV
                         (cl:cons
@@ -4856,7 +5243,7 @@
             (lambdac (tm)
               (let*
                 ((th1 (GEN_REWRITE_CONV #'I (cl:cons pth_3 nil) tm))
-                  (tm* (body (rand (funcall lhand (rand (concl th1))))))
+                  (tm% (body (rand (funcall lhand (rand (concl th1))))))
                   (th2
                     (THENC
                       (THENC
@@ -4865,21 +5252,29 @@
                             (THENC
                               (GEN_REWRITE_CONV #'I (cl:cons pth_4 nil))
                               (RAND_CONV BREAK_CONS_CONV)))
-                          UNWIND_CONV*)
+                          UNWIND_CONV%)
                         (GEN_REWRITE_CONV
                           DEPTH_CONV
                           (cl:cons
                             (funcall EQT_INTRO (SPEC_ALL EQ_REFL))
                             (cl:cons AND_CLAUSES nil))))
                       (GEN_REWRITE_CONV DEPTH_CONV (cl:cons EXISTS_SIMP nil))
-                      tm*)))
+                      tm%)))
+                (cl:declare (cl:ignorable th1 tm% th2))
                 (fletc
-                  ((conv (tm**) (if (= tm** (funcall lhand (concl th2))) th2 (fail unit))))
+                  ((conv (tm%%) (if (= tm%% (funcall lhand (concl th2))) th2 (fail unit))))
                   (CONV_RULE
                     (RAND_CONV
                       (RATOR_CONV
                         (COMB2_CONV (RAND_CONV (BINDER_CONV #'conv)) (BINDER_CONV #'conv))))
                     th1))))))
+        (cl:declare
+          (cl:ignorable
+            PUSH_EXISTS_CONV
+            BREAK_CONS_CONV
+            UNWIND_CONV%
+            MATCH_SEQPATTERN_CONV
+            MATCH_ONEPATTERN_CONV))
         (let
           ((MATCH_SEQPATTERN_CONV_TRIV
             (THENC
@@ -4895,6 +5290,12 @@
               (THENC
                 MATCH_ONEPATTERN_CONV
                 (GEN_REWRITE_CONV #'TRY_CONV (cl:cons pth_0 (cl:cons pth_5 nil))))))
+          (cl:declare
+            (cl:ignorable
+              MATCH_SEQPATTERN_CONV_TRIV
+              MATCH_SEQPATTERN_CONV_GEN
+              MATCH_ONEPATTERN_CONV_TRIV
+              MATCH_ONEPATTERN_CONV_GEN))
           (progn
             (do_list
               extend_basic_convs
@@ -4924,15 +5325,16 @@
                           MATCH_ONEPATTERN_CONV_TRIV))
                       nil)))))
             (tuple
-              (CHANGED_CONV UNWIND_CONV*)
+              (CHANGED_CONV UNWIND_CONV%)
               (ORELSEC MATCH_SEQPATTERN_CONV_GEN MATCH_ONEPATTERN_CONV_GEN)))))))
-  ((tuple UNWIND_CONV* MATCH_CONV*)
-    (setf MATCH_CONV MATCH_CONV* UNWIND_CONV UNWIND_CONV*)))
+  ((tuple UNWIND_CONV% MATCH_CONV%)
+    (setf MATCH_CONV MATCH_CONV% UNWIND_CONV UNWIND_CONV%)))
 
 (defparameter FORALL_UNWIND_CONV
   (let*
     ((PUSH_FORALL_CONV
       (let ((econv (funcall REWR_CONV SWAP_FORALL_THM)))
+        (cl:declare (cl:ignorable econv))
         (labelsc
           ((conv
             (bc tm)
@@ -4954,8 +5356,9 @@
               (cl:cons
                 (MESON nil (parse_term "(!x. x = a ==> q x) <=> q a"))
                 (cl:cons (MESON nil (parse_term "(!x. a = x ==> q x) <=> q a")) nil)))))))
+    (cl:declare (cl:ignorable PUSH_FORALL_CONV baseconv))
     (labelsc
-      ((FORALL_UNWIND_CONV*
+      ((FORALL_UNWIND_CONV%
         (tm)
         (handler-case
           (match (funcall strip_forall tm)
@@ -4966,25 +5369,26 @@
                     ((eqs (funcall hol2cl.basics:conjuncts ant))
                       (eq
                         (find
-                          (lambdac (tm*)
+                          (lambdac (tm%)
                             (cl:and
-                              (is_eq tm*)
-                              (match (dest_eq tm*)
-                                ((tuple l r*)
+                              (is_eq tm%)
+                              (match (dest_eq tm%)
+                                ((tuple l r%)
                                   (cl:or
-                                    (cl:and (mem l avs) (not (free_in l r*)))
-                                    (cl:and (mem r* avs) (not (free_in r* l))))))))
+                                    (cl:and (mem l avs) (not (free_in l r%)))
+                                    (cl:and (mem r% avs) (not (free_in r% l))))))))
                           eqs)))
+                    (cl:declare (cl:ignorable eqs eq))
                     (match (dest_eq eq)
-                      ((tuple l r*)
+                      ((tuple l r%)
                         (let*
-                          ((v (if (cl:and (mem l avs) (not (free_in l r*))) l r*))
-                            (cjs* (cl:cons eq (subtract eqs (cl:cons eq nil))))
+                          ((v (if (cl:and (mem l avs) (not (free_in l r%))) l r%))
+                            (cjs% (cl:cons eq (subtract eqs (cl:cons eq nil))))
                             (n (- (funcall length avs) (+ 1 (index v (funcall rev avs)))))
                             (th1
                               (funcall
                                 CONJ_ACI_RULE
-                                (funcall mk_eq (tuple ant (funcall list_mk_conj cjs*)))))
+                                (funcall mk_eq (tuple ant (funcall list_mk_conj cjs%)))))
                             (th2 (AP_THM (AP_TERM (rator (rator bod)) th1) con))
                             (th3 (itlist MK_FORALL avs th2))
                             (th4
@@ -4993,9 +5397,10 @@
                                 #'BINDER_CONV
                                 (funcall PUSH_FORALL_CONV baseconv)
                                 (rand (concl th3)))))
-                          (CONV_RULE (RAND_CONV #'FORALL_UNWIND_CONV*) (TRANS th3 th4))))))))))
+                          (cl:declare (cl:ignorable v cjs% n th1 th2 th3 th4))
+                          (CONV_RULE (RAND_CONV #'FORALL_UNWIND_CONV%) (TRANS th3 th4))))))))))
           (hol2cl.runtime:ocaml-condition
             (exception~7975)
             (match exception~7975 ((Failure _) (REFL tm)) (_ (raise exception~7975)))))))
-      #'FORALL_UNWIND_CONV*)))
+      #'FORALL_UNWIND_CONV%)))
 

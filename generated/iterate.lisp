@@ -193,7 +193,7 @@
         NUMSEG_COMBINE_L
         NUMSEG_COMBINE_R
         NUMSEG_CONV
-        NUMSEG_CONV*
+        NUMSEG_CONV%
         NUMSEG_EMPTY
         NUMSEG_LE
         NUMSEG_LREC
@@ -866,7 +866,7 @@
     NUMSEG_COMBINE_L
     NUMSEG_COMBINE_R
     NUMSEG_CONV
-    NUMSEG_CONV*
+    NUMSEG_CONV%
     NUMSEG_EMPTY
     NUMSEG_LE
     NUMSEG_LREC
@@ -1141,7 +1141,7 @@
     rand
     is_const
     INST_TYPE
-    INST*
+    INST%
     dest_const
     dest_comb
     concl
@@ -2132,8 +2132,9 @@
       (ns_tm (parse_term "(..)"))
       (m_tm (parse_term "m:num"))
       (n_tm (parse_term "n:num")))
+    (cl:declare (cl:ignorable pth_0 pth_1 pth_2 ns_tm m_tm n_tm))
     (labelsc
-      ((NUMSEG_CONV*
+      ((NUMSEG_CONV%
         (tm)
         (match (dest_comb tm)
           ((tuple nstm nt)
@@ -2142,28 +2143,30 @@
                 (if (<> nst ns_tm)
                   (failwith "NUMSEG_CONV")
                   (let ((m (funcall dest_numeral mt)) (n (funcall dest_numeral nt)))
+                    (cl:declare (cl:ignorable m n))
                     (if (< n m)
                       (MP_CONV
                         NUM_LT_CONV
-                        (INST*
+                        (INST%
                           (cl:cons (tuple mt m_tm) (cl:cons (tuple nt n_tm) nil))
                           pth_0))
                       (if (= n m)
-                        (INST* (cl:cons (tuple mt m_tm) nil) pth_1)
+                        (INST% (cl:cons (tuple mt m_tm) nil) pth_1)
                         (let
                           ((th
                             (MP_CONV
                               NUM_LE_CONV
-                              (INST*
+                              (INST%
                                 (cl:cons (tuple mt m_tm) (cl:cons (tuple nt n_tm) nil))
                                 pth_2))))
+                          (cl:declare (cl:ignorable th))
                           (CONV_RULE
                             (funpow
                               2
                               #'RAND_CONV
-                              (THENC (funcall LAND_CONV NUM_SUC_CONV) #'NUMSEG_CONV*))
+                              (THENC (funcall LAND_CONV NUM_SUC_CONV) #'NUMSEG_CONV%))
                             th))))))))))))
-      #'NUMSEG_CONV*)))
+      #'NUMSEG_CONV%)))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Topological sorting of a finite set.                                      *)
@@ -2849,6 +2852,7 @@
                 "(s UNION (x INSERT t) = x INSERT (s UNION t)) /\\
      (DISJOINT s (x INSERT t) <=> ~(x IN s) /\\ DISJOINT s t)")
               (funcall SET_TAC nil)))))
+        (cl:declare (cl:ignorable lemma))
         (funcall
           THEN
           (funcall
@@ -2907,6 +2911,7 @@
               (parse_term
                 "t SUBSET s ==> (s = (s DIFF t) UNION t) /\\ DISJOINT (s DIFF t) t")
               (funcall SET_TAC nil)))))
+        (cl:declare (cl:ignorable lemma))
         (MESON_TAC
           (cl:cons
             lemma
@@ -6118,6 +6123,7 @@
         ((lemma
           (prove
             (tuple (parse_term "u UNION v = u UNION (v DIFF u)") (funcall SET_TAC nil)))))
+        (cl:declare (cl:ignorable lemma))
         (funcall
           THEN
           (funcall
@@ -6338,8 +6344,8 @@
                 (funcall
                   THEN
                   (FIRST_ASSUM
-                    (lambdac (t*)
-                      (ONCE_REWRITE_TAC (cl:cons (MATCH_MP NSUM_NSUM_RESTRICT t*) nil))))
+                    (lambdac (t%)
+                      (ONCE_REWRITE_TAC (cl:cons (MATCH_MP NSUM_NSUM_RESTRICT t%) nil))))
                   (MATCH_MP_TAC NSUM_EQ))
                 (funcall ASM_SIMP_TAC (cl:cons NSUM_CONST (cl:cons FINITE_RESTRICT nil))))
               (REWRITE_TAC (cl:cons MULT_CLAUSES nil)))
@@ -7176,6 +7182,7 @@
           THEN
           (funcall THEN (REPEAT #'STRIP_TAC) (MATCH_MP_TAC NSUM_EQ))
           (funcall ASM_SIMP_TAC (cl:cons IN_ELIM_THM (cl:cons IN_NUMSEG nil))))))))
+  (cl:declare (cl:ignorable th))
   (funcall extend_basic_congs (map #'SPEC_ALL (funcall CONJUNCTS th))))
 
 ;; (* ------------------------------------------------------------------------- *)
@@ -7292,16 +7299,18 @@
                       ((tuple mtm ntm)
                         (let
                           ((m (funcall dest_numeral mtm)) (n (funcall dest_numeral ntm)))
+                          (cl:declare (cl:ignorable m n))
                           (if (< n m)
                             (let
                               ((th1
-                                (INST*
+                                (INST%
                                   (cl:cons
                                     (tuple ftm f_tm)
                                     (cl:cons
                                       (tuple mtm m_tm)
                                       (cl:cons (tuple ntm n_tm) nil)))
                                   pth_0)))
+                              (cl:declare (cl:ignorable th1))
                               (funcall
                                 MP
                                 th1
@@ -7310,14 +7319,14 @@
                             (if (= n m)
                               (CONV_RULE
                                 (RAND_CONV (TRY_CONV #'BETA_CONV))
-                                (INST*
+                                (INST%
                                   (cl:cons
                                     (tuple ftm f_tm)
                                     (cl:cons (tuple mtm m_tm) nil))
                                   pth_1))
                               (let*
                                 ((th1
-                                  (INST*
+                                  (INST%
                                     (cl:cons
                                       (tuple ftm f_tm)
                                       (cl:cons
@@ -7330,6 +7339,7 @@
                                       th1
                                       (EQT_ELIM
                                         (funcall NUM_LE_CONV (funcall lhand (concl th1)))))))
+                                (cl:declare (cl:ignorable th1 th2))
                                 (CONV_RULE
                                   (RAND_CONV
                                     (COMB2_CONV
@@ -7961,6 +7971,7 @@
         ((lemma
           (prove
             (tuple (parse_term "u UNION v = u UNION (v DIFF u)") (funcall SET_TAC nil)))))
+        (cl:declare (cl:ignorable lemma))
         (funcall
           THEN
           (funcall
@@ -9300,6 +9311,7 @@
           THEN
           (funcall THEN (REPEAT #'STRIP_TAC) (MATCH_MP_TAC SUM_EQ))
           (funcall ASM_SIMP_TAC (cl:cons IN_ELIM_THM (cl:cons IN_NUMSEG nil))))))))
+  (cl:declare (cl:ignorable th))
   (funcall extend_basic_congs (map #'SPEC_ALL (funcall CONJUNCTS th))))
 
 ;; (* ------------------------------------------------------------------------- *)
@@ -9340,16 +9352,18 @@
                       ((tuple mtm ntm)
                         (let
                           ((m (funcall dest_numeral mtm)) (n (funcall dest_numeral ntm)))
+                          (cl:declare (cl:ignorable m n))
                           (if (< n m)
                             (let
                               ((th1
-                                (INST*
+                                (INST%
                                   (cl:cons
                                     (tuple ftm f_tm)
                                     (cl:cons
                                       (tuple mtm m_tm)
                                       (cl:cons (tuple ntm n_tm) nil)))
                                   pth_0)))
+                              (cl:declare (cl:ignorable th1))
                               (funcall
                                 MP
                                 th1
@@ -9358,14 +9372,14 @@
                             (if (= n m)
                               (CONV_RULE
                                 (RAND_CONV (TRY_CONV #'BETA_CONV))
-                                (INST*
+                                (INST%
                                   (cl:cons
                                     (tuple ftm f_tm)
                                     (cl:cons (tuple mtm m_tm) nil))
                                   pth_1))
                               (let*
                                 ((th1
-                                  (INST*
+                                  (INST%
                                     (cl:cons
                                       (tuple ftm f_tm)
                                       (cl:cons
@@ -9378,6 +9392,7 @@
                                       th1
                                       (EQT_ELIM
                                         (funcall NUM_LE_CONV (funcall lhand (concl th1)))))))
+                                (cl:declare (cl:ignorable th1 th2))
                                 (CONV_RULE
                                   (RAND_CONV
                                     (COMB2_CONV

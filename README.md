@@ -1,7 +1,7 @@
 # Holai
 
 Holai translates the pinned HOL Light standard core from OCaml to readable
-Common Lisp for **SBCL + Trivia**. The translator itself is written in OCaml.
+Common Lisp for **SBCL**. The translator itself is written in OCaml.
 It preserves source bindings, scopes, declaration order and recursive
 algorithms. It accepts Common Lisp's argument evaluation order rather than
 adding temporaries to reproduce OCaml's order.
@@ -14,8 +14,9 @@ extension. See [DESIGN.md](DESIGN.md) for rules and limitations.
 ## Build and run
 
 Prerequisites: OCaml 4.14.1, Camlp5 8.02, camlp-streams, Num 1.5, SBCL and
-Python 3.9 or later. Validation used SBCL 2.2.9 on Linux. Actual Trivia and its
-Lisp dependencies are vendored with their licenses and revision information.
+Python 3.9 or later. Validation used SBCL 2.2.9 on Linux. Matching is compiled
+to standard Common Lisp by runtime/pattern.lisp; no external Lisp library is
+required. Vendored Trivia sources remain only for historical comparisons.
 
 ```sh
 make build                         # bin/hol2cl, built from the OCaml sources
@@ -38,13 +39,14 @@ translates inputs; `scan` reports supported constructs and source diagnostics.
 
 ## Generated names
 
-Ordinary names stay unchanged. Primes become stars (`x'` → `x*`), reserved
-binders become `t*`/`nil*`, and collisions add stars (`mk_comb` / `MK_COMB*`).
+Ordinary names stay unchanged. Primes become percent signs (`x'` → `x%`), reserved
+binders become `t%`/`nil%`, and collisions add percent signs (`mk_comb` / `MK_COMB%`).
 Allocated names are shared by definitions, references and exports. Generated
 core source no longer requires `|...|` symbol quoting; literal strings are
-unchanged. See [STAR-NAMES.md](reports/STAR-NAMES.md) for exact rules and examples.
+unchanged. See [PERCENT-NAMES.md](reports/PERCENT-NAMES.md) for exact rules and examples.
+Literal source operator stars and native special-variable names are retained.
 Public Lisp spellings change in this version; update manually written callers
-using the generated declarations. Benchmarks below predate this naming change.
+using the generated declarations. The OPTIONAL/OCamlopt and structural-match timing results predate this naming change.
 
 ## Current implementation and validation
 
@@ -52,10 +54,14 @@ Source functions use `defunc`, `lambdac`, `labelsc` and `fletc`. Their shared
 OPTIONAL/supplied-p entry supports complete, partial and excess application.
 Function values capture their original definitions; global named calls retain
 runtime redefinition. Tuples keep their original argument list.
-No fixed-worker or call-site specialization is enabled.
+No fixed-worker or call-site specialization is enabled. Matching uses a static
+IR at macro expansion time and standard Common Lisp control/binding forms.
+Constructor/record descriptors are resolved before execution; guards and OR
+binding joins preserve clause order. See [PATTERN-MATCH.md](reports/PATTERN-MATCH.md).
 
 The validated corpus includes 122 native checks, 27 calling-protocol checks,
-84 OPTIONAL-entry checks, 16 tuple checks and 1,124 matching OCaml/SBCL output
+84 OPTIONAL-entry checks, 16 tuple checks, 46 structural-pattern checks and
+1,124 matching OCaml/SBCL output
 rows. All 46 inputs initialize with 22 types, 303 constants, 263 definitions
 and 3 original axioms. The documented initialization-output difference is
 retained; the raw OCaml/SBCL initialization transcripts are not identical.

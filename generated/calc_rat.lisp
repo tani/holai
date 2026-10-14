@@ -42,7 +42,7 @@
         REAL_LE_TRANS_LTE
         REAL_POLY_ADD_CONV
         REAL_POLY_CONV
-        REAL_POLY_CONV*
+        REAL_POLY_CONV%
         REAL_POLY_MUL_CONV
         REAL_POLY_NEG_CONV
         REAL_POLY_POW_CONV
@@ -161,7 +161,7 @@
     REAL_LE_TRANS_LTE
     REAL_POLY_ADD_CONV
     REAL_POLY_CONV
-    REAL_POLY_CONV*
+    REAL_POLY_CONV%
     REAL_POLY_MUL_CONV
     REAL_POLY_NEG_CONV
     REAL_POLY_POW_CONV
@@ -291,9 +291,9 @@
     REFL
     rator
     rand
-    MK_COMB*
+    MK_COMB%
     is_comb
-    INST*
+    INST%
     EQ_MP
     dest_eq
     dest_comb
@@ -686,6 +686,7 @@
                         (MATCH_MP_TAC REAL_LT_IMP_LE))
                       (funcall ASM_REWRITE_TAC nil))
                     nil)))))))
+        (cl:declare (cl:ignorable lemma))
         (funcall
           THEN
           (funcall
@@ -768,6 +769,7 @@
             THEN
             (REWRITE_TAC (cl:cons REAL_DIV_1 (cl:cons DECIMAL nil)))
             (REWRITE_TAC (cl:cons real_div (cl:cons REAL_MUL_LNEG nil))))))))
+    (cl:declare (cl:ignorable pth))
     (TRY_CONV (GEN_REWRITE_CONV #'I (cl:cons pth nil)))))
 
 ;; (* ------------------------------------------------------------------------- *)
@@ -789,16 +791,17 @@
       (y2 (parse_term "y2:real"))
       (dest_le (dest_binop (parse_term "(<=)")))
       (dest_div (dest_binop (parse_term "(/)"))))
+    (cl:declare (cl:ignorable pth x1 x2 y1 y2 dest_le dest_div))
     (fletc
       ((RAW_REAL_RAT_LE_CONV
         (tm)
         (match (funcall dest_le tm)
-          ((tuple l r*)
-            (match (tuple (funcall dest_div l) (funcall dest_div r*))
+          ((tuple l r%)
+            (match (tuple (funcall dest_div l) (funcall dest_div r%))
               ((tuple (tuple lx ly) (tuple rx ry))
                 (let*
                   ((th0
-                    (INST*
+                    (INST%
                       (cl:cons
                         (tuple lx x1)
                         (cl:cons
@@ -811,6 +814,7 @@
                         (BINOP_CONV REAL_INT_MUL_CONV)
                         REAL_INT_LE_CONV
                         (rand (concl th1)))))
+                  (cl:declare (cl:ignorable th0 th1 th2))
                   (TRANS th1 th2))))))))
       (THENC (BINOP_CONV REAL_INT_RAT_CONV) #'RAW_REAL_RAT_LE_CONV))))
 
@@ -838,16 +842,17 @@
       (y2 (parse_term "y2:real"))
       (dest_lt (dest_binop (parse_term "(<)")))
       (dest_div (dest_binop (parse_term "(/)"))))
+    (cl:declare (cl:ignorable pth x1 x2 y1 y2 dest_lt dest_div))
     (fletc
       ((RAW_REAL_RAT_LT_CONV
         (tm)
         (match (funcall dest_lt tm)
-          ((tuple l r*)
-            (match (tuple (funcall dest_div l) (funcall dest_div r*))
+          ((tuple l r%)
+            (match (tuple (funcall dest_div l) (funcall dest_div r%))
               ((tuple (tuple lx ly) (tuple rx ry))
                 (let*
                   ((th0
-                    (INST*
+                    (INST%
                       (cl:cons
                         (tuple lx x1)
                         (cl:cons
@@ -860,6 +865,7 @@
                         (BINOP_CONV REAL_INT_MUL_CONV)
                         REAL_INT_LT_CONV
                         (rand (concl th1)))))
+                  (cl:declare (cl:ignorable th0 th1 th2))
                   (TRANS th1 th2))))))))
       (THENC (BINOP_CONV REAL_INT_RAT_CONV) #'RAW_REAL_RAT_LT_CONV))))
 
@@ -881,18 +887,19 @@
       (x2 (parse_term "x2:real"))
       (y1 (parse_term "y1:real"))
       (y2 (parse_term "y2:real"))
-      (dest_eq* (dest_binop (parse_term "(=) :real->real->bool")))
+      (dest_eq% (dest_binop (parse_term "(=) :real->real->bool")))
       (dest_div (dest_binop (parse_term "(/)"))))
+    (cl:declare (cl:ignorable pth x1 x2 y1 y2 dest_eq% dest_div))
     (fletc
       ((RAW_REAL_RAT_EQ_CONV
         (tm)
-        (match (funcall dest_eq* tm)
-          ((tuple l r*)
-            (match (tuple (funcall dest_div l) (funcall dest_div r*))
+        (match (funcall dest_eq% tm)
+          ((tuple l r%)
+            (match (tuple (funcall dest_div l) (funcall dest_div r%))
               ((tuple (tuple lx ly) (tuple rx ry))
                 (let*
                   ((th0
-                    (INST*
+                    (INST%
                       (cl:cons
                         (tuple lx x1)
                         (cl:cons
@@ -905,6 +912,7 @@
                         (BINOP_CONV REAL_INT_MUL_CONV)
                         REAL_INT_EQ_CONV
                         (rand (concl th1)))))
+                  (cl:declare (cl:ignorable th0 th1 th2))
                   (TRANS th1 th2))))))))
       (THENC (BINOP_CONV REAL_INT_RAT_CONV) #'RAW_REAL_RAT_EQ_CONV))))
 
@@ -946,7 +954,9 @@
                   REAL_MUL_LNEG
                   (cl:cons REAL_NEG_NEG (cl:cons REAL_NEG_0 (cl:cons DECIMAL nil))))))))))
       (ptm (parse_term "(--)")))
+    (cl:declare (cl:ignorable pth ptm))
     (let ((conv1 (GEN_REWRITE_CONV #'I (cl:cons pth nil))))
+      (cl:declare (cl:ignorable conv1))
       (lambdac (tm)
         (handler-case
           (funcall conv1 tm)
@@ -956,11 +966,11 @@
               ((Failure _)
                 (handler-case
                   (match (dest_comb tm)
-                    ((tuple l r*)
+                    ((tuple l r%)
                       (if
                         (cl:and
                           (= l ptm)
-                          (cl:and (is_realintconst r*) (> (dest_realintconst r*) num_0)))
+                          (cl:and (is_realintconst r%) (> (dest_realintconst r%) num_0)))
                         (REFL tm)
                         (fail unit))))
                   (hol2cl.runtime:ocaml-condition
@@ -986,6 +996,7 @@
             (cl:cons
               DECIMAL
               (cl:cons REAL_ABS_DIV (cl:cons REAL_ABS_NEG (cl:cons REAL_ABS_NUM nil)))))))))
+    (cl:declare (cl:ignorable pth))
     (GEN_REWRITE_CONV #'I (cl:cons pth nil))))
 
 (defparameter REAL_RAT_INV_CONV
@@ -1040,6 +1051,7 @@
                           (cl:cons
                             REAL_MUL_LNEG
                             (cl:cons REAL_INV_MUL (cl:cons REAL_INV_INV nil))))))))))))))
+    (cl:declare (cl:ignorable pth1 pth2))
     (ORELSEC
       (GEN_REWRITE_CONV #'I (cl:cons pth1 nil))
       (GEN_REWRITE_CONV #'I (cl:cons pth2 nil)))))
@@ -1094,45 +1106,51 @@
       (y1 (parse_term "y1:real"))
       (y2 (parse_term "y2:real"))
       (y3 (parse_term "y3:real")))
+    (cl:declare (cl:ignorable pth dest_divop dest_addop x1 x2 x3 y1 y2 y3))
     (fletc
       ((RAW_REAL_RAT_ADD_CONV
         (tm)
         (match (funcall dest_addop tm)
           ((tuple r1 r2)
             (match (tuple (funcall dest_divop r1) (funcall dest_divop r2))
-              ((tuple (tuple x1* y1*) (tuple x2* y2*))
+              ((tuple (tuple x1% y1%) (tuple x2% y2%))
                 (let
-                  ((x1n (dest_realintconst x1*))
-                    (y1n (dest_realintconst y1*))
-                    (x2n (dest_realintconst x2*))
-                    (y2n (dest_realintconst y2*)))
+                  ((x1n (dest_realintconst x1%))
+                    (y1n (dest_realintconst y1%))
+                    (x2n (dest_realintconst x2%))
+                    (y2n (dest_realintconst y2%)))
+                  (cl:declare (cl:ignorable x1n y1n x2n y2n))
                   (let ((x3n (+ (* x1n y2n) (* x2n y1n))) (y3n (* y1n y2n)))
+                    (cl:declare (cl:ignorable x3n y3n))
                     (let*
                       ((d (gcd-num x3n y3n))
-                        (x3n* (quo-num x3n d))
-                        (y3n* (quo-num y3n d)))
+                        (x3n% (quo-num x3n d))
+                        (y3n% (quo-num y3n d)))
+                      (cl:declare (cl:ignorable d x3n% y3n%))
                       (match
-                        (if (> y3n* (num 0)) (tuple x3n* y3n*) (tuple (- x3n*) (- y3n*)))
-                        ((tuple x3n** y3n**)
+                        (if (> y3n% (num 0)) (tuple x3n% y3n%) (tuple (- x3n%) (- y3n%)))
+                        ((tuple x3n%% y3n%%)
                           (let
-                            ((x3* (funcall mk_realintconst x3n**))
-                              (y3* (funcall mk_realintconst y3n**)))
+                            ((x3% (funcall mk_realintconst x3n%%))
+                              (y3% (funcall mk_realintconst y3n%%)))
+                            (cl:declare (cl:ignorable x3% y3%))
                             (let*
                               ((th0
-                                (INST*
+                                (INST%
                                   (cl:cons
-                                    (tuple x1* x1)
+                                    (tuple x1% x1)
                                     (cl:cons
-                                      (tuple y1* y1)
+                                      (tuple y1% y1)
                                       (cl:cons
-                                        (tuple x2* x2)
+                                        (tuple x2% x2)
                                         (cl:cons
-                                          (tuple y2* y2)
+                                          (tuple y2% y2)
                                           (cl:cons
-                                            (tuple x3* x3)
-                                            (cl:cons (tuple y3* y3) nil))))))
+                                            (tuple x3% x3)
+                                            (cl:cons (tuple y3% y3) nil))))))
                                   pth))
                                 (th1 (funpow 3 (MP_CONV REAL_INT_LT_CONV) th0)))
+                              (cl:declare (cl:ignorable th0 th1))
                               (match (dest_eq (fst (funcall dest_imp (concl th1))))
                                 ((tuple tm2 tm3)
                                   (let
@@ -1150,6 +1168,7 @@
                                           (RAND_CONV REAL_INT_MUL_CONV)
                                           REAL_INT_MUL_CONV
                                           tm3)))
+                                    (cl:declare (cl:ignorable th2 th3))
                                     (funcall MP th1 (TRANS th2 (SYM th3)))))))))))))))))))
       (THENC
         (THENC (BINOP_CONV REAL_INT_RAT_CONV) #'RAW_REAL_RAT_ADD_CONV)
@@ -1164,6 +1183,7 @@
   (let
     ((pth
       (prove (tuple (parse_term "x - y = x + --y") (REWRITE_TAC (cl:cons real_sub nil))))))
+    (cl:declare (cl:ignorable pth))
     (THENC
       (THENC (GEN_REWRITE_CONV #'I (cl:cons pth nil)) (RAND_CONV REAL_RAT_NEG_CONV))
       REAL_RAT_ADD_CONV)))
@@ -1224,65 +1244,86 @@
       (v2 (parse_term "v2:real"))
       (d1 (parse_term "d1:real"))
       (d2 (parse_term "d2:real")))
+    (cl:declare
+      (cl:ignorable
+        pth_nocancel
+        pth_cancel
+        dest_divop
+        dest_mulop
+        x1
+        x2
+        y1
+        y2
+        u1
+        u2
+        v1
+        v2
+        d1
+        d2))
     (fletc
       ((RAW_REAL_RAT_MUL_CONV
         (tm)
         (match (funcall dest_mulop tm)
           ((tuple r1 r2)
             (match (tuple (funcall dest_divop r1) (funcall dest_divop r2))
-              ((tuple (tuple x1* y1*) (tuple x2* y2*))
+              ((tuple (tuple x1% y1%) (tuple x2% y2%))
                 (let
-                  ((x1n (dest_realintconst x1*))
-                    (y1n (dest_realintconst y1*))
-                    (x2n (dest_realintconst x2*))
-                    (y2n (dest_realintconst y2*)))
+                  ((x1n (dest_realintconst x1%))
+                    (y1n (dest_realintconst y1%))
+                    (x2n (dest_realintconst x2%))
+                    (y2n (dest_realintconst y2%)))
+                  (cl:declare (cl:ignorable x1n y1n x2n y2n))
                   (let ((d1n (gcd-num x1n y2n)) (d2n (gcd-num x2n y1n)))
+                    (cl:declare (cl:ignorable d1n d2n))
                     (if (cl:and (= d1n num_1) (= d2n num_1))
                       (let*
                         ((th0
-                          (INST*
+                          (INST%
                             (cl:cons
-                              (tuple x1* x1)
+                              (tuple x1% x1)
                               (cl:cons
-                                (tuple y1* y1)
-                                (cl:cons (tuple x2* x2) (cl:cons (tuple y2* y2) nil))))
+                                (tuple y1% y1)
+                                (cl:cons (tuple x2% x2) (cl:cons (tuple y2% y2) nil))))
                             pth_nocancel))
                           (th1 (BINOP_CONV REAL_INT_MUL_CONV (rand (concl th0)))))
+                        (cl:declare (cl:ignorable th0 th1))
                         (TRANS th0 th1))
                       (let
                         ((u1n (quo-num x1n d1n))
                           (u2n (quo-num x2n d2n))
                           (v1n (quo-num y1n d2n))
                           (v2n (quo-num y2n d1n)))
+                        (cl:declare (cl:ignorable u1n u2n v1n v2n))
                         (let
-                          ((u1* (funcall mk_realintconst u1n))
-                            (u2* (funcall mk_realintconst u2n))
-                            (v1* (funcall mk_realintconst v1n))
-                            (v2* (funcall mk_realintconst v2n))
-                            (d1* (funcall mk_realintconst d1n))
-                            (d2* (funcall mk_realintconst d2n)))
+                          ((u1% (funcall mk_realintconst u1n))
+                            (u2% (funcall mk_realintconst u2n))
+                            (v1% (funcall mk_realintconst v1n))
+                            (v2% (funcall mk_realintconst v2n))
+                            (d1% (funcall mk_realintconst d1n))
+                            (d2% (funcall mk_realintconst d2n)))
+                          (cl:declare (cl:ignorable u1% u2% v1% v2% d1% d2%))
                           (let*
                             ((th0
-                              (INST*
+                              (INST%
                                 (cl:cons
-                                  (tuple x1* x1)
+                                  (tuple x1% x1)
                                   (cl:cons
-                                    (tuple y1* y1)
+                                    (tuple y1% y1)
                                     (cl:cons
-                                      (tuple x2* x2)
+                                      (tuple x2% x2)
                                       (cl:cons
-                                        (tuple y2* y2)
+                                        (tuple y2% y2)
                                         (cl:cons
-                                          (tuple u1* u1)
+                                          (tuple u1% u1)
                                           (cl:cons
-                                            (tuple v1* v1)
+                                            (tuple v1% v1)
                                             (cl:cons
-                                              (tuple u2* u2)
+                                              (tuple u2% u2)
                                               (cl:cons
-                                                (tuple v2* v2)
+                                                (tuple v2% v2)
                                                 (cl:cons
-                                                  (tuple d1* d1)
-                                                  (cl:cons (tuple d2* d2) nil))))))))))
+                                                  (tuple d1% d1)
+                                                  (cl:cons (tuple d2% d2) nil))))))))))
                                 pth_cancel))
                               (th1
                                 (EQT_ELIM
@@ -1291,6 +1332,7 @@
                                     (funcall lhand (concl th0)))))
                               (th2 (funcall MP th0 th1))
                               (th3 (BINOP_CONV REAL_INT_MUL_CONV (rand (concl th2)))))
+                            (cl:declare (cl:ignorable th0 th1 th2 th3))
                             (TRANS th2 th3)))))))))))))
       (THENC
         (THENC (BINOP_CONV REAL_INT_RAT_CONV) #'RAW_REAL_RAT_MUL_CONV)
@@ -1306,6 +1348,7 @@
     ((pth
       (prove
         (tuple (parse_term "x / y = x * inv(y)") (REWRITE_TAC (cl:cons real_div nil))))))
+    (cl:declare (cl:ignorable pth))
     (THENC
       (THENC (GEN_REWRITE_CONV #'I (cl:cons pth nil)) (RAND_CONV REAL_RAT_INV_CONV))
       REAL_RAT_MUL_CONV)))
@@ -1322,6 +1365,7 @@
         (tuple
           (parse_term "(x / y) pow n = (x pow n) / (y pow n)")
           (REWRITE_TAC (cl:cons REAL_POW_DIV nil))))))
+    (cl:declare (cl:ignorable pth))
     (ORELSEC
       REAL_INT_POW_CONV
       (THENC
@@ -1393,6 +1437,7 @@
   (let
     ((gconv_net
       (itlist (uncurry #'net_of_conv) real_rat_red_conv_list (funcall basic_net unit))))
+    (cl:declare (cl:ignorable gconv_net))
     (REWRITES_CONV gconv_net)))
 
 (defparameter REAL_RAT_REDUCE_CONV (funcall DEPTH_CONV REAL_RAT_RED_CONV))
@@ -1405,8 +1450,9 @@
           (match arg~1618
             ((tuple pat the_conv)
               (match (funcall strip_comb pat)
-                ((tuple c* args) (tuple c* (funcall length args) the_conv))))))
+                ((tuple c% args) (tuple c% (funcall length args) the_conv))))))
         real_rat_red_conv_list)))
+    (cl:declare (cl:ignorable convlist))
     (lambdac (compset)
       (itlist
         (lambdac (newc arg~1643)
@@ -1416,6 +1462,7 @@
 
 (defparameter REAL_RAT_COMPUTE_CONV
   (let ((cs (bool_compset unit)))
+    (cl:declare (cl:ignorable cs))
     (progn
       (set_skip cs (parse_term "COND: bool -> A -> A -> A") (make-Some 1))
       (funcall real_rat_compute_add_convs cs)
@@ -1446,25 +1493,25 @@
     (tuple #'is_ratconst REAL_RAT_ADD_CONV REAL_RAT_MUL_CONV REAL_RAT_POW_CONV)
     (function-value #'< 2))
   ((tuple
-    REAL_POLY_NEG_CONV*
-    REAL_POLY_ADD_CONV*
-    REAL_POLY_SUB_CONV*
-    REAL_POLY_MUL_CONV*
-    REAL_POLY_POW_CONV*
-    REAL_POLY_CONV*)
+    REAL_POLY_NEG_CONV%
+    REAL_POLY_ADD_CONV%
+    REAL_POLY_SUB_CONV%
+    REAL_POLY_MUL_CONV%
+    REAL_POLY_POW_CONV%
+    REAL_POLY_CONV%)
     (setf
       REAL_POLY_ADD_CONV
-      REAL_POLY_ADD_CONV*
+      REAL_POLY_ADD_CONV%
       REAL_POLY_CONV~1
-      REAL_POLY_CONV*
+      REAL_POLY_CONV%
       REAL_POLY_MUL_CONV
-      REAL_POLY_MUL_CONV*
+      REAL_POLY_MUL_CONV%
       REAL_POLY_NEG_CONV
-      REAL_POLY_NEG_CONV*
+      REAL_POLY_NEG_CONV%
       REAL_POLY_POW_CONV
-      REAL_POLY_POW_CONV*
+      REAL_POLY_POW_CONV%
       REAL_POLY_SUB_CONV
-      REAL_POLY_SUB_CONV*)))
+      REAL_POLY_SUB_CONV%)))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Extend normalizer to handle "inv" and division by rational constants, and *)
@@ -1485,52 +1532,70 @@
       (max_tm (parse_term "max:real->real->real"))
       (min_tm (parse_term "min:real->real->real"))
       (div_conv (funcall REWR_CONV real_div)))
+    (cl:declare
+      (cl:ignorable
+        neg_tm
+        inv_tm
+        add_tm
+        sub_tm
+        mul_tm
+        div_tm
+        pow_tm
+        abs_tm
+        max_tm
+        min_tm
+        div_conv))
     (labelsc
-      ((REAL_POLY_CONV*
+      ((REAL_POLY_CONV%
         (tm)
         (if (cl:or (not (is_comb tm)) (is_ratconst tm))
           (REFL tm)
           (match (dest_comb tm)
-            ((tuple lop r*)
+            ((tuple lop r%)
               (if (= lop neg_tm)
-                (let ((th1 (AP_TERM lop (REAL_POLY_CONV* r*))))
+                (let ((th1 (AP_TERM lop (REAL_POLY_CONV% r%))))
+                  (cl:declare (cl:ignorable th1))
                   (TRANS th1 (funcall REAL_POLY_NEG_CONV (rand (concl th1)))))
                 (if (= lop inv_tm)
-                  (let ((th1 (AP_TERM lop (REAL_POLY_CONV* r*))))
+                  (let ((th1 (AP_TERM lop (REAL_POLY_CONV% r%))))
+                    (cl:declare (cl:ignorable th1))
                     (TRANS th1 (TRY_CONV REAL_RAT_INV_CONV (rand (concl th1)))))
                   (if (= lop abs_tm)
-                    (AP_TERM lop (REAL_POLY_CONV* r*))
+                    (AP_TERM lop (REAL_POLY_CONV% r%))
                     (if (not (is_comb lop))
                       (REFL tm)
                       (match (dest_comb lop)
                         ((tuple op l)
                           (if (= op pow_tm)
-                            (let ((th1 (AP_THM (AP_TERM op (REAL_POLY_CONV* l)) r*)))
+                            (let ((th1 (AP_THM (AP_TERM op (REAL_POLY_CONV% l)) r%)))
+                              (cl:declare (cl:ignorable th1))
                               (TRANS th1 (TRY_CONV REAL_POLY_POW_CONV (rand (concl th1)))))
                             (if (cl:or (= op add_tm) (cl:or (= op mul_tm) (= op sub_tm)))
                               (let*
                                 ((th1
-                                  (MK_COMB*
+                                  (MK_COMB%
                                     (tuple
-                                      (AP_TERM op (REAL_POLY_CONV* l))
-                                      (REAL_POLY_CONV* r*))))
+                                      (AP_TERM op (REAL_POLY_CONV% l))
+                                      (REAL_POLY_CONV% r%))))
                                   (fn
                                     (if (= op add_tm)
                                       REAL_POLY_ADD_CONV
                                       (if (= op mul_tm)
                                         REAL_POLY_MUL_CONV
                                         REAL_POLY_SUB_CONV))))
+                                (cl:declare (cl:ignorable th1 fn))
                                 (TRANS th1 (funcall fn (rand (concl th1)))))
                               (if (= op div_tm)
                                 (let ((th1 (funcall div_conv tm)))
-                                  (TRANS th1 (REAL_POLY_CONV* (rand (concl th1)))))
+                                  (cl:declare (cl:ignorable th1))
+                                  (TRANS th1 (REAL_POLY_CONV% (rand (concl th1)))))
                                 (if (cl:or (= op min_tm) (= op max_tm))
-                                  (MK_COMB*
+                                  (MK_COMB%
                                     (tuple
-                                      (AP_TERM op (REAL_POLY_CONV* l))
-                                      (REAL_POLY_CONV* r*)))
+                                      (AP_TERM op (REAL_POLY_CONV% l))
+                                      (REAL_POLY_CONV% r%)))
                                   (REFL tm))))))))))))))))
-      #'REAL_POLY_CONV*)))
+      #'REAL_POLY_CONV%)))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Basic ring and ideal conversions.                                         *)
@@ -1590,6 +1655,7 @@
                       nil))))))))
       (init (GEN_REWRITE_CONV ONCE_DEPTH_CONV (cl:cons DECIMAL nil)))
       (real_ty (parse_type "real")))
+    (cl:declare (cl:ignorable REAL_INTEGRAL REAL_RABINOWITSCH init real_ty))
     (match
       (funcall
         RING_AND_IDEAL_CONV
@@ -1611,13 +1677,14 @@
         (tuple
           (lambdac (tm)
             (let ((th (funcall init tm)))
+              (cl:declare (cl:ignorable th))
               (EQ_MP (SYM th) (funcall pure (rand (concl th))))))
           (lambdac (tms tm)
-            (if (forall (lambdac (t*) (= (type_of t*) real_ty)) (cl:cons tm tms))
+            (if (forall (lambdac (t%) (= (type_of t%) real_ty)) (cl:cons tm tms))
               (funcall ideal tms tm)
               (failwith "real_ideal_cofactors: not all terms have type :real")))))))
-  ((tuple REAL_RING* real_ideal_cofactors*)
-    (setf REAL_RING REAL_RING* real_ideal_cofactors real_ideal_cofactors*)))
+  ((tuple REAL_RING% real_ideal_cofactors%)
+    (setf REAL_RING REAL_RING% real_ideal_cofactors real_ideal_cofactors%)))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Conversion for ideal membership.                                          *)
@@ -1628,20 +1695,22 @@
   (let
     ((mk_add (mk_binop (parse_term "( + ):real->real->real")))
       (mk_mul (mk_binop (parse_term "( * ):real->real->real"))))
+    (cl:declare (cl:ignorable mk_add mk_mul))
     (lambdac (tms tm)
       (let*
         ((cfs (funcall real_ideal_cofactors tms tm))
-          (tm* (end_itlist mk_add (map2 mk_mul cfs tms)))
+          (tm% (end_itlist mk_add (map2 mk_mul cfs tms)))
           (th (funcall REAL_POLY_CONV tm))
-          (th* (funcall REAL_POLY_CONV tm*)))
-        (TRANS th (SYM th*))))))
+          (th% (funcall REAL_POLY_CONV tm%)))
+        (cl:declare (cl:ignorable cfs tm% th th%))
+        (TRANS th (SYM th%))))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Further specialize GEN_REAL_ARITH and REAL_ARITH (final versions).        *)
 ;; (* ------------------------------------------------------------------------- *)
 
 
-(defunc GEN_REAL_ARITH (PROVER*)
+(defunc GEN_REAL_ARITH (PROVER%)
   (funcall
     hol2cl.realarith:GEN_REAL_ARITH
     (tuple
@@ -1653,15 +1722,18 @@
       REAL_POLY_NEG_CONV
       REAL_POLY_ADD_CONV
       REAL_POLY_MUL_CONV
-      PROVER*)))
+      PROVER%)))
 
 (defparameter REAL_ARITH
   (let
     ((init (GEN_REWRITE_CONV ONCE_DEPTH_CONV (cl:cons DECIMAL nil)))
       (pure (GEN_REAL_ARITH REAL_LINEAR_PROVER)))
+    (cl:declare (cl:ignorable init pure))
     (lambdac (tm)
       (handler-case
-        (let ((th (funcall init tm))) (EQ_MP (SYM th) (funcall pure (rand (concl th)))))
+        (let ((th (funcall init tm)))
+          (cl:declare (cl:ignorable th))
+          (EQ_MP (SYM th) (funcall pure (rand (concl th)))))
         (hol2cl.runtime:ocaml-condition
           (exception~2120)
           (match exception~2120
@@ -1765,8 +1837,9 @@
               (GEN_REWRITE_CONV
                 #'I
                 (cl:cons (funcall TAUT (parse_term "(T ==> p) <=> p")) nil)))))))
+    (cl:declare (cl:ignorable norm_net easy_nz_conv))
     (let
-      ((prenex_conv*
+      ((prenex_conv%
         (THENC
           (THENC
             (THENC
@@ -1781,50 +1854,55 @@
             (cl:cons (funcall REAL_ARITH (parse_term "x < y <=> x < y /\\ ~(x = y)")) nil))))
         (setup_conv (THENC (THENC NNF_CONV WEAK_CNF_CONV) #'CONJ_CANON_CONV))
         (core_rule
-          (lambdac (t*)
+          (lambdac (t%)
             (handler-case
-              (funcall REAL_RING t*)
+              (funcall REAL_RING t%)
               (hol2cl.runtime:ocaml-condition
                 (exception~2322)
                 (match exception~2322
-                  ((Failure _) (funcall REAL_ARITH t*))
+                  ((Failure _) (funcall REAL_ARITH t%))
                   (_ (raise exception~2322)))))))
         (is_inv
           (let
             ((inv_tm (parse_term "inv:real->real"))
               (is_div (is_binop (parse_term "(/):real->real->real"))))
+            (cl:declare (cl:ignorable inv_tm is_div))
             (lambdac (tm)
               (cl:and
                 (cl:or (funcall is_div tm) (cl:and (is_comb tm) (= (rator tm) inv_tm)))
                 (not (is_ratconst (rand tm))))))))
+      (cl:declare (cl:ignorable prenex_conv% setup_conv core_rule is_inv))
       (fletc
         ((BASIC_REAL_FIELD
           (tm)
-          (fletc ((is_freeinv (t*) (cl:and (funcall is_inv t*) (free_in t* tm))))
+          (fletc ((is_freeinv (t%) (cl:and (funcall is_inv t%) (free_in t% tm))))
             (let*
               ((itms (setify (map #'rand (funcall find_terms #'is_freeinv tm))))
                 (hyps
                   (map
-                    (lambdac (t*)
-                      (CONV_RULE easy_nz_conv (funcall SPEC t* REAL_MUL_RINV)))
+                    (lambdac (t%)
+                      (CONV_RULE easy_nz_conv (funcall SPEC t% REAL_MUL_RINV)))
                     itms))
-                (tm*
+                (tm%
                   (itlist
-                    (lambdac (th t*) (funcall mk_imp (tuple (concl th) t*)))
+                    (lambdac (th t%) (funcall mk_imp (tuple (concl th) t%)))
                     hyps
                     tm))
-                (th1 (funcall setup_conv tm*))
+                (th1 (funcall setup_conv tm%))
                 (cjs (funcall conjuncts (rand (concl th1))))
                 (ths (map core_rule cjs))
                 (th2 (EQ_MP (SYM th1) (end_itlist CONJ ths))))
+              (cl:declare (cl:ignorable itms hyps tm% th1 cjs ths th2))
               (rev_itlist (C MP) hyps th2)))))
         (lambdac (tm)
-          (let* ((th0 (funcall prenex_conv* tm)) (tm0 (rand (concl th0))))
+          (let* ((th0 (funcall prenex_conv% tm)) (tm0 (rand (concl th0))))
+            (cl:declare (cl:ignorable th0 tm0))
             (match (funcall strip_forall tm0)
               ((tuple avs bod)
                 (let*
                   ((th1 (funcall setup_conv bod))
                     (ths (map #'BASIC_REAL_FIELD (funcall conjuncts (rand (concl th1))))))
+                  (cl:declare (cl:ignorable th1 ths))
                   (EQ_MP
                     (SYM th0)
                     (funcall GENL avs (EQ_MP (SYM th1) (end_itlist CONJ ths)))))))))))))
@@ -1896,7 +1974,7 @@
                               (funcall REAL_ARITH (parse_term "&0 < &1 + abs x"))
                               (cl:cons REAL_MUL_LZERO nil)))))
                       (MAP_EVERY
-                        (lambdac (t*) (SPEC_TAC (tuple t* t*)))
+                        (lambdac (t%) (SPEC_TAC (tuple t% t%)))
                         (cl:cons
                           (parse_term "y:real")
                           (cl:cons (parse_term "x:real") nil))))

@@ -83,7 +83,7 @@
     mk_var
     mk_comb
     mk_abs
-    INST*
+    INST%
     frees
     EQ_MP
     dest_var
@@ -93,7 +93,7 @@
     concl
     bool_ty
     ASSUME
-    ABS*)
+    ABS%)
   (:shadowing-import-from
     :hol2cl.lib
     zip
@@ -177,6 +177,7 @@
           (pty (mk_fun_ty ty bool_ty))
           (s (mk_var (tuple "s" pty)))
           (x (mk_var (tuple "x" ty))))
+        (cl:declare (cl:ignorable ty pty s x))
         (let*
           ((eqvx (mk_comb (tuple eqv x)))
             (pred
@@ -185,9 +186,10 @@
             (th0 (BETA_CONV (mk_comb (tuple pred eqvx))))
             (th1 (funcall EXISTS (tuple (rand (concl th0)) x) (REFL eqvx)))
             (th2 (EQ_MP (SYM th0) th1)))
+          (cl:declare (cl:ignorable eqvx pred th0 th1 th2))
           (match (new_basic_type_definition tyname (tuple absname repname) th2)
-            ((tuple abs** rep)
-              (tuple abs** (CONV_RULE (funcall LAND_CONV #'BETA_CONV) rep)))))))))
+            ((tuple abs%% rep)
+              (tuple abs%% (CONV_RULE (funcall LAND_CONV #'BETA_CONV) rep)))))))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Given a welldefinedness theorem for a curried function f, of the form:    *)
@@ -219,10 +221,12 @@
               #'GEN_TAC
               (GEN_REWRITE_TAC (o LAND_CONV #'BINDER_CONV) (cl:cons EQ_SYM_EQ nil)))
             (funcall MATCH_ACCEPT_TAC SELECT_REFL))))))
+    (cl:declare (cl:ignorable SELECT_LEMMA))
     (lambdac (tybij2)
       (match (dest_comb (concl tybij2))
         ((tuple tybl tybr)
           (let ((eqvx (rand (body (rand (rand tybl))))))
+            (cl:declare (cl:ignorable eqvx))
             (match (dest_comb eqvx)
               ((tuple eqv xtm)
                 (match (dest_eq tybr)
@@ -230,6 +234,7 @@
                     (match (dest_comb dmr)
                       ((tuple dest mrt)
                         (let* ((mk (rator mrt)) (ety (type_of mrt)))
+                          (cl:declare (cl:ignorable mk ety))
                           (lambdac (arg~133 fname wth)
                             (match arg~133
                               ((tuple refl_th trans_th)
@@ -239,6 +244,7 @@
                                       (o (function-value #'snd 1) dest_forall)
                                       (concl wth)))
                                     (wfvs (frees wtm)))
+                                  (cl:declare (cl:ignorable wtm wfvs))
                                   (match
                                     (handler-case
                                       (F_F
@@ -271,6 +277,7 @@
                                                       (tuple (mk_comb (tuple dest ev)) rv)))
                                                   rvs
                                                   evs)))
+                                            (cl:declare (cl:ignorable rvs qvs evs mems))
                                             (match (dest_comb con)
                                               ((tuple lcon rcon)
                                                 (let*
@@ -294,15 +301,15 @@
                                                         (mk_comb (tuple mk datm))))
                                                     (newargs
                                                       (map
-                                                        (lambdac (e*)
+                                                        (lambdac (e%)
                                                           (handler-case
-                                                            (funcall lhs e*)
+                                                            (funcall lhs e%)
                                                             (hol2cl.runtime:ocaml-condition
                                                               (exception~235)
                                                               (match exception~235
                                                                 ((Failure _)
                                                                   (assoc
-                                                                    (funcall lhand e*)
+                                                                    (funcall lhand e%)
                                                                     (zip rvs evs)))
                                                                 (_ (raise exception~235))))))
                                                         hyps))
@@ -333,9 +340,10 @@
                                                     (dme_th
                                                       (let
                                                         ((th
-                                                          (INST*
+                                                          (INST%
                                                             (cl:cons (tuple eqvx rtm) nil)
                                                             tybij2)))
+                                                        (cl:declare (cl:ignorable th))
                                                         (EQ_MP
                                                           th
                                                           (funcall
@@ -344,25 +352,43 @@
                                                               (funcall lhs (concl th))
                                                               xtm)
                                                             (REFL eqvx)))))
-                                                    (ith (INST* (zip targs evs) eth))
+                                                    (ith (INST% (zip targs evs) eth))
                                                     (jth
                                                       (SUBS
                                                         (map
                                                           (lambdac (v)
-                                                            (INST*
+                                                            (INST%
                                                               (cl:cons (tuple v xtm) nil)
                                                               dme_th))
                                                           rvs)
                                                         ith)))
+                                                  (cl:declare
+                                                    (cl:ignorable
+                                                      u
+                                                      ucon
+                                                      dbod
+                                                      detm
+                                                      datm
+                                                      def
+                                                      newargs
+                                                      rdef
+                                                      ldef
+                                                      dth
+                                                      eth
+                                                      targs
+                                                      dme_th
+                                                      ith
+                                                      jth))
                                                   (match (dest_comb (rand (concl jth)))
                                                     ((tuple apop uxtm)
                                                       (let ((extm (body uxtm)))
+                                                        (cl:declare (cl:ignorable extm))
                                                         (match (funcall strip_exists extm)
-                                                          ((tuple evs* bod)
+                                                          ((tuple evs% bod)
                                                             (let*
                                                               ((th1 (ASSUME bod))
                                                                 (th2
-                                                                  (if (= evs* nil)
+                                                                  (if (= evs% nil)
                                                                     th1
                                                                     (match (CONJ_PAIR th1)
                                                                       ((tuple th2a th2b)
@@ -419,9 +445,15 @@
                                                                                     (_
                                                                                       (raise
                                                                                         exception~373)))))))
+                                                                          (cl:declare
+                                                                            (cl:ignorable
+                                                                              ethlist
+                                                                              th2c
+                                                                              th2d
+                                                                              th2e))
                                                                           (itlist
                                                                             #'SIMPLE_CHOOSE
-                                                                            evs*
+                                                                            evs%
                                                                             th2e))))))
                                                                 (th3 (ASSUME (concl th2)))
                                                                 (th4
@@ -435,7 +467,7 @@
                                                                 (th5
                                                                   (itlist
                                                                     #'SIMPLE_EXISTS
-                                                                    evs*
+                                                                    evs%
                                                                     (ASSUME bod)))
                                                                 (th6
                                                                   (MATCH_MP
@@ -451,7 +483,7 @@
                                                                     jth
                                                                     (AP_TERM
                                                                       apop
-                                                                      (ABS* u th7))))
+                                                                      (ABS% u th7))))
                                                                 (fconv
                                                                   (if (is_eq con)
                                                                     (funcall
@@ -462,6 +494,18 @@
                                                                   (CONV_RULE
                                                                     (RAND_CONV fconv)
                                                                     th8)))
+                                                              (cl:declare
+                                                                (cl:ignorable
+                                                                  th1
+                                                                  th2
+                                                                  th3
+                                                                  th4
+                                                                  th5
+                                                                  th6
+                                                                  th7
+                                                                  th8
+                                                                  fconv
+                                                                  th9))
                                                               (tuple
                                                                 eth
                                                                 (funcall GSYM th9)))))))))))))))))))))))))))))))))
@@ -552,10 +596,12 @@
                 (FIRST_ASSUM (lambdac (th) (GEN_REWRITE_TAC #'I (cl:cons th nil)))))
               (funcall CONV_TAC SELECT_CONV))
             (funcall ASM_MESON_TAC nil))))))
+    (cl:declare (cl:ignorable pth))
     (lambdac (tybij arg~662)
       (match arg~662
         ((tuple refl_th sym_th trans_th)
           (let ((tybij1 (GEN_ALL (fst tybij))) (tybij2 (GEN_ALL (snd tybij))))
+            (cl:declare (cl:ignorable tybij1 tybij2))
             (let*
               ((cth
                 (end_itlist
@@ -566,5 +612,6 @@
                       sym_th
                       (cl:cons trans_th (cl:cons tybij1 (cl:cons tybij2 nil)))))))
                 (ith (MATCH_MP pth cth)))
+              (cl:declare (cl:ignorable cth ith))
               (lambdac (trths) (REWRITE_RULE (cl:cons ith trths))))))))))
 

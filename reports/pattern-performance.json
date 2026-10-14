@@ -1,0 +1,80 @@
+{
+  "trivia": {
+    "cold_compile_and_load": {
+      "wall_seconds": 112.6807042700093,
+      "cpu_seconds": 112.63974,
+      "peak_rss_mib": 1822.1015625,
+      "compile_operation_wall_seconds_sum": 33.857051,
+      "compile_operation_cpu_seconds_sum": 33.859819,
+      "compiled_files": 93,
+      "fasl_bytes": 20903888,
+      "warnings": 0,
+      "rss_scope": "Entire cold ASDF process including compilation and prerequisite/core initialization; not compile-only RSS",
+      "style_warnings": 324,
+      "core_compile_operation_wall_seconds_sum": 32.685015,
+      "core_compiled_files": 48,
+      "core_fasl_bytes": 19740522
+    },
+    "fasl_startup": {
+      "wall_seconds": 80.92667932600307,
+      "cpu_seconds": 80.898611,
+      "peak_rss_mib": 239.76171875,
+      "core_wall_seconds": 80.698491,
+      "core_cpu_seconds": 80.681032,
+      "core_gc_seconds": 3.190283,
+      "core_allocated_bytes": 55727650256,
+      "compiled_source_files": 0
+    },
+    "runtime_sha256": {
+      "runtime/core.lisp": "57a026eba7629bdd35ff30e23db60cd5ae639406ceb8d7a4fb2903c74aa4a117",
+      "runtime/format.lisp": "01be6d69ebdd0e9e627d4c9c4dfe46afbd4f48d4f41b1e22755cc52a8ec715c7",
+      "runtime/package.lisp": "0ce386282e029512b37a615e19f3acf7f8f03f2dc0618ad3d2c5ac15f45d7729",
+      "runtime/stdlib.lisp": "231f8e1b2cb0afd9b45653db46dd68ece71992f0738b7545362ac7e09e43b6ce"
+    }
+  },
+  "structural": {
+    "cold_compile_and_load": {
+      "wall_seconds": 111.21686655300437,
+      "cpu_seconds": 111.101148,
+      "peak_rss_mib": 1079.875,
+      "compile_operation_wall_seconds_sum": 24.180735,
+      "compile_operation_cpu_seconds_sum": 24.175702,
+      "compiled_files": 51,
+      "core_compile_operation_wall_seconds_sum": 23.796723,
+      "core_compiled_files": 46,
+      "fasl_bytes": 21817272,
+      "warnings": 0,
+      "style_warnings": 97,
+      "rss_scope": "Entire cold ASDF process including compilation and prerequisite/core initialization; not compile-only RSS",
+      "core_fasl_bytes": 21535571
+    },
+    "fasl_startup": {
+      "wall_seconds": 82.04354807699565,
+      "cpu_seconds": 81.96146399999999,
+      "peak_rss_mib": 205.59375,
+      "core_wall_seconds": 81.782491,
+      "core_cpu_seconds": 81.774994,
+      "core_gc_seconds": 2.879935,
+      "core_allocated_bytes": 55734329328,
+      "compiled_source_files": 0
+    },
+    "runtime_sha256": {
+      "runtime/core.lisp": "2462f9252b893b9ef0358ca6adb559940eff052909f0a0383399145e37dcca2f",
+      "runtime/format.lisp": "01be6d69ebdd0e9e627d4c9c4dfe46afbd4f48d4f41b1e22755cc52a8ec715c7",
+      "runtime/pattern.lisp": "de5d1aa4ce06645ec957c6e1b0106b62a04bd5a6495aec4475a299eef398b0bc",
+      "runtime/package.lisp": "e6549e49d86c31e4eab14b88b33bc4c1af886479e8c2a4cca772530e2ebbe7cc",
+      "runtime/stdlib.lisp": "231f8e1b2cb0afd9b45653db46dd68ece71992f0738b7545362ac7e09e43b6ce"
+    }
+  },
+  "method": {
+    "runs_per_backend": 1,
+    "order": [
+      "trivia",
+      "structural"
+    ],
+    "baseline_commit": "1730c0299f7d677ba25be29d2dfbff0538fea354",
+    "peak_metric": "Linux wait4.ru_maxrss per child; KiB converted to MiB",
+    "caveat": "Single serial comparison, not repeated ABBA; cold peak includes initialization",
+    "candidate_refinement": "Final wildcard-read elimination and IGNORABLE declarations. Earlier candidate is retained in reports/history/pattern-initial-performance.json; original baseline measurements reused without rerunning."
+  }
+}

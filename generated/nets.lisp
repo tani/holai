@@ -35,7 +35,7 @@
     (defpackage :hol2cl.nets.si_map
       (:use :cl)
       (:shadow
-        Empty*
+        Empty%
         End
         More
         Node
@@ -57,7 +57,7 @@
         height
         is_empty
         join
-        make-Empty*
+        make-Empty%
         make-End
         make-More
         make-Node
@@ -94,7 +94,7 @@
     (defpackage :hol2cl.nets.i_map
       (:use :cl)
       (:shadow
-        Empty*
+        Empty%
         End
         More
         Node
@@ -116,7 +116,7 @@
         height
         is_empty
         join
-        make-Empty*
+        make-Empty%
         make-End
         make-More
         make-Node
@@ -173,7 +173,7 @@
         make-Vnet
         make-netnode_data
         merge_nets
-        merge_nets*
+        merge_nets%
         merge_opt
         net_update
         netnode_data
@@ -216,7 +216,7 @@
 (defpackage :hol2cl.nets.si_map
   (:use :cl)
   (:shadow
-    Empty*
+    Empty%
     End
     More
     Node
@@ -238,7 +238,7 @@
     height
     is_empty
     join
-    make-Empty*
+    make-Empty%
     make-End
     make-More
     make-Node
@@ -264,6 +264,7 @@
     make-Not_found
     make-None
     invalid-arg
+    guard
     funcall
     defvariant
     defunc
@@ -293,7 +294,7 @@
 (defpackage :hol2cl.nets.i_map
   (:use :cl)
   (:shadow
-    Empty*
+    Empty%
     End
     More
     Node
@@ -315,7 +316,7 @@
     height
     is_empty
     join
-    make-Empty*
+    make-Empty%
     make-End
     make-More
     make-Node
@@ -341,6 +342,7 @@
     make-Not_found
     make-None
     invalid-arg
+    guard
     funcall
     defvariant
     defunc
@@ -390,7 +392,7 @@
     make-Vnet
     make-netnode_data
     merge_nets
-    merge_nets*
+    merge_nets%
     merge_opt
     net_update
     netnode_data
@@ -467,8 +469,9 @@
     ((tuple s1 i1)
       (match arg~11
         ((tuple s2 i2)
-          (let ((c* (hol2cl.runtime:compare s1 s2)))
-            (if (<> c* 0) c* (hol2cl.runtime:compare i1 i2))))))))
+          (let ((c% (hol2cl.runtime:compare s1 s2)))
+            (cl:declare (cl:ignorable c%))
+            (if (<> c% 0) c% (hol2cl.runtime:compare i1 i2))))))))
 
 (in-package :hol2cl.nets)
 
@@ -480,114 +483,131 @@
 
 (in-package :hol2cl.nets.si_map)
 
-(defvariant t* (Empty*) (Node (:record l v d r h)))
+(defvariant t% (Empty%) (Node (:record l v d r h)))
 
-(defunc height (arg~47) (match arg~47 ((Empty*) 0) ((Node :h h) h)))
+(defunc height (arg~47) (match arg~47 ((Empty%) 0) ((Node :h h) h)))
 
 (defunc create (l x d r)
   (let ((hl (height l)) (hr (height r)))
+    (cl:declare (cl:ignorable hl hr))
     (make-Node :l l :v x :d d :r r :h (if (>= hl hr) (+ hl 1) (+ hr 1)))))
 
-(defunc singleton (x d) (make-Node :l (make-Empty*) :v x :d d :r (make-Empty*) :h 1))
+(defunc singleton (x d) (make-Node :l (make-Empty%) :v x :d d :r (make-Empty%) :h 1))
 
 (defunc bal (l x d r)
   (let*
-    ((hl (match l ((Empty*) 0) ((Node :h h) h)))
-      (hr (match r ((Empty*) 0) ((Node :h h) h))))
+    ((hl (match l ((Empty%) 0) ((Node :h h) h)))
+      (hr (match r ((Empty%) 0) ((Node :h h) h))))
+    (cl:declare (cl:ignorable hl hr))
     (if (> hl (+ hr 2))
       (match l
-        ((Empty*) (invalid-arg "Map.bal"))
+        ((Empty%) (invalid-arg "Map.bal"))
         ((Node :l ll :v lv :d ld :r lr)
           (if (>= (height ll) (height lr))
             (create ll lv ld (create lr x d r))
             (match lr
-              ((Empty*) (invalid-arg "Map.bal"))
+              ((Empty%) (invalid-arg "Map.bal"))
               ((Node :l lrl :v lrv :d lrd :r lrr)
                 (create (create ll lv ld lrl) lrv lrd (create lrr x d r)))))))
       (if (> hr (+ hl 2))
         (match r
-          ((Empty*) (invalid-arg "Map.bal"))
+          ((Empty%) (invalid-arg "Map.bal"))
           ((Node :l rl :v rv :d rd :r rr)
             (if (>= (height rr) (height rl))
               (create (create l x d rl) rv rd rr)
               (match rl
-                ((Empty*) (invalid-arg "Map.bal"))
+                ((Empty%) (invalid-arg "Map.bal"))
                 ((Node :l rll :v rlv :d rld :r rlr)
                   (create (create l x d rll) rlv rld (create rlr rv rd rr)))))))
         (make-Node :l l :v x :d d :r r :h (if (>= hl hr) (+ hl 1) (+ hr 1)))))))
 
-(defparameter empty (make-Empty*))
+(defparameter empty (make-Empty%))
 
-(defunc is_empty (arg~263) (match arg~263 ((Empty*) cl:t) (_ cl:nil)))
+(defunc is_empty (arg~263) (match arg~263 ((Empty%) cl:t) (_ cl:nil)))
 
 (defunc add (x data arg~273)
   (match arg~273
-    ((Empty*) (make-Node :l (make-Empty*) :v x :d data :r (make-Empty*) :h 1))
+    ((Empty%) (make-Node :l (make-Empty%) :v x :d data :r (make-Empty%) :h 1))
     ((cl:and m (Node :l l :v v :d d :r r :h h))
       (let ((c (compare x v)))
+        (cl:declare (cl:ignorable c))
         (if (= c 0)
           (if (== d data) m (make-Node :l l :v x :d data :r r :h h))
           (if (< c 0)
-            (let ((ll (add x data l))) (if (== l ll) m (bal ll v d r)))
-            (let ((rr (add x data r))) (if (== r rr) m (bal l v d rr)))))))))
+            (let ((ll (add x data l)))
+              (cl:declare (cl:ignorable ll))
+              (if (== l ll) m (bal ll v d r)))
+            (let ((rr (add x data r)))
+              (cl:declare (cl:ignorable rr))
+              (if (== r rr) m (bal l v d rr)))))))))
 
 (defunc find (x arg~355)
   (match arg~355
-    ((Empty*) (raise (make-Not_found)))
+    ((Empty%) (raise (make-Not_found)))
     ((Node :l l :v v :d d :r r)
-      (let ((c (compare x v))) (if (= c 0) d (find x (if (< c 0) l r)))))))
+      (let ((c (compare x v)))
+        (cl:declare (cl:ignorable c))
+        (if (= c 0) d (find x (if (< c 0) l r)))))))
 
 (defunc mem (x arg~390)
   (match arg~390
-    ((Empty*) cl:nil)
+    ((Empty%) cl:nil)
     ((Node :l l :v v :r r)
-      (let ((c (compare x v))) (cl:or (= c 0) (mem x (if (< c 0) l r)))))))
+      (let ((c (compare x v)))
+        (cl:declare (cl:ignorable c))
+        (cl:or (= c 0) (mem x (if (< c 0) l r)))))))
 
 (defunc min_binding (arg~420)
   (match arg~420
-    ((Empty*) (raise (make-Not_found)))
-    ((Node :l (Empty*) :v v :d d) (tuple v d))
+    ((Empty%) (raise (make-Not_found)))
+    ((Node :l (Empty%) :v v :d d) (tuple v d))
     ((Node :l l) (min_binding l))))
 
 (defunc remove_min_binding (arg~441)
   (match arg~441
-    ((Empty*) (invalid-arg "Map.remove_min_elt"))
-    ((Node :l (Empty*) :r r) r)
+    ((Empty%) (invalid-arg "Map.remove_min_elt"))
+    ((Node :l (Empty%) :r r) r)
     ((Node :l l :v v :d d :r r) (bal (remove_min_binding l) v d r))))
 
 (defunc merge~1 (t1 t2)
   (match (tuple t1 t2)
-    ((tuple (Empty*) t*) t*)
-    ((tuple t* (Empty*)) t*)
+    ((tuple (Empty%) t%) t%)
+    ((tuple t% (Empty%)) t%)
     ((tuple _ _)
       (match (min_binding t2) ((tuple x d) (bal t1 x d (remove_min_binding t2)))))))
 
 (defunc remove (x arg~504)
   (match arg~504
-    ((Empty*) (make-Empty*))
+    ((Empty%) (make-Empty%))
     ((cl:and m (Node :l l :v v :d d :r r))
       (let ((c (compare x v)))
+        (cl:declare (cl:ignorable c))
         (if (= c 0)
           (merge~1 l r)
           (if (< c 0)
-            (let ((ll (remove x l))) (if (== l ll) m (bal ll v d r)))
-            (let ((rr (remove x r))) (if (== r rr) m (bal l v d rr)))))))))
+            (let ((ll (remove x l)))
+              (cl:declare (cl:ignorable ll))
+              (if (== l ll) m (bal ll v d r)))
+            (let ((rr (remove x r)))
+              (cl:declare (cl:ignorable rr))
+              (if (== r rr) m (bal l v d rr)))))))))
 
 (defunc map (f arg~569)
   (match arg~569
-    ((Empty*) (make-Empty*))
+    ((Empty%) (make-Empty%))
     ((Node :l l :v v :d d :r r :h h)
-      (let* ((l* (map f l)) (d* (funcall f d)) (r* (map f r)))
-        (make-Node :l l* :v v :d d* :r r* :h h)))))
+      (let* ((l% (map f l)) (d% (funcall f d)) (r% (map f r)))
+        (cl:declare (cl:ignorable l% d% r%))
+        (make-Node :l l% :v v :d d% :r r% :h h)))))
 
 (defunc fold (f m accu)
   (match m
-    ((Empty*) accu)
+    ((Empty%) accu)
     ((Node :l l :v v :d d :r r) (fold f r (funcall f v d (fold f l accu))))))
 
 (defunc exists (p arg~635)
   (match arg~635
-    ((Empty*) cl:nil)
+    ((Empty%) cl:nil)
     ((Node :l l :v v :d d :r r) (cl:or (funcall p v d) (cl:or (exists p l) (exists p r))))))
 
 ;; (* Beware: those two functions assume that the added k is *strictly*
@@ -601,12 +621,12 @@
 
 (defunc add_min_binding (k x arg~663)
   (match arg~663
-    ((Empty*) (singleton k x))
+    ((Empty%) (singleton k x))
     ((Node :l l :v v :d d :r r) (bal (add_min_binding k x l) v d r))))
 
 (defunc add_max_binding (k x arg~690)
   (match arg~690
-    ((Empty*) (singleton k x))
+    ((Empty%) (singleton k x))
     ((Node :l l :v v :d d :r r) (bal l v d (add_max_binding k x r)))))
 
 ;; (* Same as create and bal, but no assumptions are made on the
@@ -615,8 +635,8 @@
 
 (defunc join (l v d r)
   (match (tuple l r)
-    ((tuple (Empty*) _) (add_min_binding v d r))
-    ((tuple _ (Empty*)) (add_max_binding v d l))
+    ((tuple (Empty%) _) (add_min_binding v d r))
+    ((tuple _ (Empty%)) (add_max_binding v d l))
     ((tuple (Node :l ll :v lv :d ld :r lr :h lh) (Node :l rl :v rv :d rd :r rr :h rh))
       (if (> lh (+ rh 2))
         (bal ll lv ld (join lr v d r))
@@ -629,19 +649,20 @@
 
 (defunc concat (t1 t2)
   (match (tuple t1 t2)
-    ((tuple (Empty*) t*) t*)
-    ((tuple t* (Empty*)) t*)
+    ((tuple (Empty%) t%) t%)
+    ((tuple t% (Empty%)) t%)
     ((tuple _ _)
       (match (min_binding t2) ((tuple x d) (join t1 x d (remove_min_binding t2)))))))
 
 (defunc concat_or_join (t1 v d t2)
-  (match d ((Some d*) (join t1 v d* t2)) ((None) (concat t1 t2))))
+  (match d ((Some d%) (join t1 v d% t2)) ((None) (concat t1 t2))))
 
 (defunc split (x arg~853)
   (match arg~853
-    ((Empty*) (tuple (make-Empty*) (make-None) (make-Empty*)))
+    ((Empty%) (tuple (make-Empty%) (make-None) (make-Empty%)))
     ((Node :l l :v v :d d :r r)
       (let ((c (compare x v)))
+        (cl:declare (cl:ignorable c))
         (if (= c 0)
           (tuple l (make-Some d) r)
           (if (< c 0)
@@ -650,8 +671,8 @@
 
 (defunc merge (f s1 s2)
   (match (tuple s1 s2)
-    ((tuple (Empty*) (Empty*)) (make-Empty*))
-    ((trivia:guard (tuple (Node :l l1 :v v1 :d d1 :r r1 :h h1) _) (>= h1 (height s2)))
+    ((tuple (Empty%) (Empty%)) (make-Empty%))
+    ((guard (tuple (Node :l l1 :v v1 :d d1 :r r1 :h h1) _) (>= h1 (height s2)))
       (match (split v1 s2)
         ((tuple l2 d2 r2)
           (concat_or_join
@@ -671,37 +692,40 @@
 
 (defunc union (f s1 s2)
   (match (tuple s1 s2)
-    ((cl:or (tuple (Empty*) s) (tuple s (Empty*))) s)
+    ((cl:or (tuple (Empty%) s) (tuple s (Empty%))) s)
     ((tuple (Node :l l1 :v v1 :d d1 :r r1 :h h1) (Node :l l2 :v v2 :d d2 :r r2 :h h2))
       (if (>= h1 h2)
         (match (split v1 s2)
-          ((tuple l2* d2* r2*)
-            (let ((l (union f l1 l2*)) (r (union f r1 r2*)))
-              (match d2*
+          ((tuple l2% d2% r2%)
+            (let ((l (union f l1 l2%)) (r (union f r1 r2%)))
+              (cl:declare (cl:ignorable l r))
+              (match d2%
                 ((None) (join l v1 d1 r))
                 ((Some d2) (concat_or_join l v1 (funcall f v1 d1 d2) r))))))
         (match (split v2 s1)
-          ((tuple l1* d1* r1*)
-            (let ((l (union f l1* l2)) (r (union f r1* r2)))
-              (match d1*
+          ((tuple l1% d1% r1%)
+            (let ((l (union f l1% l2)) (r (union f r1% r2)))
+              (cl:declare (cl:ignorable l r))
+              (match d1%
                 ((None) (join l v2 d2 r))
                 ((Some d1) (concat_or_join l v2 (funcall f v2 d1 d2) r))))))))))
 
 (defunc filter (p arg~1151)
   (match arg~1151
-    ((Empty*) (make-Empty*))
+    ((Empty%) (make-Empty%))
     ((cl:and m (Node :l l :v v :d d :r r))
-      (let* ((l* (filter p l)) (pvd (funcall p v d)) (r* (filter p r)))
-        (if pvd (if (cl:and (== l l*) (== r r*)) m (join l* v d r*)) (concat l* r*))))))
+      (let* ((l% (filter p l)) (pvd (funcall p v d)) (r% (filter p r)))
+        (cl:declare (cl:ignorable l% pvd r%))
+        (if pvd (if (cl:and (== l l%) (== r r%)) m (join l% v d r%)) (concat l% r%))))))
 
 (defvariant enumeration (End) (More field0 field1 field2 field3))
 
 (defunc cardinal (arg~1206)
-  (match arg~1206 ((Empty*) 0) ((Node :l l :r r) (+ (+ (cardinal l) 1) (cardinal r)))))
+  (match arg~1206 ((Empty%) 0) ((Node :l l :r r) (+ (+ (cardinal l) 1) (cardinal r)))))
 
 (defunc bindings_aux (accu arg~1225)
   (match arg~1225
-    ((Empty*) accu)
+    ((Empty%) accu)
     ((Node :l l :v v :d d :r r)
       (bindings_aux (cl:cons (tuple v d) (bindings_aux accu r)) l))))
 
@@ -711,114 +735,131 @@
 
 (in-package :hol2cl.nets.i_map)
 
-(defvariant t* (Empty*) (Node (:record l v d r h)))
+(defvariant t% (Empty%) (Node (:record l v d r h)))
 
-(defunc height (arg~1258) (match arg~1258 ((Empty*) 0) ((Node :h h) h)))
+(defunc height (arg~1258) (match arg~1258 ((Empty%) 0) ((Node :h h) h)))
 
 (defunc create (l x d r)
   (let ((hl (height l)) (hr (height r)))
+    (cl:declare (cl:ignorable hl hr))
     (make-Node :l l :v x :d d :r r :h (if (>= hl hr) (+ hl 1) (+ hr 1)))))
 
-(defunc singleton (x d) (make-Node :l (make-Empty*) :v x :d d :r (make-Empty*) :h 1))
+(defunc singleton (x d) (make-Node :l (make-Empty%) :v x :d d :r (make-Empty%) :h 1))
 
 (defunc bal (l x d r)
   (let*
-    ((hl (match l ((Empty*) 0) ((Node :h h) h)))
-      (hr (match r ((Empty*) 0) ((Node :h h) h))))
+    ((hl (match l ((Empty%) 0) ((Node :h h) h)))
+      (hr (match r ((Empty%) 0) ((Node :h h) h))))
+    (cl:declare (cl:ignorable hl hr))
     (if (> hl (+ hr 2))
       (match l
-        ((Empty*) (invalid-arg "Map.bal"))
+        ((Empty%) (invalid-arg "Map.bal"))
         ((Node :l ll :v lv :d ld :r lr)
           (if (>= (height ll) (height lr))
             (create ll lv ld (create lr x d r))
             (match lr
-              ((Empty*) (invalid-arg "Map.bal"))
+              ((Empty%) (invalid-arg "Map.bal"))
               ((Node :l lrl :v lrv :d lrd :r lrr)
                 (create (create ll lv ld lrl) lrv lrd (create lrr x d r)))))))
       (if (> hr (+ hl 2))
         (match r
-          ((Empty*) (invalid-arg "Map.bal"))
+          ((Empty%) (invalid-arg "Map.bal"))
           ((Node :l rl :v rv :d rd :r rr)
             (if (>= (height rr) (height rl))
               (create (create l x d rl) rv rd rr)
               (match rl
-                ((Empty*) (invalid-arg "Map.bal"))
+                ((Empty%) (invalid-arg "Map.bal"))
                 ((Node :l rll :v rlv :d rld :r rlr)
                   (create (create l x d rll) rlv rld (create rlr rv rd rr)))))))
         (make-Node :l l :v x :d d :r r :h (if (>= hl hr) (+ hl 1) (+ hr 1)))))))
 
-(defparameter empty (make-Empty*))
+(defparameter empty (make-Empty%))
 
-(defunc is_empty (arg~1474) (match arg~1474 ((Empty*) cl:t) (_ cl:nil)))
+(defunc is_empty (arg~1474) (match arg~1474 ((Empty%) cl:t) (_ cl:nil)))
 
 (defunc add (x data arg~1484)
   (match arg~1484
-    ((Empty*) (make-Node :l (make-Empty*) :v x :d data :r (make-Empty*) :h 1))
+    ((Empty%) (make-Node :l (make-Empty%) :v x :d data :r (make-Empty%) :h 1))
     ((cl:and m (Node :l l :v v :d d :r r :h h))
       (let ((c (compare x v)))
+        (cl:declare (cl:ignorable c))
         (if (= c 0)
           (if (== d data) m (make-Node :l l :v x :d data :r r :h h))
           (if (< c 0)
-            (let ((ll (add x data l))) (if (== l ll) m (bal ll v d r)))
-            (let ((rr (add x data r))) (if (== r rr) m (bal l v d rr)))))))))
+            (let ((ll (add x data l)))
+              (cl:declare (cl:ignorable ll))
+              (if (== l ll) m (bal ll v d r)))
+            (let ((rr (add x data r)))
+              (cl:declare (cl:ignorable rr))
+              (if (== r rr) m (bal l v d rr)))))))))
 
 (defunc find (x arg~1566)
   (match arg~1566
-    ((Empty*) (raise (make-Not_found)))
+    ((Empty%) (raise (make-Not_found)))
     ((Node :l l :v v :d d :r r)
-      (let ((c (compare x v))) (if (= c 0) d (find x (if (< c 0) l r)))))))
+      (let ((c (compare x v)))
+        (cl:declare (cl:ignorable c))
+        (if (= c 0) d (find x (if (< c 0) l r)))))))
 
 (defunc mem (x arg~1601)
   (match arg~1601
-    ((Empty*) cl:nil)
+    ((Empty%) cl:nil)
     ((Node :l l :v v :r r)
-      (let ((c (compare x v))) (cl:or (= c 0) (mem x (if (< c 0) l r)))))))
+      (let ((c (compare x v)))
+        (cl:declare (cl:ignorable c))
+        (cl:or (= c 0) (mem x (if (< c 0) l r)))))))
 
 (defunc min_binding (arg~1631)
   (match arg~1631
-    ((Empty*) (raise (make-Not_found)))
-    ((Node :l (Empty*) :v v :d d) (tuple v d))
+    ((Empty%) (raise (make-Not_found)))
+    ((Node :l (Empty%) :v v :d d) (tuple v d))
     ((Node :l l) (min_binding l))))
 
 (defunc remove_min_binding (arg~1652)
   (match arg~1652
-    ((Empty*) (invalid-arg "Map.remove_min_elt"))
-    ((Node :l (Empty*) :r r) r)
+    ((Empty%) (invalid-arg "Map.remove_min_elt"))
+    ((Node :l (Empty%) :r r) r)
     ((Node :l l :v v :d d :r r) (bal (remove_min_binding l) v d r))))
 
 (defunc merge~1 (t1 t2)
   (match (tuple t1 t2)
-    ((tuple (Empty*) t*) t*)
-    ((tuple t* (Empty*)) t*)
+    ((tuple (Empty%) t%) t%)
+    ((tuple t% (Empty%)) t%)
     ((tuple _ _)
       (match (min_binding t2) ((tuple x d) (bal t1 x d (remove_min_binding t2)))))))
 
 (defunc remove (x arg~1715)
   (match arg~1715
-    ((Empty*) (make-Empty*))
+    ((Empty%) (make-Empty%))
     ((cl:and m (Node :l l :v v :d d :r r))
       (let ((c (compare x v)))
+        (cl:declare (cl:ignorable c))
         (if (= c 0)
           (merge~1 l r)
           (if (< c 0)
-            (let ((ll (remove x l))) (if (== l ll) m (bal ll v d r)))
-            (let ((rr (remove x r))) (if (== r rr) m (bal l v d rr)))))))))
+            (let ((ll (remove x l)))
+              (cl:declare (cl:ignorable ll))
+              (if (== l ll) m (bal ll v d r)))
+            (let ((rr (remove x r)))
+              (cl:declare (cl:ignorable rr))
+              (if (== r rr) m (bal l v d rr)))))))))
 
 (defunc map (f arg~1780)
   (match arg~1780
-    ((Empty*) (make-Empty*))
+    ((Empty%) (make-Empty%))
     ((Node :l l :v v :d d :r r :h h)
-      (let* ((l* (map f l)) (d* (funcall f d)) (r* (map f r)))
-        (make-Node :l l* :v v :d d* :r r* :h h)))))
+      (let* ((l% (map f l)) (d% (funcall f d)) (r% (map f r)))
+        (cl:declare (cl:ignorable l% d% r%))
+        (make-Node :l l% :v v :d d% :r r% :h h)))))
 
 (defunc fold (f m accu)
   (match m
-    ((Empty*) accu)
+    ((Empty%) accu)
     ((Node :l l :v v :d d :r r) (fold f r (funcall f v d (fold f l accu))))))
 
 (defunc exists (p arg~1846)
   (match arg~1846
-    ((Empty*) cl:nil)
+    ((Empty%) cl:nil)
     ((Node :l l :v v :d d :r r) (cl:or (funcall p v d) (cl:or (exists p l) (exists p r))))))
 
 ;; (* Beware: those two functions assume that the added k is *strictly*
@@ -832,12 +873,12 @@
 
 (defunc add_min_binding (k x arg~1874)
   (match arg~1874
-    ((Empty*) (singleton k x))
+    ((Empty%) (singleton k x))
     ((Node :l l :v v :d d :r r) (bal (add_min_binding k x l) v d r))))
 
 (defunc add_max_binding (k x arg~1901)
   (match arg~1901
-    ((Empty*) (singleton k x))
+    ((Empty%) (singleton k x))
     ((Node :l l :v v :d d :r r) (bal l v d (add_max_binding k x r)))))
 
 ;; (* Same as create and bal, but no assumptions are made on the
@@ -846,8 +887,8 @@
 
 (defunc join (l v d r)
   (match (tuple l r)
-    ((tuple (Empty*) _) (add_min_binding v d r))
-    ((tuple _ (Empty*)) (add_max_binding v d l))
+    ((tuple (Empty%) _) (add_min_binding v d r))
+    ((tuple _ (Empty%)) (add_max_binding v d l))
     ((tuple (Node :l ll :v lv :d ld :r lr :h lh) (Node :l rl :v rv :d rd :r rr :h rh))
       (if (> lh (+ rh 2))
         (bal ll lv ld (join lr v d r))
@@ -860,19 +901,20 @@
 
 (defunc concat (t1 t2)
   (match (tuple t1 t2)
-    ((tuple (Empty*) t*) t*)
-    ((tuple t* (Empty*)) t*)
+    ((tuple (Empty%) t%) t%)
+    ((tuple t% (Empty%)) t%)
     ((tuple _ _)
       (match (min_binding t2) ((tuple x d) (join t1 x d (remove_min_binding t2)))))))
 
 (defunc concat_or_join (t1 v d t2)
-  (match d ((Some d*) (join t1 v d* t2)) ((None) (concat t1 t2))))
+  (match d ((Some d%) (join t1 v d% t2)) ((None) (concat t1 t2))))
 
 (defunc split (x arg~2064)
   (match arg~2064
-    ((Empty*) (tuple (make-Empty*) (make-None) (make-Empty*)))
+    ((Empty%) (tuple (make-Empty%) (make-None) (make-Empty%)))
     ((Node :l l :v v :d d :r r)
       (let ((c (compare x v)))
+        (cl:declare (cl:ignorable c))
         (if (= c 0)
           (tuple l (make-Some d) r)
           (if (< c 0)
@@ -881,8 +923,8 @@
 
 (defunc merge (f s1 s2)
   (match (tuple s1 s2)
-    ((tuple (Empty*) (Empty*)) (make-Empty*))
-    ((trivia:guard (tuple (Node :l l1 :v v1 :d d1 :r r1 :h h1) _) (>= h1 (height s2)))
+    ((tuple (Empty%) (Empty%)) (make-Empty%))
+    ((guard (tuple (Node :l l1 :v v1 :d d1 :r r1 :h h1) _) (>= h1 (height s2)))
       (match (split v1 s2)
         ((tuple l2 d2 r2)
           (concat_or_join
@@ -902,37 +944,40 @@
 
 (defunc union (f s1 s2)
   (match (tuple s1 s2)
-    ((cl:or (tuple (Empty*) s) (tuple s (Empty*))) s)
+    ((cl:or (tuple (Empty%) s) (tuple s (Empty%))) s)
     ((tuple (Node :l l1 :v v1 :d d1 :r r1 :h h1) (Node :l l2 :v v2 :d d2 :r r2 :h h2))
       (if (>= h1 h2)
         (match (split v1 s2)
-          ((tuple l2* d2* r2*)
-            (let ((l (union f l1 l2*)) (r (union f r1 r2*)))
-              (match d2*
+          ((tuple l2% d2% r2%)
+            (let ((l (union f l1 l2%)) (r (union f r1 r2%)))
+              (cl:declare (cl:ignorable l r))
+              (match d2%
                 ((None) (join l v1 d1 r))
                 ((Some d2) (concat_or_join l v1 (funcall f v1 d1 d2) r))))))
         (match (split v2 s1)
-          ((tuple l1* d1* r1*)
-            (let ((l (union f l1* l2)) (r (union f r1* r2)))
-              (match d1*
+          ((tuple l1% d1% r1%)
+            (let ((l (union f l1% l2)) (r (union f r1% r2)))
+              (cl:declare (cl:ignorable l r))
+              (match d1%
                 ((None) (join l v2 d2 r))
                 ((Some d1) (concat_or_join l v2 (funcall f v2 d1 d2) r))))))))))
 
 (defunc filter (p arg~2362)
   (match arg~2362
-    ((Empty*) (make-Empty*))
+    ((Empty%) (make-Empty%))
     ((cl:and m (Node :l l :v v :d d :r r))
-      (let* ((l* (filter p l)) (pvd (funcall p v d)) (r* (filter p r)))
-        (if pvd (if (cl:and (== l l*) (== r r*)) m (join l* v d r*)) (concat l* r*))))))
+      (let* ((l% (filter p l)) (pvd (funcall p v d)) (r% (filter p r)))
+        (cl:declare (cl:ignorable l% pvd r%))
+        (if pvd (if (cl:and (== l l%) (== r r%)) m (join l% v d r%)) (concat l% r%))))))
 
 (defvariant enumeration (End) (More field0 field1 field2 field3))
 
 (defunc cardinal (arg~2417)
-  (match arg~2417 ((Empty*) 0) ((Node :l l :r r) (+ (+ (cardinal l) 1) (cardinal r)))))
+  (match arg~2417 ((Empty%) 0) ((Node :l l :r r) (+ (+ (cardinal l) 1) (cardinal r)))))
 
 (defunc bindings_aux (accu arg~2436)
   (match arg~2436
-    ((Empty*) accu)
+    ((Empty%) accu)
     ((Node :l l :v v :d d :r r)
       (bindings_aux (cl:cons (tuple v d) (bindings_aux accu r)) l))))
 
@@ -980,14 +1025,15 @@
               (match (dest_abs op)
                 ((tuple bv bod)
                   (let
-                    ((bod*
+                    ((bod%
                       (if (mem bv lconsts)
                         (funcall
                           vsubst
                           (cl:cons (tuple (funcall genvar (type_of bv)) bv) nil)
                           bod)
                         bod)))
-                    (tuple (make-Lnet (funcall length args)) (cl:cons bod* args)))))
+                    (cl:declare (cl:ignorable bod%))
+                    (tuple (make-Lnet (funcall length args)) (cl:cons bod% args)))))
               (if (mem op lconsts)
                 (tuple
                   (make-Lcnet (tuple (fst (dest_var op)) (funcall length args)))
@@ -1018,6 +1064,7 @@
           (if (= l nil)
             (cl:cons x nil)
             (let ((h (hd l)))
+              (cl:declare (cl:ignorable h))
               (if (canon_eq h x)
                 (failwith "sinsert")
                 (if (canon_lt x h) (cl:cons x l) (cl:cons h (sinsert x (tl l)))))))))
@@ -1031,30 +1078,32 @@
                 (match exception~2614 ((Failure "sinsert") l) (_ (raise exception~2614)))))))
           (fletc
             ((update_si
-              (k* upd m)
+              (k% upd m)
               (let
                 ((child0
                   (handler-case
-                    (find k* m)
+                    (find k% m)
                     (hol2cl.runtime:ocaml-condition
                       (exception~2627)
                       (match exception~2627
                         ((Not_found) empty_net)
                         (_ (raise exception~2627)))))))
-                (add k* (funcall upd child0) m))))
+                (cl:declare (cl:ignorable child0))
+                (add k% (funcall upd child0) m))))
             (fletc
               ((update_int
-                (k* upd m)
+                (k% upd m)
                 (let
                   ((child0
                     (handler-case
-                      (hol2cl.nets.i_map:find k* m)
+                      (hol2cl.nets.i_map:find k% m)
                       (hol2cl.runtime:ocaml-condition
                         (exception~2645)
                         (match exception~2645
                           ((Not_found) empty_net)
                           (_ (raise exception~2645)))))))
-                  (hol2cl.nets.i_map:add k* (funcall upd child0) m))))
+                  (cl:declare (cl:ignorable child0))
+                  (hol2cl.nets.i_map:add k% (funcall upd child0) m))))
               (labelsc
                 ((net_update
                   (lconsts elem tms net)
@@ -1079,28 +1128,29 @@
                                     (let
                                       ((child0
                                         (match (record-field r :vnet)
-                                          ((Some c*) c*)
+                                          ((Some c%) c%)
                                           ((None) empty_net))))
+                                      (cl:declare (cl:ignorable child0))
                                       (make-Netnode
                                         (record-update r :vnet (make-Some (upd child0))))))
-                                  ((Cnet k*)
+                                  ((Cnet k%)
                                     (make-Netnode
                                       (record-update
                                         r
                                         :cnets
-                                        (update_si k* #'upd (record-field r :cnets)))))
-                                  ((Lcnet k*)
+                                        (update_si k% #'upd (record-field r :cnets)))))
+                                  ((Lcnet k%)
                                     (make-Netnode
                                       (record-update
                                         r
                                         :lcnets
-                                        (update_si k* #'upd (record-field r :lcnets)))))
-                                  ((Lnet k*)
+                                        (update_si k% #'upd (record-field r :lcnets)))))
+                                  ((Lnet k%)
                                     (make-Netnode
                                       (record-update
                                         r
                                         :lnets
-                                        (update_int k* #'upd (record-field r :lnets)))))))))))))))
+                                        (update_int k% #'upd (record-field r :lnets)))))))))))))))
                 (lambdac (lconsts arg~2757 net)
                   (match arg~2757
                     ((tuple tm elem) (net_update lconsts elem (cl:cons tm nil) net))))))))))))
@@ -1134,37 +1184,38 @@
                     (let
                       ((collection
                         (match label
-                          ((Cnet k*)
+                          ((Cnet k%)
                             (handler-case
                               (follow
                                 (append ntms rtms)
-                                (find k* (record-field r :cnets)))
+                                (find k% (record-field r :cnets)))
                               (hol2cl.runtime:ocaml-condition
                                 (exception~2842)
                                 (match exception~2842
                                   ((Not_found) nil)
                                   (_ (raise exception~2842))))))
-                          ((Lcnet k*)
+                          ((Lcnet k%)
                             (handler-case
                               (follow
                                 (append ntms rtms)
-                                (find k* (record-field r :lcnets)))
+                                (find k% (record-field r :lcnets)))
                               (hol2cl.runtime:ocaml-condition
                                 (exception~2857)
                                 (match exception~2857
                                   ((Not_found) nil)
                                   (_ (raise exception~2857))))))
-                          ((Lnet k*)
+                          ((Lnet k%)
                             (handler-case
                               (follow
                                 (append ntms rtms)
-                                (hol2cl.nets.i_map:find k* (record-field r :lnets)))
+                                (hol2cl.nets.i_map:find k% (record-field r :lnets)))
                               (hol2cl.runtime:ocaml-condition
                                 (exception~2872)
                                 (match exception~2872
                                   ((Not_found) nil)
                                   (_ (raise exception~2872))))))
                           ((Vnet) nil))))
+                      (cl:declare (cl:ignorable collection))
                       (match (record-field r :vnet)
                         ((None) collection)
                         ((Some vchild) (append collection (follow rtms vchild)))))))))))))
@@ -1201,13 +1252,14 @@
           (if (= l2 nil)
             l1
             (let ((h1 (hd l1)) (t1 (tl l1)) (h2 (hd l2)) (t2 (tl l2)))
+              (cl:declare (cl:ignorable h1 t1 h2 t2))
               (if (canon_eq h1 h2)
                 (cl:cons h1 (set_merge t1 t2))
                 (if (canon_lt h1 h2)
                   (cl:cons h1 (set_merge t1 l2))
                   (cl:cons h2 (set_merge l1 t2)))))))))
       (labelsc
-        ((merge_nets*
+        ((merge_nets%
           (arg~3003)
           (match arg~3003
             ((tuple n1 n2)
@@ -1217,16 +1269,17 @@
                     ((merge_opt
                       (a b)
                       (match (tuple a b)
-                        ((tuple (Some x) (Some y)) (make-Some (merge_nets* (tuple x y))))
+                        ((tuple (Some x) (Some y)) (make-Some (merge_nets% (tuple x y))))
                         ((tuple (Some _) (None)) a)
                         ((tuple (None) _) b))))
                     (let*
                       ((merge_si
                         (union
-                          (lambdac (arg~3038 a b) (make-Some (merge_nets* (tuple a b))))))
+                          (lambdac (arg~3038 a b) (make-Some (merge_nets% (tuple a b))))))
                         (merge_int
                           (hol2cl.nets.i_map:union
-                            (lambdac (arg~3050 a b) (make-Some (merge_nets* (tuple a b)))))))
+                            (lambdac (arg~3050 a b) (make-Some (merge_nets% (tuple a b)))))))
+                      (cl:declare (cl:ignorable merge_si merge_int))
                       (make-Netnode
                         (make-netnode_data
                           :vnet
@@ -1248,5 +1301,5 @@
                             (record-field r2 :lnets))
                           :tips
                           (set_merge (record-field r1 :tips) (record-field r2 :tips))))))))))))
-        #'merge_nets*))))
+        #'merge_nets%))))
 

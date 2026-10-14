@@ -18,10 +18,10 @@ let symbol s =
     | _ -> false in
   let stem=String.concat "" (String.split_on_char '\'' s) in
   let reserved=List.mem (String.lowercase_ascii stem) ["t";"nil";"pi"] in
-  let printed=String.map (fun c -> if safe c then c else '*') s in
-  let printed=if printed="" then "*" else printed in
+  let printed=String.map (fun c -> if safe c then c else '%') s in
+  let printed=if printed="" then "%" else printed in
   let numeric=try ignore (float_of_string stem); true with Failure _ -> false in
-  if reserved || numeric || printed="." then printed^"*" else printed
+  if reserved || numeric || printed="." then printed^"%" else printed
 let string s =
   let b=Buffer.create 16 in Buffer.add_char b '"';
   String.iter (fun c -> if c='"' || c='\\' then Buffer.add_char b '\\'; Buffer.add_char b c) s;

@@ -21,7 +21,7 @@
         accum
         alpha
         atoms
-        atoms*
+        atoms%
         binops
         bndvar
         body
@@ -46,12 +46,12 @@
         dest_uexists
         disjuncts
         find_path
-        find_path*
+        find_path%
         find_term
         find_terms
         finty
         follow_path
-        follow_path*
+        follow_path%
         free_in
         genvar
         is_binary
@@ -178,7 +178,7 @@
     accum
     alpha
     atoms
-    atoms*
+    atoms%
     binops
     bndvar
     body
@@ -203,12 +203,12 @@
     dest_uexists
     disjuncts
     find_path
-    find_path*
+    find_path%
     find_term
     find_terms
     finty
     follow_path
-    follow_path*
+    follow_path%
     free_in
     genvar
     is_binary
@@ -326,7 +326,7 @@
     curry
     can
     C
-    *->)
+    %->)
   (:shadowing-import-from
     :hol2cl.runtime
     unit
@@ -341,6 +341,7 @@
     match
     lambdac
     labelsc
+    guard
     function-value
     funcall
     fst
@@ -436,8 +437,10 @@
 
 (defparameter genvar
   (let ((gcounter (ref 0)))
+    (cl:declare (cl:ignorable gcounter))
     (lambdac (ty)
       (let ((count (deref gcounter)))
+        (cl:declare (cl:ignorable count))
         (progn
           (assign gcounter (+ count 1))
           (mk_var (tuple (string-concat "_" (string-of-int count)) ty)))))))
@@ -467,8 +470,8 @@
           (if (funcall is_vartype ty)
             ty
             (match (dest_type ty)
-              ((tuple tycon tyvars*)
-                (mk_type (tuple tycon (map (tysubst alist) tyvars*)))))))
+              ((tuple tycon tyvars%)
+                (mk_type (tuple tycon (map (tysubst alist) tyvars%)))))))
         (_ (raise exception~66))))))
 
 ;; (* ------------------------------------------------------------------------- *)
@@ -495,7 +498,7 @@
         (_ (raise exception~107))))))
 
 (defunc list_mk_comb (arg~118)
-  (match arg~118 ((tuple h t*) (rev_itlist (C (curry #'mk_comb)) t* h))))
+  (match arg~118 ((tuple h t%) (rev_itlist (C (curry #'mk_comb)) t% h))))
 
 (defunc list_mk_abs (arg~133)
   (match arg~133 ((tuple vs bod) (itlist (curry #'mk_abs) vs bod))))
@@ -511,20 +514,21 @@
 ;; (* ------------------------------------------------------------------------- *)
 
 
-(defunc is_binary (s tm) (match tm ((Comb (Comb (Const s* _) _) _) (= s* s)) (_ cl:nil)))
+(defunc is_binary (s tm) (match tm ((Comb (Comb (Const s% _) _) _) (= s% s)) (_ cl:nil)))
 
 (defunc dest_binary (s tm)
   (match tm
-    ((trivia:guard (Comb (Comb (Const s* _) l) r) (= s* s)) (tuple l r))
+    ((guard (Comb (Comb (Const s% _) l) r) (= s% s)) (tuple l r))
     (_ (failwith "dest_binary"))))
 
 (defunc mk_binary (s)
-  (let ((c* (mk_const (tuple s nil))))
+  (let ((c% (mk_const (tuple s nil))))
+    (cl:declare (cl:ignorable c%))
     (lambdac (arg~205)
       (match arg~205
         ((tuple l r)
           (handler-case
-            (mk_comb (tuple (mk_comb (tuple c* l)) r))
+            (mk_comb (tuple (mk_comb (tuple c% l)) r))
             (hol2cl.runtime:ocaml-condition
               (exception~209)
               (match exception~209
@@ -539,7 +543,9 @@
 (defunc variants (av vs)
   (if (= vs nil)
     nil
-    (let ((vh (variant av (hd vs)))) (cl:cons vh (variants (cl:cons vh av) (tl vs))))))
+    (let ((vh (variant av (hd vs))))
+      (cl:declare (cl:ignorable vh))
+      (cl:cons vh (variants (cl:cons vh av) (tl vs))))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Gets all variables (free and/or bound) in a term.                         *)
@@ -580,25 +586,28 @@
               ((Failure _)
                 (match tm
                   ((Comb f x)
-                    (let ((f* (ssubst ilist f)) (x* (ssubst ilist x)))
-                      (if (cl:and (== f* f) (== x* x)) tm (mk_comb (tuple f* x*)))))
+                    (let ((f% (ssubst ilist f)) (x% (ssubst ilist x)))
+                      (cl:declare (cl:ignorable f% x%))
+                      (if (cl:and (== f% f) (== x% x)) tm (mk_comb (tuple f% x%)))))
                   ((Abs v bod)
                     (let
-                      ((ilist*
+                      ((ilist%
                         (filter
                           (o
                             (o (function-value #'not 1) (vfree_in v))
                             (function-value #'snd 1))
                           ilist)))
-                      (mk_abs (tuple v (ssubst ilist* bod)))))
+                      (cl:declare (cl:ignorable ilist%))
+                      (mk_abs (tuple v (ssubst ilist% bod)))))
                   (_ tm)))
               (_ (raise exception~314))))))))
     (lambdac (ilist)
       (let
         ((theta
           (filter
-            (lambdac (arg~384) (match arg~384 ((tuple s t*) (<> (compare s t*) 0))))
+            (lambdac (arg~384) (match arg~384 ((tuple s t%) (<> (compare s t%) 0))))
             ilist)))
+        (cl:declare (cl:ignorable theta))
         (if (= theta nil)
           (lambdac (tm) tm)
           (match (unzip theta)
@@ -606,8 +615,9 @@
               (lambdac (tm)
                 (let*
                   ((gs (variants (funcall variables tm) (map (o genvar #'type_of) xs)))
-                    (tm* (ssubst (zip gs xs) tm)))
-                  (if (== tm* tm) tm (funcall vsubst (zip ts gs) tm*)))))))))))
+                    (tm% (ssubst (zip gs xs) tm)))
+                  (cl:declare (cl:ignorable gs tm%))
+                  (if (== tm% tm) tm (funcall vsubst (zip ts gs) tm%)))))))))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Alpha conversion term operation.                                          *)
@@ -655,12 +665,13 @@
 
 (defunc mk_mconst (arg~546)
   (match arg~546
-    ((tuple c* ty)
+    ((tuple c% ty)
       (handler-case
         (let*
-          ((uty (get_const_type c*))
+          ((uty (get_const_type c%))
             (mat (type_match uty ty nil))
-            (con (mk_const (tuple c* mat))))
+            (con (mk_const (tuple c% mat))))
+          (cl:declare (cl:ignorable uty mat con))
           (if (= (type_of con) ty) con (fail unit)))
         (hol2cl.runtime:ocaml-condition
           (exception~550)
@@ -679,6 +690,7 @@
       (match (dest_type (type_of tm1))
         ((tuple "fun" (cl:cons ty (cl:cons _ nil)))
           (let ((tyins (type_match ty (type_of tm2) nil)))
+            (cl:declare (cl:ignorable tyins))
             (mk_comb (tuple (funcall inst tyins tm1) tm2))))))))
 
 ;; (* ------------------------------------------------------------------------- *)
@@ -690,6 +702,7 @@
   (match (nsplit #'dest_fun_ty args (get_const_type cname))
     ((tuple atys _)
       (let ((tyin (itlist2 (lambdac (g a) (type_match g (type_of a))) atys args nil)))
+        (cl:declare (cl:ignorable tyin))
         (list_mk_comb (tuple (mk_const (tuple cname tyin)) args))))))
 
 ;; (* ------------------------------------------------------------------------- *)
@@ -698,7 +711,7 @@
 
 
 (defunc thm_frees (th)
-  (match (dest_thm th) ((tuple asl c*) (itlist (o #'union #'frees) asl (frees c*)))))
+  (match (dest_thm th) ((tuple asl c%) (itlist (o #'union #'frees) asl (frees c%)))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Is one term free in another?                                              *)
@@ -740,11 +753,12 @@
 (defparameter find_terms
   (labelsc
     ((accum
-      (tl* p tm)
-      (let ((tl** (if (funcall p tm) (insert tm tl*) tl*)))
+      (tl% p tm)
+      (let ((tl%% (if (funcall p tm) (insert tm tl%) tl%)))
+        (cl:declare (cl:ignorable tl%%))
         (if (is_abs tm)
-          (accum tl** p (body tm))
-          (if (is_comb tm) (accum (accum tl** p (rator tm)) p (rand tm)) tl**)))))
+          (accum tl%% p (body tm))
+          (if (is_comb tm) (accum (accum tl%% p (rator tm)) p (rand tm)) tl%%)))))
     (accum nil)))
 
 ;; (* ------------------------------------------------------------------------- *)
@@ -754,21 +768,22 @@
 ;; (* ------------------------------------------------------------------------- *)
 
 
-(defunc is_binder (s tm) (match tm ((Comb (Const s* _) (Abs _ _)) (= s* s)) (_ cl:nil)))
+(defunc is_binder (s tm) (match tm ((Comb (Const s% _) (Abs _ _)) (= s% s)) (_ cl:nil)))
 
 (defunc dest_binder (s tm)
   (match tm
-    ((trivia:guard (Comb (Const s* _) (Abs x t*)) (= s* s)) (tuple x t*))
+    ((guard (Comb (Const s% _) (Abs x t%)) (= s% s)) (tuple x t%))
     (_ (failwith "dest_binder"))))
 
 (defunc mk_binder (op)
-  (let ((c* (mk_const (tuple op nil))))
+  (let ((c% (mk_const (tuple op nil))))
+    (cl:declare (cl:ignorable c%))
     (lambdac (arg~845)
       (match arg~845
         ((tuple v tm)
           (mk_comb
             (tuple
-              (funcall inst (cl:cons (tuple (type_of v) aty) nil) c*)
+              (funcall inst (cl:cons (tuple (type_of v) aty) nil) c%)
               (mk_abs (tuple v tm)))))))))
 
 ;; (* ------------------------------------------------------------------------- *)
@@ -776,15 +791,17 @@
 ;; (* ------------------------------------------------------------------------- *)
 
 
-(defunc is_binop (op tm) (match tm ((Comb (Comb op* _) _) (= op* op)) (_ cl:nil)))
+(defunc is_binop (op tm) (match tm ((Comb (Comb op% _) _) (= op% op)) (_ cl:nil)))
 
 (defunc dest_binop (op tm)
   (match tm
-    ((trivia:guard (Comb (Comb op* l) r) (= op* op)) (tuple l r))
+    ((guard (Comb (Comb op% l) r) (= op% op)) (tuple l r))
     (_ (failwith "dest_binop"))))
 
 (defunc mk_binop (op tm1)
-  (let ((f (mk_comb (tuple op tm1)))) (lambdac (tm2) (mk_comb (tuple f tm2)))))
+  (let ((f (mk_comb (tuple op tm1))))
+    (cl:declare (cl:ignorable f))
+    (lambdac (tm2) (mk_comb (tuple f tm2)))))
 
 (defunc list_mk_binop (op) (end_itlist (mk_binop op)))
 
@@ -850,7 +867,7 @@
 (defunc dest_list (tm)
   (handler-case
     (match (splitlist dest_cons tm)
-      ((tuple tms nil*) (if (= (fst (dest_const nil*)) "NIL") tms (fail unit))))
+      ((tuple tms nil%) (if (= (fst (dest_const nil%)) "NIL") tms (fail unit))))
     (hol2cl.runtime:ocaml-condition
       (exception~1051)
       (match exception~1051
@@ -878,6 +895,7 @@
         (match (dest_comb tm)
           ((tuple l r)
             (let* ((n (* num_2 (dest_num r))) (cn (fst (dest_const l))))
+              (cl:declare (cl:ignorable n cn))
               (if (= cn "BIT0") n (if (= cn "BIT1") (+ n num_1) (fail unit)))))))))
     (lambdac (tm)
       (handler-case
@@ -901,6 +919,7 @@
 
 (defparameter dest_gabs
   (let ((dest_geq (dest_binary "GEQ")))
+    (cl:declare (cl:ignorable dest_geq))
     (lambdac (tm)
       (handler-case
         (if (is_abs tm)
@@ -924,9 +943,10 @@
     ((mk_forall
       (arg~1213)
       (match arg~1213
-        ((tuple v t*)
+        ((tuple v t%)
           (let ((cop (mk_const (tuple "!" (cl:cons (tuple (type_of v) aty) nil)))))
-            (mk_comb (tuple cop (mk_abs (tuple v t*)))))))))
+            (cl:declare (cl:ignorable cop))
+            (mk_comb (tuple cop (mk_abs (tuple v t%)))))))))
     (fletc
       ((list_mk_forall
         (arg~1239)
@@ -937,6 +957,7 @@
           (match arg~1252
             ((tuple t1 t2)
               (let ((p (mk_const (tuple "GEQ" (cl:cons (tuple (type_of t1) aty) nil)))))
+                (cl:declare (cl:ignorable p))
                 (mk_comb (tuple (mk_comb (tuple p t1)) t2)))))))
         (lambdac (arg~1277)
           (match arg~1277
@@ -954,6 +975,7 @@
                           f
                           (list_mk_forall
                             (tuple fvs (mk_geq (tuple (mk_comb (tuple f tm1)) tm2))))))))
+                  (cl:declare (cl:ignorable fvs fty f bod))
                   (mk_comb
                     (tuple (mk_const (tuple "GABS" (cl:cons (tuple fty aty) nil))) bod)))))))))))
 
@@ -976,6 +998,7 @@
           (match (funcall strip_gabs (hd aargs))
             ((tuple vars lebod)
               (let ((eqs (zip vars (tl aargs))))
+                (cl:declare (cl:ignorable eqs))
                 (match (dest_comb lebod)
                   ((tuple le bod)
                     (if (= (fst (dest_const le)) "LET_END") (tuple eqs bod) (fail unit))))))))))
@@ -999,6 +1022,7 @@
                   (mk_const (tuple "LET_END" (cl:cons (tuple (type_of bod) aty) nil)))
                   bod)))
               (lbod (list_mk_gabs (tuple lefts lend))))
+            (cl:declare (cl:ignorable lend lbod))
             (match (dest_fun_ty (type_of lbod))
               ((tuple ty1 ty2)
                 (let
@@ -1007,6 +1031,7 @@
                       (tuple
                         "LET"
                         (cl:cons (tuple ty1 aty) (cl:cons (tuple ty2 bty) nil))))))
+                  (cl:declare (cl:ignorable ltm))
                   (list_mk_comb (tuple ltm (cl:cons lbod rights))))))))))))
 
 ;; (* ------------------------------------------------------------------------- *)
@@ -1048,6 +1073,7 @@
         (let
           ((v
             (variant avoid (mk_var (tuple (string-concat s (string-of-int n)) (hd tys))))))
+          (cl:declare (cl:ignorable v))
           (cl:cons v (margs (+ n 1) s (cl:cons v avoid) (tl tys)))))))
     (lambdac (s avoid tys)
       (if (= (funcall length tys) 1)
@@ -1061,31 +1087,31 @@
 
 (defparameter find_path
   (labelsc
-    ((find_path*
+    ((find_path%
       (p tm)
       (if (funcall p tm)
         nil
         (if (is_abs tm)
-          (cl:cons "b" (find_path* p (body tm)))
+          (cl:cons "b" (find_path% p (body tm)))
           (handler-case
-            (cl:cons "r" (find_path* p (rand tm)))
+            (cl:cons "r" (find_path% p (rand tm)))
             (hol2cl.runtime:ocaml-condition
               (exception~1631)
               (match exception~1631
-                ((Failure _) (cl:cons "l" (find_path* p (rator tm))))
+                ((Failure _) (cl:cons "l" (find_path% p (rator tm))))
                 (_ (raise exception~1631)))))))))
-    (lambdac (p tm) (implode (find_path* p tm)))))
+    (lambdac (p tm) (implode (find_path% p tm)))))
 
 (defparameter follow_path
   (labelsc
-    ((follow_path*
+    ((follow_path%
       (s tm)
       (match s
         (nil tm)
-        ((cl:cons "l" t*) (follow_path* t* (rator tm)))
-        ((cl:cons "r" t*) (follow_path* t* (rand tm)))
-        ((cl:cons _ t*) (follow_path* t* (body tm))))))
-    (lambdac (s tm) (follow_path* (explode s) tm))))
+        ((cl:cons "l" t%) (follow_path% t% (rator tm)))
+        ((cl:cons "r" t%) (follow_path% t% (rand tm)))
+        ((cl:cons _ t%) (follow_path% t% (body tm))))))
+    (lambdac (s tm) (follow_path% (explode s) tm))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Considering a term as a propositional formula and returning atoms.        *)
@@ -1094,7 +1120,7 @@
 
 (defparameter atoms
   (labelsc
-    ((atoms*
+    ((atoms%
       (acc tm)
       (match tm
         ((cl:or
@@ -1106,11 +1132,11 @@
               (Const "=" (Tyapp "fun" (cl:cons (Tyapp "bool" nil) (cl:cons _ nil))))
               l)
             r))
-          (atoms* (atoms* acc l) r))
-        ((Comb (Const "~" _) l) (atoms* acc l))
-        (_ (funcall *-> tm unit acc)))))
+          (atoms% (atoms% acc l) r))
+        ((Comb (Const "~" _) l) (atoms% acc l))
+        (_ (funcall %-> tm unit acc)))))
     (lambdac (tm)
       (if (<> (type_of tm) bool_ty)
         (failwith "atoms: not Boolean")
-        (funcall foldl (lambdac (a x y) (cl:cons x a)) nil (atoms* undefined tm))))))
+        (funcall foldl (lambdac (a x y) (cl:cons x a)) nil (atoms% undefined tm))))))
 

@@ -87,9 +87,9 @@
     rator
     rand
     mk_var
-    MK_COMB*
+    MK_COMB%
     is_comb
-    INST*
+    INST%
     dest_comb
     concl)
   (:shadowing-import-from :hol2cl.lib tl striplist o num_1 num_0 map K itlist hd)
@@ -229,7 +229,7 @@
                                     (funcall
                                       THEN
                                       (MAP_EVERY
-                                        (lambdac (t*) (UNDISCH_THEN t* (K #'ALL_TAC)))
+                                        (lambdac (t%) (UNDISCH_THEN t% (K #'ALL_TAC)))
                                         (cl:cons
                                           (parse_term
                                             "!x:A y z. add x (add y z) = add (add x y) z")
@@ -277,6 +277,7 @@
               INDUCT_TAC)
             (funcall ASM_REWRITE_TAC (cl:cons MULT_CLAUSES nil))))))
       (true_tm (concl TRUTH)))
+    (cl:declare (cl:ignorable SEMIRING_PTHS true_tm))
     (lambdac (sth rth arg~114)
       (match arg~114
         ((tuple
@@ -369,6 +370,7 @@
                   (zero_tm (rand (concl pthm_06)))
                   (one_tm (rand (funcall lhand (concl pthm_14))))
                   (ty (type_of (rand (concl pthm_01)))))
+                (cl:declare (cl:ignorable add_tm mul_tm pow_tm zero_tm one_tm ty))
                 (let
                   ((p_tm (parse_term "p:num"))
                     (q_tm (parse_term "q:num"))
@@ -386,18 +388,37 @@
                     (x_tm (mk_var (tuple "x" ty)))
                     (y_tm (mk_var (tuple "y" ty)))
                     (z_tm (mk_var (tuple "z" ty))))
+                  (cl:declare
+                    (cl:ignorable
+                      p_tm
+                      q_tm
+                      zeron_tm
+                      onen_tm
+                      a_tm
+                      b_tm
+                      c_tm
+                      d_tm
+                      lx_tm
+                      ly_tm
+                      m_tm
+                      rx_tm
+                      ry_tm
+                      x_tm
+                      y_tm
+                      z_tm))
                   (let
                     ((dest_add (dest_binop add_tm))
                       (dest_mul (dest_binop mul_tm))
                       (dest_pow
                         (lambdac (tm)
                           (match (dest_binop pow_tm tm)
-                            ((tuple l r*)
-                              (if (funcall is_numeral r*)
-                                (tuple l r*)
+                            ((tuple l r%)
+                              (if (funcall is_numeral r%)
+                                (tuple l r%)
                                 (failwith "dest_pow"))))))
                       (is_add (is_binop add_tm))
                       (is_mul (is_binop mul_tm)))
+                    (cl:declare (cl:ignorable dest_add dest_mul dest_pow is_add is_mul))
                     (match
                       (if (= (concl rth) true_tm)
                         (tuple
@@ -405,7 +426,7 @@
                           rth
                           true_tm
                           true_tm
-                          (lambdac (t*) (tuple t* t*))
+                          (lambdac (t%) (tuple t% t%))
                           (K cl:nil))
                         (let
                           ((nthm_1 (funcall SPEC x_tm (funcall CONJUNCT1 rth)))
@@ -413,11 +434,14 @@
                               (SPECL
                                 (cl:cons x_tm (cl:cons y_tm nil))
                                 (funcall CONJUNCT2 rth))))
+                          (cl:declare (cl:ignorable nthm_1 nthm_2))
                           (let
                             ((sub_tm (rator (rator (funcall lhand (concl nthm_2)))))
                               (neg_tm (rator (funcall lhand (concl nthm_1)))))
+                            (cl:declare (cl:ignorable sub_tm neg_tm))
                             (let
                               ((dest_sub (dest_binop sub_tm)) (is_sub (is_binop sub_tm)))
+                              (cl:declare (cl:ignorable dest_sub is_sub))
                               (tuple nthm_1 nthm_2 sub_tm neg_tm dest_sub is_sub)))))
                       ((tuple nthm_1 nthm_2 sub_tm neg_tm dest_sub is_sub)
                         (lambdac (variable_order)
@@ -425,27 +449,28 @@
                             ((POWVAR_MUL_CONV
                               (tm)
                               (match (funcall dest_mul tm)
-                                ((tuple l r*)
+                                ((tuple l r%)
                                   (if
                                     (cl:and
                                       (funcall is_semiring_constant l)
-                                      (funcall is_semiring_constant r*))
+                                      (funcall is_semiring_constant r%))
                                     (funcall SEMIRING_MUL_CONV tm)
                                     (handler-case
                                       (match (funcall dest_pow l)
                                         ((tuple lx ln)
                                           (handler-case
-                                            (match (funcall dest_pow r*)
+                                            (match (funcall dest_pow r%)
                                               ((tuple rx rn)
                                                 (let
                                                   ((th1
-                                                    (INST*
+                                                    (INST%
                                                       (cl:cons
                                                         (tuple lx x_tm)
                                                         (cl:cons
                                                           (tuple ln p_tm)
                                                           (cl:cons (tuple rn q_tm) nil)))
                                                       pthm_29)))
+                                                  (cl:declare (cl:ignorable th1))
                                                   (match (dest_comb (rand (concl th1)))
                                                     ((tuple tm1 tm2)
                                                       (TRANS
@@ -459,11 +484,12 @@
                                                 ((Failure _)
                                                   (let
                                                     ((th1
-                                                      (INST*
+                                                      (INST%
                                                         (cl:cons
                                                           (tuple lx x_tm)
                                                           (cl:cons (tuple ln q_tm) nil))
                                                         pthm_31)))
+                                                    (cl:declare (cl:ignorable th1))
                                                     (match (dest_comb (rand (concl th1)))
                                                       ((tuple tm1 tm2)
                                                         (TRANS
@@ -477,15 +503,16 @@
                                         (match exception~305
                                           ((Failure _)
                                             (handler-case
-                                              (match (funcall dest_pow r*)
+                                              (match (funcall dest_pow r%)
                                                 ((tuple rx rn)
                                                   (let
                                                     ((th1
-                                                      (INST*
+                                                      (INST%
                                                         (cl:cons
                                                           (tuple rx x_tm)
                                                           (cl:cons (tuple rn q_tm) nil))
                                                         pthm_30)))
+                                                    (cl:declare (cl:ignorable th1))
                                                     (match (dest_comb (rand (concl th1)))
                                                       ((tuple tm1 tm2)
                                                         (TRANS
@@ -497,7 +524,7 @@
                                                 (exception~308)
                                                 (match exception~308
                                                   ((Failure _)
-                                                    (INST*
+                                                    (INST%
                                                       (cl:cons (tuple l x_tm) nil)
                                                       pthm_32))
                                                   (_ (raise exception~308))))))
@@ -507,11 +534,11 @@
                                 (th)
                                 (handler-case
                                   (match (funcall dest_mul (rand (concl th)))
-                                    ((tuple l r*)
+                                    ((tuple l r%)
                                       (if (= l one_tm)
                                         (TRANS
                                           th
-                                          (INST* (cl:cons (tuple r* x_tm) nil) pthm_01))
+                                          (INST% (cl:cons (tuple r% x_tm) nil) pthm_01))
                                         th)))
                                   (hol2cl.runtime:ocaml-condition
                                     (exception~455)
@@ -528,7 +555,7 @@
                                         (if (funcall is_semiring_constant bod)
                                           (funcall SEMIRING_POW_CONV tm)
                                           (match (dest_comb bod)
-                                            ((tuple lop r*)
+                                            ((tuple lop r%)
                                               (if (not (is_comb lop))
                                                 (REFL tm)
                                                 (match (dest_comb lop)
@@ -536,38 +563,40 @@
                                                     (if
                                                       (cl:and
                                                         (= op pow_tm)
-                                                        (funcall is_numeral r*))
+                                                        (funcall is_numeral r%))
                                                       (let
                                                         ((th1
-                                                          (INST*
+                                                          (INST%
                                                             (cl:cons
                                                               (tuple l x_tm)
                                                               (cl:cons
-                                                                (tuple r* p_tm)
+                                                                (tuple r% p_tm)
                                                                 (cl:cons
                                                                   (tuple ntm q_tm)
                                                                   nil)))
                                                             pthm_34)))
+                                                        (cl:declare (cl:ignorable th1))
                                                         (match
                                                           (dest_comb (rand (concl th1)))
-                                                          ((tuple l* r)
+                                                          ((tuple l% r)
                                                             (TRANS
                                                               th1
                                                               (AP_TERM
-                                                                l*
+                                                                l%
                                                                 (funcall NUM_MULT_CONV r))))))
                                                       (if (= op mul_tm)
                                                         (let
                                                           ((th1
-                                                            (INST*
+                                                            (INST%
                                                               (cl:cons
                                                                 (tuple l x_tm)
                                                                 (cl:cons
-                                                                  (tuple r* y_tm)
+                                                                  (tuple r% y_tm)
                                                                   (cl:cons
                                                                     (tuple ntm q_tm)
                                                                     nil)))
                                                               pthm_33)))
+                                                          (cl:declare (cl:ignorable th1))
                                                           (match
                                                             (dest_comb (rand (concl th1)))
                                                             ((tuple xy z)
@@ -582,35 +611,39 @@
                                                                       (thr
                                                                         (MONOMIAL_POW
                                                                           z
-                                                                          r*
+                                                                          r%
                                                                           ntm)))
+                                                                    (cl:declare
+                                                                      (cl:ignorable
+                                                                        thl
+                                                                        thr))
                                                                     (TRANS
                                                                       th1
-                                                                      (MK_COMB*
+                                                                      (MK_COMB%
                                                                         (tuple
                                                                           (AP_TERM x thl)
                                                                           thr)))))))))
                                                         (REFL tm))))))))))))
                                     (lambdac (tm)
                                       (match (dest_comb tm)
-                                        ((tuple lop r*)
+                                        ((tuple lop r%)
                                           (match (dest_comb lop)
                                             ((tuple op l)
                                               (if
                                                 (cl:or
                                                   (<> op pow_tm)
-                                                  (not (funcall is_numeral r*)))
+                                                  (not (funcall is_numeral r%)))
                                                 (failwith "MONOMIAL_POW_CONV")
-                                                (if (= r* zeron_tm)
-                                                  (INST*
+                                                (if (= r% zeron_tm)
+                                                  (INST%
                                                     (cl:cons (tuple l x_tm) nil)
                                                     pthm_35)
-                                                  (if (= r* onen_tm)
-                                                    (INST*
+                                                  (if (= r% onen_tm)
+                                                    (INST%
                                                       (cl:cons (tuple l x_tm) nil)
                                                       pthm_36)
                                                     (MONOMIAL_DEONE
-                                                      (MONOMIAL_POW tm l r*))))))))))))
+                                                      (MONOMIAL_POW tm l r%))))))))))))
                                   (MONOMIAL_MUL_CONV
                                     (fletc
                                       ((powvar
@@ -619,13 +652,13 @@
                                           one_tm
                                           (handler-case
                                             (match (dest_comb tm)
-                                              ((tuple lop r*)
+                                              ((tuple lop r%)
                                                 (match (dest_comb lop)
                                                   ((tuple op l)
                                                     (if
                                                       (cl:and
                                                         (= op pow_tm)
-                                                        (funcall is_numeral r*))
+                                                        (funcall is_numeral r%))
                                                       l
                                                       (failwith ""))))))
                                             (hol2cl.runtime:ocaml-condition
@@ -645,21 +678,24 @@
                                                 (if (funcall variable_order x y) (- 1) 1))))))
                                         (labelsc
                                           ((MONOMIAL_MUL
-                                            (tm l r*)
+                                            (tm l r%)
                                             (handler-case
                                               (match (funcall dest_mul l)
                                                 ((tuple lx ly)
                                                   (let ((vl (powvar lx)))
+                                                    (cl:declare (cl:ignorable vl))
                                                     (handler-case
-                                                      (match (funcall dest_mul r*)
+                                                      (match (funcall dest_mul r%)
                                                         ((tuple rx ry)
                                                           (let*
                                                             ((vr (powvar rx))
                                                               (ord (vorder vl vr)))
+                                                            (cl:declare
+                                                              (cl:ignorable vr ord))
                                                             (if (= ord 0)
                                                               (let
                                                                 ((th1
-                                                                  (INST*
+                                                                  (INST%
                                                                     (cl:cons
                                                                       (tuple lx lx_tm)
                                                                       (cl:cons
@@ -672,6 +708,8 @@
                                                                               ry_tm)
                                                                             nil))))
                                                                     pthm_15)))
+                                                                (cl:declare
+                                                                  (cl:ignorable th1))
                                                                 (match
                                                                   (dest_comb
                                                                     (rand (concl th1)))
@@ -690,6 +728,10 @@
                                                                               (TRANS
                                                                                 th1
                                                                                 th2)))
+                                                                          (cl:declare
+                                                                            (cl:ignorable
+                                                                              th2
+                                                                              th3))
                                                                           (match
                                                                             (dest_comb
                                                                               (rand
@@ -711,6 +753,9 @@
                                                                                         (rand
                                                                                           tm7)
                                                                                         tm8)))
+                                                                                    (cl:declare
+                                                                                      (cl:ignorable
+                                                                                        th4))
                                                                                     (TRANS
                                                                                       th3
                                                                                       (AP_TERM
@@ -722,7 +767,7 @@
                                                                     pthm_16
                                                                     pthm_17))
                                                                   (th1
-                                                                    (INST*
+                                                                    (INST%
                                                                       (cl:cons
                                                                         (tuple lx lx_tm)
                                                                         (cl:cons
@@ -737,6 +782,8 @@
                                                                                 ry_tm)
                                                                               nil))))
                                                                       th0)))
+                                                                (cl:declare
+                                                                  (cl:ignorable th0 th1))
                                                                 (match
                                                                   (dest_comb
                                                                     (rand (concl th1)))
@@ -756,22 +803,26 @@
                                                         (match exception~908
                                                           ((Failure _)
                                                             (let*
-                                                              ((vr (powvar r*))
+                                                              ((vr (powvar r%))
                                                                 (ord (vorder vl vr)))
+                                                              (cl:declare
+                                                                (cl:ignorable vr ord))
                                                               (if (= ord 0)
                                                                 (let
                                                                   ((th1
-                                                                    (INST*
+                                                                    (INST%
                                                                       (cl:cons
                                                                         (tuple lx lx_tm)
                                                                         (cl:cons
                                                                           (tuple ly ly_tm)
                                                                           (cl:cons
                                                                             (tuple
-                                                                              r*
+                                                                              r%
                                                                               rx_tm)
                                                                             nil)))
                                                                       pthm_18)))
+                                                                  (cl:declare
+                                                                    (cl:ignorable th1))
                                                                   (match
                                                                     (dest_comb
                                                                       (rand (concl th1)))
@@ -787,13 +838,16 @@
                                                                                   (POWVAR_MUL_CONV
                                                                                     tm4))
                                                                                 tm2)))
+                                                                            (cl:declare
+                                                                              (cl:ignorable
+                                                                                th2))
                                                                             (TRANS
                                                                               th1
                                                                               th2)))))))
                                                                 (if (< ord 0)
                                                                   (let
                                                                     ((th1
-                                                                      (INST*
+                                                                      (INST%
                                                                         (cl:cons
                                                                           (tuple lx lx_tm)
                                                                           (cl:cons
@@ -802,10 +856,12 @@
                                                                               ly_tm)
                                                                             (cl:cons
                                                                               (tuple
-                                                                                r*
+                                                                                r%
                                                                                 rx_tm)
                                                                               nil)))
                                                                         pthm_19)))
+                                                                    (cl:declare
+                                                                      (cl:ignorable th1))
                                                                     (match
                                                                       (dest_comb
                                                                         (rand (concl th1)))
@@ -822,11 +878,11 @@
                                                                                   (rand
                                                                                     tm3)
                                                                                   tm4))))))))
-                                                                  (INST*
+                                                                  (INST%
                                                                     (cl:cons
                                                                       (tuple l lx_tm)
                                                                       (cl:cons
-                                                                        (tuple r* rx_tm)
+                                                                        (tuple r% rx_tm)
                                                                         nil))
                                                                     pthm_20)))))
                                                           (_ (raise exception~908))))))))
@@ -835,16 +891,19 @@
                                                 (match exception~746
                                                   ((Failure _)
                                                     (let ((vl (powvar l)))
+                                                      (cl:declare (cl:ignorable vl))
                                                       (handler-case
-                                                        (match (funcall dest_mul r*)
+                                                        (match (funcall dest_mul r%)
                                                           ((tuple rx ry)
                                                             (let*
                                                               ((vr (powvar rx))
                                                                 (ord (vorder vl vr)))
+                                                              (cl:declare
+                                                                (cl:ignorable vr ord))
                                                               (if (= ord 0)
                                                                 (let
                                                                   ((th1
-                                                                    (INST*
+                                                                    (INST%
                                                                       (cl:cons
                                                                         (tuple l lx_tm)
                                                                         (cl:cons
@@ -855,6 +914,8 @@
                                                                               ry_tm)
                                                                             nil)))
                                                                       pthm_21)))
+                                                                  (cl:declare
+                                                                    (cl:ignorable th1))
                                                                   (match
                                                                     (dest_comb
                                                                       (rand (concl th1)))
@@ -873,7 +934,7 @@
                                                                 (if (> ord 0)
                                                                   (let
                                                                     ((th1
-                                                                      (INST*
+                                                                      (INST%
                                                                         (cl:cons
                                                                           (tuple l lx_tm)
                                                                           (cl:cons
@@ -886,6 +947,8 @@
                                                                                 ry_tm)
                                                                               nil)))
                                                                         pthm_22)))
+                                                                    (cl:declare
+                                                                      (cl:ignorable th1))
                                                                     (match
                                                                       (dest_comb
                                                                         (rand (concl th1)))
@@ -908,16 +971,18 @@
                                                           (match exception~752
                                                             ((Failure _)
                                                               (let*
-                                                                ((vr (powvar r*))
+                                                                ((vr (powvar r%))
                                                                   (ord (vorder vl vr)))
+                                                                (cl:declare
+                                                                  (cl:ignorable vr ord))
                                                                 (if (= ord 0)
                                                                   (POWVAR_MUL_CONV tm)
                                                                   (if (> ord 0)
-                                                                    (INST*
+                                                                    (INST%
                                                                       (cl:cons
                                                                         (tuple l lx_tm)
                                                                         (cl:cons
-                                                                          (tuple r* rx_tm)
+                                                                          (tuple r% rx_tm)
                                                                           nil))
                                                                       pthm_20)
                                                                     (REFL tm)))))
@@ -925,33 +990,34 @@
                                                   (_ (raise exception~746)))))))
                                           (lambdac (tm)
                                             (match (funcall dest_mul tm)
-                                              ((tuple l r*)
-                                                (MONOMIAL_DEONE (MONOMIAL_MUL tm l r*)))))))))
+                                              ((tuple l r%)
+                                                (MONOMIAL_DEONE (MONOMIAL_MUL tm l r%)))))))))
                                   (POLYNOMIAL_MONOMIAL_MUL_CONV
                                     (labelsc
                                       ((PMM_CONV
                                         (tm)
                                         (match (funcall dest_mul tm)
-                                          ((tuple l r*)
+                                          ((tuple l r%)
                                             (handler-case
-                                              (match (funcall dest_add r*)
+                                              (match (funcall dest_add r%)
                                                 ((tuple y z)
                                                   (let
                                                     ((th1
-                                                      (INST*
+                                                      (INST%
                                                         (cl:cons
                                                           (tuple l x_tm)
                                                           (cl:cons
                                                             (tuple y y_tm)
                                                             (cl:cons (tuple z z_tm) nil)))
                                                         pthm_37)))
+                                                    (cl:declare (cl:ignorable th1))
                                                     (match (dest_comb (rand (concl th1)))
                                                       ((tuple tm1 tm2)
                                                         (match (dest_comb tm1)
                                                           ((tuple tm3 tm4)
                                                             (let
                                                               ((th2
-                                                                (MK_COMB*
+                                                                (MK_COMB%
                                                                   (tuple
                                                                     (AP_TERM
                                                                       tm3
@@ -959,6 +1025,8 @@
                                                                         MONOMIAL_MUL_CONV
                                                                         tm4))
                                                                     (PMM_CONV tm2)))))
+                                                              (cl:declare
+                                                                (cl:ignorable th2))
                                                               (TRANS th1 th2)))))))))
                                               (hol2cl.runtime:ocaml-condition
                                                 (exception~1220)
@@ -967,15 +1035,20 @@
                                                     (funcall MONOMIAL_MUL_CONV tm))
                                                   (_ (raise exception~1220)))))))))
                                       #'PMM_CONV)))
+                                (cl:declare
+                                  (cl:ignorable
+                                    MONOMIAL_POW_CONV
+                                    MONOMIAL_MUL_CONV
+                                    POLYNOMIAL_MONOMIAL_MUL_CONV))
                                 (fletc
                                   ((MONOMIAL_ADD_CONV
                                     (tm)
                                     (match (funcall dest_add tm)
-                                      ((tuple l r*)
+                                      ((tuple l r%)
                                         (if
                                           (cl:and
                                             (funcall is_semiring_constant l)
-                                            (funcall is_semiring_constant r*))
+                                            (funcall is_semiring_constant r%))
                                           (funcall SEMIRING_ADD_CONV tm)
                                           (let
                                             ((th1
@@ -987,38 +1060,39 @@
                                                     (funcall lhand l)))
                                                 (if
                                                   (cl:and
-                                                    (funcall is_mul r*)
+                                                    (funcall is_mul r%)
                                                     (funcall
                                                       is_semiring_constant
-                                                      (funcall lhand r*)))
-                                                  (INST*
+                                                      (funcall lhand r%)))
+                                                  (INST%
                                                     (cl:cons
                                                       (tuple (funcall lhand l) a_tm)
                                                       (cl:cons
-                                                        (tuple (funcall lhand r*) b_tm)
+                                                        (tuple (funcall lhand r%) b_tm)
                                                         (cl:cons
-                                                          (tuple (rand r*) m_tm)
+                                                          (tuple (rand r%) m_tm)
                                                           nil)))
                                                     pthm_02)
-                                                  (INST*
+                                                  (INST%
                                                     (cl:cons
                                                       (tuple (funcall lhand l) a_tm)
-                                                      (cl:cons (tuple r* m_tm) nil))
+                                                      (cl:cons (tuple r% m_tm) nil))
                                                     pthm_03))
                                                 (if
                                                   (cl:and
-                                                    (funcall is_mul r*)
+                                                    (funcall is_mul r%)
                                                     (funcall
                                                       is_semiring_constant
-                                                      (funcall lhand r*)))
-                                                  (INST*
+                                                      (funcall lhand r%)))
+                                                  (INST%
                                                     (cl:cons
-                                                      (tuple (funcall lhand r*) a_tm)
+                                                      (tuple (funcall lhand r%) a_tm)
                                                       (cl:cons (tuple l m_tm) nil))
                                                     pthm_04)
-                                                  (INST*
-                                                    (cl:cons (tuple r* m_tm) nil)
+                                                  (INST%
+                                                    (cl:cons (tuple r% m_tm) nil)
                                                     pthm_05)))))
+                                            (cl:declare (cl:ignorable th1))
                                             (match (dest_comb (rand (concl th1)))
                                               ((tuple tm1 tm2)
                                                 (match (dest_comb tm1)
@@ -1030,10 +1104,12 @@
                                                           (funcall SEMIRING_ADD_CONV tm4)))
                                                         (th3 (TRANS th1 (AP_THM th2 tm2)))
                                                         (tm5 (rand (concl th3))))
+                                                      (cl:declare
+                                                        (cl:ignorable th2 th3 tm5))
                                                       (if (= (funcall lhand tm5) zero_tm)
                                                         (TRANS
                                                           th3
-                                                          (INST*
+                                                          (INST%
                                                             (cl:cons
                                                               (tuple (rand tm5) m_tm)
                                                               nil)
@@ -1043,6 +1119,7 @@
                                     ((powervars
                                       (tm)
                                       (let ((ptms (striplist dest_mul tm)))
+                                        (cl:declare (cl:ignorable ptms))
                                         (if (funcall is_semiring_constant (hd ptms))
                                           (tl ptms)
                                           ptms))))
@@ -1090,6 +1167,7 @@
                                                   (map #'dest_varpow (powervars tm1)))
                                                   (vdegs2
                                                     (map #'dest_varpow (powervars tm2))))
+                                                (cl:declare (cl:ignorable vdegs1 vdegs2))
                                                 (let
                                                   ((deg1
                                                     (itlist
@@ -1105,6 +1183,7 @@
                                                           (function-value #'snd 1))
                                                         vdegs2
                                                         num_0)))
+                                                  (cl:declare (cl:ignorable deg1 deg2))
                                                   (if (< deg1 deg2)
                                                     (- 1)
                                                     (if (> deg1 deg2)
@@ -1115,23 +1194,25 @@
                                               ((DEZERO_RULE
                                                 (th)
                                                 (let ((tm (rand (concl th))))
+                                                  (cl:declare (cl:ignorable tm))
                                                   (if (not (funcall is_add tm))
                                                     th
                                                     (match (dest_comb tm)
-                                                      ((tuple lop r*)
+                                                      ((tuple lop r%)
                                                         (let ((l (rand lop)))
+                                                          (cl:declare (cl:ignorable l))
                                                           (if (= l zero_tm)
                                                             (TRANS
                                                               th
-                                                              (INST*
+                                                              (INST%
                                                                 (cl:cons
-                                                                  (tuple r* a_tm)
+                                                                  (tuple r% a_tm)
                                                                   nil)
                                                                 pthm_07))
-                                                            (if (= r* zero_tm)
+                                                            (if (= r% zero_tm)
                                                               (TRANS
                                                                 th
-                                                                (INST*
+                                                                (INST%
                                                                   (cl:cons
                                                                     (tuple l a_tm)
                                                                     nil)
@@ -1141,43 +1222,46 @@
                                                 ((PADD
                                                   (tm)
                                                   (match (funcall dest_add tm)
-                                                    ((tuple l r*)
+                                                    ((tuple l r%)
                                                       (if (= l zero_tm)
-                                                        (INST*
-                                                          (cl:cons (tuple r* a_tm) nil)
+                                                        (INST%
+                                                          (cl:cons (tuple r% a_tm) nil)
                                                           pthm_07)
-                                                        (if (= r* zero_tm)
-                                                          (INST*
+                                                        (if (= r% zero_tm)
+                                                          (INST%
                                                             (cl:cons (tuple l a_tm) nil)
                                                             pthm_08)
                                                           (if (funcall is_add l)
                                                             (match (funcall dest_add l)
-                                                              ((tuple a* b*)
-                                                                (if (funcall is_add r*)
+                                                              ((tuple a% b%)
+                                                                (if (funcall is_add r%)
                                                                   (match
-                                                                    (funcall dest_add r*)
-                                                                    ((tuple c* d)
+                                                                    (funcall dest_add r%)
+                                                                    ((tuple c% d)
                                                                       (let
                                                                         ((ord
                                                                           (funcall
                                                                             morder
-                                                                            a*
-                                                                            c*)))
+                                                                            a%
+                                                                            c%)))
+                                                                        (cl:declare
+                                                                          (cl:ignorable
+                                                                            ord))
                                                                         (if (= ord 0)
                                                                           (let
                                                                             ((th1
-                                                                              (INST*
+                                                                              (INST%
                                                                                 (cl:cons
                                                                                   (tuple
-                                                                                    a*
+                                                                                    a%
                                                                                     a_tm)
                                                                                   (cl:cons
                                                                                     (tuple
-                                                                                      b*
+                                                                                      b%
                                                                                       b_tm)
                                                                                     (cl:cons
                                                                                       (tuple
-                                                                                        c*
+                                                                                        c%
                                                                                         c_tm)
                                                                                       (cl:cons
                                                                                         (tuple
@@ -1185,6 +1269,9 @@
                                                                                           d_tm)
                                                                                         nil))))
                                                                                 pthm_23)))
+                                                                            (cl:declare
+                                                                              (cl:ignorable
+                                                                                th1))
                                                                             (match
                                                                               (dest_comb
                                                                                 (rand
@@ -1205,10 +1292,13 @@
                                                                                           tm3
                                                                                           (MONOMIAL_ADD_CONV
                                                                                             tm4))))
+                                                                                      (cl:declare
+                                                                                        (cl:ignorable
+                                                                                          th2))
                                                                                       (DEZERO_RULE
                                                                                         (TRANS
                                                                                           th1
-                                                                                          (MK_COMB*
+                                                                                          (MK_COMB%
                                                                                             (tuple
                                                                                               th2
                                                                                               (PADD
@@ -1217,29 +1307,29 @@
                                                                             ((th1
                                                                               (if
                                                                                 (> ord 0)
-                                                                                (INST*
+                                                                                (INST%
                                                                                   (cl:cons
                                                                                     (tuple
-                                                                                      a*
+                                                                                      a%
                                                                                       a_tm)
                                                                                     (cl:cons
                                                                                       (tuple
-                                                                                        b*
+                                                                                        b%
                                                                                         b_tm)
                                                                                       (cl:cons
                                                                                         (tuple
-                                                                                          r*
+                                                                                          r%
                                                                                           c_tm)
                                                                                         nil)))
                                                                                   pthm_24)
-                                                                                (INST*
+                                                                                (INST%
                                                                                   (cl:cons
                                                                                     (tuple
                                                                                       l
                                                                                       a_tm)
                                                                                     (cl:cons
                                                                                       (tuple
-                                                                                        c*
+                                                                                        c%
                                                                                         c_tm)
                                                                                       (cl:cons
                                                                                         (tuple
@@ -1247,6 +1337,9 @@
                                                                                           d_tm)
                                                                                         nil)))
                                                                                   pthm_25))))
+                                                                            (cl:declare
+                                                                              (cl:ignorable
+                                                                                th1))
                                                                             (match
                                                                               (dest_comb
                                                                                 (rand
@@ -1266,26 +1359,31 @@
                                                                     ((ord
                                                                       (funcall
                                                                         morder
-                                                                        a*
-                                                                        r*)))
+                                                                        a%
+                                                                        r%)))
+                                                                    (cl:declare
+                                                                      (cl:ignorable ord))
                                                                     (if (= ord 0)
                                                                       (let
                                                                         ((th1
-                                                                          (INST*
+                                                                          (INST%
                                                                             (cl:cons
                                                                               (tuple
-                                                                                a*
+                                                                                a%
                                                                                 a_tm)
                                                                               (cl:cons
                                                                                 (tuple
-                                                                                  b*
+                                                                                  b%
                                                                                   b_tm)
                                                                                 (cl:cons
                                                                                   (tuple
-                                                                                    r*
+                                                                                    r%
                                                                                     c_tm)
                                                                                   nil)))
                                                                             pthm_26)))
+                                                                        (cl:declare
+                                                                          (cl:ignorable
+                                                                            th1))
                                                                         (match
                                                                           (dest_comb
                                                                             (rand
@@ -1305,6 +1403,9 @@
                                                                                         (MONOMIAL_ADD_CONV
                                                                                           tm4))
                                                                                       tm2)))
+                                                                                  (cl:declare
+                                                                                    (cl:ignorable
+                                                                                      th2))
                                                                                   (DEZERO_RULE
                                                                                     (TRANS
                                                                                       th1
@@ -1312,21 +1413,24 @@
                                                                       (if (> ord 0)
                                                                         (let
                                                                           ((th1
-                                                                            (INST*
+                                                                            (INST%
                                                                               (cl:cons
                                                                                 (tuple
-                                                                                  a*
+                                                                                  a%
                                                                                   a_tm)
                                                                                 (cl:cons
                                                                                   (tuple
-                                                                                    b*
+                                                                                    b%
                                                                                     b_tm)
                                                                                   (cl:cons
                                                                                     (tuple
-                                                                                      r*
+                                                                                      r%
                                                                                       c_tm)
                                                                                     nil)))
                                                                               pthm_24)))
+                                                                          (cl:declare
+                                                                            (cl:ignorable
+                                                                              th1))
                                                                           (match
                                                                             (dest_comb
                                                                               (rand
@@ -1343,37 +1447,39 @@
                                                                                     (PADD
                                                                                       tm2)))))))
                                                                         (DEZERO_RULE
-                                                                          (INST*
+                                                                          (INST%
                                                                             (cl:cons
                                                                               (tuple
                                                                                 l
                                                                                 a_tm)
                                                                               (cl:cons
                                                                                 (tuple
-                                                                                  r*
+                                                                                  r%
                                                                                   c_tm)
                                                                                 nil))
                                                                             pthm_27))))))))
-                                                            (if (funcall is_add r*)
-                                                              (match (funcall dest_add r*)
-                                                                ((tuple c* d)
+                                                            (if (funcall is_add r%)
+                                                              (match (funcall dest_add r%)
+                                                                ((tuple c% d)
                                                                   (let
                                                                     ((ord
                                                                       (funcall
                                                                         morder
                                                                         l
-                                                                        c*)))
+                                                                        c%)))
+                                                                    (cl:declare
+                                                                      (cl:ignorable ord))
                                                                     (if (= ord 0)
                                                                       (let
                                                                         ((th1
-                                                                          (INST*
+                                                                          (INST%
                                                                             (cl:cons
                                                                               (tuple
                                                                                 l
                                                                                 a_tm)
                                                                               (cl:cons
                                                                                 (tuple
-                                                                                  c*
+                                                                                  c%
                                                                                   c_tm)
                                                                                 (cl:cons
                                                                                   (tuple
@@ -1381,6 +1487,9 @@
                                                                                     d_tm)
                                                                                   nil)))
                                                                             pthm_28)))
+                                                                        (cl:declare
+                                                                          (cl:ignorable
+                                                                            th1))
                                                                         (match
                                                                           (dest_comb
                                                                             (rand
@@ -1400,6 +1509,9 @@
                                                                                         (MONOMIAL_ADD_CONV
                                                                                           tm4))
                                                                                       tm2)))
+                                                                                  (cl:declare
+                                                                                    (cl:ignorable
+                                                                                      th2))
                                                                                   (DEZERO_RULE
                                                                                     (TRANS
                                                                                       th1
@@ -1408,14 +1520,14 @@
                                                                         (REFL tm)
                                                                         (let
                                                                           ((th1
-                                                                            (INST*
+                                                                            (INST%
                                                                               (cl:cons
                                                                                 (tuple
                                                                                   l
                                                                                   a_tm)
                                                                                 (cl:cons
                                                                                   (tuple
-                                                                                    c*
+                                                                                    c%
                                                                                     c_tm)
                                                                                   (cl:cons
                                                                                     (tuple
@@ -1423,6 +1535,9 @@
                                                                                       d_tm)
                                                                                     nil)))
                                                                               pthm_25)))
+                                                                          (cl:declare
+                                                                            (cl:ignorable
+                                                                              th1))
                                                                           (match
                                                                             (dest_comb
                                                                               (rand
@@ -1440,19 +1555,21 @@
                                                                                       tm2))))))))))))
                                                               (let
                                                                 ((ord
-                                                                  (funcall morder l r*)))
+                                                                  (funcall morder l r%)))
+                                                                (cl:declare
+                                                                  (cl:ignorable ord))
                                                                 (if (= ord 0)
                                                                   (MONOMIAL_ADD_CONV tm)
                                                                   (if (> ord 0)
                                                                     (DEZERO_RULE
                                                                       (REFL tm))
                                                                     (DEZERO_RULE
-                                                                      (INST*
+                                                                      (INST%
                                                                         (cl:cons
                                                                           (tuple l a_tm)
                                                                           (cl:cons
                                                                             (tuple
-                                                                              r*
+                                                                              r%
                                                                               c_tm)
                                                                             nil))
                                                                         pthm_27)))))))))))))
@@ -1462,39 +1579,42 @@
                                               ((PMUL
                                                 (tm)
                                                 (match (funcall dest_mul tm)
-                                                  ((tuple l r*)
+                                                  ((tuple l r%)
                                                     (if (not (funcall is_add l))
                                                       (funcall
                                                         POLYNOMIAL_MONOMIAL_MUL_CONV
                                                         tm)
-                                                      (if (not (funcall is_add r*))
+                                                      (if (not (funcall is_add r%))
                                                         (let
                                                           ((th1
-                                                            (INST*
+                                                            (INST%
                                                               (cl:cons
                                                                 (tuple l a_tm)
                                                                 (cl:cons
-                                                                  (tuple r* b_tm)
+                                                                  (tuple r% b_tm)
                                                                   nil))
                                                               pthm_09)))
+                                                          (cl:declare (cl:ignorable th1))
                                                           (TRANS
                                                             th1
                                                             (funcall
                                                               POLYNOMIAL_MONOMIAL_MUL_CONV
                                                               (rand (concl th1)))))
                                                         (match (funcall dest_add l)
-                                                          ((tuple a* b*)
+                                                          ((tuple a% b%)
                                                             (let
                                                               ((th1
-                                                                (INST*
+                                                                (INST%
                                                                   (cl:cons
-                                                                    (tuple a* a_tm)
+                                                                    (tuple a% a_tm)
                                                                     (cl:cons
-                                                                      (tuple b* b_tm)
+                                                                      (tuple b% b_tm)
                                                                       (cl:cons
-                                                                        (tuple r* c_tm)
+                                                                        (tuple r% c_tm)
                                                                         nil)))
                                                                   pthm_10)))
+                                                              (cl:declare
+                                                                (cl:ignorable th1))
                                                               (match
                                                                 (dest_comb
                                                                   (rand (concl th1)))
@@ -1511,11 +1631,15 @@
                                                                           (th3
                                                                             (TRANS
                                                                               th1
-                                                                              (MK_COMB*
+                                                                              (MK_COMB%
                                                                                 (tuple
                                                                                   th2
                                                                                   (PMUL
                                                                                     tm2))))))
+                                                                        (cl:declare
+                                                                          (cl:ignorable
+                                                                            th2
+                                                                            th3))
                                                                         (TRANS
                                                                           th3
                                                                           (funcall
@@ -1524,21 +1648,21 @@
                                                                               (concl th3))))))))))))))))))
                                               (lambdac (tm)
                                                 (match (funcall dest_mul tm)
-                                                  ((tuple l r*)
+                                                  ((tuple l r%)
                                                     (if (= l zero_tm)
-                                                      (INST*
-                                                        (cl:cons (tuple r* a_tm) nil)
+                                                      (INST%
+                                                        (cl:cons (tuple r% a_tm) nil)
                                                         pthm_11)
-                                                      (if (= r* zero_tm)
-                                                        (INST*
+                                                      (if (= r% zero_tm)
+                                                        (INST%
                                                           (cl:cons (tuple l a_tm) nil)
                                                           pthm_12)
                                                         (if (= l one_tm)
-                                                          (INST*
-                                                            (cl:cons (tuple r* a_tm) nil)
+                                                          (INST%
+                                                            (cl:cons (tuple r% a_tm) nil)
                                                             pthm_13)
-                                                          (if (= r* one_tm)
-                                                            (INST*
+                                                          (if (= r% one_tm)
+                                                            (INST%
                                                               (cl:cons (tuple l a_tm) nil)
                                                               pthm_14)
                                                             (PMUL tm))))))))))
@@ -1549,17 +1673,17 @@
                                                 (match (funcall dest_pow tm)
                                                   ((tuple l n)
                                                     (if (= n zeron_tm)
-                                                      (INST*
+                                                      (INST%
                                                         (cl:cons (tuple l x_tm) nil)
                                                         pthm_35)
                                                       (if (= n onen_tm)
-                                                        (INST*
+                                                        (INST%
                                                           (cl:cons (tuple l x_tm) nil)
                                                           pthm_36)
                                                         (let*
                                                           ((th1 (funcall num_CONV n))
                                                             (th2
-                                                              (INST*
+                                                              (INST%
                                                                 (cl:cons
                                                                   (tuple l x_tm)
                                                                   (cl:cons
@@ -1569,6 +1693,8 @@
                                                                       q_tm)
                                                                     nil))
                                                                 pthm_38)))
+                                                          (cl:declare
+                                                            (cl:ignorable th1 th2))
                                                           (match
                                                             (dest_comb (rand (concl th2)))
                                                             ((tuple tm1 tm2)
@@ -1585,6 +1711,8 @@
                                                                         (rator tm)
                                                                         th1)
                                                                       th3)))
+                                                                (cl:declare
+                                                                  (cl:ignorable th3 th4))
                                                                 (TRANS
                                                                   th4
                                                                   (funcall
@@ -1594,18 +1722,25 @@
                                                 (if (funcall is_add (funcall lhand tm))
                                                   (PPOW tm)
                                                   (funcall MONOMIAL_POW_CONV tm))))))
+                                        (cl:declare
+                                          (cl:ignorable
+                                            morder
+                                            POLYNOMIAL_ADD_CONV
+                                            POLYNOMIAL_MUL_CONV
+                                            POLYNOMIAL_POW_CONV))
                                         (fletc
                                           ((POLYNOMIAL_NEG_CONV
                                             (tm)
                                             (match (dest_comb tm)
-                                              ((tuple l r*)
+                                              ((tuple l r%)
                                                 (if (<> l neg_tm)
                                                   (failwith "POLYNOMIAL_NEG_CONV")
                                                   (let
                                                     ((th1
-                                                      (INST*
-                                                        (cl:cons (tuple r* x_tm) nil)
+                                                      (INST%
+                                                        (cl:cons (tuple r% x_tm) nil)
                                                         nthm_1)))
+                                                    (cl:declare (cl:ignorable th1))
                                                     (TRANS
                                                       th1
                                                       (funcall
@@ -1615,14 +1750,15 @@
                                             ((POLYNOMIAL_SUB_CONV
                                               (tm)
                                               (match (funcall dest_sub tm)
-                                                ((tuple l r*)
+                                                ((tuple l r%)
                                                   (let
                                                     ((th1
-                                                      (INST*
+                                                      (INST%
                                                         (cl:cons
                                                           (tuple l x_tm)
-                                                          (cl:cons (tuple r* y_tm) nil))
+                                                          (cl:cons (tuple r% y_tm) nil))
                                                         nthm_2)))
+                                                    (cl:declare (cl:ignorable th1))
                                                     (match (dest_comb (rand (concl th1)))
                                                       ((tuple tm1 tm2)
                                                         (let
@@ -1632,6 +1768,7 @@
                                                               (funcall
                                                                 POLYNOMIAL_MONOMIAL_MUL_CONV
                                                                 tm2))))
+                                                          (cl:declare (cl:ignorable th2))
                                                           (TRANS
                                                             th1
                                                             (TRANS
@@ -1648,13 +1785,14 @@
                                                     (funcall is_semiring_constant tm))
                                                   (REFL tm)
                                                   (match (dest_comb tm)
-                                                    ((tuple lop r*)
+                                                    ((tuple lop r%)
                                                       (if (= lop neg_tm)
                                                         (let
                                                           ((th1
                                                             (AP_TERM
                                                               lop
-                                                              (POLYNOMIAL_CONV r*))))
+                                                              (POLYNOMIAL_CONV r%))))
+                                                          (cl:declare (cl:ignorable th1))
                                                           (TRANS
                                                             th1
                                                             (POLYNOMIAL_NEG_CONV
@@ -1666,7 +1804,7 @@
                                                               (if
                                                                 (cl:and
                                                                   (= op pow_tm)
-                                                                  (funcall is_numeral r*))
+                                                                  (funcall is_numeral r%))
                                                                 (let
                                                                   ((th1
                                                                     (AP_THM
@@ -1674,7 +1812,9 @@
                                                                         op
                                                                         (POLYNOMIAL_CONV
                                                                           l))
-                                                                      r*)))
+                                                                      r%)))
+                                                                  (cl:declare
+                                                                    (cl:ignorable th1))
                                                                   (TRANS
                                                                     th1
                                                                     (funcall
@@ -1688,14 +1828,14 @@
                                                                       (= op sub_tm)))
                                                                   (let*
                                                                     ((th1
-                                                                      (MK_COMB*
+                                                                      (MK_COMB%
                                                                         (tuple
                                                                           (AP_TERM
                                                                             op
                                                                             (POLYNOMIAL_CONV
                                                                               l))
                                                                           (POLYNOMIAL_CONV
-                                                                            r*))))
+                                                                            r%))))
                                                                       (fn
                                                                         (if (= op add_tm)
                                                                           POLYNOMIAL_ADD_CONV
@@ -1703,6 +1843,10 @@
                                                                             (= op mul_tm)
                                                                             POLYNOMIAL_MUL_CONV
                                                                             #'POLYNOMIAL_SUB_CONV))))
+                                                                    (cl:declare
+                                                                      (cl:ignorable
+                                                                        th1
+                                                                        fn))
                                                                     (TRANS
                                                                       th1
                                                                       (funcall
@@ -1752,6 +1896,14 @@
       (SEMIRING_ADD_CONV NUM_ADD_CONV)
       (SEMIRING_MUL_CONV NUM_MULT_CONV)
       (SEMIRING_POW_CONV NUM_EXP_CONV))
+    (cl:declare
+      (cl:ignorable
+        sth
+        rth
+        is_semiring_constant
+        SEMIRING_ADD_CONV
+        SEMIRING_MUL_CONV
+        SEMIRING_POW_CONV))
     (match
       (funcall
         SEMIRING_NORMALIZERS_CONV
@@ -1759,5 +1911,5 @@
         rth
         (tuple is_semiring_constant SEMIRING_ADD_CONV SEMIRING_MUL_CONV SEMIRING_POW_CONV)
         (function-value #'< 2))
-      ((tuple _ _ _ _ _ NUM_NORMALIZE_CONV*) NUM_NORMALIZE_CONV*))))
+      ((tuple _ _ _ _ _ NUM_NORMALIZE_CONV%) NUM_NORMALIZE_CONV%))))
 

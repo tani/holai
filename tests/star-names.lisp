@@ -3,7 +3,7 @@
 (setf asdf:*asdf-verbose* nil *compile-verbose* nil *load-verbose* nil)
 (asdf:load-system "hol2cl-runtime")
 (load "_build/star-names/star_names.lisp")
-(dolist (name '("T*" "T**" "NIL*" "PI*" "PI**" "NAME" "NAME*" "NAME**" "NAME***"))
+(dolist (name '("T%" "T%%" "NIL%" "PI%" "PI%%" "NAME" "NAME%" "NAME%%" "NAME%%%"))
   (unless (eq :external (nth-value 1 (find-symbol name :hol2cl.star_names)))
     (error "Missing allocated export: ~a" name)))
 (format t "~&__STAR_OBSERVATIONS__~%")

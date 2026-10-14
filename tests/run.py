@@ -115,6 +115,9 @@ def differential():
 
 def main():
     verify_pins()
+    pattern = run(["sbcl", "--noinform", "--disable-debugger", "--script", "tests/pattern.lisp"], log="pattern.log")
+    pattern_checks = int(re.search(r"Pattern checks passed: (\d+)", pattern.stdout).group(1))
+    assert all("trivia:" not in p.read_text().lower() for p in (ROOT / "runtime").glob("*.lisp"))
     star = run(["python3", "tests/star-names.py"], log="star-names.log")
     assert "Star naming checks passed" in star.stdout
     protocol = run(["sbcl", "--noinform", "--disable-debugger", "--script", "tests/defunc-protocol.lisp"], log="defunc-protocol.log")
@@ -181,10 +184,12 @@ def main():
         "compiled_loaded_inputs": CORE,
         "fixtures": FIXTURES,
         "sbcl_checks": checks,
+        "structural_pattern_checks": pattern_checks,
+        "pattern_backend": "standard-common-lisp",
         "defunc_protocol_checks": protocol_checks,
         "optional_entry_checks": optional_checks,
         "star_naming_observations": 9,
-        "star_allocator_checks": 19,
+        "star_allocator_checks": 21,
         "escaped_symbol_delimiters_in_core": 0,
         "tuple_list_checks": tuple_checks,
         "differential_observations": observations,

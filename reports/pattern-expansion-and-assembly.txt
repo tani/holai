@@ -1,0 +1,152 @@
+
+(LET ((#:VALUE122 TM))
+  (BLOCK #:MATCH123
+    (BLOCK #:NEXT-CLAUSE124
+      (PROGN
+       (LOAD-TIME-VALUE
+        (CHECK-PATTERN-SIGNATURE 'INSPECTIONCOMB
+                                 '(:CLASS %INSPECTIONCOMB-VALUE :ARITY 2
+                                   :RECORD NIL :KEYS NIL :ACCESSOR
+                                   VARIANT-FIELDS))
+        T)
+       (IF (TYPEP #:VALUE122 '%INSPECTIONCOMB-VALUE)
+           (LET ((#:FIELDS125 (VARIANT-FIELDS #:VALUE122)))
+             (LET ((#:FIELD126 (AREF #:FIELDS125 0))
+                   (#:FIELD127 (AREF #:FIELDS125 1)))
+               (PROGN
+                (LOAD-TIME-VALUE
+                 (CHECK-PATTERN-SIGNATURE 'INSPECTIONVAR
+                                          '(:CLASS %INSPECTIONVAR-VALUE :ARITY
+                                            2 :RECORD NIL :KEYS NIL :ACCESSOR
+                                            VARIANT-FIELDS))
+                 T)
+                (IF (TYPEP #:FIELD126 '%INSPECTIONVAR-VALUE)
+                    (LET ((#:FIELDS128 (VARIANT-FIELDS #:FIELD126)))
+                      (LET ((#:FIELD129 (AREF #:FIELDS128 0)))
+                        (RETURN-FROM #:MATCH123
+                          (LET ((ARG #:FIELD127) (NAME #:FIELD129))
+                            (DECLARE (IGNORABLE ARG NAME))
+                            (PROGN (TUPLE NAME ARG))))))
+                    (RETURN-FROM #:NEXT-CLAUSE124 NIL)))))
+           (RETURN-FROM #:NEXT-CLAUSE124 NIL))))
+    (BLOCK #:NEXT-CLAUSE131
+      (RETURN-FROM #:MATCH123
+        (LET ()
+          (DECLARE (IGNORABLE))
+          (PROGN NIL))))
+    (MATCH-FAILURE)))
+; disassembly for (LABELS INSPECT-PATTERN :IN "/workspace/scratch/6bf0bb049b86/holai/tests/pattern-inspect.lisp")
+; Size: 444 bytes. Origin: #x5355FDF5                         ; (LABELS INSPECT-PATTERN :IN "/workspace/scratch/6bf0bb049b86/holai/tests/pattern-inspect.lisp")
+; DF5:       498B4510         MOV RAX, [R13+16]               ; thread.binding-stack-pointer
+; DF9:       488945E8         MOV [RBP-24], RAX
+; DFD:       48817DD017010050 CMP QWORD PTR [RBP-48], #x50000117  ; NIL
+; E05:       0F8490010000     JEQ L7
+; E0B:       488B45D8         MOV RAX, [RBP-40]
+; E0F:       448D58FD         LEA R11D, [RAX-3]
+; E13:       41F6C30F         TEST R11B, 15
+; E17:       7512             JNE L0
+; E19:       448B5801         MOV R11D, [RAX+1]
+; E1D:       41817B49F6020000 CMP DWORD PTR [R11+73], 758
+; E25:       0F848D000000     JEQ L6
+; E2B: L0:   41BE17010050     MOV R14D, #x50000117            ; NIL
+; E31: L1:   498BF6           MOV RSI, R14
+; E34:       48837DC000       CMP QWORD PTR [RBP-64], 0
+; E39:       7509             JNE L2
+; E3B:       498BD6           MOV RDX, R14
+; E3E:       488BE5           MOV RSP, RBP
+; E41:       F8               CLC
+; E42:       5D               POP RBP
+; E43:       C3               RET
+; E44: L2:   458D5EF5         LEA R11D, [R14-11]
+; E48:       41F6C30F         TEST R11B, 15
+; E4C:       7535             JNE L5
+; E4E:       488B75C8         MOV RSI, [RBP-56]
+; E52:       488B4DC0         MOV RCX, [RBP-64]
+; E56:       48C1E102         SHL RCX, 2
+; E5A:       4C8BDC           MOV R11, RSP
+; E5D:       4885C9           TEST RCX, RCX
+; E60:       7414             JEQ L4
+; E62:       4829CC           SUB RSP, RCX
+; E65:       4829CE           SUB RSI, RCX
+; E68: L3:   488B040E         MOV RAX, [RSI+RCX]
+; E6C:       4883E908         SUB RCX, 8
+; E70:       4889040C         MOV [RSP+RCX], RAX
+; E74:       75F2             JNE L3
+; E76: L4:   498BF3           MOV RSI, R11
+; E79:       498BC6           MOV RAX, R14
+; E7C:       FF242510040050   JMP [#x50000410]                ; #x52A007D0: TAIL-CALL-VARIABLE
+; E83: L5:   4C8D7424F0       LEA R14, [RSP-16]
+; E88:       4883EC28         SUB RSP, 40
+; E8C:       BA4FA51450       MOV EDX, #x5014A54F             ; 'TYPE-ERROR
+; E91:       BF5F241250       MOV EDI, #x5012245F             ; ':DATUM
+; E96:       49C746F02F241250 MOV QWORD PTR [R14-16], #x5012242F  ; ':EXPECTED-TYPE
+; E9E:       49C746E8AFFB1450 MOV QWORD PTR [R14-24], #x5014FBAF  ; 'FUNCTION
+; EA6:       B90A000000       MOV ECX, 10
+; EAB:       49892E           MOV [R14], RBP
+; EAE:       498BEE           MOV RBP, R14
+; EB1:       B842242550       MOV EAX, #x50252442             ; #<FDEFN ERROR>
+; EB6:       FFD0             CALL RAX
+; EB8: L6:   4883EC10         SUB RSP, 16
+; EBC:       488B55D8         MOV RDX, [RBP-40]
+; EC0:       B902000000       MOV ECX, 2
+; EC5:       48892C24         MOV [RSP], RBP
+; EC9:       488BEC           MOV RBP, RSP
+; ECC:       B862512E50       MOV EAX, #x502E5162             ; #<FDEFN VARIANT-FIELDS>
+; ED1:       FFD0             CALL RAX
+; ED3:       480F42E3         CMOVB RSP, RBX
+; ED7:       4C8BFA           MOV R15, RDX
+; EDA:       4C897DB8         MOV [RBP-72], R15
+; EDE:       4883EC10         SUB RSP, 16
+; EE2:       498BD7           MOV RDX, R15
+; EE5:       31FF             XOR EDI, EDI
+; EE7:       48892C24         MOV [RSP], RBP
+; EEB:       488BEC           MOV RBP, RSP
+; EEE:       B862AD2550       MOV EAX, #x5025AD62             ; #<FDEFN SB-KERNEL:HAIRY-DATA-VECTOR-REF/CHECK-BOUNDS>
+; EF3:       FFD0             CALL RAX
+; EF5:       4C8B7DB8         MOV R15, [RBP-72]
+; EF9:       4C8BF2           MOV R14, RDX
+; EFC:       4C8975B0         MOV [RBP-80], R14
+; F00:       4883EC10         SUB RSP, 16
+; F04:       498BD7           MOV RDX, R15
+; F07:       BF02000000       MOV EDI, 2
+; F0C:       48892C24         MOV [RSP], RBP
+; F10:       488BEC           MOV RBP, RSP
+; F13:       B862AD2550       MOV EAX, #x5025AD62             ; #<FDEFN SB-KERNEL:HAIRY-DATA-VECTOR-REF/CHECK-BOUNDS>
+; F18:       FFD0             CALL RAX
+; F1A:       4C8B75B0         MOV R14, [RBP-80]
+; F1E:       488955B8         MOV [RBP-72], RDX
+; F22:       458D5EFD         LEA R11D, [R14-3]
+; F26:       41F6C30F         TEST R11B, 15
+; F2A:       0F85FBFEFFFF     JNE L0
+; F30:       458B5E01         MOV R11D, [R14+1]
+; F34:       41817B49F4020000 CMP DWORD PTR [R11+73], 756
+; F3C:       0F85E9FEFFFF     JNE L0
+; F42:       4883EC10         SUB RSP, 16
+; F46:       498BD6           MOV RDX, R14
+; F49:       B902000000       MOV ECX, 2
+; F4E:       48892C24         MOV [RSP], RBP
+; F52:       488BEC           MOV RBP, RSP
+; F55:       B862512E50       MOV EAX, #x502E5162             ; #<FDEFN VARIANT-FIELDS>
+; F5A:       FFD0             CALL RAX
+; F5C:       480F42E3         CMOVB RSP, RBX
+; F60:       4883EC10         SUB RSP, 16
+; F64:       31FF             XOR EDI, EDI
+; F66:       48892C24         MOV [RSP], RBP
+; F6A:       488BEC           MOV RBP, RSP
+; F6D:       B862AD2550       MOV EAX, #x5025AD62             ; #<FDEFN SB-KERNEL:HAIRY-DATA-VECTOR-REF/CHECK-BOUNDS>
+; F72:       FFD0             CALL RAX
+; F74:       4883EC10         SUB RSP, 16
+; F78:       488B7DB8         MOV RDI, [RBP-72]
+; F7C:       B904000000       MOV ECX, 4
+; F81:       48892C24         MOV [RSP], RBP
+; F85:       488BEC           MOV RBP, RSP
+; F88:       B8622D2E50       MOV EAX, #x502E2D62             ; #<FDEFN TUPLE>
+; F8D:       FFD0             CALL RAX
+; F8F:       480F42E3         CMOVB RSP, RBX
+; F93:       4C8BF2           MOV R14, RDX
+; F96:       E996FEFFFF       JMP L1
+; F9B: L7:   488B1556FDFFFF   MOV RDX, [RIP-682]              ; #<FUNCTION (LABELS INSPECT-PATTERN :IN "/workspace/scratch/6bf0bb049b86/holai/tests/pattern-inspect.lisp") {5355FD6B}>
+; FA2:       B902000000       MOV ECX, 2
+; FA7:       FF7508           PUSH QWORD PTR [RBP+8]
+; FAA:       B8422B2E50       MOV EAX, #x502E2B42             ; #<FDEFN PARTIAL>
+; FAF:       FFE0             JMP RAX

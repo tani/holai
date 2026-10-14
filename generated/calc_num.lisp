@@ -35,7 +35,7 @@
         ARITH_SUB
         ARITH_SUC
         ARITH_ZERO
-        BINOP2_CONV*
+        BINOP2_CONV%
         BIT0_0
         BIT1_0
         DENUMERAL
@@ -52,9 +52,9 @@
         NUM_EQ_CONV
         NUM_EVEN_CONV
         NUM_EXP_CONV
-        NUM_EXP_CONV*
+        NUM_EXP_CONV%
         NUM_FACT_CONV
-        NUM_FACT_CONV*
+        NUM_FACT_CONV%
         NUM_GE_CONV
         NUM_GT_CONV
         NUM_LE_CONV
@@ -162,7 +162,7 @@
     ARITH_SUB
     ARITH_SUC
     ARITH_ZERO
-    BINOP2_CONV*
+    BINOP2_CONV%
     BIT0_0
     BIT1_0
     DENUMERAL
@@ -179,9 +179,9 @@
     NUM_EQ_CONV
     NUM_EVEN_CONV
     NUM_EXP_CONV
-    NUM_EXP_CONV*
+    NUM_EXP_CONV%
     NUM_FACT_CONV
-    NUM_FACT_CONV*
+    NUM_FACT_CONV%
     NUM_GE_CONV
     NUM_GT_CONV
     NUM_LE_CONV
@@ -350,9 +350,9 @@
     rator
     rand
     mk_var
-    MK_COMB*
+    MK_COMB%
     mk_comb
-    INST*
+    INST%
     EQ_MP
     dest_const
     dest_comb
@@ -405,6 +405,7 @@
     labelsc
     int-mod
     int-div
+    guard
     function-value
     funcall
     fst
@@ -974,6 +975,7 @@
 
 (match
   (let ((num_ty (type_of (funcall lhand (concl ZERO_DEF)))))
+    (cl:declare (cl:ignorable num_ty))
     (match
       (tuple
         (mk_small_numeral 2)
@@ -991,7 +993,8 @@
         mul_tm
         exp_tm
         eq_tm)
-        (let ((num_0* (num 0)) (num_1* (num 1)) (num_2* (num 2)))
+        (let ((num_0% (num 0)) (num_1% (num 1)) (num_2% (num 2)))
+          (cl:declare (cl:ignorable num_0% num_1% num_2%))
           (let
             ((a_tm (mk_var (tuple "a" num_ty)))
               (b_tm (mk_var (tuple "b" num_ty)))
@@ -1003,6 +1006,7 @@
               (m_tm (mk_var (tuple "m" num_ty)))
               (n_tm (mk_var (tuple "n" num_ty)))
               (p_tm (mk_var (tuple "p" num_ty))))
+            (cl:declare (cl:ignorable a_tm b_tm c_tm d_tm e_tm h_tm l_tm m_tm n_tm p_tm))
             (let*
               ((STANDARDIZE
                 (let
@@ -1044,47 +1048,52 @@
                                                       (cl:cons
                                                         (tuple n_tm n_tm)
                                                         (cl:cons (tuple p_tm p_tm) nil)))))))))))))))))))))
+                  (cl:declare (cl:ignorable ilist))
                   (labelsc
                     ((replace
                       (tm)
                       (match tm
                         ((cl:or (Var _ _) (Const _ _)) (rev_assocd tm ilist tm))
-                        ((Comb s t*) (mk_comb (tuple (replace s) (replace t*))))
+                        ((Comb s t%) (mk_comb (tuple (replace s) (replace t%))))
                         ((Abs _ _) (failwith "replace")))))
                     (lambdac (th)
-                      (let ((tm* (replace (concl th)))) (EQ_MP (REFL tm*) th))))))
+                      (let ((tm% (replace (concl th))))
+                        (cl:declare (cl:ignorable tm%))
+                        (EQ_MP (REFL tm%) th))))))
                 (REFL_bit0 (funcall STANDARDIZE (REFL BIT0_tm)))
                 (REFL_bit1 (funcall STANDARDIZE (REFL BIT1_tm))))
+              (cl:declare (cl:ignorable STANDARDIZE REFL_bit0 REFL_bit1))
               (fletc
-                ((AP_BIT0 (th) (MK_COMB* (tuple REFL_bit0 th)))
-                  (AP_BIT1 (th) (MK_COMB* (tuple REFL_bit1 th)))
+                ((AP_BIT0 (th) (MK_COMB% (tuple REFL_bit0 th)))
+                  (AP_BIT1 (th) (MK_COMB% (tuple REFL_bit1 th)))
                   (QUICK_PROVE_HYP (ath bth) (EQ_MP (DEDUCT_ANTISYM_RULE ath bth) ath)))
                 (labelsc
                   ((dest_raw_numeral
                     (tm)
                     (match tm
-                      ((Comb (Const "BIT1" _) t*)
-                        (+ (* num_2* (dest_raw_numeral t*)) num_1*))
-                      ((Comb (Const "BIT0" _) t*) (* num_2* (dest_raw_numeral t*)))
-                      ((Const "_0" _) num_0*))))
+                      ((Comb (Const "BIT1" _) t%)
+                        (+ (* num_2% (dest_raw_numeral t%)) num_1%))
+                      ((Comb (Const "BIT0" _) t%) (* num_2% (dest_raw_numeral t%)))
+                      ((Const "_0" _) num_0%))))
                   (let
                     ((bitcounts
                       (labelsc
                         ((bctr
-                          (w* z tm)
+                          (w% z tm)
                           (match tm
-                            ((Const "_0" _) (tuple w* z))
-                            ((Comb (Const "BIT0" _) t*) (bctr w* (+ z 1) t*))
-                            ((Comb (Const "BIT1" _) t*) (bctr (+ w* 1) z t*))
+                            ((Const "_0" _) (tuple w% z))
+                            ((Comb (Const "BIT0" _) t%) (bctr w% (+ z 1) t%))
+                            ((Comb (Const "BIT1" _) t%) (bctr (+ w% 1) z t%))
                             (_ (failwith "malformed numeral")))))
                         (bctr 0 0))))
+                    (cl:declare (cl:ignorable bitcounts))
                     (labelsc
                       ((wellformed
                         (tm)
                         (match tm
                           ((Const "_0" _) cl:t)
-                          ((cl:or (Comb (Const "BIT0" _) t*) (Comb (Const "BIT1" _) t*))
-                            (wellformed t*))
+                          ((cl:or (Comb (Const "BIT0" _) t%) (Comb (Const "BIT1" _) t%))
+                            (wellformed t%))
                           (_ cl:nil))))
                       (labelsc
                         ((orderrelation
@@ -1302,20 +1311,21 @@
                               (match
                                 (labelsc
                                   ((mk_compnumeral
-                                    (k* base)
-                                    (if (= k* 0)
+                                    (k% base)
+                                    (if (= k% 0)
                                       base
-                                      (let ((t* (mk_compnumeral (int-div k* 2) base)))
-                                        (if (= (int-mod k* 2) 1)
-                                          (mk_comb (tuple BIT1_tm t*))
-                                          (mk_comb (tuple BIT0_tm t*)))))))
+                                      (let ((t% (mk_compnumeral (int-div k% 2) base)))
+                                        (cl:declare (cl:ignorable t%))
+                                        (if (= (int-mod k% 2) 1)
+                                          (mk_comb (tuple BIT1_tm t%))
+                                          (mk_comb (tuple BIT0_tm t%)))))))
                                   (fletc
                                     ((bases
                                       (v)
                                       (let*
                                         ((part2
                                           (map
-                                            (lambdac (k*) (mk_compnumeral k* v))
+                                            (lambdac (k%) (mk_compnumeral k% v))
                                             (-- 8 15)))
                                           (part1
                                             (map
@@ -1329,8 +1339,9 @@
                                               part2))
                                           (part0
                                             (map
-                                              (lambdac (k*) (mk_compnumeral k* zero_tm))
+                                              (lambdac (k%) (mk_compnumeral k% zero_tm))
                                               (-- 0 15))))
+                                        (cl:declare (cl:ignorable part2 part1 part0))
                                         (append part0 (append part1 part2)))))
                                     (let*
                                       ((starts
@@ -1380,12 +1391,14 @@
                                                   (parse_term "SUC(_0 + n)")
                                                   (parse_term "SUC n"))
                                                 nil)))))
+                                      (cl:declare
+                                        (cl:ignorable starts BITS_INJ ARITH_0 patadj))
                                       (fletc
                                         ((mkclauses
-                                          (sucflag t*)
+                                          (sucflag t%)
                                           (let*
                                             ((tm
-                                              (if sucflag (mk_comb (tuple suc_tm t*)) t*))
+                                              (if sucflag (mk_comb (tuple suc_tm t%)) t%))
                                               (th1
                                                 (PURE_REWRITE_CONV
                                                   (cl:cons
@@ -1395,6 +1408,7 @@
                                                       (cl:cons ARITH_0 nil)))
                                                   tm))
                                               (tm1 (funcall patadj (rand (concl th1)))))
+                                            (cl:declare (cl:ignorable tm th1 tm1))
                                             (if (not (free_in add_tm tm1))
                                               (tuple th1 (if (free_in m_tm tm1) 0 1))
                                               (let*
@@ -1414,6 +1428,7 @@
                                                                 (tuple p_tm ptm)
                                                                 nil)
                                                               tm1)))))))
+                                                (cl:declare (cl:ignorable ptm tmc))
                                                 (tuple
                                                   (EQT_ELIM
                                                     (REWRITE_CONV
@@ -1432,7 +1447,7 @@
                                               (tuple
                                                 (array-of-list (map STANDARDIZE l1))
                                                 (array-of-list l2))))
-                                          ((tuple add_clauses* add_flags)
+                                          ((tuple add_clauses% add_flags)
                                             (match
                                               (match (unzip (map (mkclauses cl:t) starts))
                                                 ((tuple l1 l2)
@@ -1459,23 +1474,27 @@
                                                               (if (= n_hi zero_tm)
                                                                 n_lo
                                                                 (+ n_lo 16))))
+                                                          (cl:declare
+                                                            (cl:ignorable m_ind n_ind))
                                                           (let*
                                                             ((ind (+ (* 32 m_ind) n_ind))
                                                               (th1
                                                                 (array-get
-                                                                  add_clauses*
+                                                                  add_clauses%
                                                                   ind))
                                                               (fl
                                                                 (array-get add_flags ind)))
+                                                            (cl:declare
+                                                              (cl:ignorable ind th1 fl))
                                                             (match fl
                                                               (0
-                                                                (INST*
+                                                                (INST%
                                                                   (cl:cons
                                                                     (tuple m_hi m_tm)
                                                                     nil)
                                                                   th1))
                                                               (1
-                                                                (INST*
+                                                                (INST%
                                                                   (cl:cons
                                                                     (tuple n_hi n_tm)
                                                                     nil)
@@ -1486,11 +1505,13 @@
                                                                     (NUM_ADD_RULE
                                                                       m_hi
                                                                       n_hi)))
+                                                                  (cl:declare
+                                                                    (cl:ignorable th2))
                                                                   (match (concl th2)
                                                                     ((Comb _ ptm)
                                                                       (let
                                                                         ((th3
-                                                                          (INST*
+                                                                          (INST%
                                                                             (cl:cons
                                                                               (tuple
                                                                                 m_hi
@@ -1505,6 +1526,9 @@
                                                                                     p_tm)
                                                                                   nil)))
                                                                             th1)))
+                                                                        (cl:declare
+                                                                          (cl:ignorable
+                                                                            th3))
                                                                         (EQ_MP th3 th2))))))
                                                               (3
                                                                 (let
@@ -1512,11 +1536,13 @@
                                                                     (NUM_ADC_RULE
                                                                       m_hi
                                                                       n_hi)))
+                                                                  (cl:declare
+                                                                    (cl:ignorable th2))
                                                                   (match (concl th2)
                                                                     ((Comb _ ptm)
                                                                       (let
                                                                         ((th3
-                                                                          (INST*
+                                                                          (INST%
                                                                             (cl:cons
                                                                               (tuple
                                                                                 m_hi
@@ -1531,6 +1557,9 @@
                                                                                     p_tm)
                                                                                   nil)))
                                                                             th1)))
+                                                                        (cl:declare
+                                                                          (cl:ignorable
+                                                                            th3))
                                                                         (EQ_MP th3 th2))))))))))))
                                                     (NUM_ADC_RULE
                                                       (mtm ntm)
@@ -1550,6 +1579,8 @@
                                                                 (if (= n_hi zero_tm)
                                                                   n_lo
                                                                   (+ n_lo 16))))
+                                                            (cl:declare
+                                                              (cl:ignorable m_ind n_ind))
                                                             (let*
                                                               ((ind
                                                                 (+ (* 32 m_ind) n_ind))
@@ -1561,15 +1592,17 @@
                                                                   (array-get
                                                                     adc_flags
                                                                     ind)))
+                                                              (cl:declare
+                                                                (cl:ignorable ind th1 fl))
                                                               (match fl
                                                                 (0
-                                                                  (INST*
+                                                                  (INST%
                                                                     (cl:cons
                                                                       (tuple m_hi m_tm)
                                                                       nil)
                                                                     th1))
                                                                 (1
-                                                                  (INST*
+                                                                  (INST%
                                                                     (cl:cons
                                                                       (tuple n_hi n_tm)
                                                                       nil)
@@ -1580,11 +1613,13 @@
                                                                       (NUM_ADD_RULE
                                                                         m_hi
                                                                         n_hi)))
+                                                                    (cl:declare
+                                                                      (cl:ignorable th2))
                                                                     (match (concl th2)
                                                                       ((Comb _ ptm)
                                                                         (let
                                                                           ((th3
-                                                                            (INST*
+                                                                            (INST%
                                                                               (cl:cons
                                                                                 (tuple
                                                                                   m_hi
@@ -1599,6 +1634,9 @@
                                                                                       p_tm)
                                                                                     nil)))
                                                                               th1)))
+                                                                          (cl:declare
+                                                                            (cl:ignorable
+                                                                              th3))
                                                                           (EQ_MP th3 th2))))))
                                                                 (3
                                                                   (let
@@ -1606,11 +1644,13 @@
                                                                       (NUM_ADC_RULE
                                                                         m_hi
                                                                         n_hi)))
+                                                                    (cl:declare
+                                                                      (cl:ignorable th2))
                                                                     (match (concl th2)
                                                                       ((Comb _ ptm)
                                                                         (let
                                                                           ((th3
-                                                                            (INST*
+                                                                            (INST%
                                                                               (cl:cons
                                                                                 (tuple
                                                                                   m_hi
@@ -1625,6 +1665,9 @@
                                                                                       p_tm)
                                                                                     nil)))
                                                                               th1)))
+                                                                          (cl:declare
+                                                                            (cl:ignorable
+                                                                              th3))
                                                                           (EQ_MP th3 th2)))))))))))))
                                                   (tuple #'NUM_ADD_RULE #'NUM_ADC_RULE))))))))))
                                 ((tuple NUM_ADD_RULE NUM_ADC_RULE)
@@ -1976,22 +2019,32 @@
                                                               (cl:cons
                                                                 (funcall GSYM MULT_ASSOC)
                                                                 nil))))))))))))
+                                        (cl:declare
+                                          (cl:ignorable
+                                            pth_0
+                                            pth_z
+                                            pth_1
+                                            pth_base
+                                            pth_triv
+                                            pths_1
+                                            pths_0))
                                         (labelsc
                                           ((NUM_SHIFT_CONV
-                                            (k* tm)
-                                            (if (<= k* 0)
-                                              (INST*
+                                            (k% tm)
+                                            (if (<= k% 0)
+                                              (INST%
                                                 (cl:cons (tuple tm n_tm) nil)
                                                 pth_base)
                                               (match tm
-                                                ((trivia:guard
+                                                ((guard
                                                   (Comb _ (Comb _ (Comb _ (Comb _ _))))
-                                                  (>= k* 4))
+                                                  (>= k% 4))
                                                   (match (topsplit tm)
-                                                    ((tuple i* ntm)
+                                                    ((tuple i% ntm)
                                                       (let
                                                         ((th1
-                                                          (NUM_SHIFT_CONV (- k* 4) ntm)))
+                                                          (NUM_SHIFT_CONV (- k% 4) ntm)))
+                                                        (cl:declare (cl:ignorable th1))
                                                         (match (concl th1)
                                                           ((Comb
                                                             _
@@ -1999,9 +2052,9 @@
                                                               (Comb _ (Const "_0" _))
                                                               (Comb (Comb _ ptm) btm)))
                                                             (let*
-                                                              ((th2 (array-get pths_0 i*))
+                                                              ((th2 (array-get pths_0 i%))
                                                                 (th3
-                                                                  (INST*
+                                                                  (INST%
                                                                     (cl:cons
                                                                       (tuple ntm n_tm)
                                                                       (cl:cons
@@ -2010,6 +2063,8 @@
                                                                           (tuple ptm p_tm)
                                                                           nil)))
                                                                     th2)))
+                                                              (cl:declare
+                                                                (cl:ignorable th2 th3))
                                                               (EQ_MP th3 th1)))
                                                           ((Comb
                                                             _
@@ -2017,9 +2072,9 @@
                                                               (Comb _ atm)
                                                               (Comb (Comb _ ptm) btm)))
                                                             (let*
-                                                              ((th2 (array-get pths_1 i*))
+                                                              ((th2 (array-get pths_1 i%))
                                                                 (th3
-                                                                  (INST*
+                                                                  (INST%
                                                                     (cl:cons
                                                                       (tuple ntm n_tm)
                                                                       (cl:cons
@@ -2032,10 +2087,13 @@
                                                                               p_tm)
                                                                             nil))))
                                                                     th2)))
+                                                              (cl:declare
+                                                                (cl:ignorable th2 th3))
                                                               (EQ_MP th3 th1))))))))
                                                 ((Comb (Const "BIT0" _) ntm)
                                                   (let
-                                                    ((th1 (NUM_SHIFT_CONV (- k* 1) ntm)))
+                                                    ((th1 (NUM_SHIFT_CONV (- k% 1) ntm)))
+                                                    (cl:declare (cl:ignorable th1))
                                                     (match (concl th1)
                                                       ((Comb
                                                         _
@@ -2043,7 +2101,7 @@
                                                           (Comb _ (Const "_0" _))
                                                           (Comb (Comb _ ptm) btm)))
                                                         (EQ_MP
-                                                          (INST*
+                                                          (INST%
                                                             (cl:cons
                                                               (tuple ntm n_tm)
                                                               (cl:cons
@@ -2059,7 +2117,7 @@
                                                           (Comb _ atm)
                                                           (Comb (Comb _ ptm) btm)))
                                                         (EQ_MP
-                                                          (INST*
+                                                          (INST%
                                                             (cl:cons
                                                               (tuple ntm n_tm)
                                                               (cl:cons
@@ -2073,7 +2131,8 @@
                                                           th1)))))
                                                 ((Comb (Const "BIT1" _) ntm)
                                                   (let
-                                                    ((th1 (NUM_SHIFT_CONV (- k* 1) ntm)))
+                                                    ((th1 (NUM_SHIFT_CONV (- k% 1) ntm)))
+                                                    (cl:declare (cl:ignorable th1))
                                                     (match (concl th1)
                                                       ((Comb
                                                         _
@@ -2081,7 +2140,7 @@
                                                           (Comb _ atm)
                                                           (Comb (Comb _ ptm) btm)))
                                                         (EQ_MP
-                                                          (INST*
+                                                          (INST%
                                                             (cl:cons
                                                               (tuple ntm n_tm)
                                                               (cl:cons
@@ -2095,7 +2154,8 @@
                                                           th1)))))
                                                 ((Const "_0" _)
                                                   (let
-                                                    ((th1 (NUM_SHIFT_CONV (- k* 1) tm)))
+                                                    ((th1 (NUM_SHIFT_CONV (- k% 1) tm)))
+                                                    (cl:declare (cl:ignorable th1))
                                                     (match (concl th1)
                                                       ((Comb
                                                         _
@@ -2103,7 +2163,7 @@
                                                           (Comb _ atm)
                                                           (Comb (Comb _ ptm) btm)))
                                                         (EQ_MP
-                                                          (INST*
+                                                          (INST%
                                                             (cl:cons
                                                               (tuple atm a_tm)
                                                               (cl:cons
@@ -2360,28 +2420,39 @@
                                                                     GSYM
                                                                     MULT_ASSOC)
                                                                   nil))))))))))))
+                                          (cl:declare
+                                            (cl:ignorable
+                                              pth_triv
+                                              pth_base
+                                              pth_0
+                                              pth_1
+                                              pth_z
+                                              puths_1))
                                           (let
                                             ((puths_2
                                               (array-of-list
                                                 (map
-                                                  (lambdac (i*)
+                                                  (lambdac (i%)
                                                     (let
                                                       ((th1
                                                         (array-get
                                                           puths_1
-                                                          (int-mod i* 16)))
+                                                          (int-mod i% 16)))
                                                         (th2
                                                           (array-get
                                                             puths_1
-                                                            (int-div i* 16))))
+                                                            (int-div i% 16))))
+                                                      (cl:declare (cl:ignorable th1 th2))
                                                       (let
                                                         ((th3
                                                           (GEN_REWRITE_RULE
                                                             #'RAND_CONV
                                                             (cl:cons th1 nil)
                                                             th2)))
+                                                        (cl:declare (cl:ignorable th3))
                                                         (funcall STANDARDIZE th3))))
                                                   (-- 0 255)))))
+                                            (cl:declare (cl:ignorable puths_2))
                                             (labelsc
                                               ((NUM_UNSHIFT_CONV
                                                 (tm)
@@ -2391,7 +2462,7 @@
                                                     (Comb (Comb (Const "*" _) ptm) btm))
                                                     (match (tuple atm ptm btm)
                                                       ((tuple _ _ (Const "_0" _))
-                                                        (INST*
+                                                        (INST%
                                                           (cl:cons
                                                             (tuple atm a_tm)
                                                             (cl:cons (tuple ptm p_tm) nil))
@@ -2404,13 +2475,14 @@
                                                         _)
                                                         (let
                                                           ((th1
-                                                            (INST*
+                                                            (INST%
                                                               (cl:cons
                                                                 (tuple atm a_tm)
                                                                 (cl:cons
                                                                   (tuple btm b_tm)
                                                                   nil))
                                                               pth_base)))
+                                                          (cl:declare (cl:ignorable th1))
                                                           (match (concl th1)
                                                             ((Comb
                                                               _
@@ -2424,7 +2496,7 @@
                                                       ((tuple
                                                         (Comb
                                                           _
-                                                          (Comb _ (Comb _ (Comb _ atm*))))
+                                                          (Comb _ (Comb _ (Comb _ atm%))))
                                                         (Comb
                                                           _
                                                           (Comb
@@ -2433,11 +2505,11 @@
                                                               _
                                                               (Comb
                                                                 _
-                                                                (cl:and ptm* (Comb _ _))))))
+                                                                (cl:and ptm% (Comb _ _))))))
                                                         _)
                                                         (match (topsplit atm)
-                                                          ((tuple i* _)
-                                                            (match (tuple atm* ptm*)
+                                                          ((tuple i% _)
+                                                            (match (tuple atm% ptm%)
                                                               ((tuple
                                                                 (Comb
                                                                   _
@@ -2445,7 +2517,7 @@
                                                                     _
                                                                     (Comb
                                                                       _
-                                                                      (Comb _ atm**))))
+                                                                      (Comb _ atm%%))))
                                                                 (Comb
                                                                   _
                                                                   (Comb
@@ -2455,37 +2527,37 @@
                                                                       (Comb
                                                                         _
                                                                         (cl:and
-                                                                          ptm**
+                                                                          ptm%%
                                                                           (Comb _ _)))))))
-                                                                (match (topsplit atm*)
+                                                                (match (topsplit atm%)
                                                                   ((tuple j _)
                                                                     (let*
-                                                                      ((tm*
+                                                                      ((tm%
                                                                         (mk_comb
                                                                           (tuple
                                                                             (mk_comb
                                                                               (tuple
                                                                                 add_tm
-                                                                                atm**))
+                                                                                atm%%))
                                                                             (mk_comb
                                                                               (tuple
                                                                                 (mk_comb
                                                                                   (tuple
                                                                                     mul_tm
-                                                                                    ptm**))
+                                                                                    ptm%%))
                                                                                 btm)))))
                                                                         (th1
                                                                           (NUM_UNSHIFT_CONV
-                                                                            tm*))
+                                                                            tm%))
                                                                         (th2
-                                                                          (INST*
+                                                                          (INST%
                                                                             (cl:cons
                                                                               (tuple
-                                                                                atm**
+                                                                                atm%%
                                                                                 a_tm)
                                                                               (cl:cons
                                                                                 (tuple
-                                                                                  ptm**
+                                                                                  ptm%%
                                                                                   p_tm)
                                                                                 (cl:cons
                                                                                   (tuple
@@ -2502,36 +2574,41 @@
                                                                               puths_2
                                                                               (+
                                                                                 (* 16 j)
-                                                                                i*)))))
+                                                                                i%)))))
+                                                                      (cl:declare
+                                                                        (cl:ignorable
+                                                                          tm%
+                                                                          th1
+                                                                          th2))
                                                                       (EQ_MP th2 th1)))))
                                                               (_
                                                                 (let*
-                                                                  ((tm*
+                                                                  ((tm%
                                                                     (mk_comb
                                                                       (tuple
                                                                         (mk_comb
                                                                           (tuple
                                                                             add_tm
-                                                                            atm*))
+                                                                            atm%))
                                                                         (mk_comb
                                                                           (tuple
                                                                             (mk_comb
                                                                               (tuple
                                                                                 mul_tm
-                                                                                ptm*))
+                                                                                ptm%))
                                                                             btm)))))
                                                                     (th1
                                                                       (NUM_UNSHIFT_CONV
-                                                                        tm*))
+                                                                        tm%))
                                                                     (th2
-                                                                      (INST*
+                                                                      (INST%
                                                                         (cl:cons
                                                                           (tuple
-                                                                            atm*
+                                                                            atm%
                                                                             a_tm)
                                                                           (cl:cons
                                                                             (tuple
-                                                                              ptm*
+                                                                              ptm%
                                                                               p_tm)
                                                                             (cl:cons
                                                                               (tuple
@@ -2546,7 +2623,12 @@
                                                                                 nil))))
                                                                         (array-get
                                                                           puths_1
-                                                                          i*))))
+                                                                          i%))))
+                                                                  (cl:declare
+                                                                    (cl:ignorable
+                                                                      tm%
+                                                                      th1
+                                                                      th2))
                                                                   (EQ_MP th2 th1)))))))
                                                       ((tuple
                                                         (Const "_0" _)
@@ -2554,13 +2636,14 @@
                                                         _)
                                                         (let
                                                           ((th1
-                                                            (INST*
+                                                            (INST%
                                                               (cl:cons
                                                                 (tuple btm b_tm)
                                                                 (cl:cons
                                                                   (tuple qtm p_tm)
                                                                   nil))
                                                               pth_z)))
+                                                          (cl:declare (cl:ignorable th1))
                                                           (CONV_RULE
                                                             (RAND_CONV
                                                               (RAND_CONV
@@ -2572,7 +2655,7 @@
                                                         _)
                                                         (let
                                                           ((th1
-                                                            (INST*
+                                                            (INST%
                                                               (cl:cons
                                                                 (tuple ctm a_tm)
                                                                 (cl:cons
@@ -2581,6 +2664,7 @@
                                                                     (tuple qtm p_tm)
                                                                     nil)))
                                                               pth_0)))
+                                                          (cl:declare (cl:ignorable th1))
                                                           (CONV_RULE
                                                             (RAND_CONV
                                                               (RAND_CONV
@@ -2592,7 +2676,7 @@
                                                         _)
                                                         (let
                                                           ((th1
-                                                            (INST*
+                                                            (INST%
                                                               (cl:cons
                                                                 (tuple ctm a_tm)
                                                                 (cl:cons
@@ -2601,6 +2685,7 @@
                                                                     (tuple qtm p_tm)
                                                                     nil)))
                                                               pth_1)))
+                                                          (cl:declare (cl:ignorable th1))
                                                           (CONV_RULE
                                                             (RAND_CONV
                                                               (RAND_CONV
@@ -3325,7 +3410,7 @@
                                                                             (REWRITE_TAC
                                                                               (map
                                                                                 (lambdac
-                                                                                  (k*)
+                                                                                  (k%)
                                                                                   (SYM
                                                                                     (REWRITE_CONV
                                                                                       (cl:cons
@@ -3336,7 +3421,7 @@
                                                                                           suc_tm
                                                                                           (mk_small_numeral
                                                                                             (-
-                                                                                              k*
+                                                                                              k%
                                                                                               1)))))))
                                                                                 (-- 1 5))))
                                                                           (REWRITE_TAC
@@ -3369,7 +3454,7 @@
                                                                         nil))))
                                                                 (REWRITE_TAC
                                                                   (map
-                                                                    (lambdac (k*)
+                                                                    (lambdac (k%)
                                                                       (SYM
                                                                         (REWRITE_CONV
                                                                           (cl:cons
@@ -3379,7 +3464,7 @@
                                                                             (tuple
                                                                               suc_tm
                                                                               (mk_small_numeral
-                                                                                (- k* 1)))))))
+                                                                                (- k% 1)))))))
                                                                     (-- 1 4))))
                                                               (REWRITE_TAC
                                                                 (cl:cons
@@ -3454,6 +3539,16 @@
                                                       (cl:cons
                                                         EQ_MULT_LCANCEL
                                                         (cl:cons ARITH_EQ nil))))))))
+                                          (cl:declare
+                                            (cl:ignorable
+                                              pth_0
+                                              pth_1
+                                              pth_even
+                                              pth_odd
+                                              pth_qstep
+                                              pth_rec
+                                              pth_toom3
+                                              pth_even3))
                                           (let*
                                             ((NUM_UNSHIFT2_CONV
                                               (THENC
@@ -3469,18 +3564,24 @@
                                                   (RAND_CONV
                                                     (RAND_CONV NUM_UNSHIFT3_CONV))
                                                   NUM_UNSHIFT_CONV)))
+                                            (cl:declare
+                                              (cl:ignorable
+                                                NUM_UNSHIFT2_CONV
+                                                NUM_UNSHIFT3_CONV
+                                                NUM_UNSHIFT4_CONV))
                                             (fletc
-                                              ((BINOP2_CONV*
+                                              ((BINOP2_CONV%
                                                 (conv1 conv2)
                                                 (COMB2_CONV (RAND_CONV conv1) conv2)))
                                               (let
                                                 ((TOOM3_CONV
-                                                  (BINOP2_CONV*
+                                                  (BINOP2_CONV%
                                                     (funcall LAND_CONV NUM_UNSHIFT2_CONV)
                                                     NUM_UNSHIFT4_CONV)))
+                                                (cl:declare (cl:ignorable TOOM3_CONV))
                                                 (labelsc
                                                   ((GEN_NUM_SQUARE_RULE
-                                                    (w* z tm)
+                                                    (w% z tm)
                                                     (match tm
                                                       ((Const "_0" _) pth_0)
                                                       ((Comb (Const "BIT0" _) mtm)
@@ -3491,12 +3592,14 @@
                                                             (let*
                                                               ((th1
                                                                 (GEN_NUM_SQUARE_RULE
-                                                                  w*
+                                                                  w%
                                                                   (- z 3)
                                                                   ptm))
                                                                 (ntm (rand (concl th1))))
+                                                              (cl:declare
+                                                                (cl:ignorable th1 ntm))
                                                               (EQ_MP
-                                                                (INST*
+                                                                (INST%
                                                                   (cl:cons
                                                                     (tuple ptm m_tm)
                                                                     (cl:cons
@@ -3508,12 +3611,14 @@
                                                             (let*
                                                               ((th1
                                                                 (GEN_NUM_SQUARE_RULE
-                                                                  w*
+                                                                  w%
                                                                   (- z 1)
                                                                   mtm))
                                                                 (ntm (rand (concl th1))))
+                                                              (cl:declare
+                                                                (cl:ignorable th1 ntm))
                                                               (EQ_MP
-                                                                (INST*
+                                                                (INST%
                                                                   (cl:cons
                                                                     (tuple mtm m_tm)
                                                                     (cl:cons
@@ -3526,8 +3631,8 @@
                                                           pth_1
                                                           (if
                                                             (cl:and
-                                                              (cl:or (< w* 100) (< z 20))
-                                                              (< (+ w* z) 150))
+                                                              (cl:or (< w% 100) (< z 20))
+                                                              (< (+ w% z) 150))
                                                             (match mtm
                                                               ((Comb
                                                                 (Const "BIT1" _)
@@ -3540,11 +3645,11 @@
                                                                       NUM_ADD_RULE
                                                                       ntm
                                                                       one_tm))
-                                                                    (mtm*
+                                                                    (mtm%
                                                                       (rand (concl th1)))
                                                                     (th2
                                                                       (NUM_SQUARE_RULE
-                                                                        mtm*))
+                                                                        mtm%))
                                                                     (ptm
                                                                       (rand (concl th2)))
                                                                     (atm
@@ -3556,19 +3661,19 @@
                                                                               (tuple
                                                                                 BIT0_tm
                                                                                 ptm))))
-                                                                        mtm*))
+                                                                        mtm%))
                                                                     (th3
                                                                       (funcall
                                                                         NUM_ADD_RULE
-                                                                        mtm*
+                                                                        mtm%
                                                                         atm))
                                                                     (th4
-                                                                      (INST*
+                                                                      (INST%
                                                                         (cl:cons
                                                                           (tuple atm a_tm)
                                                                           (cl:cons
                                                                             (tuple
-                                                                              mtm*
+                                                                              mtm%
                                                                               m_tm)
                                                                             (cl:cons
                                                                               (tuple
@@ -3580,6 +3685,15 @@
                                                                                   p_tm)
                                                                                 nil))))
                                                                         pth_qstep)))
+                                                                  (cl:declare
+                                                                    (cl:ignorable
+                                                                      th1
+                                                                      mtm%
+                                                                      th2
+                                                                      ptm
+                                                                      atm
+                                                                      th3
+                                                                      th4))
                                                                   (QUICK_PROVE_HYP
                                                                     (funcall
                                                                       CONJ
@@ -3593,14 +3707,14 @@
                                                                 (let*
                                                                   ((th1
                                                                     (GEN_NUM_SQUARE_RULE
-                                                                      (- w* 1)
+                                                                      (- w% 1)
                                                                       z
                                                                       mtm))
                                                                     (ntm
                                                                       (rand (concl th1)))
                                                                     (th2
                                                                       (EQ_MP
-                                                                        (INST*
+                                                                        (INST%
                                                                           (cl:cons
                                                                             (tuple
                                                                               mtm
@@ -3612,6 +3726,11 @@
                                                                               nil))
                                                                           pth_odd)
                                                                         th1)))
+                                                                  (cl:declare
+                                                                    (cl:ignorable
+                                                                      th1
+                                                                      ntm
+                                                                      th2))
                                                                   (match (concl th2)
                                                                     ((Comb
                                                                       _
@@ -3628,18 +3747,23 @@
                                                                             NUM_ADD_RULE
                                                                             ptm
                                                                             qtm)))
+                                                                        (cl:declare
+                                                                          (cl:ignorable
+                                                                            th3))
                                                                         (TRANS
                                                                           th2
                                                                           (AP_BIT1
                                                                             (AP_BIT0 th3)))))))))
-                                                            (if (< (+ w* z) 800)
+                                                            (if (< (+ w% z) 800)
                                                               (let*
-                                                                ((k2 (int-div (+ w* z) 2))
+                                                                ((k2 (int-div (+ w% z) 2))
                                                                   (th1
                                                                     (funcall
                                                                       NUM_SHIFT_CONV
                                                                       k2
                                                                       tm)))
+                                                                (cl:declare
+                                                                  (cl:ignorable k2 th1))
                                                                 (match (rand (concl th1))
                                                                   ((Comb
                                                                     (Comb _ ltm)
@@ -3652,7 +3776,7 @@
                                                                           NUM_ADD_RULE
                                                                           htm
                                                                           ltm))
-                                                                        (mtm*
+                                                                        (mtm%
                                                                           (rand
                                                                             (concl th2)))
                                                                         (th3
@@ -3663,7 +3787,14 @@
                                                                             ltm))
                                                                         (th5
                                                                           (NUM_SQUARE_RULE
-                                                                            mtm*)))
+                                                                            mtm%)))
+                                                                      (cl:declare
+                                                                        (cl:ignorable
+                                                                          th2
+                                                                          mtm%
+                                                                          th3
+                                                                          th4
+                                                                          th5))
                                                                       (let
                                                                         ((atm
                                                                           (rand
@@ -3674,6 +3805,11 @@
                                                                           (dtm
                                                                             (rand
                                                                               (concl th5))))
+                                                                        (cl:declare
+                                                                          (cl:ignorable
+                                                                            atm
+                                                                            ctm
+                                                                            dtm))
                                                                         (let*
                                                                           ((th6
                                                                             (funcall
@@ -3693,12 +3829,12 @@
                                                                                 NUM_ADD_RULE
                                                                                 etm
                                                                                 btm))
-                                                                            (dtm*
+                                                                            (dtm%
                                                                               (rand
                                                                                 (concl
                                                                                   th7)))
                                                                             (th8
-                                                                              (INST*
+                                                                              (INST%
                                                                                 (cl:cons
                                                                                   (tuple
                                                                                     atm
@@ -3713,7 +3849,7 @@
                                                                                         c_tm)
                                                                                       (cl:cons
                                                                                         (tuple
-                                                                                          dtm*
+                                                                                          dtm%
                                                                                           d_tm)
                                                                                         (cl:cons
                                                                                           (tuple
@@ -3729,7 +3865,7 @@
                                                                                                 l_tm)
                                                                                               (cl:cons
                                                                                                 (tuple
-                                                                                                  mtm*
+                                                                                                  mtm%
                                                                                                   m_tm)
                                                                                                 (cl:cons
                                                                                                   (tuple
@@ -3761,6 +3897,15 @@
                                                                                                 th7
                                                                                                 nil))))))))
                                                                                 th8)))
+                                                                          (cl:declare
+                                                                            (cl:ignorable
+                                                                              th6
+                                                                              etm
+                                                                              btm
+                                                                              th7
+                                                                              dtm%
+                                                                              th8
+                                                                              th9))
                                                                           (CONV_RULE
                                                                             (RAND_CONV
                                                                               (THENC
@@ -3770,7 +3915,7 @@
                                                                                 NUM_UNSHIFT_CONV))
                                                                             th9)))))))
                                                               (let*
-                                                                ((k3 (int-div (+ w* z) 3))
+                                                                ((k3 (int-div (+ w% z) 3))
                                                                   (th0
                                                                     (THENC
                                                                       (funcall
@@ -3782,13 +3927,15 @@
                                                                             NUM_SHIFT_CONV
                                                                             k3)))
                                                                       tm)))
+                                                                (cl:declare
+                                                                  (cl:ignorable k3 th0))
                                                                 (match (rand (concl th0))
                                                                   ((Comb
                                                                     (Comb _ ltm)
                                                                     (Comb
                                                                       (Comb _ ptm)
                                                                       (Comb
-                                                                        (Comb _ mtm*)
+                                                                        (Comb _ mtm%)
                                                                         (Comb
                                                                           (Comb _ _)
                                                                           htm))))
@@ -3799,6 +3946,10 @@
                                                                         (th2
                                                                           (NUM_SQUARE_RULE
                                                                             ltm)))
+                                                                      (cl:declare
+                                                                        (cl:ignorable
+                                                                          th1
+                                                                          th2))
                                                                       (let
                                                                         ((atm
                                                                           (rand
@@ -3806,16 +3957,25 @@
                                                                           (etm
                                                                             (rand
                                                                               (concl th1))))
+                                                                        (cl:declare
+                                                                          (cl:ignorable
+                                                                            atm
+                                                                            etm))
                                                                         (let
                                                                           ((lnum
                                                                             (dest_raw_numeral
                                                                               ltm))
                                                                             (mnum
                                                                               (dest_raw_numeral
-                                                                                mtm*))
+                                                                                mtm%))
                                                                             (hnum
                                                                               (dest_raw_numeral
                                                                                 htm)))
+                                                                          (cl:declare
+                                                                            (cl:ignorable
+                                                                              lnum
+                                                                              mnum
+                                                                              hnum))
                                                                           (let
                                                                             ((btm
                                                                               (rand
@@ -3823,7 +3983,7 @@
                                                                                   mk_numeral
                                                                                   (*
                                                                                     (*
-                                                                                      num_2*
+                                                                                      num_2%
                                                                                       lnum)
                                                                                     mnum))))
                                                                               (ctm
@@ -3836,7 +3996,7 @@
                                                                                         mnum)
                                                                                       (*
                                                                                         (*
-                                                                                          num_2*
+                                                                                          num_2%
                                                                                           lnum)
                                                                                         hnum)))))
                                                                               (dtm
@@ -3845,12 +4005,17 @@
                                                                                     mk_numeral
                                                                                     (*
                                                                                       (*
-                                                                                        num_2*
+                                                                                        num_2%
                                                                                         hnum)
                                                                                       mnum)))))
+                                                                            (cl:declare
+                                                                              (cl:ignorable
+                                                                                btm
+                                                                                ctm
+                                                                                dtm))
                                                                             (let*
                                                                               ((th
-                                                                                (INST*
+                                                                                (INST%
                                                                                   (cl:cons
                                                                                     (tuple
                                                                                       atm
@@ -3877,7 +4042,7 @@
                                                                                                 h_tm)
                                                                                               (cl:cons
                                                                                                 (tuple
-                                                                                                  mtm*
+                                                                                                  mtm%
                                                                                                   m_tm)
                                                                                                 (cl:cons
                                                                                                   (tuple
@@ -3889,18 +4054,22 @@
                                                                                                       p_tm)
                                                                                                     nil)))))))))
                                                                                   pth_toom3))
-                                                                                (th*
+                                                                                (th%
                                                                                   (CONV_RULE
-                                                                                    (BINOP2_CONV*
+                                                                                    (BINOP2_CONV%
                                                                                       (RAND_CONV
                                                                                         (RAND_CONV
-                                                                                          (BINOP2_CONV*
+                                                                                          (BINOP2_CONV%
                                                                                             TOOM3_CONV
-                                                                                            (BINOP2_CONV*
+                                                                                            (BINOP2_CONV%
                                                                                               TOOM3_CONV
                                                                                               TOOM3_CONV))))
                                                                                       TOOM3_CONV)
                                                                                     th)))
+                                                                              (cl:declare
+                                                                                (cl:ignorable
+                                                                                  th
+                                                                                  th%))
                                                                               (match
                                                                                 (funcall
                                                                                   hol2cl.basics:conjuncts
@@ -3909,7 +4078,7 @@
                                                                                       (funcall
                                                                                         lhand
                                                                                         (concl
-                                                                                          th*)))))
+                                                                                          th%)))))
                                                                                 ((cl:cons
                                                                                   tm3
                                                                                   (cl:cons
@@ -3939,9 +4108,14 @@
                                                                                             (funcall
                                                                                               lhand
                                                                                               tm5)))))
+                                                                                    (cl:declare
+                                                                                      (cl:ignorable
+                                                                                        th3
+                                                                                        th4
+                                                                                        th5))
                                                                                     (funcall
                                                                                       MP
-                                                                                      th*
+                                                                                      th%
                                                                                       (end_itlist
                                                                                         CONJ
                                                                                         (cl:cons
@@ -3958,8 +4132,8 @@
                                                     (NUM_SQUARE_RULE
                                                       (tm)
                                                       (match (funcall bitcounts tm)
-                                                        ((tuple w* z)
-                                                          (GEN_NUM_SQUARE_RULE w* z tm)))))
+                                                        ((tuple w% z)
+                                                          (GEN_NUM_SQUARE_RULE w% z tm)))))
                                                   #'NUM_SQUARE_RULE))))))
                                       (NUM_MUL_RULE
                                         (match
@@ -4060,7 +4234,7 @@
                                                           (cl:cons EQ_ADD_RCANCEL nil)))))
                                                   (REWRITE_TAC (cl:cons ARITH_EQ nil))))))
                                           ((tuple
-                                            QUICK_PROVE_HYP*
+                                            QUICK_PROVE_HYP%
                                             (tuple pth_0l pth_0r)
                                             (tuple pth_1l pth_1r)
                                             (tuple pth_evenl pth_evenr)
@@ -4169,7 +4343,7 @@
                                                 (pth_oo2
                                                   (PURE_ONCE_REWRITE_RULE
                                                     (cl:cons MULT_SYM nil)
-                                                    (INST*
+                                                    (INST%
                                                       (cl:cons
                                                         (tuple n_tm m_tm)
                                                         (cl:cons (tuple m_tm n_tm) nil))
@@ -4224,16 +4398,22 @@
                                                             (cl:cons
                                                               MULT_CLAUSES
                                                               (cl:cons EQ_ADD_RCANCEL nil)))))))))
+                                              (cl:declare
+                                                (cl:ignorable
+                                                  pth_oo1
+                                                  pth_oo2
+                                                  pth_recodel
+                                                  pth_recoder))
                                               (labelsc
                                                 ((NUM_MUL_RULE
-                                                  (k* l tm tm*)
-                                                  (match (tuple tm tm*)
+                                                  (k% l tm tm%)
+                                                  (match (tuple tm tm%)
                                                     ((tuple (Const "_0" _) _)
-                                                      (INST*
-                                                        (cl:cons (tuple tm* n_tm) nil)
+                                                      (INST%
+                                                        (cl:cons (tuple tm% n_tm) nil)
                                                         pth_0l))
                                                     ((tuple _ (Const "_0" _))
-                                                      (INST*
+                                                      (INST%
                                                         (cl:cons (tuple tm m_tm) nil)
                                                         pth_0r))
                                                     ((tuple
@@ -4241,44 +4421,46 @@
                                                         (Const "BIT1" _)
                                                         (Const "_0" _))
                                                       _)
-                                                      (INST*
-                                                        (cl:cons (tuple tm* n_tm) nil)
+                                                      (INST%
+                                                        (cl:cons (tuple tm% n_tm) nil)
                                                         pth_1l))
                                                     ((tuple
                                                       _
                                                       (Comb
                                                         (Const "BIT1" _)
                                                         (Const "_0" _)))
-                                                      (INST*
+                                                      (INST%
                                                         (cl:cons (tuple tm m_tm) nil)
                                                         pth_1r))
                                                     ((tuple (Comb (Const "BIT0" _) mtm) _)
                                                       (let*
                                                         ((th0
                                                           (NUM_MUL_RULE
-                                                            (- k* 1)
+                                                            (- k% 1)
                                                             l
                                                             mtm
-                                                            tm*))
+                                                            tm%))
                                                           (th1
-                                                            (INST*
+                                                            (INST%
                                                               (cl:cons
                                                                 (tuple mtm m_tm)
                                                                 (cl:cons
-                                                                  (tuple tm* n_tm)
+                                                                  (tuple tm% n_tm)
                                                                   (cl:cons
                                                                     (tuple
                                                                       (rand (concl th0))
                                                                       p_tm)
                                                                     nil)))
                                                               pth_evenl)))
+                                                        (cl:declare
+                                                          (cl:ignorable th0 th1))
                                                         (EQ_MP th1 th0)))
                                                     ((tuple _ (Comb (Const "BIT0" _) ntm))
                                                       (let*
                                                         ((th0
-                                                          (NUM_MUL_RULE k* (- l 1) tm ntm))
+                                                          (NUM_MUL_RULE k% (- l 1) tm ntm))
                                                           (th1
-                                                            (INST*
+                                                            (INST%
                                                               (cl:cons
                                                                 (tuple tm m_tm)
                                                                 (cl:cons
@@ -4289,22 +4471,24 @@
                                                                       p_tm)
                                                                     nil)))
                                                               pth_evenr)))
+                                                        (cl:declare
+                                                          (cl:ignorable th0 th1))
                                                         (EQ_MP th1 th0)))
                                                     ((tuple
                                                       (Comb (Const "BIT1" _) mtm)
                                                       (Comb (Const "BIT1" _) ntm))
                                                       (if
                                                         (cl:or
-                                                          (<= k* 50)
+                                                          (<= k% 50)
                                                           (cl:or
                                                             (<= l 50)
                                                             (cl:or
                                                               (<=
-                                                                (* (num k*) (num k*))
+                                                                (* (num k%) (num k%))
                                                                 (num l))
                                                               (<=
                                                                 (* (num l) (num l))
-                                                                (num k*)))))
+                                                                (num k%)))))
                                                         (match (tuple mtm ntm)
                                                           ((tuple
                                                             (Comb
@@ -4320,20 +4504,20 @@
                                                                 (ptm (rand (concl th1)))
                                                                 (th2
                                                                   (NUM_MUL_RULE
-                                                                    k*
+                                                                    k%
                                                                     l
                                                                     ptm
-                                                                    tm*))
+                                                                    tm%))
                                                                 (atm
                                                                   (subbn
                                                                     (rand (concl th2))
-                                                                    tm*))
+                                                                    tm%))
                                                                 (th3
-                                                                  (INST*
+                                                                  (INST%
                                                                     (cl:cons
                                                                       (tuple tm m_tm)
                                                                       (cl:cons
-                                                                        (tuple tm* n_tm)
+                                                                        (tuple tm% n_tm)
                                                                         (cl:cons
                                                                           (tuple ptm p_tm)
                                                                           (cl:cons
@@ -4343,6 +4527,14 @@
                                                                             nil))))
                                                                     pth_recodel))
                                                                 (th4 (PROVE_HYP th1 th3)))
+                                                              (cl:declare
+                                                                (cl:ignorable
+                                                                  th1
+                                                                  ptm
+                                                                  th2
+                                                                  atm
+                                                                  th3
+                                                                  th4))
                                                               (EQ_MP
                                                                 th4
                                                                 (TRANS
@@ -4351,7 +4543,7 @@
                                                                     (funcall
                                                                       NUM_ADD_RULE
                                                                       atm
-                                                                      tm*))))))
+                                                                      tm%))))))
                                                           ((tuple
                                                             _
                                                             (Comb
@@ -4362,11 +4554,11 @@
                                                                 (funcall
                                                                   NUM_ADC_RULE
                                                                   zero_tm
-                                                                  tm*))
+                                                                  tm%))
                                                                 (ptm (rand (concl th1)))
                                                                 (th2
                                                                   (NUM_MUL_RULE
-                                                                    k*
+                                                                    k%
                                                                     l
                                                                     tm
                                                                     ptm))
@@ -4375,11 +4567,11 @@
                                                                     (rand (concl th2))
                                                                     tm))
                                                                 (th3
-                                                                  (INST*
+                                                                  (INST%
                                                                     (cl:cons
                                                                       (tuple tm m_tm)
                                                                       (cl:cons
-                                                                        (tuple tm* n_tm)
+                                                                        (tuple tm% n_tm)
                                                                         (cl:cons
                                                                           (tuple ptm p_tm)
                                                                           (cl:cons
@@ -4389,6 +4581,14 @@
                                                                             nil))))
                                                                     pth_recoder))
                                                                 (th4 (PROVE_HYP th1 th3)))
+                                                              (cl:declare
+                                                                (cl:ignorable
+                                                                  th1
+                                                                  ptm
+                                                                  th2
+                                                                  atm
+                                                                  th3
+                                                                  th4))
                                                               (EQ_MP
                                                                 th4
                                                                 (TRANS
@@ -4399,23 +4599,23 @@
                                                                       atm
                                                                       tm))))))
                                                           (_
-                                                            (if (<= k* l)
+                                                            (if (<= k% l)
                                                               (let*
                                                                 ((th0
                                                                   (NUM_MUL_RULE
-                                                                    (- k* 1)
+                                                                    (- k% 1)
                                                                     l
                                                                     mtm
-                                                                    tm*))
+                                                                    tm%))
                                                                   (ptm (rand (concl th0)))
                                                                   (th1
                                                                     (EQ_MP
-                                                                      (INST*
+                                                                      (INST%
                                                                         (cl:cons
                                                                           (tuple mtm m_tm)
                                                                           (cl:cons
                                                                             (tuple
-                                                                              tm*
+                                                                              tm%
                                                                               n_tm)
                                                                             (cl:cons
                                                                               (tuple
@@ -4428,23 +4628,29 @@
                                                                     (funcall
                                                                       lhand
                                                                       (rand (concl th1)))))
+                                                                (cl:declare
+                                                                  (cl:ignorable
+                                                                    th0
+                                                                    ptm
+                                                                    th1
+                                                                    tm1))
                                                                 (TRANS
                                                                   th1
                                                                   (funcall
                                                                     NUM_ADD_RULE
                                                                     tm1
-                                                                    tm*)))
+                                                                    tm%)))
                                                               (let*
                                                                 ((th0
                                                                   (NUM_MUL_RULE
-                                                                    k*
+                                                                    k%
                                                                     (- l 1)
                                                                     tm
                                                                     ntm))
                                                                   (ptm (rand (concl th0)))
                                                                   (th1
                                                                     (EQ_MP
-                                                                      (INST*
+                                                                      (INST%
                                                                         (cl:cons
                                                                           (tuple tm m_tm)
                                                                           (cl:cons
@@ -4462,6 +4668,12 @@
                                                                     (funcall
                                                                       lhand
                                                                       (rand (concl th1)))))
+                                                                (cl:declare
+                                                                  (cl:ignorable
+                                                                    th0
+                                                                    ptm
+                                                                    th1
+                                                                    tm1))
                                                                 (TRANS
                                                                   th1
                                                                   (funcall
@@ -4471,6 +4683,8 @@
                                                         (let
                                                           ((mval (dest_raw_numeral mtm))
                                                             (nval (dest_raw_numeral ntm)))
+                                                          (cl:declare
+                                                            (cl:ignorable mval nval))
                                                           (if (<= nval mval)
                                                             (let*
                                                               ((ptm
@@ -4488,6 +4702,8 @@
                                                                     NUM_ADC_RULE
                                                                     mtm
                                                                     ntm)))
+                                                              (cl:declare
+                                                                (cl:ignorable ptm th2 th3))
                                                               (let*
                                                                 ((atm (rand (concl th3)))
                                                                   (th4
@@ -4507,7 +4723,7 @@
                                                                       btm
                                                                       dtm))
                                                                   (th1
-                                                                    (INST*
+                                                                    (INST%
                                                                       (cl:cons
                                                                         (tuple atm a_tm)
                                                                         (cl:cons
@@ -4534,8 +4750,18 @@
                                                                                       p_tm)
                                                                                     nil)))))))
                                                                       pth_oo1)))
+                                                                (cl:declare
+                                                                  (cl:ignorable
+                                                                    atm
+                                                                    th4
+                                                                    btm
+                                                                    th5
+                                                                    ctm
+                                                                    dtm
+                                                                    th6
+                                                                    th1))
                                                                 (funcall
-                                                                  QUICK_PROVE_HYP*
+                                                                  QUICK_PROVE_HYP%
                                                                   (end_itlist
                                                                     CONJ
                                                                     (cl:cons
@@ -4566,6 +4792,8 @@
                                                                     NUM_ADC_RULE
                                                                     ntm
                                                                     mtm)))
+                                                              (cl:declare
+                                                                (cl:ignorable ptm th2 th3))
                                                               (let*
                                                                 ((atm (rand (concl th3)))
                                                                   (th4
@@ -4585,7 +4813,7 @@
                                                                       btm
                                                                       dtm))
                                                                   (th1
-                                                                    (INST*
+                                                                    (INST%
                                                                       (cl:cons
                                                                         (tuple atm a_tm)
                                                                         (cl:cons
@@ -4612,8 +4840,18 @@
                                                                                       p_tm)
                                                                                     nil)))))))
                                                                       pth_oo2)))
+                                                                (cl:declare
+                                                                  (cl:ignorable
+                                                                    atm
+                                                                    th4
+                                                                    btm
+                                                                    th5
+                                                                    ctm
+                                                                    dtm
+                                                                    th6
+                                                                    th1))
                                                                 (funcall
-                                                                  QUICK_PROVE_HYP*
+                                                                  QUICK_PROVE_HYP%
                                                                   (end_itlist
                                                                     CONJ
                                                                     (cl:cons
@@ -4630,13 +4868,14 @@
                                                                   th1)))))))
                                                     (_ (failwith "NUM_MUL_RULE")))))
                                                 #'NUM_MUL_RULE)))))
-                                      (NUM_MULT_CONV*
+                                      (NUM_MULT_CONV%
                                         (let
                                           ((pth_refl
                                             (o
                                               STANDARDIZE
                                               (MESON (cl:cons EXP_2 nil))
                                               (parse_term "m EXP 2 = p <=> m * m = p"))))
+                                          (cl:declare (cl:ignorable pth_refl))
                                           (lambdac (tm)
                                             (match tm
                                               ((Comb (Comb (Const "*" _) mtm) ntm)
@@ -4644,8 +4883,9 @@
                                                   (let*
                                                     ((th1 (funcall NUM_SQUARE_RULE mtm))
                                                       (ptm (rand (concl th1))))
+                                                    (cl:declare (cl:ignorable th1 ptm))
                                                     (EQ_MP
-                                                      (INST*
+                                                      (INST%
                                                         (cl:cons
                                                           (tuple mtm m_tm)
                                                           (cl:cons (tuple ptm p_tm) nil))
@@ -4663,7 +4903,7 @@
                                                         mtm
                                                         ntm)))))
                                               (_ (failwith "NUM_MULT_CONV'"))))))
-                                      (NUM_SUC_CONV*
+                                      (NUM_SUC_CONV%
                                         (let
                                           ((pth
                                             (o
@@ -4679,9 +4919,10 @@
                                                     (cl:cons
                                                       NUMERAL
                                                       (cl:cons ADD_CLAUSES nil))))))))
+                                          (cl:declare (cl:ignorable pth))
                                           (lambdac (tm)
                                             (match tm
-                                              ((trivia:guard
+                                              ((guard
                                                 (Comb
                                                   (Const "SUC" _)
                                                   (Comb (Const "NUMERAL" _) mtm))
@@ -4690,15 +4931,16 @@
                                                   ((th1
                                                     (funcall NUM_ADC_RULE zero_tm mtm))
                                                     (ntm (rand (concl th1))))
+                                                  (cl:declare (cl:ignorable th1 ntm))
                                                   (EQ_MP
-                                                    (INST*
+                                                    (INST%
                                                       (cl:cons
                                                         (tuple mtm m_tm)
                                                         (cl:cons (tuple ntm n_tm) nil))
                                                       pth)
                                                     th1)))
                                               (_ (failwith "NUM_SUC_CONV"))))))
-                                      (NUM_ADD_CONV*
+                                      (NUM_ADD_CONV%
                                         (let
                                           ((topthm_add
                                             (o
@@ -4706,9 +4948,10 @@
                                               (MESON (cl:cons NUMERAL nil))
                                               (parse_term
                                                 "m + n = p <=> NUMERAL m + NUMERAL n = NUMERAL p"))))
+                                          (cl:declare (cl:ignorable topthm_add))
                                           (lambdac (tm)
                                             (match tm
-                                              ((trivia:guard
+                                              ((guard
                                                 (Comb
                                                   (Comb
                                                     (Const "+" _)
@@ -4719,16 +4962,17 @@
                                                   ((th1 (funcall NUM_ADD_RULE mtm ntm))
                                                     (ptm (rand (concl th1)))
                                                     (th2
-                                                      (INST*
+                                                      (INST%
                                                         (cl:cons
                                                           (tuple mtm m_tm)
                                                           (cl:cons
                                                             (tuple ntm n_tm)
                                                             (cl:cons (tuple ptm p_tm) nil)))
                                                         topthm_add)))
+                                                  (cl:declare (cl:ignorable th1 ptm th2))
                                                   (EQ_MP th2 th1)))
                                               (_ (failwith "NUM_ADD_CONV"))))))
-                                      (NUM_MULT_CONV**
+                                      (NUM_MULT_CONV%%
                                         (let
                                           ((topthm_mul
                                             (o
@@ -4743,6 +4987,7 @@
                                                   (cl:cons NUMERAL (cl:cons EXP_2 nil)))
                                                 (parse_term
                                                   "m EXP 2 = p <=> NUMERAL m * NUMERAL m = NUMERAL p"))))
+                                          (cl:declare (cl:ignorable topthm_mul pth_refl))
                                           (lambdac (tm)
                                             (match tm
                                               ((Comb
@@ -4754,8 +4999,9 @@
                                                   (let*
                                                     ((th1 (funcall NUM_SQUARE_RULE mtm))
                                                       (ptm (rand (concl th1))))
+                                                    (cl:declare (cl:ignorable th1 ptm))
                                                     (EQ_MP
-                                                      (INST*
+                                                      (INST%
                                                         (cl:cons
                                                           (tuple mtm m_tm)
                                                           (cl:cons (tuple ptm p_tm) nil))
@@ -4776,7 +5022,7 @@
                                                             ntm))
                                                           (ptm (rand (concl th1)))
                                                           (th2
-                                                            (INST*
+                                                            (INST%
                                                               (cl:cons
                                                                 (tuple mtm m_tm)
                                                                 (cl:cons
@@ -4785,9 +5031,11 @@
                                                                     (tuple ptm p_tm)
                                                                     nil)))
                                                               topthm_mul)))
+                                                        (cl:declare
+                                                          (cl:ignorable th1 ptm th2))
                                                         (EQ_MP th2 th1))))))
                                               (_ (failwith "NUM_MULT_CONV"))))))
-                                      (NUM_EXP_CONV*
+                                      (NUM_EXP_CONV%
                                         (let
                                           ((pth0
                                             (o
@@ -4850,34 +5098,39 @@
                                                 (tuple
                                                   (parse_term "m = NUMERAL m")
                                                   (REWRITE_TAC (cl:cons NUMERAL nil))))))
+                                          (cl:declare
+                                            (cl:ignorable pth0 pth1 pth tth fth))
                                           (let
                                             ((tconv
                                               (GEN_REWRITE_CONV #'I (cl:cons tth nil))))
+                                            (cl:declare (cl:ignorable tconv))
                                             (labelsc
-                                              ((NUM_EXP_CONV*
-                                                (l r*)
-                                                (if (= r* zero_tm)
-                                                  (INST* (cl:cons (tuple l m_tm) nil) pth)
-                                                  (match (dest_comb r*)
-                                                    ((tuple b* r**)
-                                                      (if (= b* BIT0_tm)
+                                              ((NUM_EXP_CONV%
+                                                (l r%)
+                                                (if (= r% zero_tm)
+                                                  (INST% (cl:cons (tuple l m_tm) nil) pth)
+                                                  (match (dest_comb r%)
+                                                    ((tuple b% r%%)
+                                                      (if (= b% BIT0_tm)
                                                         (let*
-                                                          ((th1 (NUM_EXP_CONV* l r**))
+                                                          ((th1 (NUM_EXP_CONV% l r%%))
                                                             (tm1 (rand (concl th1)))
                                                             (th2
                                                               (funcall
-                                                                NUM_MULT_CONV*
+                                                                NUM_MULT_CONV%
                                                                 (mk_binop mul_tm tm1 tm1)))
                                                             (tm2 (rand (concl th2))))
+                                                          (cl:declare
+                                                            (cl:ignorable th1 tm1 th2 tm2))
                                                           (funcall
                                                             MP
                                                             (funcall
                                                               MP
-                                                              (INST*
+                                                              (INST%
                                                                 (cl:cons
                                                                   (tuple l m_tm)
                                                                   (cl:cons
-                                                                    (tuple r** n_tm)
+                                                                    (tuple r%% n_tm)
                                                                     (cl:cons
                                                                       (tuple tm1 p_tm)
                                                                       (cl:cons
@@ -4887,29 +5140,37 @@
                                                               th1)
                                                             th2))
                                                         (let*
-                                                          ((th1 (NUM_EXP_CONV* l r**))
+                                                          ((th1 (NUM_EXP_CONV% l r%%))
                                                             (tm1 (rand (concl th1)))
                                                             (th2
                                                               (funcall
-                                                                NUM_MULT_CONV*
+                                                                NUM_MULT_CONV%
                                                                 (mk_binop mul_tm tm1 tm1)))
                                                             (tm2 (rand (concl th2)))
                                                             (th3
                                                               (funcall
-                                                                NUM_MULT_CONV*
+                                                                NUM_MULT_CONV%
                                                                 (mk_binop mul_tm l tm2)))
                                                             (tm3 (rand (concl th3))))
+                                                          (cl:declare
+                                                            (cl:ignorable
+                                                              th1
+                                                              tm1
+                                                              th2
+                                                              tm2
+                                                              th3
+                                                              tm3))
                                                           (funcall
                                                             MP
                                                             (funcall
                                                               MP
                                                               (funcall
                                                                 MP
-                                                                (INST*
+                                                                (INST%
                                                                   (cl:cons
                                                                     (tuple l m_tm)
                                                                     (cl:cons
-                                                                      (tuple r** n_tm)
+                                                                      (tuple r%% n_tm)
                                                                       (cl:cons
                                                                         (tuple tm1 p_tm)
                                                                         (cl:cons
@@ -4926,25 +5187,28 @@
                                               (lambdac (tm)
                                                 (handler-case
                                                   (let ((th (funcall tconv tm)))
+                                                    (cl:declare (cl:ignorable th))
                                                     (match (dest_comb (rand (concl th)))
-                                                      ((tuple lop r*)
+                                                      ((tuple lop r%)
                                                         (match (dest_comb lop)
                                                           ((tuple _ l)
                                                             (if
                                                               (not
                                                                 (cl:and
                                                                   (wellformed l)
-                                                                  (wellformed r*)))
+                                                                  (wellformed r%)))
                                                               (failwith "")
                                                               (let*
-                                                                ((th*
-                                                                  (NUM_EXP_CONV* l r*))
-                                                                  (tm* (rand (concl th*))))
+                                                                ((th%
+                                                                  (NUM_EXP_CONV% l r%))
+                                                                  (tm% (rand (concl th%))))
+                                                                (cl:declare
+                                                                  (cl:ignorable th% tm%))
                                                                 (TRANS
-                                                                  (TRANS th th*)
-                                                                  (INST*
+                                                                  (TRANS th th%)
+                                                                  (INST%
                                                                     (cl:cons
-                                                                      (tuple tm* m_tm)
+                                                                      (tuple tm% m_tm)
                                                                       nil)
                                                                     fth)))))))))
                                                   (hol2cl.runtime:ocaml-condition
@@ -4953,7 +5217,7 @@
                                                       ((Failure _)
                                                         (failwith "NUM_EXP_CONV"))
                                                       (_ (raise exception~5904))))))))))
-                                      (NUM_LT_CONV*
+                                      (NUM_LT_CONV%
                                         (let
                                           ((pth
                                             (o
@@ -4999,6 +5263,7 @@
                                                   (parse_term
                                                     "NUMERAL n < NUMERAL n <=> F")
                                                   (MESON_TAC (cl:cons LT_REFL nil))))))
+                                          (cl:declare (cl:ignorable pth qth rth))
                                           (lambdac (tm)
                                             (match tm
                                               ((Comb
@@ -5007,8 +5272,9 @@
                                                   (Comb (Const "NUMERAL" _) mtm))
                                                 (Comb (Const "NUMERAL" _) ntm))
                                                 (let ((rel (orderrelation mtm ntm)))
+                                                  (cl:declare (cl:ignorable rel))
                                                   (if (= rel 0)
-                                                    (INST*
+                                                    (INST%
                                                       (cl:cons (tuple ntm n_tm) nil)
                                                       rth)
                                                     (if (< rel 0)
@@ -5016,9 +5282,10 @@
                                                         ((dtm (sbcbn ntm mtm))
                                                           (th
                                                             (funcall NUM_ADC_RULE dtm mtm)))
+                                                        (cl:declare (cl:ignorable dtm th))
                                                         (QUICK_PROVE_HYP
                                                           th
-                                                          (INST*
+                                                          (INST%
                                                             (cl:cons
                                                               (tuple dtm m_tm)
                                                               (cl:cons
@@ -5031,9 +5298,10 @@
                                                         ((dtm (subbn mtm ntm))
                                                           (th
                                                             (funcall NUM_ADD_RULE dtm ntm)))
+                                                        (cl:declare (cl:ignorable dtm th))
                                                         (QUICK_PROVE_HYP
                                                           th
-                                                          (INST*
+                                                          (INST%
                                                             (cl:cons
                                                               (tuple dtm m_tm)
                                                               (cl:cons
@@ -5043,7 +5311,7 @@
                                                                   nil)))
                                                             qth)))))))
                                               (_ (failwith "NUM_LT_CONV"))))))
-                                      (NUM_LE_CONV*
+                                      (NUM_LE_CONV%
                                         (let
                                           ((pth
                                             (o
@@ -5089,6 +5357,7 @@
                                                   (parse_term
                                                     "NUMERAL n <= NUMERAL n <=> T")
                                                   (REWRITE_TAC (cl:cons LE_REFL nil))))))
+                                          (cl:declare (cl:ignorable pth qth rth))
                                           (lambdac (tm)
                                             (match tm
                                               ((Comb
@@ -5097,8 +5366,9 @@
                                                   (Comb (Const "NUMERAL" _) mtm))
                                                 (Comb (Const "NUMERAL" _) ntm))
                                                 (let ((rel (orderrelation mtm ntm)))
+                                                  (cl:declare (cl:ignorable rel))
                                                   (if (= rel 0)
-                                                    (INST*
+                                                    (INST%
                                                       (cl:cons (tuple ntm n_tm) nil)
                                                       rth)
                                                     (if (< rel 0)
@@ -5106,9 +5376,10 @@
                                                         ((dtm (subbn ntm mtm))
                                                           (th
                                                             (funcall NUM_ADD_RULE dtm mtm)))
+                                                        (cl:declare (cl:ignorable dtm th))
                                                         (QUICK_PROVE_HYP
                                                           th
-                                                          (INST*
+                                                          (INST%
                                                             (cl:cons
                                                               (tuple dtm m_tm)
                                                               (cl:cons
@@ -5121,9 +5392,10 @@
                                                         ((dtm (sbcbn mtm ntm))
                                                           (th
                                                             (funcall NUM_ADC_RULE dtm ntm)))
+                                                        (cl:declare (cl:ignorable dtm th))
                                                         (QUICK_PROVE_HYP
                                                           th
-                                                          (INST*
+                                                          (INST%
                                                             (cl:cons
                                                               (tuple dtm m_tm)
                                                               (cl:cons
@@ -5133,7 +5405,7 @@
                                                                   nil)))
                                                             qth)))))))
                                               (_ (failwith "NUM_LE_CONV"))))))
-                                      (NUM_EQ_CONV*
+                                      (NUM_EQ_CONV%
                                         (let
                                           ((pth
                                             (o
@@ -5198,6 +5470,7 @@
                                                   (parse_term
                                                     "(NUMERAL n = NUMERAL n) <=> T")
                                                   (REWRITE_TAC nil)))))
+                                          (cl:declare (cl:ignorable pth qth rth))
                                           (lambdac (tm)
                                             (match tm
                                               ((Comb
@@ -5206,8 +5479,9 @@
                                                   (Comb (Const "NUMERAL" _) mtm))
                                                 (Comb (Const "NUMERAL" _) ntm))
                                                 (let ((rel (orderrelation mtm ntm)))
+                                                  (cl:declare (cl:ignorable rel))
                                                   (if (= rel 0)
-                                                    (INST*
+                                                    (INST%
                                                       (cl:cons (tuple ntm n_tm) nil)
                                                       rth)
                                                     (if (< rel 0)
@@ -5215,9 +5489,10 @@
                                                         ((dtm (sbcbn ntm mtm))
                                                           (th
                                                             (funcall NUM_ADC_RULE dtm mtm)))
+                                                        (cl:declare (cl:ignorable dtm th))
                                                         (QUICK_PROVE_HYP
                                                           th
-                                                          (INST*
+                                                          (INST%
                                                             (cl:cons
                                                               (tuple dtm m_tm)
                                                               (cl:cons
@@ -5230,9 +5505,10 @@
                                                         ((dtm (sbcbn mtm ntm))
                                                           (th
                                                             (funcall NUM_ADC_RULE dtm ntm)))
+                                                        (cl:declare (cl:ignorable dtm th))
                                                         (QUICK_PROVE_HYP
                                                           th
-                                                          (INST*
+                                                          (INST%
                                                             (cl:cons
                                                               (tuple dtm m_tm)
                                                               (cl:cons
@@ -5242,37 +5518,51 @@
                                                                   nil)))
                                                             qth)))))))
                                               (_ (failwith "NUM_EQ_CONV")))))))
+                                    (cl:declare
+                                      (cl:ignorable
+                                        NUM_SHIFT_CONV
+                                        NUM_UNSHIFT_CONV
+                                        NUM_SQUARE_RULE
+                                        NUM_MUL_RULE
+                                        NUM_MULT_CONV%
+                                        NUM_SUC_CONV%
+                                        NUM_ADD_CONV%
+                                        NUM_MULT_CONV%%
+                                        NUM_EXP_CONV%
+                                        NUM_LT_CONV%
+                                        NUM_LE_CONV%
+                                        NUM_EQ_CONV%))
                                     (tuple
-                                      NUM_SUC_CONV*
-                                      NUM_ADD_CONV*
-                                      NUM_MULT_CONV**
-                                      NUM_EXP_CONV*
-                                      NUM_LT_CONV*
-                                      NUM_LE_CONV*
-                                      NUM_EQ_CONV*))))))))))))))))))
+                                      NUM_SUC_CONV%
+                                      NUM_ADD_CONV%
+                                      NUM_MULT_CONV%%
+                                      NUM_EXP_CONV%
+                                      NUM_LT_CONV%
+                                      NUM_LE_CONV%
+                                      NUM_EQ_CONV%))))))))))))))))))
   ((tuple
-    NUM_SUC_CONV*
-    NUM_ADD_CONV*
-    NUM_MULT_CONV*
-    NUM_EXP_CONV*
-    NUM_LT_CONV*
-    NUM_LE_CONV*
-    NUM_EQ_CONV*)
+    NUM_SUC_CONV%
+    NUM_ADD_CONV%
+    NUM_MULT_CONV%
+    NUM_EXP_CONV%
+    NUM_LT_CONV%
+    NUM_LE_CONV%
+    NUM_EQ_CONV%)
     (setf
       NUM_ADD_CONV
-      NUM_ADD_CONV*
+      NUM_ADD_CONV%
       NUM_EQ_CONV
-      NUM_EQ_CONV*
+      NUM_EQ_CONV%
       NUM_EXP_CONV
-      NUM_EXP_CONV*
+      NUM_EXP_CONV%
       NUM_LE_CONV
-      NUM_LE_CONV*
+      NUM_LE_CONV%
       NUM_LT_CONV
-      NUM_LT_CONV*
+      NUM_LT_CONV%
       NUM_MULT_CONV
-      NUM_MULT_CONV*
+      NUM_MULT_CONV%
       NUM_SUC_CONV
-      NUM_SUC_CONV*)))
+      NUM_SUC_CONV%)))
 
 (defparameter NUM_GT_CONV (THENC (GEN_REWRITE_CONV #'I (cl:cons GT nil)) NUM_LT_CONV))
 
@@ -5291,22 +5581,26 @@
               (REWRITE_TAC (cl:cons PRE nil))))))
       (m (parse_term "m:num"))
       (n (parse_term "n:num")))
-    (let* ((suc (parse_term "SUC")) (pre* (parse_term "PRE")))
+    (cl:declare (cl:ignorable tth pth m n))
+    (let* ((suc (parse_term "SUC")) (pre% (parse_term "PRE")))
+      (cl:declare (cl:ignorable suc pre%))
       (lambdac (tm)
         (handler-case
           (match (dest_comb tm)
-            ((tuple l r*)
-              (if (not (= l pre*))
+            ((tuple l r%)
+              (if (not (= l pre%))
                 (fail unit)
-                (let ((x (funcall dest_numeral r*)))
+                (let ((x (funcall dest_numeral r%)))
+                  (cl:declare (cl:ignorable x))
                   (if (= x (num 0))
                     tth
                     (let*
-                      ((tm* (funcall mk_numeral (- x (num 1))))
-                        (th1 (funcall NUM_SUC_CONV (mk_comb (tuple suc tm*)))))
+                      ((tm% (funcall mk_numeral (- x (num 1))))
+                        (th1 (funcall NUM_SUC_CONV (mk_comb (tuple suc tm%)))))
+                      (cl:declare (cl:ignorable tm% th1))
                       (funcall
                         MP
-                        (INST* (cl:cons (tuple tm* m) (cl:cons (tuple r* n) nil)) pth)
+                        (INST% (cl:cons (tuple tm% m) (cl:cons (tuple r% n) nil)) pth)
                         th1)))))))
           (hol2cl.runtime:ocaml-condition
             (exception~7174)
@@ -5329,30 +5623,34 @@
               (REWRITE_TAC (cl:cons ADD_SUB nil))))))
       (m (parse_term "m:num"))
       (n (parse_term "n:num"))
-      (p* (parse_term "p:num"))
+      (p% (parse_term "p:num"))
       (minus (parse_term "(-)"))
       (plus (parse_term "(+)"))
-      (le* (parse_term "(<=)")))
+      (le% (parse_term "(<=)")))
+    (cl:declare (cl:ignorable pth0 pth1 m n p% minus plus le%))
     (lambdac (tm)
       (handler-case
         (match (dest_binop minus tm)
-          ((tuple l r*)
-            (let ((ln (funcall dest_numeral l)) (rn (funcall dest_numeral r*)))
+          ((tuple l r%)
+            (let ((ln (funcall dest_numeral l)) (rn (funcall dest_numeral r%)))
+              (cl:declare (cl:ignorable ln rn))
               (if (<= ln rn)
                 (let
-                  ((pth (INST* (cl:cons (tuple l p*) (cl:cons (tuple r* n) nil)) pth0))
-                    (th0 (EQT_ELIM (funcall NUM_LE_CONV (mk_binop le* l r*)))))
+                  ((pth (INST% (cl:cons (tuple l p%) (cl:cons (tuple r% n) nil)) pth0))
+                    (th0 (EQT_ELIM (funcall NUM_LE_CONV (mk_binop le% l r%)))))
+                  (cl:declare (cl:ignorable pth th0))
                   (funcall MP pth th0))
                 (let*
                   ((kn (- ln rn))
-                    (k* (funcall mk_numeral kn))
+                    (k% (funcall mk_numeral kn))
                     (pth
-                      (INST*
+                      (INST%
                         (cl:cons
-                          (tuple k* m)
-                          (cl:cons (tuple l p*) (cl:cons (tuple r* n) nil)))
+                          (tuple k% m)
+                          (cl:cons (tuple l p%) (cl:cons (tuple r% n) nil)))
                         pth1))
-                    (th0 (funcall NUM_ADD_CONV (mk_binop plus k* r*))))
+                    (th0 (funcall NUM_ADD_CONV (mk_binop plus k% r%))))
+                  (cl:declare (cl:ignorable kn k% pth th0))
                   (funcall MP pth th0))))))
         (hol2cl.runtime:ocaml-condition
           (exception~7281)
@@ -5379,30 +5677,33 @@
       (m (parse_term "m:num"))
       (n (parse_term "n:num"))
       (q (parse_term "q:num"))
-      (r* (parse_term "r:num"))
+      (r% (parse_term "r:num"))
       (dtm (parse_term "(DIV)"))
       (mtm (parse_term "(MOD)")))
+    (cl:declare (cl:ignorable pth pth0 m n q r% dtm mtm))
     (fletc
       ((NUM_DIVMOD_CONV
         (x y)
         (if (= y num_0)
           (funcall SPEC (funcall mk_numeral x) pth0)
-          (let ((k* (quo-num x y)) (l (mod-num x y)))
+          (let ((k% (quo-num x y)) (l (mod-num x y)))
+            (cl:declare (cl:ignorable k% l))
             (let*
               ((th0
-                (INST*
+                (INST%
                   (cl:cons
                     (tuple (funcall mk_numeral x) m)
                     (cl:cons
                       (tuple (funcall mk_numeral y) n)
                       (cl:cons
-                        (tuple (funcall mk_numeral k*) q)
-                        (cl:cons (tuple (funcall mk_numeral l) r*) nil))))
+                        (tuple (funcall mk_numeral k%) q)
+                        (cl:cons (tuple (funcall mk_numeral l) r%) nil))))
                   pth))
                 (tm0 (funcall lhand (funcall lhand (concl th0))))
                 (th1 (THENC (funcall LAND_CONV NUM_MULT_CONV) NUM_ADD_CONV tm0))
                 (th2 (funcall MP th0 th1))
                 (tm2 (funcall lhand (concl th2))))
+              (cl:declare (cl:ignorable th0 tm0 th1 th2 tm2))
               (funcall MP th2 (EQT_ELIM (funcall NUM_LT_CONV tm2))))))))
       (tuple
         (lambdac (tm)
@@ -5429,11 +5730,12 @@
               (match exception~7512
                 ((Failure _) (failwith "NUM_MOD_CONV"))
                 (_ (raise exception~7512)))))))))
-  ((tuple NUM_DIV_CONV* NUM_MOD_CONV*)
-    (setf NUM_DIV_CONV NUM_DIV_CONV* NUM_MOD_CONV NUM_MOD_CONV*)))
+  ((tuple NUM_DIV_CONV% NUM_MOD_CONV%)
+    (setf NUM_DIV_CONV NUM_DIV_CONV% NUM_MOD_CONV NUM_MOD_CONV%)))
 
 (defparameter NUM_FACT_CONV
   (let ((suc (parse_term "SUC")) (mul (parse_term "(*)")))
+    (cl:declare (cl:ignorable suc mul))
     (let
       ((pth_0 (prove (tuple (parse_term "FACT 0 = 1") (REWRITE_TAC (cl:cons FACT nil)))))
         (pth_suc
@@ -5444,17 +5746,19 @@
                 THEN
                 (REPEAT (DISCH_THEN (o #'SUBST1_TAC #'SYM)))
                 (REWRITE_TAC (cl:cons FACT nil))))))
-        (w* (parse_term "w:num"))
+        (w% (parse_term "w:num"))
         (x (parse_term "x:num"))
         (y (parse_term "y:num"))
         (z (parse_term "z:num")))
+      (cl:declare (cl:ignorable pth_0 pth_suc w% x y z))
       (fletc
         ((mksuc
           (n)
-          (let ((n* (- n (num 1))))
-            (funcall NUM_SUC_CONV (mk_comb (tuple suc (funcall mk_numeral n*)))))))
+          (let ((n% (- n (num 1))))
+            (cl:declare (cl:ignorable n%))
+            (funcall NUM_SUC_CONV (mk_comb (tuple suc (funcall mk_numeral n%)))))))
         (labelsc
-          ((NUM_FACT_CONV*
+          ((NUM_FACT_CONV%
             (n)
             (if (= n (num 0))
               pth_0
@@ -5462,25 +5766,26 @@
                 ((th0 (mksuc n))
                   (tmx (rand (funcall lhand (concl th0))))
                   (tm0 (rand (concl th0)))
-                  (th1 (NUM_FACT_CONV* (- n (num 1))))
+                  (th1 (NUM_FACT_CONV% (- n (num 1))))
                   (tm1 (rand (concl th1)))
                   (th2 (funcall NUM_MULT_CONV (mk_binop mul tm0 tm1)))
                   (tm2 (rand (concl th2)))
                   (pth
-                    (INST*
+                    (INST%
                       (cl:cons
                         (tuple tmx x)
                         (cl:cons
                           (tuple tm0 y)
-                          (cl:cons (tuple tm1 w*) (cl:cons (tuple tm2 z) nil))))
+                          (cl:cons (tuple tm1 w%) (cl:cons (tuple tm2 z) nil))))
                       pth_suc)))
+                (cl:declare (cl:ignorable th0 tmx tm0 th1 tm1 th2 tm2 pth))
                 (funcall MP (funcall MP (funcall MP pth th0) th1) th2)))))
           (lambdac (tm)
             (handler-case
               (match (dest_comb tm)
-                ((tuple l r*)
+                ((tuple l r%)
                   (if (= (fst (dest_const l)) "FACT")
-                    (NUM_FACT_CONV* (funcall dest_numeral r*))
+                    (NUM_FACT_CONV% (funcall dest_numeral r%))
                     (fail unit))))
               (hol2cl.runtime:ocaml-condition
                 (exception~7671)
@@ -5518,6 +5823,7 @@
                 (tuple (parse_term "NUMERAL m >= NUMERAL n") NUM_GE_CONV)
                 (cl:cons (tuple (parse_term "NUMERAL m = NUMERAL n") NUM_EQ_CONV) nil)))))
         (funcall basic_net unit))))
+    (cl:declare (cl:ignorable gconv_net))
     (REWRITES_CONV gconv_net)))
 
 (defparameter num_red_conv_list
@@ -5573,6 +5879,7 @@
   (let
     ((gconv_net
       (itlist (uncurry #'net_of_conv) num_red_conv_list (funcall basic_net unit))))
+    (cl:declare (cl:ignorable gconv_net))
     (REWRITES_CONV gconv_net)))
 
 (defparameter NUM_REDUCE_CONV (funcall DEPTH_CONV NUM_RED_CONV))
@@ -5585,8 +5892,9 @@
           (match arg~7880
             ((tuple pat the_conv)
               (match (funcall strip_comb pat)
-                ((tuple c* args) (tuple c* (funcall length args) the_conv))))))
+                ((tuple c% args) (tuple c% (funcall length args) the_conv))))))
         num_red_conv_list)))
+    (cl:declare (cl:ignorable convlist))
     (lambdac (compset)
       (itlist
         (lambdac (newc arg~7905)
@@ -5596,6 +5904,7 @@
 
 (defparameter NUM_COMPUTE_CONV
   (let ((cs (bool_compset unit)))
+    (cl:declare (cl:ignorable cs))
     (progn
       (set_skip cs (parse_term "COND: bool -> A -> A -> A") (make-Some 1))
       (funcall num_compute_add_convs cs)
@@ -5610,12 +5919,15 @@
 
 (defparameter num_CONV
   (let ((SUC_tm (parse_term "SUC")))
+    (cl:declare (cl:ignorable SUC_tm))
     (lambdac (tm)
       (let ((n (- (funcall dest_numeral tm) (num 1))))
+        (cl:declare (cl:ignorable n))
         (if (< n (num 0))
           (failwith "num_CONV")
-          (let ((tm* (funcall mk_numeral n)))
-            (SYM (funcall NUM_SUC_CONV (mk_comb (tuple SUC_tm tm*))))))))))
+          (let ((tm% (funcall mk_numeral n)))
+            (cl:declare (cl:ignorable tm%))
+            (SYM (funcall NUM_SUC_CONV (mk_comb (tuple SUC_tm tm%))))))))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Expands "!n. n < numeral-constant ==> P(n)" into all the cases.           *)
@@ -5632,12 +5944,14 @@
           (tuple
             (parse_term "(!n. n < SUC k ==> P n) <=> (!n. n < k ==> P n) /\\ P k")
             (funcall THEN (REWRITE_TAC (cl:cons LT nil)) (MESON_TAC nil))))))
+    (cl:declare (cl:ignorable pth_base pth_step))
     (let
       ((base_CONV (GEN_REWRITE_CONV #'I (cl:cons pth_base nil)))
         (step_CONV
           (THENC
             (BINDER_CONV (funcall LAND_CONV (RAND_CONV num_CONV)))
             (GEN_REWRITE_CONV #'I (cl:cons pth_step nil)))))
+      (cl:declare (cl:ignorable base_CONV step_CONV))
       (labelsc
         ((conv (tm) (ORELSEC base_CONV (THENC step_CONV (funcall LAND_CONV #'conv)) tm)))
         (THENC #'conv (REWRITE_CONV (cl:cons (funcall GSYM CONJ_ASSOC) nil)))))))
@@ -5678,6 +5992,7 @@
           (conv_0 (GEN_REWRITE_CONV #'I (cl:cons pth_0 nil)))
           (conv_even (GEN_REWRITE_CONV #'I (cl:cons pth_even nil)))
           (conv_odd (GEN_REWRITE_CONV #'I (cl:cons pth_odd nil))))
+        (cl:declare (cl:ignorable conv_zero conv_0 conv_even conv_odd))
         (labelsc
           ((conv
             (tm)
@@ -5705,13 +6020,14 @@
                 NUM_MOD_CONV)
               tm)))
           (let ((fullconv (ORELSEC (THENC conv_zero NUM_EXP_CONV) #'conv)))
+            (cl:declare (cl:ignorable fullconv))
             (lambdac (tm)
               (match tm
-                ((trivia:guard
-                  (Comb (Comb (Const "MOD" _) (Comb (Comb (Const "EXP" _) m) k*)) n)
+                ((guard
+                  (Comb (Comb (Const "MOD" _) (Comb (Comb (Const "EXP" _) m) k%)) n)
                   (cl:and
                     (funcall is_numeral m)
-                    (cl:and (funcall is_numeral k*) (funcall is_numeral n))))
+                    (cl:and (funcall is_numeral k%) (funcall is_numeral n))))
                   (funcall fullconv tm))
                 (_ (failwith "EXP_MOD_CONV"))))))))))
 

@@ -288,7 +288,7 @@
         REAL_POW_ZERO
         REAL_RNEG_UNIQ
         REAL_RSQRT_LE
-        REAL_SGN*
+        REAL_SGN%
         REAL_SGNS_EQ
         REAL_SGNS_EQ_ALT
         REAL_SGN_0
@@ -623,7 +623,7 @@
         REAL_POW_ZERO
         REAL_RNEG_UNIQ
         REAL_RSQRT_LE
-        REAL_SGN*
+        REAL_SGN%
         REAL_SGNS_EQ
         REAL_SGNS_EQ_ALT
         REAL_SGN_0
@@ -961,7 +961,7 @@
     REAL_POW_ZERO
     REAL_RNEG_UNIQ
     REAL_RSQRT_LE
-    REAL_SGN*
+    REAL_SGN%
     REAL_SGNS_EQ
     REAL_SGNS_EQ_ALT
     REAL_SGN_0
@@ -1504,7 +1504,7 @@
     REAL_POW_ZERO
     REAL_RNEG_UNIQ
     REAL_RSQRT_LE
-    REAL_SGN*
+    REAL_SGN%
     REAL_SGNS_EQ
     REAL_SGNS_EQ_ALT
     REAL_SGN_0
@@ -2186,10 +2186,12 @@
 
 (defparameter REAL_LE_IMP
   (let ((pth (PURE_ONCE_REWRITE_RULE (cl:cons IMP_CONJ nil) REAL_LE_TRANS)))
+    (cl:declare (cl:ignorable pth))
     (lambdac (th) (GEN_ALL (MATCH_MP pth (SPEC_ALL th))))))
 
 (defparameter REAL_LET_IMP
   (let ((pth (PURE_ONCE_REWRITE_RULE (cl:cons IMP_CONJ nil) REAL_LET_TRANS)))
+    (cl:declare (cl:ignorable pth))
     (lambdac (th) (GEN_ALL (MATCH_MP pth (SPEC_ALL th))))))
 
 ;; (* ------------------------------------------------------------------------- *)
@@ -4530,6 +4532,7 @@
             (tuple
               (parse_term "(!x. (?n. x = &n) ==> P x) <=> !n. P(&n)")
               (MESON_TAC nil)))))
+        (cl:declare (cl:ignorable lemma))
         (funcall
           THEN
           (funcall
@@ -4798,7 +4801,7 @@
       (parse_term "!x. abs(real_sgn x) = real_sgn(abs x)")
       (funcall THEN (REWRITE_TAC (cl:cons real_sgn nil)) REAL_ARITH_TAC))))
 
-(defparameter REAL_SGN*
+(defparameter REAL_SGN%
   (prove
     (tuple
       (parse_term "!x. real_sgn x = x / abs x")
@@ -4834,7 +4837,7 @@
         THEN
         (REWRITE_TAC
           (cl:cons
-            REAL_SGN*
+            REAL_SGN%
             (cl:cons REAL_ABS_MUL (cl:cons real_div (cl:cons REAL_INV_MUL nil)))))
         REAL_ARITH_TAC))))
 
@@ -4859,7 +4862,7 @@
         THEN
         (funcall
           THEN
-          (REWRITE_TAC (cl:cons REAL_SGN* (cl:cons REAL_ABS_DIV nil)))
+          (REWRITE_TAC (cl:cons REAL_SGN% (cl:cons REAL_ABS_DIV nil)))
           (REWRITE_TAC
             (cl:cons real_div (cl:cons REAL_INV_MUL (cl:cons REAL_INV_INV nil)))))
         REAL_ARITH_TAC))))
@@ -5216,7 +5219,7 @@
                             (cl:cons REAL_LT_LMUL_EQ (cl:cons REAL_SUB_LT nil)))))
                       REAL_ARITH_TAC)
                     nil))))))
-          (lemma*
+          (lemma%
             (prove
               (tuple
                 (parse_term
@@ -5421,7 +5424,7 @@
                               (cl:cons
                                 (parse_term "s:real")
                                 (cl:cons (parse_term "y:real") nil))
-                              lemma*))
+                              lemma%))
                           (funcall ASM_REWRITE_TAC (cl:cons NOT_IMP nil)))
                         #'CONJ_TAC)
                       (cl:cons
@@ -5532,6 +5535,7 @@
                             REAL_ABS_POS
                             (cl:cons REAL_POW2_ABS (cl:cons REAL_LT_IMP_LE nil)))))
                       nil)))))))
+        (cl:declare (cl:ignorable lemma lemma% main_lemma))
         (funcall
           THENL
           (funcall

@@ -1,0 +1,58 @@
+{
+  "trivia": {
+    "cold_compile_and_load": {
+      "wall_seconds": 112.6807042700093,
+      "cpu_seconds": 112.63974,
+      "peak_rss_mib": 1822.1015625,
+      "compile_operation_wall_seconds_sum": 33.857051,
+      "compile_operation_cpu_seconds_sum": 33.859819,
+      "compiled_files": 93,
+      "fasl_bytes": 20903888,
+      "warnings": 324,
+      "rss_scope": "Entire cold ASDF process including compilation and prerequisite/core initialization; not compile-only RSS"
+    },
+    "fasl_startup": {
+      "wall_seconds": 80.92667932600307,
+      "cpu_seconds": 80.898611,
+      "peak_rss_mib": 239.76171875,
+      "core_wall_seconds": 80.698491,
+      "core_cpu_seconds": 80.681032,
+      "core_gc_seconds": 3.190283,
+      "core_allocated_bytes": 55727650256,
+      "compiled_source_files": 0
+    }
+  },
+  "structural": {
+    "cold_compile_and_load": {
+      "wall_seconds": 113.08983800400165,
+      "cpu_seconds": 113.034404,
+      "peak_rss_mib": 1737.8828125,
+      "compile_operation_wall_seconds_sum": 26.164804,
+      "compile_operation_cpu_seconds_sum": 26.151887,
+      "compiled_files": 51,
+      "fasl_bytes": 21092333,
+      "warnings": 3942,
+      "rss_scope": "Entire cold ASDF process including compilation and prerequisite/core initialization; not compile-only RSS"
+    },
+    "fasl_startup": {
+      "wall_seconds": 86.35120822799217,
+      "cpu_seconds": 86.28110500000001,
+      "peak_rss_mib": 252.32421875,
+      "core_wall_seconds": 86.12662,
+      "core_cpu_seconds": 86.101555,
+      "core_gc_seconds": 3.065292,
+      "core_allocated_bytes": 59388611856,
+      "compiled_source_files": 0
+    }
+  },
+  "method": {
+    "runs_per_backend": 1,
+    "order": [
+      "trivia",
+      "structural"
+    ],
+    "baseline_commit": "1730c0299f7d677ba25be29d2dfbff0538fea354",
+    "peak_metric": "Linux wait4.ru_maxrss per child; KiB converted to MiB",
+    "caveat": "Single serial comparison, not repeated ABBA; cold peak includes initialization"
+  }
+}

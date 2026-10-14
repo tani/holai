@@ -18,7 +18,7 @@
     (defpackage :hol2cl.parser
       (:use :cl)
       (:shadow
-        ***
+        %%%
         ++
         >>
         Ident
@@ -94,7 +94,7 @@
         typed_apreterm
         typelist)
       (:export
-        ***
+        %%%
         ++
         >>
         Ident
@@ -129,7 +129,7 @@
 (defpackage :hol2cl.parser
   (:use :cl)
   (:shadow
-    ***
+    %%%
     ++
     >>
     Ident
@@ -302,6 +302,7 @@
     int-mod
     int-lsl
     int-div
+    guard
     function-value
     funcall
     fst
@@ -321,7 +322,7 @@
     <=
     <)
   (:export
-    ***
+    %%%
     ++
     >>
     Ident
@@ -359,7 +360,7 @@
 
 (define-exception Noparse)
 
-(defunc *** (parser1 parser2 input)
+(defunc %%% (parser1 parser2 input)
   (handler-case
     (funcall parser1 input)
     (hol2cl.runtime:ocaml-condition
@@ -398,11 +399,11 @@
 (defunc listof (prs sep err)
   (>>
     (++ prs (many (>> (++ sep (fix err prs)) (function-value #'snd 1))))
-    (lambdac (arg~125) (match arg~125 ((tuple h t*) (cl:cons h t*))))))
+    (lambdac (arg~125) (match arg~125 ((tuple h t%) (cl:cons h t%))))))
 
 (defunc nothing (input) (tuple nil input))
 
-(defunc elistof (prs sep err) (*** (listof prs sep err) #'nothing))
+(defunc elistof (prs sep err) (%%% (listof prs sep err) #'nothing))
 
 (defunc leftbin (prs sep cons err)
   (>>
@@ -413,7 +414,7 @@
           (match (unzip opxs)
             ((tuple ops xs)
               (itlist2
-                (lambdac (op y x*) (funcall cons op x* y))
+                (lambdac (op y x%) (funcall cons op x% y))
                 (funcall rev ops)
                 (funcall rev xs)
                 x))))))))
@@ -439,18 +440,18 @@
 (defunc some (p arg~270)
   (match arg~270
     (nil (raise (make-Noparse)))
-    ((cl:cons h t*) (if (funcall p h) (tuple h t*) (raise (make-Noparse))))))
+    ((cl:cons h t%) (if (funcall p h) (tuple h t%) (raise (make-Noparse))))))
 
 (defunc a (tok) (some (lambdac (item) (= item tok))))
 
-(defunc atleast (n prs i*)
+(defunc atleast (n prs i%)
   (funcall
     (if (<= n 0)
       (many prs)
       (>>
         (++ prs (atleast (- n 1) prs))
-        (lambdac (arg~310) (match arg~310 ((tuple h t*) (cl:cons h t*))))))
-    i*))
+        (lambdac (arg~310) (match arg~310 ((tuple h t%) (cl:cons h t%))))))
+    i%))
 
 (defunc finished (input) (if (= input nil) (tuple 0 input) (failwith "Unparsed input")))
 
@@ -465,24 +466,25 @@
     ((collect
       (arg~357)
       (match arg~357
-        ((tuple h t*) (end_itlist (function-value #'string-concat 2) (cl:cons h t*))))))
+        ((tuple h t%) (end_itlist (function-value #'string-concat 2) (cl:cons h t%))))))
     (fletc
       ((reserve
         (arg~370)
         (match arg~370
           ((cl:and tok (Ident n)) (if (funcall is_reserved_word n) (make-Resword n) tok))
-          (t* t*))))
+          (t% t%))))
       (fletc
         ((stringof (p) (>> (atleast 1 p) (end_itlist (function-value #'string-concat 2)))))
         (let*
-          ((simple_ident (*** (stringof (some isalnum)) (stringof (some issymb))))
+          ((simple_ident (%%% (stringof (some isalnum)) (stringof (some issymb))))
             (undertail (>> (++ (stringof (a "_")) (possibly simple_ident)) #'collect))
-            (ident* (>> (++ (*** undertail simple_ident) (many undertail)) #'collect))
+            (ident% (>> (++ (%%% undertail simple_ident) (many undertail)) #'collect))
             (septok (stringof (some issep))))
+          (cl:declare (cl:ignorable simple_ident undertail ident% septok))
           (fletc
             ((escapecode
-              (i*)
-              (match i*
+              (i%)
+              (match i%
                 ((cl:cons "\\" rst) (tuple "\\" rst))
                 ((cl:cons "\"" rst) (tuple "\"" rst))
                 ((cl:cons "'" rst) (tuple "'" rst))
@@ -498,19 +500,19 @@
                       1
                       (char-chr (int-of-string (string-concat "0x" (string-concat h l)))))
                     rst))
-                ((trivia:guard
-                  (cl:cons a* (cl:cons b (cl:cons c* rst)))
-                  (forall isnum (cl:cons a* (cl:cons b (cl:cons c* nil)))))
+                ((guard
+                  (cl:cons a% (cl:cons b (cl:cons c% rst)))
+                  (forall isnum (cl:cons a% (cl:cons b (cl:cons c% nil)))))
                   (tuple
                     (string-make
                       1
-                      (char-chr (int-of-string (string-concat a* (string-concat b c*)))))
+                      (char-chr (int-of-string (string-concat a% (string-concat b c%)))))
                     rst))
                 (_ (failwith "lex:unrecognized OCaml-style escape in string")))))
             (let*
               ((stringchar
-                (***
-                  (some (lambdac (i*) (cl:and (<> i* "\\") (<> i* "\""))))
+                (%%%
+                  (some (lambdac (i%) (cl:and (<> i% "\\") (<> i% "\""))))
                   (>> (++ (a "\\") #'escapecode) (function-value #'snd 1))))
                 (string
                   (>>
@@ -521,36 +523,37 @@
                           (string-concat "\"" (string-concat (implode s) "\"")))))))
                 (rawtoken
                   (>>
-                    (*** (*** (*** string (some isbra)) septok) ident*)
+                    (%%% (%%% (%%% string (some isbra)) septok) ident%)
                     (lambdac (x) (make-Ident x))))
                 (simptoken
                   (>>
                     (++ (many (some isspace)) rawtoken)
                     (o #'reserve (function-value #'snd 1)))))
+              (cl:declare (cl:ignorable stringchar string rawtoken simptoken))
               (labelsc
                 ((tokens
-                  (i*)
+                  (i%)
                   (handler-case
-                    (match (funcall simptoken i*)
-                      ((tuple t* rst)
-                        (if (= t* (deref comment_token))
+                    (match (funcall simptoken i%)
+                      ((tuple t% rst)
+                        (if (= t% (deref comment_token))
                           (>>
                             (++
                               (many
-                                (lambdac (i**)
-                                  (if (cl:and (<> i** nil) (<> (hd i**) "
+                                (lambdac (i%%)
+                                  (if (cl:and (<> i%% nil) (<> (hd i%%) "
 "))
-                                    (tuple 1 (tl i**))
+                                    (tuple 1 (tl i%%))
                                     (raise (make-Noparse)))))
                               #'tokens)
                             (function-value #'snd 1)
                             rst)
                           (match (tokens rst)
-                            ((tuple toks rst1) (tuple (cl:cons t* toks) rst1))))))
+                            ((tuple toks rst1) (tuple (cl:cons t% toks) rst1))))))
                     (hol2cl.runtime:ocaml-condition
                       (exception~609)
                       (match exception~609
-                        ((Noparse) (tuple nil i*))
+                        ((Noparse) (tuple nil i%))
                         (_ (raise exception~609)))))))
                 (o
                   (function-value #'fst 1)
@@ -601,19 +604,21 @@
           (n)
           (if (= n num_1)
             (make-Ptycon "1" nil)
-            (let ((c* (if (= (mod-num n num_2) num_0) "tybit0" "tybit1")))
-              (make-Ptycon c* (cl:cons (prefinty (quo-num n num_2)) nil))))))
+            (let ((c% (if (= (mod-num n num_2) num_0) "tybit0" "tybit1")))
+              (cl:declare (cl:ignorable c%))
+              (make-Ptycon c% (cl:cons (prefinty (quo-num n num_2)) nil))))))
         (lambdac (n)
           (if (cl:or (not (integerp n)) (< n num_1))
             (failwith "mk_prefinty")
             (prefinty n))))))
+    (cl:declare (cl:ignorable mk_prefinty))
     (fletc
-      ((btyop (n n* x y) (make-Ptycon n (cl:cons x (cl:cons y nil))))
+      ((btyop (n n% x y) (make-Ptycon n (cl:cons x (cl:cons y nil))))
         (mk_apptype
           (arg~750)
           (match arg~750
             ((tuple (cl:cons s nil) nil) s)
-            ((tuple tys (cl:cons c* nil)) (make-Ptycon c* tys))
+            ((tuple tys (cl:cons c% nil)) (make-Ptycon c% tys))
             (_ (failwith "Bad type construction"))))
         (type_atom
           (input)
@@ -661,60 +666,60 @@
             (_ (raise (make-Noparse))))))
       (labelsc
         ((pretype
-          (i*)
+          (i%)
           (rightbin
             #'sumtype
             (a (make-Resword "->"))
             (btyop "fun")
             "proper use of type operator (->)"
-            i*))
+            i%))
           (sumtype
-            (i*)
+            (i%)
             (rightbin
               #'prodtype
               (a (make-Ident "+"))
               (btyop "sum")
               "proper use of type operator (+)"
-              i*))
+              i%))
           (prodtype
-            (i*)
+            (i%)
             (rightbin
               #'carttype
               (a (make-Ident "#"))
               (btyop "prod")
               "proper use of type operator (#)"
-              i*))
+              i%))
           (carttype
-            (i*)
+            (i%)
             (leftbin
               #'apptype
               (a (make-Ident "^"))
               (btyop "cart")
               "proper use of type operator (^)"
-              i*))
+              i%))
           (apptype
-            (i*)
+            (i%)
             (>>
               (++
                 #'atomictypes
-                (*** (>> #'type_constructor (lambdac (x) (cl:cons x nil))) #'nothing))
+                (%%% (>> #'type_constructor (lambdac (x) (cl:cons x nil))) #'nothing))
               #'mk_apptype
-              i*))
+              i%))
           (atomictypes
-            (i*)
-            (***
+            (i%)
+            (%%%
               (>>
                 (++ (++ (a (make-Resword "(")) #'typelist) (a (make-Resword ")")))
                 (o (function-value #'snd 1) (function-value #'fst 1)))
               (>> #'type_atom (lambdac (x) (cl:cons x nil)))
-              i*))
+              i%))
           (typelist
-            (i*)
+            (i%)
             (listof
               #'pretype
               (a (make-Ident ","))
               "comma separated list for type constructor"
-              i*)))
+              i%)))
         #'pretype))))
 
 ;; (* ------------------------------------------------------------------------- *)
@@ -733,17 +738,18 @@
 (match
   (labelsc
     ((try_parsers
-      (ps i*)
+      (ps i%)
       (if (= ps nil)
         (raise (make-Noparse))
         (handler-case
-          (funcall (snd (hd ps)) i*)
+          (funcall (snd (hd ps)) i%)
           (hol2cl.runtime:ocaml-condition
             (exception~962)
             (match exception~962
-              ((Noparse) (try_parsers (tl ps) i*))
+              ((Noparse) (try_parsers (tl ps) i%))
               (_ (raise exception~962))))))))
     (let ((parser_list (ref nil)))
+      (cl:declare (cl:ignorable parser_list))
       (tuple
         (lambdac (dat) (assign parser_list (cl:cons dat (deref parser_list))))
         (lambdac (key)
@@ -752,24 +758,24 @@
               parser_list
               (snd
                 (remove
-                  (lambdac (arg~996) (match arg~996 ((tuple key* _) (= key key*))))
+                  (lambdac (arg~996) (match arg~996 ((tuple key% _) (= key key%))))
                   (deref parser_list))))
             (hol2cl.runtime:ocaml-condition
               (exception~992)
               (match exception~992 ((Failure _) unit) (_ (raise exception~992))))))
         (lambdac (arg~1014)
           (match arg~1014 ((cl:type hol2cl.runtime::unit-value) (deref parser_list))))
-        (lambdac (i*) (try_parsers (deref parser_list) i*)))))
-  ((tuple install_parser* delete_parser* installed_parsers* try_user_parser*)
+        (lambdac (i%) (try_parsers (deref parser_list) i%)))))
+  ((tuple install_parser% delete_parser% installed_parsers% try_user_parser%)
     (setf
       delete_parser
-      delete_parser*
+      delete_parser%
       install_parser
-      install_parser*
+      install_parser%
       installed_parsers
-      installed_parsers*
+      installed_parsers%
       try_user_parser
-      try_user_parser*)))
+      try_user_parser%)))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Initial preterm parsing. This uses binder and precedence/associativity/   *)
@@ -811,7 +817,7 @@
       (r l)
       (match l
         (nil cl:t)
-        ((cl:cons h t*) (cl:and (forall (funcall r h) t*) (pairwise r t*))))))
+        ((cl:cons h t%) (cl:and (forall (funcall r h) t%) (pairwise r t%))))))
     (labelsc
       ((pfrees
         (ptm)
@@ -825,7 +831,7 @@
                   (cl:or
                     (can num_of_string v)
                     (exists
-                      (lambdac (arg~1062) (match arg~1062 ((tuple w* _) (= v w*))))
+                      (lambdac (arg~1062) (match arg~1062 ((tuple w% _) (= v w%))))
                       (deref the_interface))))
                 nil
                 (cl:cons ptm nil))))
@@ -841,21 +847,22 @@
           ((pmk_let
             (arg~1143)
             (match arg~1143
-              ((tuple letbindings body*)
+              ((tuple letbindings body%)
                 (match (unzip (map #'pdest_eq letbindings))
                   ((tuple vars tms)
                     (match
                       (warn
                         (not
                           (pairwise
-                            (lambdac (s t*) (= (intersect (pfrees s) (pfrees t*)) nil))
+                            (lambdac (s t%) (= (intersect (pfrees s) (pfrees t%)) nil))
                             vars))
                         "duplicate names on left of let-binding: latest is used")
                       (_
                         (let*
-                          ((lend (make-Combp (make-Varp "LET_END" dpty) body*))
-                            (abs** (itlist (lambdac (v t*) (make-Absp v t*)) vars lend))
-                            (labs (make-Combp (make-Varp "LET" dpty) abs**)))
+                          ((lend (make-Combp (make-Varp "LET_END" dpty) body%))
+                            (abs%% (itlist (lambdac (v t%) (make-Absp v t%)) vars lend))
+                            (labs (make-Combp (make-Varp "LET" dpty) abs%%)))
+                          (cl:declare (cl:ignorable lend abs%% labs))
                           (rev_itlist (lambdac (x f) (make-Combp f x)) tms labs))))))))))
           (fletc
             ((pmk_vbinder
@@ -875,22 +882,25 @@
                 ((pmk_set_enum
                   (ptms)
                   (itlist
-                    (lambdac (x t*)
-                      (make-Combp (make-Combp (make-Varp "INSERT" dpty) x) t*))
+                    (lambdac (x t%)
+                      (make-Combp (make-Combp (make-Varp "INSERT" dpty) x) t%))
                     ptms
                     (make-Varp "EMPTY" dpty))))
                 (let
                   ((pgenvar
                     (let ((gcounter (ref 0)))
+                      (cl:declare (cl:ignorable gcounter))
                       (lambdac (arg~1277)
                         (match arg~1277
                           ((cl:type hol2cl.runtime::unit-value)
                             (let ((count (deref gcounter)))
+                              (cl:declare (cl:ignorable count))
                               (progn
                                 (assign gcounter (+ count 1))
                                 (make-Varp
                                   (string-concat "GEN%PVAR%" (string-of-int count))
                                   dpty)))))))))
+                  (cl:declare (cl:ignorable pgenvar))
                   (fletc
                     ((pmk_exists
                       (arg~1299)
@@ -908,18 +918,21 @@
                       (let
                         ((pmk_bool
                           (let ((tt (make-Varp "T" dpty)) (ff (make-Varp "F" dpty)))
+                            (cl:declare (cl:ignorable tt ff))
                             (lambdac (b) (if b tt ff)))))
+                        (cl:declare (cl:ignorable pmk_bool))
                         (fletc
                           ((pmk_char
-                            (c*)
+                            (c%)
                             (let
                               ((lis
                                 (map
-                                  (lambdac (i*)
+                                  (lambdac (i%)
                                     (funcall
                                       pmk_bool
-                                      (= (int-mod (int-div c* (int-lsl 1 i*)) 2) 1)))
+                                      (= (int-mod (int-div c% (int-lsl 1 i%)) 2) 1)))
                                   (-- 0 7))))
+                              (cl:declare (cl:ignorable lis))
                               (itlist
                                 (lambdac (x y) (make-Combp y x))
                                 lis
@@ -930,8 +943,9 @@
                               (let
                                 ((ns
                                   (map
-                                    (lambdac (i*) (char-code (string-get s i*)))
+                                    (lambdac (i%) (char-code (string-get s i%)))
                                     (-- 0 (- (string-length s) 1)))))
+                                (cl:declare (cl:ignorable ns))
                                 (pmk_list (map #'pmk_char ns)))))
                             (fletc
                               ((pmk_setcompr
@@ -949,6 +963,7 @@
                                                 (make-Combp (make-Varp "SETSPEC" dpty) v)
                                                 babs)
                                               fabs))))
+                                      (cl:declare (cl:ignorable v bod))
                                       (make-Combp
                                         (make-Varp "GSPEC" dpty)
                                         (make-Absp v bod)))))))
@@ -960,12 +975,14 @@
                                       (let
                                         ((evs
                                           (let ((fvs (pfrees fabs)) (bvs (pfrees babs)))
+                                            (cl:declare (cl:ignorable fvs bvs))
                                             (if
                                               (cl:or
                                                 (<= (funcall length fvs) 1)
                                                 (= bvs nil))
                                               fvs
                                               (intersect fvs bvs)))))
+                                        (cl:declare (cl:ignorable evs))
                                         (pmk_setcompr (tuple fabs evs babs)))))))
                                 (labelsc
                                   ((mk_precedence
@@ -976,18 +993,18 @@
                                           (partition
                                             (lambdac (arg~1529)
                                               (match arg~1529
-                                                ((tuple s* pat*) (= pat* (tuple p at)))))
+                                                ((tuple s% pat%) (= pat% (tuple p at)))))
                                             infxs)
                                           ((tuple topins rest)
                                             (funcall
                                               (if (= at "right") #'rightbin #'leftbin)
                                               (mk_precedence rest prs)
                                               (end_itlist
-                                                #'***
+                                                #'%%%
                                                 (map
                                                   (lambdac (arg~1489)
                                                     (match arg~1489
-                                                      ((tuple s* _) (a (make-Ident s*)))))
+                                                      ((tuple s% _) (a (make-Ident s%)))))
                                                   topins))
                                               (lambdac (arg~1502 x y)
                                                 (match arg~1502
@@ -1000,10 +1017,10 @@
                                       (_ (funcall prs inp)))))
                                   (fletc
                                     ((pmk_geq
-                                      (s t*)
+                                      (s t%)
                                       (make-Combp
                                         (make-Combp (make-Varp "GEQ" dpty) s)
-                                        t*)))
+                                        t%)))
                                     (fletc
                                       ((pmk_pattern
                                         (arg~1561)
@@ -1012,6 +1029,7 @@
                                             (let
                                               ((x (funcall pgenvar unit))
                                                 (y (funcall pgenvar unit)))
+                                              (cl:declare (cl:ignorable x y))
                                               (let
                                                 ((vs (pfrees pat))
                                                   (bod
@@ -1032,6 +1050,7 @@
                                                             (pmk_geq pat x))
                                                           (hd guards))
                                                         (pmk_geq res y)))))
+                                                (cl:declare (cl:ignorable vs bod))
                                                 (make-Absp
                                                   x
                                                   (make-Absp
@@ -1042,7 +1061,7 @@
                                           (string
                                             (lambdac (inp)
                                               (match inp
-                                                ((trivia:guard
+                                                ((guard
                                                   (cl:cons (Ident s) rst)
                                                   (cl:and
                                                     (>= (string-length s) 2)
@@ -1093,9 +1112,9 @@
                                             (lambdac (arg~1749)
                                               (match arg~1749
                                                 ((tuple
-                                                  (tuple (tuple (tuple s h) t*) _)
+                                                  (tuple (tuple (tuple s h) t%) _)
                                                   p)
-                                                  (pmk_binder (tuple s (cl:cons h t*) p))))))
+                                                  (pmk_binder (tuple s (cl:cons h t%) p))))))
                                           (lmk_setenum
                                             (lambdac (arg~1772)
                                               (match arg~1772
@@ -1125,12 +1144,16 @@
                                                         ((r0 (hd ropt))
                                                           (n_l (funcall num_of_string l0))
                                                           (n_r (funcall num_of_string r0)))
+                                                        (cl:declare
+                                                          (cl:ignorable r0 n_l n_r))
                                                         (let*
                                                           ((n_d
                                                             (power-num
                                                               (num 10)
                                                               (num (string-length r0))))
                                                             (n_n (+ (* n_l n_d) n_r)))
+                                                          (cl:declare
+                                                            (cl:ignorable n_d n_n))
                                                           (tuple
                                                             (string-of-num n_n)
                                                             (string-of-num n_d)))))
@@ -1187,15 +1210,33 @@
                                                     (tuple s rest)
                                                     (raise (make-Noparse))))
                                                 (_ (raise (make-Noparse)))))))
+                                        (cl:declare
+                                          (cl:ignorable
+                                            pretype
+                                            string
+                                            singleton1
+                                            lmk_ite
+                                            lmk_typed
+                                            lmk_let
+                                            lmk_binder
+                                            lmk_setenum
+                                            lmk_setabs
+                                            lmk_setcompr
+                                            lmk_decimal
+                                            lmk_univ
+                                            any_identifier
+                                            identifier
+                                            binder
+                                            pre_fix))
                                         (labelsc
                                           ((preterm
-                                            (i*)
+                                            (i%)
                                             (mk_precedence
                                               (funcall infixes unit)
                                               #'typed_appl_preterm
-                                              i*))
+                                              i%))
                                             (nocommapreterm
-                                              (i*)
+                                              (i%)
                                               (let
                                                 ((infs
                                                   (filter
@@ -1203,12 +1244,13 @@
                                                       (match arg~2007
                                                         ((tuple s _) (<> s ","))))
                                                     (funcall infixes unit))))
+                                                (cl:declare (cl:ignorable infs))
                                                 (mk_precedence
                                                   infs
                                                   #'typed_appl_preterm
-                                                  i*)))
+                                                  i%)))
                                             (typed_appl_preterm
-                                              (i*)
+                                              (i%)
                                               (>>
                                                 (++
                                                   #'appl_preterm
@@ -1217,10 +1259,10 @@
                                                       (++ (a (make-Resword ":")) pretype)
                                                       (function-value #'snd 1))))
                                                 lmk_typed
-                                                i*))
+                                                i%))
                                             (appl_preterm
-                                              (i*)
-                                              (***
+                                              (i%)
+                                              (%%%
                                                 (>>
                                                   (++ pre_fix #'appl_preterm)
                                                   (lambdac (arg~2043)
@@ -1233,16 +1275,16 @@
                                                     (many #'binder_preterm))
                                                   (lambdac (arg~2061)
                                                     (match arg~2061
-                                                      ((tuple h t*)
+                                                      ((tuple h t%)
                                                         (itlist
                                                           (lambdac (x y) (make-Combp y x))
-                                                          (funcall rev t*)
+                                                          (funcall rev t%)
                                                           h)))))
-                                                i*))
+                                                i%))
                                             (binder_preterm
-                                              (i*)
-                                              (***
-                                                (***
+                                              (i%)
+                                              (%%%
+                                                (%%%
                                                   (>>
                                                     (++
                                                       (++
@@ -1267,9 +1309,9 @@
                                                       #'preterm)
                                                     lmk_binder))
                                                 #'atomic_preterm
-                                                i*))
+                                                i%))
                                             (typed_apreterm
-                                              (i*)
+                                              (i%)
                                               (>>
                                                 (++
                                                   #'atomic_preterm
@@ -1278,32 +1320,32 @@
                                                       (++ (a (make-Resword ":")) pretype)
                                                       (function-value #'snd 1))))
                                                 lmk_typed
-                                                i*))
+                                                i%))
                                             (atomic_preterm
-                                              (i*)
-                                              (***
-                                                (***
-                                                  (***
-                                                    (***
-                                                      (***
-                                                        (***
-                                                          (***
-                                                            (***
-                                                              (***
-                                                                (***
-                                                                  (***
-                                                                    (***
-                                                                      (***
-                                                                        (***
-                                                                          (***
-                                                                            (***
-                                                                              (***
-                                                                                (***
-                                                                                  (***
-                                                                                    (***
-                                                                                      (***
-                                                                                        (***
-                                                                                          (***
+                                              (i%)
+                                              (%%%
+                                                (%%%
+                                                  (%%%
+                                                    (%%%
+                                                      (%%%
+                                                        (%%%
+                                                          (%%%
+                                                            (%%%
+                                                              (%%%
+                                                                (%%%
+                                                                  (%%%
+                                                                    (%%%
+                                                                      (%%%
+                                                                        (%%%
+                                                                          (%%%
+                                                                            (%%%
+                                                                              (%%%
+                                                                                (%%%
+                                                                                  (%%%
+                                                                                    (%%%
+                                                                                      (%%%
+                                                                                        (%%%
+                                                                                          (%%%
                                                                                             try_user_parser
                                                                                             (>>
                                                                                               (++
@@ -1516,8 +1558,8 @@
                                                                 (>>
                                                                   (++
                                                                     (a (make-Resword "{"))
-                                                                    (***
-                                                                      (***
+                                                                    (%%%
+                                                                      (%%%
                                                                         (>>
                                                                           (++
                                                                             (elistof
@@ -1583,14 +1625,14 @@
                                                                 (match arg~2433
                                                                   ((tuple
                                                                     (tuple (tuple _ e) _)
-                                                                    c*)
+                                                                    c%)
                                                                     (make-Combp
                                                                       (make-Combp
                                                                         (make-Varp
                                                                           "_MATCH"
                                                                           dpty)
                                                                         e)
-                                                                      c*))))))
+                                                                      c%))))))
                                                           (>>
                                                             (a (make-Resword "match"))
                                                             (lambdac (arg~2457)
@@ -1602,12 +1644,12 @@
                                                             #'clauses)
                                                           (lambdac (arg~2469)
                                                             (match arg~2469
-                                                              ((tuple _ c*)
+                                                              ((tuple _ c%)
                                                                 (make-Combp
                                                                   (make-Varp
                                                                     "_FUNCTION"
                                                                     dpty)
-                                                                  c*))))))
+                                                                  c%))))))
                                                       (>>
                                                         (a (make-Resword "function"))
                                                         (lambdac (arg~2486)
@@ -1633,9 +1675,9 @@
                                                 (>>
                                                   identifier
                                                   (lambdac (s) (make-Varp s dpty)))
-                                                i*))
+                                                i%))
                                             (pattern
-                                              (i*)
+                                              (i%)
                                               (++
                                                 #'preterm
                                                 (possibly
@@ -1644,9 +1686,9 @@
                                                       (a (make-Resword "when"))
                                                       #'preterm)
                                                     (function-value #'snd 1)))
-                                                i*))
+                                                i%))
                                             (clause
-                                              (i*)
+                                              (i%)
                                               (>>
                                                 (++
                                                   #'pattern
@@ -1654,9 +1696,9 @@
                                                     (++ (a (make-Resword "->")) #'preterm)
                                                     (function-value #'snd 1)))
                                                 #'pmk_pattern
-                                                i*))
+                                                i%))
                                             (clauses
-                                              (i*)
+                                              (i%)
                                               (>>
                                                 (>>
                                                   (++
@@ -1667,16 +1709,16 @@
                                                       "pattern-match clause"))
                                                   (function-value #'snd 1))
                                                 (end_itlist
-                                                  (lambdac (s t*)
+                                                  (lambdac (s t%)
                                                     (make-Combp
                                                       (make-Combp
                                                         (make-Varp "_SEQPATTERN" dpty)
                                                         s)
-                                                      t*)))
-                                                i*)))
+                                                      t%)))
+                                                i%)))
                                           (lambdac (inp)
                                             (match inp
-                                              ((trivia:guard
+                                              ((guard
                                                 (cl:cons (Ident s) nil)
                                                 (not
                                                   (cl:and

@@ -1,3 +1,5 @@
+> Historical star-suffix naming profile. Current naming uses percent suffixes; see PERCENT-NAMES.md.
+
 # Unescaped star-suffix names: 1.0.0-star-names
 
 Generated source identifiers use ordinary Common Lisp reader atoms. The readtable

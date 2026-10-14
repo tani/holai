@@ -36,3 +36,8 @@ The organization changes README/working instructions, report locations,
 ignore rules, historical report references and the ZIP's holai/ top directory.
 It does not rename the CLI/ASDF/package API, rewrite algorithms or add new
 optimization. Packaging verifies mandatory files, pins and observation digests.
+
+The structural-match release adds runtime/pattern.lisp and removes production
+Trivia dependencies. Vendored Lisp libraries and the OPTIONAL runtime snapshot
+are retained only as historical controls. To reproduce the historical OPTIONAL
+comparison, check out commit1730c0299f7d677ba25be29d2dfbff0538fea354 first.

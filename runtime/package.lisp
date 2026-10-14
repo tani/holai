@@ -2,7 +2,7 @@
   (:use :cl)
   (:shadow :funcall :compare :partial := :< :> :<= :>= :Some :formatter :list-length)
   (:export :defunc :lambdac :labelsc :fletc :function-value :funcall :partial :tuple :tuple-items :tuple-ref
-    :unit :match :match-failure :ocaml-condition :raise :define-exception
+    :character-code :guard :unit :match :match-failure :ocaml-condition :raise :define-exception
     :defvariant :variant-value :variant-tag :variant-fields :variant-type
     :ref :ref-contents :deref :assign := :<> :== :!= :compare :< :> :<= :>=
     :failure :invalid_argument :end_of_file :sys_error :failwith
