@@ -1,5 +1,9 @@
 (require :asdf)
-(asdf:initialize-source-registry `(:source-registry (:directory ,(truename ".")) :inherit-configuration))
+(let ((root (uiop:pathname-parent-directory-pathname
+             (uiop:pathname-parent-directory-pathname
+              (uiop:pathname-directory-pathname *load-truename*)))))
+  (asdf:initialize-source-registry
+   `(:source-registry (:directory ,root) :inherit-configuration)))
 (setf asdf:*asdf-verbose* nil *compile-verbose* nil *load-verbose* nil)
 (asdf:load-system "holai/runtime")
 (holai.runtime:defunc bench-add (a b c) (+ a b c))

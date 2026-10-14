@@ -1,0 +1,998 @@
+;;; Loading #P"/nix/store/li8033azc46v0ilvb1hxbbg4x7wdkdfz-ecl-21.2.1/lib/ecl-21.2.1/asdf.fas"
+;;; Loading "/home/tani/ghq/github.com/tani/holai/holai/tests/profile-core.lisp"
+PROFILE_START load system
+PROFILE_END load system 0.003
+PROFILE_START load lib
+PROFILE_END load lib 0.014
+PROFILE_START load fusion
+PROFILE_END load fusion 0.011
+PROFILE_START load basics
+PROFILE_END load basics 0.006
+PROFILE_START load nets
+PROFILE_END load nets 0.026
+PROFILE_START load printer
+PROFILE_END load printer 0.010
+PROFILE_START load preterm
+PROFILE_END load preterm 0.014
+PROFILE_START load parser
+PROFILE_END load parser 0.007
+PROFILE_START load equal
+PROFILE_END load equal 0.005
+PROFILE_START load bool
+PROFILE_END load bool 0.093
+PROFILE_START load drule
+PROFILE_END load drule 0.014
+PROFILE_START load tactics
+PROFILE_END load tactics 0.018
+PROFILE_START load itab
+PROFILE_END load itab 0.005
+PROFILE_START load simp
+Searching with limit 0
+Searching with limit 1
+Searching with limit 2
+Searching with limit 3
+Warning: inventing type variables
+Searching with limit 0
+Searching with limit 1
+Searching with limit 2
+Searching with limit 3
+Searching with limit 4
+PROFILE_END load simp 0.029
+PROFILE_START load theorems
+Searching with limit 0
+Searching with limit 1
+Searching with limit 0
+Searching with limit 1
+Searching with limit 0
+Searching with limit 1
+Searching with limit 0
+Searching with limit 1
+Searching with limit 0
+Searching with limit 1
+Searching with limit 0
+Searching with limit 1
+Searching with limit 0
+Searching with limit 1
+Searching with limit 2
+Searching with limit 3
+Searching with limit 0
+Searching with limit 1
+Searching with limit 2
+Searching with limit 3
+Searching with limit 0
+Searching with limit 1
+Searching with limit 0
+Searching with limit 1
+Searching with limit 0
+Searching with limit 1
+Searching with limit 2
+Searching with limit 3
+Searching with limit 0
+Searching with limit 1
+Searching with limit 2
+Searching with limit 3
+Searching with limit 0
+Searching with limit 1
+Searching with limit 2
+Searching with limit 0
+Searching with limit 1
+Searching with limit 2
+Searching with limit 0
+Searching with limit 1
+Searching with limit 2
+Searching with limit 0
+Searching with limit 1
+Searching with limit 0
+Searching with limit 1
+Searching with limit 0
+Searching with limit 1
+Searching with limit 2
+Warning: inventing type variables
+Searching with limit 0
+Searching with limit 1
+Searching with limit 2
+Searching with limit 3
+Searching with limit 4
+Searching with limit 0
+Searching with limit 1
+Searching with limit 2
+Searching with limit 3
+Searching with limit 4
+Searching with limit 5
+Searching with limit 0
+Searching with limit 1
+Searching with limit 2
+Searching with limit 3
+Searching with limit 4
+Searching with limit 5
+Searching with limit 0
+Searching with limit 1
+Searching with limit 2
+Searching with limit 3
+Searching with limit 0
+Searching with limit 1
+Searching with limit 2
+Searching with limit 3
+Searching with limit 0
+Searching with limit 1
+Searching with limit 2
+Searching with limit 3
+Searching with limit 0
+Searching with limit 1
+Searching with limit 2
+Searching with limit 3
+Searching with limit 0
+Searching with limit 1
+Searching with limit 2
+Searching with limit 3
+Searching with limit 0
+Searching with limit 1
+Searching with limit 2
+Searching with limit 3
+Searching with limit 0
+Searching with limit 1
+Searching with limit 2
+Searching with limit 3
+Searching with limit 0
+Searching with limit 1
+Searching with limit 2
+Searching with limit 3
+Searching with limit 0
+Searching with limit 1
+Searching with limit 2
+Searching with limit 3
+Searching with limit 0
+Searching with limit 1
+Searching with limit 2
+Searching with limit 3
+Searching with limit 0
+Searching with limit 1
+Searching with limit 2
+Searching with limit 3
+Searching with limit 0
+Searching with limit 1
+Searching with limit 2
+Searching with limit 3
+Searching with limit 0
+Searching with limit 1
+Searching with limit 2
+Searching with limit 3
+Searching with limit 0
+Searching with limit 1
+Searching with limit 2
+Searching with limit 3
+Searching with limit 0
+Searching with limit 1
+Searching with limit 2
+Searching with limit 3
+Searching with limit 0
+Searching with limit 1
+Searching with limit 2
+Searching with limit 3
+Searching with limit 0
+Searching with limit 1
+Searching with limit 2
+Searching with limit 3
+Searching with limit 4
+Searching with limit 0
+Searching with limit 1
+Searching with limit 2
+Searching with limit 3
+Searching with limit 4
+Searching with limit 0
+Searching with limit 1
+Searching with limit 2
+Searching with limit 3
+Searching with limit 4
+Searching with limit 0
+Searching with limit 1
+Searching with limit 2
+Searching with limit 3
+Searching with limit 4
+Searching with limit 0
+Searching with limit 1
+Searching with limit 2
+Searching with limit 3
+Searching with limit 4
+Searching with limit 0
+Searching with limit 1
+Searching with limit 2
+Searching with limit 3
+Searching with limit 4
+Searching with limit 0
+Searching with limit 1
+Searching with limit 2
+Searching with limit 0
+Searching with limit 1
+Searching with limit 2
+Searching with limit 0
+Searching with limit 1
+Searching with limit 2
+Searching with limit 3
+Searching with limit 0
+Searching with limit 1
+Searching with limit 2
+Searching with limit 3
+Searching with limit 0
+Searching with limit 1
+Searching with limit 2
+PROFILE_END load theorems 0.865
+PROFILE_START load ind_defs
+Searching with limit 0
+Searching with limit 1
+PROFILE_END load ind_defs 0.020
+PROFILE_START load class
+Searching with limit 0
+Searching with limit 1
+Searching with limit 2
+Searching with limit 0
+Searching with limit 1
+Warning: inventing type variables
+Warning: inventing type variables
+PROFILE_END load class 0.556
+PROFILE_START load trivia
+PROFILE_END load trivia 0.094
+PROFILE_START load canon
+Warning: inventing type variables
+Warning: inventing type variables
+PROFILE_END load canon 0.307
+PROFILE_START load meson
+PROFILE_END load meson 0.106
+PROFILE_START load firstorder
+PROFILE_END load firstorder 0.024
+PROFILE_START load metis
+PROFILE_END load metis 1.708
+PROFILE_START load thecops
+PROFILE_END load thecops 0.193
+PROFILE_START load quot
+0..0..1..3..7..15..26..54..86..136..solved at 208
+0..0..1..solved at 4
+0..0..solved at 2
+0..0..1..4..solved at 10
+0..0..1..4..9..solved at 21
+0..0..solved at 2
+0..0..1..solved at 4
+0..0..1..2..6..11..22..38..70..solved at 116
+0..0..solved at 2
+0..0..solved at 2
+0..0..1..2..6..11..22..41..76..solved at 108
+0..0..1..solved at 4
+0..0..solved at 2
+PROFILE_END load quot 0.906
+PROFILE_START load impconv
+PROFILE_END load impconv 0.402
+PROFILE_START load pair
+0..0..solved at 2
+0..0..1..solved at 4
+0..0..1..2..solved at 6
+0..0..1..2..solved at 6
+0..0..solved at 2
+Warning: inventing type variables
+Warning: inventing type variables
+0..0..solved at 2
+0..0..1..2..solved at 6
+0..0..1..2..6..11..solved at 22
+0..0..solved at 2
+Warning: inventing type variables
+0..0..solved at 2
+0..0..solved at 2
+Warning: inventing type variables
+0..0..solved at 2
+0..0..solved at 2
+0..0..solved at 2
+Warning: inventing type variables
+0..0..1..5..13..solved at 26
+0..0..1..5..13..solved at 26
+0..0..solved at 2
+Warning: inventing type variables
+PROFILE_END load pair 1.535
+PROFILE_START load compute
+PROFILE_END load compute 0.049
+PROFILE_START load nums
+0..0..2..solved at 5
+0..0..solved at 2
+0..0..1..3..solved at 9
+0..0..1..2..5..9..15..29..44..68..142..260..solved at 420
+0..0..solved at 3
+0..0..solved at 2
+PROFILE_END load nums 0.470
+PROFILE_START load recursion
+PROFILE_END load recursion 0.006
+PROFILE_START load arith
+0..0..solved at 2
+0..0..1..2..solved at 6
+0..0..1..2..7..14..35..62..solved at 73
+0..0..solved at 2
+0..0..1..2..solved at 6
+0..0..1..2..7..14..35..62..solved at 73
+0..0..solved at 2
+0..0..2..12..solved at 18
+0..0..1..5..13..27..solved at 33
+0..0..1..5..11..22..49..95..171..305..solved at 319
+0..0..1..4..10..20..34..56..88..130..180..238..304..378..468..574..696..850..1032..1258..1520..1834..2228..2782..3536..4510..5728..7250..8852..10582..12504..14450..16716..19194..22436..26450..31796..solved at 33408
+0..0..3..13..37..solved at 48
+0..0..3..solved at 8
+0..0..2..8..solved at 23
+0..0..solved at 2
+0..0..0..1..3..5..solved at 10
+0..0..1..3..solved at 7
+0..0..1..2..3..7..13..21..solved at 31
+Warning: inventing type variables
+0..0..solved at 2
+0..0..solved at 2
+0..0..2..6..solved at 11
+0..0..2..7..19..39..74..156..solved at 223
+Searching with limit 0
+Searching with limit 1
+Searching with limit 2
+Searching with limit 0
+Searching with limit 1
+Searching with limit 0
+Searching with limit 1
+Searching with limit 2
+Searching with limit 3
+Searching with limit 4
+Searching with limit 0
+Searching with limit 1
+Searching with limit 2
+Searching with limit 0
+Searching with limit 1
+0..0..1..4..solved at 10
+0..0..2..8..31..79..254..629..1685..solved at 3183
+0..0..solved at 2
+0..0..solved at 3
+0..0..solved at 3
+0..0..1..4..13..29..74..solved at 99
+0..0..1..4..19..49..130..solved at 165
+0..0..3..10..29..63..170..solved at 283
+0..0..solved at 2
+0..0..solved at 5
+0..0..solved at 3
+0..0..solved at 2
+0..0..solved at 3
+0..0..solved at 2
+0..0..solved at 2
+0..0..solved at 7
+0..0..2..4..solved at 10
+0..0..solved at 2
+0..0..solved at 2
+0..0..4..8..solved at 17
+0..0..2..4..solved at 11
+0..0..solved at 2
+0..0..solved at 3
+0..0..6..12..solved at 24
+0..0..solved at 2
+0..0..solved at 2
+0..0..solved at 3
+0..0..2..7..16..32..solved at 45
+0..0..2..solved at 5
+0..0..2..solved at 5
+0..0..1..solved at 4
+0..0..1..solved at 4
+0..0..2..6..15..solved at 21
+0..0..2..6..15..57..160..883..4135..solved at 8792
+0..0..1..2..7..15..43..86..233..456..solved at 886
+0..0..solved at 2
+0..0..solved at 2
+0..0..solved at 2
+0..0..3..solved at 6
+0..0..2..11..38..157..solved at 291
+0..0..2..11..solved at 16
+0..0..2..10..39..151..solved at 158
+0..0..solved at 2
+0..0..1..solved at 4
+0..0..1..2..5..solved at 11
+0..0..1..3..6..13..28..55..102..solved at 169
+0..0..1..2..solved at 6
+0..0..1..solved at 5
+0..0..1..solved at 4
+0..0..2..6..14..solved at 19
+0..0..2..solved at 5
+0..0..2..6..13..45..solved at 52
+0..0..2..solved at 5
+0..0..2..6..18..42..solved at 52
+0..0..1..solved at 4
+0..0..2..4..solved at 8
+0..0..1..3..5..10..19..31..52..solved at 74
+0..0..2..4..10..24..solved at 34
+0..0..solved at 2
+0..0..solved at 2
+0..0..2..7..solved at 11
+0..0..1..2..solved at 7
+0..0..solved at 2
+0..0..solved at 2
+0..0..solved at 2
+0..0..solved at 3
+0..0..solved at 2
+0..0..1..2..solved at 6
+0..0..1..solved at 4
+0..0..2..8..solved at 12
+0..0..2..6..17..solved at 25
+0..0..2..solved at 5
+0..0..2..4..11..34..77..165..solved at 194
+0..0..1..2..solved at 7
+0..0..1..2..7..solved at 13
+0..0..2..solved at 6
+0..0..2..5..11..22..40..solved at 53
+0..0..1..solved at 4
+0..0..3..6..14..32..57..102..188..solved at 204
+0..0..3..6..22..41..72..122..175..248..386..solved at 407
+0..0..1..2..6..11..19..32..45..60..solved at 73
+0..0..1..2..6..11..19..32..45..60..solved at 73
+0..0..1..3..6..15..34..67..132..266..solved at 510
+0..0..1..3..6..13..29..59..110..solved at 162
+0..0..1..3..6..15..34..68..130..solved at 182
+0..0..1..3..6..15..34..67..132..266..solved at 510
+0..0..1..solved at 4
+0..0..2..solved at 6
+0..0..3..10..solved at 15
+0..0..3..10..solved at 14
+0..0..solved at 3
+0..0..2..6..21..solved at 27
+0..0..solved at 2
+0..0..2..6..21..69..246..solved at 261
+0..0..2..8..solved at 14
+0..0..solved at 2
+0..0..1..solved at 4
+0..0..solved at 2
+0..0..1..solved at 4
+0..0..solved at 2
+0..0..2..solved at 7
+0..0..2..5..solved at 17
+0..0..0..solved at 3
+0..0..solved at 2
+0..0..solved at 2
+0..0..0..1..solved at 9
+0..0..solved at 2
+0..0..solved at 2
+0..0..1..solved at 5
+0..0..1..5..16..32..solved at 40
+0..0..1..5..18..37..solved at 48
+0..0..solved at 2
+0..0..1..solved at 4
+0..0..solved at 2
+0..0..2..solved at 7
+0..0..2..5..solved at 17
+0..0..0..solved at 3
+0..0..solved at 2
+0..0..solved at 2
+0..0..0..1..solved at 9
+0..0..solved at 2
+0..0..solved at 2
+0..0..2..5..14..66..287..1310..solved at 1325
+0..0..solved at 3
+0..0..2..5..16..72..302..solved at 311
+0..0..1..2..3..7..12..17..23..29..35..solved at 84
+0..0..1..2..solved at 6
+0..0..solved at 2
+0..0..2..4..7..solved at 21
+0..0..2..4..solved at 10
+0..0..0..0..1..solved at 7
+0..0..solved at 2
+0..0..solved at 2
+0..0..0..0..solved at 4
+0..0..solved at 2
+0..0..solved at 2
+0..0..1..4..14..37..solved at 59
+0..0..solved at 2
+0..0..0..solved at 3
+0..0..1..6..18..31..solved at 38
+0..0..1..solved at 4
+0..0..1..solved at 4
+0..0..1..solved at 4
+0..0..1..4..10..solved at 18
+0..0..1..5..solved at 9
+0..0..1..solved at 4
+0..0..1..solved at 4
+0..0..solved at 2
+0..0..1..2..solved at 6
+0..0..solved at 2
+0..0..1..2..solved at 6
+0..0..solved at 2
+0..0..solved at 2
+0..0..1..2..5..10..19..32..55..112..263..solved at 489
+0..0..0..1..2..3..solved at 8
+0..0..0..1..2..3..7..14..22..33..57..84..141..221..305..441..638..849..solved at 1042
+0..0..0..1..2..3..4..5..6..11..16..21..40..59..78..103..128..153..192..231..270..358..446..534..650..766..882..1036..1190..1344..solved at 3172
+PROFILE_END load arith 29.243
+PROFILE_START load wf
+0..0..solved at 2
+0..0..solved at 2
+0..0..0..0..2..5..8..25..57..89..solved at 97
+0..0..0..1..5..10..solved at 15
+0..0..0..0..2..5..8..25..57..89..solved at 97
+0..0..solved at 2
+0..0..2..10..25..solved at 35
+0..0..0..1..4..7..solved at 12
+0..0..solved at 2
+0..0..0..3..6..9..solved at 16
+0..0..1..solved at 4
+0..0..1..solved at 4
+0..0..1..solved at 4
+0..0..1..3..solved at 7
+0..0..solved at 2
+0..0..0..solved at 3
+0..0..1..2..solved at 6
+0..0..solved at 2
+0..0..solved at 3
+0..0..2..4..8..solved at 13
+0..0..solved at 3
+0..0..2..4..8..solved at 13
+0..0..solved at 3
+0..0..solved at 2
+0..0..2..10..25..solved at 35
+0..0..solved at 2
+0..0..1..3..11..solved at 20
+0..0..1..2..4..12..24..45..78..125..solved at 140
+0..0..0..2..7..solved at 12
+0..0..1..3..13..29..63..128..226..388..642..977..1459..2097..3319..solved at 3649
+0..0..solved at 2
+0..0..solved at 2
+0..0..0..solved at 3
+0..0..solved at 2
+0..0..1..4..15..41..98..211..420..solved at 656
+0..0..1..2..5..9..17..33..55..97..162..262..411..solved at 543
+0..0..1..6..23..68..172..410..880..solved at 911
+0..0..0..1..4..7..solved at 16
+0..0..2..8..24..54..solved at 69
+0..0..1..solved at 6
+0..0..0..solved at 4
+0..0..0..solved at 3
+0..0..2..8..solved at 12
+0..0..2..8..solved at 13
+0..0..solved at 2
+0..0..0..solved at 3
+0..0..0..solved at 5
+0..0..0..0..solved at 4
+Warning: inventing type variables
+0..0..0..1..2..3..4..5..6..solved at 13
+0..0..0..1..2..3..4..5..6..9..12..15..solved at 28
+0..0..1..2..9..27..54..solved at 63
+0..0..0..0..4..11..21..solved at 31
+0..0..0..2..5..18..49..94..177..301..448..682..998..1426..2070..3047..4168..6085..8572..solved at 9229
+0..0..solved at 2
+0..0..3..7..20..54..150..solved at 180
+0..0..solved at 2
+0..0..2..6..solved at 13
+0..0..1..3..solved at 7
+0..0..1..3..solved at 8
+0..0..2..6..solved at 14
+0..0..1..3..solved at 8
+0..0..2..4..solved at 11
+0..0..5..12..39..solved at 71
+0..0..4..10..30..solved at 55
+0..0..5..13..38..solved at 66
+0..0..4..10..31..solved at 57
+0..0..3..6..19..35..60..118..solved at 270
+Warning: inventing type variables
+0..0..solved at 2
+0..0..1..2..solved at 6
+0..0..1..5..15..51..120..259..solved at 434
+0..0..1..5..15..51..120..259..solved at 394
+0..0..1..4..13..31..solved at 37
+0..0..1..2..solved at 6
+0..0..1..5..15..51..120..259..solved at 394
+0..0..1..5..15..51..120..259..solved at 434
+0..0..1..4..12..28..58..118..solved at 128
+0..0..2..9..28..85..206..492..solved at 618
+0..0..2..9..28..94..222..491..1165..solved at 1499
+0..0..2..9..28..94..223..491..1149..solved at 1472
+0..0..2..10..28..82..204..solved at 236
+0..0..1..4..11..43..116..246..648..1354..solved at 1611
+0..0..solved at 2
+0..0..1..5..15..51..120..259..solved at 434
+0..0..1..5..15..51..120..259..solved at 394
+0..0..1..4..13..31..solved at 37
+0..0..2..7..24..55..104..223..440..827..1504..solved at 1616
+0..0..2..7..24..65..133..290..574..solved at 904
+0..0..2..7..24..65..134..294..583..solved at 913
+0..0..2..8..25..52..110..solved at 145
+0..0..1..2..7..13..26..50..83..132..216..308..447..705..1020..1530..2268..3184..4455..6310..solved at 8365
+0..0..1..3..9..17..43..86..154..300..472..714..1138..1664..2466..4129..6181..solved at 6305
+0..0..2..7..20..49..89..185..solved at 215
+0..0..1..2..7..17..34..70..132..223..396..solved at 427
+0..0..1..2..6..12..23..46..74..119..197..285..418..630..886..solved at 1210
+0..0..2..8..24..solved at 32
+0..0..2..7..24..61..134..280..548..1144..solved at 1169
+0..0..3..solved at 7
+Warning: inventing type variables
+0..0..1..solved at 4
+0..0..1..solved at 4
+Warning: inventing type variables
+0..0..0..solved at 3
+0..0..solved at 2
+PROFILE_END load wf 20.230
+PROFILE_START load calc_num
+0..0..1..2..8..18..solved at 48
+0..0..1..2..8..18..solved at 55
+0..0..1..2..10..24..118..279..1321..3190..solved at 4661
+0..0..1..2..solved at 6
+0..0..1..2..solved at 6
+0..0..1..2..6..12..28..51..solved at 84
+0..0..1..2..6..12..28..57..solved at 90
+0..0..1..2..solved at 6
+0..0..1..solved at 4
+0..0..1..2..solved at 6
+0..0..solved at 2
+Warning: inventing type variables
+0..0..solved at 2
+0..0..solved at 2
+0..0..1..2..8..18..68..147..solved at 443
+0..0..1..2..8..18..67..146..solved at 427
+0..0..1..2..8..18..solved at 55
+0..0..1..2..8..18..solved at 48
+0..0..1..2..7..14..solved at 23
+0..0..1..2..solved at 6
+0..0..1..2..solved at 6
+0..0..1..2..solved at 6
+0..0..solved at 2
+0..0..1..3..12..31..100..solved at 139
+0..0..1..2..solved at 8
+0..0..1..2..6..13..29..solved at 39
+0..0..1..2..6..12..28..51..solved at 80
+0..0..1..2..6..13..29..solved at 39
+0..0..1..2..6..12..28..51..solved at 80
+0..0..1..2..7..15..35..77..161..solved at 177
+0..0..1..2..6..12..28..51..104..192..solved at 349
+0..0..1..solved at 4
+0..0..1..2..3..solved at 8
+0..0..solved at 2
+0..0..1..2..3..solved at 8
+0..0..1..solved at 4
+0..0..2..solved at 5
+0..0..2..solved at 6
+0..0..1..2..solved at 6
+0..0..1..2..solved at 6
+0..0..1..solved at 4
+0..0..1..solved at 5
+0..0..solved at 2
+0..0..1..solved at 4
+PROFILE_END load calc_num 23.888
+PROFILE_START load normalizer
+0..0..solved at 2
+0..0..1..2..solved at 9
+0..0..1..2..9..20..73..154..solved at 284
+0..0..1..2..solved at 8
+0..0..solved at 2
+0..0..1..2..solved at 8
+0..0..1..2..9..20..73..154..solved at 229
+0..0..1..2..8..18..65..140..472..992..solved at 2047
+0..0..0..1..2..3..4..5..6..solved at 20
+0..0..1..2..solved at 6
+0..0..solved at 2
+0..0..solved at 2
+PROFILE_END load normalizer 1.776
+PROFILE_START load grobner
+0..0..2..4..10..20..52..96..204..356..638..1042..1916..3036..solved at 4498
+0..0..1..2..7..16..42..78..161..285..685..solved at 954
+0..0..1..2..7..16..42..78..160..281..solved at 672
+0..0..2..4..11..21..59..116..239..426..800..1336..solved at 1840
+0..0..1..2..7..16..45..86..174..312..724..solved at 772
+0..0..1..2..7..16..44..84..168..solved at 185
+0..0..2..4..11..21..59..116..239..426..solved at 540
+0..0..1..2..7..18..46..solved at 77
+0..0..1..2..7..18..47..92..185..solved at 281
+0..0..2..4..12..22..solved at 41
+0..0..1..2..7..solved at 21
+0..0..1..2..7..solved at 18
+PROFILE_END load grobner 2.188
+PROFILE_START load ind_types
+Searching with limit 0
+Searching with limit 1
+Searching with limit 2
+Warning: inventing type variables
+0..0..solved at 2
+0..0..solved at 2
+0..0..solved at 3
+0..0..solved at 2
+0..0..solved at 3
+0..0..solved at 2
+0..0..1..2..6..13..30..solved at 70
+0..0..1..2..6..13..30..solved at 70
+0..0..solved at 2
+0..0..1..2..solved at 6
+0..0..1..2..6..11..solved at 22
+0..0..solved at 2
+0..0..solved at 2
+0..0..1..2..solved at 6
+Warning: inventing type variables
+Warning: inventing type variables
+0..0..solved at 2
+0..0..solved at 2
+Warning: inventing type variables
+0..0..solved at 3
+0..0..solved at 3
+0..0..solved at 4
+0..0..solved at 5
+Warning: inventing type variables
+0..0..solved at 2
+0..0..solved at 2
+0..0..solved at 2
+Warning: inventing type variables
+Warning: inventing type variables
+0..0..solved at 2
+0..0..solved at 2
+0..0..solved at 2
+0..0..solved at 2
+Warning: inventing type variables
+0..0..1..solved at 4
+0..0..solved at 2
+0..0..solved at 2
+Warning: inventing type variables
+Warning: inventing type variables
+Warning: inventing type variables
+Warning: inventing type variables
+Warning: inventing type variables
+0..0..1..2..solved at 6
+0..0..solved at 2
+0..0..solved at 2
+Warning: inventing type variables
+0..0..1..2..solved at 6
+0..0..solved at 2
+0..0..solved at 2
+Warning: inventing type variables
+0..0..1..solved at 4
+0..0..solved at 2
+Warning: inventing type variables
+0..0..1..solved at 4
+0..0..solved at 2
+PROFILE_END load ind_types 2.469
+PROFILE_START load lists
+0..0..1..2..solved at 6
+0..0..solved at 2
+0..0..solved at 2
+0..0..solved at 2
+0..0..solved at 2
+0..0..solved at 2
+0..0..1..2..5..10..19..32..55..112..263..solved at 489
+0..0..0..0..solved at 4
+0..0..solved at 2
+0..0..solved at 2
+0..0..1..2..6..12..solved at 26
+0..0..2..4..solved at 9
+0..0..2..4..solved at 9
+0..0..solved at 3
+0..0..solved at 3
+0..0..1..2..solved at 7
+0..0..solved at 2
+0..0..solved at 3
+0..0..solved at 2
+0..0..2..solved at 6
+0..0..1..solved at 4
+0..0..solved at 2
+0..0..solved at 2
+0..0..solved at 3
+0..0..solved at 2
+0..0..solved at 2
+0..0..solved at 2
+0..0..solved at 2
+0..0..solved at 2
+0..0..solved at 2
+0..0..solved at 2
+0..0..solved at 2
+0..0..solved at 2
+0..0..3..6..solved at 10
+0..0..3..6..solved at 13
+0..0..solved at 2
+0..0..3..6..solved at 10
+0..0..solved at 2
+0..0..solved at 2
+0..0..1..solved at 5
+0..0..solved at 2
+0..0..solved at 2
+0..0..1..solved at 4
+0..0..3..solved at 7
+0..0..3..solved at 7
+0..0..solved at 2
+0..0..solved at 4
+0..0..solved at 2
+0..0..solved at 3
+0..0..solved at 2
+0..0..solved at 2
+0..0..solved at 2
+0..0..solved at 2
+0..0..solved at 2
+0..0..solved at 2
+0..0..solved at 3
+0..0..solved at 5
+0..0..solved at 3
+0..0..solved at 4
+0..0..solved at 2
+0..0..solved at 2
+0..0..solved at 2
+0..0..solved at 2
+0..0..solved at 2
+0..0..solved at 4
+0..0..solved at 2
+0..0..solved at 3
+0..0..0..solved at 4
+0..0..0..solved at 3
+0..0..solved at 2
+0..0..1..solved at 6
+0..0..solved at 2
+0..0..solved at 2
+0..0..solved at 3
+0..0..solved at 2
+0..0..solved at 2
+0..0..solved at 2
+0..0..solved at 3
+0..0..solved at 2
+0..0..solved at 2
+0..0..solved at 2
+0..0..solved at 2
+0..0..solved at 3
+0..0..solved at 2
+0..0..solved at 2
+0..0..2..solved at 5
+0..0..solved at 2
+0..0..solved at 2
+0..0..0..solved at 4
+0..0..0..solved at 3
+0..0..solved at 3
+0..0..3..solved at 9
+0..0..1..solved at 7
+0..0..solved at 2
+0..0..solved at 3
+0..0..solved at 3
+0..0..solved at 2
+0..0..solved at 2
+0..0..2..4..10..20..40..solved at 67
+0..0..solved at 2
+0..0..solved at 2
+0..0..1..solved at 4
+0..0..1..2..solved at 6
+0..0..solved at 2
+0..0..solved at 2
+0..0..solved at 4
+0..0..solved at 2
+0..0..solved at 2
+0..0..solved at 4
+0..0..solved at 2
+0..0..solved at 2
+0..0..3..solved at 6
+0..0..solved at 2
+0..0..solved at 3
+0..0..solved at 3
+0..0..solved at 2
+0..0..solved at 2
+0..0..solved at 3
+0..0..solved at 2
+0..0..solved at 3
+0..0..solved at 3
+0..0..1..solved at 4
+0..0..solved at 3
+0..0..solved at 3
+0..0..1..2..solved at 7
+0..0..1..5..9..19..44..73..solved at 80
+0..0..1..solved at 4
+0..0..1..2..3..solved at 8
+0..0..1..2..3..7..solved at 17
+0..0..1..2..solved at 6
+0..0..1..2..3..5..7..9..13..solved at 22
+0..0..1..2..3..5..7..9..13..solved at 22
+Warning: inventing type variables
+0..0..solved at 2
+0..0..1..2..6..12..27..solved at 44
+0..0..2..solved at 6
+0..0..1..solved at 4
+0..0..2..solved at 6
+0..0..1..solved at 4
+0..0..solved at 3
+0..0..solved at 2
+0..0..solved at 2
+0..0..1..2..5..9..15..22..29..36..solved at 56
+0..0..solved at 2
+0..0..2..6..17..43..98..solved at 116
+0..0..3..8..16..solved at 33
+0..0..3..8..16..solved at 35
+0..0..solved at 2
+0..0..3..8..16..solved at 35
+0..0..solved at 5
+0..0..solved at 5
+0..0..solved at 2
+0..0..4..10..22..75..155..solved at 209
+0..0..solved at 3
+0..0..1..solved at 5
+0..0..1..solved at 5
+0..0..1..solved at 4
+0..0..1..solved at 4
+0..0..1..2..3..solved at 8
+0..0..1..solved at 4
+0..0..1..3..solved at 9
+0..0..1..3..6..22..49..93..169..273..405..601..837..1131..1577..2127..solved at 2538
+0..0..solved at 3
+0..0..solved at 3
+0..0..2..4..6..solved at 25
+0..0..2..4..6..solved at 18
+0..0..1..2..3..14..solved at 25
+0..0..solved at 2
+0..0..1..2..solved at 6
+0..0..1..2..solved at 6
+0..0..1..2..6..13..29..solved at 50
+0..0..solved at 2
+0..0..1..solved at 4
+0..0..solved at 2
+0..0..solved at 2
+0..0..2..solved at 5
+0..0..2..solved at 5
+0..0..solved at 2
+PROFILE_END load lists 10.230
+PROFILE_START load realax
+Searching with limit 0
+Searching with limit 1
+Searching with limit 2
+0..0..1..2..3..10..solved at 16
+0..0..1..3..6..12..solved at 21
+0..0..1..3..6..16..solved at 33
+0..0..1..4..10..23..48..94..solved at 172
+0..0..1..4..8..solved at 13
+0..0..solved at 2
+0..0..1..2..solved at 6
+0..0..1..2..3..solved at 8
+0..0..1..2..5..19..42..solved at 59
+0..0..1..3..6..16..37..70..121..205..325..solved at 432
+0..0..1..2..solved at 6
+Searching with limit 0
+Searching with limit 1
+Searching with limit 2
+0..0..1..4..8..solved at 17
+0..0..1..4..solved at 10
+0..0..3..6..solved at 10
+0..0..3..8..15..solved at 20
+0..0..3..12..23..40..63..solved at 72
+0..0..3..6..18..34..61..94..145..206..solved at 249
+0..0..3..14..36..111..307..901..solved at 935
+PROFILE_END load realax 7.480
+PROFILE_START load calc_int
+0..0..solved at 2
+0..0..1..2..solved at 6
+0..0..1..2..7..14..35..62..solved at 73
+0..0..1..2..solved at 6
+0..0..1..3..8..19..44..solved at 81
+0..0..solved at 2
+0..0..1..3..9..25..64..166..437..1159..3190..solved at 4411
+0..0..1..2..solved at 6
+0..0..1..3..8..19..44..112..275..694..solved at 932
+0..0..1..3..8..19..40..85..174..348..696..1556..3482..solved at 6840
+0..0..1..2..6..12..28..solved at 55
+0..0..1..2..solved at 6
+0..0..1..2..solved at 6
+0..0..1..2..6..11..19..36..53..76..121..solved at 164
+0..0..3..solved at 9
+PROFILE_END load calc_int 4.111
+PROFILE_START load realarith
+0..0..1..7..solved at 12
+0..0..1..5..12..24..solved at 30
+0..0..1..5..12..23..solved at 30
+0..0..1..2..5..solved at 10
+0..0..1..2..6..17..34..81..solved at 102
+0..0..0..solved at 3
+0..0..1..2..solved at 6
+0..0..2..solved at 7
+0..0..1..solved at 4
+0..0..1..9..solved at 16
+0..0..0..2..solved at 6
+0..0..2..6..16..solved at 22
+0..0..1..2..5..15..28..59..solved at 68
+0..0..1..2..4..10..19..solved at 27
+0..0..1..2..5..solved at 10
+0..0..1..2..solved at 7
+0..0..1..2..solved at 6
+0..0..1..solved at 4
+0..0..1..solved at 4
+0..0..2..4..solved at 13
+0..0..2..4..11..32..75..solved at 142
+0..0..2..4..12..33..75..solved at 143
+0..0..2..4..solved at 8
+0..0..1..2..solved at 6
+0..0..1..2..4..17..34..solved at 61
+0..0..1..2..solved at 6
+0..0..1..2..5..18..35..solved at 63
+0..0..1..2..solved at 6
+0..0..2..4..10..18..34..76..138..336..872..2366..solved at 5076
+CPU time (user): 4.036999999999992d0
+PROFILE_END load realarith 7.655
+PROFILE_START load real
+0..0..1..2..7..14..37..72..174..325..solved at 392
+0..0..2..solved at 5
+0..0..1..2..6..11..21..34..52..73..solved at 103

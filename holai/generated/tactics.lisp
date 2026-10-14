@@ -1372,6 +1372,7 @@
     snd
     ref
     raise
+    proof
     printf-sprintf
     pp-set-max-boxes
     pp-print-string
@@ -1738,15 +1739,13 @@
     (cl:cons g% nil)
     (lambdac (arg~612 arg~614) (match arg~614 ((cl:cons th nil) th)))))
 
-(defunc TRY (tac) (holai.runtime:proof tac #'ORELSE #'ALL_TAC))
+(defunc TRY (tac) (proof tac #'ORELSE #'ALL_TAC))
 
-(defunc REPEAT (tac g%) (ORELSE (holai.runtime:proof tac THEN (REPEAT tac)) #'ALL_TAC g%))
+(defunc REPEAT (tac g%) (ORELSE (proof tac THEN (REPEAT tac)) #'ALL_TAC g%))
 
-(defunc EVERY (tacl)
-  (itlist (lambdac (t1 t2) (holai.runtime:proof t1 THEN t2)) tacl #'ALL_TAC))
+(defunc EVERY (tacl) (itlist (lambdac (t1 t2) (proof t1 THEN t2)) tacl #'ALL_TAC))
 
-(defunc FIRST (tacl g%)
-  (end_itlist (lambdac (t1 t2) (holai.runtime:proof t1 #'ORELSE t2)) tacl g%))
+(defunc FIRST (tacl g%) (end_itlist (lambdac (t1 t2) (proof t1 #'ORELSE t2)) tacl g%))
 
 (defunc MAP_EVERY (tacf lst) (EVERY (map tacf lst)))
 
@@ -1761,7 +1760,7 @@
         gstate))))
 
 (defunc REPLICATE_TAC (n tac)
-  (if (<= n 0) #'ALL_TAC (holai.runtime:proof tac THEN (REPLICATE_TAC (- n 1) tac))))
+  (if (<= n 0) #'ALL_TAC (proof tac THEN (REPLICATE_TAC (- n 1) tac))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Combinators for theorem continuations / "theorem tacticals".              *)
@@ -2084,10 +2083,7 @@
             (_ (raise exception~1497))))))))
 
 (defparameter AP_TERM_TAC
-  (let
-    ((tac
-      (holai.runtime:proof #'MK_COMB_TAC
-        THENL (cl:cons #'REFL_TAC (cl:cons #'ALL_TAC nil)))))
+  (let ((tac (proof #'MK_COMB_TAC THENL (cl:cons #'REFL_TAC (cl:cons #'ALL_TAC nil)))))
     (cl:declare (cl:ignorable tac))
     (lambdac (gl)
       (handler-case
@@ -2099,10 +2095,7 @@
             (_ (raise exception~1573))))))))
 
 (defparameter AP_THM_TAC
-  (let
-    ((tac
-      (holai.runtime:proof #'MK_COMB_TAC
-        THENL (cl:cons #'ALL_TAC (cl:cons #'REFL_TAC nil)))))
+  (let ((tac (proof #'MK_COMB_TAC THENL (cl:cons #'ALL_TAC (cl:cons #'REFL_TAC nil)))))
     (cl:declare (cl:ignorable tac))
     (lambdac (gl)
       (handler-case
@@ -2114,10 +2107,7 @@
             (_ (raise exception~1594))))))))
 
 (defparameter BINOP_TAC
-  (let
-    ((tac
-      (holai.runtime:proof #'MK_COMB_TAC
-        THENL (cl:cons AP_TERM_TAC (cl:cons #'ALL_TAC nil)))))
+  (let ((tac (proof #'MK_COMB_TAC THENL (cl:cons AP_TERM_TAC (cl:cons #'ALL_TAC nil)))))
     (cl:declare (cl:ignorable tac))
     (lambdac (gl)
       (handler-case
@@ -2131,7 +2121,7 @@
 (defunc SUBST1_TAC (th) (#`CONV_TAC (SUBS_CONV (cl:cons th nil))))
 
 (defunc SUBST_ALL_TAC (rth)
-  (holai.runtime:proof (SUBST1_TAC rth) THEN (RULE_ASSUM_TAC (SUBS (cl:cons rth nil)))))
+  (proof (SUBST1_TAC rth) THEN (RULE_ASSUM_TAC (SUBS (cl:cons rth nil)))))
 
 (defparameter BETA_TAC (#`CONV_TAC (#`REDEPTH_CONV #'BETA_CONV)))
 
@@ -2546,7 +2536,7 @@
                 (match exception~2651
                   ((Failure _) (failwith "ACCEPT_TAC"))
                   (_ (raise exception~2651)))))))))
-    (lambdac (th) (holai.runtime:proof (REPEAT #'GEN_TAC) THEN (rawtac th)))))
+    (lambdac (th) (proof (REPEAT #'GEN_TAC) THEN (rawtac th)))))
 
 (defunc MATCH_MP_TAC (th)
   (let*
@@ -2638,17 +2628,16 @@
 (defparameter CONJUNCTS_THEN (W #'CONJUNCTS_THEN2))
 
 (defunc DISJ_CASES_THEN2 (ttac1 ttac2 cth)
-  (holai.runtime:proof (DISJ_CASES_TAC cth)
+  (proof (DISJ_CASES_TAC cth)
     THENL (cl:cons (POP_ASSUM ttac1) (cl:cons (POP_ASSUM ttac2) nil))))
 
 (defparameter DISJ_CASES_THEN (W #'DISJ_CASES_THEN2))
 
-(defunc DISCH_THEN (ttac) (holai.runtime:proof DISCH_TAC THEN (POP_ASSUM ttac)))
+(defunc DISCH_THEN (ttac) (proof DISCH_TAC THEN (POP_ASSUM ttac)))
 
-(defunc X_CHOOSE_THEN (x ttac th)
-  (holai.runtime:proof (#`X_CHOOSE_TAC x th) THEN (POP_ASSUM ttac)))
+(defunc X_CHOOSE_THEN (x ttac th) (proof (#`X_CHOOSE_TAC x th) THEN (POP_ASSUM ttac)))
 
-(defunc CHOOSE_THEN (ttac th) (holai.runtime:proof (CHOOSE_TAC th) THEN (POP_ASSUM ttac)))
+(defunc CHOOSE_THEN (ttac th) (proof (CHOOSE_TAC th) THEN (POP_ASSUM ttac)))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Various derived tactics and theorem continuations.                        *)
@@ -2697,8 +2686,7 @@
 (defunc STRUCT_CASES_THEN (ttac) (REPEAT_TCL STRIP_THM_THEN ttac))
 
 (defparameter STRUCT_CASES_TAC
-  (STRUCT_CASES_THEN
-    (lambdac (th) (holai.runtime:proof (SUBST1_TAC th) #'ORELSE (#`ASSUME_TAC th)))))
+  (STRUCT_CASES_THEN (lambdac (th) (proof (SUBST1_TAC th) #'ORELSE (#`ASSUME_TAC th)))))
 
 (defunc STRIP_GOAL_THEN (ttac)
   (FIRST (cl:cons #'GEN_TAC (cl:cons #'CONJ_TAC (cl:cons (DISCH_THEN ttac) nil)))))
@@ -2743,8 +2731,7 @@
     ((cl:cons p% ps)
       (progn
         (warn (<> ps nil) "SUBGOAL_TAC: additional subproofs ignored")
-        (holai.runtime:proof (SUBGOAL_THEN tm (LABEL_TAC s))
-          THENL (cl:cons p% (cl:cons #'ALL_TAC nil)))))
+        (proof (SUBGOAL_THEN tm (LABEL_TAC s)) THENL (cl:cons p% (cl:cons #'ALL_TAC nil)))))
     (nil (failwith "SUBGOAL_TAC: no subproof given"))))
 
 (defunc FREEZE_THEN (ttac th arg~3280)
@@ -2840,7 +2827,7 @@
               (cl:cons tm1 (cl:cons tm2 nil))
               (#`MP th2 (#`MP (ASSUME tm2) th1)))))
           (cl:declare (cl:ignorable th))
-          (holai.runtime:proof (MATCH_MP_TAC th) THEN #'CONJ_TAC))))))
+          (proof (MATCH_MP_TAC th) THEN #'CONJ_TAC))))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* A printer for goals etc.                                                  *)

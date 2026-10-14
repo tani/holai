@@ -339,6 +339,7 @@
     tuple
     snd
     raise
+    proof
     partial
     match
     lambdac
@@ -431,7 +432,7 @@
       (prove
         (tuple
           (parse_term "!x:A. (@y. x = y) = x")
-          (holai.runtime:proof #'GEN_TAC
+          (proof #'GEN_TAC
             THEN (GEN_REWRITE_TAC (o LAND_CONV #'BINDER_CONV) (cl:cons EQ_SYM_EQ nil))
             THEN (#`MATCH_ACCEPT_TAC SELECT_REFL))))))
     (cl:declare (cl:ignorable SELECT_LEMMA))
@@ -730,7 +731,7 @@
          (!P. (!x. P(mk(R x))) <=> (!x. P x)) /\\
          (!P. (?x. P(mk(R x))) <=> (?x. P x)) /\\
          (!x:Absty. mk(R((@)(dest x))) = x)")
-          (holai.runtime:proof #'STRIP_TAC
+          (proof #'STRIP_TAC
             THEN
               (SUBGOAL_THEN
                 (parse_term
@@ -746,7 +747,7 @@
             THEN #'CONJ_TAC
             THENL
               (cl:cons
-                (holai.runtime:proof (#`ASM_REWRITE_TAC nil)
+                (proof (#`ASM_REWRITE_TAC nil)
                   THEN (REWRITE_TAC (cl:cons FUN_EQ_THM nil))
                   THEN (#`ASM_MESON_TAC nil))
                 (cl:cons #'ALL_TAC nil))

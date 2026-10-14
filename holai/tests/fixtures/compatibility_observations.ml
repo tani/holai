@@ -1,0 +1,29 @@
+(* Runtime-only consumer of semantics.ml; executed unchanged in both languages. *)
+let compatibility_observations () =
+  let bool_string b = if b then "true" else "false" in
+  let ints xs = String.concat "," (List.map string_of_int xs) in
+  let bools xs = String.concat "," (List.map bool_string xs) in
+  ["compat_higher=" ^ string_of_int (higher add 2 5);
+   "compat_staged=" ^ string_of_int (staged add);
+   "compat_over=" ^ string_of_int (overapplication ());
+   "compat_unit=" ^ string_of_int (pass_unit unit_fn);
+   "compat_pair=" ^ string_of_int (pair_fn answer_pair);
+   "compat_pattern_shadow=" ^ string_of_int (pattern_shadow (3,4) 9);
+   "compat_negate=" ^ ints [negate 7; subtract_op 10 3];
+   "compat_shadow=" ^ ints [g 2; old 2; f 2];
+   "compat_parallel=" ^ string_of_int (parallel ());
+   "compat_lexical=" ^ string_of_int (lexical ());
+   "compat_nonrec=" ^ string_of_int (local_nonrec ());
+   "compat_case=" ^ ints [case_shadow (); case_function_shadow (); case_parallel_functions ()];
+   "compat_recursive=" ^ bools [even 20; odd 19; local_mutual 19];
+   "compat_patterns=" ^ ints [inspect (One 3); inspect (Pair(4,9)); inspect (Fields(5,8)); inspect Zero];
+   "compat_alias=" ^ string_of_int (alias (Pair(4,9)));
+   "compat_exceptions=" ^ ints [catch (-3); nested_catch ()];
+   "compat_single_constructor=" ^ string_of_int (only_one (One 7));
+   "compat_chars=" ^ ints [char_match 'a'; char_match 'z'];
+   "compat_radices=" ^ ints [hex; binary; octal];
+   "compat_local_cl=" ^ string_of_int (local_cl_functions ());
+   "compat_local_syntax=" ^ string_of_int (local_syntax_function ());
+   "compat_parent=" ^ string_of_int (parent_capture ());
+   "compat_string=" ^ String.escaped escaped;
+   "compat_float=" ^ bool_string (floating 1.0 = 1.5)];;

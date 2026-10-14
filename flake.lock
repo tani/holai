@@ -1,5 +1,21 @@
 {
   "nodes": {
+    "lispPkgs": {
+      "locked": {
+        "lastModified": 1747825515,
+        "narHash": "sha256-BWpMQymVI73QoKZdcVCxUCCK3GNvr/xa2Dc4DM1o2BE=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "cd2812de55cf87df88a9e09bf3be1ce63d50c1a6",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "cd2812de55cf87df88a9e09bf3be1ce63d50c1a6",
+        "type": "github"
+      }
+    },
     "nixpkgs": {
       "locked": {
         "lastModified": 1720535198,
@@ -18,6 +34,7 @@
     },
     "root": {
       "inputs": {
+        "lispPkgs": "lispPkgs",
         "nixpkgs": "nixpkgs"
       }
     }

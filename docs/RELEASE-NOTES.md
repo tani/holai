@@ -1,5 +1,100 @@
 # Holai 1.0.0-percent-names
 
+## Native implementation matrix (measured profile passes)
+
+The original compiler and SBCL/ECL pins are retained. A separately pinned
+nix-common-lisp reference source supplies additional candidates ABCL, CLISP,
+CCL, MKCL, CMUCL and Clasp. Packages are filtered by evaluability, platform and
+broken metadata with explicit exclusion reasons. The current aarch64-linux
+default matrix is SBCL/ECL/ABCL/CLISP, with measured profile passes as below.
+`HOLAI_LISPS` selects hosts; only SBCL is required for the full-core profile.
+Every selected additional host must pass the bounded `runtime-fixtures`
+compatibility profile, with a 120-second guard per process. Its independently
+recorded `compatibility_passed` status explicitly leaves full-core verification
+false; compatibility does not establish full HOL Light initialization.
+ASDF is required before ASDF/UIOP symbols are read.
+The SIGINT gate passed on the production adapters: three actual deliveries,
+two Sys.Break catches across re-enable and restored OS-default termination
+with exit -2. This does not establish additional-host full-core verification.
+Native-compiled NaN/EQL is
+explicitly not applicable on CLISP (no representable native IEEE NaN) and ECL
+(the compiler cannot externalize `#<double-float quiet NaN>` into a FASL):
+both retain 45 structural checks. SBCL and ABCL retain 46. This records a native
+compiler capability, not a skipped finite case or an OCaml NaN-input restriction.
+Stale declaration ABI rejection is checked in a separate Lisp process on every
+host by loading a real compiled consumer against a changed declaration; only
+the structured stale condition, its marker and expected nonzero exit pass.
+Reports and source archives retain the isolated rejection log.
+Random now uses standard Common Lisp RANDOM with a private standard random-state.
+Random.init ignores its integer seed and resets via MAKE-RANDOM-STATE T; integer
+seed replay is not guaranteed. Tests validate explicit-state advancement,
+snapshot replay and bounds without assumptions about host-internal entropy or
+default-state behavior. Weak storage and SIGINT use real host adapters.
+
+Ordinary `make release` requires SBCL's complete native/PROOF/OCaml differential
+profile and cold 52-path/47-inferred manifest-order compiler diagnostic audit.
+Additional hosts require actual runtime/translated-fixture compile/load and
+observations, defunc/OPTIONAL/tuple-list checks, real interrupt restoration,
+weak retention, standard Random and structural matching/stale FASL checks.
+Packaging validates exact host identities, current source fingerprints, measured
+counts and matching actual log digests; it does not require additional hosts'
+full-core observation streams or cold caches. The 94 clean outputs and 55 source
+pins remain gates. Evidence is tagged under `misc/reports/implementations/<id>/`;
+the previous root SBCL baseline remains historical, without relabelling.
+
+`HOLAI_LISPS=ecl,abcl,clisp make test-full-core` explicitly runs additional hosts'
+complete native tests and cold diagnostics. Those full-core processes retain
+the previously approved 3600-second guard; SBCL and original OCaml retain 600
+seconds, ordinary checks retain 120 and negative search bounds are unchanged.
+The optional aggregate is implementation-full-core-matrix.json, not the ordinary
+release gate. The extended ordinary matrix was cancelled; incomplete ABCL
+full-core results remain incomplete, and earlier 600-second attempts/warm probes
+are retained under misc/reports/history/portable-600-second-attempt/.
+The literal language_random= row is validated for its 8/8/4 group shape and
+2^30/97/2^30 bounds before canonical comparison. The user additionally selected
+generated-name-only structural comparison for init_constants/init_definitions,
+not record/replay or a replacement random engine. A pinned-source guard rejects
+authored positive `_decimal` tokens before provenance classification. One shared
+generated-constant identity map and distinct tag preserve reference identity
+across both rows; positive `_decimal` bound variables use actual binder indices.
+Authored `_0`, free variables, explicit/unknown constant names, concrete types,
+sharing, order and multiplicity remain observable. All other rows remain exact.
+See DESIGN's observation boundary for the complete observer-only contract.
+Fresh-counter divergence was localized around METIS at int.ml:2239; attributing
+the exact two allocations remains [INFERENCE], not a reason to rewrite source.
+Packages retain raw and canonical streams and hashes, actual structured
+identities and separate exact/property/structural counts. The measured SBCL
+corpus has 1,149 rows: 1,146 literal-exact, two structural registry comparisons
+and one Random property row; raw streams are unequal. Historical seeded
+SBCL/OCaml reports remain unchanged.
+
+Current SBCL full-core verification passed 128 native and 69 PROOF checks,
+with unchanged initial registries 22/303/263/3 and the original three axioms.
+Initialization has 5,519 OCaml / 5,517 SBCL rows with only the two existing
+OCaml-only messages. Map audits cover 194,839 core / 207,058 fixture-inclusive
+entries, including current regressions, and ten rejections preserved outputs.
+The 52-path/47-inferred cold audit exited 0 with zero compiler errors, warnings,
+style warnings and notices. Its load/initialization accounting is separate:
+zero errors/warnings, 21 style warnings and 164 notices.
+
+ECL, ABCL and CLISP each passed the 120-second-per-process runtime-fixtures
+profile: 28 defunc protocol, 84 OPTIONAL, 16 tuple-list and 1,816 Random checks;
+three translated fixtures and 33 exact differential rows; nine naming rows.
+Their structural counts are respectively 45, 46 and 45. Reports record current
+source fingerprints, actual exits and digest-matched logs, and all explicitly
+leave full-core verification false. Fixture fingerprints cover Lisp sources,
+maps, provider data and inventory only; compiled FASLs are neither captured
+nor shipped. Earlier full-core timeouts and incomplete extended attempts remain
+failures/incomplete evidence, not compatibility passes.
+
+The final `nix develop path:. --command make release` exited 0 in 269.03 seconds.
+It regenerated all 46 inputs, passed full tests and cold diagnostics, and used
+SBCL full-core evidence for inventory. Fresh clean generation matched all 94
+outputs and confirmed 55 unchanged input pins. The archive producer reported
+427 payload files. The earlier inventory failure requiring a CLISP full
+verification report is historical, superseded by this completed release;
+older package measurements below remain historical.
+
 Production matching no longer depends on Trivia. The new static pattern
 compiler validates bindings, OR alternatives, constructor arities and record
 keys, and emits standard Common Lisp type tests, field accesses and bindings.
@@ -43,7 +138,54 @@ THENL retains ordinary Lisp branch lists. Translation is gated by canonical
 binding identity, not spelling; aliases, shadowing, partial applications and
 direct goal calls keep their ordinary paths. Fragment output preserves
 `proof-tactical` source ranges for joined left prefixes and child operands.
-See DESIGN §33 and the README's fully qualified handwritten example.
+See DESIGN §33 and the README's imported development-code example; its separate
+fully qualified example intentionally demonstrates the external API.
+
+### Safe bare PROOF in development code
+
+The readability request covers translator-generated and maintained handwritten
+**software development code**, not only end-user examples. Generated tactical
+heads use deferred cells finalized after completed structure lowering for the
+actual reader-owner namespace, before declarations, dependency emission and
+rendering. Safe owners explicitly import runtime PROOF and emit bare `proof`.
+Existing owned/local/imported-symbol conflict handling plus the maker-shadow
+guard keeps `holai.runtime:proof` in conflicting owners, including declarations
+that appear after the first tactical. Lexical modules share their enclosing
+reader owner's decision; static child packages decide separately.
+No PROOF reservation or source-binder renaming is added; algorithms, binding
+identities, tactical eligibility and source-map origins are preserved.
+
+Ordinary handwritten `holai/tests/proof-dsl.lisp` cases explicitly import the
+runtime macro with UIOP and use bare `proof`. The original distinct-symbol local
+PROOF function versus qualified macro regression remains in its own CL-only
+package and uses the original helpers/counter; no theorem checks are removed.
+Intentionally qualified external-API/collision examples remain qualified.
+The actual safe-bare extension release passed
+`nix develop path:. --command make release` (exit 0, 227.15 seconds):
+129 native and 69 independent PROOF checks passed, and all 1,149 differential
+rows matched (1,142 serialized plus seven actual side-effect rows).
+Native collision-symbol tests passed. All six `proof_reader_*` observations
+matched OCaml/SBCL: safe_child, late_local, late_global, foreign_import, case
+and lexical_module. A separate fresh theorem smoke exited 0 in 72.41 seconds:
+an explicitly importing package used unqualified `proof`, `DISCH_TAC`, `THEN`,
+`FIRST_ASSUM`, `ACCEPT_TAC`, `prove`, `tuple`, `hyp` and `concl`, producing an
+actual closed `p ==> p` whose conclusion matched the expected term.
+
+All 46 inputs initialized; initial registries22/303/263/3 and exactly the
+three source axioms are unchanged. The 5,519 OCaml/5,517 SBCL initialization
+rows retain only the two known OCaml-only messages. All 194,839 core/206,472
+inclusive map entries passed audit and ten rejections preserved output.
+Fresh-cache diagnostics covered 52 unique production files in compile/load
+order, including 47 genuine inferred core/entry components, with zero errors,
+warnings or style warnings. All 94 clean outputs matched and 55 retained pins
+were unchanged. The archive contains 305 payload files plus its manifest
+(306 members), with no added repository files.
+
+Static generated inventory records 2,353 bare PROOF heads and 25 qualified
+collision heads; core Lisp totals 5,942,245 bytes. These counts are inventory,
+not behavioral correctness or performance evidence. Completed reader-owner
+decisions remain deferred, with no eager PROOF imports or source-binder renaming.
+See DESIGN §37.4. All following preceding-release measurements remain historical.
 
 The preceding reader-inclusive PROOF variant used `nix develop path:. --command make release` on
 aarch64-linux (OCaml 4.14.2, Camlp5 8.02.01, SBCL 2.3.9.nixos): all 46
@@ -259,7 +401,7 @@ private makers or turning lexical values into inherited SPECIAL bindings.
 The inferred `holai/all.lisp` entry raises production compiled units to 52.
 Generated outputs remain 94; clean/release comparisons include the provider data.
 
-The cutover passed `nix develop path:. --command make release` (exit 0,
+The preceding cutover (historical DESIGN §37.3) passed `nix develop path:. --command make release` (exit 0,
 226.10 seconds) on aarch64-linux with OCaml 4.14.2, Camlp5 8.02.01 and
 SBCL 2.3.9.nixos. All 46 inputs initialized in original order; 123 native,
 69 PROOF, 46 pattern, 27 protocol, 84 OPTIONAL and 16 tuple checks passed.
@@ -286,5 +428,8 @@ only one ASD, entry/provider data and all 92 generated Lisp/map members.
 Core Lisp totals 5,980,663 bytes. The impconv runtime-prefix inventory fell from
 910 to 59; meson remains 51 and metis 105. Increased shadow headers preclude
 inferring smaller total source, and no performance claim is made.
-Earlier §36 counts/timings remain historical. The user explicitly authorized
-committing and pushing this validated cutover to `tani/holai` main.
+Earlier §36 counts/timings remain historical. This preceding validated cutover
+was already pushed as `36f3a78`. The user now explicitly authorizes committing
+and pushing the verified safe-bare extension with the simple, tidy README rewrite
+to `tani/holai` main. Final repackaging, review, commit and push belong to the
+parent; this authorization is not a claim that publication has occurred.

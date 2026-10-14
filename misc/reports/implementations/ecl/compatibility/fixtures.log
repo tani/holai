@@ -1,0 +1,198 @@
+;;; Loading #P"/nix/store/li8033azc46v0ilvb1hxbbg4x7wdkdfz-ecl-21.2.1/lib/ecl-21.2.1/asdf.fas"
+;;; Loading "/home/tani/ghq/github.com/tani/holai/holai/tests/compatibility-fixtures.lisp"
+;;; Style warning:
+;;;   in file semantics.lisp, position 7887
+;;;   at (DEFUNC ADD ...)
+;;;   ! The argument 1 of function APPLY has type
+;;; NUMBER
+;;; instead of expected
+;;; FUNCTION-DESIGNATOR
+;;; Style warning:
+;;;   in file semantics.lisp, position 8082
+;;;   at (DEFUNC CHOOSE_FUN ...)
+;;;   ! The argument 1 of function APPLY has type
+;;; NUMBER
+;;; instead of expected
+;;; FUNCTION-DESIGNATOR
+;;; Style warning:
+;;;   in file semantics.lisp, position 8619
+;;;   at (DEFUNC F~1 ...)
+;;;   ! The argument 1 of function APPLY has type
+;;; NUMBER
+;;; instead of expected
+;;; FUNCTION-DESIGNATOR
+;;; Style warning:
+;;;   in file semantics.lisp, position 8699
+;;;   at (DEFUNC F ...)
+;;;   ! The argument 1 of function APPLY has type
+;;; NUMBER
+;;; instead of expected
+;;; FUNCTION-DESIGNATOR
+;;; Style warning:
+;;;   in file semantics.lisp, position 9213
+;;;   at (DEFUNC LOCAL_NONREC ...)
+;;;   ! The argument 1 of function APPLY has type
+;;; NUMBER
+;;; instead of expected
+;;; FUNCTION-DESIGNATOR
+;;; Style warning:
+;;;   in file semantics.lisp, position 9532
+;;;   at (DEFUNC CASE_FUNCTION_SHADOW ...)
+;;;   ! The argument 1 of function APPLY has type
+;;; NUMBER
+;;; instead of expected
+;;; FUNCTION-DESIGNATOR
+;;; Style warning:
+;;;   in file semantics.lisp, position 9532
+;;;   at (DEFUNC CASE_FUNCTION_SHADOW ...)
+;;;   ! The argument 1 of function APPLY has type
+;;; NUMBER
+;;; instead of expected
+;;; FUNCTION-DESIGNATOR
+;;; Style warning:
+;;;   in file semantics.lisp, position 9706
+;;;   at (DEFUNC CASE_PARALLEL_FUNCTIONS ...)
+;;;   ! The argument 1 of function APPLY has type
+;;; NUMBER
+;;; instead of expected
+;;; FUNCTION-DESIGNATOR
+;;; Style warning:
+;;;   in file semantics.lisp, position 9706
+;;;   at (DEFUNC CASE_PARALLEL_FUNCTIONS ...)
+;;;   ! The argument 1 of function APPLY has type
+;;; NUMBER
+;;; instead of expected
+;;; FUNCTION-DESIGNATOR
+;;; Style warning:
+;;;   in file semantics.lisp, position 11505
+;;;   at (DEFUNC FLOATING ...)
+;;;   ! The argument 1 of function APPLY has type
+;;; NUMBER
+;;; instead of expected
+;;; FUNCTION-DESIGNATOR
+;;; Style warning:
+;;;   in file semantics.lisp, position 11703
+;;;   at (DEFUNC LOCAL_CL_FUNCTIONS ...)
+;;;   ! The argument 1 of function APPLY has type
+;;; NUMBER
+;;; instead of expected
+;;; FUNCTION-DESIGNATOR
+;;; Style warning:
+;;;   in file semantics.lisp, position 11703
+;;;   at (DEFUNC LOCAL_CL_FUNCTIONS ...)
+;;;   ! The argument 1 of function APPLY has type
+;;; NUMBER
+;;; instead of expected
+;;; FUNCTION-DESIGNATOR
+;;; Style warning:
+;;;   in file semantics.lisp, position 11923
+;;;   at (DEFUNC LOCAL_SYNTAX_FUNCTION ...)
+;;;   ! The argument 1 of function APPLY has type
+;;; NUMBER
+;;; instead of expected
+;;; FUNCTION-DESIGNATOR
+;;; Style warning:
+;;;   in file semantics.lisp, position 11923
+;;;   at (DEFUNC LOCAL_SYNTAX_FUNCTION ...)
+;;;   ! The argument 1 of function APPLY has type
+;;; NUMBER
+;;; instead of expected
+;;; FUNCTION-DESIGNATOR
+;;; Style warning:
+;;;   in file semantics.lisp, position 12107
+;;;   at (DEFUNC PARENT_BEFORE~1 ...)
+;;;   ! The argument 1 of function APPLY has type
+;;; NUMBER
+;;; instead of expected
+;;; FUNCTION-DESIGNATOR
+;;; Style warning:
+;;;   in file semantics.lisp, position 12264
+;;;   at (DEFUNC PARENT_BEFORE ...)
+;;;   ! The argument 1 of function APPLY has type
+;;; NUMBER
+;;; instead of expected
+;;; FUNCTION-DESIGNATOR
+;;; Style warning:
+;;;   in file star_names.lisp, position 4172
+;;;   at (DEFUNC NAME ...)
+;;;   ! The argument 1 of function APPLY has type
+;;; NUMBER
+;;; instead of expected
+;;; FUNCTION-DESIGNATOR
+;;; Style warning:
+;;;   in file star_names.lisp, position 4201
+;;;   at (DEFUNC NAME%%% ...)
+;;;   ! The argument 1 of function APPLY has type
+;;; NUMBER
+;;; instead of expected
+;;; FUNCTION-DESIGNATOR
+;;; Style warning:
+;;;   in file star_names.lisp, position 4234
+;;;   at (DEFUNC NAME% ...)
+;;;   ! The argument 1 of function APPLY has type
+;;; NUMBER
+;;; instead of expected
+;;; FUNCTION-DESIGNATOR
+;;; Style warning:
+;;;   in file star_names.lisp, position 4266
+;;;   at (DEFUNC NAME%% ...)
+;;;   ! The argument 1 of function APPLY has type
+;;; NUMBER
+;;; instead of expected
+;;; FUNCTION-DESIGNATOR
+;;; Style warning:
+;;;   in file star_names.lisp, position 4539
+;;;   at (DEFUNC PRIME_ARGUMENTS ...)
+;;;   ! The argument 1 of function APPLY has type
+;;; NUMBER
+;;; instead of expected
+;;; FUNCTION-DESIGNATOR
+;;; Style warning:
+;;;   in file star_names.lisp, position 4775
+;;;   at (DEFUNC PARALLEL_CASE ...)
+;;;   ! The argument 1 of function APPLY has type
+;;; NUMBER
+;;; instead of expected
+;;; FUNCTION-DESIGNATOR
+;;; Style warning:
+;;;   in file star_names.lisp, position 4775
+;;;   at (DEFUNC PARALLEL_CASE ...)
+;;;   ! The argument 1 of function APPLY has type
+;;; NUMBER
+;;; instead of expected
+;;; FUNCTION-DESIGNATOR
+__HOLAI_COMPATIBILITY_OBSERVATIONS__
+compat_higher=7
+compat_staged=16
+compat_over=7
+compat_unit=42
+compat_pair=7
+compat_pattern_shadow=13
+compat_negate=-7,7
+compat_shadow=3,3,12
+compat_parallel=11
+compat_lexical=1
+compat_nonrec=107
+compat_case=18,44,44
+compat_recursive=true,true,false
+compat_patterns=3,4,5,0
+compat_alias=13
+compat_exceptions=3,1
+compat_single_constructor=7
+compat_chars=1,0
+compat_radices=42,42,42
+compat_local_cl=13
+compat_local_syntax=12
+compat_parent=28
+compat_string=a\n\"b\\c
+compat_float=true
+star-case=1115
+star-reserved=20
+star-primes=321
+star-local-case=18
+star-parallel=44
+star-fields=129
+star-variants=21
+star-module=19
+star-literal=|unchanged|
+__HOLAI_COMPATIBILITY_END__

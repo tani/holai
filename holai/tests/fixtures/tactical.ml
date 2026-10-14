@@ -44,6 +44,51 @@ let reader_computed_head () =
      if true then (fun tens units -> 10 * tens + units)
      else (fun left right -> left - right)) 4 2 in
   int_list_string [result;!evaluations];;
+(* Synthetic PROOF heads are selected only after each reader owner is complete.
+   In particular, the earlier composition must not reserve a later local name. *)
+module Proof_safe_owner = struct
+  let observe () =
+    prove(parse_term "p ==> p",DISCH_TAC THEN FIRST_ASSUM ACCEPT_TAC)
+end;;
+module Proof_late_local_owner = struct
+  let before () =
+    prove(parse_term "p ==> p",DISCH_TAC THEN FIRST_ASSUM ACCEPT_TAC)
+  let after () =
+    let proof tactic = tactic in
+    prove(parse_term "p ==> p",proof DISCH_TAC THEN FIRST_ASSUM ACCEPT_TAC)
+end;;
+module Proof_late_global_owner = struct
+  let before () =
+    prove(parse_term "p ==> p",DISCH_TAC THEN FIRST_ASSUM ACCEPT_TAC)
+  let proof tactic = tactic
+  let after () =
+    prove(parse_term "p ==> p",proof DISCH_TAC THEN FIRST_ASSUM ACCEPT_TAC)
+end;;
+module Proof_foreign = struct let proof tactic = tactic end;;
+module Proof_import_owner = struct
+  let before () =
+    prove(parse_term "p ==> p",DISCH_TAC THEN FIRST_ASSUM ACCEPT_TAC)
+  let after () =
+    prove(parse_term "p ==> p",
+      Proof_foreign.proof DISCH_TAC THEN FIRST_ASSUM ACCEPT_TAC)
+end;;
+module Proof_case_owner = struct
+  let before () =
+    prove(parse_term "p ==> p",DISCH_TAC THEN FIRST_ASSUM ACCEPT_TAC)
+  let after () =
+    let PROOF tactic = tactic in
+    prove(parse_term "p ==> p",PROOF DISCH_TAC THEN FIRST_ASSUM ACCEPT_TAC)
+end;;
+module Proof_lexical_owner = struct
+  let before () =
+    prove(parse_term "p ==> p",DISCH_TAC THEN FIRST_ASSUM ACCEPT_TAC)
+  let after () =
+    let module Local = struct
+      let pick tactic = let proof tactic = tactic in proof tactic
+    end in
+    prove(parse_term "p ==> p",
+      Local.pick DISCH_TAC THEN FIRST_ASSUM ACCEPT_TAC)
+end;;
 let tactical_observations () =
   verbose := false;
   let p = parse_term "p:bool" and q = parse_term "q:bool" in
@@ -101,7 +146,23 @@ let tactical_observations () =
        (let finish = (THEN) DISCH_TAC in
         theorem_string (prove(identity,finish (FIRST_ASSUM ACCEPT_TAC))));
      "proof_dsl_applied_goal=" ^ goalstate_string
-       ((THEN) DISCH_TAC (FIRST_ASSUM ACCEPT_TAC) ([],identity))] in
+       ((THEN) DISCH_TAC (FIRST_ASSUM ACCEPT_TAC) ([],identity));
+     "proof_reader_safe_child=" ^ theorem_string (Proof_safe_owner.observe ());
+     "proof_reader_late_local=" ^
+       theorem_string (Proof_late_local_owner.before ()) ^ "/" ^
+       theorem_string (Proof_late_local_owner.after ());
+     "proof_reader_late_global=" ^
+       theorem_string (Proof_late_global_owner.before ()) ^ "/" ^
+       theorem_string (Proof_late_global_owner.after ());
+     "proof_reader_foreign_import=" ^
+       theorem_string (Proof_import_owner.before ()) ^ "/" ^
+       theorem_string (Proof_import_owner.after ());
+     "proof_reader_case=" ^
+       theorem_string (Proof_case_owner.before ()) ^ "/" ^
+       theorem_string (Proof_case_owner.after ());
+     "proof_reader_lexical_module=" ^
+       theorem_string (Proof_lexical_owner.before ()) ^ "/" ^
+       theorem_string (Proof_lexical_owner.after ())] in
   let intuitive = map (fun s -> "ITAUT:" ^ s ^ "=" ^ theorem_string (ITAUT (parse_term s)))
     ["p /\\ q ==> q /\\ p";"p \\/ q ==> q \\/ p";
      "(p ==> q) /\\ (q ==> r) ==> p ==> r";

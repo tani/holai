@@ -1,0 +1,7 @@
+;; Loading file /nix/store/2nnqs8qwd1a11vmgrlhyiwygi3hmjynj-clisp-2.49.95-unstable-2024-12-28/lib/clisp-2.49.95+/dynmod/asdf.lisp ...
+;;  Loading file /nix/store/2nnqs8qwd1a11vmgrlhyiwygi3hmjynj-clisp-2.49.95-unstable-2024-12-28/lib/clisp-2.49.95+/asdf/asdf.fas ...
+;;  Loaded file /nix/store/2nnqs8qwd1a11vmgrlhyiwygi3hmjynj-clisp-2.49.95-unstable-2024-12-28/lib/clisp-2.49.95+/asdf/asdf.fas
+;; Loaded file /nix/store/2nnqs8qwd1a11vmgrlhyiwygi3hmjynj-clisp-2.49.95-unstable-2024-12-28/lib/clisp-2.49.95+/dynmod/asdf.lisp
+
+HOLAI_HOST_VERSION 2.49.95+ (2024-11-03) (built on localhost [127.0.0.1])
+HOLAI_HOST_TYPE CLISP

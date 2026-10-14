@@ -1,0 +1,6 @@
+{
+  "status": "running",
+  "host": {
+    "implementation": "ecl"
+  }
+}

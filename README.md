@@ -1,336 +1,153 @@
 # Holai
 
-Holai translates the pinned HOL Light standard core from OCaml to readable
-Common Lisp for **SBCL**. The translator itself is written in OCaml.
-It preserves source bindings, scopes, declaration order and recursive
-algorithms. It accepts Common Lisp's argument evaluation order rather than
-adding temporaries to reproduce OCaml's order.
+Holai translates HOL Light's pinned OCaml standard core into readable Common
+Lisp, preserving source scope, bindings, declaration order and algorithms.
+Common Lisp's left-to-right argument evaluation is accepted; this is not an
+OCaml VM or a formally verified compiler. Translation success is not a proof
+of kernel soundness.
 
-The supported profile is the 46 unchanged files listed in
-[`vendor/CORE_FILES.json`](vendor/CORE_FILES.json), through `define.ml`.
-This is not a general-purpose OCaml compiler or support for every HOL Light
-extension. See [DESIGN.md](DESIGN.md) for rules and limitations.
+The profile is **all 46 pinned core files**, through `define.ml`, listed in
+[`vendor/CORE_FILES.json`](vendor/CORE_FILES.json). Optional HOL Light libraries
+and arbitrary OCaml programs are outside this boundary. The production runtime
+needs no external pattern library. See [DESIGN.md](DESIGN.md) for the contract,
+host adapters, timeouts, limitations and diagnostic scopes.
 
-## Build and run
+## Build and test
 
-The Nix development shell uses nixpkgs `nixos-23.11` for OCaml 4.14.2,
-Camlp5 8.02.01 and camlp-streams 5.0.1, with Num pinned to upstream 1.5,
-together with SBCL, Python and GNU Make. With Nix flakes enabled, enter it and use the existing
-Makefile workflow:
+Use the pinned Nix shell with flakes enabled:
 
 ```sh
-nix develop
-make build                         # bin/ml2cl, built from the OCaml sources
+nix develop path:.
+make build             # Build bin/ml2cl
+make regenerate        # Regenerate Lisp, source maps and provider data
+make test              # SBCL full suite + selected hosts' runtime/fixture checks
+make clean-build       # Compare isolated clean-generated outputs
+make release           # Add SBCL cold diagnostics, validation and source ZIP
 ```
 
-`flake.lock` pins the shell's nixpkgs input. The shell sets `CAMLPLIB` and
-`STREAMLIB`; its `ocamlc`/`ocamlopt` wrappers add Num's include directory so
-direct compiler calls such as `ocamlc nums.cma` work without switching the
-build to `ocamlfind`.
-The shell exports `CAML_LD_LIBRARY_PATH` for Num's bytecode runtime stub.
-Validated on aarch64-linux: a forced translator build, bytecode/native Num
-execution, SBCL execution, and `make release` (1,124 differential observations,
-51 production files with zero diagnostics, and 94 identical regenerated files).
-The other declared Linux/Darwin platforms were evaluated, not build-tested.
-This OCaml 4.14.2/SBCL 2.3.9 shell is separate from the historical OCaml 4.14.1
-profile; historical timing results below were not remeasured.
+For a one-shot release: `nix develop path:. --command make release`.
+The shell pins OCaml 4.14.2, Camlp5 8.02.01, camlp-streams 5.0.1 and Num 1.5.
+`flake.lock` pins the original nixos-23.11 SBCL/ECL source and the additional
+nix-common-lisp nixos-25.05 source.
 
-Without Nix, prerequisites are OCaml 4.14.1, Camlp5 8.02.x, camlp-streams,
-Num 1.5, SBCL, Python 3.9 or later and GNU Make. Historical validation used
-SBCL 2.2.9 on Linux. Matching is compiled
-to standard Common Lisp by holai/runtime/pattern.lisp; no external Lisp library is
-required. Former Trivia dependencies are available in the historical Git
-revision used by the comparison scripts.
+On ARM64 Linux, the runnable packages are **SBCL, ECL, ABCL and CLISP**.
+`HOLAI_LISPS` selects hosts; `HOLAI_LISP_AVAILABILITY` records all eight
+candidates and exclusion reasons. SBCL is mandatory for the full 46-file/OCaml
+differential suite and release's 52-unit cold diagnostics. Every selected
+additional host must pass the **runtime-fixtures** compatibility profile, with
+120 seconds per process. Compatibility does **not** verify its full HOL core.
+Measured profiles passed: SBCL full core and ECL/ABCL/CLISP runtime fixtures.
+See [DESIGN §38](DESIGN.md#38-common-lisp-host-portability) for exact coverage,
+host limitations and retained timeout evidence.
+
+Expensive additional-host full-core tests and cold diagnostics are opt-in:
+`HOLAI_LISPS=ecl,abcl,clisp make test-full-core` (3600 seconds per full-core
+process). This is not part of ordinary `make test` or `make release`.
+
+`bin/ml2cl` provides `scan` and `translate`, for example:
 
 ```sh
-make build                         # bin/ml2cl, built from the OCaml sources
-make regenerate                    # Lisp, source maps and package-provider data
-make test                          # full OCaml/SBCL differential validation
-make clean-build                   # isolated source build; compare 94 outputs
-misc/scripts/run-sbcl.sh                 # load the generated core in fresh SBCL
-make release                       # validated source ZIP in dist/
+ocamlrun bin/ml2cl translate --output-dir holai/generated <files...>
 ```
 
-Set `CAMLPLIB` and `STREAMLIB` when your Camlp5/camlp-streams installation is
-not found by the Makefile. Cold core compilation uses a 2 GiB SBCL heap capacity
-in the test runner; `misc/scripts/compile-core.sh` provides the same setting.
-The core uses a 256 MiB control stack. Linux is required for the peak-RSS
-measurement scripts, which use per-child `wait4.ru_maxrss`.
+Generated Lisp is tracked for inspection. Do not hand-edit it: change the
+translator and regenerate Lisp and source maps together.
 
-The translator CLI is `ml2cl`; production Lisp packages remain `holai.*`
-(runtime `holai.runtime`). The single root `holai.asd` defines `holai` and
-`holai/runtime`; generated `holai/generated/<stem>` systems use genuine
-package inference. There are no old-system aliases.
-For example, `ocamlrun bin/ml2cl translate --output-dir holai/generated <files...>`
-translates inputs; `scan` reports supported constructs and source diagnostics.
+## Load
 
-Require ASDF, register only the repository root in its source registry, then
-use `(asdf:load-system "holai")` for the complete core or
-`(asdf:load-system "holai/runtime")` for the runtime alone. The latter does not
-initialize the HOL core. `holai/all.lisp` is the inferred terminal-core entry.
-Generated `package-systems.sexp` registers all physical files' package providers;
-predecessor dependencies retain the original 46-file initialization order.
-The public package API, private constructors and source algorithms are unchanged.
-UIOP declarations reduce avoidable prefixes while preserving canonical imports,
-lexical reader ownership and CL-first control semantics.
+Start a fresh full-core process, or compile/load and exit:
 
-## Generated names
+```sh
+misc/scripts/run-lisp.sh                  # SBCL by default
+HOLAI_LISP=ecl misc/scripts/run-lisp.sh    # Also abcl or clisp
+misc/scripts/compile-core.sh
+```
 
-Ordinary names stay unchanged. Primes become percent signs (`x'` → `x%`), reserved
-binders become `t%`/`nil%`, and collisions add percent signs (`mk_comb` / `MK_COMB%`).
-Allocated names are shared by definitions, references and exports. Generated
-core source no longer requires `|...|` symbol quoting; literal strings are
-unchanged. See [PERCENT-NAMES.md](misc/reports/PERCENT-NAMES.md) for exact rules and examples.
-Literal source operator stars and native special-variable names are retained.
-Public Lisp spellings change in this version; update manually written callers
-using the generated declarations. The OPTIONAL/OCamlopt and structural-match timing results predate this naming change.
-
-## Writing proofs in Lisp
-
-After loading the generated core (for example with `misc/scripts/run-sbcl.sh`),
-use the exported `holai.runtime:proof` macro with the existing prover:
+For your own Lisp process, first evaluate this separately:
 
 ```lisp
-(holai.tactics:prove
-  (holai.runtime:tuple
-    (holai.parser:parse_term "p ==> p")
-    (holai.runtime:proof
-      holai.tactics:DISCH_TAC holai.tactics:THEN
-      (holai.tactics:FIRST_ASSUM holai.tactics:ACCEPT_TAC))))
+(require :asdf)
 ```
 
-PROOF accepts an operand followed by operator/operand pairs, all left
-associative. Use an inner PROOF for explicit right grouping. THEN/THENL are
-values; the named function ORELSE uses `#'holai.tactics:ORELSE`. The same
-value/function distinction applies to operands (for example,
-`#'holai.tactics:REFL_TAC`) and lexical operators. THENL takes an ordinary
-list expression or list variable; composed branches use their own PROOF.
-One operand is accepted; empty or malformed sequences are macro errors.
-
-The runtime also installs an explicitly authorized sharp-backquote reader for
-function values/expressions, alongside unchanged standard `#'` named functions.
-After loading the runtime, the same real proof can be written:
+Then read and evaluate:
 
 ```lisp
-(holai.tactics:prove
-  (holai.runtime:tuple
-    (holai.parser:parse_term "p ==> p")
-    (holai.runtime:proof
-      #`holai.tactics:DISCH_TAC holai.tactics:THEN
-      (holai.tactics:FIRST_ASSUM #`holai.tactics:ACCEPT_TAC))))
+(asdf:initialize-source-registry
+  '(:source-registry (:directory #p"/absolute/path/to/holai/")
+    :inherit-configuration))
+(asdf:load-system "holai/runtime")   ; Runtime only
+(asdf:load-system "holai")           ; Full 46-file core
 ```
 
-Sharp-backquote reads one form and wraps it in a `CL:LAMBDA` with a gensym rest
-parameter. Each invocation evaluates the function expression anew and uses
-`CL:APPLY` to forward all arguments and multiple values; it does not capture
-the function value at wrapper construction. Its lambda is valid as a PROOF
-operand, not directly as an operator: bind it to a lexical value symbol for
-that role. PROOF's operator grammar remains unchanged.
+The single root `holai.asd` defines both systems. Generated
+`holai/generated/<stem>` systems use package inference; `holai/all.lisp`
+preserves full-core initialization order.
 
-Installation affects the active `*readtable*` during runtime compile/load/execute.
-Load the runtime before reading a file using sharp-backquote; readtable copies
-inherit it, fresh standard readtables made from NIL do not. Neither standard
-`#'` dispatch nor `readtable-case` nor source identifier spelling is changed.
+**Evaluate `(require :asdf)` before reading ASDF/UIOP forms.** Separate
+`--eval` arguments work; wrapping everything in one `progn` is too late for
+the package reader. Likewise, **load the runtime before reading sharp-backquote
+(``#` ``) code**. It installs the reader in the active readtable; a fresh
+standard readtable does not contain it. Keep loading separate from source
+files that use that reader.
 
-Generated value calls use this reader in the head position:
-``(#`f arg1 arg2)`` or ``(#`(if condition left right) argument)``. This reduces
-indentation without changing source algorithms. Arguments are evaluated left
-to right **before** the lambda acquires the function expression, once per
-call; argument-time rebinding therefore affects that same call. Partial
-curried application and multiple returned values are forwarded normally.
-Ordinary function values passed as arguments or captured in bindings remain
-eager plain references, not wrappers. Direct named calls, `#'` references and
-foreign partial adapters retain their existing paths; applying excess
-arguments to a foreign result uses a reader-headed value call. Runtime-internal
-`funcall` expansions and `holai.runtime:funcall` remain unchanged.
-The translator represents #` with a dedicated structural reader-prefix node,
-not output-string rewriting, preserving source-map origins. Fragment remains
-PROOF-only. See DESIGN §34.
+## Development notation
 
-Keep `holai.runtime:proof` fully qualified unless deliberately importing it.
-Likewise qualify generated names with their defining package, or explicitly
-import them into your working package after inspecting their declarations.
-Do not assume every tactic is a named function or import the runtime wholesale
-into a CL-using package. A local function named `proof` can coexist with the
-fully qualified macro. PROOF only constructs the existing tactic calls: it
-does not change proof algorithms, justification checks or kernel operations.
-The translator emits this notation only for resolved canonical tactical
-bindings; aliases, shadowing and ordinary partial/direct-goal calls retain
-their existing calling conventions. See DESIGN §33 for the exact contract.
-
-The native `holai/tests/proof-dsl.lisp` matrix is compiled/loaded after observation
-capture and std_formatter stream restoration, with an isolated measured
-`proof_dsl_checks` counter. The preceding reader-inclusive PROOF release passed
-61 PROOF checks and eight new OCaml/SBCL fixture observations; a separate fresh
-sharp-backquote handwritten smoke proved the actual closed identity theorem.
-Release packaging includes the new unit,
-translator, design, generated Lisp/maps, reports and matching streams.
-No PROOF timing result is claimed; the version remains 1.0.0-percent-names.
-The reader's runtime-only compile/load smoke passed (per-call evaluation,
-dynamic rebinding, argument/multiple-value forwarding, hygiene and unchanged
-`#'`). The previous DESIGN §§34–35 release's measured 69 PROOF checks include thirteen permanent reader
-checks with actual computations, including zero-argument sum, positional decimal
-calculation, NIL classification, floor quotient/remainder and lexical-argument
-hygiene, plus eight direct reader-headed consumer checks.
-One new tactical observation adds computed-head/evaluation-count coverage
-beside existing partial/excess paths. Six language observations covered
-local function groups. All seven added rows matched OCaml/SBCL exactly in that release.
-That preceding release retained 11 fixture components and 51 production units;
-the current inferred entry raises production compilation to 52 units.
-
-### Shallow generated calls and local functions
-
-Generated function-value calls use ``(#`f argument)`` (including computed
-heads) instead of an extra `holai.runtime:funcall` layer. The reader acquires
-the head once after argument evaluation; this intentional late-head timing is
-distinct from the local-definition display change below. Direct named calls,
-`#'` references, foreign partial adapters and source binding identities remain
-unchanged. Load the runtime before reading generated consumers.
-
-Adjacent local named-function groups share one shallow `labelsc` list, and
-isolated nonrecursive/recursive groups use the same plain entry syntax:
+After loading the full core, import only what your package needs:
 
 ```lisp
-(labelsc
-  ((f (x) (+ x 1))
-   (g (x) (f x))
-   (walk (x) (if (zerop x) (g x) (walk (1- x)))))
-  (walk 2))
+(uiop:define-package :my-hol-development
+  (:use :cl)
+  (:import-from :holai.runtime :proof :tuple :lambdac :labelsc)
+  (:import-from :holai.tactics :prove :DISCH_TAC :THEN :FIRST_ASSUM :ACCEPT_TAC)
+  (:import-from :holai.parser :parse_term))
+(in-package :my-hol-development)
+
+(prove (tuple (parse_term "p ==> p")
+              (proof DISCH_TAC THEN (FIRST_ASSUM ACCEPT_TAC))))
 ```
 
-Expansion creates one genuine CL:LABELS scope. Source RHSs still resolve in
-their original environments: g sees the preceding f; walk sees its recursive
-group. Nonrecursive parallel members do not see one another. Targets are
-unique throughout the combined list, including hidden shadows and case
-collisions. All entry-visible targets stay reserved until the chain ends,
-so a later shadow cannot capture an earlier reference to an outer function.
-Renames use the existing deterministic local percent suffixes.
+Use bare `proof` for ordinary development notation; nest it for non-left
+grouping. Named functions use `#'name`, while function-valued operators such as
+`THEN` use their symbols. Namespace conflicts retain `holai.runtime:proof`.
+Sharp-backquote (``#` ``) invokes a function-valued expression; `labelsc`
+provides curried lexical functions. See [DESIGN](DESIGN.md) for syntax,
+evaluation order, partial application and namespace rules.
 
-Scalar LET bindings, modules, match, lambda and annotations stop grouping.
-Initializers execute once in their original positions; captured functions,
-partials and physical function identities retain their source bindings.
-Coincident source-map spans preserve all combined local-let Origins.
-Handwritten `fletc` retains its nonrecursive outer-RHS semantics.
-Direct named calls, `#'` references and foreign partial adapters are unchanged.
-Ordinary entries keep name and parameters together when they fit 90 columns,
-then place the body on a new line. See DESIGN §§34 and 36.
+## Randomness and evidence
 
-Lexical-module named function declarations also use ordinary `LABELSC`.
-Only immediately adjacent named declarations inside one structure combine;
-module declarations, aliases and includes, value or mixed slots, effects and
-the external continuation remain barriers, even when an alias has no runtime
-output. The module combiner peels only local-module-binding Origins. RHS
-environment snapshots and original right-fold wrapper compilation order stay
-unchanged.
+`Random` uses standard Common Lisp `RANDOM` with a private random-state.
+`Random.init` deliberately ignores its integer seed and resets with
+`MAKE-RANDOM-STATE T`; integer-seed replay is not guaranteed across runs or
+hosts. Draws use the explicit private state; fresh-state creation is
+host-defined. The `language_random=` row is property-validated; two initial
+registry rows compare structurally under the user-approved generated-name
+contract in [DESIGN](DESIGN.md#observation-and-initialization-boundary).
+All remaining rows compare exactly. Reports retain raw and canonical comparison
+streams separately, without claiming raw equality.
 
-Lexical global allocation reserves entry-visible names, including qualified
-module public exports, and previously allocated targets; percent collision
-suffixes avoid future ordinary prefixed/versioned names. Alias public
-environments are visited once; functor captured environments are not traversed.
-Top-level global allocation is unchanged. This prevents a new local module
-`M.f` from capturing a resolved reference to an older `M.f`. No generated
-`FLETC` calls remain; handwritten `FLETC` is retained. Plain local definition
-headers keep the name/parameter list together when it fits 90 columns, using
-a context-specific renderer without stage markers.
+Current implementation-tagged evidence is under
+[`misc/reports/implementations/`](misc/reports/implementations/): SBCL full-core
+reports and additional-host `compatibility.json` reports have distinct profiles.
+The [aggregate matrix](misc/reports/implementation-matrix.json) records each
+selected profile's actual status; failed or incomplete reports are not release
+evidence. The root [`verification.json`](misc/reports/verification.json) and
+SBCL-named streams are historical, **not a current validation pass**.
+The current SBCL run passed 128 native and 69 PROOF checks, comparing 1,149
+rows: 1,146 exact, two structural registry rows and one Random property row.
+The three additional hosts each passed three runtime fixtures and 33 exact rows,
+not full-core verification. The final `make release` exited 0 (269.03 seconds),
+including SBCL's 52-unit cold compiler audit, inventory, 94 identical clean
+outputs and 55 unchanged input pins. Initialization notices are counted separately.
+See also [clean-generation evidence](misc/reports/clean-build.json),
+[coverage](misc/reports/COVERAGE.md), [release notes](docs/RELEASE-NOTES.md)
+and [historical reports](misc/reports/history/).
 
-The final module-inclusive plain-entry cutover passed full-release validation.
-The six existing language rows are unchanged; three new matched observations
-exercise entry-environment reservation across a scalar barrier/repeated
-shadows, case-sensitive hidden shadows and `language_module_function_scope`.
-The module row exercises escaped closures/partials, repeated module names,
-sequential and parallel dependencies, case shadowing, imports, aliases and
-once-only initialization. The measured total is 1,142 matching rows.
-Separate fresh-core smoke proved a closed identity theorem, passed 69 PROOF
-checks and eight ordinary function-scope cases, and ran the escaped/rebound
-module closure/partial and once-only initialization case twice with exact
-expected results. Static search found zero generated FLETC calls or stage tags.
-DESIGN §35 preserves the previous implementation and its measured results as
-history, not the current API. No performance claim is made.
+## Repository and licenses
 
-## Current implementation and validation
+See [repository layout](docs/REPOSITORY-LAYOUT.md), [design](DESIGN.md) and
+[maintenance rules](AGENTS.md). Translator sources live in `ml2cl/`; runtime,
+generated core and tests in `holai/`; tools and reports in `misc/`.
 
-Generated source functions use `defunc`, `lambdac` and plain-entry `labelsc`;
-handwritten `fletc` remains available. Their shared
-OPTIONAL/supplied-p entry supports complete, partial and excess application.
-Function values capture their original definitions; global named calls retain
-runtime redefinition. Tuples keep their original argument list.
-No fixed-worker or call-site specialization is enabled. Matching uses a static
-IR at macro expansion time and standard Common Lisp control/binding forms.
-Constructor/record descriptors are resolved before execution; guards and OR
-binding joins preserve clause order. See [PATTERN-MATCH.md](misc/reports/PATTERN-MATCH.md).
-
-The latest DESIGN §37 unified ASDF/UIOP cutover passed
-`nix develop path:. --command make release` (exit 0) in 226.10 seconds on
-aarch64-linux with OCaml 4.14.2, Camlp5 8.02.01 and SBCL 2.3.9.nixos.
-123 native checks, 69 independent PROOF checks, 27 calling-protocol,
-84 OPTIONAL-entry, 16 tuple and 46 structural-pattern checks passed.
-All 1,143 OCaml/SBCL output rows matched (1,136 serialized observations and
-seven actual side-effect rows). All 46 inputs initialized in original order
-with 22 types, 303 constants, 263 definitions and exactly the three source axioms.
-The 5,519 OCaml/5,517 SBCL initialization rows retain exactly the documented
-two OCaml-only messages; raw initialization transcripts are not identical.
-All 194,839 core/206,277 fixture-inclusive map entries passed audit, and ten
-rejection checks kept output unchanged. Fresh-cache diagnostics recorded 52
-unique production source paths in manifest compile/load order, including 47
-genuinely inferred core/entry components, with zero errors, warnings, style
-warnings or notices. All 94 clean outputs were identical and all 55 retained
-input hashes unchanged.
-
-Fresh ASDF 3.3.1 smokes loaded runtime alone, the complete inferred 46-source
-core, and `holai/generated/fusion` without parser/later theories. The full-core
-smoke proved a closed `p ==> p`, checked private constructors and preserved
-the original three axioms after reload. The lexical-module UNIT escaped-closure
-regression passed alongside existing private/namespace/parent-capture coverage:
-independent lexical seeds do not alter runtime UNIT.
-Only the five shared-package runtime files are explicit components, in the
-same root `holai.asd`; `holai/all.lisp` is a genuinely inferred entry.
-Safe CL-first UIOP foreign-input mixes, canonical imports and reader-owner
-local shadows shorten references without changing CL control, private makers
-or lexical scope; prefixes are not universally removed.
-
-The release ZIP contains 306 members (305 payload files plus
-`RELEASE-MANIFEST.json`), including the sole `holai/holai.asd`, entry, provider
-data and 92 generated Lisp/map members. Generated core Lisp totals 5,980,663
-bytes; this inventory is not a performance measurement. The user explicitly
-authorized committing and pushing this validated cutover to `tani/holai` main.
-See [verification.json](misc/reports/verification.json),
-[clean-build.json](misc/reports/clean-build.json),
-[compile-diagnostics.json](misc/reports/compile-diagnostics.json) and
-[COVERAGE.md](misc/reports/COVERAGE.md).
-
-Two fresh runs per version gave median FASL-only start-to-exit times of
-97.840 s before the OPTIONAL change and 81.957 s after it. Cumulative core
-allocation fell from 113.6 GB to 55.7 GB; peak RSS rose from 208.9 MiB to
-243.7 MiB. Allocation totals are not peak memory. OCamlopt's separately measured
-native initialization median was 13.715 s; it is a historical comparison.
-See [OPTIONAL-ENTRY.md](misc/reports/OPTIONAL-ENTRY.md) and
-[OCAMLOPT-STARTUP.md](misc/reports/OCAMLOPT-STARTUP.md) for methods and limits.
-
-## Repository contents
-
-| Directory/file | Purpose |
-|---|---|
-| `ml2cl/` | OCaml translator and command-line interface |
-| `holai/runtime/` | Curried calling protocol and compatibility boundary |
-| `holai/generated/` | Generated Lisp, inventory and package-provider data, kept for source comparison |
-| `holai.asd`, `holai/all.lisp` | Single ASDF definition and inferred full-core entry |
-| `vendor/` | Pinned HOL Light/OCaml inputs and their licenses |
-| `holai/tests/` | Semantic, kernel, differential and boundary tests; benchmark harnesses |
-| `misc/scripts/` | Build verification, scanning, packaging and reproducible measurements |
-| `misc/reports/` | Current validation and benchmark evidence |
-| `misc/reports/history/` | Older experiments, kept separately from current results |
-| `docs/` | Repository policy, release notes and design history |
-| `DESIGN.md` | Detailed translation design and measured status |
-| `AGENTS.md` | Instructions for maintaining this repository |
-| `flake.nix`, `flake.lock` | Reproducible development shell and pinned nixpkgs input |
-
-`_build/`, `bin/`, `dist/`, FASLs, Python caches and generated source-map JSON
-are not tracked. `make regenerate` recreates source maps; release ZIPs include
-them, DESIGN.md, AGENTS.md and the complete translator. See
-[REPOSITORY-LAYOUT.md](docs/REPOSITORY-LAYOUT.md) for the keep/exclude decisions.
-
-## License
-
-New translator/runtime code is MIT licensed. HOL Light, Trivia and the
-vendored OCaml algorithms retain their original licenses and notices.
-See [LICENSE](LICENSE) and [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md).
+New translator/runtime code is [MIT licensed](LICENSE). HOL Light and vendored
+OCaml algorithms retain their original licenses; see
+[THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md) and [`vendor/`](vendor/).

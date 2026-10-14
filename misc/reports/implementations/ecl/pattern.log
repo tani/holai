@@ -1,0 +1,5 @@
+;;; Loading #P"/nix/store/li8033azc46v0ilvb1hxbbg4x7wdkdfz-ecl-21.2.1/lib/ecl-21.2.1/asdf.fas"
+;;; Loading "/home/tani/ghq/github.com/tani/holai/holai/tests/pattern.lisp"
+Pattern native NaN EQL: not applicable (ECL native COMPILE cannot externalize a NaN literal)
+Pattern stale consumer FASL: /home/tani/ghq/github.com/tani/holai/_build/pattern-stale-consumer.fas
+Pattern checks passed: 44

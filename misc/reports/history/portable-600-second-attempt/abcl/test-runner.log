@@ -1,0 +1,20 @@
+Traceback (most recent call last):
+  File "/home/tani/ghq/github.com/tani/holai/holai/tests/run.py", line 402, in <module>
+    main()
+  File "/home/tani/ghq/github.com/tani/holai/holai/tests/run.py", line 279, in main
+    native = run(lisp_command("holai/tests/lisp-tests.lisp", core=True), log="lisp-tests.log", core=True)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/tani/ghq/github.com/tani/holai/holai/tests/run.py", line 32, in run
+    result = subprocess.run(args, text=True, capture_output=True, timeout=600 if core else 120,
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/4lc64zw53gsi86mzc46ba05a3k147ps7-python3-3.11.8/lib/python3.11/subprocess.py", line 550, in run
+    stdout, stderr = process.communicate(input, timeout=timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/4lc64zw53gsi86mzc46ba05a3k147ps7-python3-3.11.8/lib/python3.11/subprocess.py", line 1209, in communicate
+    stdout, stderr = self._communicate(input, endtime, timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/4lc64zw53gsi86mzc46ba05a3k147ps7-python3-3.11.8/lib/python3.11/subprocess.py", line 2114, in _communicate
+    self._check_timeout(endtime, orig_timeout, stdout, stderr)
+  File "/nix/store/4lc64zw53gsi86mzc46ba05a3k147ps7-python3-3.11.8/lib/python3.11/subprocess.py", line 1253, in _check_timeout
+    raise TimeoutExpired(
+subprocess.TimeoutExpired: Command '['abcl', '--noinform', '--eval', '(require "asdf")', '--eval', '(setf asdf:*asdf-verbose* nil *load-verbose* nil *compile-verbose* nil)', '--noinit', '--batch', '--eval', '(setf *debugger-hook* (lambda (condition hook) (declare (ignore hook)) (format *error-output* "~&Unhandled condition: ~a~%" condition) (uiop:quit 1)))', '--eval', '(load "holai/tests/lisp-tests.lisp")', '--eval', '(uiop:quit 0)']' timed out after 600 seconds

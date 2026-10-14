@@ -1,0 +1,1 @@
+sbcl: cold diagnostics: 52 unique production files in manifest order; 47 genuine inferred core/entry; zero compiler errors, warnings and style warnings; load/initialization warnings recorded separately: 0 warnings, 21 style warnings, 164 raw notices.

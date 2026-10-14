@@ -1,0 +1,904 @@
+{
+  "host": {
+    "implementation": "sbcl",
+    "implementation_type": "SBCL",
+    "version": "2.3.9.nixos",
+    "executable": "sbcl",
+    "os_stack_limit_bytes": {
+      "soft": 8388608,
+      "hard": -1
+    },
+    "full_core_limits": {
+      "dynamic_space_mebibytes": 2048,
+      "control_stack_mebibytes": 256
+    }
+  },
+  "fresh_asdf_cache": true,
+  "compiled_units": [
+    "holai/runtime/package.lisp",
+    "holai/runtime/pattern.lisp",
+    "holai/runtime/core.lisp",
+    "holai/runtime/format.lisp",
+    "holai/runtime/stdlib.lisp",
+    "holai/generated/system.lisp",
+    "holai/generated/lib.lisp",
+    "holai/generated/fusion.lisp",
+    "holai/generated/basics.lisp",
+    "holai/generated/nets.lisp",
+    "holai/generated/printer.lisp",
+    "holai/generated/preterm.lisp",
+    "holai/generated/parser.lisp",
+    "holai/generated/equal.lisp",
+    "holai/generated/bool.lisp",
+    "holai/generated/drule.lisp",
+    "holai/generated/tactics.lisp",
+    "holai/generated/itab.lisp",
+    "holai/generated/simp.lisp",
+    "holai/generated/theorems.lisp",
+    "holai/generated/ind_defs.lisp",
+    "holai/generated/class.lisp",
+    "holai/generated/trivia.lisp",
+    "holai/generated/canon.lisp",
+    "holai/generated/meson.lisp",
+    "holai/generated/firstorder.lisp",
+    "holai/generated/metis.lisp",
+    "holai/generated/thecops.lisp",
+    "holai/generated/quot.lisp",
+    "holai/generated/impconv.lisp",
+    "holai/generated/pair.lisp",
+    "holai/generated/compute.lisp",
+    "holai/generated/nums.lisp",
+    "holai/generated/recursion.lisp",
+    "holai/generated/arith.lisp",
+    "holai/generated/wf.lisp",
+    "holai/generated/calc_num.lisp",
+    "holai/generated/normalizer.lisp",
+    "holai/generated/grobner.lisp",
+    "holai/generated/ind_types.lisp",
+    "holai/generated/lists.lisp",
+    "holai/generated/realax.lisp",
+    "holai/generated/calc_int.lisp",
+    "holai/generated/realarith.lisp",
+    "holai/generated/real.lisp",
+    "holai/generated/calc_rat.lisp",
+    "holai/generated/int.lisp",
+    "holai/generated/sets.lisp",
+    "holai/generated/iterate.lisp",
+    "holai/generated/cart.lisp",
+    "holai/generated/define.lisp",
+    "holai/all.lisp"
+  ],
+  "compiled_unit_count": 52,
+  "loaded_units": [
+    "holai/runtime/package.lisp",
+    "holai/runtime/pattern.lisp",
+    "holai/runtime/core.lisp",
+    "holai/runtime/format.lisp",
+    "holai/runtime/stdlib.lisp",
+    "holai/generated/system.lisp",
+    "holai/generated/lib.lisp",
+    "holai/generated/fusion.lisp",
+    "holai/generated/basics.lisp",
+    "holai/generated/nets.lisp",
+    "holai/generated/printer.lisp",
+    "holai/generated/preterm.lisp",
+    "holai/generated/parser.lisp",
+    "holai/generated/equal.lisp",
+    "holai/generated/bool.lisp",
+    "holai/generated/drule.lisp",
+    "holai/generated/tactics.lisp",
+    "holai/generated/itab.lisp",
+    "holai/generated/simp.lisp",
+    "holai/generated/theorems.lisp",
+    "holai/generated/ind_defs.lisp",
+    "holai/generated/class.lisp",
+    "holai/generated/trivia.lisp",
+    "holai/generated/canon.lisp",
+    "holai/generated/meson.lisp",
+    "holai/generated/firstorder.lisp",
+    "holai/generated/metis.lisp",
+    "holai/generated/thecops.lisp",
+    "holai/generated/quot.lisp",
+    "holai/generated/impconv.lisp",
+    "holai/generated/pair.lisp",
+    "holai/generated/compute.lisp",
+    "holai/generated/nums.lisp",
+    "holai/generated/recursion.lisp",
+    "holai/generated/arith.lisp",
+    "holai/generated/wf.lisp",
+    "holai/generated/calc_num.lisp",
+    "holai/generated/normalizer.lisp",
+    "holai/generated/grobner.lisp",
+    "holai/generated/ind_types.lisp",
+    "holai/generated/lists.lisp",
+    "holai/generated/realax.lisp",
+    "holai/generated/calc_int.lisp",
+    "holai/generated/realarith.lisp",
+    "holai/generated/real.lisp",
+    "holai/generated/calc_rat.lisp",
+    "holai/generated/int.lisp",
+    "holai/generated/sets.lisp",
+    "holai/generated/iterate.lisp",
+    "holai/generated/cart.lisp",
+    "holai/generated/define.lisp",
+    "holai/all.lisp"
+  ],
+  "inferred_units": [
+    "holai/generated/system.lisp",
+    "holai/generated/lib.lisp",
+    "holai/generated/fusion.lisp",
+    "holai/generated/basics.lisp",
+    "holai/generated/nets.lisp",
+    "holai/generated/printer.lisp",
+    "holai/generated/preterm.lisp",
+    "holai/generated/parser.lisp",
+    "holai/generated/equal.lisp",
+    "holai/generated/bool.lisp",
+    "holai/generated/drule.lisp",
+    "holai/generated/tactics.lisp",
+    "holai/generated/itab.lisp",
+    "holai/generated/simp.lisp",
+    "holai/generated/theorems.lisp",
+    "holai/generated/ind_defs.lisp",
+    "holai/generated/class.lisp",
+    "holai/generated/trivia.lisp",
+    "holai/generated/canon.lisp",
+    "holai/generated/meson.lisp",
+    "holai/generated/firstorder.lisp",
+    "holai/generated/metis.lisp",
+    "holai/generated/thecops.lisp",
+    "holai/generated/quot.lisp",
+    "holai/generated/impconv.lisp",
+    "holai/generated/pair.lisp",
+    "holai/generated/compute.lisp",
+    "holai/generated/nums.lisp",
+    "holai/generated/recursion.lisp",
+    "holai/generated/arith.lisp",
+    "holai/generated/wf.lisp",
+    "holai/generated/calc_num.lisp",
+    "holai/generated/normalizer.lisp",
+    "holai/generated/grobner.lisp",
+    "holai/generated/ind_types.lisp",
+    "holai/generated/lists.lisp",
+    "holai/generated/realax.lisp",
+    "holai/generated/calc_int.lisp",
+    "holai/generated/realarith.lisp",
+    "holai/generated/real.lisp",
+    "holai/generated/calc_rat.lisp",
+    "holai/generated/int.lisp",
+    "holai/generated/sets.lisp",
+    "holai/generated/iterate.lisp",
+    "holai/generated/cart.lisp",
+    "holai/generated/define.lisp",
+    "holai/all.lisp"
+  ],
+  "inferred_load_order_matches_manifest": true,
+  "compiler_errors": 0,
+  "compiler_warnings": 0,
+  "compiler_style_warnings": 0,
+  "compiler_warning_notices": 0,
+  "load_initialization_errors": 0,
+  "load_initialization_warnings": 0,
+  "load_initialization_style_warnings": 21,
+  "load_initialization_warning_notices": 164,
+  "compiler_scope_complete": true,
+  "operations": [
+    {
+      "phase": "INITIALIZATION",
+      "unit": "holai/tests/bootstrap.lisp",
+      "ended": true,
+      "unit_completed": false
+    },
+    {
+      "phase": "COMPILE",
+      "unit": "holai/runtime/package.lisp",
+      "ended": true,
+      "unit_completed": true
+    },
+    {
+      "phase": "LOAD",
+      "unit": "holai/runtime/package.lisp",
+      "ended": true,
+      "unit_completed": true
+    },
+    {
+      "phase": "COMPILE",
+      "unit": "holai/runtime/pattern.lisp",
+      "ended": true,
+      "unit_completed": true
+    },
+    {
+      "phase": "LOAD",
+      "unit": "holai/runtime/pattern.lisp",
+      "ended": true,
+      "unit_completed": true
+    },
+    {
+      "phase": "COMPILE",
+      "unit": "holai/runtime/core.lisp",
+      "ended": true,
+      "unit_completed": true
+    },
+    {
+      "phase": "LOAD",
+      "unit": "holai/runtime/core.lisp",
+      "ended": true,
+      "unit_completed": true
+    },
+    {
+      "phase": "COMPILE",
+      "unit": "holai/runtime/format.lisp",
+      "ended": true,
+      "unit_completed": true
+    },
+    {
+      "phase": "LOAD",
+      "unit": "holai/runtime/format.lisp",
+      "ended": true,
+      "unit_completed": true
+    },
+    {
+      "phase": "COMPILE",
+      "unit": "holai/runtime/stdlib.lisp",
+      "ended": true,
+      "unit_completed": true
+    },
+    {
+      "phase": "LOAD",
+      "unit": "holai/runtime/stdlib.lisp",
+      "ended": true,
+      "unit_completed": true
+    },
+    {
+      "phase": "COMPILE",
+      "unit": "holai/generated/system.lisp",
+      "ended": true,
+      "unit_completed": true
+    },
+    {
+      "phase": "LOAD",
+      "unit": "holai/generated/system.lisp",
+      "ended": true,
+      "unit_completed": true
+    },
+    {
+      "phase": "COMPILE",
+      "unit": "holai/generated/lib.lisp",
+      "ended": true,
+      "unit_completed": true
+    },
+    {
+      "phase": "LOAD",
+      "unit": "holai/generated/lib.lisp",
+      "ended": true,
+      "unit_completed": true
+    },
+    {
+      "phase": "COMPILE",
+      "unit": "holai/generated/fusion.lisp",
+      "ended": true,
+      "unit_completed": true
+    },
+    {
+      "phase": "LOAD",
+      "unit": "holai/generated/fusion.lisp",
+      "ended": true,
+      "unit_completed": true
+    },
+    {
+      "phase": "COMPILE",
+      "unit": "holai/generated/basics.lisp",
+      "ended": true,
+      "unit_completed": true
+    },
+    {
+      "phase": "LOAD",
+      "unit": "holai/generated/basics.lisp",
+      "ended": true,
+      "unit_completed": true
+    },
+    {
+      "phase": "COMPILE",
+      "unit": "holai/generated/nets.lisp",
+      "ended": true,
+      "unit_completed": true
+    },
+    {
+      "phase": "LOAD",
+      "unit": "holai/generated/nets.lisp",
+      "ended": true,
+      "unit_completed": true
+    },
+    {
+      "phase": "COMPILE",
+      "unit": "holai/generated/printer.lisp",
+      "ended": true,
+      "unit_completed": true
+    },
+    {
+      "phase": "LOAD",
+      "unit": "holai/generated/printer.lisp",
+      "ended": true,
+      "unit_completed": true
+    },
+    {
+      "phase": "COMPILE",
+      "unit": "holai/generated/preterm.lisp",
+      "ended": true,
+      "unit_completed": true
+    },
+    {
+      "phase": "LOAD",
+      "unit": "holai/generated/preterm.lisp",
+      "ended": true,
+      "unit_completed": true
+    },
+    {
+      "phase": "COMPILE",
+      "unit": "holai/generated/parser.lisp",
+      "ended": true,
+      "unit_completed": true
+    },
+    {
+      "phase": "LOAD",
+      "unit": "holai/generated/parser.lisp",
+      "ended": true,
+      "unit_completed": true
+    },
+    {
+      "phase": "COMPILE",
+      "unit": "holai/generated/equal.lisp",
+      "ended": true,
+      "unit_completed": true
+    },
+    {
+      "phase": "LOAD",
+      "unit": "holai/generated/equal.lisp",
+      "ended": true,
+      "unit_completed": true
+    },
+    {
+      "phase": "COMPILE",
+      "unit": "holai/generated/bool.lisp",
+      "ended": true,
+      "unit_completed": true
+    },
+    {
+      "phase": "LOAD",
+      "unit": "holai/generated/bool.lisp",
+      "ended": true,
+      "unit_completed": true
+    },
+    {
+      "phase": "COMPILE",
+      "unit": "holai/generated/drule.lisp",
+      "ended": true,
+      "unit_completed": true
+    },
+    {
+      "phase": "LOAD",
+      "unit": "holai/generated/drule.lisp",
+      "ended": true,
+      "unit_completed": true
+    },
+    {
+      "phase": "COMPILE",
+      "unit": "holai/generated/tactics.lisp",
+      "ended": true,
+      "unit_completed": true
+    },
+    {
+      "phase": "LOAD",
+      "unit": "holai/generated/tactics.lisp",
+      "ended": true,
+      "unit_completed": true
+    },
+    {
+      "phase": "COMPILE",
+      "unit": "holai/generated/itab.lisp",
+      "ended": true,
+      "unit_completed": true
+    },
+    {
+      "phase": "LOAD",
+      "unit": "holai/generated/itab.lisp",
+      "ended": true,
+      "unit_completed": true
+    },
+    {
+      "phase": "COMPILE",
+      "unit": "holai/generated/simp.lisp",
+      "ended": true,
+      "unit_completed": true
+    },
+    {
+      "phase": "LOAD",
+      "unit": "holai/generated/simp.lisp",
+      "ended": true,
+      "unit_completed": true
+    },
+    {
+      "phase": "COMPILE",
+      "unit": "holai/generated/theorems.lisp",
+      "ended": true,
+      "unit_completed": true
+    },
+    {
+      "phase": "LOAD",
+      "unit": "holai/generated/theorems.lisp",
+      "ended": true,
+      "unit_completed": true
+    },
+    {
+      "phase": "COMPILE",
+      "unit": "holai/generated/ind_defs.lisp",
+      "ended": true,
+      "unit_completed": true
+    },
+    {
+      "phase": "LOAD",
+      "unit": "holai/generated/ind_defs.lisp",
+      "ended": true,
+      "unit_completed": true
+    },
+    {
+      "phase": "COMPILE",
+      "unit": "holai/generated/class.lisp",
+      "ended": true,
+      "unit_completed": true
+    },
+    {
+      "phase": "LOAD",
+      "unit": "holai/generated/class.lisp",
+      "ended": true,
+      "unit_completed": true
+    },
+    {
+      "phase": "COMPILE",
+      "unit": "holai/generated/trivia.lisp",
+      "ended": true,
+      "unit_completed": true
+    },
+    {
+      "phase": "LOAD",
+      "unit": "holai/generated/trivia.lisp",
+      "ended": true,
+      "unit_completed": true
+    },
+    {
+      "phase": "COMPILE",
+      "unit": "holai/generated/canon.lisp",
+      "ended": true,
+      "unit_completed": true
+    },
+    {
+      "phase": "LOAD",
+      "unit": "holai/generated/canon.lisp",
+      "ended": true,
+      "unit_completed": true
+    },
+    {
+      "phase": "COMPILE",
+      "unit": "holai/generated/meson.lisp",
+      "ended": true,
+      "unit_completed": true
+    },
+    {
+      "phase": "LOAD",
+      "unit": "holai/generated/meson.lisp",
+      "ended": true,
+      "unit_completed": true
+    },
+    {
+      "phase": "COMPILE",
+      "unit": "holai/generated/firstorder.lisp",
+      "ended": true,
+      "unit_completed": true
+    },
+    {
+      "phase": "LOAD",
+      "unit": "holai/generated/firstorder.lisp",
+      "ended": true,
+      "unit_completed": true
+    },
+    {
+      "phase": "COMPILE",
+      "unit": "holai/generated/metis.lisp",
+      "ended": true,
+      "unit_completed": true
+    },
+    {
+      "phase": "LOAD",
+      "unit": "holai/generated/metis.lisp",
+      "ended": true,
+      "unit_completed": true
+    },
+    {
+      "phase": "COMPILE",
+      "unit": "holai/generated/thecops.lisp",
+      "ended": true,
+      "unit_completed": true
+    },
+    {
+      "phase": "LOAD",
+      "unit": "holai/generated/thecops.lisp",
+      "ended": true,
+      "unit_completed": true
+    },
+    {
+      "phase": "COMPILE",
+      "unit": "holai/generated/quot.lisp",
+      "ended": true,
+      "unit_completed": true
+    },
+    {
+      "phase": "LOAD",
+      "unit": "holai/generated/quot.lisp",
+      "ended": true,
+      "unit_completed": true
+    },
+    {
+      "phase": "COMPILE",
+      "unit": "holai/generated/impconv.lisp",
+      "ended": true,
+      "unit_completed": true
+    },
+    {
+      "phase": "LOAD",
+      "unit": "holai/generated/impconv.lisp",
+      "ended": true,
+      "unit_completed": true
+    },
+    {
+      "phase": "COMPILE",
+      "unit": "holai/generated/pair.lisp",
+      "ended": true,
+      "unit_completed": true
+    },
+    {
+      "phase": "LOAD",
+      "unit": "holai/generated/pair.lisp",
+      "ended": true,
+      "unit_completed": true
+    },
+    {
+      "phase": "COMPILE",
+      "unit": "holai/generated/compute.lisp",
+      "ended": true,
+      "unit_completed": true
+    },
+    {
+      "phase": "LOAD",
+      "unit": "holai/generated/compute.lisp",
+      "ended": true,
+      "unit_completed": true
+    },
+    {
+      "phase": "COMPILE",
+      "unit": "holai/generated/nums.lisp",
+      "ended": true,
+      "unit_completed": true
+    },
+    {
+      "phase": "LOAD",
+      "unit": "holai/generated/nums.lisp",
+      "ended": true,
+      "unit_completed": true
+    },
+    {
+      "phase": "COMPILE",
+      "unit": "holai/generated/recursion.lisp",
+      "ended": true,
+      "unit_completed": true
+    },
+    {
+      "phase": "LOAD",
+      "unit": "holai/generated/recursion.lisp",
+      "ended": true,
+      "unit_completed": true
+    },
+    {
+      "phase": "COMPILE",
+      "unit": "holai/generated/arith.lisp",
+      "ended": true,
+      "unit_completed": true
+    },
+    {
+      "phase": "LOAD",
+      "unit": "holai/generated/arith.lisp",
+      "ended": true,
+      "unit_completed": true
+    },
+    {
+      "phase": "COMPILE",
+      "unit": "holai/generated/wf.lisp",
+      "ended": true,
+      "unit_completed": true
+    },
+    {
+      "phase": "LOAD",
+      "unit": "holai/generated/wf.lisp",
+      "ended": true,
+      "unit_completed": true
+    },
+    {
+      "phase": "COMPILE",
+      "unit": "holai/generated/calc_num.lisp",
+      "ended": true,
+      "unit_completed": true
+    },
+    {
+      "phase": "LOAD",
+      "unit": "holai/generated/calc_num.lisp",
+      "ended": true,
+      "unit_completed": true
+    },
+    {
+      "phase": "COMPILE",
+      "unit": "holai/generated/normalizer.lisp",
+      "ended": true,
+      "unit_completed": true
+    },
+    {
+      "phase": "LOAD",
+      "unit": "holai/generated/normalizer.lisp",
+      "ended": true,
+      "unit_completed": true
+    },
+    {
+      "phase": "COMPILE",
+      "unit": "holai/generated/grobner.lisp",
+      "ended": true,
+      "unit_completed": true
+    },
+    {
+      "phase": "LOAD",
+      "unit": "holai/generated/grobner.lisp",
+      "ended": true,
+      "unit_completed": true
+    },
+    {
+      "phase": "COMPILE",
+      "unit": "holai/generated/ind_types.lisp",
+      "ended": true,
+      "unit_completed": true
+    },
+    {
+      "phase": "LOAD",
+      "unit": "holai/generated/ind_types.lisp",
+      "ended": true,
+      "unit_completed": true
+    },
+    {
+      "phase": "COMPILE",
+      "unit": "holai/generated/lists.lisp",
+      "ended": true,
+      "unit_completed": true
+    },
+    {
+      "phase": "LOAD",
+      "unit": "holai/generated/lists.lisp",
+      "ended": true,
+      "unit_completed": true
+    },
+    {
+      "phase": "COMPILE",
+      "unit": "holai/generated/realax.lisp",
+      "ended": true,
+      "unit_completed": true
+    },
+    {
+      "phase": "LOAD",
+      "unit": "holai/generated/realax.lisp",
+      "ended": true,
+      "unit_completed": true
+    },
+    {
+      "phase": "COMPILE",
+      "unit": "holai/generated/calc_int.lisp",
+      "ended": true,
+      "unit_completed": true
+    },
+    {
+      "phase": "LOAD",
+      "unit": "holai/generated/calc_int.lisp",
+      "ended": true,
+      "unit_completed": true
+    },
+    {
+      "phase": "COMPILE",
+      "unit": "holai/generated/realarith.lisp",
+      "ended": true,
+      "unit_completed": true
+    },
+    {
+      "phase": "LOAD",
+      "unit": "holai/generated/realarith.lisp",
+      "ended": true,
+      "unit_completed": true
+    },
+    {
+      "phase": "COMPILE",
+      "unit": "holai/generated/real.lisp",
+      "ended": true,
+      "unit_completed": true
+    },
+    {
+      "phase": "LOAD",
+      "unit": "holai/generated/real.lisp",
+      "ended": true,
+      "unit_completed": true
+    },
+    {
+      "phase": "COMPILE",
+      "unit": "holai/generated/calc_rat.lisp",
+      "ended": true,
+      "unit_completed": true
+    },
+    {
+      "phase": "LOAD",
+      "unit": "holai/generated/calc_rat.lisp",
+      "ended": true,
+      "unit_completed": true
+    },
+    {
+      "phase": "COMPILE",
+      "unit": "holai/generated/int.lisp",
+      "ended": true,
+      "unit_completed": true
+    },
+    {
+      "phase": "LOAD",
+      "unit": "holai/generated/int.lisp",
+      "ended": true,
+      "unit_completed": true
+    },
+    {
+      "phase": "COMPILE",
+      "unit": "holai/generated/sets.lisp",
+      "ended": true,
+      "unit_completed": true
+    },
+    {
+      "phase": "LOAD",
+      "unit": "holai/generated/sets.lisp",
+      "ended": true,
+      "unit_completed": true
+    },
+    {
+      "phase": "COMPILE",
+      "unit": "holai/generated/iterate.lisp",
+      "ended": true,
+      "unit_completed": true
+    },
+    {
+      "phase": "LOAD",
+      "unit": "holai/generated/iterate.lisp",
+      "ended": true,
+      "unit_completed": true
+    },
+    {
+      "phase": "COMPILE",
+      "unit": "holai/generated/cart.lisp",
+      "ended": true,
+      "unit_completed": true
+    },
+    {
+      "phase": "LOAD",
+      "unit": "holai/generated/cart.lisp",
+      "ended": true,
+      "unit_completed": true
+    },
+    {
+      "phase": "COMPILE",
+      "unit": "holai/generated/define.lisp",
+      "ended": true,
+      "unit_completed": true
+    },
+    {
+      "phase": "LOAD",
+      "unit": "holai/generated/define.lisp",
+      "ended": true,
+      "unit_completed": true
+    },
+    {
+      "phase": "COMPILE",
+      "unit": "holai/all.lisp",
+      "ended": true,
+      "unit_completed": true
+    },
+    {
+      "phase": "LOAD",
+      "unit": "holai/all.lisp",
+      "ended": true,
+      "unit_completed": true
+    }
+  ],
+  "active_operations": [],
+  "last_operation": {
+    "phase": "LOAD",
+    "unit": "holai/all.lisp",
+    "ended": true,
+    "unit_completed": true
+  },
+  "boundary_errors": [],
+  "timed_out": false,
+  "timeout_seconds": 600,
+  "elapsed_seconds": 71.76864357991144,
+  "command": [
+    "sbcl",
+    "--noinform",
+    "--dynamic-space-size",
+    "2048",
+    "--control-stack-size",
+    "256",
+    "--disable-debugger",
+    "--script",
+    "/home/tani/ghq/github.com/tani/holai/_build/host-diagnostics-2hcbg0z6/audit.lisp"
+  ],
+  "diagnostic_accounting": "Unmuffled Common Lisp conditions and raw notices within ASDF COMPILE-OP BEGIN/END boundaries; LOAD and source initialization recorded separately",
+  "code_sha256": {
+    "holai.asd": "5afc05b7272301b6bcc7d63df0636a4d731fbf33beaf1b31da2ac05b02bb0468",
+    "holai/all.lisp": "b1caa840f482bf3651a6add6788ecccea310adcf01a49075feb68fd28bb1b17a",
+    "holai/generated/package-systems.sexp": "85262ebd6619ceee474d013a520fd9d7e7cc836e5a3ed0025a2a320c6bf005f8",
+    "ml2cl/compiler.ml": "9bb464870bd38f0c2b3ba1d24eced023990f214788e1deec408acff29ad15ab1",
+    "ml2cl/frontend.ml": "b56286522edf82280619f127c70af55944fec944b768c1c0828c745ee067f9ff",
+    "ml2cl/sexp.ml": "d03885bd2af5792c9583016a3ef1ec841e8b4956bd9ed49ca724fdb444e57a5b",
+    "ml2cl/scope.ml": "33087d86cc91ad28a81fe4f315ef50f8e408847c2682ffdb7a14dbf2a11d5f39",
+    "ml2cl/cli.ml": "abe053c65a4b9dc85d2737e1a543ac9f782cb1a451447e0d583da07cc0e7230d",
+    "holai/runtime/package.lisp": "7b930cb56614b5221ea97782a205f4e65a899193dab61965c00e35e6402f47b0",
+    "holai/runtime/pattern.lisp": "58135bbab698826dd5816f7903beaec77799a13cea076058c84f52f62fd85565",
+    "holai/runtime/core.lisp": "1390e7dd15c981ec25b87f88bd070f47958d81cd642bb8d36cb27b52b7b85113",
+    "holai/runtime/format.lisp": "1091bf1534296fb412006168400d29f244ab13de1015300f0ec1f6e85c4b478e",
+    "holai/runtime/stdlib.lisp": "0fddd3e79fa89482bbd0a02d3be9d44b884728758618706bb1d9b4abc8185a50",
+    "holai/generated/system.lisp": "dbbcc1f6f56a8be8434591a07e903b50e1676315f0b9e5f565255265e3dd17b0",
+    "holai/generated/lib.lisp": "3d35bdee84d044bc00db743c05dbd81fb30c0342dcc7135c8e9c775d50445656",
+    "holai/generated/fusion.lisp": "9f55dde7e6c4b04f23858a6bc365040e2f51b92e7eaf535b0c60b906dba8e23c",
+    "holai/generated/basics.lisp": "f28beb4940c06387972beb6038ea743cdb15dafcc51005432281a7e2dcf1f4b1",
+    "holai/generated/nets.lisp": "f5b7ed2fb543c28f4940b75bb13898a32fbbe67b9de46501cda089f1d766a1df",
+    "holai/generated/printer.lisp": "c0596ab45b966f3bad4c5375e5e9665572ed82a1be0d930f32ab77e12d0719eb",
+    "holai/generated/preterm.lisp": "c8db8fecc66d0a60fbe1861965027922ce6f0fed81860400b1de82f71e684d30",
+    "holai/generated/parser.lisp": "6e7c0a32103039cfbd18eaafc35a6a2a02f258c1595d2a38325a215d8c27da7d",
+    "holai/generated/equal.lisp": "7638a74ec282366c009e1a06a805ed29339aed6809bb6888b9e264806bb75405",
+    "holai/generated/bool.lisp": "222d240b2424963a0f3bfa3087526bf71352bec38f73d087d95ecf4a9f375437",
+    "holai/generated/drule.lisp": "d0d5b4aa99b49db5479348f2c654c985328d54459784a14fa3f74bdbe6acfbd1",
+    "holai/generated/tactics.lisp": "39a08522f351cd4c24006fe2bb4c488b5ec97247becb67d8e3599a85cfb9cd21",
+    "holai/generated/itab.lisp": "2a0b7a95ba72a8996f8c6c4012e342a09b9d78c6c4e5735028767b2d3d41cf63",
+    "holai/generated/simp.lisp": "f3592576e5689ca910827b28729872989453f4a82e7f91855e4eda75e96fcb2c",
+    "holai/generated/theorems.lisp": "594f8d9d15e11c9be132a10aa17dc79ee1d63dca759e3031ec76bac330326b32",
+    "holai/generated/ind_defs.lisp": "bcdc6fe5dc00a16ee21911605f5e5044f0d4b0f0fffb9c6eddb0140d2b85b063",
+    "holai/generated/class.lisp": "57d95a206f06bc93f2d1379faa2d7c81db9f3d146f31f3c702b9c61cf7cfc8c1",
+    "holai/generated/trivia.lisp": "9cf3a233d55423a765c632e66dd9184e6e7a629e451d104df075ec72988442a0",
+    "holai/generated/canon.lisp": "b9f05169d57d0bca291b89dd194513deeefbe71ee4fefba939bc32f45c34f210",
+    "holai/generated/meson.lisp": "c77caa5c3dd5eff5bcc486733cd47208c56e0cdf0d32d48ef580485da682f2e8",
+    "holai/generated/firstorder.lisp": "58941364e51876a23fd7d6288a174d99130f2e73856574492782ae22dd867fd1",
+    "holai/generated/metis.lisp": "9de4224866f920e2b2295da5110be6bfd4f5133a2cf9261de3ec94f81deae4a6",
+    "holai/generated/thecops.lisp": "40f65e758442ebfcc651bb758196bdfb7e08e89fad1d3a05aff3fcac69230633",
+    "holai/generated/quot.lisp": "d65000d88bfcb70ede0f9b8475a7617fc35cf4a40ff4d5409184ce73385f197e",
+    "holai/generated/impconv.lisp": "9b5ad756679ccf26ebb3ff4fab23cfc625e39ba50eadb326f9c86da30aaa9b48",
+    "holai/generated/pair.lisp": "aa9f019c98afe3a67a2d7fa90be1883c17075f97f405b5c18eebaf367f63c4f1",
+    "holai/generated/compute.lisp": "ad0575251edb8fff3ab2d969b38ed41ba51b29b8e2409072c713062224ff8699",
+    "holai/generated/nums.lisp": "55166b8ad031ad8b163fc71bcfed6d55596223e45ba1dd034dc2514eda1eb2e4",
+    "holai/generated/recursion.lisp": "ff45a8d47ce89e4c01d60422afc0ab4d386c6db13ad099d0d5ed7db3e316502c",
+    "holai/generated/arith.lisp": "a512fda05401dd9a459784f8c8af32daeca27d716cdce02b4993903de4478f12",
+    "holai/generated/wf.lisp": "65ee07efe0120b82e2df7a678e239fae2e3bcbec5462e9a50a89f7ece8a06d47",
+    "holai/generated/calc_num.lisp": "5c967a4078340a76562b931ea82b31a362511344e18270b25ae61c836b44b4e4",
+    "holai/generated/normalizer.lisp": "2947177406cdacfe320f083b0a0000818e8c6be88db77fe56117cfe51a9a1e8a",
+    "holai/generated/grobner.lisp": "0926c72e9a995ca7a0645c4e42961900d7923eb78eeea4bb17039e1cadf6b2a9",
+    "holai/generated/ind_types.lisp": "4f5ddefdb4764cbe531057d89703c4aa4732181172085015781c71b1132ef859",
+    "holai/generated/lists.lisp": "77c340c48299ea2d3bb574d86dc2b6161ffc369867a3868f427b6a434928ac98",
+    "holai/generated/realax.lisp": "b02d07f9b257129dd273f6e2996935181f7683155d2acce683cb47a2bbb02a29",
+    "holai/generated/calc_int.lisp": "076e2787ee8abe7e7a20bb2f61f673f0652960c5d38b9e68dce6fc353478f3d3",
+    "holai/generated/realarith.lisp": "8e08e75d7bc04cf1ba205a1fd114cd5f27d2e4bbb92e441a6785163f135916d2",
+    "holai/generated/real.lisp": "61f83e05a77811f7cbe0cf77ce3a6390583b7031084f51d6efd7f7c5b3ba97ff",
+    "holai/generated/calc_rat.lisp": "961e5e361d175b78ba6a362dcaae69748abb93b2edc988bf801933d1fcd01e54",
+    "holai/generated/int.lisp": "9a242e2f61e1351387eb3f6ecdc5818fe96875a4e35bb8a5c7a2b68cc76c157f",
+    "holai/generated/sets.lisp": "d1b089cc988d18d4ac80c64f1bde86b2130d98e46d726ad295a50d68f91d6b0e",
+    "holai/generated/iterate.lisp": "8a381ef40c7e263ab041517e09499f190f225d4eaecf346f67fd453bd0fec530",
+    "holai/generated/cart.lisp": "29aaa6daa98f030e5d3f0221cef92b379a1b8ff2c1e1e810966cf5349756d7ce",
+    "holai/generated/define.lisp": "80924bbc1b438b114151cb914c511ed3e35f41311a8775312cc48981059cff18"
+  },
+  "audit_complete": true,
+  "exit_code": 0,
+  "scope": "5 runtime files, all 46 inferred production core files, and inferred holai/all entry; compiler diagnostics scoped to COMPILE-OP including compile-time evaluation; load/initialization diagnostics separate; pinned upstream unchanged"
+}

@@ -1212,7 +1212,7 @@
     REAL_ADD_LDISTRIB
     REAL_ADD_ASSOC
     real_abs)
-  (:shadowing-import-from :holai.runtime tuple lambdac)
+  (:shadowing-import-from :holai.runtime tuple proof lambdac)
   (:shadowing-import-from
     :holai.simp
     SIMP_TAC
@@ -1669,7 +1669,7 @@
   (prove
     (tuple
       (parse_term "!m n. m <= n ==> (&n - &m = &(n - m))")
-      (holai.runtime:proof (REPEAT #'GEN_TAC)
+      (proof (REPEAT #'GEN_TAC)
         THEN (REWRITE_TAC (cl:cons LE_EXISTS nil))
         THEN #'STRIP_TAC
         THEN (#`ASM_REWRITE_TAC (cl:cons ADD_SUB2 nil))
@@ -1684,7 +1684,7 @@
   (prove
     (tuple
       (parse_term "!m n. &m - &n = if n <= m then &(m - n) else -- &(n - m)")
-      (holai.runtime:proof (REPEAT #'GEN_TAC)
+      (proof (REPEAT #'GEN_TAC)
         THEN COND_CASES_TAC
         THEN (#`ASM_SIMP_TAC (cl:cons REAL_OF_NUM_SUB nil))
         THEN (GEN_REWRITE_TAC LAND_CONV (cl:cons (#`GSYM REAL_NEG_SUB) nil))
@@ -1737,7 +1737,7 @@
         "(m * n = n * m) /\\
    ((m * n) * p = m * (n * p)) /\\
    (m * (n * p) = n * (m * p))")
-      (holai.runtime:proof (REWRITE_TAC
+      (proof (REWRITE_TAC
           (cl:cons REAL_MUL_ASSOC (cl:cons (#`EQT_INTRO (SPEC_ALL REAL_MUL_SYM)) nil)))
         THEN AP_THM_TAC
         THEN AP_TERM_TAC
@@ -1753,7 +1753,7 @@
   (prove
     (tuple
       (parse_term "!x y z. y < z ==> x + y < x + z")
-      (holai.runtime:proof (REPEAT #'GEN_TAC)
+      (proof (REPEAT #'GEN_TAC)
         THEN (#`CONV_TAC CONTRAPOS_CONV)
         THEN (REWRITE_TAC (cl:cons real_lt nil))
         THEN (DISCH_THEN (o #'MP_TAC (MATCH_MP REAL_LE_LADD_IMP)))
@@ -1766,7 +1766,7 @@
   (prove
     (tuple
       (parse_term "!x y. &0 < x /\\ &0 < y ==> &0 < x * y")
-      (holai.runtime:proof (REPEAT #'GEN_TAC)
+      (proof (REPEAT #'GEN_TAC)
         THEN (REWRITE_TAC (cl:cons REAL_LT_LE nil))
         THEN (#`CONV_TAC (#`ONCE_DEPTH_CONV #'SYM_CONV))
         THEN #'STRIP_TAC
@@ -2207,7 +2207,7 @@
   (prove
     (tuple
       (parse_term "!x y. abs(x * y) = abs(x) * abs(y)")
-      (holai.runtime:proof (REPEAT #'GEN_TAC)
+      (proof (REPEAT #'GEN_TAC)
         THEN (DISJ_CASES_TAC (#`SPEC (parse_term "x:real") REAL_LE_NEGTOTAL))
         THENL
           (cl:cons
@@ -2218,8 +2218,7 @@
                 (cl:cons (#`GSYM REAL_ABS_NEG) nil))
               nil))
         THEN
-          (holai.runtime:proof (DISJ_CASES_TAC
-              (#`SPEC (parse_term "y:real") REAL_LE_NEGTOTAL))
+          (proof (DISJ_CASES_TAC (#`SPEC (parse_term "y:real") REAL_LE_NEGTOTAL))
             THENL
               (cl:cons
                 #'ALL_TAC
@@ -2252,7 +2251,7 @@
   (prove
     (tuple
       (parse_term "!x n. &0 <= x ==> &0 <= x pow n")
-      (holai.runtime:proof (REPEAT #'STRIP_TAC)
+      (proof (REPEAT #'STRIP_TAC)
         THEN (SPEC_TAC (tuple (parse_term "n:num") (parse_term "n:num")))
         THEN INDUCT_TAC
         THEN (REWRITE_TAC (cl:cons real_pow (cl:cons REAL_POS nil)))
@@ -2263,7 +2262,7 @@
   (prove
     (tuple
       (parse_term "!x n. &0 < x ==> &0 < x pow n")
-      (holai.runtime:proof (REPEAT #'STRIP_TAC)
+      (proof (REPEAT #'STRIP_TAC)
         THEN (SPEC_TAC (tuple (parse_term "n:num") (parse_term "n:num")))
         THEN INDUCT_TAC
         THEN (REWRITE_TAC (cl:cons real_pow (cl:cons REAL_LT_01 nil)))
@@ -2274,7 +2273,7 @@
   (prove
     (tuple
       (parse_term "!x n. abs(x pow n) = abs(x) pow n")
-      (holai.runtime:proof #'GEN_TAC
+      (proof #'GEN_TAC
         THEN INDUCT_TAC
         THEN
           (#`ASM_REWRITE_TAC
@@ -2284,7 +2283,7 @@
   (prove
     (tuple
       (parse_term "!x y z. &0 <= x /\\ y <= z ==> x * y <= x * z")
-      (holai.runtime:proof (ONCE_REWRITE_TAC
+      (proof (ONCE_REWRITE_TAC
           (cl:cons (#`REAL_ARITH (parse_term "x <= y <=> &0 <= y - x")) nil))
         THEN
           (REWRITE_TAC
@@ -2302,7 +2301,7 @@
   (prove
     (tuple
       (parse_term "!x y z. &0 < x /\\ y < z ==> x * y < x * z")
-      (holai.runtime:proof (ONCE_REWRITE_TAC
+      (proof (ONCE_REWRITE_TAC
           (cl:cons (#`REAL_ARITH (parse_term "x < y <=> &0 < y - x")) nil))
         THEN
           (REWRITE_TAC
@@ -2320,7 +2319,7 @@
   (prove
     (tuple
       (parse_term "!x y z. (x * y = x * z) <=> (x = &0) \\/ (y = z)")
-      (holai.runtime:proof (REPEAT #'GEN_TAC)
+      (proof (REPEAT #'GEN_TAC)
         THEN
           (ONCE_REWRITE_TAC
             (cl:cons (#`REAL_ARITH (parse_term "(x = y) <=> (x - y = &0)")) nil))
@@ -2334,7 +2333,7 @@
   (prove
     (tuple
       (parse_term "!x y z. (x * z = y * z) <=> (x = y) \\/ (z = &0)")
-      (holai.runtime:proof (ONCE_REWRITE_TAC (cl:cons REAL_MUL_SYM nil))
+      (proof (ONCE_REWRITE_TAC (cl:cons REAL_MUL_SYM nil))
         THEN (REWRITE_TAC (cl:cons REAL_EQ_MUL_LCANCEL nil))
         THEN (MESON_TAC nil)))))
 
@@ -2342,7 +2341,7 @@
   (prove
     (tuple
       (parse_term "!x y. (x * y = &1) ==> (inv(y) = x)")
-      (holai.runtime:proof (REPEAT #'GEN_TAC)
+      (proof (REPEAT #'GEN_TAC)
         THEN (ASM_CASES_TAC (parse_term "y = &0"))
         THEN
           (#`ASM_REWRITE_TAC
@@ -2355,14 +2354,14 @@
   (prove
     (tuple
       (parse_term "!x y. (x * y = &1) ==> (inv(x) = y)")
-      (holai.runtime:proof (ONCE_REWRITE_TAC (cl:cons REAL_MUL_SYM nil))
+      (proof (ONCE_REWRITE_TAC (cl:cons REAL_MUL_SYM nil))
         THEN (#`MATCH_ACCEPT_TAC REAL_MUL_LINV_UNIQ)))))
 
 (defparameter REAL_INV_INV
   (prove
     (tuple
       (parse_term "!x. inv(inv x) = x")
-      (holai.runtime:proof #'GEN_TAC
+      (proof #'GEN_TAC
         THEN (ASM_CASES_TAC (parse_term "x = &0"))
         THEN (#`ASM_REWRITE_TAC (cl:cons REAL_INV_0 nil))
         THEN (MATCH_MP_TAC REAL_MUL_RINV_UNIQ)
@@ -2379,7 +2378,7 @@
   (prove
     (tuple
       (parse_term "!x. inv(x) = &0 <=> x = &0")
-      (holai.runtime:proof #'GEN_TAC
+      (proof #'GEN_TAC
         THEN #'EQ_TAC
         THEN DISCH_TAC
         THEN (#`ASM_REWRITE_TAC (cl:cons REAL_INV_0 nil))
@@ -2390,7 +2389,7 @@
   (prove
     (tuple
       (parse_term "!x. &0 < x ==> &0 < inv(x)")
-      (holai.runtime:proof #'GEN_TAC
+      (proof #'GEN_TAC
         THEN
           (REPEAT_TCL
             DISJ_CASES_THEN
@@ -2399,22 +2398,20 @@
         THEN (#`ASM_REWRITE_TAC nil)
         THENL
           (cl:cons
-            (holai.runtime:proof (RULE_ASSUM_TAC
-                (REWRITE_RULE (cl:cons REAL_INV_EQ_0 nil)))
+            (proof (RULE_ASSUM_TAC (REWRITE_RULE (cl:cons REAL_INV_EQ_0 nil)))
               THEN (#`ASM_REWRITE_TAC nil))
             (cl:cons
-              (holai.runtime:proof DISCH_TAC
+              (proof DISCH_TAC
                 THEN (SUBGOAL_THEN (parse_term "&0 < --(inv x) * x") #'MP_TAC)
                 THENL
                   (cl:cons
-                    (holai.runtime:proof (MATCH_MP_TAC REAL_LT_MUL)
-                      THEN (#`ASM_REWRITE_TAC nil))
+                    (proof (MATCH_MP_TAC REAL_LT_MUL) THEN (#`ASM_REWRITE_TAC nil))
                     (cl:cons (REWRITE_TAC (cl:cons REAL_MUL_LNEG nil)) nil)))
               nil))
         THEN (SUBGOAL_THEN (parse_term "inv(x) * x = &1") #'SUBST1_TAC)
         THENL
           (cl:cons
-            (holai.runtime:proof (MATCH_MP_TAC REAL_MUL_LINV)
+            (proof (MATCH_MP_TAC REAL_MUL_LINV)
               THEN (UNDISCH_TAC (parse_term "&0 < x"))
               THEN REAL_ARITH_TAC)
             (cl:cons
@@ -2428,7 +2425,7 @@
   (prove
     (tuple
       (parse_term "!x. &0 < inv x <=> &0 < x")
-      (holai.runtime:proof #'GEN_TAC
+      (proof #'GEN_TAC
         THEN #'EQ_TAC
         THEN (REWRITE_TAC (cl:cons REAL_LT_INV nil))
         THEN (GEN_REWRITE_TAC (funpow 2 #'RAND_CONV) (cl:cons (#`GSYM REAL_INV_INV) nil))
@@ -2438,7 +2435,7 @@
   (prove
     (tuple
       (parse_term "!x. inv(--x) = --(inv x)")
-      (holai.runtime:proof #'GEN_TAC
+      (proof #'GEN_TAC
         THEN (ASM_CASES_TAC (parse_term "x = &0"))
         THEN (#`ASM_REWRITE_TAC (cl:cons REAL_NEG_0 (cl:cons REAL_INV_0 nil)))
         THEN (MATCH_MP_TAC REAL_MUL_LINV_UNIQ)
@@ -2452,7 +2449,7 @@
   (prove
     (tuple
       (parse_term "!x. &0 <= inv x <=> &0 <= x")
-      (holai.runtime:proof (REWRITE_TAC
+      (proof (REWRITE_TAC
           (cl:cons REAL_LE_LT (cl:cons REAL_LT_INV_EQ (cl:cons REAL_INV_EQ_0 nil))))
         THEN (MESON_TAC (cl:cons REAL_INV_EQ_0 nil))))))
 
@@ -2466,14 +2463,14 @@
   (prove
     (tuple
       (parse_term "!x. ~(x = &0) ==> (x * inv(x) = &1)")
-      (holai.runtime:proof (ONCE_REWRITE_TAC (cl:cons REAL_MUL_SYM nil))
+      (proof (ONCE_REWRITE_TAC (cl:cons REAL_MUL_SYM nil))
         THEN (REWRITE_TAC (cl:cons REAL_MUL_LINV nil))))))
 
 (defparameter REAL_INV_1
   (prove
     (tuple
       (parse_term "inv(&1) = &1")
-      (holai.runtime:proof (MATCH_MP_TAC REAL_MUL_RINV_UNIQ)
+      (proof (MATCH_MP_TAC REAL_MUL_RINV_UNIQ)
         THEN (REWRITE_TAC (cl:cons REAL_MUL_LID nil))))))
 
 (defparameter REAL_INV_EQ_1
@@ -2492,8 +2489,7 @@
   (prove
     (tuple
       (parse_term "!x. ~(x = &0) ==> (x / x = &1)")
-      (holai.runtime:proof #'GEN_TAC
-        THEN (REWRITE_TAC (cl:cons real_div (cl:cons REAL_MUL_RINV nil)))))))
+      (proof #'GEN_TAC THEN (REWRITE_TAC (cl:cons real_div (cl:cons REAL_MUL_RINV nil)))))))
 
 (defparameter REAL_DIV_RMUL
   (prove
@@ -2510,14 +2506,14 @@
   (prove
     (tuple
       (parse_term "!x y. ~(y = &0) ==> (y * (x / y) = x)")
-      (holai.runtime:proof (ONCE_REWRITE_TAC (cl:cons REAL_MUL_SYM nil))
+      (proof (ONCE_REWRITE_TAC (cl:cons REAL_MUL_SYM nil))
         THEN (REWRITE_TAC (cl:cons REAL_DIV_RMUL nil))))))
 
 (defparameter REAL_DIV_EQ_1
   (prove
     (tuple
       (parse_term "!x y:real. x / y = &1 <=> x = y /\\ ~(x = &0) /\\ ~(y = &0)")
-      (holai.runtime:proof (REPEAT #'GEN_TAC)
+      (proof (REPEAT #'GEN_TAC)
         THEN (REWRITE_TAC (cl:cons real_div nil))
         THEN (ASM_CASES_TAC (parse_term "x = &0"))
         THEN (#`ASM_REWRITE_TAC (cl:cons REAL_MUL_LZERO nil))
@@ -2533,7 +2529,7 @@
   (prove
     (tuple
       (parse_term "!x. abs(inv x) = inv(abs x)")
-      (holai.runtime:proof #'GEN_TAC
+      (proof #'GEN_TAC
         THEN (#`CONV_TAC #'SYM_CONV)
         THEN (ASM_CASES_TAC (parse_term "x = &0"))
         THEN (#`ASM_REWRITE_TAC (cl:cons REAL_INV_0 (cl:cons REAL_ABS_0 nil)))
@@ -2552,7 +2548,7 @@
   (prove
     (tuple
       (parse_term "!x y. inv(x * y) = inv(x) * inv(y)")
-      (holai.runtime:proof (REPEAT #'GEN_TAC)
+      (proof (REPEAT #'GEN_TAC)
         THEN
           (MAP_EVERY
             #'ASM_CASES_TAC
@@ -2573,7 +2569,7 @@
   (prove
     (tuple
       (parse_term "!x y. inv(x / y) = y / x")
-      (holai.runtime:proof (REWRITE_TAC
+      (proof (REWRITE_TAC
           (cl:cons real_div (cl:cons REAL_INV_INV (cl:cons REAL_INV_MUL nil))))
         THEN (#`MATCH_ACCEPT_TAC REAL_MUL_SYM)))))
 
@@ -2581,7 +2577,7 @@
   (prove
     (tuple
       (parse_term "!x y n. (x * y) pow n = (x pow n) * (y pow n)")
-      (holai.runtime:proof #'GEN_TAC
+      (proof #'GEN_TAC
         THEN #'GEN_TAC
         THEN INDUCT_TAC
         THEN
@@ -2592,7 +2588,7 @@
   (prove
     (tuple
       (parse_term "!x n. (inv x) pow n = inv(x pow n)")
-      (holai.runtime:proof #'GEN_TAC
+      (proof #'GEN_TAC
         THEN INDUCT_TAC
         THEN
           (#`ASM_REWRITE_TAC
@@ -2620,7 +2616,7 @@
   (prove
     (tuple
       (parse_term "!x m n. x pow (m + n) = x pow m * x pow n")
-      (holai.runtime:proof #'GEN_TAC
+      (proof #'GEN_TAC
         THEN INDUCT_TAC
         THEN
           (#`ASM_REWRITE_TAC
@@ -2632,7 +2628,7 @@
   (prove
     (tuple
       (parse_term "!x n. ~(x = &0) ==> ~(x pow n = &0)")
-      (holai.runtime:proof #'GEN_TAC
+      (proof #'GEN_TAC
         THEN INDUCT_TAC
         THEN (REWRITE_TAC (cl:cons real_pow (cl:cons REAL_OF_NUM_EQ (cl:cons ARITH nil))))
         THEN (#`ASM_MESON_TAC (cl:cons REAL_ENTIRE nil))))))
@@ -2641,7 +2637,7 @@
   (prove
     (tuple
       (parse_term "!x m n. ~(x = &0) /\\ m <= n ==> (x pow (n - m) = x pow n / x pow m)")
-      (holai.runtime:proof (REPEAT #'GEN_TAC)
+      (proof (REPEAT #'GEN_TAC)
         THEN (DISCH_THEN (CONJUNCTS_THEN2 ASSUME_TAC #'MP_TAC))
         THEN (REWRITE_TAC (cl:cons LE_EXISTS nil))
         THEN (DISCH_THEN (CHOOSE_THEN #'SUBST1_TAC))
@@ -2662,11 +2658,10 @@
   (prove
     (tuple
       (parse_term "!x y z. &0 < x /\\ x * y < x * z ==> y < z")
-      (holai.runtime:proof (REPEAT #'GEN_TAC)
+      (proof (REPEAT #'GEN_TAC)
         THEN
           (DISCH_THEN
-            (lambdac (th)
-              (holai.runtime:proof (#`ASSUME_TAC (#`CONJUNCT1 th)) THEN (MP_TAC th))))
+            (lambdac (th) (proof (#`ASSUME_TAC (#`CONJUNCT1 th)) THEN (MP_TAC th))))
         THEN
           (DISCH_THEN
             (o
@@ -2682,14 +2677,14 @@
   (prove
     (tuple
       (parse_term "!x y z. &0 < z /\\ x * z < y * z ==> x < y")
-      (holai.runtime:proof (ONCE_REWRITE_TAC (cl:cons REAL_MUL_SYM nil))
+      (proof (ONCE_REWRITE_TAC (cl:cons REAL_MUL_SYM nil))
         THEN (REWRITE_TAC (cl:cons REAL_LT_LCANCEL_IMP nil))))))
 
 (defparameter REAL_LE_LCANCEL_IMP
   (prove
     (tuple
       (parse_term "!x y z. &0 < x /\\ x * y <= x * z ==> y <= z")
-      (holai.runtime:proof (REPEAT #'GEN_TAC)
+      (proof (REPEAT #'GEN_TAC)
         THEN (REWRITE_TAC (cl:cons REAL_LE_LT (cl:cons REAL_EQ_MUL_LCANCEL nil)))
         THEN (ASM_CASES_TAC (parse_term "x = &0"))
         THEN (#`ASM_REWRITE_TAC (cl:cons REAL_LT_REFL nil))
@@ -2704,7 +2699,7 @@
   (prove
     (tuple
       (parse_term "!x y z. &0 < z /\\ x * z <= y * z ==> x <= y")
-      (holai.runtime:proof (ONCE_REWRITE_TAC (cl:cons REAL_MUL_SYM nil))
+      (proof (ONCE_REWRITE_TAC (cl:cons REAL_MUL_SYM nil))
         THEN (REWRITE_TAC (cl:cons REAL_LE_LCANCEL_IMP nil))))))
 
 (defparameter REAL_LE_RMUL_EQ
@@ -2758,7 +2753,7 @@
   (prove
     (tuple
       (parse_term "!x y. &0 < x * y <=> &0 < x /\\ &0 < y \\/ x < &0 /\\ y < &0")
-      (holai.runtime:proof (REPEAT #'STRIP_TAC)
+      (proof (REPEAT #'STRIP_TAC)
         THEN (#`STRIP_ASSUME_TAC (#`SPEC (parse_term "x:real") REAL_LT_NEGTOTAL))
         THEN (#`STRIP_ASSUME_TAC (#`SPEC (parse_term "y:real") REAL_LT_NEGTOTAL))
         THEN
@@ -2774,7 +2769,7 @@
       (parse_term
         "!x y. &0 <= x * y <=>
          x = &0 \\/ y = &0 \\/ &0 < x /\\ &0 < y \\/ x < &0 /\\ y < &0")
-      (holai.runtime:proof (REWRITE_TAC
+      (proof (REWRITE_TAC
           (cl:cons (#`REAL_ARITH (parse_term "&0 <= x <=> x = &0 \\/ &0 < x")) nil))
         THEN (REWRITE_TAC (cl:cons REAL_MUL_POS_LT (cl:cons REAL_ENTIRE nil)))
         THEN REAL_ARITH_TAC))))
@@ -2783,7 +2778,7 @@
   (prove
     (tuple
       (parse_term "!x y z. &0 < z ==> (x <= y / z <=> x * z <= y)")
-      (holai.runtime:proof (REPEAT #'STRIP_TAC)
+      (proof (REPEAT #'STRIP_TAC)
         THEN
           (FIRST_ASSUM
             (lambdac (th)
@@ -2804,7 +2799,7 @@
   (prove
     (tuple
       (parse_term "!x y z. &0 < z ==> (x / z <= y <=> x <= y * z)")
-      (holai.runtime:proof (REPEAT #'STRIP_TAC)
+      (proof (REPEAT #'STRIP_TAC)
         THEN
           (FIRST_ASSUM
             (lambdac (th)
@@ -2837,14 +2832,14 @@
   (prove
     (tuple
       (parse_term "!x y z. &0 < z ==> ((x = y / z) <=> (x * z = y))")
-      (holai.runtime:proof (REWRITE_TAC (cl:cons (#`GSYM REAL_LE_ANTISYM) nil))
+      (proof (REWRITE_TAC (cl:cons (#`GSYM REAL_LE_ANTISYM) nil))
         THEN (SIMP_TAC (cl:cons REAL_LE_RDIV_EQ (cl:cons REAL_LE_LDIV_EQ nil)))))))
 
 (defparameter REAL_EQ_LDIV_EQ
   (prove
     (tuple
       (parse_term "!x y z. &0 < z ==> ((x / z = y) <=> (x = y * z))")
-      (holai.runtime:proof (REWRITE_TAC (cl:cons (#`GSYM REAL_LE_ANTISYM) nil))
+      (proof (REWRITE_TAC (cl:cons (#`GSYM REAL_LE_ANTISYM) nil))
         THEN (SIMP_TAC (cl:cons REAL_LE_RDIV_EQ (cl:cons REAL_LE_LDIV_EQ nil)))))))
 
 (defparameter REAL_LT_DIV2_EQ
@@ -2865,7 +2860,7 @@
   (prove
     (tuple
       (parse_term "!x n. (x pow n = &0) <=> (x = &0) /\\ ~(n = 0)")
-      (holai.runtime:proof #'GEN_TAC
+      (proof #'GEN_TAC
         THEN INDUCT_TAC
         THEN
           (#`ASM_REWRITE_TAC
@@ -2878,7 +2873,7 @@
       (parse_term
         "!w x y z. &0 <= w /\\ w <= x /\\ &0 <= y /\\ y <= z
              ==> w * y <= x * z")
-      (holai.runtime:proof (REPEAT #'STRIP_TAC)
+      (proof (REPEAT #'STRIP_TAC)
         THEN (MATCH_MP_TAC REAL_LE_TRANS)
         THEN (#`EXISTS_TAC (parse_term "w * z"))
         THEN #'CONJ_TAC
@@ -2895,7 +2890,7 @@
       (parse_term
         "!w x y z. &0 <= w /\\ w < x /\\ &0 <= y /\\ y < z
              ==> w * y < x * z")
-      (holai.runtime:proof (REPEAT #'STRIP_TAC)
+      (proof (REPEAT #'STRIP_TAC)
         THEN (MATCH_MP_TAC REAL_LET_TRANS)
         THEN (#`EXISTS_TAC (parse_term "w * z"))
         THEN #'CONJ_TAC
@@ -2904,10 +2899,9 @@
         THEN (#`ASM_REWRITE_TAC nil)
         THENL
           (cl:cons
-            (holai.runtime:proof (MATCH_MP_TAC REAL_LT_IMP_LE)
-              THEN (#`ASM_REWRITE_TAC nil))
+            (proof (MATCH_MP_TAC REAL_LT_IMP_LE) THEN (#`ASM_REWRITE_TAC nil))
             (cl:cons
-              (holai.runtime:proof (MATCH_MP_TAC REAL_LET_TRANS)
+              (proof (MATCH_MP_TAC REAL_LET_TRANS)
                 THEN (#`EXISTS_TAC (parse_term "y:real"))
                 THEN (#`ASM_REWRITE_TAC nil))
               nil))))))
@@ -2916,7 +2910,7 @@
   (prove
     (tuple
       (parse_term "!x. (&0 < x * x) <=> ~(x = &0)")
-      (holai.runtime:proof #'GEN_TAC
+      (proof #'GEN_TAC
         THEN (REWRITE_TAC (cl:cons REAL_LT_LE (cl:cons REAL_LE_SQUARE nil)))
         THEN (GEN_REWRITE_TAC (o LAND_CONV #'RAND_CONV) (cl:cons EQ_SYM_EQ nil))
         THEN (REWRITE_TAC (cl:cons REAL_ENTIRE nil))))))
@@ -2925,41 +2919,41 @@
   (prove
     (tuple
       (parse_term "!x. x pow 1 = x")
-      (holai.runtime:proof (REWRITE_TAC (cl:cons (#`num_CONV (parse_term "1")) nil))
+      (proof (REWRITE_TAC (cl:cons (#`num_CONV (parse_term "1")) nil))
         THEN (REWRITE_TAC (cl:cons real_pow (cl:cons REAL_MUL_RID nil)))))))
 
 (defparameter REAL_POW_ONE
   (prove
     (tuple
       (parse_term "!n. &1 pow n = &1")
-      (holai.runtime:proof INDUCT_TAC
+      (proof INDUCT_TAC
         THEN (#`ASM_REWRITE_TAC (cl:cons real_pow (cl:cons REAL_MUL_LID nil)))))))
 
 (defparameter REAL_LT_INV2
   (prove
     (tuple
       (parse_term "!x y. &0 < x /\\ x < y ==> inv(y) < inv(x)")
-      (holai.runtime:proof (REPEAT #'STRIP_TAC)
+      (proof (REPEAT #'STRIP_TAC)
         THEN (MATCH_MP_TAC REAL_LT_RCANCEL_IMP)
         THEN (#`EXISTS_TAC (parse_term "x * y"))
         THEN #'CONJ_TAC
         THENL
           (cl:cons
-            (holai.runtime:proof (MATCH_MP_TAC REAL_LT_MUL)
+            (proof (MATCH_MP_TAC REAL_LT_MUL)
               THEN (POP_ASSUM_LIST (o #'MP_TAC (end_itlist CONJ)))
               THEN REAL_ARITH_TAC)
             (cl:cons
-              (holai.runtime:proof (SUBGOAL_THEN
+              (proof (SUBGOAL_THEN
                   (parse_term "(inv x * x = &1) /\\ (inv y * y = &1)")
                   ASSUME_TAC)
                 THENL
                   (cl:cons
-                    (holai.runtime:proof #'CONJ_TAC
+                    (proof #'CONJ_TAC
                       THEN (MATCH_MP_TAC REAL_MUL_LINV)
                       THEN (POP_ASSUM_LIST (o #'MP_TAC (end_itlist CONJ)))
                       THEN REAL_ARITH_TAC)
                     (cl:cons
-                      (holai.runtime:proof (#`ASM_REWRITE_TAC
+                      (proof (#`ASM_REWRITE_TAC
                           (cl:cons REAL_MUL_ASSOC (cl:cons REAL_MUL_LID nil)))
                         THEN
                           (GEN_REWRITE_TAC
@@ -2975,7 +2969,7 @@
   (prove
     (tuple
       (parse_term "!x y. &0 < x /\\ x <= y ==> inv(y) <= inv(x)")
-      (holai.runtime:proof (REPEAT #'GEN_TAC)
+      (proof (REPEAT #'GEN_TAC)
         THEN (REWRITE_TAC (cl:cons REAL_LE_LT nil))
         THEN (ASM_CASES_TAC (parse_term "x:real = y"))
         THEN (#`ASM_REWRITE_TAC nil)
@@ -2988,7 +2982,7 @@
   (prove
     (tuple
       (parse_term "!x y. &0 < y /\\ inv y < x ==> inv x < y")
-      (holai.runtime:proof (REPEAT #'STRIP_TAC)
+      (proof (REPEAT #'STRIP_TAC)
         THEN (MP_TAC (#`SPEC (parse_term "y:real") REAL_LT_INV))
         THEN (#`ASM_REWRITE_TAC nil)
         THEN DISCH_TAC
@@ -3003,7 +2997,7 @@
   (prove
     (tuple
       (parse_term "!x y. &0 < x /\\ x < inv y ==> y < inv x")
-      (holai.runtime:proof (REPEAT #'STRIP_TAC)
+      (proof (REPEAT #'STRIP_TAC)
         THEN (MP_TAC (#`SPEC (parse_term "x:real") REAL_LT_INV))
         THEN (#`ASM_REWRITE_TAC nil)
         THEN DISCH_TAC
@@ -3018,7 +3012,7 @@
   (prove
     (tuple
       (parse_term "!x y. &0 < y /\\ inv y <= x ==> inv x <= y")
-      (holai.runtime:proof (REPEAT #'STRIP_TAC)
+      (proof (REPEAT #'STRIP_TAC)
         THEN (MP_TAC (#`SPEC (parse_term "y:real") REAL_LT_INV))
         THEN (#`ASM_REWRITE_TAC nil)
         THEN DISCH_TAC
@@ -3033,7 +3027,7 @@
   (prove
     (tuple
       (parse_term "!x y. &0 < x /\\ x <= inv y ==> y <= inv x")
-      (holai.runtime:proof (REPEAT #'STRIP_TAC)
+      (proof (REPEAT #'STRIP_TAC)
         THEN (MP_TAC (#`SPEC (parse_term "x:real") REAL_LT_INV))
         THEN (#`ASM_REWRITE_TAC nil)
         THEN DISCH_TAC
@@ -3048,7 +3042,7 @@
   (prove
     (tuple
       (parse_term "!x. &1 <= x ==> inv(x) <= &1")
-      (holai.runtime:proof (REPEAT #'STRIP_TAC)
+      (proof (REPEAT #'STRIP_TAC)
         THEN (ONCE_REWRITE_TAC (cl:cons (#`GSYM REAL_INV_1) nil))
         THEN (MATCH_MP_TAC REAL_LE_INV2)
         THEN (#`ASM_REWRITE_TAC (cl:cons REAL_LT_01 nil))))))
@@ -3057,7 +3051,7 @@
   (prove
     (tuple
       (parse_term "!x. &0 < x /\\ x <= &1 ==> &1 <= inv(x)")
-      (holai.runtime:proof (REPEAT #'STRIP_TAC)
+      (proof (REPEAT #'STRIP_TAC)
         THEN (ONCE_REWRITE_TAC (cl:cons (#`GSYM REAL_INV_1) nil))
         THEN (MATCH_MP_TAC REAL_LE_INV2)
         THEN (#`ASM_REWRITE_TAC (cl:cons REAL_LT_01 nil))))))
@@ -3066,7 +3060,7 @@
   (prove
     (tuple
       (parse_term "!x. &1 < x ==> inv(x) < &1")
-      (holai.runtime:proof (REPEAT #'STRIP_TAC)
+      (proof (REPEAT #'STRIP_TAC)
         THEN (ONCE_REWRITE_TAC (cl:cons (#`GSYM REAL_INV_1) nil))
         THEN (MATCH_MP_TAC REAL_LT_INV2)
         THEN (#`ASM_REWRITE_TAC (cl:cons REAL_LT_01 nil))))))
@@ -3075,7 +3069,7 @@
   (prove
     (tuple
       (parse_term "!x. &0 < x /\\ x < &1 ==> &1 < inv(x)")
-      (holai.runtime:proof (REPEAT #'STRIP_TAC)
+      (proof (REPEAT #'STRIP_TAC)
         THEN (ONCE_REWRITE_TAC (cl:cons (#`GSYM REAL_INV_1) nil))
         THEN (MATCH_MP_TAC REAL_LT_INV2)
         THEN (#`ASM_REWRITE_TAC (cl:cons REAL_LT_01 nil))))))
@@ -3085,7 +3079,7 @@
     (tuple
       (parse_term
         "!x y. ~(x = &0) /\\ ~(y = &0) ==> (inv(x) - inv(y) = (y - x) / (x * y))")
-      (holai.runtime:proof (REWRITE_TAC
+      (proof (REWRITE_TAC
           (cl:cons real_div (cl:cons REAL_SUB_RDISTRIB (cl:cons REAL_INV_MUL nil))))
         THEN
           (SIMP_TAC
@@ -3098,7 +3092,7 @@
   (prove
     (tuple
       (parse_term "!d. &0 < d ==> ?e. &0 < e /\\ e < d")
-      (holai.runtime:proof #'GEN_TAC
+      (proof #'GEN_TAC
         THEN DISCH_TAC
         THEN (#`EXISTS_TAC (parse_term "d / &2"))
         THEN (#`ASSUME_TAC (#`REAL_ARITH (parse_term "&0 < &2")))
@@ -3119,7 +3113,7 @@
   (prove
     (tuple
       (parse_term "!d1 d2. &0 < d1 /\\ &0 < d2 ==> ?e. &0 < e /\\ e < d1 /\\ e < d2")
-      (holai.runtime:proof (REPEAT #'GEN_TAC)
+      (proof (REPEAT #'GEN_TAC)
         THEN #'STRIP_TAC
         THEN
           (DISJ_CASES_TAC
@@ -3140,7 +3134,7 @@
   (prove
     (tuple
       (parse_term "!n x y. &0 <= x /\\ x <= y ==> x pow n <= y pow n")
-      (holai.runtime:proof INDUCT_TAC
+      (proof INDUCT_TAC
         THEN (REWRITE_TAC (cl:cons real_pow (cl:cons REAL_LE_REFL nil)))
         THEN (REPEAT #'STRIP_TAC)
         THEN (MATCH_MP_TAC REAL_LE_MUL2)
@@ -3148,17 +3142,16 @@
         THEN #'CONJ_TAC
         THENL
           (cl:cons
-            (holai.runtime:proof (MATCH_MP_TAC REAL_POW_LE) THEN (#`ASM_REWRITE_TAC nil))
+            (proof (MATCH_MP_TAC REAL_POW_LE) THEN (#`ASM_REWRITE_TAC nil))
             (cl:cons
-              (holai.runtime:proof (FIRST_ASSUM #'MATCH_MP_TAC)
-                THEN (#`ASM_REWRITE_TAC nil))
+              (proof (FIRST_ASSUM #'MATCH_MP_TAC) THEN (#`ASM_REWRITE_TAC nil))
               nil))))))
 
 (defparameter REAL_POW_LE_1
   (prove
     (tuple
       (parse_term "!n x. &1 <= x ==> &1 <= x pow n")
-      (holai.runtime:proof (REPEAT #'STRIP_TAC)
+      (proof (REPEAT #'STRIP_TAC)
         THEN
           (MP_TAC
             (SPECL
@@ -3172,7 +3165,7 @@
   (prove
     (tuple
       (parse_term "!n x. &0 <= x /\\ x <= &1 ==> x pow n <= &1")
-      (holai.runtime:proof (REPEAT #'STRIP_TAC)
+      (proof (REPEAT #'STRIP_TAC)
         THEN
           (MP_TAC
             (SPECL
@@ -3186,7 +3179,7 @@
   (prove
     (tuple
       (parse_term "!m n x. &1 <= x /\\ m <= n ==> x pow m <= x pow n")
-      (holai.runtime:proof (REPEAT #'GEN_TAC)
+      (proof (REPEAT #'GEN_TAC)
         THEN (REWRITE_TAC (cl:cons LE_EXISTS nil))
         THEN (DISCH_THEN (CONJUNCTS_THEN2 ASSUME_TAC #'MP_TAC))
         THEN (DISCH_THEN (X_CHOOSE_THEN (parse_term "d:num") #'SUBST1_TAC))
@@ -3196,21 +3189,20 @@
         THEN #'CONJ_TAC
         THENL
           (cl:cons
-            (holai.runtime:proof (MATCH_MP_TAC REAL_LE_TRANS)
+            (proof (MATCH_MP_TAC REAL_LE_TRANS)
               THEN (#`EXISTS_TAC (parse_term "&1"))
               THEN (REWRITE_TAC (cl:cons REAL_OF_NUM_LE (cl:cons ARITH nil)))
               THEN (MATCH_MP_TAC REAL_POW_LE_1)
               THEN (#`ASM_REWRITE_TAC nil))
             (cl:cons
-              (holai.runtime:proof (MATCH_MP_TAC REAL_POW_LE_1)
-                THEN (#`ASM_REWRITE_TAC nil))
+              (proof (MATCH_MP_TAC REAL_POW_LE_1) THEN (#`ASM_REWRITE_TAC nil))
               nil))))))
 
 (defparameter REAL_POW_LT2
   (prove
     (tuple
       (parse_term "!n x y. ~(n = 0) /\\ &0 <= x /\\ x < y ==> x pow n < y pow n")
-      (holai.runtime:proof INDUCT_TAC
+      (proof INDUCT_TAC
         THEN (REWRITE_TAC (cl:cons NOT_SUC (cl:cons real_pow nil)))
         THEN (REPEAT #'STRIP_TAC)
         THEN (ASM_CASES_TAC (parse_term "n = 0"))
@@ -3220,17 +3212,16 @@
         THEN #'CONJ_TAC
         THENL
           (cl:cons
-            (holai.runtime:proof (MATCH_MP_TAC REAL_POW_LE) THEN (#`ASM_REWRITE_TAC nil))
+            (proof (MATCH_MP_TAC REAL_POW_LE) THEN (#`ASM_REWRITE_TAC nil))
             (cl:cons
-              (holai.runtime:proof (FIRST_ASSUM #'MATCH_MP_TAC)
-                THEN (#`ASM_REWRITE_TAC nil))
+              (proof (FIRST_ASSUM #'MATCH_MP_TAC) THEN (#`ASM_REWRITE_TAC nil))
               nil))))))
 
 (defparameter REAL_POW_LT_1
   (prove
     (tuple
       (parse_term "!n x. ~(n = 0) /\\ &1 < x ==> &1 < x pow n")
-      (holai.runtime:proof (REPEAT #'STRIP_TAC)
+      (proof (REPEAT #'STRIP_TAC)
         THEN
           (MP_TAC
             (SPECL
@@ -3244,7 +3235,7 @@
   (prove
     (tuple
       (parse_term "!n x. ~(n = 0) /\\ &0 <= x /\\ x < &1 ==> x pow n < &1")
-      (holai.runtime:proof (REPEAT #'STRIP_TAC)
+      (proof (REPEAT #'STRIP_TAC)
         THEN
           (MP_TAC
             (SPECL
@@ -3258,7 +3249,7 @@
   (prove
     (tuple
       (parse_term "!m n x. &1 < x /\\ m < n ==> x pow m < x pow n")
-      (holai.runtime:proof (REPEAT #'GEN_TAC)
+      (proof (REPEAT #'GEN_TAC)
         THEN (REWRITE_TAC (cl:cons LT_EXISTS nil))
         THEN (DISCH_THEN (CONJUNCTS_THEN2 ASSUME_TAC #'MP_TAC))
         THEN (DISCH_THEN (CHOOSE_THEN #'SUBST_ALL_TAC))
@@ -3268,13 +3259,12 @@
         THEN #'CONJ_TAC
         THENL
           (cl:cons
-            (holai.runtime:proof (MATCH_MP_TAC REAL_POW_LT)
+            (proof (MATCH_MP_TAC REAL_POW_LT)
               THEN (MATCH_MP_TAC REAL_LT_TRANS)
               THEN (#`EXISTS_TAC (parse_term "&1"))
               THEN (#`ASM_REWRITE_TAC (cl:cons REAL_OF_NUM_LT (cl:cons ARITH nil))))
             (cl:cons
-              (holai.runtime:proof (SPEC_TAC
-                  (tuple (parse_term "d:num") (parse_term "d:num")))
+              (proof (SPEC_TAC (tuple (parse_term "d:num") (parse_term "d:num")))
                 THEN INDUCT_TAC
                 THEN (ONCE_REWRITE_TAC (cl:cons real_pow nil))
                 THENL
@@ -3290,7 +3280,7 @@
   (prove
     (tuple
       (parse_term "!x m n. (x pow m) pow n = x pow (m * n)")
-      (holai.runtime:proof #'GEN_TAC
+      (proof #'GEN_TAC
         THEN #'GEN_TAC
         THEN INDUCT_TAC
         THEN
@@ -3301,7 +3291,7 @@
   (prove
     (tuple
       (parse_term "!x y z. ~(z = &0) /\\ (x * z = y * z) ==> (x = y)")
-      (holai.runtime:proof (REPEAT #'GEN_TAC)
+      (proof (REPEAT #'GEN_TAC)
         THEN (ONCE_REWRITE_TAC (cl:cons (#`GSYM REAL_SUB_0) nil))
         THEN
           (REWRITE_TAC
@@ -3314,7 +3304,7 @@
   (prove
     (tuple
       (parse_term "!x y z. ~(z = &0) /\\ (z * x = z * y) ==> (x = y)")
-      (holai.runtime:proof (ONCE_REWRITE_TAC (cl:cons REAL_MUL_SYM nil))
+      (proof (ONCE_REWRITE_TAC (cl:cons REAL_MUL_SYM nil))
         THEN (#`MATCH_ACCEPT_TAC REAL_EQ_RCANCEL_IMP)))))
 
 (defparameter REAL_LT_DIV
@@ -3336,7 +3326,7 @@
         "!x m n. ~(x = &0)
            ==> (x pow m / x pow n = if n <= m then x pow (m - n)
                                     else inv(x pow (n - m)))")
-      (holai.runtime:proof (REPEAT #'STRIP_TAC)
+      (proof (REPEAT #'STRIP_TAC)
         THEN COND_CASES_TAC
         THEN (#`ASM_REWRITE_TAC nil)
         THEN (#`ASM_SIMP_TAC (cl:cons REAL_POW_SUB nil))
@@ -3355,7 +3345,7 @@
         "!x m n. ~(x = &0)
            ==> (x pow m / x pow n = if n < m then x pow (m - n)
                                     else inv(x pow (n - m)))")
-      (holai.runtime:proof (REPEAT #'STRIP_TAC)
+      (proof (REPEAT #'STRIP_TAC)
         THEN (GEN_REWRITE_TAC LAND_CONV (cl:cons (#`GSYM REAL_INV_INV) nil))
         THEN (ONCE_REWRITE_TAC (cl:cons REAL_INV_DIV nil))
         THEN (#`ASM_SIMP_TAC (cl:cons (#`GSYM NOT_LE) (cl:cons REAL_DIV_POW2 nil)))
@@ -3372,7 +3362,7 @@
   (prove
     (tuple
       (parse_term "!n. &1 <= &2 pow n")
-      (holai.runtime:proof #'GEN_TAC
+      (proof #'GEN_TAC
         THEN (MATCH_MP_TAC REAL_LE_TRANS)
         THEN (#`EXISTS_TAC (parse_term "&2 pow 0"))
         THEN
@@ -3386,7 +3376,7 @@
   (prove
     (tuple
       (parse_term "!x. abs(x) pow 2 = x pow 2")
-      (holai.runtime:proof #'GEN_TAC
+      (proof #'GEN_TAC
         THEN (REWRITE_TAC (cl:cons real_abs nil))
         THEN COND_CASES_TAC
         THEN (#`ASM_REWRITE_TAC (cl:cons REAL_POW_NEG (cl:cons ARITH_EVEN nil)))))))
@@ -3395,7 +3385,7 @@
   (prove
     (tuple
       (parse_term "!x y. abs(x) <= abs(y) <=> x pow 2 <= y pow 2")
-      (holai.runtime:proof (REPEAT #'GEN_TAC)
+      (proof (REPEAT #'GEN_TAC)
         THEN (ONCE_REWRITE_TAC (cl:cons (#`GSYM REAL_POW2_ABS) nil))
         THEN
           (MESON_TAC
@@ -3429,7 +3419,7 @@
   (prove
     (tuple
       (parse_term "!x. &0 < x pow 2 <=> ~(x = &0)")
-      (holai.runtime:proof (REWRITE_TAC
+      (proof (REWRITE_TAC
           (cl:cons
             REAL_LE_POW_2
             (cl:cons (#`REAL_ARITH (parse_term "&0 < x <=> &0 <= x /\\ ~(x = &0)")) nil)))
@@ -3439,7 +3429,7 @@
   (prove
     (tuple
       (parse_term "!x y. x pow 2 + y pow 2 = &0 <=> x = &0 /\\ y = &0")
-      (holai.runtime:proof (REPEAT #'GEN_TAC)
+      (proof (REPEAT #'GEN_TAC)
         THEN #'EQ_TAC
         THEN
           (SIMP_TAC
@@ -3457,7 +3447,7 @@
   (prove
     (tuple
       (parse_term "!n. &0 pow n = if n = 0 then &1 else &0")
-      (holai.runtime:proof INDUCT_TAC
+      (proof INDUCT_TAC
         THEN
           (REWRITE_TAC (cl:cons real_pow (cl:cons NOT_SUC (cl:cons REAL_MUL_LZERO nil))))))))
 
@@ -3465,30 +3455,28 @@
   (prove
     (tuple
       (parse_term "!m n x. &0 <= x /\\ x <= &1 /\\ n <= m ==> x pow m <= x pow n")
-      (holai.runtime:proof (REPEAT #'STRIP_TAC)
+      (proof (REPEAT #'STRIP_TAC)
         THEN (ASM_CASES_TAC (parse_term "x = &0"))
         THENL
           (cl:cons
-            (holai.runtime:proof (#`ASM_REWRITE_TAC (cl:cons REAL_POW_ZERO nil))
+            (proof (#`ASM_REWRITE_TAC (cl:cons REAL_POW_ZERO nil))
               THEN
                 (REPEAT
-                  (holai.runtime:proof COND_CASES_TAC
+                  (proof COND_CASES_TAC
                     THEN (REWRITE_TAC (cl:cons REAL_POS (cl:cons REAL_LE_REFL nil)))))
               THEN (UNDISCH_TAC (parse_term "n:num <= m"))
               THEN (#`ASM_REWRITE_TAC (cl:cons LE nil)))
             (cl:cons
-              (holai.runtime:proof (GEN_REWRITE_TAC
-                  #'BINOP_CONV
-                  (cl:cons (#`GSYM REAL_INV_INV) nil))
+              (proof (GEN_REWRITE_TAC #'BINOP_CONV (cl:cons (#`GSYM REAL_INV_INV) nil))
                 THEN (MATCH_MP_TAC REAL_LE_INV2)
                 THEN (REWRITE_TAC (cl:cons (#`GSYM REAL_POW_INV) nil))
                 THEN #'CONJ_TAC
                 THENL
                   (cl:cons
-                    (holai.runtime:proof (MATCH_MP_TAC REAL_POW_LT)
+                    (proof (MATCH_MP_TAC REAL_POW_LT)
                       THEN (REWRITE_TAC (cl:cons REAL_LT_INV_EQ nil)))
                     (cl:cons
-                      (holai.runtime:proof (MATCH_MP_TAC REAL_POW_MONO)
+                      (proof (MATCH_MP_TAC REAL_POW_MONO)
                         THEN (#`ASM_REWRITE_TAC nil)
                         THEN (MATCH_MP_TAC REAL_INV_1_LE))
                       nil))
@@ -3512,14 +3500,14 @@
     (tuple
       (parse_term
         "!n x y. ~(n = 0) /\\ &0 <= x /\\ &0 <= y /\\ x pow n = y pow n ==> x = y")
-      (holai.runtime:proof (REWRITE_TAC (cl:cons (#`GSYM REAL_LE_ANTISYM) nil))
+      (proof (REWRITE_TAC (cl:cons (#`GSYM REAL_LE_ANTISYM) nil))
         THEN (MESON_TAC (cl:cons REAL_POW_LE2_REV nil))))))
 
 (defparameter REAL_POW_EQ_ABS
   (prove
     (tuple
       (parse_term "!n x y. ~(n = 0) /\\ x pow n = y pow n ==> abs x = abs y")
-      (holai.runtime:proof (REPEAT #'STRIP_TAC)
+      (proof (REPEAT #'STRIP_TAC)
         THEN (MATCH_MP_TAC REAL_POW_EQ)
         THEN (#`EXISTS_TAC (parse_term "n:num"))
         THEN
@@ -3529,7 +3517,7 @@
   (prove
     (tuple
       (parse_term "!x n. ~(n = 0) /\\ x pow n = &1 ==> abs(x) = &1")
-      (holai.runtime:proof (REPEAT #'STRIP_TAC)
+      (proof (REPEAT #'STRIP_TAC)
         THEN (GEN_REWRITE_TAC #'RAND_CONV (cl:cons (#`GSYM REAL_ABS_NUM) nil))
         THEN (MATCH_MP_TAC REAL_POW_EQ_ABS)
         THEN (#`EXISTS_TAC (parse_term "n:num"))
@@ -3539,7 +3527,7 @@
   (prove
     (tuple
       (parse_term "!x n. x pow n = &1 <=> abs(x) = &1 /\\ (x < &0 ==> EVEN(n)) \\/ n = 0")
-      (holai.runtime:proof (REPEAT #'GEN_TAC)
+      (proof (REPEAT #'GEN_TAC)
         THEN (ASM_CASES_TAC (parse_term "n = 0"))
         THEN (#`ASM_REWRITE_TAC (cl:cons real_pow nil))
         THEN (ASM_CASES_TAC (parse_term "abs(x) = &1"))
@@ -3562,33 +3550,29 @@
   (prove
     (tuple
       (parse_term "!n x y. x < y /\\ ODD n ==> x pow n < y pow n")
-      (holai.runtime:proof (REPEAT #'GEN_TAC)
+      (proof (REPEAT #'GEN_TAC)
         THEN (ASM_CASES_TAC (parse_term "n = 0"))
         THEN (#`ASM_REWRITE_TAC (cl:cons ARITH nil))
         THEN #'STRIP_TAC
         THEN (DISJ_CASES_TAC (#`SPEC (parse_term "y:real") REAL_LE_NEGTOTAL))
         THENL
           (cl:cons
-            (holai.runtime:proof (DISJ_CASES_TAC
-                (#`REAL_ARITH (parse_term "&0 <= x \\/ &0 < --x")))
+            (proof (DISJ_CASES_TAC (#`REAL_ARITH (parse_term "&0 <= x \\/ &0 < --x")))
               THEN (#`ASM_SIMP_TAC (cl:cons REAL_POW_LT2 nil))
               THEN (SUBGOAL_THEN (parse_term "&0 < --x pow n /\\ &0 <= y pow n") #'MP_TAC)
               THENL
                 (cl:cons
                   (#`ASM_SIMP_TAC (cl:cons REAL_POW_LE (cl:cons REAL_POW_LT nil)))
                   (cl:cons
-                    (holai.runtime:proof (#`ASM_REWRITE_TAC
+                    (proof (#`ASM_REWRITE_TAC
                         (cl:cons REAL_POW_NEG (cl:cons (#`GSYM NOT_ODD) nil)))
                       THEN REAL_ARITH_TAC)
                     nil)))
             (cl:cons
-              (holai.runtime:proof (SUBGOAL_THEN
-                  (parse_term "--y pow n < --x pow n")
-                  #'MP_TAC)
+              (proof (SUBGOAL_THEN (parse_term "--y pow n < --x pow n") #'MP_TAC)
                 THENL
                   (cl:cons
-                    (holai.runtime:proof (MATCH_MP_TAC REAL_POW_LT2)
-                      THEN (#`ASM_REWRITE_TAC nil))
+                    (proof (MATCH_MP_TAC REAL_POW_LT2) THEN (#`ASM_REWRITE_TAC nil))
                     (cl:cons
                       (#`ASM_REWRITE_TAC
                         (cl:cons REAL_POW_NEG (cl:cons (#`GSYM NOT_ODD) nil)))
@@ -3601,7 +3585,7 @@
   (prove
     (tuple
       (parse_term "!n x y. x <= y /\\ ODD n ==> x pow n <= y pow n")
-      (holai.runtime:proof (REWRITE_TAC (cl:cons REAL_LE_LT nil))
+      (proof (REWRITE_TAC (cl:cons REAL_LE_LT nil))
         THEN (REPEAT #'STRIP_TAC)
         THEN (#`ASM_SIMP_TAC (cl:cons REAL_POW_LT2_ODD nil))))))
 
@@ -3637,7 +3621,7 @@
       (parse_term
         "!n x y. x pow n = y pow n <=>
            if EVEN n then n = 0 \\/ abs x = abs y else x = y")
-      (holai.runtime:proof (REPEAT #'GEN_TAC)
+      (proof (REPEAT #'GEN_TAC)
         THEN (ASM_CASES_TAC (parse_term "n = 0"))
         THEN (#`ASM_REWRITE_TAC (cl:cons real_pow (cl:cons ARITH nil)))
         THEN COND_CASES_TAC
@@ -3666,7 +3650,7 @@
   (prove
     (tuple
       (parse_term "!m n. &(m MOD n):real = &m - &(m DIV n) * &n")
-      (holai.runtime:proof (REPEAT #'GEN_TAC)
+      (proof (REPEAT #'GEN_TAC)
         THEN (REWRITE_TAC (cl:cons REAL_EQ_SUB_LADD nil))
         THEN (REWRITE_TAC (cl:cons REAL_OF_NUM_CLAUSES nil))
         THEN (MESON_TAC (cl:cons DIVISION_SIMP (cl:cons ADD_SYM nil)))))))
@@ -3675,7 +3659,7 @@
   (prove
     (tuple
       (parse_term "!m n. &(m DIV n):real = &m / &n - &(m MOD n) / &n")
-      (holai.runtime:proof (REPEAT #'GEN_TAC)
+      (proof (REPEAT #'GEN_TAC)
         THEN (ASM_CASES_TAC (parse_term "n = 0"))
         THENL
           (cl:cons
@@ -3688,7 +3672,7 @@
                     REAL_INV_0
                     (cl:cons REAL_MUL_RZERO (cl:cons REAL_SUB_REFL nil))))))
             (cl:cons
-              (holai.runtime:proof (MATCH_MP_TAC REAL_EQ_LCANCEL_IMP)
+              (proof (MATCH_MP_TAC REAL_EQ_LCANCEL_IMP)
                 THEN (#`EXISTS_TAC (parse_term "&n:real"))
                 THEN
                   (#`ASM_SIMP_TAC
@@ -3710,15 +3694,14 @@
       (parse_term
         "!x y a u v. x < a /\\ y < b /\\ &0 <= u /\\ &0 <= v /\\ u + v = &1
                ==> u * x + v * y < u * a + v * b")
-      (holai.runtime:proof (REPEAT #'GEN_TAC)
+      (proof (REPEAT #'GEN_TAC)
         THEN (ASM_CASES_TAC (parse_term "u = &0"))
         THENL
           (cl:cons
-            (holai.runtime:proof (#`ASM_REWRITE_TAC
-                (cl:cons REAL_MUL_LZERO (cl:cons REAL_ADD_LID nil)))
+            (proof (#`ASM_REWRITE_TAC (cl:cons REAL_MUL_LZERO (cl:cons REAL_ADD_LID nil)))
               THEN (REPEAT #'STRIP_TAC))
             (cl:cons
-              (holai.runtime:proof (REPEAT #'STRIP_TAC)
+              (proof (REPEAT #'STRIP_TAC)
                 THEN (MATCH_MP_TAC REAL_LTE_ADD2)
                 THEN (#`ASM_SIMP_TAC (cl:cons REAL_LE_LMUL (cl:cons REAL_LT_IMP_LE nil))))
               nil))
@@ -3732,7 +3715,7 @@
       (parse_term
         "!x y a u v. x <= a /\\ y <= b /\\ &0 <= u /\\ &0 <= v /\\ u + v = &1
                ==> u * x + v * y <= u * a + v * b")
-      (holai.runtime:proof (REPEAT #'STRIP_TAC)
+      (proof (REPEAT #'STRIP_TAC)
         THEN (MATCH_MP_TAC REAL_LE_ADD2)
         THEN #'CONJ_TAC
         THEN (MATCH_MP_TAC REAL_LE_LMUL)
@@ -3851,8 +3834,7 @@
               (parse_term "(!x. (?n. x = &n) ==> P x) <=> !n. P(&n)")
               (MESON_TAC nil)))))
         (cl:declare (cl:ignorable lemma))
-        (holai.runtime:proof (MP_TAC
-            (#`SPEC (parse_term "\\y. ?n. y = &n") REAL_COMPLETE))
+        (proof (MP_TAC (#`SPEC (parse_term "\\y. ?n. y = &n") REAL_COMPLETE))
           THEN (REWRITE_TAC (cl:cons lemma nil))
           THEN
             (MESON_TAC
@@ -3885,7 +3867,7 @@
   (prove
     (tuple
       (parse_term "!e. &0 < e <=> ?n. ~(n = 0) /\\ &0 < inv(&n) /\\ inv(&n) < e")
-      (holai.runtime:proof #'GEN_TAC
+      (proof #'GEN_TAC
         THEN #'EQ_TAC
         THENL (cl:cons #'ALL_TAC (cl:cons (MESON_TAC (cl:cons REAL_LT_TRANS nil)) nil))
         THEN DISCH_TAC
@@ -3905,7 +3887,7 @@
   (prove
     (tuple
       (parse_term "!x n. &0 <= x ==> &1 + &n * x <= (&1 + x) pow n")
-      (holai.runtime:proof #'GEN_TAC
+      (proof #'GEN_TAC
         THEN (REWRITE_TAC (cl:cons RIGHT_FORALL_IMP_THM nil))
         THEN DISCH_TAC
         THEN INDUCT_TAC
@@ -3938,7 +3920,7 @@
   (prove
     (tuple
       (parse_term "!x y. &1 < x ==> ?n. y < x pow n")
-      (holai.runtime:proof (REPEAT #'STRIP_TAC)
+      (proof (REPEAT #'STRIP_TAC)
         THEN (MP_TAC (#`SPEC (parse_term "x - &1") REAL_ARCH))
         THEN (#`ASM_REWRITE_TAC (cl:cons REAL_SUB_LT nil))
         THEN (DISCH_THEN (o #'MP_TAC (#`SPEC (parse_term "y:real"))))
@@ -3968,7 +3950,7 @@
   (prove
     (tuple
       (parse_term "!x y. &0 < y /\\ x < &1 ==> ?n. x pow n < y")
-      (holai.runtime:proof (REPEAT #'STRIP_TAC)
+      (proof (REPEAT #'STRIP_TAC)
         THEN (ASM_CASES_TAC (parse_term "&0 < x"))
         THENL
           (cl:cons
@@ -4010,27 +3992,25 @@
   (prove
     (tuple
       (parse_term "real_sgn(&0) = &0")
-      (holai.runtime:proof (REWRITE_TAC (cl:cons real_sgn nil)) THEN REAL_ARITH_TAC))))
+      (proof (REWRITE_TAC (cl:cons real_sgn nil)) THEN REAL_ARITH_TAC))))
 
 (defparameter REAL_SGN_NEG
   (prove
     (tuple
       (parse_term "!x. real_sgn(--x) = --(real_sgn x)")
-      (holai.runtime:proof (REWRITE_TAC (cl:cons real_sgn nil)) THEN REAL_ARITH_TAC))))
+      (proof (REWRITE_TAC (cl:cons real_sgn nil)) THEN REAL_ARITH_TAC))))
 
 (defparameter REAL_SGN_ABS
   (prove
     (tuple
       (parse_term "!x. real_sgn(x) * abs(x) = x")
-      (holai.runtime:proof (REWRITE_TAC (cl:cons real_sgn nil)) THEN REAL_ARITH_TAC))))
+      (proof (REWRITE_TAC (cl:cons real_sgn nil)) THEN REAL_ARITH_TAC))))
 
 (defparameter REAL_SGN_ABS_ALT
   (prove
     (tuple
       (parse_term "!x. real_sgn x * x = abs x")
-      (holai.runtime:proof #'GEN_TAC
-        THEN (REWRITE_TAC (cl:cons real_sgn nil))
-        THEN REAL_ARITH_TAC))))
+      (proof #'GEN_TAC THEN (REWRITE_TAC (cl:cons real_sgn nil)) THEN REAL_ARITH_TAC))))
 
 (defparameter REAL_EQ_SGN_ABS
   (prove
@@ -4042,20 +4022,20 @@
   (prove
     (tuple
       (parse_term "!x. abs(real_sgn x) = real_sgn(abs x)")
-      (holai.runtime:proof (REWRITE_TAC (cl:cons real_sgn nil)) THEN REAL_ARITH_TAC))))
+      (proof (REWRITE_TAC (cl:cons real_sgn nil)) THEN REAL_ARITH_TAC))))
 
 (defparameter REAL_SGN%
   (prove
     (tuple
       (parse_term "!x. real_sgn x = x / abs x")
-      (holai.runtime:proof #'GEN_TAC
+      (proof #'GEN_TAC
         THEN (ASM_CASES_TAC (parse_term "x = &0"))
         THENL
           (cl:cons
             (#`ASM_REWRITE_TAC
               (cl:cons real_div (cl:cons REAL_MUL_LZERO (cl:cons REAL_SGN_0 nil))))
             (cl:cons
-              (holai.runtime:proof (GEN_REWRITE_TAC
+              (proof (GEN_REWRITE_TAC
                   (o #'RAND_CONV LAND_CONV)
                   (cl:cons (#`GSYM REAL_SGN_ABS) nil))
                 THEN
@@ -4073,7 +4053,7 @@
   (prove
     (tuple
       (parse_term "!x y. real_sgn(x * y) = real_sgn(x) * real_sgn(y)")
-      (holai.runtime:proof (REWRITE_TAC
+      (proof (REWRITE_TAC
           (cl:cons
             REAL_SGN%
             (cl:cons REAL_ABS_MUL (cl:cons real_div (cl:cons REAL_INV_MUL nil)))))
@@ -4096,7 +4076,7 @@
   (prove
     (tuple
       (parse_term "!x y. real_sgn(x / y) = real_sgn(x) / real_sgn(y)")
-      (holai.runtime:proof (REWRITE_TAC (cl:cons REAL_SGN% (cl:cons REAL_ABS_DIV nil)))
+      (proof (REWRITE_TAC (cl:cons REAL_SGN% (cl:cons REAL_ABS_DIV nil)))
         THEN
           (REWRITE_TAC
             (cl:cons real_div (cl:cons REAL_INV_MUL (cl:cons REAL_INV_INV nil))))
@@ -4109,13 +4089,13 @@
         "(!x. real_sgn x = &0 <=> x = &0) /\\
    (!x. real_sgn x = &1 <=> x > &0) /\\
    (!x. real_sgn x = -- &1 <=> x < &0)")
-      (holai.runtime:proof (REWRITE_TAC (cl:cons real_sgn nil)) THEN REAL_ARITH_TAC))))
+      (proof (REWRITE_TAC (cl:cons real_sgn nil)) THEN REAL_ARITH_TAC))))
 
 (defparameter REAL_SGN_CASES
   (prove
     (tuple
       (parse_term "!x. real_sgn x = &0 \\/ real_sgn x = &1 \\/ real_sgn x = -- &1")
-      (holai.runtime:proof (REWRITE_TAC (cl:cons real_sgn nil)) THEN (MESON_TAC nil)))))
+      (proof (REWRITE_TAC (cl:cons real_sgn nil)) THEN (MESON_TAC nil)))))
 
 (defparameter REAL_SGN_INEQS
   (prove
@@ -4131,13 +4111,13 @@
    (!x. real_sgn x >= &0 <=> x >= &0) /\\
    (!x. real_sgn x > &0 <=> x > &0) /\\
    (!x. real_sgn x = &0 <=> x = &0)")
-      (holai.runtime:proof (REWRITE_TAC (cl:cons real_sgn nil)) THEN REAL_ARITH_TAC))))
+      (proof (REWRITE_TAC (cl:cons real_sgn nil)) THEN REAL_ARITH_TAC))))
 
 (defparameter REAL_SGN_POW
   (prove
     (tuple
       (parse_term "!x n. real_sgn(x pow n) = real_sgn(x) pow n")
-      (holai.runtime:proof #'GEN_TAC
+      (proof #'GEN_TAC
         THEN INDUCT_TAC
         THEN (#`ASM_REWRITE_TAC (cl:cons REAL_SGN_MUL (cl:cons real_pow nil)))
         THEN (REWRITE_TAC (cl:cons real_sgn (cl:cons REAL_LT_01 nil)))))))
@@ -4146,7 +4126,7 @@
   (prove
     (tuple
       (parse_term "!x. real_sgn(x pow 2) = real_sgn(abs x)")
-      (holai.runtime:proof (REWRITE_TAC (cl:cons real_sgn nil))
+      (proof (REWRITE_TAC (cl:cons real_sgn nil))
         THEN
           (SIMP_TAC
             (cl:cons
@@ -4166,13 +4146,13 @@
   (prove
     (tuple
       (parse_term "!x. real_sgn(real_sgn x) = real_sgn x")
-      (holai.runtime:proof (REWRITE_TAC (cl:cons real_sgn nil)) THEN REAL_ARITH_TAC))))
+      (proof (REWRITE_TAC (cl:cons real_sgn nil)) THEN REAL_ARITH_TAC))))
 
 (defparameter REAL_INV_SGN
   (prove
     (tuple
       (parse_term "!x. real_inv(real_sgn x) = real_sgn x")
-      (holai.runtime:proof #'GEN_TAC
+      (proof #'GEN_TAC
         THEN (REWRITE_TAC (cl:cons real_sgn nil))
         THEN (REPEAT COND_CASES_TAC)
         THEN
@@ -4185,7 +4165,7 @@
       (parse_term
         "!x y. real_sgn x = real_sgn y <=>
          x = y \\/ abs(x - y) < max (abs x) (abs y)")
-      (holai.runtime:proof (REWRITE_TAC (cl:cons real_sgn nil)) THEN REAL_ARITH_TAC))))
+      (proof (REWRITE_TAC (cl:cons real_sgn nil)) THEN REAL_ARITH_TAC))))
 
 (defparameter REAL_SGNS_EQ
   (prove
@@ -4195,7 +4175,7 @@
          (x = &0 <=> y = &0) /\\
          (x > &0 <=> y > &0) /\\
          (x < &0 <=> y < &0)")
-      (holai.runtime:proof (REWRITE_TAC (cl:cons real_sgn nil)) THEN REAL_ARITH_TAC))))
+      (proof (REWRITE_TAC (cl:cons real_sgn nil)) THEN REAL_ARITH_TAC))))
 
 (defparameter REAL_SGNS_EQ_ALT
   (prove
@@ -4205,7 +4185,7 @@
          (x = &0 ==> y = &0) /\\
          (x > &0 ==> y > &0) /\\
          (x < &0 ==> y < &0)")
-      (holai.runtime:proof (REWRITE_TAC (cl:cons real_sgn nil)) THEN REAL_ARITH_TAC))))
+      (proof (REWRITE_TAC (cl:cons real_sgn nil)) THEN REAL_ARITH_TAC))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Useful "without loss of generality" lemmas.                               *)
@@ -4251,7 +4231,7 @@
   (prove
     (tuple
       (parse_term "!x y. &0 <= y /\\ y pow 2 = x ==> sqrt(x) = y")
-      (holai.runtime:proof (REPEAT #'STRIP_TAC)
+      (proof (REPEAT #'STRIP_TAC)
         THEN (REWRITE_TAC (cl:cons sqrt nil))
         THEN (MATCH_MP_TAC SELECT_UNIQUE)
         THEN (FIRST_X_ASSUM (o #'SUBST1_TAC #'SYM))
@@ -4300,7 +4280,7 @@
   (prove
     (tuple
       (parse_term "!x. sqrt(x pow 2) = abs(x)")
-      (holai.runtime:proof #'GEN_TAC
+      (proof #'GEN_TAC
         THEN (MATCH_MP_TAC SQRT_UNIQUE)
         THEN
           (REWRITE_TAC
@@ -4318,7 +4298,7 @@
           (prove
             (tuple
               (parse_term "!x y. x pow 2 < y ==> ?x'. x < x' /\\ x' pow 2 < y")
-              (holai.runtime:proof (REPEAT #'STRIP_TAC)
+              (proof (REPEAT #'STRIP_TAC)
                 THEN
                   (#`EXISTS_TAC
                     (parse_term "abs x + min (&1) ((y - x pow 2) / (&2 * abs x + &2))"))
@@ -4351,7 +4331,7 @@
                 THEN #'CONJ_TAC
                 THENL
                   (cl:cons
-                    (holai.runtime:proof (MATCH_MP_TAC REAL_LE_MUL2)
+                    (proof (MATCH_MP_TAC REAL_LE_MUL2)
                       THEN
                         (REWRITE_TAC
                           (cl:cons
@@ -4380,7 +4360,7 @@
                             REAL_LE_LADD
                             (cl:cons REAL_MIN_LE (cl:cons REAL_LE_REFL nil)))))
                     (cl:cons
-                      (holai.runtime:proof (SIMP_TAC
+                      (proof (SIMP_TAC
                           (cl:cons
                             real_div
                             (cl:cons
@@ -4401,7 +4381,7 @@
                 (parse_term
                   "!x y. &0 < x /\\ &0 < y /\\ y < x pow 2
            ==> ?x'. x' < x /\\ &0 < x' /\\ y < x' pow 2")
-                (holai.runtime:proof (REPEAT #'STRIP_TAC)
+                (proof (REPEAT #'STRIP_TAC)
                   THEN
                     (MP_TAC
                       (ISPECL
@@ -4425,11 +4405,10 @@
                     (cl:cons
                       (GEN_REWRITE_TAC #'RAND_CONV (cl:cons (#`GSYM REAL_INV_INV) nil))
                       (cl:cons
-                        (holai.runtime:proof #'CONJ_TAC
+                        (proof #'CONJ_TAC
                           THENL
                             (cl:cons
-                              (holai.runtime:proof (REPEAT (POP_ASSUM #'MP_TAC))
-                                THEN REAL_ARITH_TAC)
+                              (proof (REPEAT (POP_ASSUM #'MP_TAC)) THEN REAL_ARITH_TAC)
                               (cl:cons #'ALL_TAC nil))
                           THEN
                             (GEN_REWRITE_TAC
@@ -4438,13 +4417,12 @@
                         nil))
                   THEN (MATCH_MP_TAC REAL_LT_INV2)
                   THEN
-                    (holai.runtime:proof #'CONJ_TAC
+                    (proof #'CONJ_TAC
                       THENL
                         (cl:cons
                           #'ALL_TAC
                           (cl:cons
-                            (holai.runtime:proof (REPEAT (POP_ASSUM #'MP_TAC))
-                              THEN REAL_ARITH_TAC)
+                            (proof (REPEAT (POP_ASSUM #'MP_TAC)) THEN REAL_ARITH_TAC)
                             nil)))
                   THEN
                     (#`ASM_REWRITE_TAC
@@ -4455,7 +4433,7 @@
             (prove
               (tuple
                 (parse_term "!y. &0 < y ==> ?x. x pow 2 = y")
-                (holai.runtime:proof (REPEAT #'STRIP_TAC)
+                (proof (REPEAT #'STRIP_TAC)
                   THEN (FIRST_ASSUM (o ASSUME_TAC (MATCH_MP REAL_LT_IMP_NZ)))
                   THEN
                     (MP_TAC
@@ -4464,10 +4442,10 @@
                   THEN ANTS_TAC
                   THENL
                     (cl:cons
-                      (holai.runtime:proof #'CONJ_TAC
+                      (proof #'CONJ_TAC
                         THENL
                           (cl:cons
-                            (holai.runtime:proof (#`EXISTS_TAC (parse_term "&0"))
+                            (proof (#`EXISTS_TAC (parse_term "&0"))
                               THEN (REPEAT (POP_ASSUM #'MP_TAC))
                               THEN REAL_ARITH_TAC)
                             (cl:cons #'ALL_TAC nil))
@@ -4492,7 +4470,7 @@
                         THEN (REPEAT (POP_ASSUM #'MP_TAC))
                         THEN REAL_ARITH_TAC)
                       (cl:cons
-                        (holai.runtime:proof (MATCH_MP_TAC MONO_EXISTS)
+                        (proof (MATCH_MP_TAC MONO_EXISTS)
                           THEN (#`X_GEN_TAC (parse_term "s:real"))
                           THEN #'STRIP_TAC)
                         nil))
@@ -4504,7 +4482,7 @@
                   THEN (REPEAT #'STRIP_TAC)
                   THENL
                     (cl:cons
-                      (holai.runtime:proof (MP_TAC
+                      (proof (MP_TAC
                           (ISPECL
                             (cl:cons
                               (parse_term "s:real")
@@ -4514,8 +4492,7 @@
                         THEN #'CONJ_TAC
                         THENL
                           (cl:cons
-                            (holai.runtime:proof (UNDISCH_TAC
-                                (parse_term "y:real < s pow 2"))
+                            (proof (UNDISCH_TAC (parse_term "y:real < s pow 2"))
                               THEN (ASM_CASES_TAC (parse_term "s = &0"))
                               THEN (#`ASM_REWRITE_TAC (cl:cons REAL_LT_LE nil))
                               THEN (REWRITE_TAC (cl:cons REAL_POW_ZERO nil))
@@ -4526,7 +4503,7 @@
                               THEN (UNDISCH_TAC (parse_term "&0 < y"))
                               THEN REAL_ARITH_TAC)
                             (cl:cons
-                              (holai.runtime:proof (DISCH_THEN
+                              (proof (DISCH_THEN
                                   (X_CHOOSE_THEN
                                     (parse_term "z:real")
                                     (CONJUNCTS_THEN2 #'MP_TAC STRIP_ASSUME_TAC)))
@@ -4549,7 +4526,7 @@
                                 THEN REAL_ARITH_TAC)
                               nil)))
                       (cl:cons
-                        (holai.runtime:proof (MP_TAC
+                        (proof (MP_TAC
                             (ISPECL
                               (cl:cons
                                 (parse_term "s:real")
@@ -4572,7 +4549,7 @@
                                 (cl:cons REAL_POW2_ABS (cl:cons REAL_LT_IMP_LE nil)))))
                         nil)))))))
         (cl:declare (cl:ignorable lemma lemma% main_lemma))
-        (holai.runtime:proof #'GEN_TAC
+        (proof #'GEN_TAC
           THEN (REWRITE_TAC (cl:cons sqrt nil))
           THEN (#`CONV_TAC SELECT_CONV)
           THEN
@@ -4581,7 +4558,7 @@
               ASSUME_TAC)
           THENL
             (cl:cons
-              (holai.runtime:proof (REPEAT #'STRIP_TAC)
+              (proof (REPEAT #'STRIP_TAC)
                 THEN (MP_TAC (#`SPEC (parse_term "x:real") main_lemma))
                 THEN (#`ASM_REWRITE_TAC (cl:cons LEFT_IMP_EXISTS_THM nil))
                 THEN (#`X_GEN_TAC (parse_term "y:real"))
@@ -4594,7 +4571,7 @@
                 THEN (REPEAT (POP_ASSUM #'MP_TAC))
                 THEN REAL_ARITH_TAC)
               (cl:cons
-                (holai.runtime:proof (ASM_CASES_TAC (parse_term "x = &0"))
+                (proof (ASM_CASES_TAC (parse_term "x = &0"))
                   THEN
                     (#`ASM_REWRITE_TAC
                       (cl:cons REAL_SGN_0 (cl:cons REAL_SGN_EQ (cl:cons UNWIND_THM2 nil))))
@@ -4626,7 +4603,7 @@
   (prove
     (tuple
       (parse_term "!x y. real_sgn y = real_sgn x /\\ y pow 2 = abs x ==> sqrt x = y")
-      (holai.runtime:proof (REPEAT #'GEN_TAC)
+      (proof (REPEAT #'GEN_TAC)
         THEN (MP_TAC (#`GSYM (#`SPEC (parse_term "x:real") SQRT_WORKS_GEN)))
         THEN
           (SIMP_TAC
@@ -4652,7 +4629,7 @@
   (prove
     (tuple
       (parse_term "!x. sqrt(--x) = --sqrt(x)")
-      (holai.runtime:proof #'GEN_TAC
+      (proof #'GEN_TAC
         THEN (MATCH_MP_TAC SQRT_UNIQUE_GEN)
         THEN
           (REWRITE_TAC
@@ -4671,7 +4648,7 @@
   (prove
     (tuple
       (parse_term "!x. &0 <= x ==> &0 <= sqrt(x) /\\ sqrt(x) pow 2 = x")
-      (holai.runtime:proof (REPEAT #'STRIP_TAC)
+      (proof (REPEAT #'STRIP_TAC)
         THEN (MP_TAC (#`SPEC (parse_term "x:real") SQRT_WORKS_GEN))
         THEN (REWRITE_TAC (cl:cons real_sgn nil))
         THEN (REPEAT (POP_ASSUM #'MP_TAC))
@@ -4705,7 +4682,7 @@
   (prove
     (tuple
       (parse_term "!x y. sqrt(x * y) = sqrt x * sqrt y")
-      (holai.runtime:proof (REPEAT #'GEN_TAC)
+      (proof (REPEAT #'GEN_TAC)
         THEN (MATCH_MP_TAC SQRT_UNIQUE_GEN)
         THEN
           (REWRITE_TAC
@@ -4717,7 +4694,7 @@
   (prove
     (tuple
       (parse_term "!x. sqrt (inv x) = inv(sqrt x)")
-      (holai.runtime:proof #'GEN_TAC
+      (proof #'GEN_TAC
         THEN (MATCH_MP_TAC SQRT_UNIQUE_GEN)
         THEN
           (REWRITE_TAC
@@ -4744,14 +4721,14 @@
   (prove
     (tuple
       (parse_term "!x. sqrt x = &0 <=> x = &0")
-      (holai.runtime:proof (ONCE_REWRITE_TAC (cl:cons (#`GSYM REAL_SGN_EQ) nil))
+      (proof (ONCE_REWRITE_TAC (cl:cons (#`GSYM REAL_SGN_EQ) nil))
         THEN (REWRITE_TAC (cl:cons REAL_SGN_SQRT nil))))))
 
 (defparameter SQRT_LE_0
   (prove
     (tuple
       (parse_term "!x. &0 <= sqrt x <=> &0 <= x")
-      (holai.runtime:proof (REWRITE_TAC
+      (proof (REWRITE_TAC
           (cl:cons (#`REAL_ARITH (parse_term "&0 <= x <=> &0 < x \\/ x = &0")) nil))
         THEN (REWRITE_TAC (cl:cons SQRT_LT_0 (cl:cons SQRT_EQ_0 nil)))))))
 
@@ -4759,7 +4736,7 @@
   (prove
     (tuple
       (parse_term "!x. abs(sqrt x) = sqrt(abs x)")
-      (holai.runtime:proof #'GEN_TAC
+      (proof #'GEN_TAC
         THEN (REWRITE_TAC (cl:cons real_abs (cl:cons SQRT_LE_0 nil)))
         THEN COND_CASES_TAC
         THEN (#`ASM_REWRITE_TAC (cl:cons SQRT_NEG nil))))))
@@ -4768,31 +4745,31 @@
   (prove
     (tuple
       (parse_term "!x y. x < y ==> sqrt(x) < sqrt(y)")
-      (holai.runtime:proof (SUBGOAL_THEN
+      (proof (SUBGOAL_THEN
           (parse_term "!x y. &0 <= x /\\ x < y ==> sqrt x < sqrt y")
           ASSUME_TAC)
         THENL
           (cl:cons
-            (holai.runtime:proof (REPEAT #'STRIP_TAC)
+            (proof (REPEAT #'STRIP_TAC)
               THEN (MATCH_MP_TAC REAL_POW_LT2_REV)
               THEN (#`EXISTS_TAC (parse_term "2"))
               THEN (#`ASM_REWRITE_TAC (cl:cons SQRT_WORKS_GEN (cl:cons SQRT_LE_0 nil)))
               THEN (REPEAT (POP_ASSUM #'MP_TAC))
               THEN REAL_ARITH_TAC)
             (cl:cons
-              (holai.runtime:proof (REPEAT #'STRIP_TAC)
+              (proof (REPEAT #'STRIP_TAC)
                 THEN (ASM_CASES_TAC (parse_term "&0 <= x"))
                 THEN (#`ASM_SIMP_TAC nil)
                 THEN (ASM_CASES_TAC (parse_term "&0 <= y"))
                 THENL
                   (cl:cons
-                    (holai.runtime:proof (MATCH_MP_TAC REAL_LTE_TRANS)
+                    (proof (MATCH_MP_TAC REAL_LTE_TRANS)
                       THEN (#`EXISTS_TAC (parse_term "&0"))
                       THEN
                         (#`ASM_REWRITE_TAC
                           (cl:cons (#`GSYM REAL_NOT_LE) (cl:cons SQRT_LE_0 nil))))
                     (cl:cons
-                      (holai.runtime:proof (FIRST_X_ASSUM
+                      (proof (FIRST_X_ASSUM
                           (o
                             #'MP_TAC
                             (SPECL
@@ -4872,7 +4849,7 @@
   (prove
     (tuple
       (parse_term "!x y. x pow 2 < y ==> x < sqrt(y)")
-      (holai.runtime:proof (REPEAT #'STRIP_TAC)
+      (proof (REPEAT #'STRIP_TAC)
         THEN (MATCH_MP_TAC (#`REAL_ARITH (parse_term "abs x < a ==> x < a")))
         THEN (REWRITE_TAC (cl:cons (#`GSYM POW_2_SQRT_ABS) nil))
         THEN (MATCH_MP_TAC SQRT_MONO_LT)
@@ -4882,7 +4859,7 @@
   (prove
     (tuple
       (parse_term "!n. EVEN n ==> (sqrt(&2 pow n) = &2 pow (n DIV 2))")
-      (holai.runtime:proof (SIMP_TAC
+      (proof (SIMP_TAC
           (cl:cons
             EVEN_EXISTS
             (cl:cons LEFT_IMP_EXISTS_THM (cl:cons DIV_MULT (cl:cons ARITH_EQ nil)))))
@@ -4898,7 +4875,7 @@
   (prove
     (tuple
       (parse_term "!x. &0 <= x ==> x / sqrt(x) = sqrt(x)")
-      (holai.runtime:proof (REWRITE_TAC (cl:cons REAL_LE_LT nil))
+      (proof (REWRITE_TAC (cl:cons REAL_LE_LT nil))
         THEN (REPEAT #'STRIP_TAC)
         THENL
           (cl:cons
@@ -4940,7 +4917,7 @@
     (tuple
       (parse_term
         "!x y. &0 <= x /\\ &0 <= y ==> abs(sqrt x - sqrt y) <= sqrt(abs(x - y))")
-      (holai.runtime:proof (REPEAT #'STRIP_TAC)
+      (proof (REPEAT #'STRIP_TAC)
         THEN (MATCH_MP_TAC REAL_LE_RSQRT)
         THEN (REWRITE_TAC (cl:cons REAL_POW_2 nil))
         THEN
@@ -4950,7 +4927,7 @@
         THEN #'CONJ_TAC
         THENL
           (cl:cons
-            (holai.runtime:proof (MATCH_MP_TAC REAL_LE_LMUL)
+            (proof (MATCH_MP_TAC REAL_LE_LMUL)
               THEN (REWRITE_TAC (cl:cons REAL_ABS_POS nil))
               THEN
                 (MATCH_MP_TAC
@@ -4958,7 +4935,7 @@
                     (parse_term "&0 <= x /\\ &0 <= y ==> abs(x - y) <= abs(x + y)")))
               THEN (#`ASM_SIMP_TAC (cl:cons SQRT_POS_LE nil)))
             (cl:cons
-              (holai.runtime:proof (REWRITE_TAC
+              (proof (REWRITE_TAC
                   (cl:cons
                     (#`GSYM REAL_ABS_MUL)
                     (cl:cons
@@ -4972,7 +4949,7 @@
   (prove
     (tuple
       (parse_term "!x y. abs(sqrt x - sqrt y) <= sqrt(&2 * abs(x - y))")
-      (holai.runtime:proof (MATCH_MP_TAC REAL_WLOG_LE)
+      (proof (MATCH_MP_TAC REAL_WLOG_LE)
         THEN #'CONJ_TAC
         THENL (cl:cons (REWRITE_TAC (cl:cons REAL_ABS_SUB nil)) (cl:cons #'ALL_TAC nil))
         THEN
@@ -4983,7 +4960,7 @@
         THEN (ASM_CASES_TAC (parse_term "&0 <= x"))
         THENL
           (cl:cons
-            (holai.runtime:proof (TRANS_TAC REAL_LE_TRANS (parse_term "sqrt(abs(x - y))"))
+            (proof (TRANS_TAC REAL_LE_TRANS (parse_term "sqrt(abs(x - y))"))
               THEN
                 (REWRITE_TAC
                   (cl:cons
@@ -4998,7 +4975,7 @@
           (cl:cons
             #'ALL_TAC
             (cl:cons
-              (holai.runtime:proof (ONCE_REWRITE_TAC
+              (proof (ONCE_REWRITE_TAC
                   (cl:cons (#`REAL_ARITH (parse_term "abs(x - y) = abs(--x - --y)")) nil))
                 THEN (REWRITE_TAC (cl:cons (#`GSYM SQRT_NEG) nil))
                 THEN (TRANS_TAC REAL_LE_TRANS (parse_term "sqrt(abs(--x - --y))"))

@@ -7,12 +7,28 @@
       :inherit-configuration)))
 (setf asdf:*asdf-verbose* nil *compile-verbose* nil *load-verbose* nil)
 (asdf:load-system "holai/runtime")
-(holai.runtime:catch-break t)
-(let ((caught (handler-case
-                 (progn
-                   (sb-unix:unix-kill (sb-unix:unix-getpid) sb-unix:sigint)
-                   (sleep 0.1) nil)
-               (holai.runtime:sys_break () t))))
-  (holai.runtime:catch-break nil)
-  (unless caught (error "SIGINT did not signal the OCaml-compatible break condition")))
-(format t "SIGINT adapter check passed~%")
+;; Each flushed readiness marker precedes a real SIGINT from the parent.
+;; Re-enable after disabling, then require the third signal to use SIG_DFL.
+(dotimes (cycle 2)
+  (declare (ignorable cycle))
+  (let (#+abcl (installing-thread (threads:current-thread)))
+    (holai.runtime:catch-break t)
+    (let ((caught (handler-case
+                     (progn
+                       (write-line "SIGINT catch ready")
+                       (finish-output)
+                       (loop (sleep 1)))
+                   (holai.runtime:sys_break ()
+                     #+abcl
+                     (unless (eq installing-thread (threads:current-thread))
+                       (error "Sys.Break delivered on a different Lisp thread"))
+                     t))))
+      (holai.runtime:catch-break nil)
+      ;; Repeated disable must not overwrite CLISP's saved native handler.
+      (holai.runtime:catch-break nil)
+      (unless caught
+        (error "SIGINT did not signal the OCaml-compatible break condition"))))
+  (write-line "SIGINT adapter check passed"))
+(write-line "SIGINT default ready")
+(finish-output)
+(loop (sleep 1))

@@ -1,0 +1,13 @@
+;; Loading file /nix/store/2nnqs8qwd1a11vmgrlhyiwygi3hmjynj-clisp-2.49.95-unstable-2024-12-28/lib/clisp-2.49.95+/dynmod/asdf.lisp ...
+;;  Loading file /nix/store/2nnqs8qwd1a11vmgrlhyiwygi3hmjynj-clisp-2.49.95-unstable-2024-12-28/lib/clisp-2.49.95+/asdf/asdf.fas ...
+;;  Loaded file /nix/store/2nnqs8qwd1a11vmgrlhyiwygi3hmjynj-clisp-2.49.95-unstable-2024-12-28/lib/clisp-2.49.95+/asdf/asdf.fas
+;; Loaded file /nix/store/2nnqs8qwd1a11vmgrlhyiwygi3hmjynj-clisp-2.49.95-unstable-2024-12-28/lib/clisp-2.49.95+/dynmod/asdf.lisp
+#P"/nix/store/2nnqs8qwd1a11vmgrlhyiwygi3hmjynj-clisp-2.49.95-unstable-2024-12-28/lib/clisp-2.49.95+/dynmod/asdf.lisp"
+NIL
+#<FUNCTION :LAMBDA (CONDITION HOOK) (DECLARE (IGNORE HOOK))
+  (FORMAT *ERROR-OUTPUT* "~&Unhandled condition: ~a~%" CONDITION)
+  (UIOP/IMAGE:QUIT 1)>
+Pattern native NaN EQL: not applicable (CLISP cannot represent NaN)
+Pattern stale consumer FASL: /home/tani/ghq/github.com/tani/holai/_build/pattern-stale-consumer.fas
+Pattern checks passed: 44
+#P"/home/tani/ghq/github.com/tani/holai/holai/tests/pattern.lisp"

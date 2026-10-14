@@ -697,6 +697,7 @@
     tuple
     snd
     raise
+    proof
     match
     lambdac
     labelsc
@@ -953,7 +954,7 @@
             "(~((!) P) <=> ?x:A. ~(P x)) /\\
      (~((?) P) <=> !x:A. ~(P x)) /\\
      (~((?!) P) <=> (!x:A. ~(P x)) \\/ ?x y. P x /\\ P y /\\ ~(y = x))")
-          (holai.runtime:proof (holai.tactics:REPEAT #'CONJ_TAC)
+          (proof (holai.tactics:REPEAT #'CONJ_TAC)
             THEN
               (GEN_REWRITE_TAC
                 (o LAND_CONV (funpow 2 #'RAND_CONV))
@@ -971,9 +972,7 @@
       (prove
         (tuple
           (parse_term "((?!) P) <=> (?x:A. P x) /\\ !x y. ~(P x) \\/ ~(P y) \\/ (y = x)")
-          (holai.runtime:proof (GEN_REWRITE_TAC
-              (o LAND_CONV #'RAND_CONV)
-              (cl:cons (#`GSYM ETA_AX) nil))
+          (proof (GEN_REWRITE_TAC (o LAND_CONV #'RAND_CONV) (cl:cons (#`GSYM ETA_AX) nil))
             THEN
               (REWRITE_TAC
                 (cl:cons
@@ -1773,7 +1772,7 @@
               (prove
                 (tuple
                   (parse_term "(P:A->bool)((@) P) <=> (?) P")
-                  (holai.runtime:proof (REWRITE_TAC (cl:cons EXISTS_THM nil))
+                  (proof (REWRITE_TAC (cl:cons EXISTS_THM nil))
                     THEN BETA_TAC
                     THEN #'REFL_TAC))))
               (ptm (parse_term "P:A->bool")))
@@ -1850,7 +1849,7 @@
                       (_ (raise exception~3130)))))))
             #'SELECT_ELIMS_ICONV))))
     (cl:declare (cl:ignorable SELECT_ELIM_CONV SELECT_ELIM_ICONV))
-    (holai.runtime:proof (#`CONV_TAC SELECT_ELIM_CONV)
+    (proof (#`CONV_TAC SELECT_ELIM_CONV)
       THEN (W (o (o #'MATCH_MP_TAC SELECT_ELIM_ICONV) (function-value #'snd 1))))))
 
 ;; (* ------------------------------------------------------------------------- *)
@@ -1975,16 +1974,14 @@
           (parse_term
             "((b <=> F) ==> x = x0) /\\ ((b <=> T) ==> x = x1)
      ==> x = (b /\\ x1 \\/ ~b /\\ x0)")
-          (holai.runtime:proof (BOOL_CASES_TAC (parse_term "b:bool"))
-            THEN (#`ASM_REWRITE_TAC nil)))))
+          (proof (BOOL_CASES_TAC (parse_term "b:bool")) THEN (#`ASM_REWRITE_TAC nil)))))
       (th_cond%
         (prove
           (tuple
             (parse_term
               "((b <=> F) ==> x = x0) /\\ ((b <=> T) ==> x = x1)
      ==> x = ((~b \\/ x1) /\\ (b \\/ x0))")
-            (holai.runtime:proof (BOOL_CASES_TAC (parse_term "b:bool"))
-              THEN (#`ASM_REWRITE_TAC nil)))))
+            (proof (BOOL_CASES_TAC (parse_term "b:bool")) THEN (#`ASM_REWRITE_TAC nil)))))
       (propsimps (#`basic_net unit))
       (false_tm (parse_term "F"))
       (true_tm (parse_term "T")))

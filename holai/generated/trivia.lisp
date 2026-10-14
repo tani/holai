@@ -108,7 +108,7 @@
   (:shadowing-import-from :holai.lib I)
   (:shadowing-import-from :holai.parser parse_term)
   (:shadowing-import-from :holai.printer parse_as_infix)
-  (:shadowing-import-from :holai.runtime tuple deref assign)
+  (:shadowing-import-from :holai.runtime tuple proof deref assign)
   (:shadowing-import-from
     :holai.simp
     REWRITE_TAC
@@ -165,7 +165,7 @@
   (prove
     (tuple
       (parse_term "!f:B->C. !g:A->B. !x:A. (f o g) x = f(g(x))")
-      (holai.runtime:proof (PURE_REWRITE_TAC (cl:cons o_DEF nil))
+      (proof (PURE_REWRITE_TAC (cl:cons o_DEF nil))
         THEN (#`CONV_TAC (#`DEPTH_CONV #'BETA_CONV))
         THEN (REPEAT #'GEN_TAC)
         THEN #'REFL_TAC))))
@@ -174,7 +174,7 @@
   (prove
     (tuple
       (parse_term "!f:C->D. !g:B->C. !h:A->B. f o (g o h) = (f o g) o h")
-      (holai.runtime:proof (REPEAT #'GEN_TAC)
+      (proof (REPEAT #'GEN_TAC)
         THEN (REWRITE_TAC (cl:cons o_DEF nil))
         THEN (#`CONV_TAC (#`REDEPTH_CONV #'BETA_CONV))
         THEN #'REFL_TAC))))
@@ -186,7 +186,7 @@
   (prove
     (tuple
       (parse_term "!f:A->B. (I o f = f) /\\ (f o I = f)")
-      (holai.runtime:proof (REPEAT #'STRIP_TAC)
+      (proof (REPEAT #'STRIP_TAC)
         THEN (REWRITE_TAC (cl:cons FUN_EQ_THM (cl:cons o_DEF (cl:cons I_THM nil))))))))
 
 ;; (* ------------------------------------------------------------------------- *)
@@ -198,9 +198,7 @@
   (prove
     (tuple
       (parse_term "?b:bool. b")
-      (holai.runtime:proof (#`EXISTS_TAC (parse_term "T"))
-        THEN BETA_TAC
-        THEN (#`ACCEPT_TAC TRUTH)))))
+      (proof (#`EXISTS_TAC (parse_term "T")) THEN BETA_TAC THEN (#`ACCEPT_TAC TRUTH)))))
 
 (defparameter one_tydef
   (new_type_definition "1" (tuple "one_ABS" "one_REP") EXISTS_ONE_REP))
@@ -211,8 +209,7 @@
   (prove
     (tuple
       (parse_term "!v:1. v = one")
-      (holai.runtime:proof (MP_TAC
-          (GEN_ALL (#`SPEC (parse_term "one_REP a") (#`CONJUNCT2 one_tydef))))
+      (proof (MP_TAC (GEN_ALL (#`SPEC (parse_term "one_REP a") (#`CONJUNCT2 one_tydef))))
         THEN (REWRITE_TAC (cl:cons (#`CONJUNCT1 one_tydef) nil))
         THEN DISCH_TAC
         THEN (ONCE_REWRITE_TAC (cl:cons (#`GSYM (#`CONJUNCT1 one_tydef)) nil))
@@ -222,7 +219,7 @@
   (prove
     (tuple
       (parse_term "!f g. f = (g:A->1)")
-      (holai.runtime:proof (REPEAT #'GEN_TAC)
+      (proof (REPEAT #'GEN_TAC)
         THEN (ONCE_REWRITE_TAC (cl:cons FUN_EQ_THM nil))
         THEN #'GEN_TAC
         THEN (ONCE_REWRITE_TAC (cl:cons one nil))
@@ -232,13 +229,13 @@
   (prove
     (tuple
       (parse_term "!P. P one ==> !x. P x")
-      (holai.runtime:proof (ONCE_REWRITE_TAC (cl:cons one nil)) THEN (REWRITE_TAC nil)))))
+      (proof (ONCE_REWRITE_TAC (cl:cons one nil)) THEN (REWRITE_TAC nil)))))
 
 (defparameter one_RECURSION
   (prove
     (tuple
       (parse_term "!e:A. ?fn. fn one = e")
-      (holai.runtime:proof #'GEN_TAC
+      (proof #'GEN_TAC
         THEN (#`EXISTS_TAC (parse_term "\\x:1. e:A"))
         THEN BETA_TAC
         THEN #'REFL_TAC))))
@@ -247,7 +244,7 @@
   (prove
     (tuple
       (parse_term "!e:A. ?!fn. fn one = e")
-      (holai.runtime:proof #'GEN_TAC
+      (proof #'GEN_TAC
         THEN (REWRITE_TAC (cl:cons EXISTS_UNIQUE_THM (cl:cons one_RECURSION nil)))
         THEN (REPEAT #'STRIP_TAC)
         THEN (ONCE_REWRITE_TAC (cl:cons FUN_EQ_THM nil))
@@ -258,7 +255,7 @@
   (prove
     (tuple
       (parse_term "(!x. P x) <=> P one")
-      (holai.runtime:proof #'EQ_TAC
+      (proof #'EQ_TAC
         THEN (REWRITE_TAC (cl:cons one_INDUCT nil))
         THEN (DISCH_THEN MATCH_ACCEPT_TAC)))))
 
@@ -266,7 +263,7 @@
   (prove
     (tuple
       (parse_term "(?x. P x) <=> P one")
-      (holai.runtime:proof (GEN_REWRITE_TAC
+      (proof (GEN_REWRITE_TAC
           #'I
           (cl:cons (#`TAUT (parse_term "(p <=> q) <=> (~p <=> ~q)")) nil))
         THEN (REWRITE_TAC (cl:cons NOT_EXISTS_THM (cl:cons FORALL_ONE_THM nil)))))))
@@ -275,7 +272,7 @@
   (prove
     (tuple
       (parse_term "!f:1->A. (\\x. f one) = f")
-      (holai.runtime:proof (REWRITE_TAC (cl:cons FUN_EQ_THM nil))
+      (proof (REWRITE_TAC (cl:cons FUN_EQ_THM nil))
         THEN (REPEAT #'GEN_TAC)
         THEN (ONCE_REWRITE_TAC (cl:cons one nil))
         THEN #'REFL_TAC))))

@@ -15,13 +15,76 @@
   (setf *gc-control* (record-update configuration)) unit)
 (define-exception sys_break)
 (defvar *catch-break* nil)
+#+abcl
+(defvar *abcl-sigint-registration* nil)
+#+(and clisp unix)
+(ffi:def-call-out native-sigint-disposition
+  (:name "signal") (:library :default) (:language :stdc)
+  (:arguments (number ffi:int) (handler ffi:c-pointer))
+  (:return-type ffi:c-pointer))
+#+(and clisp unix)
+(defvar *clisp-original-sigint-handler* nil)
+#+(and clisp unix)
+(defun set-native-sigint-disposition (handler)
+  (let ((previous (native-sigint-disposition 2 handler)))
+    ;; Inspect the address, never dereference SIG_ERR ((void *) -1).
+    (when (and previous
+               (= (ffi:foreign-address-unsigned previous)
+                  (1- (ash 1 (ffi:bitsizeof 'ffi:c-pointer)))))
+      (error "Cannot set the native SIGINT disposition"))
+    previous))
 (defun catch-break (enabled)
-  (setf *catch-break* enabled)
+  #+sbcl
   (sb-sys:enable-interrupt sb-unix:sigint
     (if enabled
         (lambda (signal info context)
           (declare (ignore signal info context)) (raise (make-sys_break)))
         :default))
+  #+ecl
+  (if enabled
+      (ext:set-signal-handler ext:+sigint+
+        (lambda () (raise (make-sys_break))))
+      (unless (ext:catch-signal ext:+sigint+ :default)
+        (error "Cannot restore the default SIGINT disposition")))
+  #+abcl
+  (if enabled
+      (let* ((target (threads:current-thread))
+             (signal (java:jnew "sun.misc.Signal" "INT"))
+             (handler
+               (java:jinterface-implementation "sun.misc.SignalHandler" "handle"
+                 (lambda (signal)
+                   (declare (ignore signal))
+                   ;; Java dispatches on its own thread; raise only on the
+                   ;; Lisp thread that installed this handler.
+                   (threads:interrupt-thread target
+                     (lambda () (raise (make-sys_break))))))))
+        (java:jstatic "handle" "sun.misc.Signal" signal handler)
+        (setf *abcl-sigint-registration* (cons signal handler)))
+      (progn
+        (java:jstatic "handle" "sun.misc.Signal"
+          (if *abcl-sigint-registration* (car *abcl-sigint-registration*)
+              (java:jnew "sun.misc.Signal" "INT"))
+          (java:jfield "sun.misc.SignalHandler" "SIG_DFL"))
+        (setf *abcl-sigint-registration* nil)))
+  #+(and clisp unix)
+  (if enabled
+      (progn
+        (when *clisp-original-sigint-handler*
+          (set-native-sigint-disposition *clisp-original-sigint-handler*))
+        (ext:set-global-handler 'sys::interrupt-condition
+          (lambda (condition)
+            (declare (ignore condition))
+            (raise (make-sys_break)))))
+      (progn
+        (let ((previous
+                (set-native-sigint-disposition (ffi:unsigned-foreign-address 0))))
+          ;; Save only the first disable: subsequent disables return SIG_DFL.
+          (unless *clisp-original-sigint-handler*
+            (setf *clisp-original-sigint-handler* previous)))
+        (ext:set-global-handler 'sys::interrupt-condition nil)))
+  #-(or sbcl ecl abcl (and clisp unix))
+  (error "SIGINT handling is unsupported on ~A" (lisp-implementation-type))
+  (setf *catch-break* enabled)
   unit)
 (define-exception assert_failure location)
 (defun assert-true (condition source line column)
@@ -156,41 +219,18 @@
              (ocaml-table-buckets table))
     result))
 
-;; Source-equivalent seeded Random.init/bits/int profile, from the pinned
-;; vendor/ocaml-stdlib/random.ml. MD5 combines raw bytes, not UTF-8 strings.
-;; Original author: Damien Doligez, projet Para, INRIA Rocquencourt.
-;; Copyright 1996 Institut National de Recherche en Informatique et en Automatique.
-;; This Random section is distributed under GNU LGPL version 2.1 with the
-;; OCaml linking exception. See vendor/ocaml-stdlib/COPYRIGHT and LGPL-2.1.
-;; Original source and notice are retained in vendor/ocaml-stdlib/random.ml.
-(eval-when (:compile-toplevel :load-toplevel :execute) (require :sb-md5))
-(defvar *random-state-ocaml* (vector #x3ae2522b #x1d8d4634 #x15b4fad0 #x18b14ace #x12f8a3c4 #x3b086c47 #x16d467d6 #x101d91c7 #x321df177 #x0176c193 #x1ff72bf1 #x1e889109 #x0b464b18 #x2b86b97c #x0891da48 #x03137463 #x085ac5a1 #x15d61f2f #x3bced359 #x29c1c132 #x3a86766e #x366d8c86 #x1f5b6222 #x3ce1b59f #x2ebf78e1 #x27cd1b86 #x258f3dc3 #x389a8194 #x02e4c44c #x18c43f7d #x0f6e534f #x1e7df359 #x055d0b7e #x10e84e7e #x126198e4 #x0e7722cb #x1cbede28 #x3391b964 #x3d40e92a #x0c59933d #x0b8cd0b7 #x24efff1c #x2803fdaa #x08ebc72e #x0f522e32 #x05398edc #x2144a04c #x0aef3cbd #x01ad4719 #x35b93cd6 #x2a559d4f #x1e6fd768 #x26e27f36 #x186f18c3 #x2fbf967a))
-(defvar *random-index-ocaml* 0)
+;; Source Random API backed by the host's standard Common Lisp engine.
+;; Integer seeds are accepted for source compatibility, but ignored:
+;; RANDOM-INIT creates a fresh state, not an integer-seeded replay stream.
+;; Reproducibility requires copying a RANDOM-STATE within the same host.
+(defvar *source-random-state* (make-random-state t))
 (defun random-init (seed)
-  (dotimes (i 55) (setf (aref *random-state-ocaml* i) i))
-  (let ((accu #(120)))
-    (dotimes (i 110)
-      (let* ((seed-text (format nil "~d" seed))
-             (bytes (make-array (+ (length accu) (length seed-text))
-                                :element-type '(unsigned-byte 8))))
-        (replace bytes accu)
-        (loop for c across seed-text for j from (length accu)
-          do (setf (aref bytes j) (char-code c)))
-        (setf accu (sb-md5:md5sum-sequence bytes))
-        (let ((extract (+ (aref accu 0) (ash (aref accu 1) 8)
-                          (ash (aref accu 2) 16) (ash (aref accu 3) 24)))
-              (j (mod i 55)))
-          (setf (aref *random-state-ocaml* j)
-                (logand (logxor (aref *random-state-ocaml* j) extract) #x3fffffff))))))
-  (setf *random-index-ocaml* 0) unit)
+  (declare (ignore seed))
+  (setf *source-random-state* (make-random-state t))
+  unit)
 (defun random-bits (u)
   (declare (ignore u))
-  (setf *random-index-ocaml* (mod (1+ *random-index-ocaml*) 55))
-  (let* ((cur (aref *random-state-ocaml* *random-index-ocaml*))
-         (new (logand (+ (aref *random-state-ocaml* (mod (+ *random-index-ocaml* 24) 55))
-                        (logxor cur (logand (ash cur -25) #x1f))) #x3fffffff)))
-    (setf (aref *random-state-ocaml* *random-index-ocaml*) new) new))
+  (cl:random #x40000000 *source-random-state*))
 (defun random-int (n)
   (unless (cl:<= 1 n #x3fffffff) (invalid-arg "Random.int"))
-  (let* ((r (random-bits unit)) (v (mod r n)))
-    (if (cl:> (- r v) (+ (- #x3fffffff n) 1)) (random-int n) v)))
+  (cl:random n *source-random-state*))

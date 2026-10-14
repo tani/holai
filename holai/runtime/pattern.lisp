@@ -4,6 +4,8 @@
 (eval-when (:compile-toplevel :load-toplevel :execute)
   (defvar *pattern-descriptions* (make-hash-table :test #'eq))
   (defvar *pattern-families* (make-hash-table :test #'eq))
+  (define-condition pattern-declaration-changed (simple-error)
+    ((name :initarg :name :reader pattern-declaration-name)))
   (defun register-pattern-family (owner descriptions)
     (dolist (name (gethash owner *pattern-families*))
       (remhash name *pattern-descriptions*))
@@ -12,7 +14,9 @@
       (setf (gethash (car description) *pattern-descriptions*) (cdr description))))
   (defun check-pattern-signature (name signature)
     (unless (equal signature (gethash name *pattern-descriptions*))
-      (error "Pattern declaration changed for ~s; rebuild dependent FASLs" name))
+      (error 'pattern-declaration-changed :name name
+             :format-control "Pattern declaration changed for ~s; rebuild dependent FASLs"
+             :format-arguments (list name)))
     t)
   (defun wildcard-pattern-p (x)
     (and (symbolp x) (string= (symbol-name x) "_")))
@@ -166,16 +170,15 @@
               (accessor (getf desc :accessor)) (readers (getf desc :readers))
               (active (loop for p in patterns for v in vars for i in indexes
                             unless (eq (car p) :wildcard) collect (cons v i))))
-         `(progn
-            (load-time-value (check-pattern-signature ',name ',desc) t)
-            (if (typep ,value ',(getf desc :class))
+         `(if (cl:and (load-time-value (check-pattern-signature ',name ',desc) t)
+                      (typep ,value ',(getf desc :class)))
                 ,(cond ((null active) (compile-patterns patterns vars env success failure))
                        (accessor `(let ((,fields (,accessor ,value)))
                         (let ,(mapcar (lambda (pair) `(,(car pair) (aref ,fields ,(cdr pair)))) active)
                           ,(compile-patterns patterns vars env success failure))))
                        (t `(let ,(mapcar (lambda (pair) `(,(car pair) (,(nth (cdr pair) readers) ,value))) active)
                              ,(compile-patterns patterns vars env success failure))))
-                ,failure))))
+                ,failure)))
       (otherwise (error "Invalid pattern IR ~s" ir))))
   (defun compile-clauses (value clauses result)
     (loop for clause in clauses collect

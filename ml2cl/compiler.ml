@@ -293,7 +293,7 @@ let rec emit c env e =
      form (runtime c "record-update") (emit c env base::fields_to_keywords c env emit fields),"record-update")
  | ExApp _ -> (match proof_composition env e with
    | Some composition ->
-     form "holai.runtime:proof" [emit_proof_fragment c env composition],"proof-tactical"
+     l [deferred_proof_head c;emit_proof_fragment c env composition],"proof-tactical"
    | None -> let h,args=expression_spine e in emit_application c env loc h args,"application-spine")
  | ExTup (_,es) -> form (runtime c "tuple") (List.map (emit c env) (v es)),"tuple"
  | ExArr (_,es) -> form "cl:vector" (List.map (emit c env) (v es)),"array-literal"

@@ -1333,6 +1333,7 @@
     unit
     tuple
     snd
+    proof
     match
     lambdac
     labelsc
@@ -1846,7 +1847,7 @@
   (prove
     (tuple
       (parse_term "!m n. FINITE(m..n)")
-      (holai.runtime:proof (REPEAT #'GEN_TAC)
+      (proof (REPEAT #'GEN_TAC)
         THEN (MATCH_MP_TAC FINITE_SUBSET)
         THEN (#`EXISTS_TAC (parse_term "{x:num | x <= n}"))
         THEN (REWRITE_TAC (cl:cons FINITE_NUMSEG_LE nil))
@@ -1856,7 +1857,7 @@
   (prove
     (tuple
       (parse_term "!m p n. m <= p + 1 /\\ p <= n ==> ((m..p) UNION ((p+1)..n) = m..n)")
-      (holai.runtime:proof (REWRITE_TAC
+      (proof (REWRITE_TAC
           (cl:cons
             EXTENSION
             (cl:cons IN_UNION (cl:cons numseg (cl:cons IN_ELIM_THM nil)))))
@@ -1866,7 +1867,7 @@
   (prove
     (tuple
       (parse_term "!m p n. m <= p /\\ p <= n + 1 ==> ((m..(p-1)) UNION (p..n) = m..n)")
-      (holai.runtime:proof (REWRITE_TAC
+      (proof (REWRITE_TAC
           (cl:cons
             EXTENSION
             (cl:cons IN_UNION (cl:cons numseg (cl:cons IN_ELIM_THM nil)))))
@@ -1876,7 +1877,7 @@
   (prove
     (tuple
       (parse_term "!m n. m <= n ==> (m INSERT ((m+1)..n) = m..n)")
-      (holai.runtime:proof (REWRITE_TAC
+      (proof (REWRITE_TAC
           (cl:cons
             EXTENSION
             (cl:cons IN_INSERT (cl:cons numseg (cl:cons IN_ELIM_THM nil)))))
@@ -1886,7 +1887,7 @@
   (prove
     (tuple
       (parse_term "!m n. m <= n ==> (n INSERT (m..(n-1)) = m..n)")
-      (holai.runtime:proof (REWRITE_TAC
+      (proof (REWRITE_TAC
           (cl:cons
             EXTENSION
             (cl:cons IN_INSERT (cl:cons numseg (cl:cons IN_ELIM_THM nil)))))
@@ -1914,15 +1915,14 @@
   (prove
     (tuple
       (parse_term "!n. n..n = {n}")
-      (holai.runtime:proof (REWRITE_TAC
-          (cl:cons EXTENSION (cl:cons IN_SING (cl:cons IN_NUMSEG nil))))
+      (proof (REWRITE_TAC (cl:cons EXTENSION (cl:cons IN_SING (cl:cons IN_NUMSEG nil))))
         THEN ARITH_TAC))))
 
 (defparameter NUMSEG_EMPTY
   (prove
     (tuple
       (parse_term "!m n. (m..n = {}) <=> n < m")
-      (holai.runtime:proof (REWRITE_TAC
+      (proof (REWRITE_TAC
           (cl:cons EXTENSION (cl:cons NOT_IN_EMPTY (cl:cons IN_NUMSEG nil))))
         THEN (MESON_TAC (cl:cons NOT_LE (cl:cons LE_TRANS (cl:cons LE_REFL nil))))))))
 
@@ -1936,12 +1936,11 @@
   (prove
     (tuple
       (parse_term "!s:num->bool. FINITE s <=> ?n. s SUBSET 0..n")
-      (holai.runtime:proof #'GEN_TAC
+      (proof #'GEN_TAC
         THEN #'EQ_TAC
         THENL
           (cl:cons
-            (holai.runtime:proof (REWRITE_TAC
-                (cl:cons SUBSET (cl:cons IN_NUMSEG (cl:cons LE_0 nil))))
+            (proof (REWRITE_TAC (cl:cons SUBSET (cl:cons IN_NUMSEG (cl:cons LE_0 nil))))
               THEN
                 (SPEC_TAC (tuple (parse_term "s:num->bool") (parse_term "s:num->bool")))
               THEN (MATCH_MP_TAC FINITE_INDUCT_STRONG)
@@ -1953,7 +1952,7 @@
   (prove
     (tuple
       (parse_term "!m d. CARD(m..(m+d)) = d + 1")
-      (holai.runtime:proof #'GEN_TAC
+      (proof #'GEN_TAC
         THEN INDUCT_TAC
         THEN
           (#`ASM_SIMP_TAC
@@ -1983,7 +1982,7 @@
   (prove
     (tuple
       (parse_term "!m n. CARD(m..n) = (n + 1) - m")
-      (holai.runtime:proof (REPEAT #'GEN_TAC)
+      (proof (REPEAT #'GEN_TAC)
         THEN
           (#`DISJ_CASES_THEN #'MP_TAC (#`ARITH_RULE (parse_term "n:num < m \\/ m <= n")))
         THENL
@@ -1995,7 +1994,7 @@
                   CARD_CLAUSES
                   (cl:cons (#`ARITH_RULE (parse_term "n < m ==> ((n + 1) - m = 0)")) nil))))
             (cl:cons
-              (holai.runtime:proof (SIMP_TAC
+              (proof (SIMP_TAC
                   (cl:cons
                     LE_EXISTS
                     (cl:cons LEFT_IMP_EXISTS_THM (cl:cons CARD_NUMSEG_LEMMA nil))))
@@ -2013,13 +2012,13 @@
   (prove
     (tuple
       (parse_term "!n. CARD(1..n) = n")
-      (holai.runtime:proof (REWRITE_TAC (cl:cons CARD_NUMSEG nil)) THEN ARITH_TAC))))
+      (proof (REWRITE_TAC (cl:cons CARD_NUMSEG nil)) THEN ARITH_TAC))))
 
 (defparameter HAS_SIZE_NUMSEG_1
   (prove
     (tuple
       (parse_term "!n. (1..n) HAS_SIZE n")
-      (holai.runtime:proof (REWRITE_TAC
+      (proof (REWRITE_TAC
           (cl:cons CARD_NUMSEG (cl:cons HAS_SIZE (cl:cons FINITE_NUMSEG nil))))
         THEN ARITH_TAC))))
 
@@ -2029,7 +2028,7 @@
       (parse_term
         "(!m. m..0 = if m = 0 then {0} else {}) /\\
    (!m n. m..SUC n = if m <= SUC n then (SUC n) INSERT (m..n) else m..n)")
-      (holai.runtime:proof (REPEAT #'STRIP_TAC)
+      (proof (REPEAT #'STRIP_TAC)
         THEN COND_CASES_TAC
         THEN (GEN_REWRITE_TAC #'I (cl:cons EXTENSION nil))
         THEN
@@ -2045,7 +2044,7 @@
         FINITE s <=>
         ?f. (!i j. i IN 1..CARD s /\\ j IN 1..CARD s /\\ f i = f j ==> i = j) /\\
             s = IMAGE f (1..CARD s)")
-      (holai.runtime:proof #'GEN_TAC
+      (proof #'GEN_TAC
         THEN #'EQ_TAC
         THENL
           (cl:cons
@@ -2077,8 +2076,7 @@
   (prove
     (tuple
       (parse_term "!m n p q. (m..n) INTER (p..q) = (MAX m p)..(MIN n q)")
-      (holai.runtime:proof (REWRITE_TAC
-          (cl:cons EXTENSION (cl:cons IN_INTER (cl:cons IN_NUMSEG nil))))
+      (proof (REWRITE_TAC (cl:cons EXTENSION (cl:cons IN_INTER (cl:cons IN_NUMSEG nil))))
         THEN ARITH_TAC))))
 
 (defparameter DISJOINT_NUMSEG
@@ -2086,7 +2084,7 @@
     (tuple
       (parse_term
         "!m n p q. DISJOINT (m..n) (p..q) <=> n < p \\/ q < m \\/ n < m \\/ q < p")
-      (holai.runtime:proof (REWRITE_TAC
+      (proof (REWRITE_TAC
           (cl:cons DISJOINT (cl:cons NUMSEG_EMPTY (cl:cons INTER_NUMSEG nil))))
         THEN ARITH_TAC))))
 
@@ -2094,24 +2092,21 @@
   (prove
     (tuple
       (parse_term "!m n p. m <= n + 1 ==> (m..(n+p) = (m..n) UNION (n+1..n+p))")
-      (holai.runtime:proof (REWRITE_TAC
-          (cl:cons EXTENSION (cl:cons IN_UNION (cl:cons IN_NUMSEG nil))))
+      (proof (REWRITE_TAC (cl:cons EXTENSION (cl:cons IN_UNION (cl:cons IN_NUMSEG nil))))
         THEN ARITH_TAC))))
 
 (defparameter NUMSEG_OFFSET_IMAGE
   (prove
     (tuple
       (parse_term "!m n p. (m+p..n+p) = IMAGE (\\i. i + p) (m..n)")
-      (holai.runtime:proof (REWRITE_TAC
-          (cl:cons EXTENSION (cl:cons IN_IMAGE (cl:cons IN_NUMSEG nil))))
+      (proof (REWRITE_TAC (cl:cons EXTENSION (cl:cons IN_IMAGE (cl:cons IN_NUMSEG nil))))
         THEN (REPEAT #'GEN_TAC)
         THEN #'EQ_TAC
         THENL
           (cl:cons
             (DISCH_THEN
               (lambdac (th)
-                (holai.runtime:proof (#`EXISTS_TAC (parse_term "x - p:num"))
-                  THEN (MP_TAC th))))
+                (proof (#`EXISTS_TAC (parse_term "x - p:num")) THEN (MP_TAC th))))
             (cl:cons #'ALL_TAC nil))
         THEN ARITH_TAC))))
 
@@ -2119,7 +2114,7 @@
   (prove
     (tuple
       (parse_term "!m n p q. (m..n) SUBSET (p..q) <=> n < m \\/ p <= m /\\ n <= q")
-      (holai.runtime:proof (REPEAT #'GEN_TAC)
+      (proof (REPEAT #'GEN_TAC)
         THEN (REWRITE_TAC (cl:cons SUBSET (cl:cons IN_NUMSEG nil)))
         THEN #'EQ_TAC
         THENL
@@ -2136,7 +2131,7 @@
   (prove
     (tuple
       (parse_term "!n. {x | x <= n} = 0..n")
-      (holai.runtime:proof (REWRITE_TAC
+      (proof (REWRITE_TAC
           (cl:cons EXTENSION (cl:cons IN_NUMSEG (cl:cons IN_ELIM_THM nil))))
         THEN ARITH_TAC))))
 
@@ -2144,7 +2139,7 @@
   (prove
     (tuple
       (parse_term "!n. {x | x < n} = if n = 0 then {} else 0..(n-1)")
-      (holai.runtime:proof #'GEN_TAC
+      (proof #'GEN_TAC
         THEN COND_CASES_TAC
         THEN
           (REWRITE_TAC
@@ -2219,7 +2214,7 @@
                     ==> ?f. s = IMAGE f (1..n) /\\
                             (!j k. j IN 1..n /\\ k IN 1..n /\\ j < k
                                    ==> ~(f k << f j))")
-      (holai.runtime:proof #'GEN_TAC
+      (proof #'GEN_TAC
         THEN DISCH_TAC
         THEN
           (SUBGOAL_THEN
@@ -2229,7 +2224,7 @@
             ASSUME_TAC)
         THENL
           (cl:cons
-            (holai.runtime:proof INDUCT_TAC
+            (proof INDUCT_TAC
               THEN
                 (REWRITE_TAC
                   (cl:cons
@@ -2258,8 +2253,7 @@
               THEN (#`ASM_REWRITE_TAC nil)
               THENL
                 (cl:cons
-                  (holai.runtime:proof (#`EXISTS_TAC (parse_term "a:A"))
-                    THEN (#`SET_TAC nil))
+                  (proof (#`EXISTS_TAC (parse_term "a:A")) THEN (#`SET_TAC nil))
                   (cl:cons #'ALL_TAC nil))
               THEN (DISCH_THEN (X_CHOOSE_THEN (parse_term "b:A") STRIP_ASSUME_TAC))
               THEN (ASM_CASES_TAC (parse_term "((a:A) << (b:A)) :bool"))
@@ -2307,12 +2301,12 @@
               (REWRITE_TAC (cl:cons EXTENSION (cl:cons IN_IMAGE (cl:cons th nil))))))
         THENL
           (cl:cons
-            (holai.runtime:proof (REWRITE_TAC (cl:cons IN_NUMSEG nil)) THEN ARITH_TAC)
+            (proof (REWRITE_TAC (cl:cons IN_NUMSEG nil)) THEN ARITH_TAC)
             (cl:cons #'ALL_TAC nil))
         THEN #'CONJ_TAC
         THENL
           (cl:cons
-            (holai.runtime:proof (#`X_GEN_TAC (parse_term "b:A"))
+            (proof (#`X_GEN_TAC (parse_term "b:A"))
               THEN (ASM_CASES_TAC (parse_term "b:A = a"))
               THENL (cl:cons (#`ASM_MESON_TAC nil) (cl:cons #'ALL_TAC nil))
               THEN
@@ -2337,7 +2331,7 @@
                     (#`ARITH_RULE (parse_term "1 <= x ==> 1 < x + 1 /\\ ~(x + 1 = 1)"))
                     (cl:cons ADD_SUB nil))))
             (cl:cons
-              (holai.runtime:proof (MAP_EVERY
+              (proof (MAP_EVERY
                   X_GEN_TAC
                   (cl:cons (parse_term "j:num") (cl:cons (parse_term "k:num") nil)))
                 THEN
@@ -2347,13 +2341,13 @@
                 THEN (#`ASM_REWRITE_TAC (cl:cons LT_REFL nil))
                 THENL
                   (cl:cons
-                    (holai.runtime:proof #'STRIP_TAC
+                    (proof #'STRIP_TAC
                       THEN (FIRST_X_ASSUM #'MATCH_MP_TAC)
                       THEN (ASM SET_TAC nil))
                     (cl:cons
                       ARITH_TAC
                       (cl:cons
-                        (holai.runtime:proof #'STRIP_TAC
+                        (proof #'STRIP_TAC
                           THEN (FIRST_X_ASSUM #'MATCH_MP_TAC)
                           THEN (#`ASM_REWRITE_TAC nil)
                           THEN ASM_ARITH_TAC)
@@ -2373,21 +2367,19 @@
    (!l r. FINITE {x:int | l <= x /\\ x < r}) /\\
    (!l r. FINITE {x:int | l < x /\\ x <= r}) /\\
    (!l r. FINITE {x:int | l < x /\\ x < r})")
-      (holai.runtime:proof (MATCH_MP_TAC
-          (#`TAUT (parse_term "(a ==> b) /\\ a ==> a /\\ b")))
+      (proof (MATCH_MP_TAC (#`TAUT (parse_term "(a ==> b) /\\ a ==> a /\\ b")))
         THEN #'CONJ_TAC
         THENL
           (cl:cons
-            (holai.runtime:proof DISCH_TAC
+            (proof DISCH_TAC
               THEN (REPEAT #'CONJ_TAC)
               THEN (POP_ASSUM #'MP_TAC)
-              THEN
-                (REPEAT (holai.runtime:proof (MATCH_MP_TAC MONO_FORALL) THEN #'GEN_TAC))
+              THEN (REPEAT (proof (MATCH_MP_TAC MONO_FORALL) THEN #'GEN_TAC))
               THEN (MATCH_MP_TAC (REWRITE_RULE (cl:cons IMP_CONJ_ALT nil) FINITE_SUBSET))
               THEN (REWRITE_TAC (cl:cons SUBSET (cl:cons IN_ELIM_THM nil)))
               THEN INT_ARITH_TAC)
             (cl:cons
-              (holai.runtime:proof (REPEAT #'GEN_TAC)
+              (proof (REPEAT #'GEN_TAC)
                 THEN (ASM_CASES_TAC (parse_term "&0:int <= r - l"))
                 THEN
                   (#`ASM_SIMP_TAC
@@ -2437,7 +2429,7 @@
             (!a b. op a b = op b a) /\\
             (!a b c. op (op a b) c = op a (op b c)) /\\
             (!a b c. op a (op b c) = op b (op a c))")
-      (holai.runtime:proof (REWRITE_TAC (cl:cons monoidal nil)) THEN (MESON_TAC nil)))))
+      (proof (REWRITE_TAC (cl:cons monoidal nil)) THEN (MESON_TAC nil)))))
 
 (defparameter support
   (#`new_definition
@@ -2462,8 +2454,7 @@
   (prove
     (tuple
       (parse_term "!op (f:A->B) s. support op f (support op f s) = support op f s")
-      (holai.runtime:proof (REWRITE_TAC
-          (cl:cons support (cl:cons IN_ELIM_THM (cl:cons EXTENSION nil))))
+      (proof (REWRITE_TAC (cl:cons support (cl:cons IN_ELIM_THM (cl:cons EXTENSION nil))))
         THEN (REWRITE_TAC (cl:cons CONJ_ACI nil))))))
 
 (defparameter SUPPORT_EMPTY
@@ -2471,7 +2462,7 @@
     (tuple
       (parse_term
         "!op (f:A->B) s. (!x. x IN s ==> f(x) = neutral op) <=> support op f s = {}")
-      (holai.runtime:proof (REWRITE_TAC
+      (proof (REWRITE_TAC
           (cl:cons
             IN_SUPPORT
             (cl:cons EXTENSION (cl:cons IN_ELIM_THM (cl:cons NOT_IN_EMPTY nil)))))
@@ -2506,7 +2497,7 @@
                    (support op f s) DIFF (support op f t)) /\\
    (!(f:A->B) (g:B->C) s.
                    support op g (IMAGE f s) = IMAGE f (support op (g o f) s))")
-      (holai.runtime:proof (REWRITE_TAC
+      (proof (REWRITE_TAC
           (cl:cons
             support
             (cl:cons
@@ -2537,7 +2528,7 @@
         "!op s (f:A->B) a.
         support op (\\x. if x = a then f(x) else neutral op) s =
         if a IN s then support op f {a} else {}")
-      (holai.runtime:proof (REWRITE_TAC
+      (proof (REWRITE_TAC
           (cl:cons
             EXTENSION
             (cl:cons support (cl:cons IN_ELIM_THM (cl:cons IN_SING nil)))))
@@ -2551,7 +2542,7 @@
       (parse_term
         "!op (f:A->B) a.
         FINITE(support op (\\x. if x = a then f(x) else neutral op) s)")
-      (holai.runtime:proof (REWRITE_TAC (cl:cons SUPPORT_DELTA nil))
+      (proof (REWRITE_TAC (cl:cons SUPPORT_DELTA nil))
         THEN (REPEAT #'GEN_TAC)
         THEN COND_CASES_TAC
         THEN (SIMP_TAC (cl:cons FINITE_RULES (cl:cons FINITE_SUPPORT nil)))))))
@@ -2587,7 +2578,7 @@
                      ==> (iterate op (x INSERT s) f =
                                 if x IN s then iterate op s f
                                 else op (f x) (iterate op s f)))")
-      (holai.runtime:proof #'GEN_TAC
+      (proof #'GEN_TAC
         THEN #'STRIP_TAC
         THEN (ONCE_REWRITE_TAC (cl:cons AND_FORALL_THM nil))
         THEN #'GEN_TAC
@@ -2647,7 +2638,7 @@
      (DISJOINT s (x INSERT t) <=> ~(x IN s) /\\ DISJOINT s t)")
               (#`SET_TAC nil)))))
         (cl:declare (cl:ignorable lemma))
-        (holai.runtime:proof #'GEN_TAC
+        (proof #'GEN_TAC
           THEN DISCH_TAC
           THEN #'GEN_TAC
           THEN #'GEN_TAC
@@ -2674,7 +2665,7 @@
                            DISJOINT (support op f s) (support op f t)
                            ==> (iterate op (s UNION t) f =
                                 op (iterate op s f) (iterate op t f))")
-      (holai.runtime:proof (ONCE_REWRITE_TAC (cl:cons (#`GSYM ITERATE_SUPPORT) nil))
+      (proof (ONCE_REWRITE_TAC (cl:cons (#`GSYM ITERATE_SUPPORT) nil))
         THEN (SIMP_TAC (cl:cons SUPPORT_CLAUSES (cl:cons ITERATE_UNION nil)))))))
 
 (defparameter ITERATE_DIFF
@@ -2710,7 +2701,7 @@
                          (support op f t) SUBSET (support op f s)
                          ==> (op (iterate op (s DIFF t) f) (iterate op t f) =
                               iterate op s f)")
-      (holai.runtime:proof (ONCE_REWRITE_TAC (cl:cons (#`GSYM ITERATE_SUPPORT) nil))
+      (proof (ONCE_REWRITE_TAC (cl:cons (#`GSYM ITERATE_SUPPORT) nil))
         THEN (SIMP_TAC (cl:cons SUPPORT_CLAUSES (cl:cons ITERATE_DIFF nil)))))))
 
 (defparameter ITERATE_INCL_EXCL
@@ -2723,7 +2714,7 @@
                 ==> op (iterate op s f) (iterate op t f) =
                     op (iterate op (s UNION t) f)
                        (iterate op (s INTER t) f)")
-      (holai.runtime:proof (REPEAT #'STRIP_TAC)
+      (proof (REPEAT #'STRIP_TAC)
         THEN
           (ONCE_REWRITE_TAC
             (cl:cons
@@ -2770,7 +2761,7 @@
         ==> !P. P(neutral op) /\\ (!x y. P x /\\ P y ==> P (op x y))
                 ==> !f:A->B s. (!x. x IN s /\\ ~(f x = neutral op) ==> P(f x))
                                ==> P(iterate op s f)")
-      (holai.runtime:proof (REPEAT #'STRIP_TAC)
+      (proof (REPEAT #'STRIP_TAC)
         THEN (ONCE_REWRITE_TAC (cl:cons ITERATE_EXPAND_CASES nil))
         THEN (REPEAT (POP_ASSUM #'MP_TAC))
         THEN (REWRITE_TAC (cl:cons (#`GSYM IN_SUPPORT) nil))
@@ -2795,7 +2786,7 @@
                       FINITE s /\\
                       (!x. x IN s ==> R (f x) (g x))
                       ==> R (iterate op s f) (iterate op s g)")
-      (holai.runtime:proof #'GEN_TAC
+      (proof #'GEN_TAC
         THEN DISCH_TAC
         THEN #'GEN_TAC
         THEN #'STRIP_TAC
@@ -2814,7 +2805,7 @@
         "!op. monoidal op
         ==> !f:A->B s. (!x. x IN s ==> (f(x) = neutral op))
                        ==> (iterate op s f = neutral op)")
-      (holai.runtime:proof (REPEAT #'STRIP_TAC)
+      (proof (REPEAT #'STRIP_TAC)
         THEN (SUBGOAL_THEN (parse_term "support op (f:A->B) s = {}") ASSUME_TAC)
         THENL
           (cl:cons
@@ -2831,7 +2822,7 @@
   (prove
     (tuple
       (parse_term "!op. monoidal op ==> !f:A->B x. (iterate op {x} f = f x)")
-      (holai.runtime:proof (SIMP_TAC
+      (proof (SIMP_TAC
           (cl:cons ITERATE_CLAUSES (cl:cons FINITE_RULES (cl:cons NOT_IN_EMPTY nil))))
         THEN (MESON_TAC (cl:cons monoidal nil))))))
 
@@ -2844,7 +2835,7 @@
                 ==> !f:A->B s. FINITE s /\\ ~(s = {}) /\\
                                (!x. x IN s ==> P(f x))
                                ==> P(iterate op s f)")
-      (holai.runtime:proof #'GEN_TAC
+      (proof #'GEN_TAC
         THEN DISCH_TAC
         THEN #'GEN_TAC
         THEN DISCH_TAC
@@ -2875,7 +2866,7 @@
                       ~(s = {}) /\\
                       (!x. x IN s ==> R (f x) (g x))
                       ==> R (iterate op s f) (iterate op s g)")
-      (holai.runtime:proof #'GEN_TAC
+      (proof #'GEN_TAC
         THEN DISCH_TAC
         THEN #'GEN_TAC
         THEN DISCH_TAC
@@ -2917,7 +2908,7 @@
         ==> !(f:A->B) a s.
                 iterate op s (\\x. if x = a then f(x) else neutral op) =
                 if a IN s then f(a) else neutral op")
-      (holai.runtime:proof #'GEN_TAC
+      (proof #'GEN_TAC
         THEN DISCH_TAC
         THEN (ONCE_REWRITE_TAC (cl:cons (#`GSYM ITERATE_SUPPORT) nil))
         THEN (REWRITE_TAC (cl:cons SUPPORT_DELTA nil))
@@ -2936,7 +2927,7 @@
        ==> !f:A->B g:B->C s.
                 (!x y. x IN s /\\ y IN s /\\ (f x = f y) ==> (x = y))
                 ==> (iterate op (IMAGE f s) g = iterate op s (g o f))")
-      (holai.runtime:proof #'GEN_TAC
+      (proof #'GEN_TAC
         THEN DISCH_TAC
         THEN #'GEN_TAC
         THEN #'GEN_TAC
@@ -2949,7 +2940,7 @@
             ASSUME_TAC)
         THENL
           (cl:cons
-            (holai.runtime:proof (REWRITE_TAC (cl:cons IMP_CONJ nil))
+            (proof (REWRITE_TAC (cl:cons IMP_CONJ nil))
               THEN (MATCH_MP_TAC FINITE_INDUCT_STRONG)
               THEN
                 (#`ASM_SIMP_TAC
@@ -2959,7 +2950,7 @@
               THEN (REWRITE_TAC (cl:cons o_THM (cl:cons IN_INSERT nil)))
               THEN (#`ASM_MESON_TAC (cl:cons IN_IMAGE nil)))
             (cl:cons
-              (holai.runtime:proof #'GEN_TAC
+              (proof #'GEN_TAC
                 THEN DISCH_TAC
                 THEN (ONCE_REWRITE_TAC (cl:cons ITERATE_EXPAND_CASES nil))
                 THEN (REPEAT #'STRIP_TAC)
@@ -2973,10 +2964,10 @@
                 THEN (REPEAT #'STRIP_TAC)
                 THENL
                   (cl:cons
-                    (holai.runtime:proof (MATCH_MP_TAC FINITE_IMAGE_INJ_EQ)
+                    (proof (MATCH_MP_TAC FINITE_IMAGE_INJ_EQ)
                       THEN (#`ASM_MESON_TAC (cl:cons IN_SUPPORT nil)))
                     (cl:cons
-                      (holai.runtime:proof (FIRST_X_ASSUM #'MATCH_MP_TAC)
+                      (proof (FIRST_X_ASSUM #'MATCH_MP_TAC)
                         THEN (#`ASM_MESON_TAC (cl:cons IN_SUPPORT nil)))
                       nil)))
               nil))))))
@@ -2990,13 +2981,13 @@
                 (!x. x IN s ==> p(x) IN s) /\\
                 (!y. y IN s ==> ?!x. x IN s /\\ p(x) = y)
                 ==> iterate op s f = iterate op s (f o p)")
-      (holai.runtime:proof (REPEAT #'STRIP_TAC)
+      (proof (REPEAT #'STRIP_TAC)
         THEN (MATCH_MP_TAC EQ_TRANS)
         THEN (#`EXISTS_TAC (parse_term "iterate op (IMAGE (p:A->A) s) (f:A->B)"))
         THEN #'CONJ_TAC
         THENL
           (cl:cons
-            (holai.runtime:proof AP_THM_TAC
+            (proof AP_THM_TAC
               THEN AP_TERM_TAC
               THEN (REWRITE_TAC (cl:cons EXTENSION (cl:cons IN_IMAGE nil))))
             (cl:cons
@@ -3016,7 +3007,7 @@
                 FINITE s /\\ (!i. i IN s ==> FINITE(t i))
                 ==> iterate op s (\\i. iterate op (t i) (x i)) =
                     iterate op {i,j | i IN s /\\ j IN t i} (\\(i,j). x i j)")
-      (holai.runtime:proof #'GEN_TAC
+      (proof #'GEN_TAC
         THEN DISCH_TAC
         THEN (REWRITE_TAC (cl:cons IMP_CONJ (cl:cons RIGHT_FORALL_IMP_THM nil)))
         THEN (MATCH_MP_TAC FINITE_INDUCT_STRONG)
@@ -3053,7 +3044,7 @@
         THEN ANTS_TAC
         THENL
           (cl:cons
-            (holai.runtime:proof (#`ASM_SIMP_TAC
+            (proof (#`ASM_SIMP_TAC
                 (cl:cons
                   FINITE_IMAGE
                   (cl:cons FINITE_PRODUCT_DEPENDENT (cl:cons IN_INSERT nil))))
@@ -3093,11 +3084,11 @@
         THEN ANTS_TAC
         THENL
           (cl:cons
-            (holai.runtime:proof (SIMP_TAC (cl:cons FORALL_PAIR_THM nil))
+            (proof (SIMP_TAC (cl:cons FORALL_PAIR_THM nil))
               THEN (#`CONV_TAC (#`ONCE_DEPTH_CONV GEN_BETA_CONV))
               THEN (#`ASM_SIMP_TAC (cl:cons PAIR_EQ nil)))
             (cl:cons
-              (holai.runtime:proof (DISCH_THEN #'SUBST1_TAC)
+              (proof (DISCH_THEN #'SUBST1_TAC)
                 THEN (REWRITE_TAC (cl:cons o_DEF nil))
                 THEN (#`CONV_TAC (#`ONCE_DEPTH_CONV GEN_BETA_CONV))
                 THEN (REWRITE_TAC (cl:cons ETA_AX nil)))
@@ -3110,7 +3101,7 @@
         "!op. monoidal op
         ==> !f:A->B g s.
               (!x. x IN s ==> f x = g x) ==> iterate op s f = iterate op s g")
-      (holai.runtime:proof (REPEAT #'STRIP_TAC)
+      (proof (REPEAT #'STRIP_TAC)
         THEN (ONCE_REWRITE_TAC (cl:cons ITERATE_EXPAND_CASES nil))
         THEN
           (SUBGOAL_THEN
@@ -3118,8 +3109,7 @@
             #'SUBST1_TAC)
         THENL
           (cl:cons
-            (holai.runtime:proof (REWRITE_TAC
-                (cl:cons EXTENSION (cl:cons IN_SUPPORT nil)))
+            (proof (REWRITE_TAC (cl:cons EXTENSION (cl:cons IN_SUPPORT nil)))
               THEN (#`ASM_MESON_TAC nil))
             (cl:cons #'ALL_TAC nil))
         THEN COND_CASES_TAC
@@ -3147,7 +3137,7 @@
         "!op. monoidal op
         ==> !P s f:A->B. iterate op {x | x IN s /\\ P x} f =
                          iterate op s (\\x. if P x then f x else neutral op)")
-      (holai.runtime:proof (REPEAT #'STRIP_TAC)
+      (proof (REPEAT #'STRIP_TAC)
         THEN (ONCE_REWRITE_TAC (cl:cons (#`GSYM ITERATE_SUPPORT) nil))
         THEN (REWRITE_TAC (cl:cons support (cl:cons IN_ELIM_THM nil)))
         THEN
@@ -3169,11 +3159,11 @@
                 (!y. y IN t ==> ?!x. x IN s /\\ h(x) = y) /\\
                 (!x. x IN s ==> h(x) IN t /\\ g(h x) = f x)
                 ==> iterate op s f = iterate op t g")
-      (holai.runtime:proof (REPEAT #'STRIP_TAC)
+      (proof (REPEAT #'STRIP_TAC)
         THEN (SUBGOAL_THEN (parse_term "t = IMAGE (h:A->B) s") #'SUBST1_TAC)
         THENL
           (cl:cons
-            (holai.runtime:proof (REWRITE_TAC (cl:cons EXTENSION (cl:cons IN_IMAGE nil)))
+            (proof (REWRITE_TAC (cl:cons EXTENSION (cl:cons IN_IMAGE nil)))
               THEN (#`ASM_MESON_TAC nil))
             (cl:cons #'ALL_TAC nil))
         THEN (MATCH_MP_TAC EQ_TRANS)
@@ -3183,7 +3173,7 @@
           (cl:cons
             (#`ASM_MESON_TAC (cl:cons ITERATE_EQ (cl:cons o_THM nil)))
             (cl:cons
-              (holai.runtime:proof (#`CONV_TAC #'SYM_CONV)
+              (proof (#`CONV_TAC #'SYM_CONV)
                 THEN (FIRST_X_ASSUM (o #'MATCH_MP_TAC (MATCH_MP ITERATE_IMAGE)))
                 THEN (#`ASM_MESON_TAC nil))
               nil))))))
@@ -3197,7 +3187,7 @@
                 (!y. y IN t ==> k(y) IN s /\\ h(k y) = y) /\\
                 (!x. x IN s ==> h(x) IN t /\\ k(h x) = x /\\ g(h x) = f x)
                 ==> iterate op s f = iterate op t g")
-      (holai.runtime:proof (REPEAT #'STRIP_TAC)
+      (proof (REPEAT #'STRIP_TAC)
         THEN (FIRST_X_ASSUM (o #'MATCH_MP_TAC (MATCH_MP ITERATE_EQ_GENERAL)))
         THEN (#`EXISTS_TAC (parse_term "h:A->B"))
         THEN (#`ASM_MESON_TAC nil)))))
@@ -3212,7 +3202,7 @@
                       (!x. x IN s ==> p x IN s) /\\
                       (!x y. x IN s /\\ y IN s /\\ p x = p y ==> x = y)
                       ==> iterate op s (f o p) = iterate op s f")
-      (holai.runtime:proof (REPEAT #'STRIP_TAC)
+      (proof (REPEAT #'STRIP_TAC)
         THEN (#`CONV_TAC #'SYM_CONV)
         THEN (FIRST_X_ASSUM (o #'MATCH_MP_TAC (MATCH_MP ITERATE_BIJECTION)))
         THEN
@@ -3233,7 +3223,7 @@
                 (!x. x IN (s INTER t) ==> f x = neutral(op))
                 ==> iterate op (s UNION t) f =
                     op (iterate op s f) (iterate op t f)")
-      (holai.runtime:proof (REPEAT #'STRIP_TAC)
+      (proof (REPEAT #'STRIP_TAC)
         THEN (ONCE_REWRITE_TAC (cl:cons (#`GSYM ITERATE_SUPPORT) nil))
         THEN (REWRITE_TAC (cl:cons SUPPORT_CLAUSES nil))
         THEN (FIRST_ASSUM (o #'MATCH_MP_TAC (MATCH_MP ITERATE_UNION)))
@@ -3255,7 +3245,7 @@
                 FINITE s
                 ==> iterate op s (\\x. op (f x) (g x)) =
                     op (iterate op s f) (iterate op s g)")
-      (holai.runtime:proof #'GEN_TAC
+      (proof #'GEN_TAC
         THEN DISCH_TAC
         THEN #'GEN_TAC
         THEN #'GEN_TAC
@@ -3271,7 +3261,7 @@
                 u SUBSET v /\\
                 (!x. x IN v /\\ ~(x IN u) ==> f(x) = neutral op)
                 ==> iterate op v f = iterate op u f")
-      (holai.runtime:proof (REPEAT #'STRIP_TAC)
+      (proof (REPEAT #'STRIP_TAC)
         THEN (ONCE_REWRITE_TAC (cl:cons (#`GSYM ITERATE_SUPPORT) nil))
         THEN AP_THM_TAC
         THEN AP_TERM_TAC
@@ -3285,8 +3275,7 @@
         "!op. monoidal op
         ==> !f:A->B s. support op f UNIV SUBSET s
                   ==> iterate op s f = iterate op UNIV f")
-      (holai.runtime:proof (REWRITE_TAC
-          (cl:cons support (cl:cons SUBSET (cl:cons IN_ELIM_THM nil))))
+      (proof (REWRITE_TAC (cl:cons support (cl:cons SUBSET (cl:cons IN_ELIM_THM nil))))
         THEN (REPEAT #'STRIP_TAC)
         THEN (#`CONV_TAC #'SYM_CONV)
         THEN (FIRST_X_ASSUM (o #'MATCH_MP_TAC (MATCH_MP ITERATE_SUPERSET)))
@@ -3301,7 +3290,7 @@
                 FINITE s /\\ FINITE t
                 ==> iterate op s (\\i. iterate op t (f i)) =
                     iterate op t (\\j. iterate op s (\\i. f i j))")
-      (holai.runtime:proof #'GEN_TAC
+      (proof #'GEN_TAC
         THEN DISCH_TAC
         THEN #'GEN_TAC
         THEN (REWRITE_TAC (cl:cons IMP_CONJ (cl:cons RIGHT_FORALL_IMP_THM nil)))
@@ -3320,7 +3309,7 @@
                     (!x y. x IN s /\\ y IN s /\\ ~(x = y) /\\ f x = f y
                            ==> g(f x) = neutral op)
                     ==> iterate op (IMAGE f s) g = iterate op s (g o f)")
-      (holai.runtime:proof #'GEN_TAC
+      (proof #'GEN_TAC
         THEN DISCH_TAC
         THEN #'GEN_TAC
         THEN #'GEN_TAC
@@ -3356,7 +3345,7 @@
                 ==> iterate op s g =
                     iterate op (IMAGE f s)
                        (\\y. iterate op {x | x IN s /\\ f x = y} g)")
-      (holai.runtime:proof (REPEAT #'STRIP_TAC)
+      (proof (REPEAT #'STRIP_TAC)
         THEN (MATCH_MP_TAC EQ_TRANS)
         THEN
           (#`EXISTS_TAC
@@ -3366,7 +3355,7 @@
         THEN #'CONJ_TAC
         THENL
           (cl:cons
-            (holai.runtime:proof (FIRST_ASSUM (o #'MATCH_MP_TAC (MATCH_MP ITERATE_EQ)))
+            (proof (FIRST_ASSUM (o #'MATCH_MP_TAC (MATCH_MP ITERATE_EQ)))
               THEN (#`ASM_REWRITE_TAC nil)
               THEN (#`X_GEN_TAC (parse_term "x:A"))
               THEN DISCH_TAC
@@ -3379,7 +3368,7 @@
                   (ASM SET_TAC nil)
                   (cl:cons (#`ASM_SIMP_TAC (cl:cons ITERATE_SING nil)) nil)))
             (cl:cons
-              (holai.runtime:proof (#`ASM_SIMP_TAC (cl:cons ITERATE_RESTRICT_SET nil))
+              (proof (#`ASM_SIMP_TAC (cl:cons ITERATE_RESTRICT_SET nil))
                 THEN
                   (FIRST_ASSUM
                     (lambdac (th)
@@ -3404,7 +3393,7 @@
                 ==> iterate op s (\\x. if P x then f x else g x) =
                     op (iterate op {x | x IN s /\\ P x} f)
                        (iterate op {x | x IN s /\\ ~P x} g)")
-      (holai.runtime:proof (REPEAT #'STRIP_TAC)
+      (proof (REPEAT #'STRIP_TAC)
         THEN (MATCH_MP_TAC EQ_TRANS)
         THEN
           (#`EXISTS_TAC
@@ -3414,7 +3403,7 @@
         THEN #'CONJ_TAC
         THENL
           (cl:cons
-            (holai.runtime:proof (FIRST_ASSUM
+            (proof (FIRST_ASSUM
                 (lambdac (th)
                   (#`ASM_SIMP_TAC
                     (cl:cons
@@ -3430,7 +3419,7 @@
               THEN AP_TERM_TAC
               THEN (#`SET_TAC nil))
             (cl:cons
-              (holai.runtime:proof BINOP_TAC
+              (proof BINOP_TAC
                 THEN (FIRST_ASSUM (o #'MATCH_MP_TAC (MATCH_MP ITERATE_EQ)))
                 THEN (SIMP_TAC (cl:cons IN_ELIM_THM nil)))
               nil))))))
@@ -3444,7 +3433,7 @@
                 FINITE(support op f s) /\\ FINITE(support op g s)
                 ==> iterate op s (\\x. op (f x) (g x)) =
                     op (iterate op s f) (iterate op s g)")
-      (holai.runtime:proof (REPEAT #'STRIP_TAC)
+      (proof (REPEAT #'STRIP_TAC)
         THEN (ONCE_REWRITE_TAC (cl:cons (#`GSYM ITERATE_SUPPORT) nil))
         THEN (MATCH_MP_TAC EQ_TRANS)
         THEN
@@ -3457,8 +3446,7 @@
           (cl:cons
             (#`CONV_TAC #'SYM_CONV)
             (cl:cons
-              (holai.runtime:proof (#`ASM_SIMP_TAC
-                  (cl:cons ITERATE_OP (cl:cons FINITE_UNION nil)))
+              (proof (#`ASM_SIMP_TAC (cl:cons ITERATE_OP (cl:cons FINITE_UNION nil)))
                 THEN BINOP_TAC)
               nil))
         THEN (FIRST_ASSUM (o #'MATCH_MP_TAC (MATCH_MP ITERATE_SUPERSET)))
@@ -3478,7 +3466,7 @@
             (!m n. iterate op (m..SUC n) f :A =
                    if m <= SUC n then op (iterate op (m..n) f) (f(SUC n))
                    else iterate op (m..n) f)")
-      (holai.runtime:proof (REWRITE_TAC (cl:cons NUMSEG_CLAUSES nil))
+      (proof (REWRITE_TAC (cl:cons NUMSEG_CLAUSES nil))
         THEN (REPEAT #'STRIP_TAC)
         THEN COND_CASES_TAC
         THEN
@@ -3501,7 +3489,7 @@
         ==> iterate op {i | i < 0} f :A = neutral op /\\
             (!k. iterate op {i | i < SUC k} f =
                  op (iterate op {i | i < k} f) (f k))")
-      (holai.runtime:proof (SIMP_TAC
+      (proof (SIMP_TAC
           (cl:cons
             NUMSEG_CLAUSES_LT
             (cl:cons ITERATE_CLAUSES (cl:cons FINITE_NUMSEG_LT nil))))
@@ -3516,7 +3504,7 @@
         ==> iterate op {i | i <= 0} f :A = f 0 /\\
             (!k. iterate op {i | i <= SUC k} f =
                  op (iterate op {i | i <= k} f) (f(SUC k)))")
-      (holai.runtime:proof (SIMP_TAC
+      (proof (SIMP_TAC
           (cl:cons
             NUMSEG_CLAUSES_LE
             (cl:cons
@@ -3538,7 +3526,7 @@
         "!op. monoidal op
         ==> !f m n. iterate op (2*m..2*n+1) f :A =
                     iterate op (m..n) (\\i. op (f(2*i)) (f(2*i+1)))")
-      (holai.runtime:proof #'GEN_TAC
+      (proof #'GEN_TAC
         THEN DISCH_TAC
         THEN #'GEN_TAC
         THEN #'GEN_TAC
@@ -3546,7 +3534,7 @@
         THEN (#`CONV_TAC NUM_REDUCE_CONV)
         THENL
           (cl:cons
-            (holai.runtime:proof (#`ASM_SIMP_TAC
+            (proof (#`ASM_SIMP_TAC
                 (cl:cons
                   (#`num_CONV (parse_term "1"))
                   (cl:cons ITERATE_CLAUSES_NUMSEG nil)))
@@ -3556,7 +3544,7 @@
               THEN COND_CASES_TAC
               THEN (#`ASM_REWRITE_TAC (cl:cons MULT_EQ_0 (cl:cons ARITH nil))))
             (cl:cons
-              (holai.runtime:proof (REWRITE_TAC
+              (proof (REWRITE_TAC
                   (cl:cons
                     (#`ARITH_RULE (parse_term "2 * SUC n + 1 = SUC(SUC(2 * n + 1))"))
                     nil))
@@ -3591,7 +3579,7 @@
         ==> !x m n. iterate op (m..n) x =
                     if n < m then neutral op
                     else iterate op (0..n-m) (\\i. x(n - i))")
-      (holai.runtime:proof (REWRITE_TAC (cl:cons (#`GSYM NUMSEG_EMPTY) nil))
+      (proof (REWRITE_TAC (cl:cons (#`GSYM NUMSEG_EMPTY) nil))
         THEN (REPEAT #'STRIP_TAC)
         THEN COND_CASES_TAC
         THENL
@@ -3661,9 +3649,7 @@
               op (f i) (itty dom neut op (<<=)
                           {j | j IN k DELETE i /\\ f j IN dom DIFF {neut}} f)
          else neut")
-      (holai.runtime:proof (REPLICATE_TAC
-          4
-          (ONCE_REWRITE_TAC (cl:cons (#`GSYM SKOLEM_THM) nil)))
+      (proof (REPLICATE_TAC 4 (ONCE_REWRITE_TAC (cl:cons (#`GSYM SKOLEM_THM) nil)))
         THEN (REPEAT #'GEN_TAC)
         THEN (GEN_REWRITE_TAC #'I (cl:cons EXISTS_SWAP_FUN_THM nil))
         THEN (REWRITE_TAC nil)
@@ -3721,7 +3707,7 @@
         "!dom neut op (<<=) k (f:K->A).
         iterato dom neut op (<<=) {i | i IN k /\\ f i IN dom DIFF {neut}} f =
         iterato dom neut op (<<=) k f")
-      (holai.runtime:proof (REPEAT #'GEN_TAC)
+      (proof (REPEAT #'GEN_TAC)
         THEN (ONCE_REWRITE_TAC (cl:cons iterato nil))
         THEN
           (REWRITE_TAC
@@ -3752,13 +3738,13 @@
         if FINITE {i | i IN k /\\ f i IN dom DIFF {neut}}
         then iterato dom neut op (<<=) {i | i IN k /\\ f i IN dom DIFF {neut}} f
         else neut")
-      (holai.runtime:proof (REPEAT #'GEN_TAC)
+      (proof (REPEAT #'GEN_TAC)
         THEN COND_CASES_TAC
         THENL
           (cl:cons
             (REWRITE_TAC (cl:cons ITERATO_SUPPORT nil))
             (cl:cons
-              (holai.runtime:proof (GEN_REWRITE_TAC LAND_CONV (cl:cons iterato nil))
+              (proof (GEN_REWRITE_TAC LAND_CONV (cl:cons iterato nil))
                 THEN (#`ASM_REWRITE_TAC nil))
               nil))))))
 
@@ -3775,13 +3761,13 @@
                    if f i IN dom ==> f i = neut \\/ i IN k
                    then iterato dom neut op (<<=) k f
                    else op (f i) (iterato dom neut op (<<=) k f))")
-      (holai.runtime:proof (REPEAT #'GEN_TAC)
+      (proof (REPEAT #'GEN_TAC)
         THEN #'CONJ_TAC
         THENL
           (cl:cons
-            (holai.runtime:proof (GEN_REWRITE_TAC LAND_CONV (cl:cons iterato nil))
+            (proof (GEN_REWRITE_TAC LAND_CONV (cl:cons iterato nil))
               THEN (#`ASM_REWRITE_TAC (cl:cons NOT_IN_EMPTY (cl:cons EMPTY_GSPEC nil))))
-            (cl:cons (holai.runtime:proof (REPEAT #'GEN_TAC) THEN #'STRIP_TAC) nil))
+            (cl:cons (proof (REPEAT #'GEN_TAC) THEN #'STRIP_TAC) nil))
         THEN (ASM_CASES_TAC (parse_term "(i:K) IN k"))
         THEN
           (#`ASM_SIMP_TAC
@@ -3797,14 +3783,13 @@
         THEN COND_CASES_TAC
         THENL
           (cl:cons
-            (holai.runtime:proof (GEN_REWRITE_TAC LAND_CONV (cl:cons iterato nil))
+            (proof (GEN_REWRITE_TAC LAND_CONV (cl:cons iterato nil))
               THEN
                 (FIRST_X_ASSUM (o #'MP_TAC (GEN_REWRITE_RULE #'I (cl:cons IN_DIFF nil))))
               THEN (REWRITE_TAC (cl:cons IN_SING nil))
               THEN #'STRIP_TAC)
             (cl:cons
-              (holai.runtime:proof (ONCE_REWRITE_TAC
-                  (cl:cons (#`GSYM ITERATO_SUPPORT) nil))
+              (proof (ONCE_REWRITE_TAC (cl:cons (#`GSYM ITERATO_SUPPORT) nil))
                 THEN AP_THM_TAC
                 THEN AP_TERM_TAC
                 THEN (ASM SET_TAC nil))
@@ -3819,7 +3804,7 @@
           (cl:cons
             (ASM SET_TAC nil)
             (cl:cons
-              (holai.runtime:proof (MATCH_MP_TAC FINITE_SUBSET)
+              (proof (MATCH_MP_TAC FINITE_SUBSET)
                 THEN
                   (#`EXISTS_TAC
                     (parse_term "i INSERT {j | j IN k /\\ (f:K->A) j IN dom DIFF {neut}}"))
@@ -3831,7 +3816,7 @@
           (cl:cons
             (FIRST_X_ASSUM (o (K #'ALL_TAC) (check (o is_exists #'concl))))
             (cl:cons
-              (holai.runtime:proof (FIRST_X_ASSUM
+              (proof (FIRST_X_ASSUM
                   (o
                     (o #'MP_TAC (#`SPEC (parse_term "i:K")))
                     (REWRITE_RULE (cl:cons NOT_EXISTS_THM nil))))
@@ -3849,7 +3834,7 @@
           (cl:cons
             #'ALL_TAC
             (cl:cons
-              (holai.runtime:proof (#`CONV_TAC (#`ONCE_DEPTH_CONV let_CONV))
+              (proof (#`CONV_TAC (#`ONCE_DEPTH_CONV let_CONV))
                 THEN
                   (#`ASM_SIMP_TAC
                     (cl:cons
@@ -3879,7 +3864,7 @@
                    if f i IN dom ==> f i = neut \\/ i IN k
                    then iterato dom neut op (<<=) k f
                    else op (f i) (iterato dom neut op (<<=) k f))")
-      (holai.runtime:proof (REPEAT #'STRIP_TAC)
+      (proof (REPEAT #'STRIP_TAC)
         THEN (REWRITE_TAC (cl:cons ITERATO_CLAUSES_GEN nil))
         THEN (MATCH_MP_TAC (#`CONJUNCT2 (SPEC_ALL ITERATO_CLAUSES_GEN)))
         THEN (#`ASM_MESON_TAC nil)))))
@@ -3895,13 +3880,13 @@
              ==> ?i. i IN k /\\ f i IN dom DIFF {neut} /\\
                      iterato dom neut op (<<=) k f =
                      op (f i) (iterato dom neut op (<<=) (k DELETE i) f))")
-      (holai.runtime:proof (REPEAT #'GEN_TAC)
+      (proof (REPEAT #'GEN_TAC)
         THEN #'CONJ_TAC
         THENL
           (cl:cons
-            (holai.runtime:proof (GEN_REWRITE_TAC LAND_CONV (cl:cons iterato nil))
+            (proof (GEN_REWRITE_TAC LAND_CONV (cl:cons iterato nil))
               THEN (#`ASM_REWRITE_TAC (cl:cons NOT_IN_EMPTY (cl:cons EMPTY_GSPEC nil))))
-            (cl:cons (holai.runtime:proof (REPEAT #'GEN_TAC) THEN #'STRIP_TAC) nil))
+            (cl:cons (proof (REPEAT #'GEN_TAC) THEN #'STRIP_TAC) nil))
         THEN
           (GEN_REWRITE_TAC
             (o (o (o #'BINDER_CONV #'RAND_CONV) #'RAND_CONV) LAND_CONV)
@@ -3931,7 +3916,7 @@
         "!dom neut op (<<=) k f (g:K->A).
         (!i. i IN k ==> f i = g i)
         ==> iterato dom neut op (<<=) k f = iterato dom neut op (<<=) k g")
-      (holai.runtime:proof (REPEAT #'STRIP_TAC)
+      (proof (REPEAT #'STRIP_TAC)
         THEN (ONCE_REWRITE_TAC (cl:cons ITERATO_EXPAND_CASES nil))
         THEN
           (#`ASM_SIMP_TAC (cl:cons (#`TAUT (parse_term "p /\\ q <=> ~(p ==> ~q)")) nil))
@@ -3990,7 +3975,7 @@
         THEN (SUBGOAL_THEN (parse_term "(i:K) IN k") ASSUME_TAC)
         THENL
           (cl:cons
-            (holai.runtime:proof (EXPAND_TAC "i")
+            (proof (EXPAND_TAC "i")
               THEN
                 (RULE_ASSUM_TAC
                   (REWRITE_RULE
@@ -4030,7 +4015,7 @@
         P neut /\\
         (!i x. i IN k /\\ f i IN dom /\\ ~(f i = neut) /\\ P x ==> P (op (f i) x))
         ==> P(iterato dom neut op (<<=) k f)")
-      (holai.runtime:proof (REPEAT #'GEN_TAC)
+      (proof (REPEAT #'GEN_TAC)
         THEN
           (REWRITE_TAC
             (cl:cons
@@ -4095,7 +4080,7 @@
         THEN #'CONJ_TAC
         THENL
           (cl:cons
-            (holai.runtime:proof (ONCE_REWRITE_TAC (cl:cons (#`GSYM ITERATO_SUPPORT) nil))
+            (proof (ONCE_REWRITE_TAC (cl:cons (#`GSYM ITERATO_SUPPORT) nil))
               THEN (SIMP_TAC nil)
               THEN (#`ASM_REWRITE_TAC (cl:cons ITERATO_CLAUSES_EXISTS nil)))
             (cl:cons (DISCH_THEN (X_CHOOSE_THEN (parse_term "i:K") #'MP_TAC)) nil))
@@ -4122,7 +4107,7 @@
         (!x y. P x /\\ P y ==> P(op x y)) /\\
         (!i. i IN k /\\ f i IN dom /\\ ~(f i = neut) ==> P(f i))
         ==> P(iterato dom neut op (<<=) k f)")
-      (holai.runtime:proof (REPEAT #'STRIP_TAC)
+      (proof (REPEAT #'STRIP_TAC)
         THEN (MATCH_MP_TAC ITERATO_INDUCT)
         THEN (#`ASM_SIMP_TAC nil)))))
 
@@ -4132,7 +4117,7 @@
       (parse_term
         "!(op:A->A->A) ((<<=):K->K->bool).
         monoidal op ==> iterato (:A) (neutral op) op (<<=) = iterate op")
-      (holai.runtime:proof (REPEAT #'STRIP_TAC)
+      (proof (REPEAT #'STRIP_TAC)
         THEN (REWRITE_TAC (cl:cons FUN_EQ_THM nil))
         THEN
           (MAP_EVERY
@@ -4196,7 +4181,7 @@
         THEN #'CONJ_TAC
         THENL
           (cl:cons
-            (holai.runtime:proof (ONCE_REWRITE_TAC
+            (proof (ONCE_REWRITE_TAC
                 (cl:cons (#`GSYM ITERATO_SUPPORT) (cl:cons (#`GSYM ITERATE_SUPPORT) nil)))
               THEN
                 (REWRITE_TAC
@@ -4254,7 +4239,7 @@
            then iterato dom neut op (<=) (m+1..n) f
            else op (f m) (iterato dom neut op (<=) (m+1..n) f)
          else neut")
-      (holai.runtime:proof (REPEAT #'GEN_TAC)
+      (proof (REPEAT #'GEN_TAC)
         THEN
           (MP_TAC
             (ISPECL
@@ -4273,10 +4258,10 @@
           (cl:cons
             (DISCH_THEN
               (lambdac (th)
-                (holai.runtime:proof (#`ASM_SIMP_TAC (cl:cons (#`GSYM NUMSEG_LREC) nil))
+                (proof (#`ASM_SIMP_TAC (cl:cons (#`GSYM NUMSEG_LREC) nil))
                   THEN (MP_TAC th))))
             (cl:cons
-              (holai.runtime:proof (DISCH_THEN (o #'MP_TAC CONJUNCT1))
+              (proof (DISCH_THEN (o #'MP_TAC CONJUNCT1))
                 THEN (#`ASM_MESON_TAC (cl:cons NUMSEG_EMPTY (cl:cons NOT_LE nil))))
               nil))
         THEN
@@ -4289,7 +4274,7 @@
         THEN ANTS_TAC
         THENL
           (cl:cons
-            (holai.runtime:proof (SIMP_TAC
+            (proof (SIMP_TAC
                 (cl:cons FINITE_RESTRICT (cl:cons FINITE_NUMSEG (cl:cons IN_NUMSEG nil))))
               THEN ARITH_TAC)
             (cl:cons
@@ -4315,7 +4300,7 @@
   (prove
     (tuple
       (parse_term "neutral(( * ):num->num->num) = 1")
-      (holai.runtime:proof (REWRITE_TAC (cl:cons neutral nil))
+      (proof (REWRITE_TAC (cl:cons neutral nil))
         THEN (MATCH_MP_TAC SELECT_UNIQUE)
         THEN (MESON_TAC (cl:cons MULT_CLAUSES (cl:cons MULT_EQ_1 nil)))))))
 
@@ -4323,8 +4308,7 @@
   (prove
     (tuple
       (parse_term "monoidal(( * ):num->num->num)")
-      (holai.runtime:proof (REWRITE_TAC (cl:cons monoidal (cl:cons NEUTRAL_MUL nil)))
-        THEN ARITH_TAC))))
+      (proof (REWRITE_TAC (cl:cons monoidal (cl:cons NEUTRAL_MUL nil))) THEN ARITH_TAC))))
 
 (defparameter NPRODUCT_CLAUSES
   (prove
@@ -4335,8 +4319,7 @@
         FINITE(s)
         ==> (nproduct (x INSERT s) f =
              if x IN s then nproduct s f else f(x) * nproduct s f))")
-      (holai.runtime:proof (REWRITE_TAC
-          (cl:cons nproduct (cl:cons (#`GSYM NEUTRAL_MUL) nil)))
+      (proof (REWRITE_TAC (cl:cons nproduct (cl:cons (#`GSYM NEUTRAL_MUL) nil)))
         THEN (ONCE_REWRITE_TAC (cl:cons SWAP_FORALL_THM nil))
         THEN (MATCH_MP_TAC ITERATE_CLAUSES)
         THEN (REWRITE_TAC (cl:cons MONOIDAL_MUL nil))))))
@@ -4349,7 +4332,7 @@
   (prove
     (tuple
       (parse_term "neutral(( * ):int->int->int) = &1")
-      (holai.runtime:proof (REWRITE_TAC (cl:cons neutral nil))
+      (proof (REWRITE_TAC (cl:cons neutral nil))
         THEN (MATCH_MP_TAC SELECT_UNIQUE)
         THEN (MESON_TAC (cl:cons INT_MUL_LID (cl:cons INT_MUL_RID nil)))))))
 
@@ -4357,7 +4340,7 @@
   (prove
     (tuple
       (parse_term "monoidal(( * ):int->int->int)")
-      (holai.runtime:proof (REWRITE_TAC (cl:cons monoidal (cl:cons NEUTRAL_INT_MUL nil)))
+      (proof (REWRITE_TAC (cl:cons monoidal (cl:cons NEUTRAL_INT_MUL nil)))
         THEN INT_ARITH_TAC))))
 
 (defparameter IPRODUCT_CLAUSES
@@ -4369,8 +4352,7 @@
         FINITE(s)
         ==> (iproduct (x INSERT s) f =
              if x IN s then iproduct s f else f(x) * iproduct s f))")
-      (holai.runtime:proof (REWRITE_TAC
-          (cl:cons iproduct (cl:cons (#`GSYM NEUTRAL_INT_MUL) nil)))
+      (proof (REWRITE_TAC (cl:cons iproduct (cl:cons (#`GSYM NEUTRAL_INT_MUL) nil)))
         THEN (ONCE_REWRITE_TAC (cl:cons SWAP_FORALL_THM nil))
         THEN (MATCH_MP_TAC ITERATE_CLAUSES)
         THEN (REWRITE_TAC (cl:cons MONOIDAL_INT_MUL nil))))))
@@ -4383,7 +4365,7 @@
   (prove
     (tuple
       (parse_term "neutral(( * ):real->real->real) = &1")
-      (holai.runtime:proof (REWRITE_TAC (cl:cons neutral nil))
+      (proof (REWRITE_TAC (cl:cons neutral nil))
         THEN (MATCH_MP_TAC SELECT_UNIQUE)
         THEN (MESON_TAC (cl:cons REAL_MUL_LID (cl:cons REAL_MUL_RID nil)))))))
 
@@ -4391,7 +4373,7 @@
   (prove
     (tuple
       (parse_term "monoidal(( * ):real->real->real)")
-      (holai.runtime:proof (REWRITE_TAC (cl:cons monoidal (cl:cons NEUTRAL_REAL_MUL nil)))
+      (proof (REWRITE_TAC (cl:cons monoidal (cl:cons NEUTRAL_REAL_MUL nil)))
         THEN REAL_ARITH_TAC))))
 
 (defparameter PRODUCT_CLAUSES
@@ -4403,8 +4385,7 @@
         FINITE(s)
         ==> (product (x INSERT s) f =
              if x IN s then product s f else f(x) * product s f))")
-      (holai.runtime:proof (REWRITE_TAC
-          (cl:cons product (cl:cons (#`GSYM NEUTRAL_REAL_MUL) nil)))
+      (proof (REWRITE_TAC (cl:cons product (cl:cons (#`GSYM NEUTRAL_REAL_MUL) nil)))
         THEN (ONCE_REWRITE_TAC (cl:cons SWAP_FORALL_THM nil))
         THEN (MATCH_MP_TAC ITERATE_CLAUSES)
         THEN (REWRITE_TAC (cl:cons MONOIDAL_REAL_MUL nil))))))
@@ -4417,7 +4398,7 @@
   (prove
     (tuple
       (parse_term "neutral((+):int->int->int) = &0")
-      (holai.runtime:proof (REWRITE_TAC (cl:cons neutral nil))
+      (proof (REWRITE_TAC (cl:cons neutral nil))
         THEN (MATCH_MP_TAC SELECT_UNIQUE)
         THEN (MESON_TAC (cl:cons INT_ADD_LID (cl:cons INT_ADD_RID nil)))))))
 
@@ -4425,7 +4406,7 @@
   (prove
     (tuple
       (parse_term "monoidal((+):int->int->int)")
-      (holai.runtime:proof (REWRITE_TAC (cl:cons monoidal (cl:cons NEUTRAL_INT_ADD nil)))
+      (proof (REWRITE_TAC (cl:cons monoidal (cl:cons NEUTRAL_INT_ADD nil)))
         THEN INT_ARITH_TAC))))
 
 (defparameter ISUM_CLAUSES
@@ -4437,8 +4418,7 @@
         FINITE(s)
         ==> (isum (x INSERT s) f =
              if x IN s then isum s f else f(x) + isum s f))")
-      (holai.runtime:proof (REWRITE_TAC
-          (cl:cons isum (cl:cons (#`GSYM NEUTRAL_INT_ADD) nil)))
+      (proof (REWRITE_TAC (cl:cons isum (cl:cons (#`GSYM NEUTRAL_INT_ADD) nil)))
         THEN (ONCE_REWRITE_TAC (cl:cons SWAP_FORALL_THM nil))
         THEN (MATCH_MP_TAC ITERATE_CLAUSES)
         THEN (REWRITE_TAC (cl:cons MONOIDAL_INT_ADD nil))))))
@@ -4452,7 +4432,7 @@
   (prove
     (tuple
       (parse_term "neutral((+):num->num->num) = 0")
-      (holai.runtime:proof (REWRITE_TAC (cl:cons neutral nil))
+      (proof (REWRITE_TAC (cl:cons neutral nil))
         THEN (MATCH_MP_TAC SELECT_UNIQUE)
         THEN (MESON_TAC (cl:cons ADD_CLAUSES nil))))))
 
@@ -4460,14 +4440,13 @@
   (prove
     (tuple
       (parse_term "monoidal((+):num->num->num)")
-      (holai.runtime:proof (REWRITE_TAC (cl:cons monoidal (cl:cons NEUTRAL_ADD nil)))
-        THEN ARITH_TAC))))
+      (proof (REWRITE_TAC (cl:cons monoidal (cl:cons NEUTRAL_ADD nil))) THEN ARITH_TAC))))
 
 (defparameter NSUM_DEGENERATE
   (prove
     (tuple
       (parse_term "!f s:A->bool. ~(FINITE {x | x IN s /\\ ~(f x = 0)}) ==> nsum s f = 0")
-      (holai.runtime:proof (REPEAT #'GEN_TAC)
+      (proof (REPEAT #'GEN_TAC)
         THEN (REWRITE_TAC (cl:cons nsum nil))
         THEN (SIMP_TAC (cl:cons iterate (cl:cons support (cl:cons NEUTRAL_ADD nil))))))))
 
@@ -4480,7 +4459,7 @@
         FINITE(s)
         ==> (nsum (x INSERT s) f =
              if x IN s then nsum s f else f(x) + nsum s f))")
-      (holai.runtime:proof (REWRITE_TAC (cl:cons nsum (cl:cons (#`GSYM NEUTRAL_ADD) nil)))
+      (proof (REWRITE_TAC (cl:cons nsum (cl:cons (#`GSYM NEUTRAL_ADD) nil)))
         THEN (ONCE_REWRITE_TAC (cl:cons SWAP_FORALL_THM nil))
         THEN (MATCH_MP_TAC ITERATE_CLAUSES)
         THEN (REWRITE_TAC (cl:cons MONOIDAL_ADD nil))))))
@@ -4501,7 +4480,7 @@
         "!f s t:A->bool.
         FINITE s /\\ t SUBSET s
         ==> nsum (s DIFF t) f = nsum s f - nsum t f")
-      (holai.runtime:proof (REPEAT #'STRIP_TAC)
+      (proof (REPEAT #'STRIP_TAC)
         THEN (MATCH_MP_TAC (#`ARITH_RULE (parse_term "(x + z = y:num) ==> (x = y - z)")))
         THEN
           (#`ASM_SIMP_TAC
@@ -4514,7 +4493,7 @@
         "!s t (f:A->num).
      FINITE s /\\ FINITE t
      ==> nsum s f + nsum t f = nsum (s UNION t) f + nsum (s INTER t) f")
-      (holai.runtime:proof (REWRITE_TAC (cl:cons nsum (cl:cons (#`GSYM NEUTRAL_ADD) nil)))
+      (proof (REWRITE_TAC (cl:cons nsum (cl:cons (#`GSYM NEUTRAL_ADD) nil)))
         THEN (MATCH_MP_TAC ITERATE_INCL_EXCL)
         THEN (REWRITE_TAC (cl:cons MONOIDAL_ADD nil))))))
 
@@ -4539,7 +4518,7 @@
         "!f g s:A->bool.
         FINITE {x | x IN s /\\ ~(f x = 0)} /\\ FINITE {x | x IN s /\\ ~(g x = 0)}
         ==> nsum s (\\x. f x + g x) = nsum s f + nsum s g")
-      (holai.runtime:proof (REWRITE_TAC
+      (proof (REWRITE_TAC
           (cl:cons (#`GSYM NEUTRAL_ADD) (cl:cons (#`GSYM support) (cl:cons nsum nil))))
         THEN (MATCH_MP_TAC ITERATE_OP_GEN)
         THEN (#`ACCEPT_TAC MONOIDAL_ADD)))))
@@ -4548,7 +4527,7 @@
   (prove
     (tuple
       (parse_term "!f s:A->bool. (!x. x IN s ==> f(x) = 0) ==> nsum s f = 0")
-      (holai.runtime:proof (REWRITE_TAC (cl:cons nsum (cl:cons (#`GSYM NEUTRAL_ADD) nil)))
+      (proof (REWRITE_TAC (cl:cons nsum (cl:cons (#`GSYM NEUTRAL_ADD) nil)))
         THEN (SIMP_TAC (cl:cons ITERATE_EQ_NEUTRAL (cl:cons MONOIDAL_ADD nil)))))))
 
 (defparameter NSUM_0
@@ -4561,7 +4540,7 @@
   (prove
     (tuple
       (parse_term "!f c s:A->bool. nsum s (\\x. c * f(x)) = c * nsum s f")
-      (holai.runtime:proof (REPEAT #'GEN_TAC)
+      (proof (REPEAT #'GEN_TAC)
         THEN (ASM_CASES_TAC (parse_term "c = 0"))
         THEN (#`ASM_REWRITE_TAC (cl:cons MULT_CLAUSES (cl:cons NSUM_0 nil)))
         THEN (REWRITE_TAC (cl:cons nsum nil))
@@ -4591,7 +4570,7 @@
   (prove
     (tuple
       (parse_term "!f c s:A->bool. nsum s (\\x. f(x) * c) = nsum s f * c")
-      (holai.runtime:proof (ONCE_REWRITE_TAC (cl:cons MULT_SYM nil))
+      (proof (ONCE_REWRITE_TAC (cl:cons MULT_SYM nil))
         THEN (REWRITE_TAC (cl:cons NSUM_LMUL nil))))))
 
 (defparameter NSUM_LE
@@ -4601,7 +4580,7 @@
         "!f g s:A->bool.
         FINITE(s) /\\ (!x. x IN s ==> f(x) <= g(x))
         ==> nsum s f <= nsum s g")
-      (holai.runtime:proof (ONCE_REWRITE_TAC (cl:cons IMP_CONJ nil))
+      (proof (ONCE_REWRITE_TAC (cl:cons IMP_CONJ nil))
         THEN #'GEN_TAC
         THEN #'GEN_TAC
         THEN (MATCH_MP_TAC FINITE_INDUCT_STRONG)
@@ -4619,14 +4598,13 @@
          FINITE(s) /\\ (!x. x IN s ==> f(x) <= g(x)) /\\
          (?x. x IN s /\\ f(x) < g(x))
          ==> nsum s f < nsum s g")
-      (holai.runtime:proof (REPEAT #'GEN_TAC)
+      (proof (REPEAT #'GEN_TAC)
         THEN (REPEAT (DISCH_THEN (CONJUNCTS_THEN2 ASSUME_TAC #'MP_TAC)))
         THEN (DISCH_THEN (X_CHOOSE_THEN (parse_term "a:A") STRIP_ASSUME_TAC))
         THEN (SUBGOAL_THEN (parse_term "s = (a:A) INSERT (s DELETE a)") #'SUBST1_TAC)
         THENL
           (cl:cons
-            (holai.runtime:proof (UNDISCH_TAC (parse_term "a:A IN s"))
-              THEN (#`SET_TAC nil))
+            (proof (UNDISCH_TAC (parse_term "a:A IN s")) THEN (#`SET_TAC nil))
             (cl:cons #'ALL_TAC nil))
         THEN
           (#`ASM_SIMP_TAC
@@ -4650,7 +4628,7 @@
   (prove
     (tuple
       (parse_term "!f g s:A->bool. (!x. x IN s ==> f x = g x) ==> nsum s f = nsum s g")
-      (holai.runtime:proof (REWRITE_TAC (cl:cons nsum nil))
+      (proof (REWRITE_TAC (cl:cons nsum nil))
         THEN (MATCH_MP_TAC ITERATE_EQ)
         THEN (REWRITE_TAC (cl:cons MONOIDAL_ADD nil))))))
 
@@ -4658,7 +4636,7 @@
   (prove
     (tuple
       (parse_term "!c s:A->bool. FINITE s ==> (nsum s (\\n. c) = (CARD s) * c)")
-      (holai.runtime:proof #'GEN_TAC
+      (proof #'GEN_TAC
         THEN (MATCH_MP_TAC FINITE_INDUCT_STRONG)
         THEN (SIMP_TAC (cl:cons NSUM_CLAUSES (cl:cons CARD_CLAUSES nil)))
         THEN (REPEAT #'STRIP_TAC)
@@ -4669,7 +4647,7 @@
     (tuple
       (parse_term
         "!f b s:A->bool. FINITE s /\\ nsum s f <= b ==> !x:A. x IN s ==> f x <= b")
-      (holai.runtime:proof #'GEN_TAC
+      (proof #'GEN_TAC
         THEN #'GEN_TAC
         THEN (REWRITE_TAC (cl:cons IMP_CONJ nil))
         THEN (MATCH_MP_TAC FINITE_INDUCT_STRONG)
@@ -4688,7 +4666,7 @@
   (prove
     (tuple
       (parse_term "!s:A->bool. FINITE s ==> (nsum s f = 0 <=> !x. x IN s ==> f x = 0)")
-      (holai.runtime:proof (REPEAT #'STRIP_TAC)
+      (proof (REPEAT #'STRIP_TAC)
         THEN #'EQ_TAC
         THEN (#`ASM_SIMP_TAC (cl:cons NSUM_EQ_0 nil))
         THEN
@@ -4704,7 +4682,7 @@
         "!f s:A->bool.
         FINITE s /\\ (?x. x IN s /\\ 0 < f x)
         ==> 0 < nsum s f")
-      (holai.runtime:proof (SIMP_TAC
+      (proof (SIMP_TAC
           (cl:cons
             (#`ARITH_RULE (parse_term "0 < n <=> ~(n = 0)"))
             (cl:cons NSUM_EQ_0_IFF nil)))
@@ -4716,7 +4694,7 @@
       (parse_term
         "!s f:A->num.
      FINITE s /\\ ~(s = {}) /\\ (!i. i IN s ==> 0 < f i) ==> 0 < nsum s f")
-      (holai.runtime:proof (REPEAT #'STRIP_TAC)
+      (proof (REPEAT #'STRIP_TAC)
         THEN (MATCH_MP_TAC NSUM_POS_LT)
         THEN (#`ASM_MESON_TAC (cl:cons MEMBER_NOT_EMPTY (cl:cons REAL_LT_IMP_LE nil)))))))
 
@@ -4741,7 +4719,7 @@
     (tuple
       (parse_term
         "!s a. nsum s (\\x. if x = a:A then b else 0) = if a IN s then b else 0")
-      (holai.runtime:proof (REWRITE_TAC (cl:cons nsum (cl:cons (#`GSYM NEUTRAL_ADD) nil)))
+      (proof (REWRITE_TAC (cl:cons nsum (cl:cons (#`GSYM NEUTRAL_ADD) nil)))
         THEN (SIMP_TAC (cl:cons ITERATE_DELTA (cl:cons MONOIDAL_ADD nil)))))))
 
 (defparameter NSUM_SWAP
@@ -4751,7 +4729,7 @@
         "!f:A->B->num s t.
       FINITE(s) /\\ FINITE(t)
       ==> (nsum s (\\i. nsum t (f i)) = nsum t (\\j. nsum s (\\i. f i j)))")
-      (holai.runtime:proof #'GEN_TAC
+      (proof #'GEN_TAC
         THEN (REWRITE_TAC (cl:cons IMP_CONJ (cl:cons RIGHT_FORALL_IMP_THM nil)))
         THEN (MATCH_MP_TAC FINITE_INDUCT_STRONG)
         THEN
@@ -4767,7 +4745,7 @@
         "!(f:A->B) g s.
         (!x y. x IN s /\\ y IN s /\\ (f x = f y) ==> (x = y))
         ==> (nsum (IMAGE f s) g = nsum s (g o f))")
-      (holai.runtime:proof (REWRITE_TAC (cl:cons nsum (cl:cons (#`GSYM NEUTRAL_ADD) nil)))
+      (proof (REWRITE_TAC (cl:cons nsum (cl:cons (#`GSYM NEUTRAL_ADD) nil)))
         THEN (MATCH_MP_TAC ITERATE_IMAGE)
         THEN (REWRITE_TAC (cl:cons MONOIDAL_ADD nil))))))
 
@@ -4789,7 +4767,7 @@
   (prove
     (tuple
       (parse_term "!f:A->num s. support (+) f (:A) SUBSET s ==> nsum s f = nsum (:A) f")
-      (holai.runtime:proof (REWRITE_TAC (cl:cons nsum nil))
+      (proof (REWRITE_TAC (cl:cons nsum nil))
         THEN (MATCH_MP_TAC ITERATE_UNIV)
         THEN (REWRITE_TAC (cl:cons MONOIDAL_ADD nil))))))
 
@@ -4804,7 +4782,7 @@
         ((lemma
           (prove (tuple (parse_term "u UNION v = u UNION (v DIFF u)") (#`SET_TAC nil)))))
         (cl:declare (cl:ignorable lemma))
-        (holai.runtime:proof (REPEAT #'STRIP_TAC)
+        (proof (REPEAT #'STRIP_TAC)
           THEN (ONCE_REWRITE_TAC (cl:cons lemma nil))
           THEN (MATCH_MP_TAC NSUM_SUPERSET)
           THEN (#`ASM_MESON_TAC (cl:cons IN_UNION (cl:cons IN_DIFF (cl:cons SUBSET nil)))))))))
@@ -4824,9 +4802,7 @@
       (parse_term
         "!f s:A->bool.
         FINITE s ==> nsum s (\\x. if x IN s then f(x) else 0) = nsum s f")
-      (holai.runtime:proof (REPEAT #'STRIP_TAC)
-        THEN (MATCH_MP_TAC NSUM_EQ)
-        THEN (#`ASM_SIMP_TAC nil)))))
+      (proof (REPEAT #'STRIP_TAC) THEN (MATCH_MP_TAC NSUM_EQ) THEN (#`ASM_SIMP_TAC nil)))))
 
 (defparameter NSUM_BOUND
   (prove
@@ -4842,8 +4818,7 @@
       (parse_term
         "!s f b. FINITE s /\\ ~(s = {}) /\\ (!x:A. x IN s ==> f(x) <= b DIV (CARD s))
            ==> nsum s f <= b")
-      (holai.runtime:proof (SIMP_TAC
-          (cl:cons IMP_CONJ (cl:cons CARD_EQ_0 (cl:cons LE_RDIV_EQ nil))))
+      (proof (SIMP_TAC (cl:cons IMP_CONJ (cl:cons CARD_EQ_0 (cl:cons LE_RDIV_EQ nil))))
         THEN (REPEAT #'STRIP_TAC)
         THEN
           (SUBGOAL_THEN
@@ -4863,13 +4838,13 @@
       (parse_term
         "!s f b. FINITE s /\\ (!x:A. x IN s ==> f x <= b) /\\ (?x. x IN s /\\ f x < b)
            ==> nsum s f < (CARD s) * b")
-      (holai.runtime:proof (REPEAT #'STRIP_TAC)
+      (proof (REPEAT #'STRIP_TAC)
         THEN (MATCH_MP_TAC LTE_TRANS)
         THEN (#`EXISTS_TAC (parse_term "nsum s (\\x:A. b)"))
         THEN #'CONJ_TAC
         THENL
           (cl:cons
-            (holai.runtime:proof (MATCH_MP_TAC NSUM_LT)
+            (proof (MATCH_MP_TAC NSUM_LT)
               THEN (#`ASM_REWRITE_TAC nil)
               THEN (#`ASM_MESON_TAC nil))
             (cl:cons (#`ASM_SIMP_TAC (cl:cons NSUM_CONST (cl:cons LE_REFL nil))) nil))))))
@@ -4889,17 +4864,15 @@
       (parse_term
         "!s f b. FINITE s /\\ ~(s = {}) /\\ (!x:A. x IN s ==> f(x) < b DIV (CARD s))
            ==> nsum s f < b")
-      (holai.runtime:proof (REPEAT #'STRIP_TAC)
+      (proof (REPEAT #'STRIP_TAC)
         THEN (MATCH_MP_TAC LTE_TRANS)
         THEN (#`EXISTS_TAC (parse_term "nsum (s:A->bool) (\\a. f(a) + 1)"))
         THEN #'CONJ_TAC
         THENL
           (cl:cons
-            (holai.runtime:proof (MATCH_MP_TAC NSUM_LT_ALL)
-              THEN (#`ASM_SIMP_TAC nil)
-              THEN ARITH_TAC)
+            (proof (MATCH_MP_TAC NSUM_LT_ALL) THEN (#`ASM_SIMP_TAC nil) THEN ARITH_TAC)
             (cl:cons
-              (holai.runtime:proof (MATCH_MP_TAC NSUM_BOUND_GEN)
+              (proof (MATCH_MP_TAC NSUM_BOUND_GEN)
                 THEN
                   (#`ASM_REWRITE_TAC
                     (cl:cons (#`ARITH_RULE (parse_term "a + 1 <= b <=> a < b")) nil)))
@@ -4933,7 +4906,7 @@
     (tuple
       (parse_term
         "!P s f. nsum {x:A | x IN s /\\ P x} f = nsum s (\\x. if P x then f(x) else 0)")
-      (holai.runtime:proof (REWRITE_TAC (cl:cons nsum (cl:cons (#`GSYM NEUTRAL_ADD) nil)))
+      (proof (REWRITE_TAC (cl:cons nsum (cl:cons (#`GSYM NEUTRAL_ADD) nil)))
         THEN (MATCH_MP_TAC ITERATE_RESTRICT_SET)
         THEN (REWRITE_TAC (cl:cons MONOIDAL_ADD nil))))))
 
@@ -4945,7 +4918,7 @@
         FINITE s /\\ FINITE t
         ==> (nsum s (\\x. nsum {y | y IN t /\\ R x y} (\\y. f x y)) =
              nsum t (\\y. nsum {x | x IN s /\\ R x y} (\\x. f x y)))")
-      (holai.runtime:proof (REPEAT #'GEN_TAC)
+      (proof (REPEAT #'GEN_TAC)
         THEN (SIMP_TAC (cl:cons NSUM_RESTRICT_SET nil))
         THEN
           (DISCH_THEN (lambdac (th) (REWRITE_TAC (cl:cons (MATCH_MP NSUM_SWAP th) nil))))))))
@@ -4965,7 +4938,7 @@
         (!j. j IN t ==> (CARD {i | i IN s /\\ R i j} = k(j)))
         ==> (nsum s (\\i. (CARD {j | j IN t /\\ R i j})) =
              nsum t (\\i. (k i)))")
-      (holai.runtime:proof (REPEAT #'GEN_TAC)
+      (proof (REPEAT #'GEN_TAC)
         THEN (REWRITE_TAC (cl:cons CONJ_ASSOC nil))
         THEN (DISCH_THEN (#`CONJUNCTS_THEN ASSUME_TAC))
         THEN (MATCH_MP_TAC EQ_TRANS)
@@ -4975,12 +4948,12 @@
         THEN #'CONJ_TAC
         THENL
           (cl:cons
-            (holai.runtime:proof (MATCH_MP_TAC NSUM_EQ)
+            (proof (MATCH_MP_TAC NSUM_EQ)
               THEN (#`ASM_REWRITE_TAC nil)
               THEN (REPEAT #'STRIP_TAC)
               THEN (#`ASM_SIMP_TAC (cl:cons CARD_EQ_NSUM (cl:cons FINITE_RESTRICT nil))))
             (cl:cons
-              (holai.runtime:proof (FIRST_ASSUM
+              (proof (FIRST_ASSUM
                   (lambdac (t%)
                     (ONCE_REWRITE_TAC (cl:cons (MATCH_MP NSUM_NSUM_RESTRICT t%) nil))))
                 THEN (MATCH_MP_TAC NSUM_EQ)
@@ -4996,16 +4969,15 @@
         FINITE s /\\ FINITE t /\\
         (!j. j IN t ==> (CARD {i | i IN s /\\ R i j} = k))
         ==> (nsum s (\\i. (CARD {j | j IN t /\\ R i j})) = (k * CARD t))")
-      (holai.runtime:proof (REPEAT #'STRIP_TAC)
+      (proof (REPEAT #'STRIP_TAC)
         THEN (MATCH_MP_TAC EQ_TRANS)
         THEN (#`EXISTS_TAC (parse_term "nsum t (\\i:B. k)"))
         THEN #'CONJ_TAC
         THENL
           (cl:cons
-            (holai.runtime:proof (MATCH_MP_TAC NSUM_MULTICOUNT_GEN)
-              THEN (#`ASM_REWRITE_TAC nil))
+            (proof (MATCH_MP_TAC NSUM_MULTICOUNT_GEN) THEN (#`ASM_REWRITE_TAC nil))
             (cl:cons
-              (holai.runtime:proof (#`ASM_SIMP_TAC (cl:cons NSUM_CONST nil))
+              (proof (#`ASM_SIMP_TAC (cl:cons NSUM_CONST nil))
                 THEN (REWRITE_TAC (cl:cons MULT_AC nil)))
               nil))))))
 
@@ -5017,7 +4989,7 @@
         FINITE s
         ==> nsum s g =
             nsum (IMAGE f s) (\\y. nsum {x | x IN s /\\ f x = y} g)")
-      (holai.runtime:proof (REWRITE_TAC (cl:cons nsum nil))
+      (proof (REWRITE_TAC (cl:cons nsum nil))
         THEN (MATCH_MP_TAC ITERATE_IMAGE_GEN)
         THEN (REWRITE_TAC (cl:cons MONOIDAL_ADD nil))))))
 
@@ -5028,7 +5000,7 @@
         "!f:A->B g s t.
         FINITE s /\\ IMAGE f s SUBSET t
         ==> nsum t (\\y. nsum {x | x IN s /\\ f(x) = y} g) = nsum s g")
-      (holai.runtime:proof (REPEAT #'STRIP_TAC)
+      (proof (REPEAT #'STRIP_TAC)
         THEN
           (MP_TAC
             (ISPECL
@@ -5052,7 +5024,7 @@
          FINITE s /\\
          (!x. x IN s ==> ?!y. y IN t /\\ R x y)
          ==> nsum t (\\y. nsum {x | x IN s /\\ R x y} g) = nsum s g")
-      (holai.runtime:proof (REPEAT #'STRIP_TAC)
+      (proof (REPEAT #'STRIP_TAC)
         THEN
           (MP_TAC
             (ISPECL
@@ -5083,7 +5055,7 @@
       (parse_term
         "!u v f. FINITE u /\\ FINITE v /\\ (!x:A. x IN (u DIFF v) ==> f(x) = 0)
            ==> nsum u f <= nsum v f")
-      (holai.runtime:proof (REPEAT #'STRIP_TAC)
+      (proof (REPEAT #'STRIP_TAC)
         THEN
           (MP_TAC
             (ISPECL
@@ -5094,7 +5066,7 @@
         THEN
           (DISCH_THEN
             (lambdac (th)
-              (holai.runtime:proof (MP_TAC (#`SPEC (parse_term "v DIFF u :A->bool") th))
+              (proof (MP_TAC (#`SPEC (parse_term "v DIFF u :A->bool") th))
                 THEN (MP_TAC (#`SPEC (parse_term "u DIFF v :A->bool") th)))))
         THEN
           (REWRITE_TAC
@@ -5104,7 +5076,7 @@
         THEN (#`ASM_SIMP_TAC (cl:cons FINITE_DIFF (cl:cons FINITE_INTER nil)))
         THEN
           (REPEAT
-            (holai.runtime:proof ANTS_TAC
+            (proof ANTS_TAC
               THENL (cl:cons (#`SET_TAC nil) (cl:cons (DISCH_THEN #'SUBST1_TAC) nil))))
         THEN (#`ASM_SIMP_TAC (cl:cons NSUM_EQ_0 nil))
         THEN ARITH_TAC))))
@@ -5113,7 +5085,7 @@
   (prove
     (tuple
       (parse_term "!u v f:A->num. FINITE v /\\ u SUBSET v ==> nsum u f <= nsum v f")
-      (holai.runtime:proof (REPEAT #'STRIP_TAC)
+      (proof (REPEAT #'STRIP_TAC)
         THEN (MATCH_MP_TAC NSUM_SUBSET)
         THEN
           (#`ASM_MESON_TAC (cl:cons IN_DIFF (cl:cons SUBSET (cl:cons FINITE_SUBSET nil))))))))
@@ -5124,14 +5096,14 @@
       (parse_term
         "!f g s. (!x:A. x IN s ==> f x <= g x) /\\ FINITE {x | x IN s /\\ ~(g x = 0)}
            ==> nsum s f <= nsum s g")
-      (holai.runtime:proof (REPEAT #'STRIP_TAC)
+      (proof (REPEAT #'STRIP_TAC)
         THEN (ONCE_REWRITE_TAC (cl:cons (#`GSYM NSUM_SUPPORT) nil))
         THEN (REWRITE_TAC (cl:cons support (cl:cons NEUTRAL_ADD nil)))
         THEN (TRANS_TAC LE_TRANS (parse_term "nsum {x | x IN s /\\ ~(g(x:A) = 0)} f"))
         THEN #'CONJ_TAC
         THENL
           (cl:cons
-            (holai.runtime:proof (MATCH_MP_TAC NSUM_SUBSET)
+            (proof (MATCH_MP_TAC NSUM_SUBSET)
               THEN (#`ASM_REWRITE_TAC (cl:cons IN_ELIM_THM (cl:cons IN_DIFF nil)))
               THEN #'CONJ_TAC
               THENL (cl:cons #'ALL_TAC (cl:cons (#`ASM_MESON_TAC (cl:cons LE nil)) nil))
@@ -5143,7 +5115,7 @@
               THEN (REWRITE_TAC (cl:cons SUBSET (cl:cons IN_ELIM_THM nil)))
               THEN (#`ASM_MESON_TAC (cl:cons LE nil)))
             (cl:cons
-              (holai.runtime:proof (MATCH_MP_TAC NSUM_LE)
+              (proof (MATCH_MP_TAC NSUM_LE)
                 THEN (#`ASM_SIMP_TAC (cl:cons IN_ELIM_THM nil)))
               nil))))))
 
@@ -5154,7 +5126,7 @@
         "!a b s:A->bool.
         FINITE s
         ==> nsum s (\\i. a i * b i) <= nsum s a * nsum s b")
-      (holai.runtime:proof (REPEAT #'STRIP_TAC)
+      (proof (REPEAT #'STRIP_TAC)
         THEN (REWRITE_TAC (cl:cons (#`GSYM NSUM_LMUL) nil))
         THEN (MATCH_MP_TAC NSUM_LE)
         THEN (#`ASM_REWRITE_TAC (cl:cons LE_MULT_RCANCEL nil))
@@ -5174,7 +5146,7 @@
     FINITE s /\\
     (!x y. x IN s /\\ y IN s /\\ ~(x = y) /\\ i x = i y ==> d(i x) = 0)
     ==> nsum (IMAGE i s) d = nsum s (d o i)")
-      (holai.runtime:proof (REWRITE_TAC (cl:cons (#`GSYM NEUTRAL_ADD) (cl:cons nsum nil)))
+      (proof (REWRITE_TAC (cl:cons (#`GSYM NEUTRAL_ADD) (cl:cons nsum nil)))
         THEN (MATCH_MP_TAC ITERATE_IMAGE_NONZERO)
         THEN (REWRITE_TAC (cl:cons MONOIDAL_ADD nil))))))
 
@@ -5186,7 +5158,7 @@
         (!x. x IN s ==> p(x) IN s) /\\
         (!y. y IN s ==> ?!x. x IN s /\\ p(x) = y)
         ==> nsum s f = nsum s (f o p)")
-      (holai.runtime:proof (REWRITE_TAC (cl:cons nsum nil))
+      (proof (REWRITE_TAC (cl:cons nsum nil))
         THEN (MATCH_MP_TAC ITERATE_BIJECTION)
         THEN (REWRITE_TAC (cl:cons MONOIDAL_ADD nil))))))
 
@@ -5198,7 +5170,7 @@
         FINITE s /\\ (!i. i IN s ==> FINITE(t i))
         ==> nsum s (\\i. nsum (t i) (x i)) =
             nsum {i,j | i IN s /\\ j IN t i} (\\(i,j). x i j)")
-      (holai.runtime:proof (REWRITE_TAC (cl:cons nsum nil))
+      (proof (REWRITE_TAC (cl:cons nsum nil))
         THEN (MATCH_MP_TAC ITERATE_ITERATE_PRODUCT)
         THEN (REWRITE_TAC (cl:cons MONOIDAL_ADD nil))))))
 
@@ -5210,7 +5182,7 @@
         (!y. y IN t ==> ?!x. x IN s /\\ h(x) = y) /\\
         (!x. x IN s ==> h(x) IN t /\\ g(h x) = f x)
         ==> nsum s f = nsum t g")
-      (holai.runtime:proof (REWRITE_TAC (cl:cons nsum nil))
+      (proof (REWRITE_TAC (cl:cons nsum nil))
         THEN (MATCH_MP_TAC ITERATE_EQ_GENERAL)
         THEN (REWRITE_TAC (cl:cons MONOIDAL_ADD nil))))))
 
@@ -5222,7 +5194,7 @@
         (!y. y IN t ==> k(y) IN s /\\ h(k y) = y) /\\
         (!x. x IN s ==> h(x) IN t /\\ k(h x) = x /\\ g(h x) = f x)
         ==> nsum s f = nsum t g")
-      (holai.runtime:proof (REWRITE_TAC (cl:cons nsum nil))
+      (proof (REWRITE_TAC (cl:cons nsum nil))
         THEN (MATCH_MP_TAC ITERATE_EQ_GENERAL_INVERSES)
         THEN (REWRITE_TAC (cl:cons MONOIDAL_ADD nil))))))
 
@@ -5235,7 +5207,7 @@
         (!x. x IN s ==> p x IN s) /\\
         (!x y. x IN s /\\ y IN s /\\ p x = p y ==> x = y)
         ==> nsum s (f o p) = nsum s f")
-      (holai.runtime:proof (REWRITE_TAC (cl:cons nsum nil))
+      (proof (REWRITE_TAC (cl:cons nsum nil))
         THEN (MATCH_MP_TAC ITERATE_INJECTION)
         THEN (REWRITE_TAC (cl:cons MONOIDAL_ADD nil))))))
 
@@ -5246,7 +5218,7 @@
         "!f s t:A->bool.
         FINITE s /\\ FINITE t /\\ (!x. x IN s INTER t ==> f(x) = 0)
         ==> nsum (s UNION t) f = nsum s f + nsum t f")
-      (holai.runtime:proof (REWRITE_TAC (cl:cons nsum (cl:cons (#`GSYM NEUTRAL_ADD) nil)))
+      (proof (REWRITE_TAC (cl:cons nsum (cl:cons (#`GSYM NEUTRAL_ADD) nil)))
         THEN (MATCH_MP_TAC ITERATE_UNION_NONZERO)
         THEN (REWRITE_TAC (cl:cons MONOIDAL_ADD nil))))))
 
@@ -5258,7 +5230,7 @@
          (!t1 t2 x. t1 IN s /\\ t2 IN s /\\ ~(t1 = t2) /\\ x IN t1 /\\ x IN t2
                     ==> f x = 0)
          ==> nsum (UNIONS s) f = nsum s (\\t. nsum t f)")
-      (holai.runtime:proof #'GEN_TAC
+      (proof #'GEN_TAC
         THEN (ONCE_REWRITE_TAC (cl:cons IMP_CONJ nil))
         THEN (MATCH_MP_TAC FINITE_INDUCT_STRONG)
         THEN
@@ -5272,8 +5244,7 @@
             (cl:cons
               (parse_term "t:A->bool")
               (cl:cons (parse_term "s:(A->bool)->bool") nil)))
-        THEN
-          (DISCH_THEN (lambdac (th) (holai.runtime:proof #'STRIP_TAC THEN (MP_TAC th))))
+        THEN (DISCH_THEN (lambdac (th) (proof #'STRIP_TAC THEN (MP_TAC th))))
         THEN (ONCE_REWRITE_TAC (cl:cons IMP_CONJ nil))
         THEN (#`ASM_SIMP_TAC (cl:cons NSUM_CLAUSES nil))
         THEN ANTS_TAC
@@ -5295,7 +5266,7 @@
         "!s P f g. FINITE s
              ==> nsum s (\\x:A. if P x then f x else g x) =
                  nsum {x | x IN s /\\ P x} f + nsum {x | x IN s /\\ ~P x} g")
-      (holai.runtime:proof (REWRITE_TAC (cl:cons nsum (cl:cons (#`GSYM NEUTRAL_ADD) nil)))
+      (proof (REWRITE_TAC (cl:cons nsum (cl:cons (#`GSYM NEUTRAL_ADD) nil)))
         THEN (MATCH_MP_TAC ITERATE_CASES)
         THEN (REWRITE_TAC (cl:cons MONOIDAL_ADD nil))))))
 
@@ -5306,7 +5277,7 @@
         "!P f:A->num s.
         P(0) /\\ (!x y. P x /\\ P y ==> P(x + y)) /\\ (!a. a IN s ==> P(f a))
         ==> P(nsum s f)")
-      (holai.runtime:proof (REPEAT #'STRIP_TAC)
+      (proof (REPEAT #'STRIP_TAC)
         THEN (MP_TAC (MATCH_MP ITERATE_CLOSED MONOIDAL_ADD))
         THEN (DISCH_THEN (o #'MP_TAC (#`SPEC (parse_term "P:num->bool"))))
         THEN (#`ASM_SIMP_TAC (cl:cons NEUTRAL_ADD (cl:cons (#`GSYM nsum) nil)))))))
@@ -5320,8 +5291,7 @@
         (!m n m' n'. R m n /\\ R m' n' ==> R (m + m') (n + n')) /\\
         FINITE s /\\ (!x. x IN s ==> R (f x) (g x))
         ==> R (nsum s f) (nsum s g)")
-      (holai.runtime:proof (REWRITE_TAC
-          (cl:cons IMP_CONJ (cl:cons RIGHT_FORALL_IMP_THM nil)))
+      (proof (REWRITE_TAC (cl:cons IMP_CONJ (cl:cons RIGHT_FORALL_IMP_THM nil)))
         THEN #'GEN_TAC
         THEN (REPEAT DISCH_TAC)
         THEN
@@ -5340,7 +5310,7 @@
         FINITE s /\\ ~(s = {}) /\\
         (!x y. P x /\\ P y ==> P(x + y)) /\\ (!a. a IN s ==> P(f a))
         ==> P(nsum s f)")
-      (holai.runtime:proof (REPEAT #'STRIP_TAC)
+      (proof (REPEAT #'STRIP_TAC)
         THEN (MP_TAC (MATCH_MP ITERATE_CLOSED_NONEMPTY MONOIDAL_ADD))
         THEN (DISCH_THEN (o #'MP_TAC (#`SPEC (parse_term "P:num->bool"))))
         THEN (#`ASM_SIMP_TAC (cl:cons NEUTRAL_ADD (cl:cons (#`GSYM nsum) nil)))))))
@@ -5353,8 +5323,7 @@
         (!m n m' n'. R m n /\\ R m' n' ==> R (m + m') (n + n')) /\\
         FINITE s /\\ ~(s = {}) /\\ (!x. x IN s ==> R (f x) (g x))
         ==> R (nsum s f) (nsum s g)")
-      (holai.runtime:proof (REWRITE_TAC
-          (cl:cons IMP_CONJ (cl:cons RIGHT_FORALL_IMP_THM nil)))
+      (proof (REWRITE_TAC (cl:cons IMP_CONJ (cl:cons RIGHT_FORALL_IMP_THM nil)))
         THEN #'GEN_TAC
         THEN (REPEAT DISCH_TAC)
         THEN
@@ -5424,7 +5393,7 @@
         "(!m. nsum(m..0) f = if m = 0 then f(0) else 0) /\\
    (!m n. nsum(m..SUC n) f = if m <= SUC n then nsum(m..n) f + f(SUC n)
                              else nsum(m..n) f)")
-      (holai.runtime:proof (MP_TAC (MATCH_MP ITERATE_CLAUSES_NUMSEG MONOIDAL_ADD))
+      (proof (MP_TAC (MATCH_MP ITERATE_CLAUSES_NUMSEG MONOIDAL_ADD))
         THEN (REWRITE_TAC (cl:cons NEUTRAL_ADD (cl:cons nsum nil)))))))
 
 (defparameter NSUM_CLAUSES_NUMSEG_LT
@@ -5433,7 +5402,7 @@
       (parse_term
         "nsum {i | i < 0} f = 0 /\\
    (!k. nsum {i | i < SUC k} f = nsum {i | i < k} f + f k)")
-      (holai.runtime:proof (MP_TAC (MATCH_MP ITERATE_CLAUSES_NUMSEG_LT MONOIDAL_ADD))
+      (proof (MP_TAC (MATCH_MP ITERATE_CLAUSES_NUMSEG_LT MONOIDAL_ADD))
         THEN (REWRITE_TAC (cl:cons NEUTRAL_ADD (cl:cons nsum nil)))))))
 
 (defparameter NSUM_CLAUSES_NUMSEG_LE
@@ -5442,7 +5411,7 @@
       (parse_term
         "nsum {i | i <= 0} f = f 0 /\\
    (!k. nsum {i | i <= SUC k} f = nsum {i | i <= k} f + f(SUC k))")
-      (holai.runtime:proof (MP_TAC (MATCH_MP ITERATE_CLAUSES_NUMSEG_LE MONOIDAL_ADD))
+      (proof (MP_TAC (MATCH_MP ITERATE_CLAUSES_NUMSEG_LE MONOIDAL_ADD))
         THEN (REWRITE_TAC (cl:cons NEUTRAL_ADD (cl:cons nsum nil)))))))
 
 (defparameter NSUM_SWAP_NUMSEG
@@ -5452,7 +5421,7 @@
         "!a b c d f.
      nsum(a..b) (\\i. nsum(c..d) (f i)) =
      nsum(c..d) (\\j. nsum(a..b) (\\i. f i j))")
-      (holai.runtime:proof (REPEAT #'GEN_TAC)
+      (proof (REPEAT #'GEN_TAC)
         THEN (MATCH_MP_TAC NSUM_SWAP)
         THEN (REWRITE_TAC (cl:cons FINITE_NUMSEG nil))))))
 
@@ -5477,7 +5446,7 @@
   (prove
     (tuple
       (parse_term "!p f m n. nsum(m+p..n+p) f = nsum(m..n) (\\i. f(i + p))")
-      (holai.runtime:proof (SIMP_TAC
+      (proof (SIMP_TAC
           (cl:cons
             NUMSEG_OFFSET_IMAGE
             (cl:cons NSUM_IMAGE (cl:cons EQ_ADD_RCANCEL (cl:cons FINITE_NUMSEG nil)))))
@@ -5494,7 +5463,7 @@
   (prove
     (tuple
       (parse_term "!f m n. m <= n ==> nsum(m..n) f = f(m) + nsum(m+1..n) f")
-      (holai.runtime:proof (SIMP_TAC
+      (proof (SIMP_TAC
           (cl:cons
             (#`GSYM NUMSEG_LREC)
             (cl:cons NSUM_CLAUSES (cl:cons FINITE_NUMSEG (cl:cons IN_NUMSEG nil)))))
@@ -5504,7 +5473,7 @@
   (prove
     (tuple
       (parse_term "!f m n. 0 < n /\\ m <= n ==> nsum(m..n) f = nsum(m..n-1) f + f(n)")
-      (holai.runtime:proof #'GEN_TAC
+      (proof #'GEN_TAC
         THEN #'GEN_TAC
         THEN INDUCT_TAC
         THEN
@@ -5515,7 +5484,7 @@
   (prove
     (tuple
       (parse_term "!f m n. nsum(2*m..2*n+1) f = nsum(m..n) (\\i. f(2*i) + f(2*i+1))")
-      (holai.runtime:proof (MP_TAC (MATCH_MP ITERATE_PAIR MONOIDAL_ADD))
+      (proof (MP_TAC (MATCH_MP ITERATE_PAIR MONOIDAL_ADD))
         THEN (REWRITE_TAC (cl:cons nsum (cl:cons NEUTRAL_ADD nil)))))))
 
 (defparameter NSUM_REFLECT
@@ -5523,7 +5492,7 @@
     (tuple
       (parse_term
         "!x m n. nsum(m..n) x = if n < m then 0 else nsum(0..n-m) (\\i. x(n - i))")
-      (holai.runtime:proof (REPEAT #'GEN_TAC)
+      (proof (REPEAT #'GEN_TAC)
         THEN (REWRITE_TAC (cl:cons nsum nil))
         THEN
           (GEN_REWRITE_TAC
@@ -5537,7 +5506,7 @@
       (parse_term
         "!f:A->num n s.
         FINITE s ==> (nsum s f) MOD n = nsum s (\\i. f(i) MOD n) MOD n")
-      (holai.runtime:proof #'GEN_TAC
+      (proof #'GEN_TAC
         THEN #'GEN_TAC
         THEN (ASM_CASES_TAC (parse_term "n = 0"))
         THEN (#`ASM_REWRITE_TAC (cl:cons MOD_ZERO (cl:cons ETA_AX nil)))
@@ -5564,7 +5533,7 @@
         "!n (f:A->num) g s.
         FINITE s /\\ (!x. x IN s ==> (f x == g x) (mod n))
         ==> (nsum s f == nsum s g) (mod n)")
-      (holai.runtime:proof (REPEAT #'STRIP_TAC)
+      (proof (REPEAT #'STRIP_TAC)
         THEN
           (MP_TAC
             (ISPECL
@@ -5590,7 +5559,7 @@
               ==> nsum(a..b) (\\i. f(i)) = nsum(a..b) g) /\\
    (!f g p. (!x. p x ==> f x = g x)
             ==> nsum {y | p y} (\\i. f(i)) = nsum {y | p y} g)")
-        (holai.runtime:proof (REPEAT #'STRIP_TAC)
+        (proof (REPEAT #'STRIP_TAC)
           THEN (MATCH_MP_TAC NSUM_EQ)
           THEN (#`ASM_SIMP_TAC (cl:cons IN_ELIM_THM (cl:cons IN_NUMSEG nil))))))))
   (cl:declare (cl:ignorable th))
@@ -5609,7 +5578,7 @@
         FINITE s /\\ (!t. t IN s ==> FINITE(f t)) /\\
         (!t u. t IN s /\\ u IN s /\\ ~(t = u) ==> f t INTER f u = {})
         ==> CARD(UNIONS(IMAGE f s)) = nsum s (\\i. CARD(f i))")
-      (holai.runtime:proof #'GEN_TAC
+      (proof #'GEN_TAC
         THEN (ONCE_REWRITE_TAC (cl:cons IMP_CONJ nil))
         THEN (MATCH_MP_TAC FINITE_INDUCT_STRONG)
         THEN (REWRITE_TAC (cl:cons IMAGE_CLAUSES nil))
@@ -5620,8 +5589,7 @@
               (cl:cons UNIONS_INSERT (cl:cons NOT_IN_EMPTY (cl:cons IN_INSERT nil)))))
         THEN (REWRITE_TAC (cl:cons CARD_CLAUSES (cl:cons NSUM_CLAUSES nil)))
         THEN (REPEAT #'GEN_TAC)
-        THEN
-          (DISCH_THEN (lambdac (th) (holai.runtime:proof #'STRIP_TAC THEN (MP_TAC th))))
+        THEN (DISCH_THEN (lambdac (th) (proof #'STRIP_TAC THEN (MP_TAC th))))
         THEN (#`ASM_SIMP_TAC (cl:cons NSUM_CLAUSES nil))
         THEN (DISCH_THEN (CONJUNCTS_THEN2 (o #'SUBST1_TAC #'SYM) STRIP_ASSUME_TAC))
         THEN (#`CONV_TAC #'SYM_CONV)
@@ -5641,8 +5609,7 @@
         FINITE s /\\ (!t. t IN s ==> FINITE t) /\\
         (!t u. t IN s /\\ u IN s /\\ ~(t = u) ==> t INTER u = {})
         ==> CARD(UNIONS s) = nsum s CARD")
-      (holai.runtime:proof (MP_TAC
-          (ISPEC (parse_term "\\x:A->bool. x") CARD_UNIONS_IMAGE))
+      (proof (MP_TAC (ISPEC (parse_term "\\x:A->bool. x") CARD_UNIONS_IMAGE))
         THEN (REWRITE_TAC (cl:cons IMAGE_ID (cl:cons ETA_AX nil)))))))
 
 ;; (* ------------------------------------------------------------------------- *)
@@ -5735,7 +5702,7 @@
   (prove
     (tuple
       (parse_term "neutral((+):real->real->real) = &0")
-      (holai.runtime:proof (REWRITE_TAC (cl:cons neutral nil))
+      (proof (REWRITE_TAC (cl:cons neutral nil))
         THEN (MATCH_MP_TAC SELECT_UNIQUE)
         THEN (MESON_TAC (cl:cons REAL_ADD_LID (cl:cons REAL_ADD_RID nil)))))))
 
@@ -5743,14 +5710,14 @@
   (prove
     (tuple
       (parse_term "monoidal((+):real->real->real)")
-      (holai.runtime:proof (REWRITE_TAC (cl:cons monoidal (cl:cons NEUTRAL_REAL_ADD nil)))
+      (proof (REWRITE_TAC (cl:cons monoidal (cl:cons NEUTRAL_REAL_ADD nil)))
         THEN REAL_ARITH_TAC))))
 
 (defparameter SUM_DEGENERATE
   (prove
     (tuple
       (parse_term "!f s:A->bool. ~(FINITE {x | x IN s /\\ ~(f x = &0)}) ==> sum s f = &0")
-      (holai.runtime:proof (REPEAT #'GEN_TAC)
+      (proof (REPEAT #'GEN_TAC)
         THEN (REWRITE_TAC (cl:cons sum nil))
         THEN (SIMP_TAC (cl:cons iterate (cl:cons support (cl:cons NEUTRAL_REAL_ADD nil))))))))
 
@@ -5763,8 +5730,7 @@
         FINITE(s)
         ==> (sum (x INSERT s) f =
              if x IN s then sum s f else f(x) + sum s f))")
-      (holai.runtime:proof (REWRITE_TAC
-          (cl:cons sum (cl:cons (#`GSYM NEUTRAL_REAL_ADD) nil)))
+      (proof (REWRITE_TAC (cl:cons sum (cl:cons (#`GSYM NEUTRAL_REAL_ADD) nil)))
         THEN (ONCE_REWRITE_TAC (cl:cons SWAP_FORALL_THM nil))
         THEN (MATCH_MP_TAC ITERATE_CLAUSES)
         THEN (REWRITE_TAC (cl:cons MONOIDAL_REAL_ADD nil))))))
@@ -5795,8 +5761,7 @@
         "!s t (f:A->real).
      FINITE s /\\ FINITE t
      ==> sum s f + sum t f = sum (s UNION t) f + sum (s INTER t) f")
-      (holai.runtime:proof (REWRITE_TAC
-          (cl:cons sum (cl:cons (#`GSYM NEUTRAL_REAL_ADD) nil)))
+      (proof (REWRITE_TAC (cl:cons sum (cl:cons (#`GSYM NEUTRAL_REAL_ADD) nil)))
         THEN (MATCH_MP_TAC ITERATE_INCL_EXCL)
         THEN (REWRITE_TAC (cl:cons MONOIDAL_REAL_ADD nil))))))
 
@@ -5820,7 +5785,7 @@
         "!f g s:A->bool.
        FINITE {x | x IN s /\\ ~(f x = &0)} /\\ FINITE {x | x IN s /\\ ~(g x = &0)}
        ==> sum s (\\x. f x + g x) = sum s f + sum s g")
-      (holai.runtime:proof (REWRITE_TAC
+      (proof (REWRITE_TAC
           (cl:cons (#`GSYM NEUTRAL_REAL_ADD) (cl:cons (#`GSYM support) (cl:cons sum nil))))
         THEN (MATCH_MP_TAC ITERATE_OP_GEN)
         THEN (#`ACCEPT_TAC MONOIDAL_REAL_ADD)))))
@@ -5829,8 +5794,7 @@
   (prove
     (tuple
       (parse_term "!f s. (!x:A. x IN s ==> (f(x) = &0)) ==> (sum s f = &0)")
-      (holai.runtime:proof (REWRITE_TAC
-          (cl:cons sum (cl:cons (#`GSYM NEUTRAL_REAL_ADD) nil)))
+      (proof (REWRITE_TAC (cl:cons sum (cl:cons (#`GSYM NEUTRAL_REAL_ADD) nil)))
         THEN (SIMP_TAC (cl:cons ITERATE_EQ_NEUTRAL (cl:cons MONOIDAL_REAL_ADD nil)))))))
 
 (defparameter SUM_0
@@ -5843,7 +5807,7 @@
   (prove
     (tuple
       (parse_term "!f c s:A->bool. sum s (\\x. c * f(x)) = c * sum s f")
-      (holai.runtime:proof (REPEAT #'GEN_TAC)
+      (proof (REPEAT #'GEN_TAC)
         THEN (ASM_CASES_TAC (parse_term "c = &0"))
         THEN (#`ASM_REWRITE_TAC (cl:cons REAL_MUL_LZERO (cl:cons SUM_0 nil)))
         THEN (REWRITE_TAC (cl:cons sum nil))
@@ -5877,14 +5841,14 @@
   (prove
     (tuple
       (parse_term "!f c s:A->bool. sum s (\\x. f(x) * c) = sum s f * c")
-      (holai.runtime:proof (ONCE_REWRITE_TAC (cl:cons REAL_MUL_SYM nil))
+      (proof (ONCE_REWRITE_TAC (cl:cons REAL_MUL_SYM nil))
         THEN (REWRITE_TAC (cl:cons SUM_LMUL nil))))))
 
 (defparameter SUM_NEG
   (prove
     (tuple
       (parse_term "!f s:A->bool. sum s (\\x. --(f(x))) = --(sum s f)")
-      (holai.runtime:proof (ONCE_REWRITE_TAC
+      (proof (ONCE_REWRITE_TAC
           (cl:cons (#`REAL_ARITH (parse_term "--x = --(&1) * x")) nil))
         THEN (SIMP_TAC (cl:cons SUM_LMUL nil))))))
 
@@ -5893,7 +5857,7 @@
     (tuple
       (parse_term
         "!f g s:A->bool. FINITE s ==> sum s (\\x. f(x) - g(x)) = sum s f - sum s g")
-      (holai.runtime:proof (ONCE_REWRITE_TAC (cl:cons real_sub nil))
+      (proof (ONCE_REWRITE_TAC (cl:cons real_sub nil))
         THEN (SIMP_TAC (cl:cons SUM_NEG (cl:cons SUM_ADD nil)))))))
 
 (defparameter SUM_LE
@@ -5902,7 +5866,7 @@
       (parse_term
         "!f g s:A->bool.
         FINITE(s) /\\ (!x. x IN s ==> f(x) <= g(x)) ==> sum s f <= sum s g")
-      (holai.runtime:proof (ONCE_REWRITE_TAC (cl:cons IMP_CONJ nil))
+      (proof (ONCE_REWRITE_TAC (cl:cons IMP_CONJ nil))
         THEN #'GEN_TAC
         THEN #'GEN_TAC
         THEN (MATCH_MP_TAC FINITE_INDUCT_STRONG)
@@ -5920,14 +5884,13 @@
         FINITE(s) /\\ (!x. x IN s ==> f(x) <= g(x)) /\\
         (?x. x IN s /\\ f(x) < g(x))
          ==> sum s f < sum s g")
-      (holai.runtime:proof (REPEAT #'GEN_TAC)
+      (proof (REPEAT #'GEN_TAC)
         THEN (REPEAT (DISCH_THEN (CONJUNCTS_THEN2 ASSUME_TAC #'MP_TAC)))
         THEN (DISCH_THEN (X_CHOOSE_THEN (parse_term "a:A") STRIP_ASSUME_TAC))
         THEN (SUBGOAL_THEN (parse_term "s = (a:A) INSERT (s DELETE a)") #'SUBST1_TAC)
         THENL
           (cl:cons
-            (holai.runtime:proof (UNDISCH_TAC (parse_term "a:A IN s"))
-              THEN (#`SET_TAC nil))
+            (proof (UNDISCH_TAC (parse_term "a:A IN s")) THEN (#`SET_TAC nil))
             (cl:cons #'ALL_TAC nil))
         THEN
           (#`ASM_SIMP_TAC
@@ -5956,7 +5919,7 @@
         (!x. x IN s ==> &0 <= f x) /\\
         (?x. x IN s /\\ &0 < f x)
         ==> &0 < sum s f")
-      (holai.runtime:proof (REPEAT #'STRIP_TAC)
+      (proof (REPEAT #'STRIP_TAC)
         THEN (MATCH_MP_TAC REAL_LET_TRANS)
         THEN (#`EXISTS_TAC (parse_term "sum (s:A->bool) (\\i. &0)"))
         THEN #'CONJ_TAC
@@ -5972,7 +5935,7 @@
       (parse_term
         "!s f:A->real.
      FINITE s /\\ ~(s = {}) /\\ (!i. i IN s ==> &0 < f i) ==> &0 < sum s f")
-      (holai.runtime:proof (REPEAT #'STRIP_TAC)
+      (proof (REPEAT #'STRIP_TAC)
         THEN (MATCH_MP_TAC SUM_POS_LT)
         THEN (#`ASM_MESON_TAC (cl:cons MEMBER_NOT_EMPTY (cl:cons REAL_LT_IMP_LE nil)))))))
 
@@ -5980,7 +5943,7 @@
   (prove
     (tuple
       (parse_term "!f g s:A->bool. (!x. x IN s ==> (f x = g x)) ==> (sum s f = sum s g)")
-      (holai.runtime:proof (REWRITE_TAC (cl:cons sum nil))
+      (proof (REWRITE_TAC (cl:cons sum nil))
         THEN (MATCH_MP_TAC ITERATE_EQ)
         THEN (REWRITE_TAC (cl:cons MONOIDAL_REAL_ADD nil))))))
 
@@ -5988,7 +5951,7 @@
   (prove
     (tuple
       (parse_term "!f s:A->bool. FINITE(s) ==> abs(sum s f) <= sum s (\\x. abs(f x))")
-      (holai.runtime:proof #'GEN_TAC
+      (proof #'GEN_TAC
         THEN (MATCH_MP_TAC FINITE_INDUCT_STRONG)
         THEN
           (SIMP_TAC
@@ -6009,7 +5972,7 @@
         "!f:A->real g s:A->bool.
         FINITE s /\\ (!x. x IN s ==> abs(f x) <= g x)
         ==> abs(sum s f) <= sum s g")
-      (holai.runtime:proof (REPEAT #'STRIP_TAC)
+      (proof (REPEAT #'STRIP_TAC)
         THEN (MATCH_MP_TAC REAL_LE_TRANS)
         THEN (#`EXISTS_TAC (parse_term "sum s (\\x:A. abs(f x))"))
         THEN (#`ASM_SIMP_TAC (cl:cons SUM_ABS nil))
@@ -6020,7 +5983,7 @@
   (prove
     (tuple
       (parse_term "!c s:A->bool. FINITE s ==> (sum s (\\n. c) = &(CARD s) * c)")
-      (holai.runtime:proof #'GEN_TAC
+      (proof #'GEN_TAC
         THEN (MATCH_MP_TAC FINITE_INDUCT_STRONG)
         THEN
           (SIMP_TAC
@@ -6034,7 +5997,7 @@
   (prove
     (tuple
       (parse_term "!s:A->bool. (!x. x IN s ==> &0 <= f x) ==> &0 <= sum s f")
-      (holai.runtime:proof (REPEAT #'STRIP_TAC)
+      (proof (REPEAT #'STRIP_TAC)
         THEN (ASM_CASES_TAC (parse_term "FINITE {x:A | x IN s /\\ ~(f x = &0)}"))
         THEN (#`ASM_SIMP_TAC (cl:cons SUM_DEGENERATE (cl:cons REAL_LE_REFL nil)))
         THEN (ONCE_REWRITE_TAC (cl:cons (#`GSYM SUM_SUPPORT) nil))
@@ -6057,7 +6020,7 @@
         "!f b s:A->bool.
         FINITE s /\\ (!x. x IN s ==> &0 <= f x) /\\ sum s f <= b
         ==> !x:A. x IN s ==> f x <= b")
-      (holai.runtime:proof #'GEN_TAC
+      (proof #'GEN_TAC
         THEN #'GEN_TAC
         THEN (REWRITE_TAC (cl:cons IMP_CONJ nil))
         THEN (MATCH_MP_TAC FINITE_INDUCT_STRONG)
@@ -6079,7 +6042,7 @@
         "!f s:A->bool.
         FINITE s /\\ (!x. x IN s ==> &0 <= f x) /\\ (sum s f = &0)
         ==> !x. x IN s ==> f x = &0")
-      (holai.runtime:proof (REWRITE_TAC (cl:cons (#`GSYM REAL_LE_ANTISYM) nil))
+      (proof (REWRITE_TAC (cl:cons (#`GSYM REAL_LE_ANTISYM) nil))
         THEN (MESON_TAC (cl:cons SUM_POS_BOUND (cl:cons SUM_POS_LE nil)))))))
 
 (defparameter SUM_ZERO_EXISTS
@@ -6090,7 +6053,7 @@
          FINITE s /\\ sum s u = &0
          ==> (!i. i IN s ==> u i = &0) \\/
              (?j k. j IN s /\\ u j < &0 /\\ k IN s /\\ u k > &0)")
-      (holai.runtime:proof (REPEAT #'STRIP_TAC)
+      (proof (REPEAT #'STRIP_TAC)
         THEN
           (REPEAT_TCL
             DISJ_CASES_THEN
@@ -6131,7 +6094,7 @@
         "!f s a:A. FINITE s
              ==> sum (s DELETE a) f = if a IN s then sum s f - f(a)
                                       else sum s f")
-      (holai.runtime:proof (REPEAT #'STRIP_TAC)
+      (proof (REPEAT #'STRIP_TAC)
         THEN COND_CASES_TAC
         THEN
           (#`ASM_SIMP_TAC
@@ -6153,8 +6116,7 @@
     (tuple
       (parse_term
         "!s a. sum s (\\x. if x = a:A then b else &0) = if a IN s then b else &0")
-      (holai.runtime:proof (REWRITE_TAC
-          (cl:cons sum (cl:cons (#`GSYM NEUTRAL_REAL_ADD) nil)))
+      (proof (REWRITE_TAC (cl:cons sum (cl:cons (#`GSYM NEUTRAL_REAL_ADD) nil)))
         THEN (SIMP_TAC (cl:cons ITERATE_DELTA (cl:cons MONOIDAL_REAL_ADD nil)))))))
 
 (defparameter SUM_SWAP
@@ -6164,7 +6126,7 @@
         "!f:A->B->real s t.
       FINITE(s) /\\ FINITE(t)
       ==> (sum s (\\i. sum t (f i)) = sum t (\\j. sum s (\\i. f i j)))")
-      (holai.runtime:proof #'GEN_TAC
+      (proof #'GEN_TAC
         THEN (REWRITE_TAC (cl:cons IMP_CONJ (cl:cons RIGHT_FORALL_IMP_THM nil)))
         THEN (MATCH_MP_TAC FINITE_INDUCT_STRONG)
         THEN
@@ -6178,8 +6140,7 @@
         "!(f:A->B) g s.
         (!x y. x IN s /\\ y IN s /\\ f x = f y ==> x = y)
         ==> sum (IMAGE f s) g = sum s (g o f)")
-      (holai.runtime:proof (REWRITE_TAC
-          (cl:cons sum (cl:cons (#`GSYM NEUTRAL_REAL_ADD) nil)))
+      (proof (REWRITE_TAC (cl:cons sum (cl:cons (#`GSYM NEUTRAL_REAL_ADD) nil)))
         THEN (MATCH_MP_TAC ITERATE_IMAGE)
         THEN (REWRITE_TAC (cl:cons MONOIDAL_REAL_ADD nil))))))
 
@@ -6201,7 +6162,7 @@
   (prove
     (tuple
       (parse_term "!f:A->real s. support (+) f (:A) SUBSET s ==> sum s f = sum (:A) f")
-      (holai.runtime:proof (REWRITE_TAC (cl:cons sum nil))
+      (proof (REWRITE_TAC (cl:cons sum nil))
         THEN (MATCH_MP_TAC ITERATE_UNIV)
         THEN (REWRITE_TAC (cl:cons MONOIDAL_REAL_ADD nil))))))
 
@@ -6216,7 +6177,7 @@
         ((lemma
           (prove (tuple (parse_term "u UNION v = u UNION (v DIFF u)") (#`SET_TAC nil)))))
         (cl:declare (cl:ignorable lemma))
-        (holai.runtime:proof (REPEAT #'STRIP_TAC)
+        (proof (REPEAT #'STRIP_TAC)
           THEN (ONCE_REWRITE_TAC (cl:cons lemma nil))
           THEN (MATCH_MP_TAC SUM_SUPERSET)
           THEN (#`ASM_MESON_TAC (cl:cons IN_UNION (cl:cons IN_DIFF (cl:cons SUBSET nil)))))))))
@@ -6236,9 +6197,7 @@
       (parse_term
         "!f s:A->bool.
         FINITE s ==> sum s (\\x. if x IN s then f(x) else &0) = sum s f")
-      (holai.runtime:proof (REPEAT #'STRIP_TAC)
-        THEN (MATCH_MP_TAC SUM_EQ)
-        THEN (#`ASM_SIMP_TAC nil)))))
+      (proof (REPEAT #'STRIP_TAC) THEN (MATCH_MP_TAC SUM_EQ) THEN (#`ASM_SIMP_TAC nil)))))
 
 (defparameter SUM_BOUND
   (prove
@@ -6267,7 +6226,7 @@
       (parse_term
         "!s f b. FINITE s /\\ (!x:A. x IN s ==> abs(f(x)) <= b)
            ==> abs(sum s f) <= &(CARD s) * b")
-      (holai.runtime:proof (REPEAT #'STRIP_TAC)
+      (proof (REPEAT #'STRIP_TAC)
         THEN (MATCH_MP_TAC REAL_LE_TRANS)
         THEN (#`EXISTS_TAC (parse_term "sum s (\\x:A. abs(f x))"))
         THEN (#`ASM_SIMP_TAC (cl:cons SUM_BOUND (cl:cons SUM_ABS nil)))))))
@@ -6278,13 +6237,13 @@
       (parse_term
         "!s f b. FINITE s /\\ (!x:A. x IN s ==> f x <= b) /\\ (?x. x IN s /\\ f x < b)
            ==> sum s f < &(CARD s) * b")
-      (holai.runtime:proof (REPEAT #'STRIP_TAC)
+      (proof (REPEAT #'STRIP_TAC)
         THEN (MATCH_MP_TAC REAL_LTE_TRANS)
         THEN (#`EXISTS_TAC (parse_term "sum s (\\x:A. b)"))
         THEN #'CONJ_TAC
         THENL
           (cl:cons
-            (holai.runtime:proof (MATCH_MP_TAC SUM_LT)
+            (proof (MATCH_MP_TAC SUM_LT)
               THEN (#`ASM_REWRITE_TAC nil)
               THEN (#`ASM_MESON_TAC nil))
             (cl:cons (#`ASM_SIMP_TAC (cl:cons SUM_CONST (cl:cons REAL_LE_REFL nil))) nil))))))
@@ -6339,8 +6298,7 @@
     (tuple
       (parse_term
         "!P s f. sum {x:A | x IN s /\\ P x} f = sum s (\\x. if P x then f x else &0)")
-      (holai.runtime:proof (REWRITE_TAC
-          (cl:cons sum (cl:cons (#`GSYM NEUTRAL_REAL_ADD) nil)))
+      (proof (REWRITE_TAC (cl:cons sum (cl:cons (#`GSYM NEUTRAL_REAL_ADD) nil)))
         THEN (MATCH_MP_TAC ITERATE_RESTRICT_SET)
         THEN (REWRITE_TAC (cl:cons MONOIDAL_REAL_ADD nil))))))
 
@@ -6352,7 +6310,7 @@
         FINITE s /\\ FINITE t
         ==> (sum s (\\x. sum {y | y IN t /\\ R x y} (\\y. f x y)) =
              sum t (\\y. sum {x | x IN s /\\ R x y} (\\x. f x y)))")
-      (holai.runtime:proof (REPEAT #'GEN_TAC)
+      (proof (REPEAT #'GEN_TAC)
         THEN (SIMP_TAC (cl:cons SUM_RESTRICT_SET nil))
         THEN
           (DISCH_THEN (lambdac (th) (REWRITE_TAC (cl:cons (MATCH_MP SUM_SWAP th) nil))))))))
@@ -6372,7 +6330,7 @@
         (!j. j IN t ==> (CARD {i | i IN s /\\ R i j} = k(j)))
         ==> (sum s (\\i. &(CARD {j | j IN t /\\ R i j})) =
              sum t (\\i. &(k i)))")
-      (holai.runtime:proof (REPEAT #'GEN_TAC)
+      (proof (REPEAT #'GEN_TAC)
         THEN (REWRITE_TAC (cl:cons CONJ_ASSOC nil))
         THEN (DISCH_THEN (#`CONJUNCTS_THEN ASSUME_TAC))
         THEN (MATCH_MP_TAC EQ_TRANS)
@@ -6382,12 +6340,12 @@
         THEN #'CONJ_TAC
         THENL
           (cl:cons
-            (holai.runtime:proof (MATCH_MP_TAC SUM_EQ)
+            (proof (MATCH_MP_TAC SUM_EQ)
               THEN (#`ASM_REWRITE_TAC nil)
               THEN (REPEAT #'STRIP_TAC)
               THEN (#`ASM_SIMP_TAC (cl:cons CARD_EQ_SUM (cl:cons FINITE_RESTRICT nil))))
             (cl:cons
-              (holai.runtime:proof (FIRST_ASSUM
+              (proof (FIRST_ASSUM
                   (lambdac (th)
                     (ONCE_REWRITE_TAC (cl:cons (MATCH_MP SUM_SUM_RESTRICT th) nil))))
                 THEN (MATCH_MP_TAC SUM_EQ)
@@ -6403,17 +6361,15 @@
         FINITE s /\\ FINITE t /\\
         (!j. j IN t ==> (CARD {i | i IN s /\\ R i j} = k))
         ==> (sum s (\\i. &(CARD {j | j IN t /\\ R i j})) = &(k * CARD t))")
-      (holai.runtime:proof (REPEAT #'STRIP_TAC)
+      (proof (REPEAT #'STRIP_TAC)
         THEN (MATCH_MP_TAC EQ_TRANS)
         THEN (#`EXISTS_TAC (parse_term "sum t (\\i:B. &k)"))
         THEN #'CONJ_TAC
         THENL
           (cl:cons
-            (holai.runtime:proof (MATCH_MP_TAC SUM_MULTICOUNT_GEN)
-              THEN (#`ASM_REWRITE_TAC nil))
+            (proof (MATCH_MP_TAC SUM_MULTICOUNT_GEN) THEN (#`ASM_REWRITE_TAC nil))
             (cl:cons
-              (holai.runtime:proof (#`ASM_SIMP_TAC
-                  (cl:cons SUM_CONST (cl:cons REAL_OF_NUM_MUL nil)))
+              (proof (#`ASM_SIMP_TAC (cl:cons SUM_CONST (cl:cons REAL_OF_NUM_MUL nil)))
                 THEN (REWRITE_TAC (cl:cons MULT_AC nil)))
               nil))))))
 
@@ -6425,7 +6381,7 @@
         FINITE s
         ==> sum s g =
             sum (IMAGE f s) (\\y. sum {x | x IN s /\\ f x = y} g)")
-      (holai.runtime:proof (REWRITE_TAC (cl:cons sum nil))
+      (proof (REWRITE_TAC (cl:cons sum nil))
         THEN (MATCH_MP_TAC ITERATE_IMAGE_GEN)
         THEN (REWRITE_TAC (cl:cons MONOIDAL_REAL_ADD nil))))))
 
@@ -6436,7 +6392,7 @@
         "!f:A->B g s t.
         FINITE s /\\ IMAGE f s SUBSET t
         ==> sum t (\\y. sum {x | x IN s /\\ f(x) = y} g) = sum s g")
-      (holai.runtime:proof (REPEAT #'STRIP_TAC)
+      (proof (REPEAT #'STRIP_TAC)
         THEN
           (MP_TAC
             (ISPECL
@@ -6460,7 +6416,7 @@
          FINITE s /\\
          (!x. x IN s ==> ?!y. y IN t /\\ R x y)
          ==> sum t (\\y. sum {x | x IN s /\\ R x y} g) = sum s g")
-      (holai.runtime:proof (REPEAT #'STRIP_TAC)
+      (proof (REPEAT #'STRIP_TAC)
         THEN
           (MP_TAC
             (ISPECL
@@ -6489,7 +6445,7 @@
   (prove
     (tuple
       (parse_term "!f s:A->bool. FINITE s ==> (&(nsum s f) = sum s (\\x. &(f x)))")
-      (holai.runtime:proof #'GEN_TAC
+      (proof #'GEN_TAC
         THEN (MATCH_MP_TAC FINITE_INDUCT_STRONG)
         THEN
           (SIMP_TAC
@@ -6505,7 +6461,7 @@
            (!x. x IN (u DIFF v) ==> f(x) <= &0) /\\
            (!x:A. x IN (v DIFF u) ==> &0 <= f(x))
            ==> sum u f <= sum v f")
-      (holai.runtime:proof (REPEAT #'STRIP_TAC)
+      (proof (REPEAT #'STRIP_TAC)
         THEN
           (MP_TAC
             (ISPECL
@@ -6516,7 +6472,7 @@
         THEN
           (DISCH_THEN
             (lambdac (th)
-              (holai.runtime:proof (MP_TAC (#`SPEC (parse_term "v DIFF u :A->bool") th))
+              (proof (MP_TAC (#`SPEC (parse_term "v DIFF u :A->bool") th))
                 THEN (MP_TAC (#`SPEC (parse_term "u DIFF v :A->bool") th)))))
         THEN
           (REWRITE_TAC
@@ -6526,7 +6482,7 @@
         THEN (#`ASM_SIMP_TAC (cl:cons FINITE_DIFF (cl:cons FINITE_INTER nil)))
         THEN
           (REPEAT
-            (holai.runtime:proof ANTS_TAC
+            (proof ANTS_TAC
               THENL (cl:cons (#`SET_TAC nil) (cl:cons (DISCH_THEN #'SUBST1_TAC) nil))))
         THEN
           (MATCH_MP_TAC
@@ -6545,7 +6501,7 @@
         "!u v f.
         FINITE v /\\ u SUBSET v /\\ (!x:A. x IN (v DIFF u) ==> &0 <= f(x))
         ==> sum u f <= sum v f")
-      (holai.runtime:proof (REPEAT #'STRIP_TAC)
+      (proof (REPEAT #'STRIP_TAC)
         THEN (MATCH_MP_TAC SUM_SUBSET)
         THEN
           (#`ASM_MESON_TAC (cl:cons IN_DIFF (cl:cons SUBSET (cl:cons FINITE_SUBSET nil))))))))
@@ -6557,7 +6513,7 @@
         "!a b s:A->bool.
         FINITE s /\\ (!i. i IN s ==> &0 <= a i /\\ &0 <= b i)
         ==> sum s (\\i. a i * b i) <= sum s a * sum s b")
-      (holai.runtime:proof (REPEAT #'STRIP_TAC)
+      (proof (REPEAT #'STRIP_TAC)
         THEN (REWRITE_TAC (cl:cons (#`GSYM SUM_LMUL) nil))
         THEN (MATCH_MP_TAC SUM_LE)
         THEN (#`ASM_REWRITE_TAC nil)
@@ -6577,8 +6533,7 @@
     FINITE s /\\
     (!x y. x IN s /\\ y IN s /\\ ~(x = y) /\\ i x = i y ==> d(i x) = &0)
     ==> sum (IMAGE i s) d = sum s (d o i)")
-      (holai.runtime:proof (REWRITE_TAC
-          (cl:cons (#`GSYM NEUTRAL_REAL_ADD) (cl:cons sum nil)))
+      (proof (REWRITE_TAC (cl:cons (#`GSYM NEUTRAL_REAL_ADD) (cl:cons sum nil)))
         THEN (MATCH_MP_TAC ITERATE_IMAGE_NONZERO)
         THEN (REWRITE_TAC (cl:cons MONOIDAL_REAL_ADD nil))))))
 
@@ -6590,7 +6545,7 @@
         (!x. x IN s ==> p(x) IN s) /\\
         (!y. y IN s ==> ?!x. x IN s /\\ p(x) = y)
         ==> sum s f = sum s (f o p)")
-      (holai.runtime:proof (REWRITE_TAC (cl:cons sum nil))
+      (proof (REWRITE_TAC (cl:cons sum nil))
         THEN (MATCH_MP_TAC ITERATE_BIJECTION)
         THEN (REWRITE_TAC (cl:cons MONOIDAL_REAL_ADD nil))))))
 
@@ -6602,7 +6557,7 @@
         FINITE s /\\ (!i. i IN s ==> FINITE(t i))
         ==> sum s (\\i. sum (t i) (x i)) =
             sum {i,j | i IN s /\\ j IN t i} (\\(i,j). x i j)")
-      (holai.runtime:proof (REWRITE_TAC (cl:cons sum nil))
+      (proof (REWRITE_TAC (cl:cons sum nil))
         THEN (MATCH_MP_TAC ITERATE_ITERATE_PRODUCT)
         THEN (REWRITE_TAC (cl:cons MONOIDAL_REAL_ADD nil))))))
 
@@ -6614,7 +6569,7 @@
         (!y. y IN t ==> ?!x. x IN s /\\ h(x) = y) /\\
         (!x. x IN s ==> h(x) IN t /\\ g(h x) = f x)
         ==> sum s f = sum t g")
-      (holai.runtime:proof (REWRITE_TAC (cl:cons sum nil))
+      (proof (REWRITE_TAC (cl:cons sum nil))
         THEN (MATCH_MP_TAC ITERATE_EQ_GENERAL)
         THEN (REWRITE_TAC (cl:cons MONOIDAL_REAL_ADD nil))))))
 
@@ -6626,7 +6581,7 @@
         (!y. y IN t ==> k(y) IN s /\\ h(k y) = y) /\\
         (!x. x IN s ==> h(x) IN t /\\ k(h x) = x /\\ g(h x) = f x)
         ==> sum s f = sum t g")
-      (holai.runtime:proof (REWRITE_TAC (cl:cons sum nil))
+      (proof (REWRITE_TAC (cl:cons sum nil))
         THEN (MATCH_MP_TAC ITERATE_EQ_GENERAL_INVERSES)
         THEN (REWRITE_TAC (cl:cons MONOIDAL_REAL_ADD nil))))))
 
@@ -6639,7 +6594,7 @@
            (!x. x IN s ==> p x IN s) /\\
            (!x y. x IN s /\\ y IN s /\\ p x = p y ==> x = y)
            ==> sum s (f o p) = sum s f")
-      (holai.runtime:proof (REWRITE_TAC (cl:cons sum nil))
+      (proof (REWRITE_TAC (cl:cons sum nil))
         THEN (MATCH_MP_TAC ITERATE_INJECTION)
         THEN (REWRITE_TAC (cl:cons MONOIDAL_REAL_ADD nil))))))
 
@@ -6650,8 +6605,7 @@
         "!f s t:A->bool.
         FINITE s /\\ FINITE t /\\ (!x. x IN s INTER t ==> f(x) = &0)
         ==> sum (s UNION t) f = sum s f + sum t f")
-      (holai.runtime:proof (REWRITE_TAC
-          (cl:cons sum (cl:cons (#`GSYM NEUTRAL_REAL_ADD) nil)))
+      (proof (REWRITE_TAC (cl:cons sum (cl:cons (#`GSYM NEUTRAL_REAL_ADD) nil)))
         THEN (MATCH_MP_TAC ITERATE_UNION_NONZERO)
         THEN (REWRITE_TAC (cl:cons MONOIDAL_REAL_ADD nil))))))
 
@@ -6663,7 +6617,7 @@
          (!t1 t2 x. t1 IN s /\\ t2 IN s /\\ ~(t1 = t2) /\\ x IN t1 /\\ x IN t2
                     ==> f x = &0)
          ==> sum (UNIONS s) f = sum s (\\t. sum t f)")
-      (holai.runtime:proof #'GEN_TAC
+      (proof #'GEN_TAC
         THEN (ONCE_REWRITE_TAC (cl:cons IMP_CONJ nil))
         THEN (MATCH_MP_TAC FINITE_INDUCT_STRONG)
         THEN
@@ -6677,8 +6631,7 @@
             (cl:cons
               (parse_term "t:A->bool")
               (cl:cons (parse_term "s:(A->bool)->bool") nil)))
-        THEN
-          (DISCH_THEN (lambdac (th) (holai.runtime:proof #'STRIP_TAC THEN (MP_TAC th))))
+        THEN (DISCH_THEN (lambdac (th) (proof #'STRIP_TAC THEN (MP_TAC th))))
         THEN (ONCE_REWRITE_TAC (cl:cons IMP_CONJ nil))
         THEN (#`ASM_SIMP_TAC (cl:cons SUM_CLAUSES nil))
         THEN ANTS_TAC
@@ -6700,8 +6653,7 @@
         "!s P f g. FINITE s
              ==> sum s (\\x:A. if P x then f x else g x) =
                  sum {x | x IN s /\\ P x} f + sum {x | x IN s /\\ ~P x} g")
-      (holai.runtime:proof (REWRITE_TAC
-          (cl:cons sum (cl:cons (#`GSYM NEUTRAL_REAL_ADD) nil)))
+      (proof (REWRITE_TAC (cl:cons sum (cl:cons (#`GSYM NEUTRAL_REAL_ADD) nil)))
         THEN (MATCH_MP_TAC ITERATE_CASES)
         THEN (REWRITE_TAC (cl:cons MONOIDAL_REAL_ADD nil))))))
 
@@ -6711,7 +6663,7 @@
       (parse_term
         "!s a:A. FINITE s /\\ a IN s
            ==> sum s (\\x. if x = a then y else f(x)) = sum s f + (y - f a)")
-      (holai.runtime:proof (REPEAT #'STRIP_TAC)
+      (proof (REPEAT #'STRIP_TAC)
         THEN (#`ASM_SIMP_TAC (cl:cons SUM_CASES nil))
         THEN (#`ASM_SIMP_TAC (cl:cons (#`GSYM DELETE) (cl:cons SUM_DELETE nil)))
         THEN
@@ -6731,7 +6683,7 @@
         (!y. y IN t ==> &0 <= g y) /\\
         (!x. x IN s ==> ?y. y IN t /\\ i y = x /\\ f(x) <= g(y))
         ==> sum s f <= sum t g")
-      (holai.runtime:proof (REPEAT #'STRIP_TAC)
+      (proof (REPEAT #'STRIP_TAC)
         THEN (MATCH_MP_TAC REAL_LE_TRANS)
         THEN
           (#`EXISTS_TAC
@@ -6741,7 +6693,7 @@
           (cl:cons
             #'ALL_TAC
             (cl:cons
-              (holai.runtime:proof (MATCH_MP_TAC REAL_EQ_IMP_LE)
+              (proof (MATCH_MP_TAC REAL_EQ_IMP_LE)
                 THEN (MATCH_MP_TAC (#`GSYM SUM_IMAGE_GEN))
                 THEN (#`ASM_REWRITE_TAC nil))
               nil))
@@ -6751,7 +6703,7 @@
         THEN #'CONJ_TAC
         THENL
           (cl:cons
-            (holai.runtime:proof (MATCH_MP_TAC SUM_LE)
+            (proof (MATCH_MP_TAC SUM_LE)
               THEN (#`ASM_REWRITE_TAC nil)
               THEN (#`X_GEN_TAC (parse_term "x:A"))
               THEN DISCH_TAC
@@ -6782,7 +6734,7 @@
         FINITE s /\\
         (!x. x IN s ==> &0 <= g(f x))
         ==> sum (IMAGE f s) g <= sum s (g o f)")
-      (holai.runtime:proof (REPEAT #'STRIP_TAC)
+      (proof (REPEAT #'STRIP_TAC)
         THEN (MATCH_MP_TAC SUM_LE_INCLUDED)
         THEN (#`ASM_SIMP_TAC (cl:cons FINITE_IMAGE (cl:cons FORALL_IN_IMAGE nil)))
         THEN (#`ASM_REWRITE_TAC (cl:cons o_THM nil))
@@ -6796,7 +6748,7 @@
         "!P f:A->real s.
         P(&0) /\\ (!x y. P x /\\ P y ==> P(x + y)) /\\ (!a. a IN s ==> P(f a))
         ==> P(sum s f)")
-      (holai.runtime:proof (REPEAT #'STRIP_TAC)
+      (proof (REPEAT #'STRIP_TAC)
         THEN (MP_TAC (MATCH_MP ITERATE_CLOSED MONOIDAL_REAL_ADD))
         THEN (DISCH_THEN (o #'MP_TAC (#`SPEC (parse_term "P:real->bool"))))
         THEN (#`ASM_SIMP_TAC (cl:cons NEUTRAL_REAL_ADD (cl:cons (#`GSYM sum) nil)))))))
@@ -6810,8 +6762,7 @@
         (!m n m' n'. R m n /\\ R m' n' ==> R (m + m') (n + n')) /\\
         FINITE s /\\ (!x. x IN s ==> R (f x) (g x))
         ==> R (sum s f) (sum s g)")
-      (holai.runtime:proof (REWRITE_TAC
-          (cl:cons IMP_CONJ (cl:cons RIGHT_FORALL_IMP_THM nil)))
+      (proof (REWRITE_TAC (cl:cons IMP_CONJ (cl:cons RIGHT_FORALL_IMP_THM nil)))
         THEN #'GEN_TAC
         THEN (REPEAT DISCH_TAC)
         THEN
@@ -6830,7 +6781,7 @@
         FINITE s /\\ ~(s = {}) /\\
         (!x y. P x /\\ P y ==> P(x + y)) /\\ (!a. a IN s ==> P(f a))
         ==> P(sum s f)")
-      (holai.runtime:proof (REPEAT #'STRIP_TAC)
+      (proof (REPEAT #'STRIP_TAC)
         THEN (MP_TAC (MATCH_MP ITERATE_CLOSED_NONEMPTY MONOIDAL_REAL_ADD))
         THEN (DISCH_THEN (o #'MP_TAC (#`SPEC (parse_term "P:real->bool"))))
         THEN (#`ASM_SIMP_TAC (cl:cons NEUTRAL_REAL_ADD (cl:cons (#`GSYM sum) nil)))))))
@@ -6843,8 +6794,7 @@
         (!m n m' n'. R m n /\\ R m' n' ==> R (m + m') (n + n')) /\\
         FINITE s /\\ ~(s = {}) /\\ (!x. x IN s ==> R (f x) (g x))
         ==> R (sum s f) (sum s g)")
-      (holai.runtime:proof (REWRITE_TAC
-          (cl:cons IMP_CONJ (cl:cons RIGHT_FORALL_IMP_THM nil)))
+      (proof (REWRITE_TAC (cl:cons IMP_CONJ (cl:cons RIGHT_FORALL_IMP_THM nil)))
         THEN #'GEN_TAC
         THEN (REPEAT DISCH_TAC)
         THEN
@@ -6861,7 +6811,7 @@
       (parse_term
         "!f s:A->bool.
        FINITE {i | i IN s /\\ ~(f i = 0)} ==> &(nsum s f) = sum s (\\x. &(f x))")
-      (holai.runtime:proof (REPEAT #'STRIP_TAC)
+      (proof (REPEAT #'STRIP_TAC)
         THEN
           (ONCE_REWRITE_TAC
             (cl:cons (#`GSYM SUM_SUPPORT) (cl:cons (#`GSYM NSUM_SUPPORT) nil)))
@@ -6959,7 +6909,7 @@
         "(!m. sum(m..0) f = if m = 0 then f(0) else &0) /\\
    (!m n. sum(m..SUC n) f = if m <= SUC n then sum(m..n) f + f(SUC n)
                             else sum(m..n) f)")
-      (holai.runtime:proof (MP_TAC (MATCH_MP ITERATE_CLAUSES_NUMSEG MONOIDAL_REAL_ADD))
+      (proof (MP_TAC (MATCH_MP ITERATE_CLAUSES_NUMSEG MONOIDAL_REAL_ADD))
         THEN (REWRITE_TAC (cl:cons NEUTRAL_REAL_ADD (cl:cons sum nil)))))))
 
 (defparameter SUM_CLAUSES_NUMSEG_LT
@@ -6968,7 +6918,7 @@
       (parse_term
         "sum {i | i < 0} f = &0 /\\
    (!k. sum {i | i < SUC k} f = sum {i | i < k} f + f k)")
-      (holai.runtime:proof (MP_TAC (MATCH_MP ITERATE_CLAUSES_NUMSEG_LT MONOIDAL_REAL_ADD))
+      (proof (MP_TAC (MATCH_MP ITERATE_CLAUSES_NUMSEG_LT MONOIDAL_REAL_ADD))
         THEN (REWRITE_TAC (cl:cons NEUTRAL_REAL_ADD (cl:cons sum nil)))))))
 
 (defparameter SUM_CLAUSES_NUMSEG_LE
@@ -6977,7 +6927,7 @@
       (parse_term
         "sum {i | i <= 0} f = f 0 /\\
    (!k. sum {i | i <= SUC k} f = sum {i | i <= k} f + f(SUC k))")
-      (holai.runtime:proof (MP_TAC (MATCH_MP ITERATE_CLAUSES_NUMSEG_LE MONOIDAL_REAL_ADD))
+      (proof (MP_TAC (MATCH_MP ITERATE_CLAUSES_NUMSEG_LE MONOIDAL_REAL_ADD))
         THEN (REWRITE_TAC (cl:cons NEUTRAL_REAL_ADD (cl:cons sum nil)))))))
 
 (defparameter SUM_SWAP_NUMSEG
@@ -6986,7 +6936,7 @@
       (parse_term
         "!a b c d f.
      sum(a..b) (\\i. sum(c..d) (f i)) = sum(c..d) (\\j. sum(a..b) (\\i. f i j))")
-      (holai.runtime:proof (REPEAT #'GEN_TAC)
+      (proof (REPEAT #'GEN_TAC)
         THEN (MATCH_MP_TAC SUM_SWAP)
         THEN (REWRITE_TAC (cl:cons FINITE_NUMSEG nil))))))
 
@@ -7011,7 +6961,7 @@
   (prove
     (tuple
       (parse_term "!p f m n. sum(m+p..n+p) f = sum(m..n) (\\i. f(i + p))")
-      (holai.runtime:proof (SIMP_TAC
+      (proof (SIMP_TAC
           (cl:cons
             NUMSEG_OFFSET_IMAGE
             (cl:cons SUM_IMAGE (cl:cons EQ_ADD_RCANCEL (cl:cons FINITE_NUMSEG nil)))))
@@ -7027,7 +6977,7 @@
   (prove
     (tuple
       (parse_term "!f m n. m <= n ==> sum(m..n) f = f(m) + sum(m+1..n) f")
-      (holai.runtime:proof (SIMP_TAC
+      (proof (SIMP_TAC
           (cl:cons
             (#`GSYM NUMSEG_LREC)
             (cl:cons SUM_CLAUSES (cl:cons FINITE_NUMSEG (cl:cons IN_NUMSEG nil)))))
@@ -7037,7 +6987,7 @@
   (prove
     (tuple
       (parse_term "!f m n. 0 < n /\\ m <= n ==> sum(m..n) f = sum(m..n-1) f + f(n)")
-      (holai.runtime:proof #'GEN_TAC
+      (proof #'GEN_TAC
         THEN #'GEN_TAC
         THEN INDUCT_TAC
         THEN
@@ -7047,7 +6997,7 @@
   (prove
     (tuple
       (parse_term "!f m n. sum(2*m..2*n+1) f = sum(m..n) (\\i. f(2*i) + f(2*i+1))")
-      (holai.runtime:proof (MP_TAC (MATCH_MP ITERATE_PAIR MONOIDAL_REAL_ADD))
+      (proof (MP_TAC (MATCH_MP ITERATE_PAIR MONOIDAL_REAL_ADD))
         THEN (REWRITE_TAC (cl:cons sum (cl:cons NEUTRAL_REAL_ADD nil)))))))
 
 (defparameter SUM_REFLECT
@@ -7055,7 +7005,7 @@
     (tuple
       (parse_term
         "!x m n. sum(m..n) x = if n < m then &0 else sum(0..n-m) (\\i. x(n - i))")
-      (holai.runtime:proof (REPEAT #'GEN_TAC)
+      (proof (REPEAT #'GEN_TAC)
         THEN (REWRITE_TAC (cl:cons sum nil))
         THEN
           (GEN_REWRITE_TAC
@@ -7083,7 +7033,7 @@
             if m <= n then f(n + 1) * g(n + 1) - f(m) * g(m) -
                            sum (m..n) (\\k. g(k + 1) * (f(k + 1) - f(k)))
             else &0")
-      (holai.runtime:proof #'GEN_TAC
+      (proof #'GEN_TAC
         THEN #'GEN_TAC
         THEN #'GEN_TAC
         THEN INDUCT_TAC
@@ -7092,7 +7042,7 @@
         THEN (#`ASM_REWRITE_TAC (cl:cons SUM_CLAUSES_NUMSEG nil))
         THENL
           (cl:cons
-            (holai.runtime:proof COND_CASES_TAC
+            (proof COND_CASES_TAC
               THEN (#`ASM_SIMP_TAC nil)
               THENL (cl:cons REAL_ARITH_TAC (cl:cons ASM_ARITH_TAC nil)))
             (cl:cons #'ALL_TAC nil))
@@ -7117,7 +7067,7 @@
             if m <= n then f(n + 1) * g(n) - f(m) * g(m - 1) -
                            sum (m..n) (\\k. g k * (f(k + 1) - f(k)))
             else &0")
-      (holai.runtime:proof (REPEAT #'GEN_TAC)
+      (proof (REPEAT #'GEN_TAC)
         THEN
           (MP_TAC
             (ISPECL
@@ -7138,7 +7088,7 @@
       (parse_term
         "!m n. sum(m..n) (\\k. f(k) - f(k + 1)) =
           if m <= n then f(m) - f(n + 1) else &0")
-      (holai.runtime:proof (ONCE_REWRITE_TAC
+      (proof (ONCE_REWRITE_TAC
           (cl:cons (#`REAL_ARITH (parse_term "a - b = -- &1 * (b - a)")) nil))
         THEN (ONCE_REWRITE_TAC (cl:cons SUM_PARTIAL_SUC nil))
         THEN
@@ -7152,7 +7102,7 @@
       (parse_term
         "!m n. sum(m..n) (\\k. f(k + 1) - f(k)) =
           if m <= n then f(n + 1) - f(m) else &0")
-      (holai.runtime:proof (REPEAT #'GEN_TAC)
+      (proof (REPEAT #'GEN_TAC)
         THEN (ONCE_REWRITE_TAC (cl:cons (#`GSYM REAL_NEG_SUB) nil))
         THEN (SIMP_TAC (cl:cons SUM_NEG (cl:cons SUM_DIFFS nil)))
         THEN COND_CASES_TAC
@@ -7164,7 +7114,7 @@
       (parse_term
         "!f m n p. m <= n + 1 /\\ n <= p
              ==> sum(m..n) f + sum(n+1..p) f = sum(m..p) f")
-      (holai.runtime:proof (REPEAT #'STRIP_TAC)
+      (proof (REPEAT #'STRIP_TAC)
         THEN (MATCH_MP_TAC SUM_UNION_EQ)
         THEN
           (REWRITE_TAC
@@ -7183,7 +7133,7 @@
       (parse_term
         "!f m n p. 0 < n /\\ m <= n /\\ n <= p + 1
              ==> sum(m..n-1) f + sum(n..p) f = sum(m..p) f")
-      (holai.runtime:proof (REPEAT #'STRIP_TAC)
+      (proof (REPEAT #'STRIP_TAC)
         THEN (MATCH_MP_TAC SUM_UNION_EQ)
         THEN
           (REWRITE_TAC
@@ -7208,7 +7158,7 @@
               ==> sum(a..b) (\\i. f(i)) = sum(a..b) g) /\\
    (!f g p. (!x. p x ==> f x = g x)
             ==> sum {y | p y} (\\i. f(i)) = sum {y | p y} g)")
-        (holai.runtime:proof (REPEAT #'STRIP_TAC)
+        (proof (REPEAT #'STRIP_TAC)
           THEN (MATCH_MP_TAC SUM_EQ)
           THEN (#`ASM_SIMP_TAC (cl:cons IN_ELIM_THM (cl:cons IN_NUMSEG nil))))))))
   (cl:declare (cl:ignorable th))
@@ -7307,7 +7257,7 @@
         "!x y n.
         1 <= n ==> x pow n - y pow n =
                    (x - y) * sum(0..n-1) (\\i. x pow i * y pow (n - 1 - i))")
-      (holai.runtime:proof (REWRITE_TAC (cl:cons (#`GSYM SUM_LMUL) nil))
+      (proof (REWRITE_TAC (cl:cons (#`GSYM SUM_LMUL) nil))
         THEN
           (REWRITE_TAC
             (cl:cons
@@ -7341,7 +7291,7 @@
   (prove
     (tuple
       (parse_term "!x n. 1 <= n ==> x pow n - &1 = (x - &1) * sum(0..n-1) (\\i. x pow i)")
-      (holai.runtime:proof (REPEAT #'GEN_TAC)
+      (proof (REPEAT #'GEN_TAC)
         THEN
           (DISCH_THEN
             (o
@@ -7355,7 +7305,7 @@
   (prove
     (tuple
       (parse_term "!x n. 1 <= n ==> &1 - x pow n = (&1 - x) * sum(0..n-1) (\\i. x pow i)")
-      (holai.runtime:proof (ONCE_REWRITE_TAC (cl:cons (#`GSYM REAL_NEG_SUB) nil))
+      (proof (ONCE_REWRITE_TAC (cl:cons (#`GSYM REAL_NEG_SUB) nil))
         THEN (SIMP_TAC (cl:cons REAL_SUB_POW_R1 nil))
         THEN (REWRITE_TAC (cl:cons REAL_MUL_LNEG nil))))))
 
@@ -7373,7 +7323,7 @@
     ==> sum(0..n) (\\i. a i * x pow i) - sum(0..n) (\\i. a i * y pow i) =
         (x - y) *
         sum(0..n-1) (\\j. sum(j+1..n) (\\i. a i * y pow (i - j - 1)) * x pow j)")
-      (holai.runtime:proof (REPEAT #'STRIP_TAC)
+      (proof (REPEAT #'STRIP_TAC)
         THEN
           (REWRITE_TAC
             (cl:cons (#`GSYM SUM_SUB_NUMSEG) (cl:cons (#`GSYM REAL_SUB_LDISTRIB) nil)))
@@ -7421,7 +7371,7 @@
     ==> sum(0..n) (\\i. a i * x pow i) - sum(0..n) (\\i. a i * y pow i) =
         (x - y) *
         sum(0..n-1) (\\j. sum(0..n-j-1) (\\k. a(j+k+1) * y pow k) * x pow j)")
-      (holai.runtime:proof (REPEAT #'STRIP_TAC)
+      (proof (REPEAT #'STRIP_TAC)
         THEN (#`ASM_SIMP_TAC (cl:cons REAL_SUB_POLYFUN nil))
         THEN AP_TERM_TAC
         THEN (MATCH_MP_TAC SUM_EQ_NUMSEG)
@@ -7439,7 +7389,7 @@
               (cl:cons (parse_term "\\k. j + k + 1") nil)))
         THEN (REWRITE_TAC (cl:cons IN_NUMSEG nil))
         THEN (REPEAT #'STRIP_TAC)
-        THEN (TRY (holai.runtime:proof BINOP_TAC THEN AP_TERM_TAC))
+        THEN (TRY (proof BINOP_TAC THEN AP_TERM_TAC))
         THEN ASM_ARITH_TAC))))
 
 (defparameter REAL_POLYFUN_ROOTBOUND
@@ -7449,11 +7399,11 @@
         "!n c. ~(!i. i IN 0..n ==> c i = &0)
          ==> FINITE {x | sum(0..n) (\\i. c i * x pow i) = &0} /\\
              CARD {x | sum(0..n) (\\i. c i * x pow i) = &0} <= n")
-      (holai.runtime:proof (REWRITE_TAC (cl:cons NOT_FORALL_THM (cl:cons NOT_IMP nil)))
+      (proof (REWRITE_TAC (cl:cons NOT_FORALL_THM (cl:cons NOT_IMP nil)))
         THEN INDUCT_TAC
         THENL
           (cl:cons
-            (holai.runtime:proof (REWRITE_TAC
+            (proof (REWRITE_TAC
                 (cl:cons
                   NUMSEG_SING
                   (cl:cons IN_SING (cl:cons UNWIND_THM2 (cl:cons SUM_CLAUSES_NUMSEG nil)))))
@@ -7469,13 +7419,13 @@
                           CARD_CLAUSES
                           (cl:cons FINITE_EMPTY (cl:cons LE_REFL nil))))))))
             (cl:cons
-              (holai.runtime:proof (#`X_GEN_TAC (parse_term "c:num->real"))
+              (proof (#`X_GEN_TAC (parse_term "c:num->real"))
                 THEN (REWRITE_TAC (cl:cons IN_NUMSEG nil))
                 THEN DISCH_TAC
                 THEN (ASM_CASES_TAC (parse_term "(c:num->real) (SUC n) = &0"))
                 THENL
                   (cl:cons
-                    (holai.runtime:proof (#`ASM_SIMP_TAC
+                    (proof (#`ASM_SIMP_TAC
                         (cl:cons
                           SUM_CLAUSES_NUMSEG
                           (cl:cons
@@ -7486,7 +7436,7 @@
                       THEN (FIRST_X_ASSUM #'MATCH_MP_TAC)
                       THEN (#`ASM_MESON_TAC (cl:cons IN_NUMSEG (cl:cons LE nil))))
                     (cl:cons
-                      (holai.runtime:proof (ASM_CASES_TAC
+                      (proof (ASM_CASES_TAC
                           (parse_term
                             "{x | sum (0..SUC n) (\\i. c i * x pow i) = &0} = {}"))
                         THEN
@@ -7581,7 +7531,7 @@
       (parse_term
         "!n c. FINITE {x | sum(0..n) (\\i. c i * x pow i) = &0} <=>
          ?i. i IN 0..n /\\ ~(c i = &0)")
-      (holai.runtime:proof (REPEAT #'GEN_TAC)
+      (proof (REPEAT #'GEN_TAC)
         THEN (REWRITE_TAC (cl:cons (#`TAUT (parse_term "a /\\ ~b <=> ~(a ==> b)")) nil))
         THEN (REWRITE_TAC (cl:cons (#`GSYM NOT_FORALL_THM) nil))
         THEN #'EQ_TAC
@@ -7600,14 +7550,12 @@
       (parse_term
         "!n c. (!x. sum(0..n) (\\i. c i * x pow i) = &0) <=>
          (!i. i IN 0..n ==> c i = &0)")
-      (holai.runtime:proof (REPEAT #'GEN_TAC)
+      (proof (REPEAT #'GEN_TAC)
         THEN #'EQ_TAC
         THEN DISCH_TAC
         THENL
           (cl:cons
-            (holai.runtime:proof (GEN_REWRITE_TAC
-                #'I
-                (cl:cons (#`TAUT (parse_term "p <=> ~ ~p")) nil))
+            (proof (GEN_REWRITE_TAC #'I (cl:cons (#`TAUT (parse_term "p <=> ~ ~p")) nil))
               THEN (DISCH_THEN (o #'MP_TAC (MATCH_MP REAL_POLYFUN_ROOTBOUND)))
               THEN
                 (#`ASM_REWRITE_TAC
@@ -7631,7 +7579,7 @@
       (parse_term
         "!n c k. (!x. sum(0..n) (\\i. c i * x pow i) = k) <=>
            c 0 = k /\\ (!i. i IN 1..n ==> c i = &0)")
-      (holai.runtime:proof (REPEAT #'GEN_TAC)
+      (proof (REPEAT #'GEN_TAC)
         THEN (MATCH_MP_TAC EQ_TRANS)
         THEN
           (#`EXISTS_TAC
@@ -7640,7 +7588,7 @@
         THEN #'CONJ_TAC
         THENL
           (cl:cons
-            (holai.runtime:proof (SIMP_TAC
+            (proof (SIMP_TAC
                 (cl:cons
                   SUM_CLAUSES_LEFT
                   (cl:cons LE_0 (cl:cons real_pow (cl:cons REAL_MUL_RID nil)))))
@@ -7660,7 +7608,7 @@
               THEN COND_CASES_TAC
               THEN (#`ASM_REWRITE_TAC (cl:cons ARITH nil)))
             (cl:cons
-              (holai.runtime:proof (REWRITE_TAC
+              (proof (REWRITE_TAC
                   (cl:cons REAL_POLYFUN_EQ_0 (cl:cons IN_NUMSEG (cl:cons LE_0 nil))))
                 THEN
                   (GEN_REWRITE_TAC
@@ -7688,7 +7636,7 @@
   (prove
     (tuple
       (parse_term "!c. polynomial_function (\\x. c)")
-      (holai.runtime:proof #'GEN_TAC
+      (proof #'GEN_TAC
         THEN (REWRITE_TAC (cl:cons polynomial_function nil))
         THEN
           (MAP_EVERY
@@ -7702,7 +7650,7 @@
   (prove
     (tuple
       (parse_term "polynomial_function (\\x. x)")
-      (holai.runtime:proof (REWRITE_TAC (cl:cons polynomial_function nil))
+      (proof (REWRITE_TAC (cl:cons polynomial_function nil))
         THEN
           (MAP_EVERY
             EXISTS_TAC
@@ -7724,7 +7672,7 @@
       (parse_term
         "!p q. polynomial_function p /\\ polynomial_function q
          ==> polynomial_function (\\x. p x + q x)")
-      (holai.runtime:proof (REPEAT #'GEN_TAC)
+      (proof (REPEAT #'GEN_TAC)
         THEN
           (REWRITE_TAC
             (cl:cons
@@ -7763,7 +7711,7 @@
   (prove
     (tuple
       (parse_term "!p c. polynomial_function p ==> polynomial_function (\\x. c * p x)")
-      (holai.runtime:proof (REPEAT #'GEN_TAC)
+      (proof (REPEAT #'GEN_TAC)
         THEN
           (REWRITE_TAC
             (cl:cons
@@ -7786,14 +7734,14 @@
   (prove
     (tuple
       (parse_term "!p c. polynomial_function p ==> polynomial_function (\\x. p x * c)")
-      (holai.runtime:proof (ONCE_REWRITE_TAC (cl:cons REAL_MUL_SYM nil))
+      (proof (ONCE_REWRITE_TAC (cl:cons REAL_MUL_SYM nil))
         THEN (REWRITE_TAC (cl:cons POLYNOMIAL_FUNCTION_LMUL nil))))))
 
 (defparameter POLYNOMIAL_FUNCTION_NEG
   (prove
     (tuple
       (parse_term "!p. polynomial_function(\\x. --(p x)) <=> polynomial_function p")
-      (holai.runtime:proof #'GEN_TAC
+      (proof #'GEN_TAC
         THEN #'EQ_TAC
         THEN
           (DISCH_THEN
@@ -7823,8 +7771,7 @@
       (parse_term
         "!p q. polynomial_function p /\\ polynomial_function q
          ==> polynomial_function (\\x. p x * q x)")
-      (holai.runtime:proof (REWRITE_TAC
-          (cl:cons IMP_CONJ (cl:cons RIGHT_FORALL_IMP_THM nil)))
+      (proof (REWRITE_TAC (cl:cons IMP_CONJ (cl:cons RIGHT_FORALL_IMP_THM nil)))
         THEN #'GEN_TAC
         THEN DISCH_TAC
         THEN
@@ -7886,8 +7833,7 @@
         "!s:A->bool p.
         FINITE s /\\ (!i. i IN s ==> polynomial_function(\\x. p x i))
         ==> polynomial_function (\\x. sum s (p x))")
-      (holai.runtime:proof (REWRITE_TAC
-          (cl:cons IMP_CONJ (cl:cons RIGHT_FORALL_IMP_THM nil)))
+      (proof (REWRITE_TAC (cl:cons IMP_CONJ (cl:cons RIGHT_FORALL_IMP_THM nil)))
         THEN (MATCH_MP_TAC FINITE_INDUCT_STRONG)
         THEN (SIMP_TAC (cl:cons SUM_CLAUSES (cl:cons POLYNOMIAL_FUNCTION_CONST nil)))
         THEN (SIMP_TAC (cl:cons FORALL_IN_INSERT (cl:cons POLYNOMIAL_FUNCTION_ADD nil)))))))
@@ -7896,7 +7842,7 @@
   (prove
     (tuple
       (parse_term "!p n. polynomial_function p ==> polynomial_function (\\x. p x pow n)")
-      (holai.runtime:proof (REWRITE_TAC (cl:cons RIGHT_FORALL_IMP_THM nil))
+      (proof (REWRITE_TAC (cl:cons RIGHT_FORALL_IMP_THM nil))
         THEN #'GEN_TAC
         THEN DISCH_TAC
         THEN INDUCT_TAC
@@ -7914,7 +7860,7 @@
       (!p q. P p /\\ P q ==> P (\\x. p x + q x)) /\\
       (!p q. P p /\\ P q ==> P (\\x. p x * q x))
       ==> !p. polynomial_function p ==> P p")
-      (holai.runtime:proof #'GEN_TAC
+      (proof #'GEN_TAC
         THEN #'STRIP_TAC
         THEN (REWRITE_TAC (cl:cons polynomial_function (cl:cons LEFT_IMP_EXISTS_THM nil)))
         THEN
@@ -7944,7 +7890,7 @@
       (parse_term
         "!p q. polynomial_function p /\\ polynomial_function q
          ==> polynomial_function (p o q)")
-      (holai.runtime:proof (ONCE_REWRITE_TAC (cl:cons SWAP_FORALL_THM nil))
+      (proof (ONCE_REWRITE_TAC (cl:cons SWAP_FORALL_THM nil))
         THEN (REWRITE_TAC (cl:cons IMP_CONJ_ALT (cl:cons RIGHT_FORALL_IMP_THM nil)))
         THEN #'GEN_TAC
         THEN DISCH_TAC
@@ -7962,7 +7908,7 @@
       (parse_term
         "!p a. polynomial_function p
          ==> (FINITE {x | p x = a} <=> ~(!x. p x = a))")
-      (holai.runtime:proof (ONCE_REWRITE_TAC (cl:cons (#`GSYM REAL_SUB_0) nil))
+      (proof (ONCE_REWRITE_TAC (cl:cons (#`GSYM REAL_SUB_0) nil))
         THEN
           (SUBGOAL_THEN
             (parse_term
@@ -7984,8 +7930,7 @@
             (SIMP_TAC
               (cl:cons UNIV_GSPEC (cl:cons (#`GSYM INFINITE) (cl:cons real_INFINITE nil))))
             (cl:cons
-              (holai.runtime:proof (#`ASM_REWRITE_TAC
-                  (cl:cons REAL_POLYFUN_FINITE_ROOTS nil))
+              (proof (#`ASM_REWRITE_TAC (cl:cons REAL_POLYFUN_FINITE_ROOTS nil))
                 THEN
                   (SIMP_TAC
                     (cl:cons

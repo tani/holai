@@ -886,6 +886,7 @@
     string-escaped
     snd
     raise
+    proof
     partial
     match
     lambdac
@@ -1115,12 +1116,10 @@
             "!P:(A)list->bool. P [] /\\ (!h t. P t ==> P (CONS h t)) ==> !l. P l")
           (#`MATCH_ACCEPT_TAC list_INDUCT)))))
     (cl:declare (cl:ignorable list_INDUCT%))
-    (holai.runtime:proof (MATCH_MP_TAC list_INDUCT%)
+    (proof (MATCH_MP_TAC list_INDUCT%)
       THEN #'CONJ_TAC
       THENL
-        (cl:cons
-          #'ALL_TAC
-          (cl:cons (holai.runtime:proof #'GEN_TAC THEN #'GEN_TAC THEN DISCH_TAC) nil)))))
+        (cl:cons #'ALL_TAC (cl:cons (proof #'GEN_TAC THEN #'GEN_TAC THEN DISCH_TAC) nil)))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Basic definitions.                                                        *)
@@ -1336,19 +1335,19 @@
   (prove
     (tuple
       (parse_term "!l:A list. APPEND l [] = l")
-      (holai.runtime:proof LIST_INDUCT_TAC THEN (#`ASM_REWRITE_TAC (cl:cons APPEND nil))))))
+      (proof LIST_INDUCT_TAC THEN (#`ASM_REWRITE_TAC (cl:cons APPEND nil))))))
 
 (defparameter APPEND_ASSOC
   (prove
     (tuple
       (parse_term "!(l:A list) m n. APPEND l (APPEND m n) = APPEND (APPEND l m) n")
-      (holai.runtime:proof LIST_INDUCT_TAC THEN (#`ASM_REWRITE_TAC (cl:cons APPEND nil))))))
+      (proof LIST_INDUCT_TAC THEN (#`ASM_REWRITE_TAC (cl:cons APPEND nil))))))
 
 (defparameter REVERSE_APPEND
   (prove
     (tuple
       (parse_term "!(l:A list) m. REVERSE (APPEND l m) = APPEND (REVERSE m) (REVERSE l)")
-      (holai.runtime:proof LIST_INDUCT_TAC
+      (proof LIST_INDUCT_TAC
         THEN
           (#`ASM_REWRITE_TAC
             (cl:cons
@@ -1359,7 +1358,7 @@
   (prove
     (tuple
       (parse_term "!l:A list. REVERSE(REVERSE l) = l")
-      (holai.runtime:proof LIST_INDUCT_TAC
+      (proof LIST_INDUCT_TAC
         THEN
           (#`ASM_REWRITE_TAC
             (cl:cons REVERSE (cl:cons REVERSE_APPEND (cl:cons APPEND nil))))))))
@@ -1381,7 +1380,7 @@
   (prove
     (tuple
       (parse_term "!l:(A)list. (l = []) \\/ ?h t. l = CONS h t")
-      (holai.runtime:proof LIST_INDUCT_TAC
+      (proof LIST_INDUCT_TAC
         THEN (REWRITE_TAC (cl:cons CONS_11 (cl:cons NOT_CONS_NIL nil)))
         THEN (MESON_TAC nil)))))
 
@@ -1392,7 +1391,7 @@
         "!l1 l2:A list.
         l1 = l2 <=>
         LENGTH l1 = LENGTH l2 /\\ !n. n < LENGTH l2 ==> EL n l1 = EL n l2")
-      (holai.runtime:proof (REPEAT LIST_INDUCT_TAC)
+      (proof (REPEAT LIST_INDUCT_TAC)
         THEN
           (REWRITE_TAC
             (cl:cons
@@ -1421,7 +1420,7 @@
   (prove
     (tuple
       (parse_term "!(l:A list) m. LENGTH(APPEND l m) = LENGTH l + LENGTH m")
-      (holai.runtime:proof LIST_INDUCT_TAC
+      (proof LIST_INDUCT_TAC
         THEN
           (#`ASM_REWRITE_TAC (cl:cons APPEND (cl:cons LENGTH (cl:cons ADD_CLAUSES nil))))))))
 
@@ -1429,7 +1428,7 @@
   (prove
     (tuple
       (parse_term "!f:A->B. !l1 l2. MAP f (APPEND l1 l2) = APPEND (MAP f l1) (MAP f l2)")
-      (holai.runtime:proof #'GEN_TAC
+      (proof #'GEN_TAC
         THEN LIST_INDUCT_TAC
         THEN (#`ASM_REWRITE_TAC (cl:cons MAP (cl:cons APPEND nil)))))))
 
@@ -1437,14 +1436,13 @@
   (prove
     (tuple
       (parse_term "!l. !f:A->B. LENGTH (MAP f l) = LENGTH l")
-      (holai.runtime:proof LIST_INDUCT_TAC
-        THEN (#`ASM_REWRITE_TAC (cl:cons MAP (cl:cons LENGTH nil)))))))
+      (proof LIST_INDUCT_TAC THEN (#`ASM_REWRITE_TAC (cl:cons MAP (cl:cons LENGTH nil)))))))
 
 (defparameter LENGTH_EQ_NIL
   (prove
     (tuple
       (parse_term "!l:A list. (LENGTH l = 0) <=> (l = [])")
-      (holai.runtime:proof LIST_INDUCT_TAC
+      (proof LIST_INDUCT_TAC
         THEN (REWRITE_TAC (cl:cons LENGTH (cl:cons NOT_CONS_NIL (cl:cons NOT_SUC nil))))))))
 
 (defparameter LENGTH_EQ_CONS
@@ -1452,7 +1450,7 @@
     (tuple
       (parse_term
         "!(l:A list) n. LENGTH l = SUC n <=> ?h t. (l = CONS h t) /\\ (LENGTH t = n)")
-      (holai.runtime:proof LIST_INDUCT_TAC
+      (proof LIST_INDUCT_TAC
         THEN (REWRITE_TAC (cl:cons LENGTH (cl:cons NOT_SUC (cl:cons NOT_CONS_NIL nil))))
         THEN (#`ASM_REWRITE_TAC (cl:cons SUC_INJ (cl:cons CONS_11 nil)))
         THEN (MESON_TAC nil)))))
@@ -1461,7 +1459,7 @@
   (prove
     (tuple
       (parse_term "!l:A list. LENGTH(REVERSE l) = LENGTH l")
-      (holai.runtime:proof LIST_INDUCT_TAC
+      (proof LIST_INDUCT_TAC
         THEN
           (#`ASM_REWRITE_TAC
             (cl:cons REVERSE (cl:cons LENGTH_APPEND (cl:cons LENGTH nil))))
@@ -1471,7 +1469,7 @@
   (prove
     (tuple
       (parse_term "!f:A->B. !g:B->C. !l. MAP (g o f) l = MAP g (MAP f l)")
-      (holai.runtime:proof #'GEN_TAC
+      (proof #'GEN_TAC
         THEN #'GEN_TAC
         THEN LIST_INDUCT_TAC
         THEN (#`ASM_REWRITE_TAC (cl:cons MAP (cl:cons o_THM nil)))))))
@@ -1480,7 +1478,7 @@
   (prove
     (tuple
       (parse_term "!(f:A->B) g l. ALL (\\x. f x = g x) l ==> (MAP f l = MAP g l)")
-      (holai.runtime:proof #'GEN_TAC
+      (proof #'GEN_TAC
         THEN #'GEN_TAC
         THEN LIST_INDUCT_TAC
         THEN (REWRITE_TAC (cl:cons MAP (cl:cons ALL nil)))
@@ -1490,7 +1488,7 @@
   (prove
     (tuple
       (parse_term "!P Q l:A list. (!x. MEM x l /\\ P x ==> Q x) /\\ ALL P l ==> ALL Q l")
-      (holai.runtime:proof #'GEN_TAC
+      (proof #'GEN_TAC
         THEN #'GEN_TAC
         THEN LIST_INDUCT_TAC
         THEN (REWRITE_TAC (cl:cons MEM (cl:cons ALL nil)))
@@ -1500,7 +1498,7 @@
   (prove
     (tuple
       (parse_term "!P l:A list. ~(EX P l) <=> ALL (\\x. ~(P x)) l")
-      (holai.runtime:proof #'GEN_TAC
+      (proof #'GEN_TAC
         THEN LIST_INDUCT_TAC
         THEN (#`ASM_REWRITE_TAC (cl:cons EX (cl:cons ALL (cl:cons DE_MORGAN_THM nil))))))))
 
@@ -1508,7 +1506,7 @@
   (prove
     (tuple
       (parse_term "!P l:A list. ~(ALL P l) <=> EX (\\x. ~(P x)) l")
-      (holai.runtime:proof #'GEN_TAC
+      (proof #'GEN_TAC
         THEN LIST_INDUCT_TAC
         THEN (#`ASM_REWRITE_TAC (cl:cons EX (cl:cons ALL (cl:cons DE_MORGAN_THM nil))))))))
 
@@ -1516,7 +1514,7 @@
   (prove
     (tuple
       (parse_term "!P (f:A->B) l. ALL P (MAP f l) <=> ALL (P o f) l")
-      (holai.runtime:proof #'GEN_TAC
+      (proof #'GEN_TAC
         THEN #'GEN_TAC
         THEN LIST_INDUCT_TAC
         THEN (#`ASM_REWRITE_TAC (cl:cons ALL (cl:cons MAP (cl:cons o_THM nil))))))))
@@ -1527,7 +1525,7 @@
       (parse_term
         "!l:A list.
         ALL R l /\\ (!x. R x ==> (P x <=> Q x)) ==> (ALL P l <=> ALL Q l)")
-      (holai.runtime:proof LIST_INDUCT_TAC
+      (proof LIST_INDUCT_TAC
         THEN (REWRITE_TAC (cl:cons ALL nil))
         THEN #'STRIP_TAC
         THEN BINOP_TAC
@@ -1538,13 +1536,13 @@
   (prove
     (tuple
       (parse_term "!l:A list. ALL (\\x. T) l")
-      (holai.runtime:proof LIST_INDUCT_TAC THEN (#`ASM_REWRITE_TAC (cl:cons ALL nil))))))
+      (proof LIST_INDUCT_TAC THEN (#`ASM_REWRITE_TAC (cl:cons ALL nil))))))
 
 (defparameter MAP_EQ_ALL2
   (prove
     (tuple
       (parse_term "!(f:A->B) l m. ALL2 (\\x y. f x = f y) l m ==> MAP f l = MAP f m")
-      (holai.runtime:proof #'GEN_TAC
+      (proof #'GEN_TAC
         THEN (REPEAT LIST_INDUCT_TAC)
         THEN (#`ASM_REWRITE_TAC (cl:cons MAP (cl:cons ALL2 (cl:cons CONS_11 nil))))
         THEN (#`ASM_MESON_TAC nil)))))
@@ -1553,7 +1551,7 @@
   (prove
     (tuple
       (parse_term "!P (f:A->B) l. ALL2 P (MAP f l) l <=> ALL (\\a. P (f a) a) l")
-      (holai.runtime:proof #'GEN_TAC
+      (proof #'GEN_TAC
         THEN #'GEN_TAC
         THEN LIST_INDUCT_TAC
         THEN (#`ASM_REWRITE_TAC (cl:cons ALL2 (cl:cons MAP (cl:cons ALL nil))))))))
@@ -1562,7 +1560,7 @@
   (prove
     (tuple
       (parse_term "!l (f:A->A). ALL (\\x. f(x) = x) l ==> (MAP f l = l)")
-      (holai.runtime:proof LIST_INDUCT_TAC
+      (proof LIST_INDUCT_TAC
         THEN (REWRITE_TAC (cl:cons ALL (cl:cons MAP (cl:cons CONS_11 nil))))
         THEN (REPEAT #'STRIP_TAC)
         THEN (#`ASM_REWRITE_TAC nil)
@@ -1574,7 +1572,7 @@
     (tuple
       (parse_term
         "!l m P Q. ALL2 (\\(x:A) (y:B). P x /\\ Q x y) l m <=> ALL P l /\\ ALL2 Q l m")
-      (holai.runtime:proof LIST_INDUCT_TAC
+      (proof LIST_INDUCT_TAC
         THEN (#`ASM_REWRITE_TAC (cl:cons ALL (cl:cons ALL2 nil)))
         THEN LIST_INDUCT_TAC
         THEN (#`ASM_REWRITE_TAC (cl:cons ALL (cl:cons ALL2 nil)))
@@ -1586,7 +1584,7 @@
       (parse_term
         "!(f:A->B->B) a l1 l2.
         ITLIST f (APPEND l1 l2) a = ITLIST f l1 (ITLIST f l2 a)")
-      (holai.runtime:proof #'GEN_TAC
+      (proof #'GEN_TAC
         THEN #'GEN_TAC
         THEN LIST_INDUCT_TAC
         THEN (#`ASM_REWRITE_TAC (cl:cons ITLIST (cl:cons APPEND nil)))))))
@@ -1601,7 +1599,7 @@
   (prove
     (tuple
       (parse_term "!P Q (l:A list). ALL (\\x. P x ==> Q x) l /\\ ALL P l ==> ALL Q l")
-      (holai.runtime:proof #'GEN_TAC
+      (proof #'GEN_TAC
         THEN #'GEN_TAC
         THEN LIST_INDUCT_TAC
         THEN (REWRITE_TAC (cl:cons ALL nil))
@@ -1611,7 +1609,7 @@
   (prove
     (tuple
       (parse_term "!l:A list. ALL P l /\\ ALL Q l <=> ALL (\\x. P x /\\ Q x) l")
-      (holai.runtime:proof (#`CONV_TAC (#`ONCE_DEPTH_CONV #'SYM_CONV))
+      (proof (#`CONV_TAC (#`ONCE_DEPTH_CONV #'SYM_CONV))
         THEN LIST_INDUCT_TAC
         THEN (#`ASM_REWRITE_TAC (cl:cons ALL (cl:cons CONJ_ACI nil)))))))
 
@@ -1619,7 +1617,7 @@
   (prove
     (tuple
       (parse_term "!P Q (l:A list). (!x. MEM x l /\\ P x ==> Q x) /\\ EX P l ==> EX Q l")
-      (holai.runtime:proof #'GEN_TAC
+      (proof #'GEN_TAC
         THEN #'GEN_TAC
         THEN LIST_INDUCT_TAC
         THEN (REWRITE_TAC (cl:cons MEM (cl:cons EX nil)))
@@ -1629,7 +1627,7 @@
   (prove
     (tuple
       (parse_term "!P (l:A list). (!x. MEM x l ==> P x) <=> ALL P l")
-      (holai.runtime:proof #'GEN_TAC
+      (proof #'GEN_TAC
         THEN LIST_INDUCT_TAC
         THEN (REWRITE_TAC (cl:cons ALL (cl:cons MEM nil)))
         THEN (#`ASM_MESON_TAC nil)))))
@@ -1638,14 +1636,13 @@
   (prove
     (tuple
       (parse_term "!n x:A. LENGTH(REPLICATE n x) = n")
-      (holai.runtime:proof INDUCT_TAC
-        THEN (#`ASM_REWRITE_TAC (cl:cons LENGTH (cl:cons REPLICATE nil)))))))
+      (proof INDUCT_TAC THEN (#`ASM_REWRITE_TAC (cl:cons LENGTH (cl:cons REPLICATE nil)))))))
 
 (defparameter MEM_REPLICATE
   (prove
     (tuple
       (parse_term "!n x y:A. MEM x (REPLICATE n y) <=> x = y /\\ ~(n = 0)")
-      (holai.runtime:proof INDUCT_TAC
+      (proof INDUCT_TAC
         THEN (#`ASM_REWRITE_TAC (cl:cons MEM (cl:cons REPLICATE (cl:cons NOT_SUC nil))))
         THEN (MESON_TAC nil)))))
 
@@ -1653,7 +1650,7 @@
   (prove
     (tuple
       (parse_term "!P (f:A->B) l. EX P (MAP f l) <=> EX (P o f) l")
-      (holai.runtime:proof #'GEN_TAC
+      (proof #'GEN_TAC
         THEN #'GEN_TAC
         THEN LIST_INDUCT_TAC
         THEN (#`ASM_REWRITE_TAC (cl:cons MAP (cl:cons EX (cl:cons o_THM nil))))))))
@@ -1662,7 +1659,7 @@
   (prove
     (tuple
       (parse_term "!(P:A->B->bool) l. (?x. EX (P x) l) <=> EX (\\s. ?x. P x s) l")
-      (holai.runtime:proof #'GEN_TAC
+      (proof #'GEN_TAC
         THEN LIST_INDUCT_TAC
         THEN (#`ASM_REWRITE_TAC (cl:cons EX nil))
         THEN (#`ASM_MESON_TAC nil)))))
@@ -1671,7 +1668,7 @@
   (prove
     (tuple
       (parse_term "!(P:A->B->bool) l. (!x. ALL (P x) l) <=> ALL (\\s. !x. P x s) l")
-      (holai.runtime:proof #'GEN_TAC
+      (proof #'GEN_TAC
         THEN LIST_INDUCT_TAC
         THEN (#`ASM_REWRITE_TAC (cl:cons ALL nil))
         THEN (#`ASM_MESON_TAC nil)))))
@@ -1680,7 +1677,7 @@
   (prove
     (tuple
       (parse_term "!(x:A) l1 l2. MEM x (APPEND l1 l2) <=> MEM x l1 \\/ MEM x l2")
-      (holai.runtime:proof #'GEN_TAC
+      (proof #'GEN_TAC
         THEN LIST_INDUCT_TAC
         THEN (#`ASM_REWRITE_TAC (cl:cons MEM (cl:cons APPEND (cl:cons DISJ_ACI nil))))))))
 
@@ -1688,7 +1685,7 @@
   (prove
     (tuple
       (parse_term "!(f:A->B) y l. MEM y (MAP f l) <=> ?x. MEM x l /\\ (y = f x)")
-      (holai.runtime:proof #'GEN_TAC
+      (proof #'GEN_TAC
         THEN #'GEN_TAC
         THEN LIST_INDUCT_TAC
         THEN (#`ASM_REWRITE_TAC (cl:cons MEM (cl:cons MAP nil)))
@@ -1700,7 +1697,7 @@
       (parse_term
         "!(P:A->bool) l1 l2.
         FILTER P (APPEND l1 l2) = APPEND (FILTER P l1) (FILTER P l2)")
-      (holai.runtime:proof #'GEN_TAC
+      (proof #'GEN_TAC
         THEN LIST_INDUCT_TAC
         THEN (#`ASM_REWRITE_TAC (cl:cons FILTER (cl:cons APPEND nil)))
         THEN #'GEN_TAC
@@ -1711,7 +1708,7 @@
   (prove
     (tuple
       (parse_term "!P (f:A->B) l. FILTER P (MAP f l) = MAP f (FILTER (P o f) l)")
-      (holai.runtime:proof #'GEN_TAC
+      (proof #'GEN_TAC
         THEN #'GEN_TAC
         THEN LIST_INDUCT_TAC
         THEN (#`ASM_REWRITE_TAC (cl:cons MAP (cl:cons FILTER (cl:cons o_THM nil))))
@@ -1722,7 +1719,7 @@
   (prove
     (tuple
       (parse_term "!P l (x:A). MEM x (FILTER P l) <=> P x /\\ MEM x l")
-      (holai.runtime:proof #'GEN_TAC
+      (proof #'GEN_TAC
         THEN LIST_INDUCT_TAC
         THEN (#`ASM_REWRITE_TAC (cl:cons MEM (cl:cons FILTER nil)))
         THEN #'GEN_TAC
@@ -1734,7 +1731,7 @@
   (prove
     (tuple
       (parse_term "!P l:A list. LENGTH(FILTER P l) <= LENGTH l")
-      (holai.runtime:proof #'GEN_TAC
+      (proof #'GEN_TAC
         THEN LIST_INDUCT_TAC
         THEN (#`ASM_REWRITE_TAC (cl:cons FILTER (cl:cons LE_REFL nil)))
         THEN COND_CASES_TAC
@@ -1745,7 +1742,7 @@
   (prove
     (tuple
       (parse_term "!P (l:A list). (?x. P x /\\ MEM x l) <=> EX P l")
-      (holai.runtime:proof #'GEN_TAC
+      (proof #'GEN_TAC
         THEN LIST_INDUCT_TAC
         THEN (#`ASM_REWRITE_TAC (cl:cons EX (cl:cons MEM nil)))
         THEN (#`ASM_MESON_TAC nil)))))
@@ -1756,7 +1753,7 @@
       (parse_term
         "!(l1:A list) (l2:B list).
     LENGTH l1 = LENGTH l2 ==> MAP FST (ZIP l1 l2) = l1")
-      (holai.runtime:proof LIST_INDUCT_TAC
+      (proof LIST_INDUCT_TAC
         THEN LIST_INDUCT_TAC
         THEN
           (#`ASM_SIMP_TAC
@@ -1772,7 +1769,7 @@
       (parse_term
         "!(l1:A list) (l2:B list).
     LENGTH l1 = LENGTH l2 ==> MAP SND (ZIP l1 l2) = l2")
-      (holai.runtime:proof LIST_INDUCT_TAC
+      (proof LIST_INDUCT_TAC
         THEN LIST_INDUCT_TAC
         THEN
           (#`ASM_SIMP_TAC
@@ -1788,8 +1785,7 @@
       (parse_term
         "!(l1:A list) (l2:B list).
     LENGTH l1 = LENGTH l2 ==> LENGTH(ZIP l1 l2) = LENGTH l2")
-      (holai.runtime:proof (REPEAT
-          (holai.runtime:proof LIST_INDUCT_TAC #'ORELSE #'GEN_TAC))
+      (proof (REPEAT (proof LIST_INDUCT_TAC #'ORELSE #'GEN_TAC))
         THEN
           (#`ASM_SIMP_TAC
             (cl:cons LENGTH (cl:cons NOT_SUC (cl:cons ZIP (cl:cons SUC_INJ nil)))))))))
@@ -1798,7 +1794,7 @@
   (prove
     (tuple
       (parse_term "!(l:(A#B)list) x. MEM (x,ASSOC x l) l <=> MEM x (MAP FST l)")
-      (holai.runtime:proof LIST_INDUCT_TAC
+      (proof LIST_INDUCT_TAC
         THEN (#`ASM_REWRITE_TAC (cl:cons MEM (cl:cons MAP (cl:cons ASSOC nil))))
         THEN #'GEN_TAC
         THEN COND_CASES_TAC
@@ -1809,7 +1805,7 @@
   (prove
     (tuple
       (parse_term "!P l1 l2:A list. ALL P (APPEND l1 l2) <=> ALL P l1 /\\ ALL P l2")
-      (holai.runtime:proof #'GEN_TAC
+      (proof #'GEN_TAC
         THEN LIST_INDUCT_TAC
         THEN
           (#`ASM_REWRITE_TAC
@@ -1819,7 +1815,7 @@
   (prove
     (tuple
       (parse_term "!(l:A list) n. n < LENGTH l ==> MEM (EL n l) l")
-      (holai.runtime:proof LIST_INDUCT_TAC
+      (proof LIST_INDUCT_TAC
         THEN (REWRITE_TAC (cl:cons MEM (cl:cons (#`CONJUNCT1 LT) (cl:cons LENGTH nil))))
         THEN INDUCT_TAC
         THEN (#`ASM_SIMP_TAC (cl:cons EL (cl:cons HD (cl:cons LT_SUC (cl:cons TL nil)))))))))
@@ -1828,7 +1824,7 @@
   (prove
     (tuple
       (parse_term "!(l:A list) x. MEM x l <=> ?i. i < LENGTH l /\\ x = EL i l")
-      (holai.runtime:proof LIST_INDUCT_TAC
+      (proof LIST_INDUCT_TAC
         THEN
           (#`ASM_REWRITE_TAC
             (cl:cons LENGTH (cl:cons EL (cl:cons MEM (cl:cons (#`CONJUNCT1 LT) nil)))))
@@ -1849,8 +1845,7 @@
   (prove
     (tuple
       (parse_term "!P (l:A list). (!i. i < LENGTH l ==> P (EL i l)) <=> ALL P l")
-      (holai.runtime:proof (REWRITE_TAC
-          (cl:cons (#`GSYM ALL_MEM) (cl:cons MEM_EXISTS_EL nil)))
+      (proof (REWRITE_TAC (cl:cons (#`GSYM ALL_MEM) (cl:cons MEM_EXISTS_EL nil)))
         THEN (MESON_TAC nil)))))
 
 (defparameter ALL2_MAP2
@@ -1859,7 +1854,7 @@
       (parse_term
         "!(f:A->B) (g:C->D) l m.
         ALL2 P (MAP f l) (MAP g m) = ALL2 (\\x y. P (f x) (g y)) l m")
-      (holai.runtime:proof #'GEN_TAC
+      (proof #'GEN_TAC
         THEN #'GEN_TAC
         THEN LIST_INDUCT_TAC
         THEN LIST_INDUCT_TAC
@@ -1871,7 +1866,7 @@
       (parse_term
         "!(P:A->B->bool) Q l m.
         ALL2 P l m /\\ ALL2 Q l m <=> ALL2 (\\x y. P x y /\\ Q x y) l m")
-      (holai.runtime:proof #'GEN_TAC
+      (proof #'GEN_TAC
         THEN #'GEN_TAC
         THEN (#`CONV_TAC (#`ONCE_DEPTH_CONV #'SYM_CONV))
         THEN LIST_INDUCT_TAC
@@ -1883,7 +1878,7 @@
   (prove
     (tuple
       (parse_term "!(P:A->B->bool) l m. ALLPAIRS P l m <=> ALLPAIRS (\\x y. P y x) m l")
-      (holai.runtime:proof #'GEN_TAC
+      (proof #'GEN_TAC
         THEN LIST_INDUCT_TAC
         THEN (REWRITE_TAC (cl:cons ALLPAIRS nil))
         THEN LIST_INDUCT_TAC
@@ -1896,7 +1891,7 @@
       (parse_term
         "!(P:A->B->bool) l m.
         (!x y. MEM x l /\\ MEM y m ==> P x y) <=> ALLPAIRS P l m")
-      (holai.runtime:proof #'GEN_TAC
+      (proof #'GEN_TAC
         THEN LIST_INDUCT_TAC
         THEN (REWRITE_TAC (cl:cons ALLPAIRS (cl:cons (#`GSYM ALL_MEM) (cl:cons MEM nil))))
         THEN (#`ASM_MESON_TAC nil)))))
@@ -1908,8 +1903,7 @@
         "!P (f:A->B) (g:C->D) l m.
         ALLPAIRS P (MAP f l) (MAP g m) <=>
         ALLPAIRS (\\x y. P (f x) (g y)) l m")
-      (holai.runtime:proof (REWRITE_TAC
-          (cl:cons (#`GSYM ALLPAIRS_MEM) (cl:cons MEM_MAP nil)))
+      (proof (REWRITE_TAC (cl:cons (#`GSYM ALLPAIRS_MEM) (cl:cons MEM_MAP nil)))
         THEN (MESON_TAC nil)))))
 
 (defparameter ALLPAIRS_EQ
@@ -1919,15 +1913,14 @@
         "!l m. !P Q. ALL P (l:A list) /\\ ALL Q (m:B list) /\\
                (!p q. P p /\\ Q q ==> (R p q <=> R' p q))
                ==> (ALLPAIRS R l m <=> ALLPAIRS R' l m)")
-      (holai.runtime:proof (REWRITE_TAC
-          (cl:cons (#`GSYM ALLPAIRS_MEM) (cl:cons (#`GSYM ALL_MEM) nil)))
+      (proof (REWRITE_TAC (cl:cons (#`GSYM ALLPAIRS_MEM) (cl:cons (#`GSYM ALL_MEM) nil)))
         THEN (MESON_TAC nil)))))
 
 (defparameter ALL2_ALL
   (prove
     (tuple
       (parse_term "!P (l:A list). ALL2 P l l <=> ALL (\\x. P x x) l")
-      (holai.runtime:proof #'GEN_TAC
+      (proof #'GEN_TAC
         THEN LIST_INDUCT_TAC
         THEN (#`ASM_REWRITE_TAC (cl:cons ALL2 (cl:cons ALL nil)))))))
 
@@ -1942,14 +1935,14 @@
   (prove
     (tuple
       (parse_term "!l1 l2 l3:A list. APPEND l1 l2 = APPEND l1 l3 <=> l2 = l3")
-      (holai.runtime:proof LIST_INDUCT_TAC
+      (proof LIST_INDUCT_TAC
         THEN (#`ASM_REWRITE_TAC (cl:cons APPEND (cl:cons CONS_11 nil)))))))
 
 (defparameter APPEND_RCANCEL
   (prove
     (tuple
       (parse_term "!l1 l2 l3:A list. APPEND l1 l3 = APPEND l2 l3 <=> l1 = l2")
-      (holai.runtime:proof (ONCE_REWRITE_TAC
+      (proof (ONCE_REWRITE_TAC
           (cl:cons
             (MESON
               (cl:cons REVERSE_REVERSE nil)
@@ -1962,7 +1955,7 @@
     (tuple
       (parse_term
         "!(f:A->B->C) l m. LENGTH l = LENGTH m ==> LENGTH(MAP2 f l m) = LENGTH m")
-      (holai.runtime:proof #'GEN_TAC
+      (proof #'GEN_TAC
         THEN LIST_INDUCT_TAC
         THEN LIST_INDUCT_TAC
         THEN
@@ -1980,7 +1973,7 @@
         "!(f:A->B->C) l m k.
         k < LENGTH l /\\ k < LENGTH m
         ==> EL k (MAP2 f l m) = f (EL k l) (EL k m)")
-      (holai.runtime:proof #'GEN_TAC
+      (proof #'GEN_TAC
         THEN LIST_INDUCT_TAC
         THEN LIST_INDUCT_TAC
         THEN (#`ASM_SIMP_TAC (cl:cons LENGTH (cl:cons (#`CONJUNCT1 LT) nil)))
@@ -1995,7 +1988,7 @@
   (prove
     (tuple
       (parse_term "!(f:A->B) l. MAP f l = [] <=> l = []")
-      (holai.runtime:proof #'GEN_TAC
+      (proof #'GEN_TAC
         THEN LIST_INDUCT_TAC
         THEN (REWRITE_TAC (cl:cons MAP (cl:cons NOT_CONS_NIL nil)))))))
 
@@ -2005,12 +1998,12 @@
       (parse_term
         "!f:A->B. (!l m. MAP f l = MAP f m ==> l = m) <=>
             (!x y. f x = f y ==> x = y)")
-      (holai.runtime:proof #'GEN_TAC
+      (proof #'GEN_TAC
         THEN #'EQ_TAC
         THEN DISCH_TAC
         THENL
           (cl:cons
-            (holai.runtime:proof (MAP_EVERY
+            (proof (MAP_EVERY
                 X_GEN_TAC
                 (cl:cons (parse_term "x:A") (cl:cons (parse_term "y:A") nil)))
               THEN DISCH_TAC
@@ -2022,7 +2015,7 @@
                       (cl:cons (parse_term "[x:A]") (cl:cons (parse_term "[y:A]") nil)))))
               THEN (#`ASM_REWRITE_TAC (cl:cons MAP (cl:cons CONS_11 nil))))
             (cl:cons
-              (holai.runtime:proof (REPEAT LIST_INDUCT_TAC)
+              (proof (REPEAT LIST_INDUCT_TAC)
                 THEN
                   (#`ASM_SIMP_TAC
                     (cl:cons MAP (cl:cons NOT_CONS_NIL (cl:cons CONS_11 nil))))
@@ -2033,12 +2026,12 @@
   (prove
     (tuple
       (parse_term "!f:A->B. (!m. ?l. MAP f l = m) <=> (!y. ?x. f x = y)")
-      (holai.runtime:proof #'GEN_TAC
+      (proof #'GEN_TAC
         THEN #'EQ_TAC
         THEN DISCH_TAC
         THENL
           (cl:cons
-            (holai.runtime:proof (#`X_GEN_TAC (parse_term "y:B"))
+            (proof (#`X_GEN_TAC (parse_term "y:B"))
               THEN (FIRST_X_ASSUM (o #'MP_TAC (#`SPEC (parse_term "[y:B]"))))
               THEN (REWRITE_TAC (cl:cons LEFT_IMP_EXISTS_THM nil))
               THEN LIST_INDUCT_TAC
@@ -2054,7 +2047,7 @@
   (prove
     (tuple
       (parse_term "!l. MAP (\\x:A. x) l = l")
-      (holai.runtime:proof LIST_INDUCT_TAC THEN (#`ASM_REWRITE_TAC (cl:cons MAP nil))))))
+      (proof LIST_INDUCT_TAC THEN (#`ASM_REWRITE_TAC (cl:cons MAP nil))))))
 
 (defparameter MAP_I
   (prove
@@ -2077,7 +2070,7 @@
       (parse_term
         "!l m:A list. BUTLAST(APPEND l m) =
                 if m = [] then BUTLAST l else APPEND l (BUTLAST m)")
-      (holai.runtime:proof (SIMP_TAC
+      (proof (SIMP_TAC
           (cl:cons
             COND_RAND
             (cl:cons
@@ -2091,7 +2084,7 @@
   (prove
     (tuple
       (parse_term "!l:A list. ~(l = []) ==> APPEND (BUTLAST l) [LAST l] = l")
-      (holai.runtime:proof LIST_INDUCT_TAC
+      (proof LIST_INDUCT_TAC
         THEN (REWRITE_TAC (cl:cons LAST (cl:cons BUTLAST (cl:cons NOT_CONS_NIL nil))))
         THEN COND_CASES_TAC
         THEN (#`ASM_SIMP_TAC (cl:cons APPEND nil))))))
@@ -2100,7 +2093,7 @@
   (prove
     (tuple
       (parse_term "!p q:A list. LAST(APPEND p q) = if q = [] then LAST p else LAST q")
-      (holai.runtime:proof LIST_INDUCT_TAC
+      (proof LIST_INDUCT_TAC
         THEN
           (#`ASM_REWRITE_TAC (cl:cons APPEND (cl:cons LAST (cl:cons APPEND_EQ_NIL nil))))
         THEN (MESON_TAC nil)))))
@@ -2109,7 +2102,7 @@
   (prove
     (tuple
       (parse_term "!l:A list. ~(l = []) ==> LENGTH(TL l) = LENGTH l - 1")
-      (holai.runtime:proof LIST_INDUCT_TAC
+      (proof LIST_INDUCT_TAC
         THEN
           (REWRITE_TAC
             (cl:cons LENGTH (cl:cons TL (cl:cons ARITH (cl:cons SUC_SUB1 nil)))))))))
@@ -2118,7 +2111,7 @@
   (prove
     (tuple
       (parse_term "!l:A list. ~(l = []) ==> LAST(REVERSE l) = HD l")
-      (holai.runtime:proof LIST_INDUCT_TAC
+      (proof LIST_INDUCT_TAC
         THEN
           (REWRITE_TAC
             (cl:cons
@@ -2141,7 +2134,7 @@
         "!k l m:A list.
         EL k (APPEND l m) = if k < LENGTH l then EL k l
                             else EL (k - LENGTH l) m")
-      (holai.runtime:proof INDUCT_TAC
+      (proof INDUCT_TAC
         THEN (REWRITE_TAC (cl:cons EL nil))
         THEN LIST_INDUCT_TAC
         THEN
@@ -2167,7 +2160,7 @@
   (prove
     (tuple
       (parse_term "!n (h:A) t. EL n (CONS h t) = if n = 0 then h else EL (n - 1) t")
-      (holai.runtime:proof INDUCT_TAC
+      (proof INDUCT_TAC
         THEN
           (REWRITE_TAC
             (cl:cons
@@ -2178,7 +2171,7 @@
   (prove
     (tuple
       (parse_term "!l:A list. ~(l = []) ==> LAST l = EL (LENGTH l - 1) l")
-      (holai.runtime:proof LIST_INDUCT_TAC
+      (proof LIST_INDUCT_TAC
         THEN (REWRITE_TAC (cl:cons LAST (cl:cons LENGTH (cl:cons SUC_SUB1 nil))))
         THEN DISCH_TAC
         THEN COND_CASES_TAC
@@ -2192,21 +2185,21 @@
   (prove
     (tuple
       (parse_term "!l m:A list. HD(APPEND l m) = if l = [] then HD m else HD l")
-      (holai.runtime:proof LIST_INDUCT_TAC
+      (proof LIST_INDUCT_TAC
         THEN (REWRITE_TAC (cl:cons HD (cl:cons APPEND (cl:cons NOT_CONS_NIL nil))))))))
 
 (defparameter CONS_HD_TL
   (prove
     (tuple
       (parse_term "!l:A list. ~(l = []) ==> l = CONS (HD l) (TL l)")
-      (holai.runtime:proof LIST_INDUCT_TAC
+      (proof LIST_INDUCT_TAC
         THEN (REWRITE_TAC (cl:cons NOT_CONS_NIL (cl:cons HD (cl:cons TL nil))))))))
 
 (defparameter EL_MAP
   (prove
     (tuple
       (parse_term "!(f:A->B) n l. n < LENGTH l ==> EL n (MAP f l) = f(EL n l)")
-      (holai.runtime:proof #'GEN_TAC
+      (proof #'GEN_TAC
         THEN INDUCT_TAC
         THEN LIST_INDUCT_TAC
         THEN
@@ -2225,7 +2218,7 @@
   (prove
     (tuple
       (parse_term "!(f:A->B) l. REVERSE(MAP f l) = MAP f (REVERSE l)")
-      (holai.runtime:proof #'GEN_TAC
+      (proof #'GEN_TAC
         THEN LIST_INDUCT_TAC
         THEN (#`ASM_REWRITE_TAC (cl:cons MAP (cl:cons REVERSE (cl:cons MAP_APPEND nil))))))))
 
@@ -2233,7 +2226,7 @@
   (prove
     (tuple
       (parse_term "!P Q l:A list. ALL P (FILTER Q l) <=> ALL (\\x. Q x ==> P x) l")
-      (holai.runtime:proof #'GEN_TAC
+      (proof #'GEN_TAC
         THEN #'GEN_TAC
         THEN LIST_INDUCT_TAC
         THEN (REWRITE_TAC (cl:cons ALL (cl:cons FILTER nil)))
@@ -2250,7 +2243,7 @@
   (prove
     (tuple
       (parse_term "!x:A l. MEM x l <=> ?l1 l2. ~(MEM x l1) /\\ l = APPEND l1 (CONS x l2)")
-      (holai.runtime:proof (REWRITE_TAC
+      (proof (REWRITE_TAC
           (cl:cons (#`TAUT (parse_term "(p <=> q) <=> (p ==> q) /\\ (q ==> p)")) nil))
         THEN
           (SIMP_TAC (cl:cons LEFT_IMP_EXISTS_THM (cl:cons MEM_APPEND (cl:cons MEM nil))))
@@ -2268,7 +2261,7 @@
   (prove
     (tuple
       (parse_term "!x:A l. MEM x l <=> ?l1 l2. l = APPEND l1 (CONS x l2)")
-      (holai.runtime:proof (REWRITE_TAC
+      (proof (REWRITE_TAC
           (cl:cons (#`TAUT (parse_term "(p <=> q) <=> (p ==> q) /\\ (q ==> p)")) nil))
         THEN
           (SIMP_TAC (cl:cons LEFT_IMP_EXISTS_THM (cl:cons MEM_APPEND (cl:cons MEM nil))))
@@ -2282,7 +2275,7 @@
         "!R:A->A->bool l m.
         PAIRWISE R (APPEND l m) <=>
         PAIRWISE R l /\\ PAIRWISE R m /\\ (!x y. MEM x l /\\ MEM y m ==> R x y)")
-      (holai.runtime:proof #'GEN_TAC
+      (proof #'GEN_TAC
         THEN (MATCH_MP_TAC list_INDUCT)
         THEN
           (REWRITE_TAC
@@ -2299,7 +2292,7 @@
       (parse_term
         "!R f:A->B l.
         PAIRWISE R (MAP f l) <=> PAIRWISE (\\x y. R (f x) (f y)) l")
-      (holai.runtime:proof #'GEN_TAC
+      (proof #'GEN_TAC
         THEN #'GEN_TAC
         THEN LIST_INDUCT_TAC
         THEN
@@ -2313,7 +2306,7 @@
         "!R:A->A->bool R' l.
         PAIRWISE R l /\\ (!x y. MEM x l /\\ MEM y l /\\ R x y ==> R' x y)
         ==> PAIRWISE R' l")
-      (holai.runtime:proof #'GEN_TAC
+      (proof #'GEN_TAC
         THEN #'GEN_TAC
         THEN (MATCH_MP_TAC list_INDUCT)
         THEN (REWRITE_TAC (cl:cons PAIRWISE (cl:cons (#`GSYM ALL_MEM) (cl:cons MEM nil))))
@@ -2326,7 +2319,7 @@
         "!R x y:A l.
       (!x y z. R x y /\\ R y z ==> R x z)
       ==> (PAIRWISE R (CONS x (CONS y l)) <=> R x y /\\ PAIRWISE R (CONS y l))")
-      (holai.runtime:proof (REPEAT #'STRIP_TAC)
+      (proof (REPEAT #'STRIP_TAC)
         THEN
           (REWRITE_TAC
             (cl:cons
@@ -2349,7 +2342,7 @@
   (prove
     (tuple
       (parse_term "!s:num->A n. LENGTH(list_of_seq s n) = n")
-      (holai.runtime:proof #'GEN_TAC
+      (proof #'GEN_TAC
         THEN INDUCT_TAC
         THEN
           (#`ASM_REWRITE_TAC
@@ -2361,7 +2354,7 @@
   (prove
     (tuple
       (parse_term "!s:num->A m n. m < n ==> EL m (list_of_seq s n) = s m")
-      (holai.runtime:proof #'GEN_TAC
+      (proof #'GEN_TAC
         THEN (ONCE_REWRITE_TAC (cl:cons SWAP_FORALL_THM nil))
         THEN INDUCT_TAC
         THEN
@@ -2398,7 +2391,7 @@
   (prove
     (tuple
       (parse_term "!f (g:A->B) n. MAP g (list_of_seq f n) = list_of_seq (g o f) n")
-      (holai.runtime:proof #'GEN_TAC
+      (proof #'GEN_TAC
         THEN #'GEN_TAC
         THEN INDUCT_TAC
         THEN
@@ -2412,7 +2405,7 @@
         "(!(f:num->A). list_of_seq f 0 = []) /\\
    (!(f:num->A) n.
         list_of_seq f (SUC n) = CONS (f 0) (list_of_seq (f o SUC) n))")
-      (holai.runtime:proof (REWRITE_TAC (cl:cons (#`CONJUNCT1 list_of_seq) nil))
+      (proof (REWRITE_TAC (cl:cons (#`CONJUNCT1 list_of_seq) nil))
         THEN (REPEAT #'GEN_TAC)
         THEN
           (REWRITE_TAC
@@ -2476,7 +2469,7 @@
   (prove
     (tuple
       (parse_term "(!x:A. P x ==> Q x) ==> ALL P l ==> ALL Q l")
-      (holai.runtime:proof DISCH_TAC
+      (proof DISCH_TAC
         THEN (SPEC_TAC (tuple (parse_term "l:A list") (parse_term "l:A list")))
         THEN LIST_INDUCT_TAC
         THEN (#`ASM_REWRITE_TAC (cl:cons ALL nil))
@@ -2486,7 +2479,7 @@
   (prove
     (tuple
       (parse_term "(!x y. (P:A->B->bool) x y ==> Q x y) ==> ALL2 P l l' ==> ALL2 Q l l'")
-      (holai.runtime:proof DISCH_TAC
+      (proof DISCH_TAC
         THEN (SPEC_TAC (tuple (parse_term "l':B list") (parse_term "l':B list")))
         THEN (SPEC_TAC (tuple (parse_term "l:A list") (parse_term "l:A list")))
         THEN LIST_INDUCT_TAC
@@ -3018,7 +3011,7 @@
                               (parse_term
                                 "(CONS x xs:string = CONS x ys <=> xs = ys) /\\
        ((x = y <=> F) ==> (CONS x xs:string = CONS y ys <=> F))")
-                              (holai.runtime:proof (REWRITE_TAC (cl:cons CONS_11 nil))
+                              (proof (REWRITE_TAC (cl:cons CONS_11 nil))
                                 THEN (MESON_TAC nil))))
                           (o
                             #'CONJ_PAIR

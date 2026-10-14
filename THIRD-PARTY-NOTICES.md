@@ -13,13 +13,17 @@ The revision lock is `vendor/SOURCES.json`. Vendored sources are unmodified.
 The production runtime has no external pattern-library dependency. Former Trivia dependencies and their original licenses are available in
 Git commit1730c0299f7d677ba25be29d2dfbff0538fea354 for historical reproduction;
 they are not shipped in the current version.
-OCaml, Camlp5 binaries, and SBCL are prerequisites and are not shipped as
-machine binaries in this release.
+OCaml, Camlp5 binaries and platform-selected Common Lisp implementations are
+prerequisites, not shipped machine binaries. Additional Lisp package selection
+follows https://github.com/tani/nix-common-lisp with a separately pinned nixpkgs
+source; existing compiler/SBCL/ECL package pins are retained.
 
 The Map/Set specializations translate selected whole declarations from the original
 source, without changing their bodies. The original OCaml source and its license
 are included so the generated specialization is traceable and reproducible.
 
 The Random section preserves the original seeded init, bits and int algorithms
-and default state. Its raw-byte MD5 operation uses SBCL's bundled SB-MD5 module.
+and default state. Its raw-byte MD5 primitive is implemented locally in portable
+Common Lisp; no SB-MD5 dependency is required. The pinned Random translation and
+its retained LGPL/linking-exception notices remain unchanged.
 The remaining new translator/runtime code is MIT licensed.

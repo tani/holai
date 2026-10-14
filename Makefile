@@ -7,7 +7,7 @@ SOURCE = ml2cl/sexp.ml ml2cl/scope.ml ml2cl/compiler.ml ml2cl/frontend.ml ml2cl/
 CORE = system lib fusion basics nets printer preterm parser equal bool drule tactics itab simp theorems ind_defs class trivia canon meson firstorder metis thecops quot impconv pair compute nums recursion arith wf calc_num normalizer grobner ind_types lists realax calc_int realarith real calc_rat int sets iterate cart define
 CORE_FILES = $(addprefix vendor/hol-light/,$(addsuffix .ml,$(CORE)))
 
-.PHONY: all build regenerate scan inventory test clean-build release clean
+.PHONY: all build regenerate scan inventory test test-full-core clean-build release clean
 all: build
 build: bin/ml2cl
 _build/pa_j.cmo: vendor/hol-light/pa_j_4.xx_8.02.ml
@@ -30,11 +30,13 @@ scan: build
 inventory: build
 	python3 misc/scripts/scan_core.py
 test: regenerate
-	python3 holai/tests/run.py
+	python3 misc/scripts/test-matrix.py test
+test-full-core: regenerate
+	python3 misc/scripts/test-matrix.py full-core
 clean-build: regenerate
 	python3 misc/scripts/check-clean-build.py
-release: test
-	python3 misc/scripts/check-compile-diagnostics.py
+release: regenerate
+	python3 misc/scripts/test-matrix.py release
 	python3 misc/scripts/scan_core.py
 	python3 misc/scripts/check-clean-build.py
 	python3 misc/scripts/release.py

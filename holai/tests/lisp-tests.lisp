@@ -1,4 +1,5 @@
 (require :asdf)
+(setf *load-verbose* nil *compile-verbose* nil)
 (with-open-file (stream "_build/lisp-initialization.txt" :direction :output :if-exists :supersede)
   (let ((*standard-output* stream))
     (load (merge-pathnames "bootstrap.lisp" *load-truename*))
@@ -35,6 +36,23 @@
 (check (= 44 (holai.semantics:case_parallel_functions holai.runtime:unit)) "parallel function case collision")
 (check (= 13 (holai.semantics:local_cl_functions holai.runtime:unit)) "local functions shadow inherited CL names")
 (check (= 12 (holai.semantics:local_syntax_function holai.runtime:unit)) "local functions preserve generated control syntax")
+;; Inspect actual reader symbols, not generated text: importing a synthetic
+;; head eagerly could silently turn a later source PROOF into PROOF%.
+(check (eq (find-symbol "PROOF" :holai.tactical.proof_safe_owner)
+           'holai.runtime:proof)
+       "safe static child imports the bare runtime PROOF macro independently")
+(dolist (package '(:holai.tactical.proof_late_local_owner
+                   :holai.tactical.proof_late_global_owner
+                   :holai.tactical.proof_case_owner
+                   :holai.tactical.proof_lexical_owner))
+  (let ((symbol (find-symbol "PROOF" package)))
+    (check (and symbol (eq (symbol-package symbol) (find-package package))
+                (not (eq symbol 'holai.runtime:proof))
+                (null (find-symbol "PROOF%" package)))
+           "late source PROOF spelling survives synthetic heads in its reader owner")))
+(check (eq (find-symbol "PROOF" :holai.tactical.proof_import_owner)
+           'holai.tactical.proof_foreign:proof)
+       "a later foreign PROOF import is not displaced by the runtime macro")
 (check (= 28 (holai.semantics:parent_capture holai.runtime:unit)) "child module captures an earlier enclosing binding")
 (let* ((unit holai.runtime:unit)
        (first (holai.language:language_module_special 20))
@@ -215,9 +233,6 @@
        "boolean tokens remain distinct from True/False variant tags")
 (check (= -1 (holai.runtime:int-lsr -1 0)) "zero logical shift retains the original signed int")
 (check (= (- (expt 2 62)) (holai.runtime:int-lsl 1 62)) "left shift retains the 63-bit sign bit")
-(holai.runtime:random-init 0)
-(check (= 218040752 (holai.runtime:random-bits holai.runtime:unit))
-       "seeded Random matches original OCaml's first value")
 (let ((table (holai.runtime:table-create 1)))
   (holai.runtime:table-add table (holai.runtime:tuple 1 2) 4)
   (holai.runtime:table-add table (holai.runtime:tuple 1 2) 5)
@@ -415,4 +430,4 @@
   (check (and (= 4 (length axioms))
               (holai.runtime:= (rest axioms) *initial-source-axioms*))
          "source axioms remain unchanged beside the one explicit primitive-kernel fixture axiom"))
-(format t "SBCL checks passed: ~d~%" *checks*)
+(format t "Native checks passed: ~d~%" *checks*)

@@ -88,7 +88,7 @@ type context = {
  mutable dependencies:string list; mutable rules:int SM.t;
  lexical_prefix:string option; mutable metadata:Sexp.t list;
  reference_observer:(binding -> unit) ref; mutable owned_logicals:SS.t option;
- reader_owner:context option; mutable used_packages:SS.t }
+ reader_owner:context option; mutable used_packages:SS.t; mutable proof_head:string ref option }
 let context ?(counter=ref 0) ?(reference_observer=ref (fun (_:binding) -> ())) ?lexical_prefix ?reader_owner package source text items =
  let own=own_names items in
  let totals=List.fold_left (fun m s -> SM.add s (1+Option.value (SM.find_opt s m) ~default:0) m) SM.empty own in
@@ -99,7 +99,7 @@ let context ?(counter=ref 0) ?(reference_observer=ref (fun (_:binding) -> ())) ?
    (SM.empty,SS.empty) (List.sort_uniq compare_source_names own) in
  {package;source;text;own;spellings;totals;occurrences=SM.empty;globals=SS.empty;local_functions=SS.empty;local_symbols=SS.empty;makers=SS.empty;next=counter;
   imports=SM.empty;exports=SM.empty;dependencies=[];rules=SM.empty;lexical_prefix;metadata=[];reference_observer;owned_logicals=None;
-  reader_owner;used_packages=SS.empty}
+  reader_owner;used_packages=SS.empty;proof_head=None}
 let reader_owner c = Option.value c.reader_owner ~default:c
 let use_package c package =
  let owner=reader_owner c in
@@ -190,6 +190,23 @@ let reference c (b:binding) =
  | _ when own_conflict -> b.package^":"^b.printed
  | _ -> owner.imports<-SM.add b.logical b owner.imports; b.printed
 let runtime c name = reference c (external_binding "holai.runtime" name Value)
+(* Synthetic macro heads must not reserve imports while source names are still
+   being allocated. Lexical modules share this cell with their reader owner. *)
+let deferred_proof_head c =
+ let owner=reader_owner c in
+ let head=match owner.proof_head with
+ | Some head -> head
+ | None -> let head=ref "holai.runtime:proof" in owner.proof_head<-Some head;head in
+ Sexp.DeferredAtom head
+let finalize_proof_head c =
+ let owner=reader_owner c in
+ match owner.proof_head with
+ | None -> ()
+ | Some head ->
+   (* REFERENCE handles source-owned/local names and foreign imports; makers
+      are also shadowed by the final package declaration. *)
+   if SS.mem "PROOF" owner.makers then use_package owner "holai.runtime"
+   else head:=runtime owner "proof"
 let mark c loc rule form =
  incr c.next;
  c.rules<-SM.add rule (1+Option.value (SM.find_opt rule c.rules) ~default:0) c.rules;

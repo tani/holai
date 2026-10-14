@@ -1420,6 +1420,7 @@
     snd
     ref
     raise
+    proof
     match
     lambdac
     function-value
@@ -2999,7 +3000,7 @@
 
 
 (defunc GEN_MESON_TAC (min% max% step ths)
-  (holai.runtime:proof (#`REFUTE_THEN ASSUME_TAC)
+  (proof (#`REFUTE_THEN ASSUME_TAC)
     THEN (#`POLY_ASSUME_TAC (map #'GEN_ALL ths))
     THEN
       (W
@@ -3019,7 +3020,7 @@
             (THENC (THENC PRESIMP_CONV (#`TOP_DEPTH_CONV #'BETA_CONV)) LAMBDA_ELIM_CONV)
             CONDS_CELIM_CONV)
           QUANT_BOOL_CONV))
-    THEN (REPEAT (holai.runtime:proof #'GEN_TAC #'ORELSE DISCH_TAC))
+    THEN (REPEAT (proof #'GEN_TAC #'ORELSE DISCH_TAC))
     THEN (#`REFUTE_THEN ASSUME_TAC)
     THEN (RULE_ASSUM_TAC (CONV_RULE (THENC NNF_CONV SKOLEM_CONV)))
     THEN (REPEAT (FIRST_X_ASSUM #'CHOOSE_TAC))
@@ -3042,8 +3043,7 @@
 
 (defparameter ASM_MESON_TAC (GEN_MESON_TAC 0 50 1))
 
-(defunc MESON_TAC (ths)
-  (holai.runtime:proof (POP_ASSUM_LIST (K #'ALL_TAC)) THEN (#`ASM_MESON_TAC ths)))
+(defunc MESON_TAC (ths) (proof (POP_ASSUM_LIST (K #'ALL_TAC)) THEN (#`ASM_MESON_TAC ths)))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Also introduce a rule.                                                    *)

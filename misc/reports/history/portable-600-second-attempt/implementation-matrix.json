@@ -1,0 +1,100 @@
+{
+  "selected": [
+    "abcl",
+    "sbcl",
+    "ecl",
+    "clisp"
+  ],
+  "required": [
+    "sbcl",
+    "ecl"
+  ],
+  "availability": {
+    "abcl": {
+      "available": true,
+      "reason": null
+    },
+    "ccl": {
+      "available": false,
+      "reason": "Unsupported platform aarch64-linux"
+    },
+    "clasp-common-lisp": {
+      "available": false,
+      "reason": "Unsupported platform aarch64-linux"
+    },
+    "clisp": {
+      "available": true,
+      "reason": null
+    },
+    "cmucl_binary": {
+      "available": false,
+      "reason": "Package attribute missing or evaluation failed"
+    },
+    "ecl": {
+      "available": true,
+      "reason": null
+    },
+    "mkcl": {
+      "available": false,
+      "reason": "Marked broken; actual allowBroken MKCL1.1.11 build failed: tinycc/lib-arm64.c:17 implicit declaration __arm64_clear_cache"
+    },
+    "sbcl": {
+      "available": true,
+      "reason": null
+    }
+  },
+  "hosts": {
+    "abcl": {
+      "test": {
+        "exit_code": 1,
+        "log": "misc/reports/implementations/abcl/test-runner.log"
+      },
+      "status": "failed",
+      "diagnostics": {
+        "exit_code": 1,
+        "log": "misc/reports/implementations/abcl/diagnostics-runner.log"
+      }
+    },
+    "sbcl": {
+      "test": {
+        "exit_code": 1,
+        "log": "misc/reports/implementations/sbcl/test-runner.log"
+      },
+      "status": "failed",
+      "diagnostics": {
+        "exit_code": 1,
+        "log": "misc/reports/implementations/sbcl/diagnostics-runner.log"
+      }
+    },
+    "ecl": {
+      "test": {
+        "exit_code": 1,
+        "log": "misc/reports/implementations/ecl/test-runner.log"
+      },
+      "status": "failed",
+      "diagnostics": {
+        "exit_code": 1,
+        "log": "misc/reports/implementations/ecl/diagnostics-runner.log"
+      }
+    },
+    "ccl": {
+      "status": "unavailable",
+      "reason": "Unsupported platform aarch64-linux"
+    },
+    "mkcl": {
+      "status": "unavailable",
+      "reason": "Marked broken; actual allowBroken MKCL1.1.11 build failed: tinycc/lib-arm64.c:17 implicit declaration __arm64_clear_cache"
+    },
+    "clisp": {
+      "test": {
+        "exit_code": 1,
+        "log": "misc/reports/implementations/clisp/test-runner.log"
+      },
+      "status": "failed",
+      "diagnostics": {
+        "exit_code": 1,
+        "log": "misc/reports/implementations/clisp/diagnostics-runner.log"
+      }
+    }
+  }
+}

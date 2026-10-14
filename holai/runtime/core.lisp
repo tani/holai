@@ -120,6 +120,14 @@
 ;; keys and values, so the cache does not retain dead dynamic foreign closures.
 ;; Generated source functions/lambdas do not pass through this cache.
 (defvar *native-function-adapters* (make-hash-table :test #'eql))
+(defun make-native-adapter-cache ()
+  #+(or sbcl ecl abcl)
+  (make-hash-table :test #'eq :weakness :key-and-value)
+  #+clisp
+  (make-hash-table :test #'eq :weak :key-and-value)
+  #-(or sbcl ecl abcl clisp)
+  (error "Weak native-function adapter storage is unsupported on ~A"
+         (lisp-implementation-type)))
 (defun make-native-adapter (function arity)
   (cl:labels ((invoke (&rest arguments)
                (let ((count (length arguments)))
@@ -131,8 +139,7 @@
 (defun function-value (function arity)
   (let ((table (or (gethash arity *native-function-adapters*)
                    (setf (gethash arity *native-function-adapters*)
-                         (make-hash-table :test #'eq
-                           #+sbcl :weakness #+sbcl :key-and-value)))))
+                         (make-native-adapter-cache)))))
     (or (gethash function table)
         (setf (gethash function table) (make-native-adapter function arity)))))
 

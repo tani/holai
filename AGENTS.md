@@ -18,15 +18,21 @@ readable OCaml-to-Lisp translation, even when argument evaluation order differs.
   kernel, differential, source-map, and regeneration checks before release.
 - Keep original licensing in pinned and generated inputs, and pin dependencies.
 - Package with `make release`; its manifest must include the design and source.
-- Latest completed validation is DESIGN37's unified ASDF/UIOP cutover:
-  `nix develop path:. --command make release` exited 0 in 226.10 seconds.
+- Latest completed validation is the split-profile release:
+  `nix develop path:. --command make release` exited 0 in 269.03 seconds.
   All 46 unchanged vendor/CORE_FILES.json inputs initialize in original order;
-  123 native and 69 independent PROOF checks, 1,143 matching rows (1,136
-  serialized and seven side-effect rows), 194,839 core / 206,277 fixture-inclusive
-  maps, ten protected rejection cases, 94 identical clean outputs and 55 unchanged
-  pins passed. Fresh-cache diagnostics recorded 52 unique production source paths
-  in compile/load order, including 47 genuinely inferred core/entry components,
-  with zero errors, warnings, style warnings or notices.
+  128 native and 69 independent PROOF checks passed. The 1,149 differential rows
+  comprise 1,146 exact, two structural registry and one Random property comparison.
+  Map audits cover 194,839 core / 207,058 fixture-inclusive entries. Ten protected
+  rejection cases, fresh 94 identical clean outputs and 55 unchanged pins passed.
+  Fresh-cache diagnostics covered 52 unique production source paths, including
+  47 inferred core/entry components: zero compiler errors, warnings, style warnings
+  or notices. Separate load/initialization accounting records zero errors/warnings,
+  21 style warnings and 164 notices. ECL/ABCL/CLISP each passed three runtime
+  fixtures and 33 exact rows, not full-core verification. Fixture fingerprints
+  cover Lisp/maps/provider/inventory only; compiled FASLs are neither captured
+  nor shipped. Inventory uses SBCL full-core evidence; the archive producer
+  reported 427 payload files.
   Initial types/constants/definitions/axioms: 22/303/263/3. Initial inductive
   definitions: 3; rewrite/conversion/congruence/monotonicity lists: 34/5/8/9.
   Source axioms are exactly INFINITY_AX/SELECT_AX/ETA_AX; the primitive-kernel
@@ -53,7 +59,7 @@ readable OCaml-to-Lisp translation, even when argument evaluation order differs.
 - Map.Make/Set.Make specialize original OCaml 4.14.1 whole declarations, with
   their original helpers: 15 Map and 18 Set public operations. Do not replace
   their balanced-tree algorithms. Keep both pinned sources and LGPL/linking
-  exception notices. The runtime Random section also retains that license.
+  exception notices. Retained Random provenance/licenses remain pinned inputs.
 - Records use unambiguous label sets or explicit module qualifiers; retain each
   record's owner and emitted binding. General type-directed label resolution and
   module-signature record exports are outside the profile. Format has a tested box interface
@@ -131,9 +137,12 @@ readable OCaml-to-Lisp translation, even when argument evaluation order differs.
   foreign references. Shadow generated makers and protect the CL constant PI.
   CL-qualify synthetic cons/vector/and/or. Distinguish boolean source tokens
   from declared True/False variants, retaining their original constructor tags.
-- Keep seeded Random.init/bits/int equivalent to pinned OCaml 4.14.1 raw-byte
-  MD5/lagged-Fibonacci code; UTF-8 encoding changes the seed sequence. Shifts use
-  signed 63-bit ints, counts 0..63; zero logical shift retains the signed operand.
+- Random.init ignores its integer seed and replaces a private standard CL
+  random-state with MAKE-RANDOM-STATE T; bits/int use CL:RANDOM with that state.
+  Integer seed replay is not guaranteed. Validate explicit-state advancement,
+  snapshot replay and result bounds; do not assume host-internal entropy or
+  default-state behavior. Shifts use signed 63-bit ints, counts
+  0..63; zero logical shift retains the signed operand.
   General machine-int overflow and full OCaml library coverage remain outside.
 - Preserve the actual tactic and justification algorithms, including goal-stack
   mutation, rotation, undo and top_thm. Do not substitute a different prover or
@@ -146,16 +155,28 @@ readable OCaml-to-Lisp translation, even when argument evaluation order differs.
   for this measured profile. Goal/theorem/output observations must match exactly
   under the enumerated observer rules. Keep the existing std_formatter identity
   when redirecting output, because source closures capture it.
-- Forty selected observations serialize bound names by binding index; two
-  initial registry rows normalize generated ?decimal schematic type variables
-  by first structural occurrence per scheme; the definition row also normalizes
-  generated GEN%PVAR%decimal binders in PCROSS/iterate. Preserve sharing, explicit
-  names, all free names, concrete types and full term/theorem structure. These
-  rules are observer-only and must never rewrite source, stored proofs or output.
+- Forty selected observations serialize bound names by binding index. The user
+  selected generated-name-only structural comparison for `init_constants` and
+  `init_definitions`, not Random record/replay or a different engine. Preserve
+  existing ?decimal schematic type normalization and PCROSS/iterate binder rules.
+  A pinned-source guard must reject authored positive `_decimal` names before
+  provenance classification. Use one shared generated-constant identity map
+  across both registry rows, with a distinct serialization tag; normalize
+  positive `_decimal` variables only at actual binders via de Bruijn indices.
+  Preserve authored `_0`, free variables, explicit/unknown constant names, order,
+  multiplicity, concrete types, sharing and complete term/theorem structure.
+  These observer-only rules never rewrite source, runtime or stored proofs.
+  Keep raw/canonical hashes and separate exact/property/structural row counts.
 - Full native/oracle core processes use a measured 600-second guard and a
   256 MiB SBCL control stack. Keep ordinary compiler/rejection/isolated-adapter
   processes at 120 seconds and negative proof-search bounds at their explicit
   small values. Document measured evidence before altering those boundaries.
+  Explicit user-authorized exception: optional ECL/ABCL/CLISP full-core native
+  and cold-diagnostic commands retain 3600 seconds, following the measured
+  timeouts/progress in DESIGN §38. Ordinary additional-host matrix profiles now
+  run runtime/translated-fixture compatibility at 120 seconds per process.
+  SBCL and original OCaml retain 600 seconds; negative bounds are unchanged.
+  Report actual profiles/guards; compatibility never means full-core verified.
 - In the 1.0 baseline, synthetic lambdas use CL:LAMBDA, including lazy thunks; preserve actual source
   values/functions named lambda. Retain both namespace regression cases.
 - Scope.reference caches only the immutable exact owned-symbol/maker spellings;
@@ -167,16 +188,18 @@ readable OCaml-to-Lisp translation, even when argument evaluation order differs.
   for negative divisors/rational operands. int_of_num preserves noninteger and
   signed-63-bit overflow Failure boundaries. Gc get/set retain logical snapshot
   semantics; stack capacity is a launcher setting, not an active native resize.
-  Verify the actual SIGINT-to-Sys.Break adapter in its own SBCL process.
+  Verify actual SIGINT-to-Sys.Break delivery and restored OS default in each
+  selected native host process, using the parent runner's readiness handshake.
 - Heap checkpoints are scratch-only development aids. Every release must verify
-  full initialization from fresh SBCL and original OCaml processes.
+  full initialization from SBCL and original OCaml, plus every selected
+  additional host's bounded runtime/translated-fixture compatibility profile.
 - Run `make release` for delivery; it includes all tests and inventory. After
   documentation-only changes, repackage against the validated reports without
   repeating a full initialization unless a new unresolved concern justifies it.
-  Include reports and matching observation streams in the package; keep
-  parsed/lowered/compiled/differential-corpus states distinct.
+  Include raw observation streams and reproducible canonical comparison streams
+  in the package; keep parsed/lowered/compiled/differential-corpus states distinct.
 - `make test` needs Camlp5 8.02, OCaml Num for the original-execution oracle,
-  SBCL; production runtime has no external pattern-library dependency.
+  all selected pinned native hosts (and ECL's C compiler); production runtime has no external pattern-library dependency.
 - Do not publish or push anywhere unless the user requests that destination.
 - Further agents should work independently only if the user explicitly asks
   for delegation. This file does not request multi-agent work.
@@ -264,13 +287,13 @@ readable OCaml-to-Lisp translation, even when argument evaluation order differs.
   unchanged retained input hashes. vendor/README.md explains each retained item.
   Continue the same repository-maintenance task on the previously requested main.
 
-- DESIGN33 PROOF contract: emit fully qualified `holai.runtime:proof` only for
-  canonical new globals in holai.tactics/tactics.ml, without lexical prefix,
-  at source-name occurrence1: then_/Value, thenl_/Value, orelse_/Function3.
-  Binding reuse retains tagging; new aliases/shadowing do not. Only exact
-  two-argument unlabelled applications qualify. Source proof names are not
-  newly reserved/renamed; then1_ remains separate. Left folding/right inner
-  PROOF preserve the binary call tree; branch lists, justification and kernel
+- DESIGN33 PROOF recognition applies only to canonical new globals in
+  holai.tactics/tactics.ml, without lexical prefix, at source-name occurrence1:
+  then_/Value, thenl_/Value, orelse_/Function3. Binding reuse retains tagging;
+  new aliases/shadowing do not. Only exact two-argument unlabelled applications
+  qualify. Synthetic heads follow DESIGN37's completed-reader-owner policy below,
+  never eager PROOF import/reservation or source renaming; then1_ stays separate.
+  Left folding/right inner PROOF preserve the binary call tree; branch lists, justification and kernel
   operations are unchanged.
 - Preceding reader-inclusive PROOF release validated with `nix develop path:. --command make release`:
   46 inputs,122 existing native,61 independent PROOF,46 pattern,27 protocol,
@@ -396,6 +419,17 @@ readable OCaml-to-Lisp translation, even when argument evaluation order differs.
   and shadow allocation. Shadow ordinary lexical values as well as functions
   so mixed foreign SPECIAL exports cannot alter lexical scope. CL is first in
   safe foreign-input mixes; no broad same-file use or new public exports.
+- Apply readability policy to the software's generated and maintained handwritten
+  development code, not merely end-user API examples. Synthetic PROOF heads use a
+  deferred cell per actual reader owner, finalized after complete structure
+  lowering and before dependencies/package declarations/rendering. Safe owners
+  explicitly import runtime PROOF and emit bare proof; source-owned/local names,
+  distinct foreign PROOF imports or maker shadows retain holai.runtime:proof.
+  Lexical modules share the enclosing owner; static child packages decide
+  separately. Never reserve/import PROOF during lowering or rename source proof
+  to shorten the macro head. Retain Fragment layout, Origin spans and source IDs.
+  Ordinary handwritten tests explicitly import the macro; the separate CL-only
+  source-function collision regression intentionally retains qualification.
 - Audit unique physical source pathnames: runtime five, core 46 in manifest
   order and holai/all entry, 52 total; core/entry must be actual inferred
   components. Fingerprint root ASD, entry, provider data and every production
@@ -407,8 +441,74 @@ readable OCaml-to-Lisp translation, even when argument evaluation order differs.
   constructors and unchanged three axioms after reload passed.
   Report counters and differential/map totals from actual reports; historical
   baseline names and raw evidence stay unchanged.
-- The release archive has 306 members (305 payload plus manifest), only one ASD,
+- The safe-bare extension passed 129 native/69 PROOF checks and 1,149 matching
+  rows, including all six proof_reader_* real-theorem observations: safe child,
+  late local/global, foreign import, case and lexical module. Native reader-symbol
+  identity/no-PROOF% assertions passed. A separate fresh smoke exited 0 in
+  72.41 seconds using an explicitly importing development package and bare
+  proof/tactic/runtime/kernel names to prove the actual closed p ==> p theorem
+  with its independently parsed expected conclusion.
+- The latest archive has 306 members (305 payload plus manifest), only one ASD,
   entry/provider data and 92 generated Lisp/map members. Core Lisp totals
-  5,980,663 bytes, an inventory rather than performance evidence.
-- The user explicitly authorizes committing and pushing the validated DESIGN37
-  cutover to tani/holai main. Validation alone does not authorize publication.
+  5,942,245 bytes; static generated inventory has 2,353 bare PROOF heads and
+  25 qualified collision heads. These inventories are not performance evidence.
+  The release retained 55 input hashes and 94 identical clean-generated outputs;
+  initial registries remain 22/303/263/3 with exactly three source axioms.
+  The 5,519 OCaml/5,517 SBCL initialization rows retain the two known OCaml-only
+  messages. Prior cutover measurements remain historical in DESIGN37.3.
+- The previous unified ASDF/UIOP cutover was separately authorized and pushed as
+  36f3a78. The user now explicitly authorizes committing and pushing this verified
+  safe-bare extension and tidy README rewrite to tani/holai main. The parent owns
+  repackaging, review, commit and push; authorization is not evidence they occurred.
+
+## Supported host portability (DESIGN38)
+
+- Current correctness/release tooling uses `misc/scripts/lisp_host.py` and
+  `run-lisp.sh`; no obsolete SBCL launcher alias. Select any explicit candidate
+  ID using `HOLAI_LISP`, with optional uppercase `HOLAI_<ID>` executable paths.
+  Native arguments are implementation-specific, not textual substitution.
+- Require ASDF in its own evaluated form before reading any ASDF/UIOP symbols.
+  Use actual UIOP environment/process/quit APIs where supplied; unsupported
+  signal and weak-storage capabilities must fail, never fake success.
+- Use standard CL Random state, not OCaml seeded replay or a custom generator.
+  Validate only the literal language_random= row's shape/bounds before replacing
+  it for comparison; every other row stays exact. Keep original source pins and
+  licenses. Adapters preserve real weak retention, live identity and SIGINT.
+- `make release` must exercise SBCL's complete 46-file/native/PROOF/oracle
+  profile and cold 52-path/47-inferred manifest-order diagnostics. Every selected
+  additional host must pass `runtime-fixtures` compatibility with independent
+  counts/source fingerprints/log digests and 120 seconds per process; never
+  label it full-core verified or require its full-core streams/cold diagnostics.
+  `make test-full-core` explicitly opts selected hosts into complete tests/cold
+  diagnostics, retaining ECL/ABCL/CLISP's approved 3600-second full-core guard.
+  Keep SBCL/original OCaml 600-second guards, ordinary 120-second guards,
+  negative proof bounds, native capacities and recorded OS stack constraints.
+  Retain compiled NaN/EQL tests using actual APIs and exact trap restoration.
+  CLISP cannot represent NaN; ECL cannot externalize a compiled NaN literal:
+  both report that case not applicable (45 structural checks), never passed.
+  SBCL/ABCL retain 46.
+  Require two actual SIGINT catch cycles across disable/re-enable and a third
+  signal terminating by OS SIG_DFL; never count readiness markers as delivery.
+- Current evidence is under `misc/reports/implementations/<id>/`; matrix selection,
+  explicit profiles and actual per-phase status are in implementation-matrix.json.
+  Package availability never implies compatibility; every selected profile's
+  failures gate packaging. Require exact implementation/version identities and
+  current source coverage/log digests. Only SBCL requires full verification,
+  diagnostics and streams; extras require compatibility.json and matching
+  compatibility/ logs. Optional full-core evidence has a separate aggregate;
+  preserve incomplete/timeout attempts without relabelling them.
+  Old root SBCL raw baselines and historical benchmarks retain their identity.
+  Release still checks 94 clean outputs, 55 pins and SBCL/original OCaml's
+  registries/axioms and exact initialization exceptions.
+- Current measured profiles passed: SBCL full core (128 native, 69 PROOF;
+  1,149 rows = 1,146 exact + two structural registries + one Random property)
+  and ECL/ABCL/CLISP runtime fixtures (28 protocol, 84 OPTIONAL, 16 tuple-list,
+  1,816 Random; 45/46/45 structural checks; three fixtures and 33 exact rows).
+  Retain current source fingerprints and digest-matched logs. Each extra-host
+  SIGINT test delivered three signals, caught two and restored default exit -2.
+  SBCL cold diagnostics passed 52 paths/47 inferred components with zero compiler
+  diagnostics, separately recording 21 load/initialization style warnings and
+  164 notices. Current maps total 194,839 core / 207,058 fixture-inclusive.
+  Test/diagnostic stages passed, then inventory failed: do not claim end-to-end
+  release success or a new 94-output clean-build pass before the parent rerun.
+

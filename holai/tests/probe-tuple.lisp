@@ -1,6 +1,10 @@
 ;;; Historical vector-representation microprobe, independent of current tuple storage.
 (require :asdf)
-(asdf:initialize-source-registry `(:source-registry (:directory ,(truename ".")) :inherit-configuration))
+(let ((root (uiop:pathname-parent-directory-pathname
+             (uiop:pathname-parent-directory-pathname
+              (uiop:pathname-directory-pathname *load-truename*)))))
+  (asdf:initialize-source-registry
+   `(:source-registry (:directory ,root) :inherit-configuration)))
 (asdf:load-system "holai/runtime")
 (defstruct probe-tuple-value items)
 (declaim (notinline tuple-generic tuple-direct))

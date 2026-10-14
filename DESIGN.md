@@ -1,4 +1,4 @@
-# HOL Light → SBCL + Trivia: translation design
+# HOL Light → Common Lisp: translation design
 
 Version: 1.0.0-star-names (OPTIONAL common entry experiment; sections 1–22 retain
 the 1.0.0 baseline contract and historical results,
@@ -12,7 +12,7 @@ The implementation status at the end is updated from actual test results.
 ## 1. Purpose and priority
 
 Translate HOL Light's OCaml source reproducibly into Common Lisp that a person
-can read beside the original, inspect in SBCL, and debug. The input is the real
+can read beside the original, inspect in supported Lisp hosts, and debug. The input is the real
 HOL Light grammar, including its Camlp5 `pa_j` extension.
 
 Priority, in order:
@@ -108,6 +108,17 @@ and SBCL execution, and `make release`: 46 inputs, 1,124 differential rows,
 51 production files with zero diagnostics, and 94 identical clean-generated
 files. SBCL is 2.3.9. The other three declared platforms were evaluated only.
 These checks do not remeasure the historical timing results elsewhere here.
+
+The current portability matrix keeps that compiler/SBCL/ECL package source and
+adds the reference nix-common-lisp nixpkgs revision independently. Candidate
+availability is filtered by package evaluation, architecture and broken status
+and recorded explicitly, separately from full compatibility verification.
+`HOLAI_LISPS` selects hosts, with SBCL mandatory for full-core verification.
+Ordinary matrix phases run the full SBCL suite and the additional hosts'
+120-second-per-process runtime/translated-fixture compatibility profiles.
+All selected profiles gate release, but compatibility is not a full-core claim.
+Only SBCL supplies full oracle/registry/PROOF and cold 52-unit inferred-ASDF
+evidence by default; additional-host full-core runs are explicitly optional.
 
 Use Camlp5's **MLast AST**, not a regular-expression approximation and not an
 OCaml parser that cannot recognize HOL Light syntax. Separate:
@@ -441,7 +452,7 @@ Meaningful tests must cover semantic fault lines, not just repeat the printer:
    formatter output against original OCaml.
 9. Regress static functor capture/instances, aliases, local module closures,
    rebound prefix operators, required labels, actual source loops, lazy values
-   and failures, Map/Set, seeded Random and the finite-width shift boundary.
+   and failures, Map/Set, standard CL Random and the finite-width shift boundary.
 10. Compare actual METIS/connection-prover results, bounded failures, quotient
     construction/lifting and implicational tactics, restoring search settings.
 
@@ -527,7 +538,7 @@ separate instances and shared aliases, boolean tokens versus True/False tags,
 required labels, leading-let recursive closure initialization, escaped local
 module closures, local types inside a global nested module, import/local collisions, rebound recursive prefix `!`, source
 for/while loops, lazy values/failures, structural hash keys, assertions, vertical
-Format boxes, Map/Set operations, standard List callbacks, seeded Random and
+Format boxes, Map/Set operations, standard List callbacks, standard CL Random and
 six logical right-shift cases. Native checks independently require the expected
 captures/state separation, values, exceptions, coordinates and shift sign bit.
 
@@ -640,12 +651,42 @@ Forty selected conversion/inductive/quotient/recursive-property observations
 serialize bound variables by de Bruijn indices. This includes the previous 38
 checkpoint cases and the new standard_tree_induction/standard_tree_recursion
 principles. Free names, types, term structure and complete hypotheses/conclusions
-remain observable. Two initial registry rows additionally canonicalize only
+remain observable. Two initial registry rows additionally canonicalize
 preterm-generated ?decimal type-variable names per scheme by first structural
-occurrence. The initial-definition row canonicalizes GEN%PVAR%decimal bound
-names in PCROSS and iterate only. Authored type/bound names and all free names
-remain unchanged. No parser, stored theorem or generated program is normalized.
-The complete defined observation streams match byte for byte.
+occurrence; the initial-definition row also canonicalizes GEN%PVAR%decimal bound
+names in PCROSS and iterate. These historical observer rules remain in force.
+
+For standard CL Random, the user selected **generated-name-only structural
+comparison**, not record/replay or a replacement random engine. This extension
+is limited to `init_constants` and `init_definitions`. Before classifying a
+positive `_decimal` name as generated, the observer checks the pinned source
+and rejects authored positive `_decimal` tokens. Authored `_0` is excluded and
+must remain literal. One generated-constant identity map is shared across the
+two initial registry rows and their name/bounds groups. A distinct serialization
+tag separates generated identities from authored constant names. First structural
+occurrence determines identity, not numeric suffix or broad serialized-text
+replacement; repeated references retain the same identity. Positive `_decimal`
+bound variables use the existing de Bruijn path only at actual binders.
+Free variables, explicit and unknown constant names, authored `_0`, concrete
+types, reference sharing, order, multiplicity and full term/theorem structure
+remain observable. No parser, stored theorem, runtime algorithm, pinned source
+or generated program is rewritten.
+
+The investigation localized the fresh-counter divergence to the METIS call at
+`int.ml:2239` within the `int.ml:2130–2572` interval: counters agree at
+`num_lcm` (31403), then differ at `prime` (32188 versus 32186). Attribution to
+the exact two allocation calls remains **[INFERENCE]**; this is not evidence of
+a logical difference or permission to rewrite the proof.
+
+Only `language_random=` is property-validated (8/8/4 groups and
+2^30/97/2^30 bounds). The two initial registry rows are structural comparisons;
+all remaining rows compare exactly. Release evidence must derive counts from
+the actual streams (the current expected corpus is 1,149 rows), separately
+report one property row and two structural rows, and preserve full raw and
+canonical stream hashes plus actual structured identity in both streams.
+Raw equality is reported, never manufactured. The current SBCL run validated
+this contract: 1,149 rows comprise 1,146 exact comparisons, two structural
+registry comparisons and one Random property row; raw streams are unequal.
 
 Initial snapshots precede test-only extensions. Both executions register 22
 types, 303 constants, 263 definitions and exactly INFINITY_AX/SELECT_AX/ETA_AX.
@@ -686,7 +727,7 @@ Comments inside expressions, exhaustive erased-node maps, general type-directed
 record selection, full module/type semantics, arbitrary binary I/O, float/NaN
 corner cases, cyclic/recursive non-function values and general machine-int
 overflow remain outside the profile. See section 19 for finite-width shifts,
-seeded Random and source-derived libraries, and section 22 for exact-rational
+standard CL Random and source-derived libraries, and section 22 for exact-rational
 Num exception boundaries. Optional HOL Light libraries outside the standard
 manifest are separate inputs. Generated code and runtime remain trusted code.
 
@@ -1006,9 +1047,9 @@ source; never turn recursive proof algorithms into loops. Logical right shift
 uses the tested OCaml 64-bit host's 63-bit int representation, including negative
 operands; document its finite-width boundary rather than claiming general
 machine-integer emulation. Add the observed List, Hashtbl, numeric and random
-APIs at explicit compatibility boundaries. Random search must have a retained
-seed/profile; compare proof results independently of irrelevant internal
-search choices, and disclose any nonidentical random/float behavior.
+APIs at explicit compatibility boundaries. Random search uses a documented
+standard CL state profile without integer-seed replay; compare proof results
+independently of irrelevant internal search choices and disclose random/float differences.
 
 ### Verification and release conditions
 
@@ -1045,10 +1086,11 @@ Camlp5's True/False names for boolean literals are disambiguated from declared
 True/False variants using the original source token. Signature restriction keeps
 its actual private-constructor flags; the existing rejection checks remain fatal.
 
-The seeded Random.init/bits/int implementation follows the pinned OCaml 4.14.1
-lagged-Fibonacci and raw-byte MD5 algorithms. Its translated runtime section
-retains the original LGPL-2.1/linking-exception notice. Additional Format
-character/int/cut/vertical-box and standard-channel print_endline operations
+Random.init/bits/int use standard Common Lisp RANDOM with a dedicated private
+random-state. Init ignores its integer seed and resets with MAKE-RANDOM-STATE T;
+integer-seed replay is not guaranteed across hosts or runs. No custom seeding,
+digest or generator algorithm remains. Retained provenance/licenses stay pinned.
+Additional Format character/int/cut/vertical-box and standard-channel print_endline operations
 cover the newly observed printer calls. Container algorithms remain sourced
 from the original Map/Set declarations, not substitute data structures.
 
@@ -1066,7 +1108,7 @@ collects its own new metadata; it must not duplicate preceding root metadata.
 The standard List and hash-table adapters are explicit compatibility profiles;
 List.sort does not promise identical comparator invocation order, and Hashtbl
 does not promise original hash encoding or its full API. General float corner
-cases remain outside the profile. Seeded Random init accepts one integer;
+cases remain outside the profile. Random init accepts but ignores one integer;
 the full Random.State/self_init/int64/nativeint/float API is not implemented.
 
 Compile/load/initialize all twenty-four complete translations in fresh SBCL,
@@ -1273,7 +1315,7 @@ matching defined observations and source axiom/definition/type registries.
 
 Retain real pa_j and Trivia, source declarations/scopes/recursive algorithms,
 ordinary CL argument evaluation, immutable pinned input and source-derived
-Map/Set/Random algorithms. Do not hand-edit generated code, supply assumed
+Map/Set algorithms and the documented standard CL Random boundary. Do not hand-edit generated code, supply assumed
 proofs, replace source search/normalization algorithms, or convert recursion
 into loops. Extend syntax resolution only when an unchanged input exposes a
 specific boundary; record the rule here before implementing it. Arbitrary
@@ -2519,6 +2561,14 @@ TAC_PROOF and interactive e retain their existing algorithms, justification
 checks and kernel. Runtime sources do not reader-reference generated packages,
 so runtime-only compilation/loading remains possible.
 
+The readability scope is **software development code**: translator-generated
+source and maintained handwritten development/tests, not only end-user proof
+examples. Ordinary handwritten code uses `uiop:define-package` with
+`(:use :cl)` and `(:import-from :holai.runtime :proof)`, then bare `proof`.
+External-API examples may intentionally qualify the macro. A package with its
+own distinct PROOF symbol retains `holai.runtime:proof`; importing the macro
+must not replace a source/local function's symbol.
+
 #### Authorized sharp-backquote reader
 
 At the user's explicit request, runtime `sharp-backquote-lambda-reader` installs
@@ -2558,9 +2608,16 @@ then resolves it with find. Only a flagged binding with exactly two arguments,
 neither labelled nor optional, becomes PROOF. References, partial applications,
 three-or-more-argument direct goal applications, aliases and computed heads
 retain ordinary lowering; eligible nested expressions still lower recursively.
-No source-text, uppercase-name or output-symbol heuristic is used. The macro
-head is always fully qualified `holai.runtime:proof`; source functions named
-proof are not renamed for this feature.
+No source-text, uppercase-name or output-symbol heuristic recognizes tacticals.
+The macro head is a deferred cell shared by its actual reader owner, finalized
+only after that owner's complete structure has been lowered, before package
+declarations, dependencies and rendering. Safe owners explicitly import runtime
+PROOF and emit bare `proof`; a conflicting owned spelling, local target symbol,
+distinct imported PROOF or maker-shadow target keeps `holai.runtime:proof`.
+Later declarations count, even if the first tactical precedes them. Static child
+packages have separate cells; lexical modules share their enclosing reader
+owner's cell. This uses the existing reference-conflict policy, not a new PROOF
+reservation during lowering. Source functions named proof are not renamed.
 
 References continue through reference/function_ref, preserving imports,
 binding IDs and recursive-reference observers. Lowering processes lhs and its
@@ -2590,6 +2647,11 @@ are part of this translation.
 
 ### 33.4 Verification boundary and current evidence
 
+The safe-bare development-code extension was subsequently verified in §37.4;
+current portability profile measurements are in §38. The measurements below
+remain historical evidence for the preceding reader-inclusive variants, not
+new counts or timings for either later change.
+
 The preceding reader-inclusive PROOF variant was validated on aarch64-linux with
 `nix develop path:. --command make release` using OCaml 4.14.2,
 Camlp5 8.02.01 and SBCL 2.3.9.nixos. All 46 inputs compiled, loaded and
@@ -2610,10 +2672,14 @@ All ten rejection checks retained the previous output.
 The native `holai/tests/proof-dsl.lisp` matrix covers real closed theorems,
 literal/dynamic THENL branches, left/right grouping, interactive state
 restoration, failure/justification boundaries, lexical value/function capture,
-once-only evaluation and syntax errors. It is compiled/loaded after observation
-capture and restoration of std_formatter's stream, outside the differential
-stream. The runner records its measured `proof_dsl_checks` separately; release
-requires a positive count and packages the unit. Eight fixture observations
+once-only evaluation and syntax errors. Ordinary cases use the explicitly
+imported bare macro. The distinct-symbol local PROOF function/qualified macro
+regression remains in a separate CL-only package, calling the original helpers
+and counter without changing the theorem checks. The matrix is compiled/loaded
+after observation capture and restoration of std_formatter's stream, outside
+the differential stream. The runner records its measured `proof_dsl_checks`
+separately; release requires a positive count and packages the unit. Eight
+fixture observations
 exercise capture, branches, grouping, shadowing, a local function named proof,
 partial application and direct goals. A separate fresh sharp-backquote
 handwritten proof smoke produced the actual closed identity theorem.
@@ -3032,11 +3098,26 @@ symbols, including ordinary lexical values whose names resemble foreign SPECIAL
 exports such as runtime UNIT. Native CL control references must not acquire a
 foreign meaning. Private makers remain internal, never exported merely to
 shorten a reference. Keep synthetic CL control/constructor qualification,
-`holai.runtime:proof`, original strings and reader case unchanged.
-This is a package/dependency and printed-reference cutover, not an algorithm,
-evaluation-order, declaration-boundary or public source-API change.
+original strings and reader case unchanged.
 
-### 37.3 Verification boundary
+PROOF is the explicit synthetic-head exception to unconditional qualification.
+Defer its printed head until the completed reader-owner namespace is known,
+then use the existing runtime-reference conflict policy and maker-shadow guard.
+An owner without an owned, lexical, shadowing or distinct imported PROOF conflict
+explicitly imports `holai.runtime:proof` and emits bare `proof`. Conflicting
+owners keep the qualified macro, preserving all source bindings and allocations.
+Do not reserve or rename PROOF during lowering to manufacture a safe import.
+Decide for the actual package reading the form: a lexical module shares its
+enclosing owner's decision; a static child package has its own decision.
+The same safe-bare convention applies to maintained handwritten software
+development code, using explicit UIOP imports, not only end-user examples.
+
+This is a package/dependency and printed-reference cutover, not an algorithm,
+evaluation-order, declaration-boundary or public source-API change. The safe-bare
+extension passed the actual release run recorded in §37.4; §37.3 preserves the
+completed pre-extension cutover's historical measurements.
+
+### 37.3 Historical verification of the preceding cutover
 
 Section 36's completed release and its 51-unit results remain historical evidence
 for the preceding variant. Do not relabel historical checkouts or raw reports.
@@ -3078,3 +3159,195 @@ bytes. Static runtime-prefix inventory in impconv fell from 910 to 59; meson
 remains 51 and metis 105. Larger shadow declarations mean this is not evidence
 of smaller total source or improved performance. The user subsequently
 authorized committing and pushing this validated cutover to `tani/holai` main.
+
+### 37.4 Verified safe-bare extension
+
+Build and regeneration passed. The actual extension release passed
+`nix develop path:. --command make release` (exit 0, 227.15 seconds).
+All 46 inputs initialized; 129 native and 69 independent PROOF checks passed.
+All 1,149 differential rows matched (1,142 serialized observations plus seven
+actual side-effect rows). The six `proof_reader_*` observations cover
+safe_child, late_local, late_global, foreign_import, case and lexical_module;
+all matched OCaml/SBCL, and native collision-symbol tests passed.
+
+A separate fresh bare theorem smoke exited 0 in 72.41 seconds. Its explicitly
+importing package used unqualified `proof`, `DISCH_TAC`, `THEN`, `FIRST_ASSUM`,
+`ACCEPT_TAC`, `prove`, `tuple`, `hyp` and `concl`; the actual theorem had no
+hypotheses and its conclusion matched the expected `p ==> p` term.
+This is behavioral evidence, unlike the static generated inventory of 2,353
+bare PROOF heads and 25 qualified collision heads. Generated core Lisp totals
+5,942,245 bytes; neither inventory establishes correctness or performance.
+
+Audits passed for 194,839 core / 206,472 fixture-inclusive map entries and ten
+output-preserving rejections. Fresh-cache diagnostics covered 52 unique
+production files in compile/load order, including 47 genuinely inferred
+core/entry components, with zero errors, warnings or style warnings.
+All 94 clean outputs matched and all 55 retained input pins were unchanged.
+Initial registries remain 22/303/263/3 with exactly the original three axioms;
+5,519 OCaml / 5,517 SBCL initialization rows retain only the known two OCaml-only
+messages, not raw equality. The archive contains 305 payload files plus its
+manifest (306 members), with no added repository files.
+
+The completed-reader-owner, deferred-head policy in §37.2 remains in force:
+no eager PROOF import or source-binder renaming is introduced. The preceding
+cutover was already pushed as `36f3a78`. The user now explicitly requests a
+simple, tidy README rewrite and authorizes committing and pushing that rewrite
+with the verified safe-bare extension to `tani/holai` main. The parent owns final
+repackaging, review, commit and push; this authorization is not a publication
+claim. Documentation-only repackaging does not require repeating initialization.
+
+## 38. Common Lisp host portability
+
+The currently available hosts are SBCL, nixpkgs-locked ECL 21.2.1, ABCL and
+CLISP. Their ordinary correctness profiles deliberately differ: SBCL runs the
+full 46-file native/OCaml differential suite and release's cold diagnostics;
+every selected additional host runs runtime plus translated-fixture compatibility.
+Compatibility is not full HOL Light initialization or a full-core verified claim.
+Production algorithms use ANSI Common Lisp/UIOP; the only host adapters are
+real SIGINT handling and weak key-and-value storage. Unsupported implementations
+must reject unavailable capabilities explicitly. Random uses standard CL RANDOM
+and an explicit private standard random-state. Validate copied-state replay,
+advancement and bounds without assumptions about host-internal entropy/default
+state behavior. Init uses MAKE-RANDOM-STATE T and ignores the integer seed;
+no integer-seed replay or OCaml engine is promised.
+
+`misc/scripts/lisp_host.py` owns native argument construction and implementation
+identity for current launchers, native suites and cold diagnostics.
+`HOLAI_LISP=sbcl|ecl|abcl|clisp` selects these available hosts;
+`HOLAI_SBCL`/`HOLAI_ECL`/`HOLAI_ABCL`/`HOLAI_CLISP` optionally select their
+executables. `HOLAI_LISPS` selects the matrix profiles. `run-lisp.sh` replaces
+the SBCL-only launcher without an alias.
+SBCL retains 2048 MiB dynamic space and 256 MiB control stack; ECL uses its
+documented byte-valued heap/C-stack flags with the same budgets, retains native
+Lisp/frame-stack defaults and inherits the OS stack limit. Ordinary additional
+host compatibility processes have a 120-second guard. Full SBCL native/cold
+processes retain 600 seconds, as does original OCaml. The explicit optional
+ECL/ABCL/CLISP full-core native/cold profiles retain the approved 3600-second
+guard. Ordinary compiler/rejection/isolated checks remain at 120 seconds;
+negative proof-search bounds are unchanged.
+Require ASDF in a separate read/evaluation step before any ASDF/UIOP symbol is
+read. ECL requires a C compiler for compile-file, supplied by the Nix shell.
+
+Every release runs SBCL's complete native/PROOF/differential corpus, including
+real weak-retention/protocol, standard Random state/range and SIGINT behavior.
+Every selected additional host must pass `holai/tests/compatibility.py`, not
+merely start ASDF. Its `runtime-fixtures` profile compiles/loads the runtime and
+maintained translated fixture consumers without loading the 46-file core.
+It measures defunc/OPTIONAL/tuple-list behavior, standard Random, structural
+matching and stale-consumer rejection, real SIGINT catch/re-enable/default
+restoration, translated naming and exact OCaml/translated fixture observations.
+The report records concrete counts, exact host identity, all covered source
+fingerprints, per-process 120-second guards, exit codes and log SHA256 digests.
+No full-core theorem/registry/PROOF count is inferred from these checks.
+
+For SIGINT, two signals must actually become Sys.Break across disabling and
+re-enabling catch-break; after disabling it again, the third must terminate
+through restored OS SIG_DFL with exit code -2. Readiness alone is insufficient.
+SBCL's cold cache must compile/load all 52 unique production pathnames in
+manifest order, with 47 genuine inferred components. Compiler instrumentation
+scopes diagnostics to actual ASDF COMPILE-OP boundaries. Load/initialization
+conditions and source warning notices remain separately reported, never silently
+suppressed or misclassified as compiler diagnostics.
+
+Only the literal `language_random=` row is property-validated: each raw row must
+contain 8 bits, 8 int(97), then 4 bits, with bounds 2^30/97/2^30. Missing,
+duplicate, malformed or out-of-range rows fail. The user-approved generated-name
+structural comparison additionally applies only to `init_constants` and
+`init_definitions`, under the observation-boundary provenance and shared-identity
+contract above. All other rows compare exactly. Release packages contain raw
+and canonical streams plus the reproducible checker; reports separate exact,
+structural and property counts, without claiming raw stream equality.
+Native-compiled structural matching covers 45 cases on ECL/CLISP and 46 on
+SBCL/ABCL. SBCL constructs the IEEE NaN with masked invalid traps and tests
+compiled matching against native EQL behavior. ECL reports
+`ECL native COMPILE cannot externalize a NaN literal into a FASL`; CLISP reports
+`CLISP does not represent IEEE NaN as a native Lisp float`. Neither limitation
+is reported as a passing native-compiled NaN test. All four hosts observed
+isolated stale FASL rejection through the specific
+`holai.runtime::pattern-declaration-changed` condition, nonzero exit code 17,
+and exactly one `Pattern stale FASL rejected: Separate` marker. Release reports
+and archives retain both `pattern.log` and `pattern-stale.log`, with the latter's
+SHA256 recorded in verification metadata; compiled consumer FASLs are not archived.
+
+Current per-host evidence lives in
+`misc/reports/implementations/{sbcl,ecl,abcl,clisp}/`. SBCL retains full native,
+cold diagnostic and raw initialization/observation reports. Additional hosts
+retain `compatibility.json` and matching `compatibility/` logs. The aggregate
+matrix names each selected profile: `full-core` / `full_core_verified` for SBCL,
+`runtime-fixtures` / `compatibility_passed` for successful additional hosts,
+and failed/pending states otherwise. Every additional-host ordinary row and
+compatibility report explicitly sets `full_core_verified` to false.
+Release validates each selected profile, exact identity, current fingerprint
+coverage, concrete counts and actual log digests. SBCL additionally requires
+the complete corpus comparison and the two existing OCaml-only initialization
+exceptions. Extra-host full-core streams and cold diagnostics are not ordinary
+release prerequisites. Availability and historical/incomplete attempts cannot
+substitute for any selected profile.
+Shared clean generation retains all 94 outputs and 55 source pins. Old root
+SBCL reports/raw streams and benchmark tools remain historical evidence, never
+relabelled or overwritten with another host's output. Heap image saving remains an explicit
+SBCL-only scratch aid and is never a release prerequisite.
+
+### Measured ordinary profiles
+
+Current implementation-tagged reports record passing SBCL full-core and
+ECL/ABCL/CLISP runtime-fixture profiles. SBCL executed all 46 inputs and eleven
+fixtures, passing 128 native checks, 69 PROOF checks, 46 structural pattern
+checks, 28 defunc protocol checks, 84 OPTIONAL checks, 16 tuple-list checks and
+1,816 standard Random checks. Its 1,149 differential rows comprise 1,146
+literal-exact comparisons, two generated-name structural registry comparisons
+and one Random property comparison. Raw observation streams are unequal.
+Initial registries remain 22/303/263/3 with the three original axioms; 5,519
+OCaml and 5,517 SBCL initialization rows retain exactly the two known OCaml-only
+messages. Map audits cover 194,839 core / 207,058 fixture-inclusive entries;
+the increased fixture total includes the current regressions. Ten rejections
+preserved their outputs.
+
+The fresh SBCL cold audit exited 0 and covered 52 unique paths, including all
+47 genuinely inferred core/entry components in manifest order. Compiler
+errors, warnings, style warnings and warning notices were all zero.
+Load/initialization errors and warnings were zero, while 21 style warnings and
+164 warning notices were recorded separately. A zero compiler count does not
+mean silent initialization.
+
+Each additional host passed 28 defunc protocol, 84 OPTIONAL, 16 tuple-list and
+1,816 standard Random checks, plus three translated fixture units with 33 exact
+OCaml differential rows and nine naming observations. Structural pattern counts
+were ECL 45, ABCL 46 and CLISP 45, with the native NaN limitations above.
+Each SIGINT test actually delivered three signals: two catches across re-enable
+and restored OS-default termination with exit -2. Compatibility reports retain
+covered source SHA256 fingerprints, process exits and matching log digests;
+all three explicitly report `full_core_verified: false`. Fixture fingerprints
+cover Lisp sources, maps, provider data and inventory only; compiled FASLs are
+neither captured by those fingerprints nor shipped.
+
+The final `nix develop path:. --command make release` exited 0 in 269.03 seconds.
+All 46 inputs were regenerated, full tests and cold diagnostics passed, and
+inventory used SBCL's full-core evidence without requiring additional-host
+full-core reports. Fresh isolated clean generation matched all 94 outputs and
+confirmed all 55 retained input pins unchanged. The archive producer reported
+427 payload files. The preceding inventory failure, which incorrectly required
+a CLISP full verification report, is historical and was superseded by this
+completed release. Earlier §37.4 package measurements remain historical.
+
+ECL and ABCL complete native tests and cold diagnostics were measured timing
+out at the former 600-second guard; those timeouts are not successful runs.
+Separate 120-second warm profiles showed actual initialization progress through
+`real` on ECL and `arith` on ABCL. On that evidence the user explicitly authorized
+extending only the added ECL/ABCL/CLISP full-core guards to 3600 seconds.
+The shared host helper still selects those guards for explicit full-core runs,
+and their reports record the actual value; neither the extension nor an
+incomplete run establishes success. The user subsequently approved replacing
+ordinary additional-host full-core runs with the bounded runtime/fixture
+profile. The running extended matrix was cancelled; incomplete ABCL full-core
+reports remain incomplete, never relabelled as compatibility results. Earlier
+600-second attempts and warm probes are retained under
+`misc/reports/history/portable-600-second-attempt/`.
+
+`HOLAI_LISPS=ecl,abcl,clisp make test-full-core` explicitly runs complete native
+tests and cold diagnostics on just those hosts. Its aggregate evidence is
+`misc/reports/implementation-full-core-matrix.json`, separate from the ordinary
+release matrix. Nix `test-<id>` apps use the ordinary host-appropriate suite;
+`full-core-<id>` explicitly runs that host's complete native suite. Neither
+optional command is invoked by ordinary `make test` or `make release`.
+

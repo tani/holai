@@ -1075,6 +1075,7 @@
     snd
     ref
     raise
+    proof
     print-string
     print-newline
     partial
@@ -1585,7 +1586,7 @@
               (!n a b c d. ~(n = n0)
                            ==> (a = b) /\\ ~(c = d)
                                ==> ~(add a (mul n c) = add b (mul n d)))")
-              (holai.runtime:proof (REPEAT #'GEN_TAC)
+              (proof (REPEAT #'GEN_TAC)
                 THEN #'STRIP_TAC
                 THEN (#`ASM_REWRITE_TAC (cl:cons (#`GSYM DE_MORGAN_THM) nil))
                 THEN (REPEAT #'GEN_TAC)
@@ -2557,7 +2558,7 @@
      (ODD(x) <=> (!y. ~(x = 2 * y))) /\\
      (~EVEN(x) <=> (!y. ~(x = 2 * y))) /\\
      (~ODD(x) <=> (!y. ~(x = SUC(2 * y))))")
-              (holai.runtime:proof (REWRITE_TAC
+              (proof (REWRITE_TAC
                   (cl:cons
                     (#`GSYM NOT_EXISTS_THM)
                     (cl:cons (#`GSYM EVEN_EXISTS) (cl:cons (#`GSYM ODD_EXISTS) nil))))
@@ -2730,7 +2731,7 @@
           (parse_term
             "(w = x + d) /\\ (y = z + e)
      ==> ((w * y + x * z = w * z + x * y) <=> (w = x) \\/ (y = z))")
-          (holai.runtime:proof (DISCH_THEN (lambdac (th) (REWRITE_TAC (cl:cons th nil))))
+          (proof (DISCH_THEN (lambdac (th) (REWRITE_TAC (cl:cons th nil))))
             THEN
               (REWRITE_TAC
                 (cl:cons
@@ -2753,8 +2754,7 @@
               "(!x. 0 * x = 0) /\\
      (!x y z. (x + y = x + z) <=> (y = z)) /\\
      (!w x y z. (w * y + x * z = w * z + x * y) <=> (w = x) \\/ (y = z))")
-            (holai.runtime:proof (REWRITE_TAC
-                (cl:cons MULT_CLAUSES (cl:cons EQ_ADD_LCANCEL nil)))
+            (proof (REWRITE_TAC (cl:cons MULT_CLAUSES (cl:cons EQ_ADD_LCANCEL nil)))
               THEN (REPEAT #'GEN_TAC)
               THEN
                 (DISJ_CASES_TAC

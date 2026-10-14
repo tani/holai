@@ -1,6 +1,6 @@
 (* Output syntax and deterministic, source-aware formatting. *)
 type origin = { id:int; source:string; first:int; last:int; line:int; rule:string }
-type t = Atom of string | List of t list | ReaderPrefix of t | Fragment of t list | Origin of origin * t | Comment of string
+type t = Atom of string | DeferredAtom of string ref | List of t list | ReaderPrefix of t | Fragment of t list | Origin of origin * t | Comment of string
 type mapping = { origin:origin; output_first:int; output_last:int }
 let a s = Atom s
 let l xs = List xs
@@ -10,6 +10,7 @@ let form h xs = l (a h :: xs)
 let rec unwrap = function Origin (_,x) -> unwrap x | x -> x
 let rec flat_length = function
   | Atom s -> String.length s
+  | DeferredAtom s -> String.length !s
   | List xs -> 2 + max 0 (List.length xs-1) + List.fold_left (fun n x -> n + flat_length x) 0 xs
   | Fragment xs -> max 0 (List.length xs-1) + List.fold_left (fun n x -> n + flat_length x) 0 xs
   | ReaderPrefix x -> 2 + flat_length x
@@ -48,18 +49,24 @@ let render ?(width=90) ?(prefix="") forms =
     | Origin (o,x) -> let first=Buffer.length b in emit ?leading_override indent x;
       maps:={origin=o;output_first=first;output_last=Buffer.length b}:: !maps
     | Atom s -> put s
+    | DeferredAtom s -> put !s
     | ReaderPrefix x -> put "#`"; emit indent x
     | Comment s -> String.split_on_char '\n' s |> List.iter (fun line -> put (";; "^line);newline indent)
     | Fragment _ -> emit_fragment indent (flat_length x + !col > width) x
     | List xs when flat_length x + !col <= width ->
       put "("; List.iteri (fun i x -> if i>0 then put " "; emit indent x) xs; put ")"
     | List [] -> put "()"
-    | List [Atom "holai.runtime:proof";body] when (match unwrap body with Fragment _ -> true | _ -> false) ->
-      put "(holai.runtime:proof ";
+    | List [head;body] when
+        (match unwrap head with
+         | Atom ("proof" | "holai.runtime:proof") -> true
+         | DeferredAtom s -> !s="proof" || !s="holai.runtime:proof"
+         | _ -> false) &&
+        (match unwrap body with Fragment _ -> true | _ -> false) ->
+      put "("; emit indent head; put " ";
       emit_fragment (indent+2) true body; put ")"
     | List (h::xs) ->
       put "("; emit indent h;
-      let head=match unwrap h with Atom "cl:lambda" -> "lambda" | Atom s -> s | _ -> "" in
+      let head=match unwrap h with Atom "cl:lambda" -> "lambda" | Atom s -> s | DeferredAtom s -> !s | _ -> "" in
       let leading=match leading_override with Some n -> n | None -> match head with
         | "defun" | "defunc" -> 2 | "lambda" | "lambdac" | "labelsc" | "fletc" | "let" | "let*" | "labels" | "match" | "if" | "defvariant" | "define-exception" -> 1
         | "defparameter" | "defpackage" | "in-package" -> 1 | _ -> 0 in

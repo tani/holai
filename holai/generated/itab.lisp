@@ -158,6 +158,7 @@
     string-of-int
     string-concat
     snd
+    proof
     printf-printf
     match
     lambdac
@@ -260,8 +261,7 @@
                           (prove
                             (tuple
                               the_goal
-                              (holai.runtime:proof (#`CONV_TAC
-                                  (RAND_CONV (#`DEPTH_CONV #'BETA_CONV)))
+                              (proof (#`CONV_TAC (RAND_CONV (#`DEPTH_CONV #'BETA_CONV)))
                                 THEN #'REFL_TAC)))))
                       (cl:declare (cl:ignorable rargs_vars f the_goal th))
                       (UNIFY_ACCEPT_TAC (cl:cons constr nil) th (tuple asl w%)))))))))))))
@@ -274,7 +274,7 @@
 (defparameter ITAUT_TAC
   (labelsc
     ((CONJUNCTS_THEN% (ttac cth)
-      (holai.runtime:proof (#`ttac (#`CONJUNCT1 cth)) THEN (#`ttac (#`CONJUNCT2 cth))))
+      (proof (#`ttac (#`CONJUNCT1 cth)) THEN (#`ttac (#`CONJUNCT2 cth))))
       (IMPLICATE (t%)
         (let ((th1 (AP_THM NOT_DEF (dest_neg t%))))
           (cl:declare (cl:ignorable th1))
@@ -306,41 +306,38 @@
           (if (<= n 0)
             (failwith "ITAUT_TAC: Too deep")
             (ORELSE
-              (holai.runtime:proof (FIRST_ASSUM (UNIFY_ACCEPT_TAC mvs))
+              (proof (FIRST_ASSUM (UNIFY_ACCEPT_TAC mvs))
                 #'ORELSE (#`ACCEPT_TAC TRUTH)
                 #'ORELSE (FIRST_ASSUM CONTR_TAC)
+                #'ORELSE (proof RIGHT_REVERSIBLE_TAC THEN (TRY (ITAUT_TAC% mvs n)))
                 #'ORELSE
-                  (holai.runtime:proof RIGHT_REVERSIBLE_TAC THEN (TRY (ITAUT_TAC% mvs n)))
-                #'ORELSE
-                  (holai.runtime:proof (FIRST_X_ASSUM LEFT_REVERSIBLE_TAC)
+                  (proof (FIRST_X_ASSUM LEFT_REVERSIBLE_TAC)
                     THEN (TRY (ITAUT_TAC% mvs n)))
                 #'ORELSE
                   (FIRST_X_ASSUM
                     (lambdac (th)
-                      (holai.runtime:proof (#`ASSUME_TAC th)
+                      (proof (#`ASSUME_TAC th)
                         THEN
                           (let
                             ((gv (#`genvar (type_of (fst (#`dest_forall (concl th)))))))
                             (cl:declare (cl:ignorable gv))
-                            (holai.runtime:proof (META_SPEC_TAC gv th)
+                            (proof (META_SPEC_TAC gv th)
                               THEN (ITAUT_TAC% (cl:cons gv mvs) (- n 2))
                               THEN NO_TAC)))))
-                #'ORELSE
-                  (holai.runtime:proof #'DISJ1_TAC THEN (ITAUT_TAC% mvs n) THEN NO_TAC)
-                #'ORELSE
-                  (holai.runtime:proof #'DISJ2_TAC THEN (ITAUT_TAC% mvs n) THEN NO_TAC)
+                #'ORELSE (proof #'DISJ1_TAC THEN (ITAUT_TAC% mvs n) THEN NO_TAC)
+                #'ORELSE (proof #'DISJ2_TAC THEN (ITAUT_TAC% mvs n) THEN NO_TAC)
                 #'ORELSE
                   (lambdac (gl%)
                     (let ((gv (#`genvar (type_of (fst (#`dest_exists (snd gl%)))))))
                       (cl:declare (cl:ignorable gv))
                       (#`THEN
-                        (holai.runtime:proof (X_META_EXISTS_TAC gv)
+                        (proof (X_META_EXISTS_TAC gv)
                           THEN (ITAUT_TAC% (cl:cons gv mvs) (- n 2)))
                         NO_TAC
                         gl%))))
               (FIRST_ASSUM
                 (lambdac (th)
-                  (holai.runtime:proof (SUBGOAL_THEN
+                  (proof (SUBGOAL_THEN
                       (fst (#`dest_imp (concl th)))
                       (lambdac (ath) (#`ASSUME_TAC (#`MP th ath))))
                     THEN (ITAUT_TAC% mvs (- n 1))
@@ -350,7 +347,7 @@
             (progn
               (remark (string-concat "Searching with limit " (string-of-int n)))
               (ORELSE
-                (holai.runtime:proof (ITAUT_TAC% nil n) THEN NO_TAC)
+                (proof (ITAUT_TAC% nil n) THEN NO_TAC)
                 (ITAUT_ITERDEEP_TAC (+ n 1))
                 gl))))
         (ITAUT_ITERDEEP_TAC 0)))))

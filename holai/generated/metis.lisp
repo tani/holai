@@ -19972,7 +19972,7 @@
   (:shadow ASM_METIS_TAC METIS METIS_TAC THS TM metisverb)
   (:shadowing-import-from :holai.lib K)
   (:shadowing-import-from :holai.metis.metis GEN_METIS_TAC)
-  (:shadowing-import-from :holai.runtime tuple ref defunc)
+  (:shadowing-import-from :holai.runtime tuple ref proof defunc)
   (:shadowing-import-from :holai.tactics THEN prove POP_ASSUM_LIST ALL_TAC)
   (:export ASM_METIS_TAC METIS METIS_TAC metisverb))
 
@@ -36983,8 +36983,7 @@
 
 (defparameter ASM_METIS_TAC #'GEN_METIS_TAC)
 
-(defunc METIS_TAC (ths)
-  (holai.runtime:proof (POP_ASSUM_LIST (K #'ALL_TAC)) THEN (#`ASM_METIS_TAC ths)))
+(defunc METIS_TAC (ths) (proof (POP_ASSUM_LIST (K #'ALL_TAC)) THEN (#`ASM_METIS_TAC ths)))
 
 (defunc METIS (ths tm) (prove (tuple tm (METIS_TAC ths))))
 

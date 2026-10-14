@@ -1,5 +1,6 @@
-(defpackage :holai.proof-dsl-tests
-  (:use :cl))
+(uiop:define-package :holai.proof-dsl-tests
+  (:use :cl)
+  (:import-from :holai.runtime :proof))
 (in-package :holai.proof-dsl-tests)
 
 (defparameter *proof-dsl-checks* 0)
@@ -30,22 +31,22 @@
 
 (check-closed-proof
   (prove-proof "!x:bool. x = x"
-    (holai.runtime:proof #'holai.tactics:GEN_TAC holai.tactics:THEN
-                         #'holai.tactics:REFL_TAC))
+    (proof #'holai.tactics:GEN_TAC holai.tactics:THEN
+           #'holai.tactics:REFL_TAC))
   "!x:bool. x = x" "universal reflexivity")
 
 (check-closed-proof
   (prove-proof "p ==> p"
-    (holai.runtime:proof (holai.tactics:FAIL_TAC "first")
-                         #'holai.tactics:ORELSE holai.tactics:DISCH_TAC
-                         holai.tactics:THEN
-                         (holai.tactics:FIRST_ASSUM holai.tactics:ACCEPT_TAC)))
+    (proof (holai.tactics:FAIL_TAC "first")
+           #'holai.tactics:ORELSE holai.tactics:DISCH_TAC
+           holai.tactics:THEN
+           (holai.tactics:FIRST_ASSUM holai.tactics:ACCEPT_TAC)))
   "p ==> p" "Failure fallback then assumption")
 
 (check-closed-proof
   (prove-proof "p /\\ q ==> q /\\ p"
-    (holai.runtime:proof holai.tactics:DISCH_TAC holai.tactics:THEN
-                         #'holai.tactics:CONJ_TAC holai.tactics:THENL
+    (proof holai.tactics:DISCH_TAC holai.tactics:THEN
+           #'holai.tactics:CONJ_TAC holai.tactics:THENL
       (list
         (holai.tactics:FIRST_ASSUM
           (holai.runtime:lambdac (th)
@@ -69,25 +70,25 @@
                                     (holai.runtime:funcall holai.bool:CONJUNCT1 th)))))))
   (check-closed-proof
     (prove-proof "p /\\ q ==> q /\\ p"
-      (holai.runtime:proof holai.tactics:DISCH_TAC holai.tactics:THEN
-                           #'holai.tactics:CONJ_TAC holai.tactics:THENL branches))
+      (proof holai.tactics:DISCH_TAC holai.tactics:THEN
+             #'holai.tactics:CONJ_TAC holai.tactics:THENL branches))
     "p /\\ q ==> q /\\ p" "dynamic THENL branches"))
 
 (check-closed-proof
   (prove-proof "p ==> p"
-    (holai.runtime:proof holai.tactics:DISCH_TAC #'holai.tactics:ORELSE
-                         (holai.tactics:FAIL_TAC "fallback") holai.tactics:THEN
-                         (holai.tactics:FIRST_ASSUM holai.tactics:ACCEPT_TAC)))
+    (proof holai.tactics:DISCH_TAC #'holai.tactics:ORELSE
+           (holai.tactics:FAIL_TAC "fallback") holai.tactics:THEN
+           (holai.tactics:FIRST_ASSUM holai.tactics:ACCEPT_TAC)))
   "p ==> p" "left association completes identity")
 
 (check-proof
   (handler-case
     (progn
       (prove-proof "p ==> p"
-        (holai.runtime:proof holai.tactics:DISCH_TAC #'holai.tactics:ORELSE
-          (holai.runtime:proof (holai.tactics:FAIL_TAC "fallback")
-                               holai.tactics:THEN
-                               (holai.tactics:FIRST_ASSUM holai.tactics:ACCEPT_TAC))))
+        (proof holai.tactics:DISCH_TAC #'holai.tactics:ORELSE
+          (proof (holai.tactics:FAIL_TAC "fallback")
+                 holai.tactics:THEN
+                 (holai.tactics:FIRST_ASSUM holai.tactics:ACCEPT_TAC))))
       nil)
     (holai.runtime:failure () t))
   "explicit right association leaves an unsolved goal")
@@ -97,7 +98,7 @@
       (progn
         (holai.tactics:set_goal
           (holai.runtime:tuple nil (holai.parser:parse_term "p ==> p")))
-        (holai.tactics:e (holai.runtime:proof holai.tactics:DISCH_TAC))
+        (holai.tactics:e (proof holai.tactics:DISCH_TAC))
         (let ((goal (holai.tactics:top_goal holai.runtime:unit))
               (goals (holai.runtime:snd
                        (first (holai.runtime:deref holai.tactics:current_goalstack)))))
@@ -118,7 +119,7 @@
   (handler-case
     (progn
       (prove-proof "T /\\ T"
-        (holai.runtime:proof #'holai.tactics:CONJ_TAC holai.tactics:THENL
+        (proof #'holai.tactics:CONJ_TAC holai.tactics:THENL
           (list (holai.runtime:funcall holai.tactics:ACCEPT_TAC holai.bool:TRUTH))))
       nil)
     (holai.runtime:failure () t))
@@ -126,7 +127,7 @@
 
 (check-proof
   (handler-case
-    (progn (prove-proof "p ==> p" (holai.runtime:proof holai.tactics:DISCH_TAC)) nil)
+    (progn (prove-proof "p ==> p" (proof holai.tactics:DISCH_TAC)) nil)
     (holai.runtime:failure () t))
   "prove rejects incomplete single operand")
 
@@ -136,21 +137,21 @@
             (holai.runtime:lambdac (inst ths)
               holai.bool:TRUTH)))))
   (check-proof
-    (handler-case (progn (prove-proof "F" (holai.runtime:proof bogus)) nil)
+    (handler-case (progn (prove-proof "F" (proof bogus)) nil)
       (holai.runtime:failure () t))
     "prove rejects an actual TRUTH justification for F"))
 
 (let ((finish (holai.tactics:FIRST_ASSUM holai.tactics:ACCEPT_TAC)))
   (check-closed-proof
     (prove-proof "p ==> p"
-      (holai.runtime:proof holai.tactics:DISCH_TAC holai.tactics:THEN finish))
+      (proof holai.tactics:DISCH_TAC holai.tactics:THEN finish))
     "p ==> p" "lexical tactic capture"))
 
 (let ((compose holai.tactics:THEN))
   (check-closed-proof
     (prove-proof "p ==> p"
-      (holai.runtime:proof holai.tactics:DISCH_TAC compose
-                           (holai.tactics:FIRST_ASSUM holai.tactics:ACCEPT_TAC)))
+      (proof holai.tactics:DISCH_TAC compose
+             (holai.tactics:FIRST_ASSUM holai.tactics:ACCEPT_TAC)))
     "p ==> p" "lexical function value operator"))
 
 (let ((compose holai.tactics:THEN))
@@ -158,16 +159,23 @@
       ((named-compose (left right) (holai.runtime:funcall compose left right)))
     (check-closed-proof
       (prove-proof "p ==> p"
-        (holai.runtime:proof holai.tactics:DISCH_TAC #'named-compose
-                             (holai.tactics:FIRST_ASSUM holai.tactics:ACCEPT_TAC)))
+        (proof holai.tactics:DISCH_TAC #'named-compose
+               (holai.tactics:FIRST_ASSUM holai.tactics:ACCEPT_TAC)))
       "p ==> p" "fletc named operator captures lexical THEN")))
 
+;; Keep the source/local PROOF symbol distinct from the runtime macro.
+(uiop:define-package :holai.proof-dsl-collision-tests
+  (:use :cl))
+(in-package :holai.proof-dsl-collision-tests)
+
 (holai.runtime:fletc ((proof (tactic) tactic))
-  (check-closed-proof
-    (prove-proof "p ==> p"
+  (holai.proof-dsl-tests::check-closed-proof
+    (holai.proof-dsl-tests::prove-proof "p ==> p"
       (holai.runtime:proof (proof holai.tactics:DISCH_TAC) holai.tactics:THEN
                            (holai.tactics:FIRST_ASSUM holai.tactics:ACCEPT_TAC)))
     "p ==> p" "separate local proof function and runtime macro"))
+
+(in-package :holai.proof-dsl-tests)
 
 (let ((trace nil)
       (expected '(:left-construct :right-construct :left-run :right-run)))
@@ -184,7 +192,7 @@
                (holai.tactics:FIRST_ASSUM holai.tactics:ACCEPT_TAC) goal))))
     (check-closed-proof
       (prove-proof "p ==> p"
-        (holai.runtime:proof (make-left) holai.tactics:THEN (make-right)))
+        (proof (make-left) holai.tactics:THEN (make-right)))
       "p ==> p" "trace DSL identity")
     (check-proof (equal expected (reverse trace)) "DSL constructs and runs each operand once")
     (let ((dsl-trace (copy-list trace)))
@@ -196,7 +204,7 @@
       (check-proof (and (equal expected (reverse trace)) (equal dsl-trace trace))
                    "explicit call has the same once-only trace")
       (let ((before (copy-list trace)))
-        (macroexpand-1 '(holai.runtime:proof (make-left) holai.tactics:THEN (make-right)))
+        (macroexpand-1 '(proof (make-left) holai.tactics:THEN (make-right)))
         (check-proof (equal before trace) "macroexpansion does not evaluate operands")))))
 
 (let ((right-runs 0))
@@ -204,7 +212,7 @@
     (handler-case
       (progn
         (prove-proof "p ==> p"
-          (holai.runtime:proof
+          (proof
             (holai.runtime:lambdac (goal)
               (holai.runtime:invalid-arg "proof-dsl"))
             #'holai.tactics:ORELSE
@@ -216,31 +224,31 @@
     "ORELSE propagates Invalid_argument instead of catching it")
   (check-proof (zerop right-runs) "Invalid_argument does not run ORELSE fallback"))
 
-(check-proof-syntax '(holai.runtime:proof)
+(check-proof-syntax '(proof)
                      "PROOF: expected a tactic expression")
-(check-proof-syntax '(holai.runtime:proof holai.tactics:DISCH_TAC holai.tactics:THEN)
+(check-proof-syntax '(proof holai.tactics:DISCH_TAC holai.tactics:THEN)
                      "PROOF: expected alternating operands and operator references")
 (dolist (operator '(:then 42 (function (lambda (x) x)) (function)
                    (function holai.tactics:ORELSE extra) (function :then)
                    (function t) (function nil) t nil))
   (check-proof-syntax
-    (list 'holai.runtime:proof 'holai.tactics:DISCH_TAC operator
+    (list 'proof 'holai.tactics:DISCH_TAC operator
           'holai.tactics:DISCH_TAC)
     (format nil "PROOF: operator must be a value symbol or #'function-name: ~S" operator)))
 
 (check-proof
-  (null (macroexpand-1 '(holai.runtime:proof nil)))
+  (null (macroexpand-1 '(proof nil)))
   "singleton NIL is valid operand syntax")
 (check-proof
   (handler-case
-    (progn (prove-proof "p ==> p" (holai.runtime:proof nil)) nil)
+    (progn (prove-proof "p ==> p" (proof nil)) nil)
     (error (condition) (not (typep condition 'holai.runtime:ocaml-condition))))
   "singleton NIL application fails at the existing nonfunction boundary")
 
 (check-closed-proof
   (prove-proof "p ==> p"
-    (holai.runtime:proof #`holai.tactics:DISCH_TAC holai.tactics:THEN
-                         (holai.tactics:FIRST_ASSUM #`holai.tactics:ACCEPT_TAC)))
+    (proof #`holai.tactics:DISCH_TAC holai.tactics:THEN
+           (holai.tactics:FIRST_ASSUM #`holai.tactics:ACCEPT_TAC)))
   "p ==> p" "sharp-backquote function-value operands close identity")
 
 (let ((evaluations 0)

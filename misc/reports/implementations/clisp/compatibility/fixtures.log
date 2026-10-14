@@ -1,0 +1,40 @@
+;; Loading file /nix/store/2nnqs8qwd1a11vmgrlhyiwygi3hmjynj-clisp-2.49.95-unstable-2024-12-28/lib/clisp-2.49.95+/dynmod/asdf.lisp ...
+;;  Loading file /nix/store/2nnqs8qwd1a11vmgrlhyiwygi3hmjynj-clisp-2.49.95-unstable-2024-12-28/lib/clisp-2.49.95+/asdf/asdf.fas ...
+;;  Loaded file /nix/store/2nnqs8qwd1a11vmgrlhyiwygi3hmjynj-clisp-2.49.95-unstable-2024-12-28/lib/clisp-2.49.95+/asdf/asdf.fas
+;; Loaded file /nix/store/2nnqs8qwd1a11vmgrlhyiwygi3hmjynj-clisp-2.49.95-unstable-2024-12-28/lib/clisp-2.49.95+/dynmod/asdf.lisp
+
+__HOLAI_COMPATIBILITY_OBSERVATIONS__
+compat_higher=7
+compat_staged=16
+compat_over=7
+compat_unit=42
+compat_pair=7
+compat_pattern_shadow=13
+compat_negate=-7,7
+compat_shadow=3,3,12
+compat_parallel=11
+compat_lexical=1
+compat_nonrec=107
+compat_case=18,44,44
+compat_recursive=true,true,false
+compat_patterns=3,4,5,0
+compat_alias=13
+compat_exceptions=3,1
+compat_single_constructor=7
+compat_chars=1,0
+compat_radices=42,42,42
+compat_local_cl=13
+compat_local_syntax=12
+compat_parent=28
+compat_string=a\n\"b\\c
+compat_float=true
+star-case=1115
+star-reserved=20
+star-primes=321
+star-local-case=18
+star-parallel=44
+star-fields=129
+star-variants=21
+star-module=19
+star-literal=|unchanged|
+__HOLAI_COMPATIBILITY_END__

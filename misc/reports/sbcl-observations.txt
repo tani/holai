@@ -720,6 +720,12 @@ proof_dsl_named_shadow=|-((c:==>:fun(bool(),fun(bool(),bool())) v:p:bool()) v:p:
 reader_computed_head=42,1
 proof_dsl_partial=|-((c:==>:fun(bool(),fun(bool(),bool())) v:p:bool()) v:p:bool())
 proof_dsl_applied_goal=
+proof_reader_safe_child=|-((c:==>:fun(bool(),fun(bool(),bool())) v:p:bool()) v:p:bool())
+proof_reader_late_local=|-((c:==>:fun(bool(),fun(bool(),bool())) v:p:bool()) v:p:bool())/|-((c:==>:fun(bool(),fun(bool(),bool())) v:p:bool()) v:p:bool())
+proof_reader_late_global=|-((c:==>:fun(bool(),fun(bool(),bool())) v:p:bool()) v:p:bool())/|-((c:==>:fun(bool(),fun(bool(),bool())) v:p:bool()) v:p:bool())
+proof_reader_foreign_import=|-((c:==>:fun(bool(),fun(bool(),bool())) v:p:bool()) v:p:bool())/|-((c:==>:fun(bool(),fun(bool(),bool())) v:p:bool()) v:p:bool())
+proof_reader_case=|-((c:==>:fun(bool(),fun(bool(),bool())) v:p:bool()) v:p:bool())/|-((c:==>:fun(bool(),fun(bool(),bool())) v:p:bool()) v:p:bool())
+proof_reader_lexical_module=|-((c:==>:fun(bool(),fun(bool(),bool())) v:p:bool()) v:p:bool())/|-((c:==>:fun(bool(),fun(bool(),bool())) v:p:bool()) v:p:bool())
 ITAUT:p /\ q ==> q /\ p=|-((c:==>:fun(bool(),fun(bool(),bool())) ((c:/\:fun(bool(),fun(bool(),bool())) v:p:bool()) v:q:bool())) ((c:/\:fun(bool(),fun(bool(),bool())) v:q:bool()) v:p:bool()))
 ITAUT:p \/ q ==> q \/ p=|-((c:==>:fun(bool(),fun(bool(),bool())) ((c:\/:fun(bool(),fun(bool(),bool())) v:p:bool()) v:q:bool())) ((c:\/:fun(bool(),fun(bool(),bool())) v:q:bool()) v:p:bool()))
 ITAUT:(p ==> q) /\ (q ==> r) ==> p ==> r=|-((c:==>:fun(bool(),fun(bool(),bool())) ((c:/\:fun(bool(),fun(bool(),bool())) ((c:==>:fun(bool(),fun(bool(),bool())) v:p:bool()) v:q:bool())) ((c:==>:fun(bool(),fun(bool(),bool())) v:q:bool()) v:r:bool()))) ((c:==>:fun(bool(),fun(bool(),bool())) v:p:bool()) v:r:bool()))

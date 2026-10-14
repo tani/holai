@@ -520,6 +520,7 @@
     tuple
     snd
     raise
+    proof
     partial
     match
     lambdac
@@ -672,37 +673,31 @@
 
 
 (defparameter EQ_REFL
-  (prove
-    (tuple (parse_term "!x:A. x = x") (holai.runtime:proof #'GEN_TAC THEN #'REFL_TAC))))
+  (prove (tuple (parse_term "!x:A. x = x") (proof #'GEN_TAC THEN #'REFL_TAC))))
 
 (defparameter REFL_CLAUSE
   (prove
     (tuple
       (parse_term "!x:A. (x = x) <=> T")
-      (holai.runtime:proof #'GEN_TAC
-        THEN (#`MATCH_ACCEPT_TAC (#`EQT_INTRO (SPEC_ALL EQ_REFL)))))))
+      (proof #'GEN_TAC THEN (#`MATCH_ACCEPT_TAC (#`EQT_INTRO (SPEC_ALL EQ_REFL)))))))
 
 (defparameter EQ_SYM
   (prove
     (tuple
       (parse_term "!(x:A) y. (x = y) ==> (y = x)")
-      (holai.runtime:proof (REPEAT #'GEN_TAC) THEN (DISCH_THEN (o ACCEPT_TAC #'SYM))))))
+      (proof (REPEAT #'GEN_TAC) THEN (DISCH_THEN (o ACCEPT_TAC #'SYM))))))
 
 (defparameter EQ_SYM_EQ
   (prove
     (tuple
       (parse_term "!(x:A) y. (x = y) <=> (y = x)")
-      (holai.runtime:proof (REPEAT #'GEN_TAC)
-        THEN #'EQ_TAC
-        THEN (#`MATCH_ACCEPT_TAC EQ_SYM)))))
+      (proof (REPEAT #'GEN_TAC) THEN #'EQ_TAC THEN (#`MATCH_ACCEPT_TAC EQ_SYM)))))
 
 (defparameter EQ_TRANS
   (prove
     (tuple
       (parse_term "!(x:A) y z. (x = y) /\\ (y = z) ==> (x = z)")
-      (holai.runtime:proof (REPEAT #'STRIP_TAC)
-        THEN (#`PURE_ASM_REWRITE_TAC nil)
-        THEN #'REFL_TAC))))
+      (proof (REPEAT #'STRIP_TAC) THEN (#`PURE_ASM_REWRITE_TAC nil) THEN #'REFL_TAC))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* The following is a common special case of ordered rewriting.              *)
@@ -721,13 +716,13 @@
   (prove
     (tuple
       (parse_term "!(f:A->B) y. (\\x. (f:A->B) x) y = f y")
-      (holai.runtime:proof (REPEAT #'GEN_TAC) THEN BETA_TAC THEN #'REFL_TAC))))
+      (proof (REPEAT #'GEN_TAC) THEN BETA_TAC THEN #'REFL_TAC))))
 
 (defparameter ABS_SIMP
   (prove
     (tuple
       (parse_term "!(t1:A) (t2:B). (\\x. t1) t2 = t1")
-      (holai.runtime:proof (REPEAT #'GEN_TAC)
+      (proof (REPEAT #'GEN_TAC)
         THEN (REWRITE_TAC (cl:cons BETA_THM (cl:cons REFL_CLAUSE nil)))))))
 
 ;; (* ------------------------------------------------------------------------- *)
@@ -893,7 +888,7 @@
   (prove
     (tuple
       (parse_term "!P. (?!x:A. P x) <=> (?x. P x) /\\ (!x x'. P x /\\ P x' ==> (x = x'))")
-      (holai.runtime:proof #'GEN_TAC THEN (REWRITE_TAC (cl:cons EXISTS_UNIQUE_DEF nil))))))
+      (proof #'GEN_TAC THEN (REWRITE_TAC (cl:cons EXISTS_UNIQUE_DEF nil))))))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Trivial instances of existence.                                           *)
@@ -904,17 +899,15 @@
   (prove
     (tuple
       (parse_term "!a:A. ?x. x = a")
-      (holai.runtime:proof #'GEN_TAC
-        THEN (#`EXISTS_TAC (parse_term "a:A"))
-        THEN #'REFL_TAC))))
+      (proof #'GEN_TAC THEN (#`EXISTS_TAC (parse_term "a:A")) THEN #'REFL_TAC))))
 
 (defparameter EXISTS_UNIQUE_REFL
   (prove
     (tuple
       (parse_term "!a:A. ?!x. x = a")
-      (holai.runtime:proof #'GEN_TAC
+      (proof #'GEN_TAC
         THEN (REWRITE_TAC (cl:cons EXISTS_UNIQUE_THM nil))
-        THEN (REPEAT (holai.runtime:proof #'EQ_TAC #'ORELSE #'STRIP_TAC))
+        THEN (REPEAT (proof #'EQ_TAC #'ORELSE #'STRIP_TAC))
         THENL
           (cl:cons
             (#`EXISTS_TAC (parse_term "a:A"))
@@ -930,13 +923,13 @@
   (prove
     (tuple
       (parse_term "!P (a:A). (?x. a = x /\\ P x) <=> P a")
-      (holai.runtime:proof (REPEAT #'GEN_TAC)
+      (proof (REPEAT #'GEN_TAC)
         THEN #'EQ_TAC
         THENL
           (cl:cons
             (DISCH_THEN (CHOOSE_THEN (CONJUNCTS_THEN2 #'SUBST1_TAC ACCEPT_TAC)))
             (cl:cons
-              (holai.runtime:proof DISCH_TAC
+              (proof DISCH_TAC
                 THEN (#`EXISTS_TAC (parse_term "a:A"))
                 THEN #'CONJ_TAC
                 THEN (TRY (FIRST_ASSUM MATCH_ACCEPT_TAC))
@@ -947,7 +940,7 @@
   (prove
     (tuple
       (parse_term "!P (a:A). (?x. x = a /\\ P x) <=> P a")
-      (holai.runtime:proof (REPEAT #'GEN_TAC)
+      (proof (REPEAT #'GEN_TAC)
         THEN (#`CONV_TAC (#`LAND_CONV (#`ONCE_DEPTH_CONV #'SYM_CONV)))
         THEN (#`MATCH_ACCEPT_TAC UNWIND_THM1)))))
 
@@ -955,14 +948,14 @@
   (prove
     (tuple
       (parse_term "!P (a:A). (!x. x = a ==> P x) <=> P a")
-      (holai.runtime:proof (REPEAT #'GEN_TAC)
+      (proof (REPEAT #'GEN_TAC)
         THEN #'EQ_TAC
         THENL
           (cl:cons
-            (holai.runtime:proof (DISCH_THEN (o #'MP_TAC (#`SPEC (parse_term "a:A"))))
+            (proof (DISCH_THEN (o #'MP_TAC (#`SPEC (parse_term "a:A"))))
               THEN (REWRITE_TAC nil))
             (cl:cons
-              (holai.runtime:proof DISCH_TAC
+              (proof DISCH_TAC
                 THEN #'GEN_TAC
                 THEN (DISCH_THEN #'SUBST1_TAC)
                 THEN (#`ASM_REWRITE_TAC nil))
@@ -972,7 +965,7 @@
   (prove
     (tuple
       (parse_term "!P (a:A). (!x. a = x ==> P x) <=> P a")
-      (holai.runtime:proof (REPEAT #'GEN_TAC)
+      (proof (REPEAT #'GEN_TAC)
         THEN (#`CONV_TAC (#`LAND_CONV (#`ONCE_DEPTH_CONV #'SYM_CONV)))
         THEN (#`MATCH_ACCEPT_TAC FORALL_UNWIND_THM2)))))
 
@@ -1108,7 +1101,7 @@
   (prove
     (tuple
       (parse_term "(!x:A. P x ==> Q x) ==> ((!x. P x) ==> (!x. Q x))")
-      (holai.runtime:proof (REPEAT #'STRIP_TAC)
+      (proof (REPEAT #'STRIP_TAC)
         THEN (FIRST_ASSUM #'MATCH_MP_TAC)
         THEN (#`ASM_REWRITE_TAC nil)))))
 
@@ -1116,7 +1109,7 @@
   (prove
     (tuple
       (parse_term "(!x:A. P x ==> Q x) ==> ((?x. P x) ==> (?x. Q x))")
-      (holai.runtime:proof DISCH_TAC
+      (proof DISCH_TAC
         THEN (DISCH_THEN (#`X_CHOOSE_TAC (parse_term "x:A")))
         THEN (#`EXISTS_TAC (parse_term "x:A"))
         THEN (FIRST_ASSUM #'MATCH_MP_TAC)
@@ -1135,10 +1128,10 @@
          (!x y. R x y \\/ R y x) /\\
          (!x y. R x y ==> P x y)
          ==> !x y:A. P x y")
-      (holai.runtime:proof (REPEAT #'GEN_TAC)
+      (proof (REPEAT #'GEN_TAC)
         THEN
           (DISCH_THEN (CONJUNCTS_THEN2 ASSUME_TAC (CONJUNCTS_THEN2 #'MP_TAC ASSUME_TAC)))
-        THEN (REPEAT (holai.runtime:proof (MATCH_MP_TAC MONO_FORALL) THEN #'GEN_TAC))
+        THEN (REPEAT (proof (MATCH_MP_TAC MONO_FORALL) THEN #'GEN_TAC))
         THEN #'STRIP_TAC
         THEN (#`ASM_SIMP_TAC nil)))))
 
@@ -1151,27 +1144,27 @@
   (prove
     (tuple
       (parse_term "!P:A->bool. (?!x. P x) <=> (?x. !y. P y <=> (x = y))")
-      (holai.runtime:proof #'GEN_TAC
+      (proof #'GEN_TAC
         THEN (REWRITE_TAC (cl:cons EXISTS_UNIQUE_THM nil))
         THEN #'EQ_TAC
         THENL
           (cl:cons
-            (holai.runtime:proof (DISCH_THEN
+            (proof (DISCH_THEN
                 (CONJUNCTS_THEN2 (#`X_CHOOSE_TAC (parse_term "x:A")) ASSUME_TAC))
               THEN (#`EXISTS_TAC (parse_term "x:A"))
               THEN #'GEN_TAC
               THEN #'EQ_TAC
               THENL
                 (cl:cons
-                  (holai.runtime:proof DISCH_TAC
+                  (proof DISCH_TAC
                     THEN (FIRST_ASSUM #'MATCH_MP_TAC)
                     THEN (#`ASM_REWRITE_TAC nil))
                   (cl:cons
-                    (holai.runtime:proof (DISCH_THEN (o #'SUBST1_TAC #'SYM))
+                    (proof (DISCH_THEN (o #'SUBST1_TAC #'SYM))
                       THEN (FIRST_ASSUM MATCH_ACCEPT_TAC))
                     nil)))
             (cl:cons
-              (holai.runtime:proof (DISCH_THEN (#`X_CHOOSE_TAC (parse_term "x:A")))
+              (proof (DISCH_THEN (#`X_CHOOSE_TAC (parse_term "x:A")))
                 THEN (#`ASM_REWRITE_TAC (cl:cons (#`GSYM EXISTS_REFL) nil))
                 THEN (REPEAT #'GEN_TAC)
                 THEN (DISCH_THEN (#`CONJUNCTS_THEN (o #'SUBST1_TAC #'SYM)))
@@ -1182,7 +1175,7 @@
   (prove
     (tuple
       (parse_term "!P:A->bool. (?!x. P x) <=> (?x. P x /\\ !y. P y ==> (y = x))")
-      (holai.runtime:proof #'GEN_TAC
+      (proof #'GEN_TAC
         THEN (REWRITE_TAC (cl:cons EXISTS_UNIQUE_ALT nil))
         THEN AP_TERM_TAC
         THEN #'ABS_TAC
@@ -1258,14 +1251,12 @@
             (X_CHOOSE_THEN (mk_var (tuple v ty)) ttac th))))
       (CONJ_LIST_TAC
         (end_itlist
-          (lambdac (t1 t2)
-            (holai.runtime:proof #'CONJ_TAC THENL (cl:cons t1 (cl:cons t2 nil))))))
+          (lambdac (t1 t2) (proof #'CONJ_TAC THENL (cl:cons t1 (cl:cons t2 nil))))))
       (NUM_DISJ_TAC
         (lambdac (n)
           (if (<= n 0)
             (failwith "NUM_DISJ_TAC")
-            (holai.runtime:proof (REPLICATE_TAC (- n 1) #'DISJ2_TAC)
-              THEN (REPEAT #'DISJ1_TAC)))))
+            (proof (REPLICATE_TAC (- n 1) #'DISJ2_TAC) THEN (REPEAT #'DISJ1_TAC)))))
       (NAME_PULL_FORALL_CONV
         (let
           ((SWAP_FORALL_CONV (#`REWR_CONV SWAP_FORALL_THM))
@@ -1306,12 +1297,11 @@
           ((fix_tac%
             (labelsc
               ((fix_var (v)
-                (holai.runtime:proof (#`CONV_TAC (#`NAME_PULL_FORALL_CONV v))
-                  THEN PURE_GEN_TAC))
+                (proof (#`CONV_TAC (#`NAME_PULL_FORALL_CONV v)) THEN PURE_GEN_TAC))
                 (fix_rename (arg~1021)
                   (match arg~1021
                     ((tuple u (cl:cons v nil))
-                      (holai.runtime:proof (#`CONV_TAC (#`NAME_PULL_FORALL_CONV v))
+                      (proof (#`CONV_TAC (#`NAME_PULL_FORALL_CONV v))
                         THEN (#`NAME_GEN_TAC u)))
                     ((tuple u _) (#`NAME_GEN_TAC u)))))
               (let
@@ -1343,7 +1333,7 @@
                   (lambdac (arg~1091)
                     (match arg~1091
                       ((tuple tac nil) tac)
-                      ((tuple tac _) (holai.runtime:proof tac THEN (REPEAT #'GEN_TAC)))))))))
+                      ((tuple tac _) (proof tac THEN (REPEAT #'GEN_TAC)))))))))
             (destruct_tac%
               (let ((OBTAINL_THEN (o #'EVERY_TCL (map OBTAIN_THEN))))
                 (cl:declare (cl:ignorable OBTAINL_THEN))

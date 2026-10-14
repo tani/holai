@@ -367,6 +367,7 @@
     ref
     raise
     quo-num
+    proof
     num
     mod-num
     match
@@ -487,7 +488,7 @@
     (tuple
       (parse_term
         "?(f:ind->ind) z. (!x1 x2. (f x1 = f x2) = (x1 = x2)) /\\ (!x. ~(f x = z))")
-      (holai.runtime:proof (#`X_CHOOSE_TAC (parse_term "f:ind->ind") INFINITY_AX)
+      (proof (#`X_CHOOSE_TAC (parse_term "f:ind->ind") INFINITY_AX)
         THEN (#`EXISTS_TAC (parse_term "f:ind->ind"))
         THEN (POP_ASSUM #'MP_TAC)
         THEN (REWRITE_TAC (cl:cons ONE_ONE (cl:cons ONTO nil)))
@@ -560,7 +561,7 @@
   (prove
     (tuple
       (parse_term "!n. ~(SUC n = _0)")
-      (holai.runtime:proof (REWRITE_TAC (cl:cons SUC_DEF (cl:cons ZERO_DEF nil)))
+      (proof (REWRITE_TAC (cl:cons SUC_DEF (cl:cons ZERO_DEF nil)))
         THEN
           (MESON_TAC
             (cl:cons
@@ -571,7 +572,7 @@
   (prove
     (tuple
       (parse_term "!m n. SUC m = SUC n <=> m = n")
-      (holai.runtime:proof (REPEAT #'GEN_TAC)
+      (proof (REPEAT #'GEN_TAC)
         THEN (REWRITE_TAC (cl:cons SUC_DEF nil))
         THEN #'EQ_TAC
         THEN DISCH_TAC
@@ -580,8 +581,7 @@
         THEN (SUBGOAL_THEN (parse_term "!p. NUM_REP (IND_SUC (dest_num p))") #'MP_TAC)
         THENL
           (cl:cons
-            (holai.runtime:proof #'GEN_TAC
-              THEN (MATCH_MP_TAC (#`CONJUNCT2 NUM_REP_RULES)))
+            (proof #'GEN_TAC THEN (MATCH_MP_TAC (#`CONJUNCT2 NUM_REP_RULES)))
             (cl:cons #'ALL_TAC nil))
         THEN (REWRITE_TAC (cl:cons (fst num_tydef) (cl:cons (snd num_tydef) nil)))
         THEN DISCH_TAC
@@ -598,7 +598,7 @@
   (prove
     (tuple
       (parse_term "!P. P(_0) /\\ (!n. P(n) ==> P(SUC n)) ==> !n. P n")
-      (holai.runtime:proof (REPEAT #'STRIP_TAC)
+      (proof (REPEAT #'STRIP_TAC)
         THEN
           (MP_TAC
             (#`SPEC (parse_term "\\i. NUM_REP i /\\ P(mk_num i):bool") NUM_REP_INDUCT))
@@ -612,30 +612,29 @@
               (function-value #'snd 1)))
         THENL
           (cl:cons
-            (holai.runtime:proof (REPEAT #'STRIP_TAC)
+            (proof (REPEAT #'STRIP_TAC)
               THENL
                 (cl:cons
-                  (holai.runtime:proof (MATCH_MP_TAC (#`CONJUNCT2 NUM_REP_RULES))
+                  (proof (MATCH_MP_TAC (#`CONJUNCT2 NUM_REP_RULES))
                     THEN (#`ASM_REWRITE_TAC nil))
                   (cl:cons
-                    (holai.runtime:proof (SUBGOAL_THEN
+                    (proof (SUBGOAL_THEN
                         (parse_term "mk_num(IND_SUC i) = SUC(mk_num i)")
                         #'SUBST1_TAC)
                       THENL
                         (cl:cons
-                          (holai.runtime:proof (REWRITE_TAC (cl:cons SUC_DEF nil))
+                          (proof (REWRITE_TAC (cl:cons SUC_DEF nil))
                             THEN (REPEAT AP_TERM_TAC)
                             THEN (#`CONV_TAC #'SYM_CONV)
                             THEN (REWRITE_TAC (cl:cons (#`GSYM (snd num_tydef)) nil))
                             THEN (FIRST_ASSUM MATCH_ACCEPT_TAC))
                           (cl:cons
-                            (holai.runtime:proof (FIRST_ASSUM #'MATCH_MP_TAC)
+                            (proof (FIRST_ASSUM #'MATCH_MP_TAC)
                               THEN (FIRST_ASSUM MATCH_ACCEPT_TAC))
                             nil)))
                     nil)))
             (cl:cons
-              (holai.runtime:proof (DISCH_THEN
-                  (o #'MP_TAC (#`SPEC (parse_term "dest_num n"))))
+              (proof (DISCH_THEN (o #'MP_TAC (#`SPEC (parse_term "dest_num n"))))
                 THEN (REWRITE_TAC (cl:cons (fst num_tydef) (cl:cons (snd num_tydef) nil))))
               nil))))))
 
@@ -650,12 +649,12 @@
       (parse_term
         "!(e:A) f. ?!fn. (fn _0 = e) /\\
                    (!n. fn (SUC n) = f (fn n) n)")
-      (holai.runtime:proof (REPEAT #'GEN_TAC)
+      (proof (REPEAT #'GEN_TAC)
         THEN (ONCE_REWRITE_TAC (cl:cons EXISTS_UNIQUE_THM nil))
         THEN #'CONJ_TAC
         THENL
           (cl:cons
-            (holai.runtime:proof (o
+            (proof (o
                 #'MP_TAC
                 prove_inductive_relations_exist
                 (parse_term "PRG _0 e /\\ (!b:A n:num. PRG n b ==> PRG (SUC n) (f b n))"))
@@ -664,7 +663,7 @@
               THEN (SUBGOAL_THEN (parse_term "!n:num. ?!y:A. PRG n y") #'MP_TAC)
               THENL
                 (cl:cons
-                  (holai.runtime:proof (MATCH_MP_TAC num_INDUCTION~1)
+                  (proof (MATCH_MP_TAC num_INDUCTION~1)
                     THEN (REPEAT #'STRIP_TAC)
                     THEN
                       (FIRST_ASSUM
@@ -693,13 +692,13 @@
                             (parse_term "(f:A->num->A) y n")
                             (cl:cons (parse_term "y:A") nil)))
                         (cl:cons
-                          (holai.runtime:proof AP_THM_TAC
+                          (proof AP_THM_TAC
                             THEN AP_TERM_TAC
                             THEN (FIRST_ASSUM #'MATCH_MP_TAC))
                           nil))
                     THEN (#`ASM_REWRITE_TAC nil))
                   (cl:cons
-                    (holai.runtime:proof (REWRITE_TAC (cl:cons UNIQUE_SKOLEM_ALT nil))
+                    (proof (REWRITE_TAC (cl:cons UNIQUE_SKOLEM_ALT nil))
                       THEN
                         (DISCH_THEN
                           (X_CHOOSE_THEN (parse_term "fn:num->A") (o ASSUME_TAC GSYM)))
@@ -713,7 +712,7 @@
                       THEN #'REFL_TAC)
                     nil)))
             (cl:cons
-              (holai.runtime:proof (REPEAT #'STRIP_TAC)
+              (proof (REPEAT #'STRIP_TAC)
                 THEN (ONCE_REWRITE_TAC (cl:cons FUN_EQ_THM nil))
                 THEN (MATCH_MP_TAC num_INDUCTION~1)
                 THEN (#`ASM_REWRITE_TAC nil)
@@ -756,9 +755,9 @@
 
 
 (defparameter INDUCT_TAC
-  (holai.runtime:proof (MATCH_MP_TAC num_INDUCTION)
+  (proof (MATCH_MP_TAC num_INDUCTION)
     THEN #'CONJ_TAC
-    THENL (cl:cons #'ALL_TAC (cl:cons (holai.runtime:proof #'GEN_TAC THEN DISCH_TAC) nil))))
+    THENL (cl:cons #'ALL_TAC (cl:cons (proof #'GEN_TAC THEN DISCH_TAC) nil))))
 
 (defparameter num_RECURSION
   (let ((avs (fst (#`strip_forall (concl num_Axiom)))))
@@ -774,7 +773,7 @@
   (prove
     (tuple
       (parse_term "!m. (m = 0) \\/ (?n. m = SUC n)")
-      (holai.runtime:proof INDUCT_TAC THEN (MESON_TAC nil)))))
+      (proof INDUCT_TAC THEN (MESON_TAC nil)))))
 
 (assign
   inductive_type_store

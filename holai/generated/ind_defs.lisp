@@ -756,6 +756,7 @@
     snd
     ref
     raise
+    proof
     partial
     match
     lambdac
@@ -852,7 +853,7 @@
       (prove
         (tuple
           (parse_term "!P t. (!x:A. (x = t) ==> P x) ==> (?) P")
-          (holai.runtime:proof (REWRITE_TAC (cl:cons EXISTS_DEF nil))
+          (proof (REWRITE_TAC (cl:cons EXISTS_DEF nil))
             THEN BETA_TAC
             THEN (REPEAT #'STRIP_TAC)
             THEN (FIRST_ASSUM #'MATCH_MP_TAC)
@@ -1521,14 +1522,11 @@
                             (_ (raise exception~1598)))))))
                   (cl:declare (cl:ignorable ft c%))
                   (cl:cons
-                    (tuple
-                      c%
-                      (holai.runtime:proof (BACKCHAIN_TAC th) THEN (REPEAT #'CONJ_TAC)))
+                    (tuple c% (proof (BACKCHAIN_TAC th) THEN (REPEAT #'CONJ_TAC)))
                     l)))
               (deref monotonicity_theorems)
               (cl:cons (tuple "" #'MONO_ABS_TAC) nil)))
-            (MONO_STEP_TAC
-              (holai.runtime:proof (REPEAT #'GEN_TAC) THEN (APPLY_MONOTAC tacs))))
+            (MONO_STEP_TAC (proof (REPEAT #'GEN_TAC) THEN (APPLY_MONOTAC tacs))))
           (cl:declare (cl:ignorable tacs MONO_STEP_TAC))
           (#`THEN (REPEAT MONO_STEP_TAC) (#`ASM_REWRITE_TAC nil) gl))))))
 
@@ -1540,7 +1538,7 @@
 (defparameter prove_monotonicity_hyps
   (let
     ((tac
-      (holai.runtime:proof (REPEAT #'GEN_TAC)
+      (proof (REPEAT #'GEN_TAC)
         THEN (DISCH_THEN (REPEAT_TCL CONJUNCTS_THEN ASSUME_TAC))
         THEN (REPEAT #'CONJ_TAC)
         THEN MONO_TAC)))

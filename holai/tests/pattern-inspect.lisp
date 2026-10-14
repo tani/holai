@@ -1,6 +1,10 @@
 (require :asdf)
-(asdf:initialize-source-registry `(:source-registry (:directory ,(truename ".")) :inherit-configuration))
-(setf *compile-verbose* nil *load-verbose* nil)
+(let ((root (uiop:pathname-parent-directory-pathname
+             (uiop:pathname-parent-directory-pathname
+              (uiop:pathname-directory-pathname *load-truename*)))))
+  (asdf:initialize-source-registry
+   `(:source-registry (:directory ,root) :inherit-configuration)))
+(setf asdf:*asdf-verbose* nil *compile-verbose* nil *load-verbose* nil)
 (asdf:load-system "holai/runtime")
 (in-package :holai.runtime)
 (defvariant inspection-term (InspectionVar name ty) (InspectionComb left right))

@@ -1,0 +1,306 @@
+PROFILE_START load system
+PROFILE_END load system 0.015
+PROFILE_START load lib
+PROFILE_END load lib 0.043
+PROFILE_START load fusion
+PROFILE_END load fusion 0.066
+PROFILE_START load basics
+PROFILE_END load basics 0.019
+PROFILE_START load nets
+PROFILE_END load nets 0.101
+PROFILE_START load printer
+PROFILE_END load printer 0.058
+PROFILE_START load preterm
+PROFILE_END load preterm 0.048
+PROFILE_START load parser
+PROFILE_END load parser 0.030
+PROFILE_START load equal
+PROFILE_END load equal 0.020
+PROFILE_START load bool
+PROFILE_END load bool 1.512
+PROFILE_START load drule
+PROFILE_END load drule 0.028
+PROFILE_START load tactics
+PROFILE_END load tactics 0.093
+PROFILE_START load itab
+PROFILE_END load itab 0.011
+PROFILE_START load simp
+Searching with limit 0
+Searching with limit 1
+Searching with limit 2
+Searching with limit 3
+Warning: inventing type variables
+Searching with limit 0
+Searching with limit 1
+Searching with limit 2
+Searching with limit 3
+Searching with limit 4
+PROFILE_END load simp 0.350
+PROFILE_START load theorems
+Searching with limit 0
+Searching with limit 1
+Searching with limit 0
+Searching with limit 1
+Searching with limit 0
+Searching with limit 1
+Searching with limit 0
+Searching with limit 1
+Searching with limit 0
+Searching with limit 1
+Searching with limit 0
+Searching with limit 1
+Searching with limit 0
+Searching with limit 1
+Searching with limit 2
+Searching with limit 3
+Searching with limit 0
+Searching with limit 1
+Searching with limit 2
+Searching with limit 3
+Searching with limit 0
+Searching with limit 1
+Searching with limit 0
+Searching with limit 1
+Searching with limit 0
+Searching with limit 1
+Searching with limit 2
+Searching with limit 3
+Searching with limit 0
+Searching with limit 1
+Searching with limit 2
+Searching with limit 3
+Searching with limit 0
+Searching with limit 1
+Searching with limit 2
+Searching with limit 0
+Searching with limit 1
+Searching with limit 2
+Searching with limit 0
+Searching with limit 1
+Searching with limit 2
+Searching with limit 0
+Searching with limit 1
+Searching with limit 0
+Searching with limit 1
+Searching with limit 0
+Searching with limit 1
+Searching with limit 2
+Warning: inventing type variables
+Searching with limit 0
+Searching with limit 1
+Searching with limit 2
+Searching with limit 3
+Searching with limit 4
+Searching with limit 0
+Searching with limit 1
+Searching with limit 2
+Searching with limit 3
+Searching with limit 4
+Searching with limit 5
+Searching with limit 0
+Searching with limit 1
+Searching with limit 2
+Searching with limit 3
+Searching with limit 4
+Searching with limit 5
+Searching with limit 0
+Searching with limit 1
+Searching with limit 2
+Searching with limit 3
+Searching with limit 0
+Searching with limit 1
+Searching with limit 2
+Searching with limit 3
+Searching with limit 0
+Searching with limit 1
+Searching with limit 2
+Searching with limit 3
+Searching with limit 0
+Searching with limit 1
+Searching with limit 2
+Searching with limit 3
+Searching with limit 0
+Searching with limit 1
+Searching with limit 2
+Searching with limit 3
+Searching with limit 0
+Searching with limit 1
+Searching with limit 2
+Searching with limit 3
+Searching with limit 0
+Searching with limit 1
+Searching with limit 2
+Searching with limit 3
+Searching with limit 0
+Searching with limit 1
+Searching with limit 2
+Searching with limit 3
+Searching with limit 0
+Searching with limit 1
+Searching with limit 2
+Searching with limit 3
+Searching with limit 0
+Searching with limit 1
+Searching with limit 2
+Searching with limit 3
+Searching with limit 0
+Searching with limit 1
+Searching with limit 2
+Searching with limit 3
+Searching with limit 0
+Searching with limit 1
+Searching with limit 2
+Searching with limit 3
+Searching with limit 0
+Searching with limit 1
+Searching with limit 2
+Searching with limit 3
+Searching with limit 0
+Searching with limit 1
+Searching with limit 2
+Searching with limit 3
+Searching with limit 0
+Searching with limit 1
+Searching with limit 2
+Searching with limit 3
+Searching with limit 0
+Searching with limit 1
+Searching with limit 2
+Searching with limit 3
+Searching with limit 0
+Searching with limit 1
+Searching with limit 2
+Searching with limit 3
+Searching with limit 4
+Searching with limit 0
+Searching with limit 1
+Searching with limit 2
+Searching with limit 3
+Searching with limit 4
+Searching with limit 0
+Searching with limit 1
+Searching with limit 2
+Searching with limit 3
+Searching with limit 4
+Searching with limit 0
+Searching with limit 1
+Searching with limit 2
+Searching with limit 3
+Searching with limit 4
+Searching with limit 0
+Searching with limit 1
+Searching with limit 2
+Searching with limit 3
+Searching with limit 4
+Searching with limit 0
+Searching with limit 1
+Searching with limit 2
+Searching with limit 3
+Searching with limit 4
+Searching with limit 0
+Searching with limit 1
+Searching with limit 2
+Searching with limit 0
+Searching with limit 1
+Searching with limit 2
+Searching with limit 0
+Searching with limit 1
+Searching with limit 2
+Searching with limit 3
+Searching with limit 0
+Searching with limit 1
+Searching with limit 2
+Searching with limit 3
+Searching with limit 0
+Searching with limit 1
+Searching with limit 2
+PROFILE_END load theorems 14.096
+PROFILE_START load ind_defs
+Searching with limit 0
+Searching with limit 1
+PROFILE_END load ind_defs 0.365
+PROFILE_START load class
+Searching with limit 0
+Searching with limit 1
+Searching with limit 2
+Searching with limit 0
+Searching with limit 1
+Warning: inventing type variables
+Warning: inventing type variables
+PROFILE_END load class 9.011
+PROFILE_START load trivia
+PROFILE_END load trivia 1.665
+PROFILE_START load canon
+Warning: inventing type variables
+Warning: inventing type variables
+PROFILE_END load canon 4.761
+PROFILE_START load meson
+PROFILE_END load meson 1.116
+PROFILE_START load firstorder
+PROFILE_END load firstorder 0.048
+PROFILE_START load metis
+PROFILE_END load metis 2.354
+PROFILE_START load thecops
+PROFILE_END load thecops 1.237
+PROFILE_START load quot
+0..0..1..3..7..15..26..54..86..136..solved at 208
+0..0..1..solved at 4
+0..0..solved at 2
+0..0..1..4..solved at 10
+0..0..1..4..9..solved at 21
+0..0..solved at 2
+0..0..1..solved at 4
+0..0..1..2..6..11..22..38..70..solved at 116
+0..0..solved at 2
+0..0..solved at 2
+0..0..1..2..6..11..22..41..76..solved at 108
+0..0..1..solved at 4
+0..0..solved at 2
+PROFILE_END load quot 14.374
+PROFILE_START load impconv
+PROFILE_END load impconv 5.773
+PROFILE_START load pair
+0..0..solved at 2
+0..0..1..solved at 4
+0..0..1..2..solved at 6
+0..0..1..2..solved at 6
+0..0..solved at 2
+Warning: inventing type variables
+Warning: inventing type variables
+0..0..solved at 2
+0..0..1..2..solved at 6
+0..0..1..2..6..11..solved at 22
+0..0..solved at 2
+Warning: inventing type variables
+0..0..solved at 2
+0..0..solved at 2
+Warning: inventing type variables
+0..0..solved at 2
+0..0..solved at 2
+0..0..solved at 2
+Warning: inventing type variables
+0..0..1..5..13..solved at 26
+0..0..1..5..13..solved at 26
+0..0..solved at 2
+Warning: inventing type variables
+PROFILE_END load pair 24.767
+PROFILE_START load compute
+PROFILE_END load compute 0.330
+PROFILE_START load nums
+0..0..2..solved at 5
+0..0..solved at 2
+0..0..1..3..solved at 9
+0..0..1..2..5..9..15..29..44..68..142..260..solved at 420
+0..0..solved at 3
+0..0..solved at 2
+PROFILE_END load nums 8.582
+PROFILE_START load recursion
+PROFILE_END load recursion 0.012
+PROFILE_START load arith
+0..0..solved at 2
+0..0..1..2..solved at 6
+0..0..1..2..7..14..35..62..solved at 73
+0..0..solved at 2
+0..0..1..2..solved at 6
+0..0..1..2..7..14..35..62..solved at 73
+0..0..solved at 2

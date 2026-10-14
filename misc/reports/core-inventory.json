@@ -22,7 +22,13 @@
     "unsupported_families": 0,
     "mapped_nodes": 24,
     "sbcl_compiled_loaded": true,
-    "differential_corpus_loaded": true
+    "differential_corpus_loaded": true,
+    "compiled_loaded_implementations": [
+      "sbcl"
+    ],
+    "differential_corpus_implementations": [
+      "sbcl"
+    ]
   },
   {
     "file": "lib.ml",
@@ -57,7 +63,13 @@
     "unsupported_families": 0,
     "mapped_nodes": 2688,
     "sbcl_compiled_loaded": true,
-    "differential_corpus_loaded": true
+    "differential_corpus_loaded": true,
+    "compiled_loaded_implementations": [
+      "sbcl"
+    ],
+    "differential_corpus_implementations": [
+      "sbcl"
+    ]
   },
   {
     "file": "fusion.ml",
@@ -99,7 +111,13 @@
     "unsupported_families": 0,
     "mapped_nodes": 1760,
     "sbcl_compiled_loaded": true,
-    "differential_corpus_loaded": true
+    "differential_corpus_loaded": true,
+    "compiled_loaded_implementations": [
+      "sbcl"
+    ],
+    "differential_corpus_implementations": [
+      "sbcl"
+    ]
   },
   {
     "file": "basics.ml",
@@ -136,7 +154,13 @@
     "unsupported_families": 0,
     "mapped_nodes": 1447,
     "sbcl_compiled_loaded": true,
-    "differential_corpus_loaded": true
+    "differential_corpus_loaded": true,
+    "compiled_loaded_implementations": [
+      "sbcl"
+    ],
+    "differential_corpus_implementations": [
+      "sbcl"
+    ]
   },
   {
     "file": "nets.ml",
@@ -176,7 +200,13 @@
     "unsupported_families": 0,
     "mapped_nodes": 2407,
     "sbcl_compiled_loaded": true,
-    "differential_corpus_loaded": true
+    "differential_corpus_loaded": true,
+    "compiled_loaded_implementations": [
+      "sbcl"
+    ],
+    "differential_corpus_implementations": [
+      "sbcl"
+    ]
   },
   {
     "file": "printer.ml",
@@ -217,7 +247,13 @@
     "unsupported_families": 0,
     "mapped_nodes": 2981,
     "sbcl_compiled_loaded": true,
-    "differential_corpus_loaded": true
+    "differential_corpus_loaded": true,
+    "compiled_loaded_implementations": [
+      "sbcl"
+    ],
+    "differential_corpus_implementations": [
+      "sbcl"
+    ]
   },
   {
     "file": "preterm.ml",
@@ -256,7 +292,13 @@
     "unsupported_families": 0,
     "mapped_nodes": 1566,
     "sbcl_compiled_loaded": true,
-    "differential_corpus_loaded": true
+    "differential_corpus_loaded": true,
+    "compiled_loaded_implementations": [
+      "sbcl"
+    ],
+    "differential_corpus_implementations": [
+      "sbcl"
+    ]
   },
   {
     "file": "parser.ml",
@@ -296,7 +338,13 @@
     "unsupported_families": 0,
     "mapped_nodes": 2163,
     "sbcl_compiled_loaded": true,
-    "differential_corpus_loaded": true
+    "differential_corpus_loaded": true,
+    "compiled_loaded_implementations": [
+      "sbcl"
+    ],
+    "differential_corpus_implementations": [
+      "sbcl"
+    ]
   },
   {
     "file": "equal.ml",
@@ -335,7 +383,13 @@
     "unsupported_families": 0,
     "mapped_nodes": 860,
     "sbcl_compiled_loaded": true,
-    "differential_corpus_loaded": true
+    "differential_corpus_loaded": true,
+    "compiled_loaded_implementations": [
+      "sbcl"
+    ],
+    "differential_corpus_implementations": [
+      "sbcl"
+    ]
   },
   {
     "file": "bool.ml",
@@ -368,7 +422,13 @@
     "unsupported_families": 0,
     "mapped_nodes": 1844,
     "sbcl_compiled_loaded": true,
-    "differential_corpus_loaded": true
+    "differential_corpus_loaded": true,
+    "compiled_loaded_implementations": [
+      "sbcl"
+    ],
+    "differential_corpus_implementations": [
+      "sbcl"
+    ]
   },
   {
     "file": "drule.ml",
@@ -404,7 +464,13 @@
     "unsupported_families": 0,
     "mapped_nodes": 2355,
     "sbcl_compiled_loaded": true,
-    "differential_corpus_loaded": true
+    "differential_corpus_loaded": true,
+    "compiled_loaded_implementations": [
+      "sbcl"
+    ],
+    "differential_corpus_implementations": [
+      "sbcl"
+    ]
   },
   {
     "file": "tactics.ml",
@@ -443,7 +509,13 @@
     "unsupported_families": 0,
     "mapped_nodes": 3406,
     "sbcl_compiled_loaded": true,
-    "differential_corpus_loaded": true
+    "differential_corpus_loaded": true,
+    "compiled_loaded_implementations": [
+      "sbcl"
+    ],
+    "differential_corpus_implementations": [
+      "sbcl"
+    ]
   },
   {
     "file": "itab.ml",
@@ -477,7 +549,13 @@
     "unsupported_families": 0,
     "mapped_nodes": 327,
     "sbcl_compiled_loaded": true,
-    "differential_corpus_loaded": true
+    "differential_corpus_loaded": true,
+    "compiled_loaded_implementations": [
+      "sbcl"
+    ],
+    "differential_corpus_implementations": [
+      "sbcl"
+    ]
   },
   {
     "file": "simp.ml",
@@ -516,7 +594,13 @@
     "unsupported_families": 0,
     "mapped_nodes": 1706,
     "sbcl_compiled_loaded": true,
-    "differential_corpus_loaded": true
+    "differential_corpus_loaded": true,
+    "compiled_loaded_implementations": [
+      "sbcl"
+    ],
+    "differential_corpus_implementations": [
+      "sbcl"
+    ]
   },
   {
     "file": "theorems.ml",
@@ -549,7 +633,13 @@
     "unsupported_families": 0,
     "mapped_nodes": 1312,
     "sbcl_compiled_loaded": true,
-    "differential_corpus_loaded": true
+    "differential_corpus_loaded": true,
+    "compiled_loaded_implementations": [
+      "sbcl"
+    ],
+    "differential_corpus_implementations": [
+      "sbcl"
+    ]
   },
   {
     "file": "ind_defs.ml",
@@ -585,7 +675,13 @@
     "unsupported_families": 0,
     "mapped_nodes": 1956,
     "sbcl_compiled_loaded": true,
-    "differential_corpus_loaded": true
+    "differential_corpus_loaded": true,
+    "compiled_loaded_implementations": [
+      "sbcl"
+    ],
+    "differential_corpus_implementations": [
+      "sbcl"
+    ]
   },
   {
     "file": "class.ml",
@@ -621,7 +717,13 @@
     "unsupported_families": 0,
     "mapped_nodes": 1440,
     "sbcl_compiled_loaded": true,
-    "differential_corpus_loaded": true
+    "differential_corpus_loaded": true,
+    "compiled_loaded_implementations": [
+      "sbcl"
+    ],
+    "differential_corpus_implementations": [
+      "sbcl"
+    ]
   },
   {
     "file": "trivia.ml",
@@ -648,7 +750,13 @@
     "unsupported_families": 0,
     "mapped_nodes": 270,
     "sbcl_compiled_loaded": true,
-    "differential_corpus_loaded": true
+    "differential_corpus_loaded": true,
+    "compiled_loaded_implementations": [
+      "sbcl"
+    ],
+    "differential_corpus_implementations": [
+      "sbcl"
+    ]
   },
   {
     "file": "canon.ml",
@@ -683,7 +791,13 @@
     "unsupported_families": 0,
     "mapped_nodes": 3496,
     "sbcl_compiled_loaded": true,
-    "differential_corpus_loaded": true
+    "differential_corpus_loaded": true,
+    "compiled_loaded_implementations": [
+      "sbcl"
+    ],
+    "differential_corpus_implementations": [
+      "sbcl"
+    ]
   },
   {
     "file": "meson.ml",
@@ -724,7 +838,13 @@
     "unsupported_families": 0,
     "mapped_nodes": 3117,
     "sbcl_compiled_loaded": true,
-    "differential_corpus_loaded": true
+    "differential_corpus_loaded": true,
+    "compiled_loaded_implementations": [
+      "sbcl"
+    ],
+    "differential_corpus_implementations": [
+      "sbcl"
+    ]
   },
   {
     "file": "firstorder.ml",
@@ -764,7 +884,13 @@
     "unsupported_families": 0,
     "mapped_nodes": 834,
     "sbcl_compiled_loaded": true,
-    "differential_corpus_loaded": true
+    "differential_corpus_loaded": true,
+    "compiled_loaded_implementations": [
+      "sbcl"
+    ],
+    "differential_corpus_implementations": [
+      "sbcl"
+    ]
   },
   {
     "file": "metis.ml",
@@ -818,7 +944,13 @@
     "unsupported_families": 0,
     "mapped_nodes": 40244,
     "sbcl_compiled_loaded": true,
-    "differential_corpus_loaded": true
+    "differential_corpus_loaded": true,
+    "compiled_loaded_implementations": [
+      "sbcl"
+    ],
+    "differential_corpus_implementations": [
+      "sbcl"
+    ]
   },
   {
     "file": "thecops.ml",
@@ -871,7 +1003,13 @@
     "unsupported_families": 0,
     "mapped_nodes": 5475,
     "sbcl_compiled_loaded": true,
-    "differential_corpus_loaded": true
+    "differential_corpus_loaded": true,
+    "compiled_loaded_implementations": [
+      "sbcl"
+    ],
+    "differential_corpus_implementations": [
+      "sbcl"
+    ]
   },
   {
     "file": "quot.ml",
@@ -901,7 +1039,13 @@
     "unsupported_families": 0,
     "mapped_nodes": 556,
     "sbcl_compiled_loaded": true,
-    "differential_corpus_loaded": true
+    "differential_corpus_loaded": true,
+    "compiled_loaded_implementations": [
+      "sbcl"
+    ],
+    "differential_corpus_implementations": [
+      "sbcl"
+    ]
   },
   {
     "file": "impconv.ml",
@@ -944,7 +1088,13 @@
     "unsupported_families": 0,
     "mapped_nodes": 5451,
     "sbcl_compiled_loaded": true,
-    "differential_corpus_loaded": true
+    "differential_corpus_loaded": true,
+    "compiled_loaded_implementations": [
+      "sbcl"
+    ],
+    "differential_corpus_implementations": [
+      "sbcl"
+    ]
   },
   {
     "file": "pair.ml",
@@ -981,7 +1131,13 @@
     "unsupported_families": 0,
     "mapped_nodes": 1729,
     "sbcl_compiled_loaded": true,
-    "differential_corpus_loaded": true
+    "differential_corpus_loaded": true,
+    "compiled_loaded_implementations": [
+      "sbcl"
+    ],
+    "differential_corpus_implementations": [
+      "sbcl"
+    ]
   },
   {
     "file": "compute.ml",
@@ -1025,7 +1181,13 @@
     "unsupported_families": 0,
     "mapped_nodes": 2117,
     "sbcl_compiled_loaded": true,
-    "differential_corpus_loaded": true
+    "differential_corpus_loaded": true,
+    "compiled_loaded_implementations": [
+      "sbcl"
+    ],
+    "differential_corpus_implementations": [
+      "sbcl"
+    ]
   },
   {
     "file": "nums.ml",
@@ -1063,7 +1225,13 @@
     "unsupported_families": 0,
     "mapped_nodes": 1083,
     "sbcl_compiled_loaded": true,
-    "differential_corpus_loaded": true
+    "differential_corpus_loaded": true,
+    "compiled_loaded_implementations": [
+      "sbcl"
+    ],
+    "differential_corpus_implementations": [
+      "sbcl"
+    ]
   },
   {
     "file": "recursion.ml",
@@ -1096,7 +1264,13 @@
     "unsupported_families": 0,
     "mapped_nodes": 479,
     "sbcl_compiled_loaded": true,
-    "differential_corpus_loaded": true
+    "differential_corpus_loaded": true,
+    "compiled_loaded_implementations": [
+      "sbcl"
+    ],
+    "differential_corpus_implementations": [
+      "sbcl"
+    ]
   },
   {
     "file": "arith.ml",
@@ -1129,7 +1303,13 @@
     "unsupported_families": 0,
     "mapped_nodes": 7923,
     "sbcl_compiled_loaded": true,
-    "differential_corpus_loaded": true
+    "differential_corpus_loaded": true,
+    "compiled_loaded_implementations": [
+      "sbcl"
+    ],
+    "differential_corpus_implementations": [
+      "sbcl"
+    ]
   },
   {
     "file": "wf.ml",
@@ -1160,7 +1340,13 @@
     "unsupported_families": 0,
     "mapped_nodes": 1467,
     "sbcl_compiled_loaded": true,
-    "differential_corpus_loaded": true
+    "differential_corpus_loaded": true,
+    "compiled_loaded_implementations": [
+      "sbcl"
+    ],
+    "differential_corpus_implementations": [
+      "sbcl"
+    ]
   },
   {
     "file": "calc_num.ml",
@@ -1196,7 +1382,13 @@
     "unsupported_families": 0,
     "mapped_nodes": 7333,
     "sbcl_compiled_loaded": true,
-    "differential_corpus_loaded": true
+    "differential_corpus_loaded": true,
+    "compiled_loaded_implementations": [
+      "sbcl"
+    ],
+    "differential_corpus_implementations": [
+      "sbcl"
+    ]
   },
   {
     "file": "normalizer.ml",
@@ -1229,7 +1421,13 @@
     "unsupported_families": 0,
     "mapped_nodes": 2331,
     "sbcl_compiled_loaded": true,
-    "differential_corpus_loaded": true
+    "differential_corpus_loaded": true,
+    "compiled_loaded_implementations": [
+      "sbcl"
+    ],
+    "differential_corpus_implementations": [
+      "sbcl"
+    ]
   },
   {
     "file": "grobner.ml",
@@ -1266,7 +1464,13 @@
     "unsupported_families": 0,
     "mapped_nodes": 2991,
     "sbcl_compiled_loaded": true,
-    "differential_corpus_loaded": true
+    "differential_corpus_loaded": true,
+    "compiled_loaded_implementations": [
+      "sbcl"
+    ],
+    "differential_corpus_implementations": [
+      "sbcl"
+    ]
   },
   {
     "file": "ind_types.ml",
@@ -1302,7 +1506,13 @@
     "unsupported_families": 0,
     "mapped_nodes": 6621,
     "sbcl_compiled_loaded": true,
-    "differential_corpus_loaded": true
+    "differential_corpus_loaded": true,
+    "compiled_loaded_implementations": [
+      "sbcl"
+    ],
+    "differential_corpus_implementations": [
+      "sbcl"
+    ]
   },
   {
     "file": "lists.ml",
@@ -1338,7 +1548,13 @@
     "unsupported_families": 0,
     "mapped_nodes": 3747,
     "sbcl_compiled_loaded": true,
-    "differential_corpus_loaded": true
+    "differential_corpus_loaded": true,
+    "compiled_loaded_implementations": [
+      "sbcl"
+    ],
+    "differential_corpus_implementations": [
+      "sbcl"
+    ]
   },
   {
     "file": "realax.ml",
@@ -1368,7 +1584,13 @@
     "unsupported_families": 0,
     "mapped_nodes": 9442,
     "sbcl_compiled_loaded": true,
-    "differential_corpus_loaded": true
+    "differential_corpus_loaded": true,
+    "compiled_loaded_implementations": [
+      "sbcl"
+    ],
+    "differential_corpus_implementations": [
+      "sbcl"
+    ]
   },
   {
     "file": "calc_int.ml",
@@ -1403,7 +1625,13 @@
     "unsupported_families": 0,
     "mapped_nodes": 1582,
     "sbcl_compiled_loaded": true,
-    "differential_corpus_loaded": true
+    "differential_corpus_loaded": true,
+    "compiled_loaded_implementations": [
+      "sbcl"
+    ],
+    "differential_corpus_implementations": [
+      "sbcl"
+    ]
   },
   {
     "file": "realarith.ml",
@@ -1437,7 +1665,13 @@
     "unsupported_families": 0,
     "mapped_nodes": 2253,
     "sbcl_compiled_loaded": true,
-    "differential_corpus_loaded": true
+    "differential_corpus_loaded": true,
+    "compiled_loaded_implementations": [
+      "sbcl"
+    ],
+    "differential_corpus_implementations": [
+      "sbcl"
+    ]
   },
   {
     "file": "real.ml",
@@ -1464,7 +1698,13 @@
     "unsupported_families": 0,
     "mapped_nodes": 6736,
     "sbcl_compiled_loaded": true,
-    "differential_corpus_loaded": true
+    "differential_corpus_loaded": true,
+    "compiled_loaded_implementations": [
+      "sbcl"
+    ],
+    "differential_corpus_implementations": [
+      "sbcl"
+    ]
   },
   {
     "file": "calc_rat.ml",
@@ -1499,7 +1739,13 @@
     "unsupported_families": 0,
     "mapped_nodes": 2366,
     "sbcl_compiled_loaded": true,
-    "differential_corpus_loaded": true
+    "differential_corpus_loaded": true,
+    "compiled_loaded_implementations": [
+      "sbcl"
+    ],
+    "differential_corpus_implementations": [
+      "sbcl"
+    ]
   },
   {
     "file": "int.ml",
@@ -1535,7 +1781,13 @@
     "unsupported_families": 0,
     "mapped_nodes": 10575,
     "sbcl_compiled_loaded": true,
-    "differential_corpus_loaded": true
+    "differential_corpus_loaded": true,
+    "compiled_loaded_implementations": [
+      "sbcl"
+    ],
+    "differential_corpus_implementations": [
+      "sbcl"
+    ]
   },
   {
     "file": "sets.ml",
@@ -1568,7 +1820,13 @@
     "unsupported_families": 0,
     "mapped_nodes": 17487,
     "sbcl_compiled_loaded": true,
-    "differential_corpus_loaded": true
+    "differential_corpus_loaded": true,
+    "compiled_loaded_implementations": [
+      "sbcl"
+    ],
+    "differential_corpus_implementations": [
+      "sbcl"
+    ]
   },
   {
     "file": "iterate.ml",
@@ -1599,7 +1857,13 @@
     "unsupported_families": 0,
     "mapped_nodes": 11328,
     "sbcl_compiled_loaded": true,
-    "differential_corpus_loaded": true
+    "differential_corpus_loaded": true,
+    "compiled_loaded_implementations": [
+      "sbcl"
+    ],
+    "differential_corpus_implementations": [
+      "sbcl"
+    ]
   },
   {
     "file": "cart.ml",
@@ -1631,7 +1895,13 @@
     "unsupported_families": 0,
     "mapped_nodes": 2254,
     "sbcl_compiled_loaded": true,
-    "differential_corpus_loaded": true
+    "differential_corpus_loaded": true,
+    "compiled_loaded_implementations": [
+      "sbcl"
+    ],
+    "differential_corpus_implementations": [
+      "sbcl"
+    ]
   },
   {
     "file": "define.ml",
@@ -1667,6 +1937,12 @@
     "unsupported_families": 0,
     "mapped_nodes": 3310,
     "sbcl_compiled_loaded": true,
-    "differential_corpus_loaded": true
+    "differential_corpus_loaded": true,
+    "compiled_loaded_implementations": [
+      "sbcl"
+    ],
+    "differential_corpus_implementations": [
+      "sbcl"
+    ]
   }
 ]

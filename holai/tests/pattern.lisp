@@ -1,5 +1,9 @@
 (require :asdf)
-(asdf:initialize-source-registry `(:source-registry (:directory ,(truename ".")) :inherit-configuration))
+(let ((root (uiop:pathname-parent-directory-pathname
+             (uiop:pathname-parent-directory-pathname
+               (uiop:pathname-directory-pathname *load-truename*)))))
+  (asdf:initialize-source-registry
+    `(:source-registry (:directory ,root) :inherit-configuration)))
 (setf *compile-verbose* nil *load-verbose* nil)
 (asdf:load-system "holai/runtime")
 (defpackage :pattern-test (:use :cl :holai.runtime)
@@ -33,6 +37,14 @@
   (let* ((nan (sb-kernel:make-double-float #x7ff80000 0))
          (matcher (compile nil `(lambda (value) (match value (,nan t) (_ nil))))))
     (check (eq (cl:funcall matcher nan) (eql nan nan)))))
+#+ecl
+(write-line "Pattern native NaN EQL: not applicable (ECL native COMPILE cannot externalize a NaN literal)")
+#+abcl
+(let* ((nan (java:jfield "java.lang.Double" "NaN"))
+       (matcher (compile nil `(lambda (value) (match value (,nan t) (_ nil))))))
+  (check (eq (cl:funcall matcher nan) (eql nan nan))))
+#+clisp
+(write-line "Pattern native NaN EQL: not applicable (CLISP cannot represent NaN)")
 (check (match nil (nil t)))
 (check (match t (cl:t t)))
 (check (= (match #(2 3) ((cl:vector a b) (+ a b))) 5))
@@ -56,14 +68,17 @@
                    (rec :foo x :foo y) (Unknown x) (cl:cons x) (:bad)))
   (check (handler-case (progn (macroexpand-1 `(match nil (,pattern t))) nil)
            (error () t))))
-;; The body is present once despite a wide OR; no runtime registry operations.
-(let* ((body '(print :unique-pattern-body))
-       (expansion (macroexpand-1 `(match nil ((cl:or x x x x x x x x) ,body))))
-       (text (write-to-string expansion)))
-  (check (= (loop for pos = (search "UNIQUE-PATTERN-BODY" text) then (search "UNIQUE-PATTERN-BODY" text :start2 (+ pos 1))
-                 while pos count t) 1))
-  (check (not (search "GETHASH" text))))
-;; Separate compilation, FASL load and stale declaration signature rejection.
+;; A successful wide OR must execute its body exactly once and return its value.
+(let ((count 0) (result (list :wide-or-result)))
+  (check (eq (match (make-Const 5 6)
+               ((cl:or (Var x _) (Var x _) (Var x _) (Var x _)
+                       (Const x _) (Const x _) (Const x _) (Const x _))
+                (incf count)
+                (if (= x 5) result nil)))
+             result))
+  (check (= count 1)))
+;; Separate compilation and registry-independent execution. A fresh process
+;; checks rejection of this real consumer with an incompatible declaration.
 (let* ((source #p"_build/pattern-unit.lisp") (output nil))
   (with-open-file (s source :direction :output :if-exists :supersede)
     (write-line "(in-package :pattern-test)" s)
@@ -72,6 +87,7 @@
   (setf output (compile-file source))
   (load output)
   (check (= (separate-match (make-Separate 9)) 9))
+  (setf source #p"_build/pattern-stale-consumer.lisp")
   (with-open-file (s source :direction :output :if-exists :supersede)
     (write-line "(in-package :pattern-test)" s)
     (write-line "(defun dependent-match (x) (match x ((Separate y) y)))" s))
@@ -81,9 +97,9 @@
          (old (gethash 'Separate registry)))
     (unwind-protect
          (progn (setf (gethash 'Separate registry) (list :class 'bogus :arity 1))
-                (check (= (dependent-match (make-Separate 11)) 11))
-                (check (handler-case (progn (load output) nil) (error () t))))
-      (setf (gethash 'Separate registry) old))))
+                (check (= (dependent-match (make-Separate 11)) 11)))
+      (setf (gethash 'Separate registry) old)))
+  (format t "~&Pattern stale consumer FASL: ~A~%" (namestring (truename output))))
 ;; Wide tuples and nested constructors must compile without recursive list DSL expansion.
 (let* ((wide (make-list 128 :initial-element '_))
        (deep (loop with p = '_ repeat 60 do (setf p `(Comb ,p _)) finally (return p))))

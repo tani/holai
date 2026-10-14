@@ -854,6 +854,7 @@
     string-concat
     snd
     raise
+    proof
     match
     lambdac
     labelsc
@@ -1033,7 +1034,7 @@
              (CASEWISE clauses c x = t c a)) \\/
     ~(?s t a. MEM (s,t) clauses /\\ (s a = x)) /\\
     (CASEWISE clauses c x = @y. T)")
-      (holai.runtime:proof (MATCH_MP_TAC list_INDUCT)
+      (proof (MATCH_MP_TAC list_INDUCT)
         THEN
           (REWRITE_TAC
             (cl:cons
@@ -1051,8 +1052,7 @@
      (!s t s' t' x y. MEM (s,t) clauses /\\ MEM (s',t') clauses /\\ (s x = s' y)
                       ==> (t c x = t' c y))
      ==> ALL (\\(s:P->A,t). !x. CASEWISE clauses c (s x) :B = t c x) clauses")
-      (holai.runtime:proof (REWRITE_TAC
-          (cl:cons (#`GSYM ALL_MEM) (cl:cons FORALL_PAIR_THM nil)))
+      (proof (REWRITE_TAC (cl:cons (#`GSYM ALL_MEM) (cl:cons FORALL_PAIR_THM nil)))
         THEN (MESON_TAC (cl:cons CASEWISE_CASES nil))))))
 
 ;; (* ------------------------------------------------------------------------- *)
@@ -1095,7 +1095,7 @@
       (parse_term
         "_MATCH x (_SEQPATTERN r s) =
    if ?y. r x y then _MATCH x r else _MATCH x s")
-      (holai.runtime:proof (REWRITE_TAC (cl:cons _MATCH (cl:cons _SEQPATTERN nil)))
+      (proof (REWRITE_TAC (cl:cons _MATCH (cl:cons _SEQPATTERN nil)))
         THEN (MESON_TAC nil)))))
 
 ;; (* ------------------------------------------------------------------------- *)
@@ -1116,7 +1116,7 @@
         "!(<<) p s t.
         (!f a. p f a ==> t a << s a)
         ==> admissible((<<):A->A->bool) p s (\\f:A->B x:P. f(t x))")
-      (holai.runtime:proof (REWRITE_TAC (cl:cons admissible nil)) THEN (MESON_TAC nil)))))
+      (proof (REWRITE_TAC (cl:cons admissible nil)) THEN (MESON_TAC nil)))))
 
 (defparameter ADMISSIBLE_COMB
   (prove
@@ -1125,7 +1125,7 @@
         "!(<<) p s:P->A g:(A->B)->P->C->D y:(A->B)->P->C.
         admissible(<<) p s g /\\ admissible(<<) p s y
         ==> admissible(<<) p s (\\f x. (g f x) (y f x))")
-      (holai.runtime:proof (SIMP_TAC (cl:cons admissible nil)) THEN (MESON_TAC nil)))))
+      (proof (SIMP_TAC (cl:cons admissible nil)) THEN (MESON_TAC nil)))))
 
 (defparameter ADMISSIBLE_RAND
   (prove
@@ -1134,7 +1134,7 @@
         "!(<<) p s:P->A g:P->C->D y:(A->B)->P->C.
         admissible(<<) p s y
         ==> admissible(<<) p s (\\f x. (g x) (y f x))")
-      (holai.runtime:proof (SIMP_TAC (cl:cons admissible nil)) THEN (MESON_TAC nil)))))
+      (proof (SIMP_TAC (cl:cons admissible nil)) THEN (MESON_TAC nil)))))
 
 (defparameter ADMISSIBLE_LAMBDA
   (prove
@@ -1143,7 +1143,7 @@
         "!(<<) p s:P->A t:(A->B)->C->P->bool.
      admissible(<<) (\\f (u,x). p f x) (\\(u,x). s x) (\\f (u,x). t f u x)
      ==> admissible(<<) p s (\\f x. \\u. t f u x)")
-      (holai.runtime:proof (REWRITE_TAC
+      (proof (REWRITE_TAC
           (cl:cons admissible (cl:cons FUN_EQ_THM (cl:cons FORALL_PAIR_THM nil))))
         THEN (MESON_TAC nil)))))
 
@@ -1155,7 +1155,7 @@
         admissible(<<) p s t /\\
         (!f a. p f a ==> t f a << s a)
         ==> admissible((<<):A->A->bool) p s (\\f:A->B x:P. f(t f x))")
-      (holai.runtime:proof (REWRITE_TAC (cl:cons admissible nil)) THEN (MESON_TAC nil)))))
+      (proof (REWRITE_TAC (cl:cons admissible nil)) THEN (MESON_TAC nil)))))
 
 (defparameter ADMISSIBLE_COND
   (prove
@@ -1166,11 +1166,10 @@
         admissible(<<) (\\f x. p f x /\\ P f x) s h /\\
         admissible(<<) (\\f x. p f x /\\ ~P f x) s k
         ==> admissible(<<) p s (\\f x:P. if P f x then h f x else k f x)")
-      (holai.runtime:proof (REPEAT #'GEN_TAC)
+      (proof (REPEAT #'GEN_TAC)
         THEN (REWRITE_TAC (cl:cons admissible (cl:cons AND_FORALL_THM nil)))
-        THEN (REPEAT (holai.runtime:proof (MATCH_MP_TAC MONO_FORALL) THEN #'GEN_TAC))
-        THEN
-          (DISCH_THEN (lambdac (th) (holai.runtime:proof #'STRIP_TAC THEN (MP_TAC th))))
+        THEN (REPEAT (proof (MATCH_MP_TAC MONO_FORALL) THEN #'GEN_TAC))
+        THEN (DISCH_THEN (lambdac (th) (proof #'STRIP_TAC THEN (MP_TAC th))))
         THEN (#`ASM_REWRITE_TAC nil)
         THEN (#`ASM_MESON_TAC nil)))))
 
@@ -1181,7 +1180,7 @@
         "!(<<) p s e c.
         admissible(<<) p s e /\\ admissible(<<) p s (\\f x. c f x (e f x))
         ==> admissible(<<) p s (\\f x:P. _MATCH (e f x) (c f x))")
-      (holai.runtime:proof (REWRITE_TAC (cl:cons admissible (cl:cons _MATCH nil)))
+      (proof (REWRITE_TAC (cl:cons admissible (cl:cons _MATCH nil)))
         THEN (REPEAT #'STRIP_TAC)
         THEN (REPEAT COND_CASES_TAC)
         THEN (#`ASM_MESON_TAC nil)))))
@@ -1197,7 +1196,7 @@
         admissible(<<) (\\f x. p f x /\\ ~(?y. c1 f x (e f x) y)) s
                        (\\f x. c2 f x (e f x))
         ==> admissible(<<) p s (\\f x. _SEQPATTERN (c1 f x) (c2 f x) (e f x))")
-      (holai.runtime:proof (REWRITE_TAC (cl:cons _SEQPATTERN (cl:cons admissible nil)))
+      (proof (REWRITE_TAC (cl:cons _SEQPATTERN (cl:cons admissible nil)))
         THEN (MESON_TAC nil)))))
 
 (defparameter ADMISSIBLE_UNGUARDED_PATTERN
@@ -1212,7 +1211,7 @@
         ==> admissible(<<) p s
              (\\f x:P. _UNGUARDED_PATTERN (GEQ (pat f x) (e f x))
                                          (GEQ (t f x) (y f x)))")
-      (holai.runtime:proof (REPEAT #'GEN_TAC)
+      (proof (REPEAT #'GEN_TAC)
         THEN
           (REWRITE_TAC
             (cl:cons
@@ -1242,7 +1241,7 @@
              (\\f x:P. _GUARDED_PATTERN (GEQ (pat f x) (e f x))
                                        (q f x)
                                        (GEQ (t f x) (y f x)))")
-      (holai.runtime:proof (REPEAT #'GEN_TAC)
+      (proof (REPEAT #'GEN_TAC)
         THEN
           (REWRITE_TAC
             (cl:cons admissible (cl:cons FORALL_PAIR_THM (cl:cons _GUARDED_PATTERN nil))))
@@ -1250,7 +1249,7 @@
         THEN (REPEAT #'STRIP_TAC)
         THEN
           (REPEAT
-            (holai.runtime:proof (MATCH_MP_TAC
+            (proof (MATCH_MP_TAC
                 (#`TAUT
                   (parse_term
                     "(a <=> a') /\\ (a /\\ a' ==> (b <=> b'))
@@ -1270,8 +1269,7 @@
         admissible(<<) (\\f (k,x). a(x) <= k /\\ k <= b(x) /\\ p f x)
                        (\\(k,x). s x) (\\f (k,x). h f x k)
    ==> admissible(<<) p s (\\f x. nsum(a(x)..b(x)) (h f x))")
-      (holai.runtime:proof (REWRITE_TAC
-          (cl:cons admissible (cl:cons FORALL_PAIR_THM nil)))
+      (proof (REWRITE_TAC (cl:cons admissible (cl:cons FORALL_PAIR_THM nil)))
         THEN (REPEAT #'STRIP_TAC)
         THEN (MATCH_MP_TAC NSUM_EQ_NUMSEG)
         THEN (#`ASM_MESON_TAC nil)))))
@@ -1284,8 +1282,7 @@
         admissible(<<) (\\f (k,x). a(x) <= k /\\ k <= b(x) /\\ p f x)
                        (\\(k,x). s x) (\\f (k,x). h f x k)
    ==> admissible(<<) p s (\\f x. sum(a(x)..b(x)) (h f x))")
-      (holai.runtime:proof (REWRITE_TAC
-          (cl:cons admissible (cl:cons FORALL_PAIR_THM nil)))
+      (proof (REWRITE_TAC (cl:cons admissible (cl:cons FORALL_PAIR_THM nil)))
         THEN (REPEAT #'STRIP_TAC)
         THEN (MATCH_MP_TAC SUM_EQ_NUMSEG)
         THEN (#`ASM_MESON_TAC nil)))))
@@ -1299,8 +1296,7 @@
         admissible (<<) (\\f (y,x). p f x /\\ MEM y (l f x))
                         (\\(y,x). s x) (\\f (y,x). h f x y)
    ==> admissible (<<) p s (\\f:A->B x:P. MAP (h f x) (l f x))")
-      (holai.runtime:proof (REWRITE_TAC
-          (cl:cons admissible (cl:cons FORALL_PAIR_THM nil)))
+      (proof (REWRITE_TAC (cl:cons admissible (cl:cons FORALL_PAIR_THM nil)))
         THEN (REPEAT #'STRIP_TAC)
         THEN
           (MATCH_MP_TAC
@@ -1346,7 +1342,7 @@
       (parse_term
         "!(<<) p s t:(A->B)->P->B.
       admissible(<<) p s t ==> superadmissible(<<) p s t")
-      (holai.runtime:proof (REWRITE_TAC
+      (proof (REWRITE_TAC
           (cl:cons admissible (cl:cons superadmissible (cl:cons tailadmissible nil))))
         THEN (REPEAT #'STRIP_TAC)
         THEN
@@ -1366,7 +1362,7 @@
   (prove
     (tuple
       (parse_term "!p s c. superadmissible(<<) p s (\\f. c)")
-      (holai.runtime:proof (REPEAT #'GEN_TAC)
+      (proof (REPEAT #'GEN_TAC)
         THEN (MATCH_MP_TAC ADMISSIBLE_IMP_SUPERADMISSIBLE)
         THEN (REWRITE_TAC (cl:cons ADMISSIBLE_CONST nil))))))
 
@@ -1378,7 +1374,7 @@
       admissible(<<) p s t /\\
       (!f a. p f a ==> !y. y << t f a ==> y << s a)
       ==> superadmissible(<<) p s (\\f x. f(t f x))")
-      (holai.runtime:proof (REWRITE_TAC
+      (proof (REWRITE_TAC
           (cl:cons admissible (cl:cons superadmissible (cl:cons tailadmissible nil))))
         THEN (REPEAT #'STRIP_TAC)
         THEN
@@ -1401,20 +1397,18 @@
         superadmissible(<<) (\\f x. p f x /\\ P f x) s h /\\
         superadmissible(<<) (\\f x. p f x /\\ ~P f x) s k
         ==> superadmissible(<<) p s (\\f x. if P f x then h f x else k f x)")
-      (holai.runtime:proof (REWRITE_TAC
-          (cl:cons superadmissible (cl:cons admissible nil)))
+      (proof (REWRITE_TAC (cl:cons superadmissible (cl:cons admissible nil)))
         THEN (REPEAT #'GEN_TAC)
         THEN (DISCH_THEN (CONJUNCTS_THEN2 ASSUME_TAC #'MP_TAC))
         THEN
           (DISCH_THEN
-            (lambdac (th)
-              (holai.runtime:proof DISCH_TAC THEN (#`CONJUNCTS_THEN #'MP_TAC th))))
+            (lambdac (th) (proof DISCH_TAC THEN (#`CONJUNCTS_THEN #'MP_TAC th))))
         THEN ANTS_TAC
         THENL (cl:cons (#`ASM_MESON_TAC nil) (cl:cons #'ALL_TAC nil))
         THEN
           (DISCH_THEN
             (lambdac (th)
-              (holai.runtime:proof ANTS_TAC
+              (proof ANTS_TAC
                 THENL (cl:cons (#`ASM_MESON_TAC nil) (cl:cons (MP_TAC th) nil)))))
         THEN (REWRITE_TAC (cl:cons tailadmissible nil))
         THEN
@@ -1444,7 +1438,7 @@
         THEN
           (DISCH_THEN
             (lambdac (th)
-              (holai.runtime:proof (MAP_EVERY
+              (proof (MAP_EVERY
                   EXISTS_TAC
                   (cl:cons
                     (parse_term
@@ -1458,7 +1452,7 @@
                         nil))))
                 THEN (MP_TAC th))))
         THEN (REWRITE_TAC nil)
-        THEN (REPEAT (holai.runtime:proof (MATCH_MP_TAC MONO_AND) THEN #'CONJ_TAC))
+        THEN (REPEAT (proof (MATCH_MP_TAC MONO_AND) THEN #'CONJ_TAC))
         THENL
           (cl:cons
             (#`ASM_MESON_TAC nil)
@@ -1466,8 +1460,8 @@
               (POP_ASSUM_LIST (o #'MP_TAC (end_itlist CONJ)))
               (cl:cons #'ALL_TAC nil)))
         THEN (REWRITE_TAC (cl:cons IMP_IMP (cl:cons AND_FORALL_THM nil)))
-        THEN (REPEAT (holai.runtime:proof (MATCH_MP_TAC MONO_FORALL) THEN #'GEN_TAC))
-        THEN (DISCH_THEN (lambdac (th) (holai.runtime:proof DISCH_TAC THEN (MP_TAC th))))
+        THEN (REPEAT (proof (MATCH_MP_TAC MONO_FORALL) THEN #'GEN_TAC))
+        THEN (DISCH_THEN (lambdac (th) (proof DISCH_TAC THEN (MP_TAC th))))
         THEN (#`ASM_REWRITE_TAC nil)
         THEN (#`ASM_MESON_TAC nil)))))
 
@@ -1496,7 +1490,7 @@
            (\\f:A->B x. _MATCH (e x)
                     (\\u v. ?t. _UNGUARDED_PATTERN (GEQ (pat t) u)
                                                   (GEQ (f(arg x t)) v)))")
-      (holai.runtime:proof (REPEAT #'GEN_TAC)
+      (proof (REPEAT #'GEN_TAC)
         THEN #'STRIP_TAC
         THEN (REWRITE_TAC (cl:cons superadmissible nil))
         THEN DISCH_TAC
@@ -1537,7 +1531,7 @@
                     (\\u v. ?t. _GUARDED_PATTERN (GEQ (pat t) u)
                                                 (q x t)
                                                 (GEQ (f(arg x t)) v)))")
-      (holai.runtime:proof (REPEAT #'GEN_TAC)
+      (proof (REPEAT #'GEN_TAC)
         THEN #'STRIP_TAC
         THEN (REWRITE_TAC (cl:cons superadmissible nil))
         THEN DISCH_TAC
@@ -1581,7 +1575,7 @@
          (!f x y. P f x /\\ y << G f x ==> y << x) /\\
          (!f x. H f x = if P f x then f(G f x) else H' f x)
          ==> ?f. !x. f x = H f x")
-      (holai.runtime:proof (REPEAT #'STRIP_TAC)
+      (proof (REPEAT #'STRIP_TAC)
         THEN (#`ASM_REWRITE_TAC nil)
         THEN (MATCH_MP_TAC WF_REC_TAIL_GENERAL)
         THEN (#`ASM_MESON_TAC nil)))))
@@ -1600,7 +1594,7 @@
                      (!f a:P. t f a = if P f a then f(G f a) else H f a))
             clauses
         ==> ?f:A->B. !x. f x = CASEWISE clauses f x")
-      (holai.runtime:proof (REPEAT #'STRIP_TAC)
+      (proof (REPEAT #'STRIP_TAC)
         THEN (MATCH_MP_TAC WF_REC_TAIL_GENERAL%)
         THEN (FIRST_X_ASSUM (o #'MP_TAC (check (o (is_binary "ALL") #'concl))))
         THEN
@@ -1615,7 +1609,7 @@
         THEN #'CONJ_TAC
         THENL
           (cl:cons
-            (holai.runtime:proof (MAP_EVERY
+            (proof (MAP_EVERY
                 EXISTS_TAC
                 (cl:cons
                   (parse_term "\\f:A->B x:A. F")
@@ -1635,8 +1629,7 @@
         THEN
           (DISCH_THEN
             (lambdac (th)
-              (holai.runtime:proof (DISCH_THEN (CONJUNCTS_THEN2 #'MP_TAC ASSUME_TAC))
-                THEN (MP_TAC th))))
+              (proof (DISCH_THEN (CONJUNCTS_THEN2 #'MP_TAC ASSUME_TAC)) THEN (MP_TAC th))))
         THEN (#`ASM_REWRITE_TAC nil)
         THEN (POP_ASSUM_LIST (K #'ALL_TAC))
         THEN (REWRITE_TAC (cl:cons LEFT_IMP_EXISTS_THM nil))
@@ -1693,7 +1686,7 @@
    (!s t s' t' f x y. MEM (s,t) clauses /\\ MEM (s',t') clauses
                       ==> (s x = s' y) ==> (t f x = t' f y))
    ==> ?f:A->B. ALL (\\(s,t). !x. f (s x) = t f x) clauses")
-      (holai.runtime:proof (REPEAT #'GEN_TAC)
+      (proof (REPEAT #'GEN_TAC)
         THEN (REWRITE_TAC (cl:cons IMP_IMP (cl:cons CONJ_ASSOC nil)))
         THEN (DISCH_THEN (CONJUNCTS_THEN2 #'MP_TAC ASSUME_TAC))
         THEN (DISCH_THEN (CHOOSE_THEN (o #'MP_TAC (MATCH_MP WF_REC_CASES%))))
@@ -1721,7 +1714,7 @@
                 "!P. (!x y. P x y ==> P y x)
          ==> !l. (!x y. MEM x l /\\ MEM y l ==> P x y) <=>
                  ALL (\\x. P x x) l /\\ PAIRWISE P l")
-              (holai.runtime:proof (REWRITE_TAC
+              (proof (REWRITE_TAC
                   (cl:cons
                     IMP_CONJ
                     (cl:cons RIGHT_FORALL_IMP_THM (cl:cons (#`GSYM ALL_MEM) nil))))
@@ -1748,7 +1741,7 @@
                 lemma)))
             (cth (prove (tuple (#`lhand (concl pth)) (MESON_TAC nil)))))
           (cl:declare (cl:ignorable pth cth))
-          (holai.runtime:proof (REWRITE_TAC
+          (proof (REWRITE_TAC
               (cl:cons (#`GSYM (MATCH_MP pth cth)) (cl:cons RIGHT_IMP_FORALL_THM nil)))
             THEN (REWRITE_TAC (cl:cons RECURSION_CASEWISE nil))))))))
 
@@ -1791,7 +1784,7 @@
        ((2 * m + 1 = 2 * n) <=> F) /\\
        ((2 * m = SUC(2 * n)) <=> F) /\\
        ((SUC(2 * m) = 2 * n) <=> F)")
-                (holai.runtime:proof (REWRITE_TAC nil)
+                (proof (REWRITE_TAC nil)
                   THEN (REPEAT #'CONJ_TAC)
                   THEN (DISCH_THEN (o #'MP_TAC (AP_TERM (parse_term "EVEN"))))
                   THEN
@@ -1921,7 +1914,7 @@
                 (parse_term
                   "((?y. _UNGUARDED_PATTERN (GEQ s t) (GEQ z y)) <=> s = t) /\\
        ((?y. _GUARDED_PATTERN (GEQ s t) g (GEQ z y)) <=> g /\\ s = t)")
-                (holai.runtime:proof (REWRITE_TAC
+                (proof (REWRITE_TAC
                     (cl:cons
                       _UNGUARDED_PATTERN
                       (cl:cons _GUARDED_PATTERN (cl:cons GEQ_DEF nil))))
@@ -1951,7 +1944,7 @@
                   "(!P. (!t:A->B->C#D->E. P t) <=> (!t. P (\\a b (c,d). t a b d c))) /\\
        (!P. (!t:B->C#D->E. P t) <=> (!t. P (\\b (c,d). t b d c))) /\\
        (!P. (!t:C#D->E. P t) <=> (!t. P (\\(c,d). t d c)))")
-                (holai.runtime:proof (REPEAT #'STRIP_TAC)
+                (proof (REPEAT #'STRIP_TAC)
                   THEN #'EQ_TAC
                   THEN (REPEAT #'STRIP_TAC)
                   THEN (#`ASM_REWRITE_TAC nil)
@@ -2070,9 +2063,8 @@
                         "(a /\\ b /\\ c /\\ x = k ==> x = y ==> d)
       ==> (a /\\ x = k /\\ b /\\ y = k /\\ c ==> d)"))))
                 (cl:declare (cl:ignorable pth0 pth1))
-                (holai.runtime:proof (REPEAT #'GEN_TAC)
-                  THEN
-                    (holai.runtime:proof (MATCH_MP_TAC pth1) #'ORELSE (MATCH_MP_TAC pth0))
+                (proof (REPEAT #'GEN_TAC)
+                  THEN (proof (MATCH_MP_TAC pth1) #'ORELSE (MATCH_MP_TAC pth0))
                   THEN (#`CONV_TAC (RAND_CONV SIMPLIFY_WELLDEFINEDNESS_CONV))
                   THEN
                     (PURE_REWRITE_TAC
@@ -2137,8 +2129,7 @@
                                                     SUPERADMISSIBLE_MATCH_UNGUARDED_PATTERN)))
                                               (cl:declare (cl:ignorable n th))
                                               (#`THENL
-                                                (holai.runtime:proof (APPLY_PROFORMA_TAC
-                                                    th)
+                                                (proof (APPLY_PROFORMA_TAC th)
                                                   THEN #'CONJ_TAC)
                                                 (cl:cons
                                                   SIMPLIFY_MATCH_WELLDEFINED_TAC
@@ -2159,8 +2150,7 @@
                                                     SUPERADMISSIBLE_MATCH_GUARDED_PATTERN)))
                                               (cl:declare (cl:ignorable n th))
                                               (#`THENL
-                                                (holai.runtime:proof (APPLY_PROFORMA_TAC
-                                                    th)
+                                                (proof (APPLY_PROFORMA_TAC th)
                                                   THEN #'CONJ_TAC)
                                                 (cl:cons
                                                   SIMPLIFY_MATCH_WELLDEFINED_TAC
@@ -2213,7 +2203,7 @@
                                           (_ (failwith "MAIN_ADMISS_TAC"))))))))))))))))
               (let*
                 ((ADMISS_TAC
-                  (holai.runtime:proof #'CONJ_TAC
+                  (proof #'CONJ_TAC
                     #'ORELSE (#`MATCH_ACCEPT_TAC ADMISSIBLE_CONST)
                     #'ORELSE (#`MATCH_ACCEPT_TAC SUPERADMISSIBLE_CONST)
                     #'ORELSE #'MAIN_ADMISS_TAC
@@ -2669,7 +2659,7 @@
                                           ((tuple ord bod%)
                                             (let*
                                               ((SIMP_ADMISS_TAC
-                                                (holai.runtime:proof (REWRITE_TAC
+                                                (proof (REWRITE_TAC
                                                     (cl:cons
                                                       LET_DEF
                                                       (cl:cons LET_END_DEF nil)))
@@ -2685,12 +2675,11 @@
                                                                   (fst (#`dest_forall w%))))
                                                                 (cl:declare
                                                                   (cl:ignorable v))
-                                                                (holai.runtime:proof (#`X_GEN_TAC
-                                                                    v)
+                                                                (proof (#`X_GEN_TAC v)
                                                                   THEN
                                                                     (MAP_EVERY
                                                                       (lambdac (v%)
-                                                                        (holai.runtime:proof (TRY
+                                                                        (proof (TRY
                                                                             (GEN_REWRITE_TAC
                                                                               #'I
                                                                               (cl:cons
@@ -2867,7 +2856,7 @@
                                               th)))
                                           (cl:declare (cl:ignorable th%))
                                           (#`THEN
-                                            (holai.runtime:proof (MP_TAC th%)
+                                            (proof (MP_TAC th%)
                                               THEN (MATCH_MP_TAC MONO_EXISTS)
                                               THEN #'GEN_TAC
                                               THEN
@@ -2895,8 +2884,7 @@
                           (cl:declare (cl:ignorable CONSTANT_MEASURE_THEN))
                           (labelsc
                             ((GUESS_MEASURE_THEN (tac)
-                              (holai.runtime:proof (#`EXISTS_TAC
-                                  (parse_term "\\n. n + 1"))
+                              (proof (#`EXISTS_TAC (parse_term "\\n. n + 1"))
                                 THEN tac
                                 #'ORELSE (INDUCTIVE_MEASURE_THEN tac)
                                 #'ORELSE (#`CONSTANT_MEASURE_THEN tac))))
@@ -2909,7 +2897,7 @@
             ?s. WF(s) /\\
                 P(\\(x1,y1) (x2,y2). r x1 x2 \\/ (x1 = x2) /\\ s y1 y2))
        ==> ?t:A#B->A#B->bool. WF(t) /\\ P t")
-                                    (holai.runtime:proof (REPEAT #'STRIP_TAC)
+                                    (proof (REPEAT #'STRIP_TAC)
                                       THEN
                                         (#`EXISTS_TAC
                                           (parse_term
@@ -2923,7 +2911,7 @@
             ?s. WF(s) /\\
                 P(\\(x1,y1) (x2,y2). r y1 y2 \\/ (y1 = y2) /\\ s x1 x2))
        ==> ?t:A#B->A#B->bool. WF(t) /\\ P t")
-                                      (holai.runtime:proof (REPEAT #'STRIP_TAC)
+                                      (proof (REPEAT #'STRIP_TAC)
                                         THEN
                                           (#`EXISTS_TAC
                                             (parse_term
@@ -2948,7 +2936,7 @@
                                         THEN
                                           (FIRST_X_ASSUM
                                             (lambdac (th)
-                                              (holai.runtime:proof (MP_TAC th)
+                                              (proof (MP_TAC th)
                                                 THEN (MATCH_MP_TAC EQ_IMP)
                                                 THEN AP_TERM_TAC)))
                                         THEN
@@ -2969,13 +2957,12 @@
                                   (match arg~3099
                                     ((tuple asl w%)
                                       (ORELSE
-                                        (holai.runtime:proof (MATCH_MP_TAC pth_lexleft)
+                                        (proof (MATCH_MP_TAC pth_lexleft)
                                           THEN (GUESS_WF_THEN (GUESS_WF_THEN tac))
                                           #'ORELSE
-                                            (holai.runtime:proof (MATCH_MP_TAC
-                                                pth_lexright)
+                                            (proof (MATCH_MP_TAC pth_lexright)
                                               THEN (GUESS_WF_THEN (GUESS_WF_THEN tac))))
-                                        (holai.runtime:proof (MATCH_MP_TAC pth_measure)
+                                        (proof (MATCH_MP_TAC pth_measure)
                                           THEN
                                             (REWRITE_TAC
                                               (cl:cons MEASURE (cl:cons MEASURE_LE nil)))
@@ -2994,7 +2981,7 @@
                                     (GUESS_ORDERING_TAC
                                       (let ((false_tm (parse_term "\\x:A y:A. F")))
                                         (cl:declare (cl:ignorable false_tm))
-                                        (holai.runtime:proof (W
+                                        (proof (W
                                             (lambdac (arg~3155)
                                               (match arg~3155
                                                 ((tuple asl w%)
@@ -3005,7 +2992,7 @@
                                                           (type_of
                                                             (fst (#`dest_exists w%)))))))
                                                     (cl:declare (cl:ignorable ty))
-                                                    (holai.runtime:proof (#`EXISTS_TAC
+                                                    (proof (#`EXISTS_TAC
                                                         (#`inst
                                                           (cl:cons (tuple ty aty) nil)
                                                           false_tm))
@@ -3015,7 +3002,7 @@
                                                       THEN NO_TAC))))))
                                           #'ORELSE
                                             (GUESS_WF_THEN
-                                              (holai.runtime:proof (REWRITE_TAC
+                                              (proof (REWRITE_TAC
                                                   (cl:cons FORALL_PAIR_THM nil))
                                                 THEN ARITH_TAC))))))
                                   (cl:declare
@@ -3031,7 +3018,7 @@
                                               (prove
                                                 (tuple
                                                   wtm
-                                                  (holai.runtime:proof PRE_GUESS_TAC
+                                                  (proof PRE_GUESS_TAC
                                                     THEN GUESS_ORDERING_TAC)))))
                                           (cl:declare (cl:ignorable wtm wth))
                                           (PROVE_HYP wth th))

@@ -455,6 +455,7 @@
     tuple
     snd
     raise
+    proof
     match
     lambdac
     labelsc
@@ -537,7 +538,7 @@
          (pwr x 1 = x) /\\
          (mul x (add y z) = add (mul x y) (mul x z)) /\\
          (pwr x (SUC q) = mul x (pwr x q))")
-          (holai.runtime:proof #'STRIP_TAC
+          (proof #'STRIP_TAC
             THEN
               (SUBGOAL_THEN
                 (parse_term
@@ -556,7 +557,7 @@
               (cl:cons
                 (#`ASM_MESON_TAC nil)
                 (cl:cons
-                  (holai.runtime:proof (MAP_EVERY
+                  (proof (MAP_EVERY
                       (lambdac (t%) (UNDISCH_THEN t% (K #'ALL_TAC)))
                       (cl:cons
                         (parse_term "!x:A y z. add x (add y z) = add (add x y) z")
@@ -578,7 +579,7 @@
                 ASSUME_TAC)
             THENL
               (cl:cons
-                (holai.runtime:proof #'GEN_TAC
+                (proof #'GEN_TAC
                   THEN INDUCT_TAC
                   THEN (#`ASM_REWRITE_TAC (cl:cons ADD_CLAUSES nil)))
                 (cl:cons #'ALL_TAC nil))
@@ -588,7 +589,7 @@
                 ASSUME_TAC)
             THENL
               (cl:cons
-                (holai.runtime:proof #'GEN_TAC
+                (proof #'GEN_TAC
                   THEN #'GEN_TAC
                   THEN INDUCT_TAC
                   THEN (#`ASM_REWRITE_TAC nil))
@@ -2008,7 +2009,7 @@
      (!x y z. x * (y + z) = x * y + x * z) /\\
      (!x. x EXP 0 = 1) /\\
      (!x n. x EXP (SUC n) = x * x EXP n)")
-          (holai.runtime:proof (REWRITE_TAC
+          (proof (REWRITE_TAC
               (cl:cons
                 EXP
                 (cl:cons

@@ -10,35 +10,108 @@ let rec schematic_type_string names = function
   | Tyapp(s,args) ->
     let rendered = List.map (schematic_type_string names) args in
     s ^ "(" ^ String.concat "," rendered ^ ")";;
+(* Only the guarded initial registry may classify genvar's positive counters.
+   Generated identities have their own serialization tag, not a legal name. *)
+let positive_registry_counter s =
+  let n = String.length s in
+  let rec digits i =
+    i = n || (s.[i] >= '0' && s.[i] <= '9' && digits (i + 1)) in
+  n > 1 && s.[0] = '_' && s.[1] >= '1' && s.[1] <= '9' && digits 2;;
+let registry_generated_names entries =
+  let names = ref [] and next = ref 0 in
+  List.iter (fun (s,ty) ->
+    if positive_registry_counter s && not (can (assoc s) !names) then
+      (names := (s,string_of_int !next) :: !names; next := !next + 1)) entries;
+  !names;;
+let registry_constant_name generated s =
+  try "g:" ^ assoc s generated with Failure _ -> "c:" ^ s;;
 let generated_registry_binder s =
-  String.length s > 9 && String.sub s 0 9 = "GEN%PVAR%" &&
-  List.for_all (fun c -> c >= "0" && c <= "9") (explode (String.sub s 9 (String.length s - 9)));;
-let rec schematic_term_string names bound = function
+  positive_registry_counter s ||
+  (String.length s > 9 && String.sub s 0 9 = "GEN%PVAR%" &&
+   List.for_all (fun c -> c >= "0" && c <= "9") (explode (String.sub s 9 (String.length s - 9))));;
+let rec schematic_term_string generated names bound = function
   Var(s,t) as tm ->
     let ty = schematic_type_string names t in
     if generated_registry_binder s && mem tm bound
     then "b:" ^ string_of_int (index tm bound) ^ ":" ^ ty
     else "v:" ^ s ^ ":" ^ ty
-  | Const(s,t) -> "c:" ^ s ^ ":" ^ schematic_type_string names t
+  | Const(s,t) -> registry_constant_name generated s ^ ":" ^ schematic_type_string names t
   | Comb(f,x) ->
-    let left = schematic_term_string names bound f in let right = schematic_term_string names bound x in
+    let left = schematic_term_string generated names bound f in
+    let right = schematic_term_string generated names bound x in
     "(" ^ left ^ " " ^ right ^ ")"
   | Abs(v,b) ->
     let variable =
       if generated_registry_binder (fst(dest_var v))
       then ":" ^ schematic_type_string names (type_of v)
-      else schematic_term_string names bound v in
-    let body = schematic_term_string names (v::bound) b in
+      else schematic_term_string generated names bound v in
+    let body = schematic_term_string generated names (v::bound) b in
     "(lambda " ^ variable ^ "." ^ body ^ ")";;
-let schematic_theorem_string th =
+let schematic_theorem_string generated th =
   let names = ref [] in
-  let assumptions = List.map (schematic_term_string names []) (hyp th) in
-  let conclusion = schematic_term_string names [] (concl th) in
+  let assumptions = List.map (schematic_term_string generated names []) (hyp th) in
+  let conclusion = schematic_term_string generated names [] (concl th) in
   String.concat "," assumptions ^ "|-" ^ conclusion;;
+let registry_constants_string generated entries =
+  String.concat ";" (map (fun (s,ty) ->
+    registry_constant_name generated s ^ ":" ^ schematic_type_string (ref []) ty) entries);;
+
+(* Pure observer regressions: no registry mutation and no fresh-name allocation.
+   Failures abort both observers before any differential rows are printed. *)
+let registry_observer_regressions () =
+  let check ok = if not ok then failwith "Structural registry observer regression" in
+  let left = ["_17",bool_ty; "_23",aty; "_0",bool_ty; "named",bool_ty] in
+  let right = ["_91",bool_ty; "_105",aty; "_0",bool_ty; "named",bool_ty] in
+  let lm = registry_generated_names left and rm = registry_generated_names right in
+  let render entries = registry_constants_string (registry_generated_names entries) entries in
+  check (render left = render right);
+  check (registry_constant_name lm "_17" = registry_constant_name rm "_91");
+  check (registry_constant_name lm "_23" = registry_constant_name rm "_105");
+  check (registry_constant_name lm "_17" <> registry_constant_name lm "_23");
+  check (registry_constant_name lm "_17" <> registry_constant_name lm "g:0");
+  check (registry_constant_name lm "_0" = "c:_0");
+  check (registry_constant_name lm "_99" = "c:_99");
+  check (render left <> render ["_17",aty; "_23",aty; "_0",bool_ty; "named",bool_ty]);
+  check (render left <> render ["_17",bool_ty; "_23",aty; "_0",bool_ty; "changed",bool_ty]);
+  check (render left <> render ["_23",aty; "_17",bool_ty; "_0",bool_ty; "named",bool_ty]);
+  check (render left <> render (left @ ["_17",bool_ty]));
+  (* Kernel terms are private, so exercise Const using registered boolean
+     constants with controlled identity maps; do not extend the registry. *)
+  let t = mk_const("T",[]) and f = mk_const("F",[]) in
+  let lc = ["T",assoc "_17" lm; "F",assoc "_23" lm] in
+  let rc = ["F",assoc "_91" rm; "T",assoc "_105" rm] in
+  let constant_term generated tm = schematic_term_string generated (ref []) [] tm in
+  check (constant_term lc (mk_eq(t,f)) = constant_term rc (mk_eq(f,t)));
+  check (constant_term lc (mk_eq(t,f)) <> constant_term rc (mk_eq(f,f)));
+  check (constant_term lc t = "g:0:bool()");
+  check (constant_term lc f = "g:1:bool()");
+  check (constant_term lm t = "c:T:bool()");
+  check (constant_term lm (mk_const("_0",[])) = "c:_0:num()");
+  let term tm = schematic_term_string [] (ref []) [] tm in
+  let x = mk_var("_17",bool_ty) and y = mk_var("_91",bool_ty) in
+  let z = mk_var("_0",bool_ty) and named = mk_var("named",bool_ty) in
+  check (term (mk_abs(x,x)) = term (mk_abs(y,y)));
+  check (term x <> term y);
+  check (term (mk_abs(x,x)) <> term (mk_abs(z,z)));
+  check (term (mk_abs(x,x)) <> term (mk_abs(named,named)));
+  check (term (mk_abs(x,x)) <> term (mk_abs(x,y)));
+  check (term (mk_abs(x,x)) <> term (mk_abs(x,mk_abs(y,x))));
+  check (term (mk_abs(x,mk_abs(y,x))) <> term (mk_abs(x,mk_abs(y,y))));
+  check (term (mk_abs(x,x)) <>
+         term (mk_abs(mk_var("_17",aty),mk_var("_17",aty))));
+  let u = mk_vartype "?17" and v = mk_vartype "?23" in
+  let a = mk_vartype "?91" and b = mk_vartype "?105" in
+  let ty t = schematic_type_string (ref []) t in
+  check (ty (mk_fun_ty u v) = ty (mk_fun_ty a b));
+  check (ty (mk_fun_ty u u) <> ty (mk_fun_ty a b));
+  check (ty (mk_fun_ty u v) <> ty (mk_fun_ty bool_ty v));;
 let initial_logic_observations =
+  let () = registry_observer_regressions () in
+  let entries = constants() in
+  let generated = registry_generated_names entries in
   ["init_types=" ^ String.concat ";" (map (fun (s,n) -> s ^ ":" ^ string_of_int n) (types()));
-   "init_constants=" ^ String.concat ";" (map (fun (s,ty) -> s ^ ":" ^ schematic_type_string (ref []) ty) (constants()));
-   "init_definitions=" ^ String.concat ";" (map schematic_theorem_string (definitions()));
+   "init_constants=" ^ registry_constants_string generated entries;
+   "init_definitions=" ^ String.concat ";" (map (schematic_theorem_string generated) (definitions()));
    "init_axioms=" ^ String.concat ";" (map theorem_string (axioms()));
    "TRUTH=" ^ theorem_string TRUTH];;
 let instantiation_string (counts,tmins,tyins) =

@@ -822,6 +822,7 @@
     snd
     ref
     raise
+    proof
     partial
     match
     lambdac
@@ -1825,7 +1826,7 @@
                       (failwith "ABBREV_TAC: variable already used")
                       (CHOOSE_THEN
                         (lambdac (th)
-                          (holai.runtime:proof (RULE_ASSUM_TAC
+                          (proof (RULE_ASSUM_TAC
                               (PURE_ONCE_REWRITE_RULE (cl:cons th nil)))
                             THEN (PURE_ONCE_REWRITE_TAC (cl:cons th nil))
                             THEN (#`ASSUME_TAC th)))
@@ -1833,7 +1834,7 @@
                         gl))))))))))))
 
 (defunc EXPAND_TAC (s)
-  (holai.runtime:proof (FIRST_ASSUM
+  (proof (FIRST_ASSUM
       (o
         (o #'SUBST1_TAC #'SYM)
         (check

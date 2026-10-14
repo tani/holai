@@ -1,0 +1,293 @@
+{
+  "status": "passed",
+  "profile": "runtime-fixtures",
+  "full_core_verified": false,
+  "timeout_seconds": 120,
+  "host": {
+    "implementation": "clisp",
+    "implementation_type": "CLISP",
+    "version": "2.49.95+ (2024-11-03) (built on localhost [127.0.0.1])",
+    "executable": "clisp"
+  },
+  "code_sha256": {
+    "holai/runtime/core.lisp": "1390e7dd15c981ec25b87f88bd070f47958d81cd642bb8d36cb27b52b7b85113",
+    "holai/runtime/format.lisp": "1091bf1534296fb412006168400d29f244ab13de1015300f0ec1f6e85c4b478e",
+    "holai/runtime/package.lisp": "7b930cb56614b5221ea97782a205f4e65a899193dab61965c00e35e6402f47b0",
+    "holai/runtime/pattern.lisp": "58135bbab698826dd5816f7903beaec77799a13cea076058c84f52f62fd85565",
+    "holai/runtime/stdlib.lisp": "0fddd3e79fa89482bbd0a02d3be9d44b884728758618706bb1d9b4abc8185a50",
+    "holai/tests/compatibility-fixtures.lisp": "cc6cafc5d93eeb16ddf7bfb23d89717c09f6c1a4105169e7285b7e3508fe83f0",
+    "holai/tests/compatibility.py": "f1762c8cfa63a887596acbd0996fc00aa0c7e353844a36842293cba888d2c55f",
+    "holai/tests/defunc-protocol.lisp": "59749a1a098b0d7faae8b2762c8ee2aee0e9b2d4f2224f3ead26bbc8edf5c85a",
+    "holai/tests/fixtures/compatibility_observations.ml": "8ebb1386ddca5befd8bf92ecd9c915f1ca4a44e2fd1b3f33c5afe24ef9870455",
+    "holai/tests/fixtures/semantics.ml": "d364498982f183b9247fc41863b173333010710fff591f0e1d924e7b6d98995d",
+    "holai/tests/fixtures/star_names.ml": "944a8d60fc6180e485527b34bf54361fc8ad7282322875f7add7569a91e0a5ca",
+    "holai/tests/optional-entry.lisp": "4717cbb48decb37817d689496346aa8ac525efdd22b2d2821aec67dae6a0d9de",
+    "holai/tests/pattern-stale.lisp": "792c8f106bdce4f3c0399d64b62be8b0089cf80e0f3f79a3a494b06e54ba559f",
+    "holai/tests/pattern.lisp": "3aa4980b04fb4d1d4b17b96c1d8faf88fcbfed4370b912bae0b934862ee8f0ae",
+    "holai/tests/random.lisp": "6e27579705233731e43fc0465279ef9252b5ab9ee56f283e7fe4e7149c27433e",
+    "holai/tests/run.py": "1c00cd9d489b1a64e25817eec8c646f592f15b4cb93a515a0c93a6f61e144993",
+    "holai/tests/system-interrupt.lisp": "676998f3f09f0b5c22899d0c5a9dd22d913df5af5e1b37443666e3263df57ef9",
+    "holai/tests/tuple-list.lisp": "ef7662fc0fa174e471e7f326a4ff0ee05c18c69e5ddff6f48e88eb4f92e55740",
+    "holai.asd": "5afc05b7272301b6bcc7d63df0636a4d731fbf33beaf1b31da2ac05b02bb0468",
+    "misc/scripts/lisp_host.py": "52d054617072d5700e07533cff09c1a13d739a66aaa803ff40bf3930b1da3112",
+    "ml2cl/cli.ml": "abe053c65a4b9dc85d2737e1a543ac9f782cb1a451447e0d583da07cc0e7230d",
+    "ml2cl/compiler.ml": "9bb464870bd38f0c2b3ba1d24eced023990f214788e1deec408acff29ad15ab1",
+    "ml2cl/frontend.ml": "b56286522edf82280619f127c70af55944fec944b768c1c0828c745ee067f9ff",
+    "ml2cl/scope.ml": "33087d86cc91ad28a81fe4f315ef50f8e408847c2682ffdb7a14dbf2a11d5f39",
+    "ml2cl/sexp.ml": "d03885bd2af5792c9583016a3ef1ec841e8b4956bd9ed49ca724fdb444e57a5b",
+    "vendor/CORE_FILES.json": "c039b51e0525feb4777d5f1e6fd9e4fff095287e56dc81ba982c2bdf93665c72",
+    "vendor/SOURCES.json": "7a13ab2df34b6bee00ccf2f94ffb016b6e030564300f44f0514fc02f6e05c9f1",
+    "vendor/hol-light/pa_j_4.xx_8.02.ml": "c4eede2c8159ddf42a13536bc9304edbab3272c6ad3b0c29227f880ab51c7397"
+  },
+  "logs": {
+    "compatibility/defunc-protocol.log": "6050386232abc1dc598b12f95f36393bb245c17f74e01907ed42573087c7a54d",
+    "compatibility/fixtures.log": "ead8de1c84abf8c86e875349c0f8f8a9e501ad0dac110a293399b8556abe1e9a",
+    "compatibility/host.log": "19e1c04d336ea5f72ec0e324dffca4126cdcf1bf052fd447643ba140bb43ca5b",
+    "compatibility/lisp-observations.txt": "1140da07d402c885c02afc34c05a4d9a59290ba9c57984acbf8114bf2f742308",
+    "compatibility/ocaml-build.log": "76418c821c11fb2ff89380229a5643aeb4e6df84d85549b1cffed6d46ec30636",
+    "compatibility/ocaml-observations.txt": "1140da07d402c885c02afc34c05a4d9a59290ba9c57984acbf8114bf2f742308",
+    "compatibility/ocaml-run.log": "1140da07d402c885c02afc34c05a4d9a59290ba9c57984acbf8114bf2f742308",
+    "compatibility/optional-entry.log": "95ff66e8bd31113067adf7828e4dc11e2f67c62feea125d12ebdae6b22241f58",
+    "compatibility/pattern-stale.log": "4dc778626dc4cd58c46bda116c11a9d76991ef2906f6f891a7ef99cd42ec263c",
+    "compatibility/pattern.log": "eacdbcb0cf7bea3b49a26ad2f961e15422de73148ebabb048fbb43385296ec9c",
+    "compatibility/random.log": "481df10ea66481e9eba93c6b9a1e8107fbc95ea1da75bc4acbf00147015f563f",
+    "compatibility/system-interrupt.log": "804ceedbe9926a72e68420e61d5f14f5de3c998572fdfadb4d3fc9670f825961",
+    "compatibility/translate.log": "9186135fb89d4d503f46a923fb9fc50a03fedcb80be1c1d788459e4225bd481f",
+    "compatibility/tuple-list.log": "e1bfbcdf19f8dfc1552d7684401e4a97d24b1d2c2926035b73b573e25bfd59d0"
+  },
+  "counts": {
+    "structural_pattern_checks": 45,
+    "defunc_protocol_checks": 28,
+    "optional_entry_checks": 84,
+    "tuple_list_checks": 16,
+    "standard_random_checks": 1816,
+    "system_interrupt_deliveries": 3,
+    "fixture_sources": 3,
+    "translated_fixture_units": 3,
+    "star_naming_observations": 9,
+    "differential_observations": 33,
+    "exact_differential_observations": 33
+  },
+  "subprocesses": [
+    {
+      "command": [
+        "clisp",
+        "--quiet",
+        "-norc",
+        "-x",
+        "(progn (require \"asdf\") (values))",
+        "-x",
+        "(progn (setf asdf:*asdf-verbose* nil *load-verbose* nil *compile-verbose* nil)\n(setf *debugger-hook* (lambda (condition hook) (declare (ignore hook)) (format *error-output* \"~&Unhandled condition: ~a~%\" condition) (uiop:quit 1)))\n(format t \"~&HOLAI_HOST_VERSION ~a~%HOLAI_HOST_TYPE ~a~%\" (lisp-implementation-version) (lisp-implementation-type))\n(uiop:quit 0))"
+      ],
+      "timeout_seconds": 120,
+      "expected_exit_code": 0,
+      "exit_code": 0,
+      "log": "compatibility/host.log",
+      "elapsed_seconds": 0.4636301421560347
+    },
+    {
+      "command": [
+        "clisp",
+        "--quiet",
+        "-norc",
+        "-x",
+        "(progn (require \"asdf\") (values))",
+        "-x",
+        "(progn (setf asdf:*asdf-verbose* nil *load-verbose* nil *compile-verbose* nil)\n(setf *debugger-hook* (lambda (condition hook) (declare (ignore hook)) (format *error-output* \"~&Unhandled condition: ~a~%\" condition) (uiop:quit 1)))\n(load \"holai/tests/pattern.lisp\")\n(uiop:quit 0))"
+      ],
+      "timeout_seconds": 120,
+      "expected_exit_code": 0,
+      "exit_code": 0,
+      "log": "compatibility/pattern.log",
+      "elapsed_seconds": 0.6360931280069053
+    },
+    {
+      "command": [
+        "clisp",
+        "--quiet",
+        "-norc",
+        "-x",
+        "(progn (require \"asdf\") (values))",
+        "-x",
+        "(progn (setf asdf:*asdf-verbose* nil *load-verbose* nil *compile-verbose* nil)\n(setf *debugger-hook* (lambda (condition hook) (declare (ignore hook)) (format *error-output* \"~&Unhandled condition: ~a~%\" condition) (uiop:quit 1)))\n(load \"holai/tests/pattern-stale.lisp\")\n(uiop:quit 0))"
+      ],
+      "timeout_seconds": 120,
+      "expected_exit_code": 17,
+      "exit_code": 17,
+      "log": "compatibility/pattern-stale.log",
+      "elapsed_seconds": 0.5991047360002995
+    },
+    {
+      "command": [
+        "clisp",
+        "--quiet",
+        "-norc",
+        "-x",
+        "(progn (require \"asdf\") (values))",
+        "-x",
+        "(progn (setf asdf:*asdf-verbose* nil *load-verbose* nil *compile-verbose* nil)\n(setf *debugger-hook* (lambda (condition hook) (declare (ignore hook)) (format *error-output* \"~&Unhandled condition: ~a~%\" condition) (uiop:quit 1)))\n(load \"holai/tests/defunc-protocol.lisp\")\n(uiop:quit 0))"
+      ],
+      "timeout_seconds": 120,
+      "expected_exit_code": 0,
+      "exit_code": 0,
+      "log": "compatibility/defunc-protocol.log",
+      "elapsed_seconds": 0.6371104218997061
+    },
+    {
+      "command": [
+        "clisp",
+        "--quiet",
+        "-norc",
+        "-x",
+        "(progn (require \"asdf\") (values))",
+        "-x",
+        "(progn (setf asdf:*asdf-verbose* nil *load-verbose* nil *compile-verbose* nil)\n(setf *debugger-hook* (lambda (condition hook) (declare (ignore hook)) (format *error-output* \"~&Unhandled condition: ~a~%\" condition) (uiop:quit 1)))\n(load \"holai/tests/optional-entry.lisp\")\n(uiop:quit 0))"
+      ],
+      "timeout_seconds": 120,
+      "expected_exit_code": 0,
+      "exit_code": 0,
+      "log": "compatibility/optional-entry.log",
+      "elapsed_seconds": 0.5990546210668981
+    },
+    {
+      "command": [
+        "clisp",
+        "--quiet",
+        "-norc",
+        "-x",
+        "(progn (require \"asdf\") (values))",
+        "-x",
+        "(progn (setf asdf:*asdf-verbose* nil *load-verbose* nil *compile-verbose* nil)\n(setf *debugger-hook* (lambda (condition hook) (declare (ignore hook)) (format *error-output* \"~&Unhandled condition: ~a~%\" condition) (uiop:quit 1)))\n(load \"holai/tests/tuple-list.lisp\")\n(uiop:quit 0))"
+      ],
+      "timeout_seconds": 120,
+      "expected_exit_code": 0,
+      "exit_code": 0,
+      "log": "compatibility/tuple-list.log",
+      "elapsed_seconds": 0.5982223320752382
+    },
+    {
+      "command": [
+        "clisp",
+        "--quiet",
+        "-norc",
+        "-x",
+        "(progn (require \"asdf\") (values))",
+        "-x",
+        "(progn (setf asdf:*asdf-verbose* nil *load-verbose* nil *compile-verbose* nil)\n(setf *debugger-hook* (lambda (condition hook) (declare (ignore hook)) (format *error-output* \"~&Unhandled condition: ~a~%\" condition) (uiop:quit 1)))\n(load \"holai/tests/random.lisp\")\n(uiop:quit 0))"
+      ],
+      "timeout_seconds": 120,
+      "expected_exit_code": 0,
+      "exit_code": 0,
+      "log": "compatibility/random.log",
+      "elapsed_seconds": 0.6031328779645264
+    },
+    {
+      "command": [
+        "clisp",
+        "--quiet",
+        "-norc",
+        "-x",
+        "(progn (require \"asdf\") (values))",
+        "-x",
+        "(progn (setf asdf:*asdf-verbose* nil *load-verbose* nil *compile-verbose* nil)\n(setf *debugger-hook* (lambda (condition hook) (declare (ignore hook)) (format *error-output* \"~&Unhandled condition: ~a~%\" condition) (uiop:quit 1)))\n(load \"holai/tests/system-interrupt.lisp\")\n(uiop:quit 0))"
+      ],
+      "timeout_seconds": 120,
+      "expected_exit_code": -2,
+      "exit_code": -2,
+      "log": "compatibility/system-interrupt.log",
+      "elapsed_seconds": 0.6092658881098032
+    },
+    {
+      "command": [
+        "ocamlrun",
+        "bin/ml2cl",
+        "translate",
+        "--output-dir",
+        "/home/tani/ghq/github.com/tani/holai/_build/compatibility/clisp/translated",
+        "holai/tests/fixtures/semantics.ml",
+        "holai/tests/fixtures/compatibility_observations.ml",
+        "holai/tests/fixtures/star_names.ml"
+      ],
+      "timeout_seconds": 120,
+      "expected_exit_code": 0,
+      "exit_code": 0,
+      "log": "compatibility/translate.log",
+      "elapsed_seconds": 0.06411288678646088
+    },
+    {
+      "command": [
+        "ocamlc",
+        "-w",
+        "-a",
+        "-pp",
+        "camlp5r -I /nix/store/miwkyg90bzq10dn9bzzmfb6yqpwsn2sp-ocaml4.14.2-camlp5-8.02.01/lib/ocaml/4.14.2/site-lib/camlp5 -I /home/tani/ghq/github.com/tani/holai/_build pa_j.cmo",
+        "/home/tani/ghq/github.com/tani/holai/_build/compatibility/clisp/original.ml",
+        "-o",
+        "/home/tani/ghq/github.com/tani/holai/_build/compatibility/clisp/original"
+      ],
+      "timeout_seconds": 120,
+      "expected_exit_code": 0,
+      "exit_code": 0,
+      "log": "compatibility/ocaml-build.log",
+      "elapsed_seconds": 0.08106420887634158
+    },
+    {
+      "command": [
+        "ocamlrun",
+        "/home/tani/ghq/github.com/tani/holai/_build/compatibility/clisp/original"
+      ],
+      "timeout_seconds": 120,
+      "expected_exit_code": 0,
+      "exit_code": 0,
+      "log": "compatibility/ocaml-run.log",
+      "elapsed_seconds": 0.0016455529257655144
+    },
+    {
+      "command": [
+        "clisp",
+        "--quiet",
+        "-norc",
+        "-x",
+        "(progn (require \"asdf\") (values))",
+        "-x",
+        "(progn (setf asdf:*asdf-verbose* nil *load-verbose* nil *compile-verbose* nil)\n(setf *debugger-hook* (lambda (condition hook) (declare (ignore hook)) (format *error-output* \"~&Unhandled condition: ~a~%\" condition) (uiop:quit 1)))\n(load \"holai/tests/compatibility-fixtures.lisp\")\n(uiop:quit 0))"
+      ],
+      "timeout_seconds": 120,
+      "expected_exit_code": 0,
+      "exit_code": 0,
+      "log": "compatibility/fixtures.log",
+      "elapsed_seconds": 0.948550074826926
+    }
+  ],
+  "native_nan_eql": {
+    "status": "not_applicable",
+    "reason": "CLISP does not represent IEEE NaN as a native Lisp float",
+    "execution": "native-compiled"
+  },
+  "pattern_stale_fasl_rejection": {
+    "checked": true,
+    "exit_code": 17,
+    "condition": "holai.runtime::pattern-declaration-changed",
+    "marker": "Pattern stale FASL rejected: Separate",
+    "consumer_fasl": "_build/pattern-stale-consumer.fas",
+    "log": "compatibility/pattern-stale.log",
+    "log_sha256": "4dc778626dc4cd58c46bda116c11a9d76991ef2906f6f891a7ef99cd42ec263c"
+  },
+  "translated_sha256": {
+    "_build/compatibility/clisp/translated/compatibility_observations.lisp": "06ffdce0fa4fd8e34edfd1d0887aa262963fbdcf7fdf73c196c1a788717f3bd3",
+    "_build/compatibility/clisp/translated/compatibility_observations.map.json": "c2ca6a6efa87239bdf3b6ac5e996283f242d37c071a45fc5151e9915fa6e4177",
+    "_build/compatibility/clisp/translated/inventory.json": "aa007d5eddb9209db286008c4609f7115f315d705b1d566c6535ce3b1b9b5037",
+    "_build/compatibility/clisp/translated/package-systems.sexp": "1e75f4aebd2684b04833d437b57a580c0226d2e0a91b9a8bd17e64c9b98ce022",
+    "_build/compatibility/clisp/translated/semantics.lisp": "25caa0be27d389190be02760068e710c14d31387f57b79f3a93a1d62181fdb7a",
+    "_build/compatibility/clisp/translated/semantics.map.json": "33dda3c3f04a3182f8f886044e37905d3dfb94f2c511d7e6facf74cdf0e29626",
+    "_build/compatibility/clisp/translated/star_names.lisp": "d8ab0c72054f438693496b140019220d711acdc34a8b16a48c6b31d5c823f518",
+    "_build/compatibility/clisp/translated/star_names.map.json": "ccfd6ff5743611df7295a9e787999cb3373d746d67bdab018336e95a892608d6"
+  },
+  "tool_artifact_sha256": {
+    "bin/ml2cl": "efef3231969e6798f04a0dadb91bffe56ad8b6cfd7dff051a484182e97563d62",
+    "_build/pa_j.cmo": "057c9ab5d06d5a26e75c1155f4c6cc4605c12e9c9e20d016dbdd37ff8883a4ed"
+  },
+  "oracle_source_sha256": "a2e149601a7f80095e35d9ea32a9094870e10dbe12ad5396cb195ff46df46640",
+  "raw_observation_streams_equal": true,
+  "property_validated_random_observations": 0
+}

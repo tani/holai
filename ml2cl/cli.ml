@@ -42,6 +42,7 @@ let () =
    let ctx=context ("holai."^String.lowercase_ascii stem) source text items in
    try
     let result=Compiler.structure ctx !environment None items in
+    List.iter (fun (p:Compiler.package_result) -> finalize_proof_head p.ctx) result.packages;
     environment:=result.environment;
     let same_file=List.fold_left (fun packages (p:Compiler.package_result) ->
       SS.add p.ctx.package packages) SS.empty result.packages in

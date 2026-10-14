@@ -1470,6 +1470,7 @@
     :holai.runtime
     tuple
     snd
+    proof
     lambdac
     function-value
     fst
@@ -2234,6 +2235,7 @@
     tuple
     snd
     raise
+    proof
     match
     lambdac
     labelsc
@@ -2280,6 +2282,7 @@
     :holai.runtime
     tuple
     snd
+    proof
     match
     lambdac
     function-value
@@ -2503,6 +2506,7 @@
     Some
     snd
     record-field
+    proof
     None
     match
     make-Some
@@ -3523,6 +3527,7 @@
     tuple
     snd
     record-field
+    proof
     print-endline
     match
     make-Some
@@ -3630,7 +3635,7 @@
   (prove (tuple (parse_term "~ hashek <=> F") (SIMP_TAC (cl:cons hashek_def nil)))))
 
 (defunc MARK_CONCL (label)
-  (holai.runtime:proof (USE_THEN label (lambdac (th) (UNDISCH_TAC (concl th))))
+  (proof (USE_THEN label (lambdac (th) (UNDISCH_TAC (concl th))))
     THEN
       (lambdac (g%)
         (progn
@@ -4399,7 +4404,7 @@
           (parse_term
             "(x:A = x) /\\ (~(x = y) \\/ y = x) /\\
      (~(x:A = y) \\/ ~(x = z) \\/ (y = z))")
-          (holai.runtime:proof (REWRITE_TAC nil)
+          (proof (REWRITE_TAC nil)
             THEN (ASM_CASES_TAC (parse_term "x:A = y"))
             THEN (#`ASM_REWRITE_TAC nil)
             THEN (#`CONV_TAC TAUT)))))
@@ -4581,9 +4586,9 @@
 (in-package :holai.thecops.prepare)
 
 (defunc PREPARE_COP_TAC (ths)
-  (holai.runtime:proof (#`REFUTE_THEN (LABEL_TAC "copconcl"))
+  (proof (#`REFUTE_THEN (LABEL_TAC "copconcl"))
     THEN (#`POLY_ASSUME_TAC (map #'GEN_ALL ths))
-    THEN (holai.runtime:proof (MARK_CONCL "copconcl") #'ORELSE MARK_ASSUMS)
+    THEN (proof (MARK_CONCL "copconcl") #'ORELSE MARK_ASSUMS)
     THEN
       (W
         (o
@@ -4602,7 +4607,7 @@
             (THENC (THENC PRESIMP_CONV (#`TOP_DEPTH_CONV #'BETA_CONV)) LAMBDA_ELIM_CONV)
             CONDS_CELIM_CONV)
           QUANT_BOOL_CONV))
-    THEN (REPEAT (holai.runtime:proof #'GEN_TAC #'ORELSE DISCH_TAC))
+    THEN (REPEAT (proof #'GEN_TAC #'ORELSE DISCH_TAC))
     THEN (#`REFUTE_THEN ASSUME_TAC)
     THEN (RULE_ASSUM_TAC (CONV_RULE (THENC NNF_CONV SKOLEM_CONV)))
     THEN (REPEAT (FIRST_X_ASSUM #'CHOOSE_TAC))
@@ -4819,7 +4824,7 @@
               (EQ_MP hashek_eq th))))))))
 
 (defunc PREPARE_LEAN_TAC (ths)
-  (holai.runtime:proof (PREPARE_COP_TAC ths)
+  (proof (PREPARE_COP_TAC ths)
     THEN (RULE_ASSUM_TAC (CONV_RULE (THENC PRENEX_CONV WEAK_CNF_CONV)))
     THEN
       (RULE_ASSUM_TAC
@@ -4838,8 +4843,7 @@
         (function-value #'fst 1)))
     gl))
 
-(defunc GEN_LEANCOP_TAC (opt ths)
-  (holai.runtime:proof (PREPARE_LEAN_TAC ths) THEN (PURE_LEANCOP opt)))
+(defunc GEN_LEANCOP_TAC (opt ths) (proof (PREPARE_LEAN_TAC ths) THEN (PURE_LEANCOP opt)))
 
 (defunc LEANCOP_TAC (ths) (GEN_LEANCOP_TAC search_opts ths))
 
@@ -6041,7 +6045,7 @@
   (progn (if (deref copverb) (print-endline s) unit) (PRINT_TAC g%)))
 
 (defunc PREPARE_NANOCOP_TAC (ths)
-  (holai.runtime:proof (PREPARE_COP_TAC ths)
+  (proof (PREPARE_COP_TAC ths)
     THEN
       (RULE_ASSUM_TAC (CONV_RULE (#`DEPTH_CONV (CHANGED_CONV (ASSOC_CONV DISJ_ASSOC)))))
     THEN
@@ -6058,7 +6062,7 @@
     gl))
 
 (defunc GEN_NANOCOP_TAC (opt ths)
-  (holai.runtime:proof (PREPARE_NANOCOP_TAC ths) THEN (PURE_NANOCOP opt)))
+  (proof (PREPARE_NANOCOP_TAC ths) THEN (PURE_NANOCOP opt)))
 
 (defunc NANOCOP_TAC (ths) (GEN_NANOCOP_TAC search_opts ths))
 

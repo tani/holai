@@ -898,6 +898,7 @@
     snd
     raise
     quo-num
+    proof
     num
     mod-num
     match
@@ -1076,7 +1077,7 @@
    (PRE _0 = _0) /\\
    (!n. PRE(BIT0 n) = if n = _0 then _0 else BIT1 (PRE n)) /\\
    (!n. PRE(BIT1 n) = BIT0 n)")
-      (holai.runtime:proof (REWRITE_TAC
+      (proof (REWRITE_TAC
           (cl:cons NUMERAL (cl:cons BIT1 (cl:cons BIT0 (cl:cons (#`DENUMERAL PRE) nil)))))
         THEN INDUCT_TAC
         THEN
@@ -1103,7 +1104,7 @@
    (!m n. BIT0 m + BIT1 n = BIT1 (m + n)) /\\
    (!m n. BIT1 m + BIT0 n = BIT1 (m + n)) /\\
    (!m n. BIT1 m + BIT1 n = BIT0 (SUC(m + n)))")
-      (holai.runtime:proof (PURE_REWRITE_TAC
+      (proof (PURE_REWRITE_TAC
           (cl:cons
             NUMERAL
             (cl:cons
@@ -1125,7 +1126,7 @@
    (!m n. BIT0 m * BIT1 n = BIT0 m + BIT0 (BIT0 (m * n))) /\\
    (!m n. BIT1 m * BIT0 n = BIT0 n + BIT0 (BIT0 (m * n))) /\\
    (!m n. BIT1 m * BIT1 n = BIT1 m + BIT0 n + BIT0 (BIT0 (m * n)))")
-      (holai.runtime:proof (PURE_REWRITE_TAC
+      (proof (PURE_REWRITE_TAC
           (cl:cons
             NUMERAL
             (cl:cons
@@ -1155,7 +1156,7 @@
         BIT0 m * ((BIT0 m) EXP n) * ((BIT0 m) EXP n)) /\\
    (!m n. (BIT1 m) EXP (BIT1 n) =
         BIT1 m * ((BIT1 m) EXP n) * ((BIT1 m) EXP n))")
-      (holai.runtime:proof (REWRITE_TAC (cl:cons NUMERAL nil))
+      (proof (REWRITE_TAC (cl:cons NUMERAL nil))
         THEN (REPEAT #'STRIP_TAC)
         THEN
           (TRY
@@ -1208,7 +1209,7 @@
    (!m n. (BIT0 m <= BIT1 n) <=> m <= n) /\\
    (!m n. (BIT1 m <= BIT0 n) <=> m < n) /\\
    (!m n. (BIT1 m <= BIT1 n) <=> m <= n)")
-      (holai.runtime:proof (REWRITE_TAC
+      (proof (REWRITE_TAC
           (cl:cons
             NUMERAL
             (cl:cons
@@ -1241,7 +1242,7 @@
                 NUMERAL
                 (cl:cons BIT0 (cl:cons BIT1 (cl:cons (#`DENUMERAL ADD_CLAUSES) nil)))))
             (cl:cons
-              (holai.runtime:proof (REWRITE_TAC
+              (proof (REWRITE_TAC
                   (cl:cons
                     (#`DENUMERAL NOT_SUC)
                     (cl:cons NOT_SUC (cl:cons EQ_MULT_LCANCEL nil))))
@@ -1280,7 +1281,7 @@
    (!m n. (BIT0 m < BIT1 n) <=> m <= n) /\\
    (!m n. (BIT1 m < BIT0 n) <=> m < n) /\\
    (!m n. (BIT1 m < BIT1 n) <=> m < n)")
-      (holai.runtime:proof (REWRITE_TAC
+      (proof (REWRITE_TAC
           (cl:cons NUMERAL (cl:cons (#`GSYM NOT_LE) (cl:cons ARITH_LE nil))))
         THEN (REWRITE_TAC (cl:cons (#`DENUMERAL LE) nil))))))
 
@@ -1304,7 +1305,7 @@
    (!m n. (BIT0 m = BIT1 n) <=> F) /\\
    (!m n. (BIT1 m = BIT0 n) <=> F) /\\
    (!m n. (BIT1 m = BIT1 n) <=> (m = n))")
-      (holai.runtime:proof (REWRITE_TAC
+      (proof (REWRITE_TAC
           (cl:cons NUMERAL (cl:cons (#`GSYM LE_ANTISYM) (cl:cons ARITH_LE nil))))
         THEN
           (REWRITE_TAC
@@ -1324,8 +1325,7 @@
    (!m n. BIT0 m - BIT1 n = PRE(BIT0 (m - n))) /\\
    (!m n. BIT1 m - BIT0 n = if n <= m then BIT1 (m - n) else _0) /\\
    (!m n. BIT1 m - BIT1 n = BIT0 (m - n))")
-      (holai.runtime:proof (REWRITE_TAC
-          (cl:cons NUMERAL (cl:cons (#`DENUMERAL SUB_0) nil)))
+      (proof (REWRITE_TAC (cl:cons NUMERAL (cl:cons (#`DENUMERAL SUB_0) nil)))
         THEN (PURE_REWRITE_TAC (cl:cons BIT0 (cl:cons BIT1 nil)))
         THEN
           (REWRITE_TAC
@@ -1741,8 +1741,7 @@
                                   (parse_term
                                     "(BIT0 m = BIT0 n <=> m = n) /\\
        (BIT1 m = BIT1 n <=> m = n)")
-                                  (holai.runtime:proof (REWRITE_TAC
-                                      (cl:cons BIT0 (cl:cons BIT1 nil)))
+                                  (proof (REWRITE_TAC (cl:cons BIT0 (cl:cons BIT1 nil)))
                                     THEN (REWRITE_TAC (cl:cons (#`GSYM MULT_2) nil))
                                     THEN
                                       (REWRITE_TAC
@@ -1952,8 +1951,7 @@
                                   (tuple
                                     (parse_term
                                       "(n = a + p * b <=> BIT0 n = BIT0 a + BIT0 p * b)")
-                                    (holai.runtime:proof (REWRITE_TAC
-                                        (cl:cons BIT0 (cl:cons BIT1 nil)))
+                                    (proof (REWRITE_TAC (cl:cons BIT0 (cl:cons BIT1 nil)))
                                       THEN
                                         (REWRITE_TAC
                                           (cl:cons
@@ -1971,7 +1969,7 @@
                                     (tuple
                                       (parse_term
                                         "n = _0 + p * b <=> BIT0 n = _0 + BIT0 p * b")
-                                      (holai.runtime:proof (SUBST1_TAC
+                                      (proof (SUBST1_TAC
                                           (SYM (#`SPEC (parse_term "_0") NUMERAL)))
                                         THEN
                                           (REWRITE_TAC (cl:cons BIT1 (cl:cons BIT0 nil)))
@@ -1994,7 +1992,7 @@
                                     (tuple
                                       (parse_term
                                         "(n = a + p * b <=> BIT1 n = BIT1 a + BIT0 p * b)")
-                                      (holai.runtime:proof (REWRITE_TAC
+                                      (proof (REWRITE_TAC
                                           (cl:cons BIT0 (cl:cons BIT1 nil)))
                                         THEN
                                           (REWRITE_TAC
@@ -2029,8 +2027,7 @@
                                     (tuple
                                       (parse_term
                                         "_0 = a + p * b <=> _0 = a + BIT0 p * b")
-                                      (holai.runtime:proof (#`CONV_TAC
-                                          (BINOP_CONV #'SYM_CONV))
+                                      (proof (#`CONV_TAC (BINOP_CONV #'SYM_CONV))
                                         THEN
                                           (SUBST1_TAC
                                             (SYM (#`SPEC (parse_term "_0") NUMERAL)))
@@ -2095,7 +2092,7 @@
        (n = a + p * b <=>
         BIT1(BIT1(BIT1(BIT1 n))) =
         BIT1(BIT1(BIT1(BIT1 a))) + BIT0(BIT0(BIT0(BIT0 p))) * b)")
-                                      (holai.runtime:proof (MP_TAC
+                                      (proof (MP_TAC
                                           (REWRITE_RULE
                                             (cl:cons (#`GSYM MULT_2) nil)
                                             BIT0))
@@ -2181,7 +2178,7 @@
        (n = _0 + p * b <=>
         BIT1(BIT1(BIT1(BIT1 n))) =
         BIT1(BIT1(BIT1(BIT1 _0))) + BIT0(BIT0(BIT0(BIT0 p))) * b)")
-                                      (holai.runtime:proof (SUBST1_TAC
+                                      (proof (SUBST1_TAC
                                           (MESON
                                             (cl:cons NUMERAL nil)
                                             (parse_term "_0 = 0")))
@@ -2354,7 +2351,7 @@
                                     #'prove
                                     (tuple
                                       (parse_term "a + p * _0 = a")
-                                      (holai.runtime:proof (SUBST1_TAC
+                                      (proof (SUBST1_TAC
                                           (SYM (#`SPEC (parse_term "_0") NUMERAL)))
                                         THEN
                                           (REWRITE_TAC
@@ -2367,7 +2364,7 @@
                                       #'prove
                                       (tuple
                                         (parse_term "a + BIT1 _0 * b = a + b")
-                                        (holai.runtime:proof (SUBST1_TAC
+                                        (proof (SUBST1_TAC
                                             (SYM (#`SPEC (parse_term "BIT1 _0") NUMERAL)))
                                           THEN
                                             (REWRITE_TAC
@@ -2381,8 +2378,7 @@
                                       (tuple
                                         (parse_term
                                           "BIT0 a + BIT0 p * b = BIT0(a + p * b)")
-                                        (holai.runtime:proof (REWRITE_TAC
-                                            (cl:cons BIT0 nil))
+                                        (proof (REWRITE_TAC (cl:cons BIT0 nil))
                                           THEN (REWRITE_TAC (cl:cons (#`GSYM MULT_2) nil))
                                           THEN
                                             (REWRITE_TAC
@@ -2396,7 +2392,7 @@
                                       (tuple
                                         (parse_term
                                           "BIT1 a + BIT0 p * b = BIT1(a + p * b)")
-                                        (holai.runtime:proof (REWRITE_TAC
+                                        (proof (REWRITE_TAC
                                             (cl:cons BIT0 (cl:cons BIT1 nil)))
                                           THEN (REWRITE_TAC (cl:cons (#`GSYM MULT_2) nil))
                                           THEN
@@ -2418,7 +2414,7 @@
                                       #'prove
                                       (tuple
                                         (parse_term "_0 + BIT0 p * b = BIT0(_0 + p * b)")
-                                        (holai.runtime:proof (SUBST1_TAC
+                                        (proof (SUBST1_TAC
                                             (SYM (#`SPEC (parse_term "_0") NUMERAL)))
                                           THEN
                                             (REWRITE_TAC
@@ -2482,7 +2478,7 @@
          (a + p * b = n <=>
           BIT1(BIT1(BIT1(BIT1 a))) + BIT0(BIT0(BIT0(BIT0 p))) * b =
           BIT1(BIT1(BIT1(BIT1 n))))")
-                                        (holai.runtime:proof (SUBST1_TAC
+                                        (proof (SUBST1_TAC
                                             (MESON
                                               (cl:cons NUMERAL nil)
                                               (parse_term "_0 = 0")))
@@ -2758,8 +2754,7 @@
                                       (tuple
                                         (parse_term
                                           "m EXP 2 = n <=> (BIT0 m) EXP 2 = BIT0(BIT0 n)")
-                                        (holai.runtime:proof (ABBREV_TAC
-                                            (parse_term "two = 2"))
+                                        (proof (ABBREV_TAC (parse_term "two = 2"))
                                           THEN (REWRITE_TAC (cl:cons BIT0 nil))
                                           THEN (EXPAND_TAC "two")
                                           THEN (REWRITE_TAC (cl:cons (#`GSYM MULT_2) nil))
@@ -2784,8 +2779,7 @@
                                       (tuple
                                         (parse_term
                                           "m EXP 2 = n <=> (BIT1 m) EXP 2 = BIT1(BIT0(m + n))")
-                                        (holai.runtime:proof (ABBREV_TAC
-                                            (parse_term "two = 2"))
+                                        (proof (ABBREV_TAC (parse_term "two = 2"))
                                           THEN
                                             (REWRITE_TAC
                                               (cl:cons
@@ -2849,8 +2843,7 @@
        m EXP 2 = p /\\
        m + a = BIT0(BIT0 p)
        ==> (BIT1(BIT1(BIT1 n))) EXP 2 = BIT1(BIT0(BIT0(BIT0 a)))")
-                                        (holai.runtime:proof (ABBREV_TAC
-                                            (parse_term "two = 2"))
+                                        (proof (ABBREV_TAC (parse_term "two = 2"))
                                           THEN
                                             (SUBST1_TAC
                                               (MESON
@@ -2955,8 +2948,7 @@
        a + c = e /\\
        e + b = d
        ==> n EXP 2 = c + p * (b + p * a)")
-                                        (holai.runtime:proof (REWRITE_TAC
-                                            (cl:cons IMP_CONJ nil))
+                                        (proof (REWRITE_TAC (cl:cons IMP_CONJ nil))
                                           THEN (DISCH_THEN #'SUBST1_TAC)
                                           THEN
                                             (REPLICATE_TAC
@@ -2994,8 +2986,7 @@
        (c + BIT0(BIT1 _0) * (b + BIT0(BIT1 _0) * a)))
        ==> (l + p * (m + p * h)) EXP 2 =
            a + p * (b + p * (c + p * (d + p * e)))")
-                                        (holai.runtime:proof (ABBREV_TAC
-                                            (parse_term "two = 2"))
+                                        (proof (ABBREV_TAC (parse_term "two = 2"))
                                           THEN
                                             (SUBST1_TAC
                                               (MESON
@@ -3017,7 +3008,7 @@
                                                 (REWRITE_TAC (cl:cons th nil))))
                                           THENL
                                             (cl:cons
-                                              (holai.runtime:proof (REWRITE_TAC
+                                              (proof (REWRITE_TAC
                                                   (cl:cons
                                                     EXP_2
                                                     (cl:cons
@@ -3180,8 +3171,7 @@
                                         (parse_term
                                           "m EXP 2 = n <=>
        (BIT0(BIT0(BIT0 m))) EXP 2 = BIT0(BIT0(BIT0(BIT0(BIT0(BIT0 n)))))")
-                                        (holai.runtime:proof (ABBREV_TAC
-                                            (parse_term "two = 2"))
+                                        (proof (ABBREV_TAC (parse_term "two = 2"))
                                           THEN (REWRITE_TAC (cl:cons BIT0 nil))
                                           THEN (REWRITE_TAC (cl:cons (#`GSYM MULT_2) nil))
                                           THEN (EXPAND_TAC "two")
@@ -3678,8 +3668,7 @@
                                       (parse_term
                                         "(m * n = p <=> (BIT0 m) * n = BIT0 p) /\\
        (m * n = p <=> m * BIT0 n = BIT0 p)")
-                                      (holai.runtime:proof (REWRITE_TAC
-                                          (cl:cons BIT0 nil))
+                                      (proof (REWRITE_TAC (cl:cons BIT0 nil))
                                         THEN (REWRITE_TAC (cl:cons (#`GSYM MULT_2) nil))
                                         THEN
                                           (REWRITE_TAC
@@ -3702,7 +3691,7 @@
                                       (parse_term
                                         "(m * n = p <=> BIT1 m * n = BIT0 p + n) /\\
        (m * n = p <=> m * BIT1 n = BIT0 p + m)")
-                                      (holai.runtime:proof (REWRITE_TAC
+                                      (proof (REWRITE_TAC
                                           (cl:cons BIT0 (cl:cons BIT1 nil)))
                                         THEN (REWRITE_TAC (cl:cons (#`GSYM MULT_2) nil))
                                         THEN (REWRITE_TAC (cl:cons MULT_CLAUSES nil))
@@ -3737,8 +3726,7 @@
                                           (parse_term
                                             "n + p = m /\\ SUC(m + n) = a /\\ p EXP 2 = b /\\ a EXP 2 = c /\\ b + d = c
         ==> ((BIT1 m) * (BIT1 n) = d)")
-                                          (holai.runtime:proof (ABBREV_TAC
-                                              (parse_term "two = 2"))
+                                          (proof (ABBREV_TAC (parse_term "two = 2"))
                                             THEN
                                               (REWRITE_TAC
                                                 (cl:cons BIT1 (cl:cons IMP_CONJ nil)))
@@ -3801,7 +3789,7 @@
                                           (tuple
                                             (parse_term
                                               "SUC(_0 + m) = p ==> (p * n = a + n <=> m * n = a)")
-                                            (holai.runtime:proof (SUBST1_TAC
+                                            (proof (SUBST1_TAC
                                                 (MESON
                                                   (cl:cons NUMERAL nil)
                                                   (parse_term "_0 = 0")))
@@ -3820,7 +3808,7 @@
                                           (tuple
                                             (parse_term
                                               "SUC(_0 + n) = p ==> (m * p = a + m <=> m * n = a)")
-                                            (holai.runtime:proof (ONCE_REWRITE_TAC
+                                            (proof (ONCE_REWRITE_TAC
                                                 (cl:cons MULT_SYM nil))
                                               THEN
                                                 (SUBST1_TAC
@@ -4167,7 +4155,7 @@
                                     (tuple
                                       (parse_term
                                         "SUC(_0 + m) = n <=> SUC(NUMERAL m) = NUMERAL n")
-                                      (holai.runtime:proof BINOP_TAC
+                                      (proof BINOP_TAC
                                         THEN
                                           (MESON_TAC
                                             (cl:cons NUMERAL (cl:cons ADD_CLAUSES nil))))))))
@@ -4285,8 +4273,7 @@
                                     (tuple
                                       (parse_term
                                         "(m EXP n = p) ==> (p * p = a) ==> (m EXP (BIT0 n) = a)")
-                                      (holai.runtime:proof (REPEAT
-                                          (DISCH_THEN (o #'SUBST1_TAC #'SYM)))
+                                      (proof (REPEAT (DISCH_THEN (o #'SUBST1_TAC #'SYM)))
                                         THEN
                                           (REWRITE_TAC
                                             (cl:cons BIT0 (cl:cons EXP_ADD nil)))))))
@@ -4297,7 +4284,7 @@
                                       (tuple
                                         (parse_term
                                           "(m EXP n = p) ==> (p * p = b) ==> (m * b = a) ==> (m EXP (BIT1 n) = a)")
-                                        (holai.runtime:proof (REPEAT
+                                        (proof (REPEAT
                                             (DISCH_THEN (o #'SUBST1_TAC #'SYM)))
                                           THEN
                                             (REWRITE_TAC
@@ -4310,7 +4297,7 @@
                                       #'prove
                                       (tuple
                                         (parse_term "m EXP _0 = BIT1 _0")
-                                        (holai.runtime:proof (MP_TAC (#`CONJUNCT1 EXP))
+                                        (proof (MP_TAC (#`CONJUNCT1 EXP))
                                           THEN
                                             (REWRITE_TAC
                                               (cl:cons NUMERAL (cl:cons BIT1 nil)))
@@ -4431,7 +4418,7 @@
                                     (tuple
                                       (parse_term
                                         "SUC(m + n) = p ==> ((NUMERAL n < NUMERAL p) <=> T)")
-                                      (holai.runtime:proof (REWRITE_TAC
+                                      (proof (REWRITE_TAC
                                           (cl:cons
                                             NUMERAL
                                             (cl:cons LT_EXISTS (cl:cons ADD_CLAUSES nil))))
@@ -4443,8 +4430,7 @@
                                       (tuple
                                         (parse_term
                                           "m + p = n ==> (NUMERAL n < NUMERAL p <=> F)")
-                                        (holai.runtime:proof (DISCH_THEN
-                                            (o #'SUBST1_TAC #'SYM))
+                                        (proof (DISCH_THEN (o #'SUBST1_TAC #'SYM))
                                           THEN
                                             (REWRITE_TAC
                                               (cl:cons NOT_LT (cl:cons NUMERAL nil)))
@@ -4505,8 +4491,7 @@
                                     (tuple
                                       (parse_term
                                         "m + n = p ==> ((NUMERAL n <= NUMERAL p) <=> T)")
-                                      (holai.runtime:proof (DISCH_THEN
-                                          (o #'SUBST1_TAC #'SYM))
+                                      (proof (DISCH_THEN (o #'SUBST1_TAC #'SYM))
                                         THEN (REWRITE_TAC (cl:cons NUMERAL nil))
                                         THEN
                                           (MESON_TAC
@@ -4518,8 +4503,7 @@
                                       (tuple
                                         (parse_term
                                           "SUC(m + p) = n ==> (NUMERAL n <= NUMERAL p <=> F)")
-                                        (holai.runtime:proof (DISCH_THEN
-                                            (o #'SUBST1_TAC #'SYM))
+                                        (proof (DISCH_THEN (o #'SUBST1_TAC #'SYM))
                                           THEN
                                             (REWRITE_TAC
                                               (cl:cons
@@ -4584,8 +4568,7 @@
                                     (tuple
                                       (parse_term
                                         "SUC(m + n) = p ==> ((NUMERAL n = NUMERAL p) <=> F)")
-                                      (holai.runtime:proof (DISCH_THEN
-                                          (o #'SUBST1_TAC #'SYM))
+                                      (proof (DISCH_THEN (o #'SUBST1_TAC #'SYM))
                                         THEN
                                           (REWRITE_TAC
                                             (cl:cons
@@ -4608,8 +4591,7 @@
                                       (tuple
                                         (parse_term
                                           "SUC(m + p) = n ==> ((NUMERAL n = NUMERAL p) <=> F)")
-                                        (holai.runtime:proof (DISCH_THEN
-                                            (o #'SUBST1_TAC #'SYM))
+                                        (proof (DISCH_THEN (o #'SUBST1_TAC #'SYM))
                                           THEN
                                             (REWRITE_TAC
                                               (cl:cons
@@ -4727,7 +4709,7 @@
         (prove
           (tuple
             (parse_term "(SUC m = n) ==> (PRE n = m)")
-            (holai.runtime:proof (DISCH_THEN (o #'SUBST1_TAC #'SYM))
+            (proof (DISCH_THEN (o #'SUBST1_TAC #'SYM))
               THEN (REWRITE_TAC (cl:cons PRE nil))))))
       (m (parse_term "m:num"))
       (n (parse_term "n:num")))
@@ -4766,7 +4748,7 @@
         (prove
           (tuple
             (parse_term "(m + n = p) ==> (p - n = m)")
-            (holai.runtime:proof (DISCH_THEN (o #'SUBST1_TAC #'SYM))
+            (proof (DISCH_THEN (o #'SUBST1_TAC #'SYM))
               THEN (REWRITE_TAC (cl:cons ADD_SUB nil))))))
       (m (parse_term "m:num"))
       (n (parse_term "n:num"))
@@ -4884,7 +4866,7 @@
           (prove
             (tuple
               (parse_term "(SUC x = y) ==> (FACT x = w) ==> (y * w = z) ==> (FACT y = z)")
-              (holai.runtime:proof (REPEAT (DISCH_THEN (o #'SUBST1_TAC #'SYM)))
+              (proof (REPEAT (DISCH_THEN (o #'SUBST1_TAC #'SYM)))
                 THEN (REWRITE_TAC (cl:cons FACT nil))))))
         (w% (parse_term "w:num"))
         (x (parse_term "x:num"))
@@ -5078,7 +5060,7 @@
         (prove
           (tuple
             (parse_term "(!n. n < SUC k ==> P n) <=> (!n. n < k ==> P n) /\\ P k")
-            (holai.runtime:proof (REWRITE_TAC (cl:cons LT nil)) THEN (MESON_TAC nil))))))
+            (proof (REWRITE_TAC (cl:cons LT nil)) THEN (MESON_TAC nil))))))
     (cl:declare (cl:ignorable pth_base pth_step))
     (let
       ((base_CONV (GEN_REWRITE_CONV #'I (cl:cons pth_base nil)))
@@ -5107,7 +5089,7 @@
      ((a EXP (NUMERAL k) MOD n) EXP 2) MOD n /\\
      (a EXP (NUMERAL(BIT1 k))) MOD n =
      (a * ((a EXP (NUMERAL k) MOD n) EXP 2) MOD n) MOD n")
-        (holai.runtime:proof (REWRITE_TAC (cl:cons EXP (cl:cons EXP_2 nil)))
+        (proof (REWRITE_TAC (cl:cons EXP (cl:cons EXP_2 nil)))
           THEN (REWRITE_TAC (cl:cons BIT0 (cl:cons BIT1 (cl:cons NUMERAL nil))))
           THEN (REWRITE_TAC (cl:cons EXP (cl:cons EXP_ADD nil)))
           THEN (#`CONV_TAC MOD_DOWN_CONV)

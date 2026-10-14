@@ -1,0 +1,7 @@
+; (IN-PACKAGE :PATTERN-TEST)
+; (DEFVARIANT SEPARATE ...)
+; (DEFUN SEPARATE-MATCH ...)
+; (IN-PACKAGE :PATTERN-TEST)
+; (DEFUN DEPENDENT-MATCH ...)
+Pattern stale consumer FASL: /home/tani/ghq/github.com/tani/holai/_build/pattern-stale-consumer.abcl
+Pattern checks passed: 45

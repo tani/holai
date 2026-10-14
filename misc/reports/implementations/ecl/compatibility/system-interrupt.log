@@ -1,0 +1,7 @@
+;;; Loading #P"/nix/store/li8033azc46v0ilvb1hxbbg4x7wdkdfz-ecl-21.2.1/lib/ecl-21.2.1/asdf.fas"
+;;; Loading "/home/tani/ghq/github.com/tani/holai/holai/tests/system-interrupt.lisp"
+SIGINT catch ready
+SIGINT adapter check passed
+SIGINT catch ready
+SIGINT adapter check passed
+SIGINT default ready

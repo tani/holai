@@ -1,0 +1,111 @@
+Traceback (most recent call last):
+  File "/home/tani/ghq/github.com/tani/holai/misc/scripts/check-compile-diagnostics.py", line 155, in <module>
+    assert exit_code == 0 and result['audit_complete'], text[-4000:]
+           ^^^^^^^^^^^^^^
+AssertionError: .0..1..2..solved at 6
+0..0..1..5..15..51..120..259..solved at 434
+0..0..1..5..15..51..120..259..solved at 394
+0..0..1..4..13..31..solved at 37
+0..0..1..2..solved at 6
+0..0..1..5..15..51..120..259..solved at 394
+0..0..1..5..15..51..120..259..solved at 434
+0..0..1..4..12..28..58..118..solved at 128
+0..0..2..9..28..85..206..492..solved at 618
+0..0..2..9..28..94..222..491..1165..solved at 1499
+0..0..2..9..28..94..223..491..1149..solved at 1472
+0..0..2..10..28..82..204..solved at 236
+0..0..1..4..11..43..116..246..648..1354..solved at 1611
+0..0..solved at 2
+0..0..1..5..15..51..120..259..solved at 434
+0..0..1..5..15..51..120..259..solved at 394
+0..0..1..4..13..31..solved at 37
+0..0..2..7..24..55..104..223..440..827..1504..solved at 1616
+0..0..2..7..24..65..133..290..574..solved at 904
+0..0..2..7..24..65..134..294..583..solved at 913
+0..0..2..8..25..52..110..solved at 145
+0..0..1..2..7..13..26..50..83..132..216..308..447..705..1020..1530..2268..3184..4455..6310..solved at 8365
+0..0..1..3..9..17..43..86..154..300..472..714..1138..1664..2466..4129..6181..solved at 6305
+0..0..2..7..20..49..89..185..solved at 215
+0..0..1..2..7..17..34..70..132..223..396..solved at 427
+0..0..1..2..6..12..23..46..74..119..197..285..418..630..886..solved at 1210
+0..0..2..8..24..solved at 32
+0..0..2..7..24..61..134..280..548..1144..solved at 1169
+0..0..3..solved at 7
+Warning: inventing type variables
+0..0..1..solved at 4
+0..0..1..solved at 4
+Warning: inventing type variables
+0..0..0..solved at 3
+0..0..solved at 2
+LOADED_UNIT holai/generated/wf.lisp
+AUDIT_END LOAD holai/generated/wf.lisp
+AUDIT_BEGIN COMPILE holai/generated/calc_num.lisp
+; (UIOP/PACKAGE:DEFINE-PACKAGE :HOLAI.CALC_NUM ...)
+; (UIOP/PACKAGE:DEFINE-PACKAGE :HOLAI.CALC_NUM ...)
+; (IN-PACKAGE :HOLAI.CALC_NUM)
+; (DEFPARAMETER DENUMERAL ...)
+; (DEFPARAMETER ARITH_ZERO ...)
+; (DEFPARAMETER BIT0_0 ...)
+; (DEFPARAMETER BIT1_0 ...)
+; (DEFPARAMETER ARITH_SUC ...)
+; (DEFPARAMETER ARITH_PRE ...)
+; (DEFPARAMETER ARITH_ADD ...)
+; (DEFPARAMETER ARITH_MULT ...)
+; (DEFPARAMETER ARITH_EXP ...)
+; (DEFPARAMETER ARITH_EVEN ...)
+; (DEFPARAMETER ARITH_ODD ...)
+; (DEFPARAMETER ARITH_LE ...)
+; (DEFPARAMETER ARITH_LT ...)
+; (DEFPARAMETER ARITH_GE ...)
+; (DEFPARAMETER ARITH_GT ...)
+; (DEFPARAMETER ARITH_EQ ...)
+; (DEFPARAMETER ARITH_SUB ...)
+; (DEFPARAMETER ARITH ...)
+; (DEFPARAMETER EXP_2_NE_0 ...)
+; (DEFPARAMETER NUM_EVEN_CONV ...)
+; (DEFPARAMETER NUM_ODD_CONV ...)
+; (DEFPARAMETER NUM_ADD_CONV ...)
+; (DEFPARAMETER NUM_EQ_CONV ...)
+; (DEFPARAMETER NUM_EXP_CONV ...)
+; (DEFPARAMETER NUM_LE_CONV ...)
+; (DEFPARAMETER NUM_LT_CONV ...)
+; (DEFPARAMETER NUM_MULT_CONV ...)
+; (DEFPARAMETER NUM_SUC_CONV ...)
+; (MATCH (LET # ...) ...)
+; (DEFPARAMETER NUM_GT_CONV ...)
+; (DEFPARAMETER NUM_GE_CONV ...)
+; (DEFPARAMETER NUM_PRE_CONV ...)
+; (DEFPARAMETER NUM_SUB_CONV ...)
+; (DEFPARAMETER NUM_DIV_CONV ...)
+; (DEFPARAMETER NUM_MOD_CONV ...)
+; (MATCH (LET # ...) ...)
+; (DEFPARAMETER NUM_FACT_CONV ...)
+; (DEFPARAMETER NUM_MAX_CONV ...)
+; (DEFPARAMETER NUM_MIN_CONV ...)
+; (DEFPARAMETER NUM_REL_CONV ...)
+; (DEFPARAMETER NUM_RED_CONV_LIST ...)
+; (DEFPARAMETER NUM_RED_CONV ...)
+; (DEFPARAMETER NUM_REDUCE_CONV ...)
+; (DEFPARAMETER NUM_COMPUTE_ADD_CONVS ...)
+; (DEFPARAMETER NUM_COMPUTE_CONV ...)
+; (DEFPARAMETER NUM_REDUCE_TAC ...)
+; (DEFPARAMETER NUM_CONV ...)
+; (DEFPARAMETER EXPAND_CASES_CONV ...)
+; (DEFPARAMETER EXP_MOD_CONV ...)
+COMPILED_UNIT holai/generated/calc_num.lisp
+INFERRED_UNIT holai/generated/calc_num.lisp
+AUDIT_END COMPILE holai/generated/calc_num.lisp
+AUDIT_BEGIN LOAD holai/generated/calc_num.lisp
+0..0..1..2..8..18..solved at 48
+0..0..1..2..8..18..solved at 55
+AUDIT_END LOAD holai/generated/calc_num.lisp
+
+; Compilation unit finished
+;   Caught 1 WARNING condition
+;   Caught 12 STYLE-WARNING conditions
+
+AUDIT_END INITIALIZATION holai/tests/bootstrap.lisp
+
+Caught STORAGE-CONDITION while processing --eval option "(load "/home/tani/ghq/github.com/tani/holai/_build/host-diagnostics-as0cty5_/audit.lisp")":
+  Stack overflow from compiled code
+

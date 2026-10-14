@@ -1,0 +1,29 @@
+{
+  "implementation": "abcl",
+  "allocator_checks": 21,
+  "original_observations_match": true,
+  "observations": [
+    "star-case=1115",
+    "star-reserved=20",
+    "star-primes=321",
+    "star-local-case=18",
+    "star-parallel=44",
+    "star-fields=129",
+    "star-variants=21",
+    "star-module=19",
+    "star-literal=|unchanged|"
+  ],
+  "escaped_symbol_delimiters_in_core": 0,
+  "core_files": 46,
+  "checked_exports": [
+    "T%",
+    "T%%",
+    "NIL%",
+    "PI%",
+    "PI%%",
+    "NAME",
+    "NAME%",
+    "NAME%%",
+    "NAME%%%"
+  ]
+}

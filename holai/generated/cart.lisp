@@ -513,6 +513,7 @@
     unit
     tuple
     snd
+    proof
     match
     lambdac
     labelsc
@@ -716,7 +717,7 @@
   (prove
     (tuple
       (parse_term "!s:A->bool. ~(dimindex(s) = 0)")
-      (holai.runtime:proof #'GEN_TAC
+      (proof #'GEN_TAC
         THEN (REWRITE_TAC (cl:cons dimindex nil))
         THEN COND_CASES_TAC
         THEN (#`ASM_SIMP_TAC (cl:cons CARD_EQ_0 (cl:cons ARITH nil)))
@@ -753,10 +754,10 @@
   (prove
     (tuple
       (parse_term "(:1) HAS_SIZE 1")
-      (holai.runtime:proof (SUBGOAL_THEN (parse_term "(:1) = {one}") #'SUBST1_TAC)
+      (proof (SUBGOAL_THEN (parse_term "(:1) = {one}") #'SUBST1_TAC)
         THENL
           (cl:cons
-            (holai.runtime:proof (REWRITE_TAC
+            (proof (REWRITE_TAC
                 (cl:cons EXTENSION (cl:cons IN_UNIV (cl:cons IN_SING nil))))
               THEN (MESON_TAC (cl:cons one nil)))
             (cl:cons
@@ -788,7 +789,7 @@
     (prove
       (tuple
         (parse_term "?x. x IN 1..dimindex(:A)")
-        (holai.runtime:proof (#`EXISTS_TAC (parse_term "1"))
+        (proof (#`EXISTS_TAC (parse_term "1"))
           THEN
             (REWRITE_TAC
               (cl:cons IN_NUMSEG (cl:cons LE_REFL (cl:cons DIMINDEX_GE_1 nil)))))))))
@@ -797,8 +798,7 @@
   (prove
     (tuple
       (parse_term "UNIV:(A)finite_image->bool = IMAGE finite_index (1..dimindex(:A))")
-      (holai.runtime:proof (REWRITE_TAC
-          (cl:cons EXTENSION (cl:cons IN_UNIV (cl:cons IN_IMAGE nil))))
+      (proof (REWRITE_TAC (cl:cons EXTENSION (cl:cons IN_UNIV (cl:cons IN_IMAGE nil))))
         THEN (MESON_TAC (cl:cons finite_image_tybij nil))))))
 
 ;; (* ------------------------------------------------------------------------- *)
@@ -810,7 +810,7 @@
   (prove
     (tuple
       (parse_term "!s. (UNIV:(A)finite_image->bool) HAS_SIZE dimindex(s:A->bool)")
-      (holai.runtime:proof #'GEN_TAC
+      (proof #'GEN_TAC
         THEN (SIMP_TAC (cl:cons FINITE_IMAGE_IMAGE nil))
         THEN (MATCH_MP_TAC HAS_SIZE_IMAGE_INJ)
         THEN (ONCE_REWRITE_TAC (cl:cons DIMINDEX_UNIV nil))
@@ -833,7 +833,7 @@
   (prove
     (tuple
       (parse_term "!s t. dimindex(s:(A)finite_image->bool) = dimindex(t:A->bool)")
-      (holai.runtime:proof (REPEAT #'GEN_TAC)
+      (proof (REPEAT #'GEN_TAC)
         THEN (GEN_REWRITE_TAC LAND_CONV (cl:cons dimindex nil))
         THEN (MP_TAC (ISPEC (parse_term "t:A->bool") HAS_SIZE_FINITE_IMAGE))
         THEN (SIMP_TAC (cl:cons FINITE_FINITE_IMAGE (cl:cons HAS_SIZE nil)))))))
@@ -844,8 +844,7 @@
       (parse_term
         "!i:(A)finite_image.
         ?!n. 1 <= n /\\ n <= dimindex(:A) /\\ (finite_index n = i)")
-      (holai.runtime:proof (REWRITE_TAC
-          (cl:cons CONJ_ASSOC (cl:cons (#`GSYM IN_NUMSEG) nil)))
+      (proof (REWRITE_TAC (cl:cons CONJ_ASSOC (cl:cons (#`GSYM IN_NUMSEG) nil)))
         THEN (MESON_TAC (cl:cons finite_image_tybij nil))))))
 
 (defparameter FINITE_INDEX_INJ
@@ -888,7 +887,7 @@
       (parse_term
         "!x:A^B y.
     (x = y) <=> !i. 1 <= i /\\ i <= dimindex(:B) ==> (x$i = y$i)")
-      (holai.runtime:proof (REPEAT #'GEN_TAC)
+      (proof (REPEAT #'GEN_TAC)
         THEN
           (REWRITE_TAC (cl:cons finite_index (cl:cons (#`GSYM FORALL_FINITE_INDEX) nil)))
         THEN (REWRITE_TAC (cl:cons (#`GSYM FUN_EQ_THM) (cl:cons ETA_AX nil)))
@@ -908,7 +907,7 @@
       (parse_term
         "!i. 1 <= i /\\ i <= dimindex(:B)
        ==> (((lambda) g:A^B) $i = g i)")
-      (holai.runtime:proof (REWRITE_TAC (cl:cons lambda% nil))
+      (proof (REWRITE_TAC (cl:cons lambda% nil))
         THEN (#`CONV_TAC SELECT_CONV)
         THEN
           (#`EXISTS_TAC
@@ -932,8 +931,7 @@
         "!f:A^B g.
         (!i. 1 <= i /\\ i <= dimindex(:B) ==> (f$i = g i)) <=>
         ((lambda) g = f)")
-      (holai.runtime:proof (SIMP_TAC (cl:cons CART_EQ (cl:cons LAMBDA_BETA nil)))
-        THEN (MESON_TAC nil)))))
+      (proof (SIMP_TAC (cl:cons CART_EQ (cl:cons LAMBDA_BETA nil))) THEN (MESON_TAC nil)))))
 
 (defparameter LAMBDA_ETA
   (prove
@@ -950,7 +948,7 @@
   (prove
     (tuple
       (parse_term "!i. ?k. 1 <= k /\\ k <= dimindex(:N) /\\ !x:A^N. x$i = x$k")
-      (holai.runtime:proof (REWRITE_TAC (cl:cons finite_index nil))
+      (proof (REWRITE_TAC (cl:cons finite_index nil))
         THEN (MESON_TAC (cl:cons FINITE_INDEX_WORKS nil))))))
 
 (defparameter FINITE_INDEX_INRANGE_2
@@ -959,14 +957,14 @@
       (parse_term
         "!i. ?k. 1 <= k /\\ k <= dimindex(:N) /\\
            (!x:A^N. x$i = x$k) /\\ (!y:B^N. y$i = y$k)")
-      (holai.runtime:proof (REWRITE_TAC (cl:cons finite_index nil))
+      (proof (REWRITE_TAC (cl:cons finite_index nil))
         THEN (MESON_TAC (cl:cons FINITE_INDEX_WORKS nil))))))
 
 (defparameter CART_EQ_FULL
   (prove
     (tuple
       (parse_term "!x y:A^N. x = y <=> !i. x$i = y$i")
-      (holai.runtime:proof (REPEAT #'GEN_TAC)
+      (proof (REPEAT #'GEN_TAC)
         THEN #'EQ_TAC
         THEN (SIMP_TAC nil)
         THEN (SIMP_TAC (cl:cons CART_EQ nil))))))
@@ -982,7 +980,7 @@
       (prove
         (tuple
           (parse_term "?x. x IN 1..(dimindex(:A) + dimindex(:B))")
-          (holai.runtime:proof (#`EXISTS_TAC (parse_term "1"))
+          (proof (#`EXISTS_TAC (parse_term "1"))
             THEN
               (SIMP_TAC
                 (cl:cons
@@ -1017,15 +1015,14 @@
       (parse_term
         "UNIV:(A,B)finite_sum->bool =
        IMAGE mk_finite_sum (1..(dimindex(:A)+dimindex(:B)))")
-      (holai.runtime:proof (REWRITE_TAC
-          (cl:cons EXTENSION (cl:cons IN_UNIV (cl:cons IN_IMAGE nil))))
+      (proof (REWRITE_TAC (cl:cons EXTENSION (cl:cons IN_UNIV (cl:cons IN_IMAGE nil))))
         THEN (MESON_TAC (cl:cons finite_sum_tybij nil))))))
 
 (defparameter DIMINDEX_HAS_SIZE_FINITE_SUM
   (prove
     (tuple
       (parse_term "(UNIV:(M,N)finite_sum->bool) HAS_SIZE (dimindex(:M) + dimindex(:N))")
-      (holai.runtime:proof (SIMP_TAC (cl:cons FINITE_SUM_IMAGE nil))
+      (proof (SIMP_TAC (cl:cons FINITE_SUM_IMAGE nil))
         THEN (MATCH_MP_TAC HAS_SIZE_IMAGE_INJ)
         THEN (ONCE_REWRITE_TAC (cl:cons DIMINDEX_UNIV nil))
         THEN (REWRITE_TAC (cl:cons HAS_SIZE_NUMSEG_1 nil))
@@ -1035,7 +1032,7 @@
   (prove
     (tuple
       (parse_term "dimindex(:(M,N)finite_sum) = dimindex(:M) + dimindex(:N)")
-      (holai.runtime:proof (GEN_REWRITE_TAC LAND_CONV (cl:cons dimindex nil))
+      (proof (GEN_REWRITE_TAC LAND_CONV (cl:cons dimindex nil))
         THEN
           (REWRITE_TAC
             (cl:cons
@@ -1063,7 +1060,7 @@
   (prove
     (tuple
       (parse_term "!x y. sndcart(pastecart (x:A^M) (y:A^N)) = y")
-      (holai.runtime:proof (SIMP_TAC
+      (proof (SIMP_TAC
           (cl:cons
             pastecart
             (cl:cons sndcart (cl:cons CART_EQ (cl:cons LAMBDA_BETA nil)))))
@@ -1077,14 +1074,14 @@
         THEN ANTS_TAC
         THENL
           (cl:cons
-            (holai.runtime:proof (REWRITE_TAC (cl:cons DIMINDEX_FINITE_SUM nil))
+            (proof (REWRITE_TAC (cl:cons DIMINDEX_FINITE_SUM nil))
               THEN
                 (MATCH_MP_TAC
                   (#`ARITH_RULE
                     (parse_term "1 <= i /\\ i <= b ==> 1 <= i + a /\\ i + a <= a + b")))
               THEN (#`ASM_REWRITE_TAC nil))
             (cl:cons
-              (holai.runtime:proof (DISCH_THEN #'SUBST1_TAC)
+              (proof (DISCH_THEN #'SUBST1_TAC)
                 THEN (REWRITE_TAC nil)
                 THEN
                   (#`ASM_SIMP_TAC
@@ -1097,7 +1094,7 @@
   (prove
     (tuple
       (parse_term "!z. pastecart (fstcart z) (sndcart z):A^(M,N)finite_sum = z")
-      (holai.runtime:proof (SIMP_TAC
+      (proof (SIMP_TAC
           (cl:cons
             pastecart
             (cl:cons
@@ -1176,19 +1173,19 @@
         "(!u:A^M v:A^N i. 1 <= i /\\ i <= dimindex(:M) ==> pastecart u v$i = u$i) /\\
    (!u:A^M v:A^N i. dimindex(:M) + 1 <= i /\\ i <= dimindex(:M) + dimindex(:N)
                     ==> pastecart u v$i = v$(i - dimindex(:M)))")
-      (holai.runtime:proof (REWRITE_TAC (cl:cons pastecart nil))
+      (proof (REWRITE_TAC (cl:cons pastecart nil))
         THEN #'CONJ_TAC
         THEN (REPEAT #'GEN_TAC)
         THEN #'STRIP_TAC
         THENL
           (cl:cons
-            (holai.runtime:proof (SUBGOAL_THEN
+            (proof (SUBGOAL_THEN
                 (parse_term "i <= dimindex(:(M,N)finite_sum)")
                 (lambdac (th) (#`ASM_SIMP_TAC (cl:cons LAMBDA_BETA (cl:cons th nil)))))
               THEN (REWRITE_TAC (cl:cons DIMINDEX_FINITE_SUM nil))
               THEN ASM_ARITH_TAC)
             (cl:cons
-              (holai.runtime:proof (#`ASM_SIMP_TAC
+              (proof (#`ASM_SIMP_TAC
                   (cl:cons
                     LAMBDA_BETA
                     (cl:cons
@@ -1214,7 +1211,7 @@
           (parse_term
             "?x. x IN 1..(if dimindex(:B) < dimindex(:A)
                   then dimindex(:A) - dimindex(:B) else 1)")
-          (holai.runtime:proof (#`EXISTS_TAC (parse_term "1"))
+          (proof (#`EXISTS_TAC (parse_term "1"))
             THEN (REWRITE_TAC (cl:cons IN_NUMSEG nil))
             THEN ARITH_TAC)))))
     (cl:declare (cl:ignorable th))
@@ -1228,8 +1225,7 @@
        IMAGE mk_finite_diff
        (1..(if dimindex(:B) < dimindex(:A)
                   then dimindex(:A) - dimindex(:B) else 1))")
-      (holai.runtime:proof (REWRITE_TAC
-          (cl:cons EXTENSION (cl:cons IN_UNIV (cl:cons IN_IMAGE nil))))
+      (proof (REWRITE_TAC (cl:cons EXTENSION (cl:cons IN_UNIV (cl:cons IN_IMAGE nil))))
         THEN (MESON_TAC (cl:cons finite_diff_tybij nil))))))
 
 (defparameter DIMINDEX_HAS_SIZE_FINITE_DIFF
@@ -1238,7 +1234,7 @@
       (parse_term
         "(UNIV:(M,N)finite_diff->bool) HAS_SIZE
    (if dimindex(:N) < dimindex(:M) then dimindex(:M) - dimindex(:N) else 1)")
-      (holai.runtime:proof (SIMP_TAC (cl:cons FINITE_DIFF_IMAGE nil))
+      (proof (SIMP_TAC (cl:cons FINITE_DIFF_IMAGE nil))
         THEN (MATCH_MP_TAC HAS_SIZE_IMAGE_INJ)
         THEN (ONCE_REWRITE_TAC (cl:cons DIMINDEX_UNIV nil))
         THEN (REWRITE_TAC (cl:cons HAS_SIZE_NUMSEG_1 nil))
@@ -1250,7 +1246,7 @@
       (parse_term
         "dimindex(:(M,N)finite_diff) =
      if dimindex(:N) < dimindex(:M) then dimindex(:M) - dimindex(:N) else 1")
-      (holai.runtime:proof (GEN_REWRITE_TAC LAND_CONV (cl:cons dimindex nil))
+      (proof (GEN_REWRITE_TAC LAND_CONV (cl:cons dimindex nil))
         THEN
           (REWRITE_TAC
             (cl:cons
@@ -1268,7 +1264,7 @@
       (prove
         (tuple
           (parse_term "?x. x IN 1..(dimindex(:A) * dimindex(:B))")
-          (holai.runtime:proof (#`EXISTS_TAC (parse_term "1"))
+          (proof (#`EXISTS_TAC (parse_term "1"))
             THEN (REWRITE_TAC (cl:cons IN_NUMSEG (cl:cons LE_REFL nil)))
             THEN
               (MESON_TAC (cl:cons LE_1 (cl:cons DIMINDEX_GE_1 (cl:cons MULT_EQ_0 nil)))))))))
@@ -1281,15 +1277,14 @@
       (parse_term
         "UNIV:(A,B)finite_prod->bool =
        IMAGE mk_finite_prod (1..(dimindex(:A)*dimindex(:B)))")
-      (holai.runtime:proof (REWRITE_TAC
-          (cl:cons EXTENSION (cl:cons IN_UNIV (cl:cons IN_IMAGE nil))))
+      (proof (REWRITE_TAC (cl:cons EXTENSION (cl:cons IN_UNIV (cl:cons IN_IMAGE nil))))
         THEN (MESON_TAC (cl:cons finite_prod_tybij nil))))))
 
 (defparameter DIMINDEX_HAS_SIZE_FINITE_PROD
   (prove
     (tuple
       (parse_term "(UNIV:(M,N)finite_prod->bool) HAS_SIZE (dimindex(:M) * dimindex(:N))")
-      (holai.runtime:proof (SIMP_TAC (cl:cons FINITE_PROD_IMAGE nil))
+      (proof (SIMP_TAC (cl:cons FINITE_PROD_IMAGE nil))
         THEN (MATCH_MP_TAC HAS_SIZE_IMAGE_INJ)
         THEN (ONCE_REWRITE_TAC (cl:cons DIMINDEX_UNIV nil))
         THEN (REWRITE_TAC (cl:cons HAS_SIZE_NUMSEG_1 nil))
@@ -1299,7 +1294,7 @@
   (prove
     (tuple
       (parse_term "dimindex(:(M,N)finite_prod) = dimindex(:M) * dimindex(:N)")
-      (holai.runtime:proof (GEN_REWRITE_TAC LAND_CONV (cl:cons dimindex nil))
+      (proof (GEN_REWRITE_TAC LAND_CONV (cl:cons dimindex nil))
         THEN
           (REWRITE_TAC
             (cl:cons
@@ -1331,17 +1326,17 @@
   (prove
     (tuple
       (parse_term "(:(A)tybit0) HAS_SIZE 2 * dimindex(:A)")
-      (holai.runtime:proof (SUBGOAL_THEN
+      (proof (SUBGOAL_THEN
           (parse_term "(:(A)tybit0) = IMAGE mktybit0 (:(A,A)finite_sum)")
           #'SUBST1_TAC)
         THENL
           (cl:cons
-            (holai.runtime:proof (#`CONV_TAC #'SYM_CONV)
+            (proof (#`CONV_TAC #'SYM_CONV)
               THEN (MATCH_MP_TAC SURJECTIVE_IMAGE_EQ)
               THEN (REWRITE_TAC (cl:cons IN_UNIV nil))
               THEN (MESON_TAC (cl:cons (cases "tybit0") nil)))
             (cl:cons
-              (holai.runtime:proof (MATCH_MP_TAC HAS_SIZE_IMAGE_INJ)
+              (proof (MATCH_MP_TAC HAS_SIZE_IMAGE_INJ)
                 THEN (REWRITE_TAC (cl:cons IN_UNIV (cl:cons (injectivity "tybit0") nil)))
                 THEN
                   (W
@@ -1359,17 +1354,17 @@
   (prove
     (tuple
       (parse_term "(:(A)tybit1) HAS_SIZE 2 * dimindex(:A) + 1")
-      (holai.runtime:proof (SUBGOAL_THEN
+      (proof (SUBGOAL_THEN
           (parse_term "(:(A)tybit1) = IMAGE mktybit1 (:((A,A)finite_sum,1)finite_sum)")
           #'SUBST1_TAC)
         THENL
           (cl:cons
-            (holai.runtime:proof (#`CONV_TAC #'SYM_CONV)
+            (proof (#`CONV_TAC #'SYM_CONV)
               THEN (MATCH_MP_TAC SURJECTIVE_IMAGE_EQ)
               THEN (REWRITE_TAC (cl:cons IN_UNIV nil))
               THEN (MESON_TAC (cl:cons (cases "tybit1") nil)))
             (cl:cons
-              (holai.runtime:proof (MATCH_MP_TAC HAS_SIZE_IMAGE_INJ)
+              (proof (MATCH_MP_TAC HAS_SIZE_IMAGE_INJ)
                 THEN (REWRITE_TAC (cl:cons IN_UNIV (cl:cons (injectivity "tybit1") nil)))
                 THEN
                   (W
@@ -1389,15 +1384,13 @@
   (prove
     (tuple
       (parse_term "dimindex(:(A)tybit0) = 2 * dimindex(:A)")
-      (holai.runtime:proof (MATCH_MP_TAC DIMINDEX_UNIQUE)
-        THEN (#`MATCH_ACCEPT_TAC HAS_SIZE_TYBIT0)))))
+      (proof (MATCH_MP_TAC DIMINDEX_UNIQUE) THEN (#`MATCH_ACCEPT_TAC HAS_SIZE_TYBIT0)))))
 
 (defparameter DIMINDEX_TYBIT1
   (prove
     (tuple
       (parse_term "dimindex(:(A)tybit1) = 2 * dimindex(:A) + 1")
-      (holai.runtime:proof (MATCH_MP_TAC DIMINDEX_UNIQUE)
-        THEN (#`MATCH_ACCEPT_TAC HAS_SIZE_TYBIT1)))))
+      (proof (MATCH_MP_TAC DIMINDEX_UNIQUE) THEN (#`MATCH_ACCEPT_TAC HAS_SIZE_TYBIT1)))))
 
 (defparameter DIMINDEX_CLAUSES
   (prove
@@ -1406,7 +1399,7 @@
         "dimindex(:1) = 1 /\\
    dimindex(:(A)tybit0) = 2 * dimindex(:A) /\\
    dimindex(:(A)tybit1) = 2 * dimindex(:A) + 1")
-      (holai.runtime:proof (REWRITE_TAC (cl:cons DIMINDEX_1 nil))
+      (proof (REWRITE_TAC (cl:cons DIMINDEX_1 nil))
         THEN #'CONJ_TAC
         THEN (MATCH_MP_TAC DIMINDEX_UNIQUE)
         THEN (REWRITE_TAC (cl:cons HAS_SIZE_TYBIT0 (cl:cons HAS_SIZE_TYBIT1 nil)))))))
@@ -1451,7 +1444,7 @@
      (dimindex(:A) = n <=> dimindex(:A tybit0) = BIT0 n) /\\
      (dimindex(:A) = n <=> dimindex(:A tybit1) = BIT1 n) /\\
      dimindex(:1) = BIT1 _0")
-        (holai.runtime:proof #'CONJ_TAC
+        (proof #'CONJ_TAC
           THENL
             (cl:cons
               (REWRITE_TAC (cl:cons NUMERAL (cl:cons dimindex nil)))
@@ -1538,22 +1531,13 @@
 
 
 (defparameter DIMINDEX_2
-  (prove
-    (tuple
-      (parse_term "dimindex (:2) = 2")
-      (holai.runtime:proof DIMINDEX_TAC THEN #'REFL_TAC))))
+  (prove (tuple (parse_term "dimindex (:2) = 2") (proof DIMINDEX_TAC THEN #'REFL_TAC))))
 
 (defparameter DIMINDEX_3
-  (prove
-    (tuple
-      (parse_term "dimindex (:3) = 3")
-      (holai.runtime:proof DIMINDEX_TAC THEN #'REFL_TAC))))
+  (prove (tuple (parse_term "dimindex (:3) = 3") (proof DIMINDEX_TAC THEN #'REFL_TAC))))
 
 (defparameter DIMINDEX_4
-  (prove
-    (tuple
-      (parse_term "dimindex (:4) = 4")
-      (holai.runtime:proof DIMINDEX_TAC THEN #'REFL_TAC))))
+  (prove (tuple (parse_term "dimindex (:4) = 4") (proof DIMINDEX_TAC THEN #'REFL_TAC))))
 
 (defparameter HAS_SIZE_2 (#`HAS_SIZE_DIMINDEX_RULE (parse_type "2")))
 
@@ -1572,7 +1556,7 @@
       (parse_term
         "!P. (!i. 1 <= i /\\ i <= dimindex(:N) ==> FINITE {x | P i x})
        ==> FINITE {v:A^N | !i. 1 <= i /\\ i <= dimindex(:N) ==> P i (v$i)}")
-      (holai.runtime:proof #'GEN_TAC
+      (proof #'GEN_TAC
         THEN DISCH_TAC
         THEN
           (SUBGOAL_THEN
@@ -1587,7 +1571,7 @@
         THEN INDUCT_TAC
         THENL
           (cl:cons
-            (holai.runtime:proof (REWRITE_TAC
+            (proof (REWRITE_TAC
                 (cl:cons
                   (#`ARITH_RULE (parse_term "1 <= i /\\ i <= n /\\ i <= 0 <=> F"))
                   nil))
@@ -1625,7 +1609,7 @@
         THEN #'CONJ_TAC
         THENL
           (cl:cons
-            (holai.runtime:proof (MATCH_MP_TAC FINITE_IMAGE)
+            (proof (MATCH_MP_TAC FINITE_IMAGE)
               THEN
                 (#`ASM_SIMP_TAC
                   (cl:cons
@@ -1672,7 +1656,7 @@
   (prove
     (tuple
       (parse_term "!m. (:A) HAS_SIZE m ==> (:A^N) HAS_SIZE m EXP (dimindex(:N))")
-      (holai.runtime:proof (REPEAT #'STRIP_TAC)
+      (proof (REPEAT #'STRIP_TAC)
         THEN
           (SUBGOAL_THEN
             (parse_term "(:(N)finite_image->A) HAS_SIZE m EXP (dimindex(:N))")
@@ -1682,7 +1666,7 @@
             (#`ASM_SIMP_TAC
               (cl:cons HAS_SIZE_FUNSPACE_UNIV (cl:cons HAS_SIZE_FINITE_IMAGE nil)))
             (cl:cons
-              (holai.runtime:proof (DISCH_THEN
+              (proof (DISCH_THEN
                   (o
                     (o #'MP_TAC (ISPEC (parse_term "mk_cart:((N)finite_image->A)->A^N")))
                     (MATCH_MP
@@ -1730,7 +1714,7 @@
     (tuple
       (parse_term
         "!P (a:A^M) (b:A^N). pastecart a b IN {pastecart x y | P x y} <=> P a b")
-      (holai.runtime:proof (REWRITE_TAC
+      (proof (REWRITE_TAC
           (cl:cons
             IN_ELIM_THM
             (cl:cons
@@ -1771,7 +1755,7 @@
   (prove
     (tuple
       (parse_term "!(s:A^M->bool) (t:A^N->bool). s PCROSS t = {} <=> s = {} \\/ t = {}")
-      (holai.runtime:proof (REWRITE_TAC (cl:cons PCROSS nil)) THEN (#`SET_TAC nil)))))
+      (proof (REWRITE_TAC (cl:cons PCROSS nil)) THEN (#`SET_TAC nil)))))
 
 (defparameter PCROSS_EMPTY
   (prove
@@ -1799,7 +1783,7 @@
         "!(s:A^M->bool) (t:A^N->bool) s' t'.
         s PCROSS t SUBSET s' PCROSS t' <=>
         s = {} \\/ t = {} \\/ s SUBSET s' /\\ t SUBSET t'")
-      (holai.runtime:proof (SIMP_TAC
+      (proof (SIMP_TAC
           (cl:cons
             PCROSS
             (cl:cons
@@ -1828,7 +1812,7 @@
         "!s s':real^M->bool t t':real^N->bool.
         s PCROSS t = s' PCROSS t' <=>
         (s = {} \\/ t = {}) /\\ (s' = {} \\/ t' = {}) \\/ s = s' /\\ t = t'")
-      (holai.runtime:proof (REWRITE_TAC
+      (proof (REWRITE_TAC
           (cl:cons (#`GSYM SUBSET_ANTISYM_EQ) (cl:cons SUBSET_PCROSS nil)))
         THEN (#`SET_TAC nil)))))
 
@@ -1847,7 +1831,7 @@
       (parse_term
         "!(s:A^M->bool) (t:A^N->bool) m n.
         s HAS_SIZE m /\\ t HAS_SIZE n ==> (s PCROSS t) HAS_SIZE (m * n)")
-      (holai.runtime:proof (REPEAT #'GEN_TAC)
+      (proof (REPEAT #'GEN_TAC)
         THEN DISCH_TAC
         THEN (FIRST_ASSUM (o #'MP_TAC (MATCH_MP HAS_SIZE_PRODUCT)))
         THEN (MATCH_MP_TAC EQ_IMP)
@@ -1877,7 +1861,7 @@
       (parse_term
         "!(s:A^M->bool) (t:A^N->bool).
         FINITE(s PCROSS t) <=> s = {} \\/ t = {} \\/ FINITE s /\\ FINITE t")
-      (holai.runtime:proof (REPEAT #'GEN_TAC)
+      (proof (REPEAT #'GEN_TAC)
         THEN
           (MAP_EVERY
             #'ASM_CASES_TAC
@@ -1915,7 +1899,7 @@
       (parse_term
         "!s:real^M->bool t:real^N->bool.
         IMAGE fstcart (s PCROSS t) = if t = {} then {} else s")
-      (holai.runtime:proof (REPEAT #'GEN_TAC)
+      (proof (REPEAT #'GEN_TAC)
         THEN COND_CASES_TAC
         THEN (#`ASM_REWRITE_TAC (cl:cons PCROSS_EMPTY (cl:cons IMAGE_CLAUSES nil)))
         THEN (REWRITE_TAC (cl:cons EXTENSION (cl:cons IN_IMAGE nil)))
@@ -1929,7 +1913,7 @@
       (parse_term
         "!s:real^M->bool t:real^N->bool.
         IMAGE sndcart (s PCROSS t) = if s = {} then {} else t")
-      (holai.runtime:proof (REPEAT #'GEN_TAC)
+      (proof (REPEAT #'GEN_TAC)
         THEN COND_CASES_TAC
         THEN (#`ASM_REWRITE_TAC (cl:cons PCROSS_EMPTY (cl:cons IMAGE_CLAUSES nil)))
         THEN (REWRITE_TAC (cl:cons EXTENSION (cl:cons IN_IMAGE nil)))
@@ -1945,7 +1929,7 @@
         s PCROSS (t INTER u) = (s PCROSS t) INTER (s PCROSS u)) /\\
    (!(s:A^M->bool) t (u:A^N->bool).
         (s INTER t) PCROSS u = (s PCROSS u) INTER (t PCROSS u))")
-      (holai.runtime:proof (REWRITE_TAC
+      (proof (REWRITE_TAC
           (cl:cons
             EXTENSION
             (cl:cons
@@ -1962,7 +1946,7 @@
         s PCROSS (t UNION u) = (s PCROSS t) UNION (s PCROSS u)) /\\
    (!(s:A^M->bool) t (u:A^N->bool).
         (s UNION t) PCROSS u = (s PCROSS u) UNION (t PCROSS u))")
-      (holai.runtime:proof (REWRITE_TAC
+      (proof (REWRITE_TAC
           (cl:cons
             EXTENSION
             (cl:cons
@@ -1979,7 +1963,7 @@
         s PCROSS (t DIFF u) = (s PCROSS t) DIFF (s PCROSS u)) /\\
    (!(s:A^M->bool) t (u:A^N->bool).
         (s DIFF t) PCROSS u = (s PCROSS u) DIFF (t PCROSS u))")
-      (holai.runtime:proof (REWRITE_TAC
+      (proof (REWRITE_TAC
           (cl:cons
             EXTENSION
             (cl:cons FORALL_PASTECART (cl:cons IN_DIFF (cl:cons PASTECART_IN_PCROSS nil)))))
@@ -1992,7 +1976,7 @@
       (parse_term
         "!(s:A^M->bool) s' (t:A^N->bool) t'.
       (s PCROSS t) INTER (s' PCROSS t') = (s INTER s') PCROSS (t INTER t')")
-      (holai.runtime:proof (REWRITE_TAC
+      (proof (REWRITE_TAC
           (cl:cons
             EXTENSION
             (cl:cons
@@ -2016,7 +2000,7 @@
           UNIONS {s PCROSS t | t IN f}) /\\
    (!f t. ((UNIONS f) PCROSS t) :A^(M,N)finite_sum->bool =
           UNIONS {s PCROSS t | s IN f})")
-      (holai.runtime:proof (REWRITE_TAC
+      (proof (REWRITE_TAC
           (cl:cons
             UNIONS_GSPEC
             (cl:cons
@@ -2046,8 +2030,8 @@
           if f = {} then s PCROSS UNIV else INTERS {s PCROSS t | t IN f}) /\\
    (!f t. ((INTERS f) PCROSS t) :A^(M,N)finite_sum->bool =
           if f = {} then UNIV PCROSS t else INTERS {s PCROSS t | s IN f})")
-      (holai.runtime:proof (REPEAT #'STRIP_TAC)
-        THEN (REPEAT (holai.runtime:proof COND_CASES_TAC THEN (REWRITE_TAC nil)))
+      (proof (REPEAT #'STRIP_TAC)
+        THEN (REPEAT (proof COND_CASES_TAC THEN (REWRITE_TAC nil)))
         THEN
           (#`ASM_REWRITE_TAC
             (cl:cons
