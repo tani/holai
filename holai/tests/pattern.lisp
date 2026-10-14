@@ -1,7 +1,7 @@
 (require :asdf)
 (asdf:initialize-source-registry `(:source-registry (:directory ,(truename ".")) :inherit-configuration))
 (setf *compile-verbose* nil *load-verbose* nil)
-(asdf:load-system "holai-runtime")
+(asdf:load-system "holai/runtime")
 (defpackage :pattern-test (:use :cl :holai.runtime)
   (:shadowing-import-from :holai.runtime :funcall :partial :compare := :< :> :<= :>= :Some :formatter :list-length))
 (in-package :pattern-test)

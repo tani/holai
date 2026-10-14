@@ -10,85 +10,122 @@
 ;; (*              (c) Copyright, John Harrison 1998-2007                       *)
 ;; (* ========================================================================= *)
 
-(cl:eval-when
-  (:compile-toplevel :load-toplevel :execute)
-  (cl:unless
-    (cl:find-package :holai.nums)
-    (defpackage :holai.nums
-      (:use :cl)
-      (:shadow
-        BIT0_DEF
-        BIT1_DEF
-        INDUCT_TAC
-        IND_SUC_0
-        IND_SUC_0_EXISTS
-        IND_SUC_INJ
-        IND_SUC_SPEC
-        INFINITY_AX
-        NOT_SUC
-        NUMERAL
-        NUM_REP_CASES
-        NUM_REP_INDUCT
-        NUM_REP_RULES
-        ONE_ONE
-        ONTO
-        SUC_DEF
-        SUC_INJ
-        ZERO_DEF
-        check_distinct
-        code
-        dest_small_numeral
-        is_numeral
-        mk_code
-        mk_numeral
-        mk_raw_numeral
-        mk_small_numeral
-        new_specification
-        num_Axiom
-        num_CASES
-        num_INDUCTION
-        num_RECURSION
-        num_tydef
-        numeral_of_list
-        raw_list_of_num
-        specifies
-        specify
-        stripzeros
-        the_specifications)
-      (:export
-        BIT0_DEF
-        BIT1_DEF
-        INDUCT_TAC
-        IND_SUC_0
-        IND_SUC_0_EXISTS
-        IND_SUC_INJ
-        IND_SUC_SPEC
-        INFINITY_AX
-        NOT_SUC
-        NUMERAL
-        NUM_REP_CASES
-        NUM_REP_INDUCT
-        NUM_REP_RULES
-        ONE_ONE
-        ONTO
-        SUC_DEF
-        SUC_INJ
-        ZERO_DEF
-        dest_small_numeral
-        is_numeral
-        mk_numeral
-        mk_small_numeral
-        new_specification
-        num_Axiom
-        num_CASES
-        num_INDUCTION
-        num_RECURSION
-        num_tydef
-        the_specifications))))
-
-(defpackage :holai.nums
+(uiop:define-package
+  :holai.nums
   (:use :cl)
   (:shadow
+    ARG~1132
+    ARG~1185
+    ASL
+    AVS
+    B%
+    BIT0_DEF
+    BIT0_TM
+    BIT1_DEF
+    BIT1_TM
+    C%
+    CHECK_DISTINCT
+    CODE
+    DEF
+    EXCEPTION~1111
+    EXCEPTION~992
+    FUNN_TY
+    GV
+    H
+    INDUCT_TAC
+    IND_SUC_0
+    IND_SUC_0%
+    IND_SUC_0_EXISTS
+    IND_SUC_INJ
+    IND_SUC_INJ%
+    IND_SUC_SPEC
+    INFINITY_AX
+    L
+    MK_CODE
+    MK_RAW_NUMERAL
+    N
+    NAME
+    NAMES
+    NAMES%
+    NOT_SUC
+    NOT_SUC%
+    NTM
+    NUMERAL
+    NUMERAL_OF_LIST
+    NUMERAL_TM
+    NUM_0%
+    NUM_AXIOM%
+    NUM_INDUCTION%
+    NUM_REP_CASES
+    NUM_REP_CASES%
+    NUM_REP_INDUCT
+    NUM_REP_INDUCT%
+    NUM_REP_RULES
+    NUM_REP_RULES%
+    NUM_TY
+    N_TM
+    ONAMES
+    ONE_ONE
+    ONTO
+    POW24
+    R%
+    RAW_LIST_OF_NUM
+    RES
+    RN
+    SPECIFIES
+    SPECIFY
+    STH
+    STH%
+    STRIPZEROS
+    SUC_DEF
+    SUC_INJ
+    T%
+    TH
+    TH%
+    TH0
+    TH1
+    TH2
+    TH3
+    TY
+    ZERO_DEF
+    ZERO_TM
+    check_distinct
+    code
+    dest_small_numeral
+    is_numeral
+    mk_code
+    mk_numeral
+    mk_raw_numeral
+    mk_small_numeral
+    new_specification
+    num_Axiom
+    num_CASES
+    num_INDUCTION
+    num_RECURSION
+    num_tydef
+    numeral_of_list
+    raw_list_of_num
+    specifies
+    specify
+    stripzeros
+    the_specifications)
+  (:import-from :holai.basics)
+  (:import-from :holai.bool)
+  (:import-from :holai.class)
+  (:import-from :holai.compute)
+  (:import-from :holai.equal)
+  (:import-from :holai.fusion)
+  (:import-from :holai.fusion.hol)
+  (:import-from :holai.ind_defs)
+  (:import-from :holai.lib)
+  (:import-from :holai.meson)
+  (:import-from :holai.pair)
+  (:import-from :holai.parser)
+  (:import-from :holai.runtime)
+  (:import-from :holai.simp)
+  (:import-from :holai.tactics)
+  (:import-from :holai.theorems)
+  (:export
     BIT0_DEF
     BIT1_DEF
     INDUCT_TAC
@@ -107,6 +144,114 @@
     SUC_DEF
     SUC_INJ
     ZERO_DEF
+    dest_small_numeral
+    is_numeral
+    mk_numeral
+    mk_small_numeral
+    new_specification
+    num_Axiom
+    num_CASES
+    num_INDUCTION
+    num_RECURSION
+    num_tydef
+    the_specifications))
+
+(uiop:define-package
+  :holai.nums
+  (:use :cl)
+  (:mix
+    :cl
+    :holai.basics
+    :holai.bool
+    :holai.class
+    :holai.equal
+    :holai.fusion
+    :holai.fusion.hol
+    :holai.ind_defs
+    :holai.lib
+    :holai.meson
+    :holai.pair
+    :holai.parser
+    :holai.runtime
+    :holai.simp
+    :holai.tactics
+    :holai.theorems)
+  (:shadow
+    ARG~1132
+    ARG~1185
+    ASL
+    AVS
+    B%
+    BIT0_DEF
+    BIT0_TM
+    BIT1_DEF
+    BIT1_TM
+    C%
+    CHECK_DISTINCT
+    CODE
+    DEF
+    EXCEPTION~1111
+    EXCEPTION~992
+    FUNN_TY
+    GV
+    H
+    INDUCT_TAC
+    IND_SUC_0
+    IND_SUC_0%
+    IND_SUC_0_EXISTS
+    IND_SUC_INJ
+    IND_SUC_INJ%
+    IND_SUC_SPEC
+    INFINITY_AX
+    L
+    MK_CODE
+    MK_RAW_NUMERAL
+    N
+    NAME
+    NAMES
+    NAMES%
+    NOT_SUC
+    NOT_SUC%
+    NTM
+    NUMERAL
+    NUMERAL_OF_LIST
+    NUMERAL_TM
+    NUM_0%
+    NUM_AXIOM%
+    NUM_INDUCTION%
+    NUM_REP_CASES
+    NUM_REP_CASES%
+    NUM_REP_INDUCT
+    NUM_REP_INDUCT%
+    NUM_REP_RULES
+    NUM_REP_RULES%
+    NUM_TY
+    N_TM
+    ONAMES
+    ONE_ONE
+    ONTO
+    POW24
+    R%
+    RAW_LIST_OF_NUM
+    RES
+    RN
+    SPECIFIES
+    SPECIFY
+    STH
+    STH%
+    STRIPZEROS
+    SUC_DEF
+    SUC_INJ
+    T%
+    TH
+    TH%
+    TH0
+    TH1
+    TH2
+    TH3
+    TY
+    ZERO_DEF
+    ZERO_TM
     check_distinct
     code
     dest_small_numeral

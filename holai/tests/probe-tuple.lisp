@@ -1,7 +1,7 @@
 ;;; Historical vector-representation microprobe, independent of current tuple storage.
 (require :asdf)
 (asdf:initialize-source-registry `(:source-registry (:directory ,(truename ".")) :inherit-configuration))
-(asdf:load-system "holai-runtime")
+(asdf:load-system "holai/runtime")
 (defstruct probe-tuple-value items)
 (declaim (notinline tuple-generic tuple-direct))
 (defun tuple-generic (a b) (let ((items (list a b))) (make-probe-tuple-value :items (coerce items 'vector))))

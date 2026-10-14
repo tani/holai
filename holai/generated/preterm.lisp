@@ -12,124 +12,229 @@
 ;; (*               (c) Copyright, Vincent Aravantinos 2012                     *)
 ;; (* ========================================================================= *)
 
-(cl:eval-when
-  (:compile-toplevel :load-toplevel :execute)
-  (cl:unless
-    (cl:find-package :holai.preterm)
-    (defpackage :holai.preterm
-      (:use :cl)
-      (:shadow
-        Absp
-        Combp
-        Constp
-        Ptycon
-        Stv
-        Typing
-        Utv
-        Varp
-        default_msg
-        dpty
-        free_stvs
-        get_generic_type
-        get_var_type
-        hide_constant
-        hide_constant%
-        ignore_constant_varstruct
-        is_hidden
-        is_hidden%
-        istrivial
-        make-Absp
-        make-Combp
-        make-Constp
-        make-Ptycon
-        make-Stv
-        make-Typing
-        make-Utv
-        make-Varp
-        make_overloadable
-        new_type_abbrev
-        new_type_abbrev%
-        new_type_var
-        overload_interface
-        override_interface
-        pmk_cv
-        pmk_numeral
-        preterm_of_term
-        pretype_instance
-        pretype_of_type
-        pretype_subst
-        prioritize_overload
-        reduce_interface
-        remove_interface
-        remove_type_abbrev
-        remove_type_abbrev%
-        report_type_invention
-        resolve_interface
-        retypecheck
-        retypecheck%
-        solve
-        solve_preterm
-        string_of_pretype
-        string_of_ty_error
-        term_of_preterm
-        term_of_preterm%
-        the_implicit_types
-        type_abbrevs
-        type_abbrevs%
-        type_invention_error
-        type_invention_warning
-        type_of_pretype
-        type_of_pretype%
-        type_of_pretype_base
-        typify
-        unhide_constant
-        unhide_constant%
-        unify
-        untyped_t_of_pt
-        varstruct_consts)
-      (:export
-        Absp
-        Combp
-        Constp
-        Ptycon
-        Stv
-        Typing
-        Utv
-        Varp
-        dpty
-        hide_constant
-        ignore_constant_varstruct
-        is_hidden
-        make-Absp
-        make-Combp
-        make-Constp
-        make-Ptycon
-        make-Stv
-        make-Typing
-        make-Utv
-        make-Varp
-        make_overloadable
-        new_type_abbrev
-        overload_interface
-        override_interface
-        preterm_of_term
-        pretype_of_type
-        prioritize_overload
-        reduce_interface
-        remove_interface
-        remove_type_abbrev
-        retypecheck
-        term_of_preterm
-        the_implicit_types
-        type_abbrevs
-        type_invention_error
-        type_invention_warning
-        type_of_pretype
-        unhide_constant))))
-
-(defpackage :holai.preterm
+(uiop:define-package
+  :holai.preterm
   (:use :cl)
   (:shadow
+    ARGS
+    ARGS%
+    ARG~1172
+    ARG~125
+    ARG~1537
+    ARG~1550
+    ARG~1643
+    ARG~1849
+    ARG~193
+    ARG~215
+    ARG~270
+    ARG~286
+    ARG~308
+    ARG~489
+    ARG~505
+    ARG~62
+    ARG~719
+    ARG~746
+    ARG~785
+    ARG~841
+    ARG~90
+    ARG~928
+    ARG~975
+    Absp
+    B
+    BIT0
+    BIT1
+    BOD
+    BOD%
+    C%
+    CNAME
+    CON
+    CONT
+    CSEED
+    Combp
+    Constp
+    DEFAULT_MSG
+    E
+    ENV
+    ENV%
+    EXCEPTION~130
+    EXCEPTION~1627
+    EXCEPTION~177
+    EXCEPTION~1898
+    EXCEPTION~1921
+    EXCEPTION~197
+    EXCEPTION~409
+    EXCEPTION~412
+    EXCEPTION~415
+    EXCEPTION~67
+    EXCEPTION~95
+    F
+    F%
+    FARGS
+    FREE_STVS
+    G
+    GARGS
+    GET_GENERIC_TYPE
+    GET_VAR_TYPE
+    GTY
+    HCS
+    HIDE_CONSTANT%
+    I%
+    INTERFACE
+    ISTRIVIAL
+    IS_HIDDEN%
+    L
+    M
+    MAPS
+    N
+    NAME
+    NAMTY
+    NEW_TYPE_ABBREV%
+    NEW_TYPE_VAR
+    NS
+    NUMERAL
+    NUM_PTY
+    OP
+    OTH
+    PMK_CV
+    PMK_NUMERAL
+    PRETYPE_INSTANCE
+    PRETYPE_SUBST
+    PTM
+    PTM%
+    PTM%%
+    PTY
+    Ptycon
+    R
+    REMOVE_TYPE_ABBREV%
+    REPORT_TYPE_INVENTION
+    RESOLVE_INTERFACE
+    RETYPECHECK%
+    S
+    S%
+    SOLVE
+    SOLVE_PRETERM
+    STRING_OF_PRETERM
+    STRING_OF_PRETYPE
+    STRING_OF_TY_ERROR
+    STVS
+    STVS_TRANSLATED_TERMS
+    STY1
+    STY2
+    SUBS
+    SYM
+    Stv
+    T%
+    T%%
+    TERM_OF_PRETERM%
+    TH
+    THE_TYPE_ABBREVIATIONS
+    TM
+    TRANSLATED
+    TRANSLATED%
+    TV
+    TY
+    TY%
+    TY%%
+    TY%%%
+    TY1
+    TY1%
+    TY2
+    TY2%
+    TYCON
+    TYPE_ABBREVS%
+    TYPE_OF_PRETYPE%
+    TYPE_OF_PRETYPE_BASE
+    TYPIFY
+    TYS
+    TYVS
+    TYV_NUM
+    T_0
+    Typing
+    UENV
+    UENV0
+    UENV1
+    UENV2
+    UNHIDE_CONSTANT%
+    UNIFY
+    UNTYPED_T_OF_PT
+    Utv
+    V
+    V%
+    VARSTRUCT_CONSTS
+    VENV
+    VENV1
+    VENV2
+    VNAME
+    Varp
+    X
+    X%
+    Y
+    default_msg
+    dpty
+    free_stvs
+    get_generic_type
+    get_var_type
+    hide_constant
+    hide_constant%
+    ignore_constant_varstruct
+    is_hidden
+    is_hidden%
+    istrivial
+    make-Absp
+    make-Combp
+    make-Constp
+    make-Ptycon
+    make-Stv
+    make-Typing
+    make-Utv
+    make-Varp
+    make_overloadable
+    new_type_abbrev
+    new_type_abbrev%
+    new_type_var
+    overload_interface
+    override_interface
+    pmk_cv
+    pmk_numeral
+    preterm_of_term
+    pretype_instance
+    pretype_of_type
+    pretype_subst
+    prioritize_overload
+    reduce_interface
+    remove_interface
+    remove_type_abbrev
+    remove_type_abbrev%
+    report_type_invention
+    resolve_interface
+    retypecheck
+    retypecheck%
+    solve
+    solve_preterm
+    string_of_pretype
+    string_of_ty_error
+    term_of_preterm
+    term_of_preterm%
+    the_implicit_types
+    type_abbrevs
+    type_abbrevs%
+    type_invention_error
+    type_invention_warning
+    type_of_pretype
+    type_of_pretype%
+    type_of_pretype_base
+    typify
+    unhide_constant
+    unhide_constant%
+    unify
+    untyped_t_of_pt
+    varstruct_consts)
+  (:import-from :holai.basics)
+  (:import-from :holai.fusion.hol)
+  (:import-from :holai.lib)
+  (:import-from :holai.printer)
+  (:import-from :holai.runtime)
+  (:export
     Absp
     Combp
     Constp
@@ -138,6 +243,195 @@
     Typing
     Utv
     Varp
+    dpty
+    hide_constant
+    ignore_constant_varstruct
+    is_hidden
+    make-Absp
+    make-Combp
+    make-Constp
+    make-Ptycon
+    make-Stv
+    make-Typing
+    make-Utv
+    make-Varp
+    make_overloadable
+    new_type_abbrev
+    overload_interface
+    override_interface
+    preterm_of_term
+    pretype_of_type
+    prioritize_overload
+    reduce_interface
+    remove_interface
+    remove_type_abbrev
+    retypecheck
+    term_of_preterm
+    the_implicit_types
+    type_abbrevs
+    type_invention_error
+    type_invention_warning
+    type_of_pretype
+    unhide_constant))
+
+(uiop:define-package
+  :holai.preterm
+  (:use :cl)
+  (:mix :cl :holai.basics :holai.fusion.hol :holai.lib :holai.printer :holai.runtime)
+  (:shadow
+    ARGS
+    ARGS%
+    ARG~1172
+    ARG~125
+    ARG~1537
+    ARG~1550
+    ARG~1643
+    ARG~1849
+    ARG~193
+    ARG~215
+    ARG~270
+    ARG~286
+    ARG~308
+    ARG~489
+    ARG~505
+    ARG~62
+    ARG~719
+    ARG~746
+    ARG~785
+    ARG~841
+    ARG~90
+    ARG~928
+    ARG~975
+    Absp
+    B
+    BIT0
+    BIT1
+    BOD
+    BOD%
+    C%
+    CNAME
+    CON
+    CONT
+    CSEED
+    Combp
+    Constp
+    DEFAULT_MSG
+    E
+    ENV
+    ENV%
+    EXCEPTION~130
+    EXCEPTION~1627
+    EXCEPTION~177
+    EXCEPTION~1898
+    EXCEPTION~1921
+    EXCEPTION~197
+    EXCEPTION~409
+    EXCEPTION~412
+    EXCEPTION~415
+    EXCEPTION~67
+    EXCEPTION~95
+    F
+    F%
+    FARGS
+    FREE_STVS
+    G
+    GARGS
+    GET_GENERIC_TYPE
+    GET_VAR_TYPE
+    GTY
+    HCS
+    HIDE_CONSTANT%
+    I%
+    INTERFACE
+    ISTRIVIAL
+    IS_HIDDEN%
+    L
+    M
+    MAPS
+    N
+    NAME
+    NAMTY
+    NEW_TYPE_ABBREV%
+    NEW_TYPE_VAR
+    NS
+    NUMERAL
+    NUM_PTY
+    OP
+    OTH
+    PMK_CV
+    PMK_NUMERAL
+    PRETYPE_INSTANCE
+    PRETYPE_SUBST
+    PTM
+    PTM%
+    PTM%%
+    PTY
+    Ptycon
+    R
+    REMOVE_TYPE_ABBREV%
+    REPORT_TYPE_INVENTION
+    RESOLVE_INTERFACE
+    RETYPECHECK%
+    S
+    S%
+    SOLVE
+    SOLVE_PRETERM
+    STRING_OF_PRETERM
+    STRING_OF_PRETYPE
+    STRING_OF_TY_ERROR
+    STVS
+    STVS_TRANSLATED_TERMS
+    STY1
+    STY2
+    SUBS
+    SYM
+    Stv
+    T%
+    T%%
+    TERM_OF_PRETERM%
+    TH
+    THE_TYPE_ABBREVIATIONS
+    TM
+    TRANSLATED
+    TRANSLATED%
+    TV
+    TY
+    TY%
+    TY%%
+    TY%%%
+    TY1
+    TY1%
+    TY2
+    TY2%
+    TYCON
+    TYPE_ABBREVS%
+    TYPE_OF_PRETYPE%
+    TYPE_OF_PRETYPE_BASE
+    TYPIFY
+    TYS
+    TYVS
+    TYV_NUM
+    T_0
+    Typing
+    UENV
+    UENV0
+    UENV1
+    UENV2
+    UNHIDE_CONSTANT%
+    UNIFY
+    UNTYPED_T_OF_PT
+    Utv
+    V
+    V%
+    VARSTRUCT_CONSTS
+    VENV
+    VENV1
+    VENV2
+    VNAME
+    Varp
+    X
+    X%
+    Y
     default_msg
     dpty
     free_stvs
@@ -534,7 +828,7 @@
       unhide_constant
       unhide_constant%)))
 
-(defvariant pretype (Utv field0) (Ptycon field0 field1) (Stv field0))
+(defvariant pretype (Utv #:field0) (Ptycon #:field0 #:field1) (Stv #:field0))
 
 ;; (* System type variable       *)
 ;; 
@@ -556,11 +850,11 @@
     ((Tyapp con args) (make-Ptycon con (map #'pretype_of_type args)))))
 
 (defvariant preterm
-  (Varp field0 field1)
-  (Constp field0 field1)
-  (Combp field0 field1)
-  (Absp field0 field1)
-  (Typing field0 field1))
+  (Varp #:field0 #:field1)
+  (Constp #:field0 #:field1)
+  (Combp #:field0 #:field1)
+  (Absp #:field0 #:field1)
+  (Typing #:field0 #:field1))
 
 ;; (* Type constraint    - t : ty *)
 ;; 

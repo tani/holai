@@ -10,26 +10,190 @@
 ;; (*              (c) Copyright, John Harrison 1998-2007                       *)
 ;; (* ========================================================================= *)
 
-(cl:eval-when
-  (:compile-toplevel :load-toplevel :execute)
-  (cl:unless
-    (cl:find-package :holai.recursion)
-    (defpackage :holai.recursion
-      (:use :cl)
-      (:shadow
-        canonize
-        find_redefinition
-        new_recursive_definition
-        prove_canon_recursive_functions_exist
-        prove_raw_recursive_functions_exist
-        prove_recursive_functions_exist
-        reshuffle
-        scrub_def)
-      (:export new_recursive_definition prove_recursive_functions_exist))))
-
-(defpackage :holai.recursion
+(uiop:define-package
+  :holai.recursion
   (:use :cl)
   (:shadow
+    ACC
+    ARGS
+    ARGS%
+    ATHS
+    ATM
+    AVS
+    AX
+    AXBODY
+    AXCLS
+    AXFNS
+    AXTH
+    AXTM
+    BOD
+    CANONIZE
+    DEF
+    DTH
+    DTHS
+    EBOD
+    ETH
+    EVS
+    EXCEPTION~518
+    EXVS
+    F
+    FINDAX
+    FIND_REDEFINITION
+    FN
+    FN%
+    FTH
+    FVS
+    GCLS
+    GTH
+    GVS
+    GVS%
+    INSTS
+    IXBODY
+    IXTH
+    IXTHS
+    IXTM
+    IXVS
+    L
+    L%
+    LPATS
+    LTY
+    PROVE_CANON_RECURSIVE_FUNCTIONS_EXIST
+    PROVE_RAW_RECURSIVE_FUNCTIONS_EXIST
+    R%
+    R%%
+    RARG
+    RAWCLS
+    RAXS
+    RESHUFFLE
+    RIXTH
+    RIXTHS
+    RTH
+    SCRUB_DEF
+    SPCLS
+    T%
+    TH
+    TH%
+    THE_RECURSIVE_DEFINITIONS
+    THS
+    TM
+    TRTHS
+    TTH
+    UFNS
+    URFNS
+    URTM
+    UXARGS
+    V
+    VARGS
+    canonize
+    find_redefinition
+    new_recursive_definition
+    prove_canon_recursive_functions_exist
+    prove_raw_recursive_functions_exist
+    prove_recursive_functions_exist
+    reshuffle
+    scrub_def)
+  (:import-from :holai.basics)
+  (:import-from :holai.bool)
+  (:import-from :holai.drule)
+  (:import-from :holai.equal)
+  (:import-from :holai.fusion)
+  (:import-from :holai.fusion.hol)
+  (:import-from :holai.ind_defs)
+  (:import-from :holai.lib)
+  (:import-from :holai.nums)
+  (:import-from :holai.runtime)
+  (:import-from :holai.simp)
+  (:import-from :holai.theorems)
+  (:export new_recursive_definition prove_recursive_functions_exist))
+
+(uiop:define-package
+  :holai.recursion
+  (:use :cl)
+  (:mix
+    :cl
+    :holai.basics
+    :holai.bool
+    :holai.drule
+    :holai.equal
+    :holai.fusion
+    :holai.fusion.hol
+    :holai.ind_defs
+    :holai.lib
+    :holai.nums
+    :holai.runtime
+    :holai.simp
+    :holai.theorems)
+  (:shadow
+    ACC
+    ARGS
+    ARGS%
+    ATHS
+    ATM
+    AVS
+    AX
+    AXBODY
+    AXCLS
+    AXFNS
+    AXTH
+    AXTM
+    BOD
+    CANONIZE
+    DEF
+    DTH
+    DTHS
+    EBOD
+    ETH
+    EVS
+    EXCEPTION~518
+    EXVS
+    F
+    FINDAX
+    FIND_REDEFINITION
+    FN
+    FN%
+    FTH
+    FVS
+    GCLS
+    GTH
+    GVS
+    GVS%
+    INSTS
+    IXBODY
+    IXTH
+    IXTHS
+    IXTM
+    IXVS
+    L
+    L%
+    LPATS
+    LTY
+    PROVE_CANON_RECURSIVE_FUNCTIONS_EXIST
+    PROVE_RAW_RECURSIVE_FUNCTIONS_EXIST
+    R%
+    R%%
+    RARG
+    RAWCLS
+    RAXS
+    RESHUFFLE
+    RIXTH
+    RIXTHS
+    RTH
+    SCRUB_DEF
+    SPCLS
+    T%
+    TH
+    TH%
+    THE_RECURSIVE_DEFINITIONS
+    THS
+    TM
+    TRTHS
+    TTH
+    UFNS
+    URFNS
+    URTM
+    UXARGS
+    V
+    VARGS
     canonize
     find_redefinition
     new_recursive_definition

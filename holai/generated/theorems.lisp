@@ -11,181 +11,192 @@
 ;; (*                 (c) Copyright, Marco Maggesi 2012                         *)
 ;; (* ========================================================================= *)
 
-(cl:eval-when
-  (:compile-toplevel :load-toplevel :execute)
-  (cl:unless
-    (cl:find-package :holai.theorems)
-    (defpackage :holai.theorems
-      (:use :cl)
-      (:shadow
-        ABS_SIMP
-        AC
-        AND_CLAUSES
-        AND_FORALL_THM
-        BETA_THM
-        CLAIM_TAC
-        CONJ_ACI
-        CONJ_ASSOC
-        CONJ_SYM
-        DESTRUCT_TAC
-        DESTRUCT_TAC%%
-        DISJ_ACI
-        DISJ_ASSOC
-        DISJ_SYM
-        EQ_CLAUSES
-        EQ_IMP
-        EQ_REFL
-        EQ_SYM
-        EQ_SYM_EQ
-        EQ_TRANS
-        EXISTS_OR_THM
-        EXISTS_REFL
-        EXISTS_SIMP
-        EXISTS_UNIQUE
-        EXISTS_UNIQUE_ALT
-        EXISTS_UNIQUE_REFL
-        EXISTS_UNIQUE_THM
-        FIX_TAC
-        FIX_TAC%%
-        FORALL_AND_THM
-        FORALL_SIMP
-        FORALL_UNWIND_THM1
-        FORALL_UNWIND_THM2
-        HYP_TAC
-        HYP_TAC%%
-        IMP_CLAUSES
-        IMP_CONJ
-        IMP_CONJ_ALT
-        IMP_IMP
-        INTRO_TAC
-        INTRO_TAC%%
-        LEFT_AND_EXISTS_THM
-        LEFT_AND_FORALL_THM
-        LEFT_EXISTS_AND_THM
-        LEFT_FORALL_IMP_THM
-        LEFT_IMP_EXISTS_THM
-        LEFT_OR_DISTRIB
-        LEFT_OR_EXISTS_THM
-        MONO_AND
-        MONO_EXISTS
-        MONO_FORALL
-        MONO_IMP
-        MONO_NOT
-        MONO_OR
-        NOT_CLAUSES_WEAK
-        OR_CLAUSES
-        OR_EXISTS_THM
-        PULL_FORALL
-        REFL_CLAUSE
-        RIGHT_AND_EXISTS_THM
-        RIGHT_AND_FORALL_THM
-        RIGHT_EXISTS_AND_THM
-        RIGHT_FORALL_IMP_THM
-        RIGHT_IMP_FORALL_THM
-        RIGHT_OR_DISTRIB
-        RIGHT_OR_EXISTS_THM
-        SWAP_EXISTS_THM
-        SWAP_FORALL_THM
-        TRIV_AND_EXISTS_THM
-        TRIV_EXISTS_AND_THM
-        TRIV_EXISTS_IMP_THM
-        TRIV_FORALL_IMP_THM
-        TRIV_FORALL_OR_THM
-        TRIV_OR_FORALL_THM
-        UNWIND_THM1
-        UNWIND_THM2
-        WLOG_RELATION
-        atom
-        conj%
-        destruct
-        disj
-        fix_rename
-        fix_var
-        hyp_tac%
-        obtain
-        pa_action
-        pa_conj
-        pa_disj
-        pa_ident
-        pa_intro
-        pa_postfix)
-      (:export
-        ABS_SIMP
-        AC
-        AND_CLAUSES
-        AND_FORALL_THM
-        BETA_THM
-        CLAIM_TAC
-        CONJ_ACI
-        CONJ_ASSOC
-        CONJ_SYM
-        DESTRUCT_TAC
-        DISJ_ACI
-        DISJ_ASSOC
-        DISJ_SYM
-        EQ_CLAUSES
-        EQ_IMP
-        EQ_REFL
-        EQ_SYM
-        EQ_SYM_EQ
-        EQ_TRANS
-        EXISTS_OR_THM
-        EXISTS_REFL
-        EXISTS_SIMP
-        EXISTS_UNIQUE
-        EXISTS_UNIQUE_ALT
-        EXISTS_UNIQUE_REFL
-        EXISTS_UNIQUE_THM
-        FIX_TAC
-        FORALL_AND_THM
-        FORALL_SIMP
-        FORALL_UNWIND_THM1
-        FORALL_UNWIND_THM2
-        HYP_TAC
-        IMP_CLAUSES
-        IMP_CONJ
-        IMP_CONJ_ALT
-        IMP_IMP
-        INTRO_TAC
-        LEFT_AND_EXISTS_THM
-        LEFT_AND_FORALL_THM
-        LEFT_EXISTS_AND_THM
-        LEFT_FORALL_IMP_THM
-        LEFT_IMP_EXISTS_THM
-        LEFT_OR_DISTRIB
-        LEFT_OR_EXISTS_THM
-        MONO_AND
-        MONO_EXISTS
-        MONO_FORALL
-        MONO_IMP
-        MONO_NOT
-        MONO_OR
-        NOT_CLAUSES_WEAK
-        OR_CLAUSES
-        OR_EXISTS_THM
-        REFL_CLAUSE
-        RIGHT_AND_EXISTS_THM
-        RIGHT_AND_FORALL_THM
-        RIGHT_EXISTS_AND_THM
-        RIGHT_FORALL_IMP_THM
-        RIGHT_IMP_FORALL_THM
-        RIGHT_OR_DISTRIB
-        RIGHT_OR_EXISTS_THM
-        SWAP_EXISTS_THM
-        SWAP_FORALL_THM
-        TRIV_AND_EXISTS_THM
-        TRIV_EXISTS_AND_THM
-        TRIV_EXISTS_IMP_THM
-        TRIV_FORALL_IMP_THM
-        TRIV_FORALL_OR_THM
-        TRIV_OR_FORALL_THM
-        UNWIND_THM1
-        UNWIND_THM2
-        WLOG_RELATION))))
-
-(defpackage :holai.theorems
+(uiop:define-package
+  :holai.theorems
   (:use :cl)
   (:shadow
+    ABS_SIMP
+    AC
+    ACSUITE
+    ACTION
+    AND_CLAUSES
+    AND_FORALL_CONV
+    AND_FORALL_THM
+    ARG~1021
+    ARG~1091
+    ARG~1176
+    ARG~1238
+    ARG~1353
+    ARG~1380
+    ARG~818
+    ARG~989
+    ASL
+    ATOM
+    AVOIDS
+    BETA_THM
+    CLAIM_TAC
+    CONJ%
+    CONJS
+    CONJ_ACI
+    CONJ_ASSOC
+    CONJ_LIST_TAC
+    CONJ_SYM
+    DESTRUCT
+    DESTRUCT_TAC
+    DESTRUCT_TAC%
+    DESTRUCT_TAC%%
+    DISJ
+    DISJ_ACI
+    DISJ_ASSOC
+    DISJ_CASES_LIST
+    DISJ_SYM
+    EQ_CLAUSES
+    EQ_IMP
+    EQ_REFL
+    EQ_SYM
+    EQ_SYM_EQ
+    EQ_TRANS
+    EXCEPTION~1246
+    EXCEPTION~822
+    EXISTS_OR_THM
+    EXISTS_REFL
+    EXISTS_SIMP
+    EXISTS_UNIQUE
+    EXISTS_UNIQUE_ALT
+    EXISTS_UNIQUE_REFL
+    EXISTS_UNIQUE_THM
+    FIX_RENAME
+    FIX_TAC
+    FIX_TAC%
+    FIX_TAC%%
+    FIX_VAR
+    FORALL_AND_THM
+    FORALL_SIMP
+    FORALL_UNWIND_THM1
+    FORALL_UNWIND_THM2
+    GL
+    HYP_TAC
+    HYP_TAC%
+    HYP_TAC%%
+    IMP_CLAUSES
+    IMP_CONJ
+    IMP_CONJ_ALT
+    IMP_EQ_CLAUSE
+    IMP_IMP
+    INP
+    INTRO_TAC
+    INTRO_TAC%
+    INTRO_TAC%%
+    LABEL
+    LBL
+    LEFT_AND_EXISTS_THM
+    LEFT_AND_FORALL_THM
+    LEFT_EXISTS_AND_THM
+    LEFT_FORALL_IMP_THM
+    LEFT_IMP_EXISTS_THM
+    LEFT_OR_DISTRIB
+    LEFT_OR_EXISTS_THM
+    MONO_AND
+    MONO_EXISTS
+    MONO_FORALL
+    MONO_IMP
+    MONO_NOT
+    MONO_OR
+    N
+    NAME_GEN_TAC
+    NAME_PULL_FORALL_CONV
+    NOT_CLAUSES_WEAK
+    NUMBER
+    NUM_DISJ_TAC
+    OBTAIN
+    OBTAINL_THEN
+    OBTAIN_PRFX
+    OBTAIN_THEN
+    ONAME
+    OR_CLAUSES
+    OR_EXISTS_THM
+    P%
+    PAREN
+    PA_ACTION
+    PA_CONJ
+    PA_DEST
+    PA_DISJ
+    PA_FIX
+    PA_IDENT
+    PA_INTRO
+    PA_LABEL
+    PA_POSTFIX
+    PA_PREFIX
+    PA_RENAME
+    PA_VAR
+    PULL_FORALL
+    PURE_GEN_TAC
+    REFL_CLAUSE
+    RES
+    REST
+    RIGHT_AND_EXISTS_THM
+    RIGHT_AND_FORALL_THM
+    RIGHT_EXISTS_AND_THM
+    RIGHT_FORALL_IMP_THM
+    RIGHT_IMP_FORALL_CONV
+    RIGHT_IMP_FORALL_THM
+    RIGHT_OR_DISTRIB
+    RIGHT_OR_EXISTS_THM
+    RULE
+    S
+    STAR
+    SWAP_EXISTS_THM
+    SWAP_FORALL_CONV
+    SWAP_FORALL_THM
+    T1
+    T2
+    TAC
+    TH
+    TM
+    TOKS
+    TRIV_AND_EXISTS_THM
+    TRIV_EXISTS_AND_THM
+    TRIV_EXISTS_IMP_THM
+    TRIV_FORALL_IMP_THM
+    TRIV_FORALL_OR_THM
+    TRIV_OR_FORALL_THM
+    TTAC
+    TY
+    U
+    UNWIND_THM1
+    UNWIND_THM2
+    V
+    VARS
+    VAR_LIST
+    W%
+    WLOG_RELATION
+    X
+    atom
+    conj%
+    destruct
+    disj
+    fix_rename
+    fix_var
+    hyp_tac%
+    obtain
+    pa_action
+    pa_conj
+    pa_disj
+    pa_ident
+    pa_intro
+    pa_postfix)
+  (:import-from :holai.basics)
+  (:import-from :holai.bool)
+  (:import-from :holai.equal)
+  (:import-from :holai.fusion.hol)
+  (:import-from :holai.itab)
+  (:import-from :holai.lib)
+  (:import-from :holai.parser)
+  (:import-from :holai.printer)
+  (:import-from :holai.runtime)
+  (:import-from :holai.simp)
+  (:import-from :holai.tactics)
+  (:export
     ABS_SIMP
     AC
     AND_CLAUSES
@@ -196,7 +207,6 @@
     CONJ_ASSOC
     CONJ_SYM
     DESTRUCT_TAC
-    DESTRUCT_TAC%%
     DISJ_ACI
     DISJ_ASSOC
     DISJ_SYM
@@ -214,19 +224,16 @@
     EXISTS_UNIQUE_REFL
     EXISTS_UNIQUE_THM
     FIX_TAC
-    FIX_TAC%%
     FORALL_AND_THM
     FORALL_SIMP
     FORALL_UNWIND_THM1
     FORALL_UNWIND_THM2
     HYP_TAC
-    HYP_TAC%%
     IMP_CLAUSES
     IMP_CONJ
     IMP_CONJ_ALT
     IMP_IMP
     INTRO_TAC
-    INTRO_TAC%%
     LEFT_AND_EXISTS_THM
     LEFT_AND_FORALL_THM
     LEFT_EXISTS_AND_THM
@@ -243,7 +250,6 @@
     NOT_CLAUSES_WEAK
     OR_CLAUSES
     OR_EXISTS_THM
-    PULL_FORALL
     REFL_CLAUSE
     RIGHT_AND_EXISTS_THM
     RIGHT_AND_FORALL_THM
@@ -262,7 +268,181 @@
     TRIV_OR_FORALL_THM
     UNWIND_THM1
     UNWIND_THM2
+    WLOG_RELATION))
+
+(uiop:define-package
+  :holai.theorems
+  (:use :cl)
+  (:mix
+    :cl
+    :holai.basics
+    :holai.bool
+    :holai.equal
+    :holai.fusion.hol
+    :holai.itab
+    :holai.lib
+    :holai.parser
+    :holai.printer
+    :holai.runtime
+    :holai.simp
+    :holai.tactics)
+  (:shadow
+    ABS_SIMP
+    AC
+    ACSUITE
+    ACTION
+    AND_CLAUSES
+    AND_FORALL_CONV
+    AND_FORALL_THM
+    ARG~1021
+    ARG~1091
+    ARG~1176
+    ARG~1238
+    ARG~1353
+    ARG~1380
+    ARG~818
+    ARG~989
+    ASL
+    ATOM
+    AVOIDS
+    BETA_THM
+    CLAIM_TAC
+    CONJ%
+    CONJS
+    CONJ_ACI
+    CONJ_ASSOC
+    CONJ_LIST_TAC
+    CONJ_SYM
+    DESTRUCT
+    DESTRUCT_TAC
+    DESTRUCT_TAC%
+    DESTRUCT_TAC%%
+    DISJ
+    DISJ_ACI
+    DISJ_ASSOC
+    DISJ_CASES_LIST
+    DISJ_SYM
+    EQ_CLAUSES
+    EQ_IMP
+    EQ_REFL
+    EQ_SYM
+    EQ_SYM_EQ
+    EQ_TRANS
+    EXCEPTION~1246
+    EXCEPTION~822
+    EXISTS_OR_THM
+    EXISTS_REFL
+    EXISTS_SIMP
+    EXISTS_UNIQUE
+    EXISTS_UNIQUE_ALT
+    EXISTS_UNIQUE_REFL
+    EXISTS_UNIQUE_THM
+    FIX_RENAME
+    FIX_TAC
+    FIX_TAC%
+    FIX_TAC%%
+    FIX_VAR
+    FORALL_AND_THM
+    FORALL_SIMP
+    FORALL_UNWIND_THM1
+    FORALL_UNWIND_THM2
+    GL
+    HYP_TAC
+    HYP_TAC%
+    HYP_TAC%%
+    IMP_CLAUSES
+    IMP_CONJ
+    IMP_CONJ_ALT
+    IMP_EQ_CLAUSE
+    IMP_IMP
+    INP
+    INTRO_TAC
+    INTRO_TAC%
+    INTRO_TAC%%
+    LABEL
+    LBL
+    LEFT_AND_EXISTS_THM
+    LEFT_AND_FORALL_THM
+    LEFT_EXISTS_AND_THM
+    LEFT_FORALL_IMP_THM
+    LEFT_IMP_EXISTS_THM
+    LEFT_OR_DISTRIB
+    LEFT_OR_EXISTS_THM
+    MONO_AND
+    MONO_EXISTS
+    MONO_FORALL
+    MONO_IMP
+    MONO_NOT
+    MONO_OR
+    N
+    NAME_GEN_TAC
+    NAME_PULL_FORALL_CONV
+    NOT_CLAUSES_WEAK
+    NUMBER
+    NUM_DISJ_TAC
+    OBTAIN
+    OBTAINL_THEN
+    OBTAIN_PRFX
+    OBTAIN_THEN
+    ONAME
+    OR_CLAUSES
+    OR_EXISTS_THM
+    P%
+    PAREN
+    PA_ACTION
+    PA_CONJ
+    PA_DEST
+    PA_DISJ
+    PA_FIX
+    PA_IDENT
+    PA_INTRO
+    PA_LABEL
+    PA_POSTFIX
+    PA_PREFIX
+    PA_RENAME
+    PA_VAR
+    PULL_FORALL
+    PURE_GEN_TAC
+    REFL_CLAUSE
+    RES
+    REST
+    RIGHT_AND_EXISTS_THM
+    RIGHT_AND_FORALL_THM
+    RIGHT_EXISTS_AND_THM
+    RIGHT_FORALL_IMP_THM
+    RIGHT_IMP_FORALL_CONV
+    RIGHT_IMP_FORALL_THM
+    RIGHT_OR_DISTRIB
+    RIGHT_OR_EXISTS_THM
+    RULE
+    S
+    STAR
+    SWAP_EXISTS_THM
+    SWAP_FORALL_CONV
+    SWAP_FORALL_THM
+    T1
+    T2
+    TAC
+    TH
+    TM
+    TOKS
+    TRIV_AND_EXISTS_THM
+    TRIV_EXISTS_AND_THM
+    TRIV_EXISTS_IMP_THM
+    TRIV_FORALL_IMP_THM
+    TRIV_FORALL_OR_THM
+    TRIV_OR_FORALL_THM
+    TTAC
+    TY
+    U
+    UNWIND_THM1
+    UNWIND_THM2
+    V
+    VARS
+    VAR_LIST
+    W%
     WLOG_RELATION
+    X
     atom
     conj%
     destruct

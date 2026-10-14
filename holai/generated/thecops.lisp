@@ -8,15 +8,63 @@
 ;; (*                 (c) Cezary Kaliszyk 2014                                  *)
 ;; (* ========================================================================= *)
 
+(uiop:define-package
+  :holai.thecops
+  (:use :cl)
+  (:shadow
+    A%
+    ARG~1007
+    F
+    LEANCOP
+    LEANCOP_TAC
+    NANOCOP
+    NANOCOP_TAC
+    OFF
+    P%
+    PA
+    TM
+    V
+    offset_lit
+    offset_term)
+  (:import-from :holai.basics)
+  (:import-from :holai.bool)
+  (:import-from :holai.canon)
+  (:import-from :holai.class)
+  (:import-from :holai.drule)
+  (:import-from :holai.equal)
+  (:import-from :holai.firstorder)
+  (:import-from :holai.firstorder.mapping)
+  (:import-from :holai.firstorder.utils)
+  (:import-from :holai.firstorder.utils.list)
+  (:import-from :holai.firstorder.utils.pair)
+  (:import-from :holai.fusion)
+  (:import-from :holai.fusion.hol)
+  (:import-from :holai.lib)
+  (:import-from :holai.meson)
+  (:import-from :holai.meson.meson)
+  (:import-from :holai.metis)
+  (:import-from :holai.parser)
+  (:import-from :holai.printer)
+  (:import-from :holai.runtime)
+  (:import-from :holai.simp)
+  (:import-from :holai.tactics)
+  (:import-from :holai.theorems)
+  (:export LEANCOP LEANCOP_TAC NANOCOP NANOCOP_TAC offset_lit offset_term))
+
 (cl:eval-when
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.thecops.hashek)
-    (defpackage :holai.thecops.hashek
+    (uiop:define-package
+      :holai.thecops.hashek
       (:use :cl)
       (:shadow
+        G%
+        L
+        LABEL
         MARK_ASSUMS
         MARK_CONCL
+        TH
         hashek_def
         hashek_eq
         hashek_prop
@@ -35,10 +83,53 @@
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.thecops.strom)
-    (defpackage :holai.thecops.strom
+    (uiop:define-package
+      :holai.thecops.strom
       (:use :cl)
       (:shadow
+        ARG~134
+        ARG~146
+        ARG~168
+        ARG~195
+        ARG~236
+        ARG~259
+        ARG~272
+        ARG~295
+        ARG~316
+        ARG~333
+        ARG~352
+        ARG~375
+        ARG~403
+        ARG~440
+        ARG~475
+        ARG~514
+        CONCAT%
+        CONCAT_MAP%
+        CUT%
+        EXCEPTION~170
+        EXCEPTION~219
+        EXCEPTION~248
+        EXCEPTION~377
+        EXCEPTION~405
+        EXCEPTION~427
+        EXCEPTION~477
         End_of_strom
+        F
+        H
+        I%
+        ITER%
+        L
+        LAST%
+        LS
+        N
+        P%
+        PAST
+        R%
+        RESULT
+        X
+        XS
+        Y
+        YS
         append
         cache
         concat
@@ -87,9 +178,28 @@
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.thecops.fol_term)
-    (defpackage :holai.thecops.fol_term
+    (uiop:define-package
+      :holai.thecops.fol_term
       (:use :cl)
       (:shadow
+        A%
+        ACC
+        ARG~534
+        ARG~548
+        ARG~567
+        ARG~580
+        ARG~601
+        ARG~618
+        ARG~644
+        F
+        FA
+        FV
+        I%
+        L
+        P%
+        T%
+        V
+        X
         lit_ground
         lit_max_var
         map_lit_vars
@@ -114,9 +224,23 @@
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.thecops.print)
-    (defpackage :holai.thecops.print
+    (uiop:define-package
+      :holai.thecops.print
       (:use :cl)
       (:shadow
+        ARG~659
+        ARG~825
+        ARG~858
+        F
+        FN
+        I%
+        L
+        SEP
+        SEP%
+        START
+        STOP
+        X
+        XS
         pp_enclose
         pp_enclose_cut
         pp_enum
@@ -154,19 +278,87 @@
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.thecops.database)
-    (defpackage :holai.thecops.database
+    (uiop:define-package
+      :holai.thecops.database
       (:use :cl)
-      (:shadow axioms2db clause_max_var db db_entries mapentry)
+      (:shadow
+        ARGS
+        ARG~917
+        ARG~951
+        CL
+        CL_REST
+        EXCEPTION~972
+        L
+        LIT
+        P%
+        TH
+        THS
+        axioms2db
+        clause_max_var
+        db
+        db_entries
+        mapentry)
       (:export axioms2db clause_max_var db db_entries mapentry))))
 
 (cl:eval-when
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.thecops.substlist)
-    (defpackage :holai.thecops.substlist
+    (uiop:define-package
+      :holai.thecops.substlist
       (:use :cl)
       (:shadow
+        A%
+        ARGS
+        ARG~1026
+        ARG~1147
+        ARG~1151
+        ARG~1264
+        ARG~1371
+        ARG~1375
+        ARG~1396
+        ARG~1428
+        ARG~1444
+        ARG~1473
+        ARG~1486
+        ENV
+        EXCEPTION~1031
+        EXCEPTION~1115
+        EXCEPTION~1209
+        EXCEPTION~1232
+        EXCEPTION~1269
+        EXCEPTION~1322
+        EXCEPTION~1343
+        EXCEPTION~1401
+        EXCEPTION~1449
+        F
+        FA
+        FARGS
+        G%
+        GA
+        GARGS
+        H1
+        H2
+        L
+        L1
+        L2
+        OFF
+        P%
+        PA
+        Q
+        QA
+        SUB
+        T%
+        T1
+        T2
+        TM
+        TM1
+        TM2
         Unify
+        V
+        X
+        X%
+        Y
         add_subst
         empty
         eq_lit
@@ -202,10 +394,64 @@
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.thecops.substarray)
-    (defpackage :holai.thecops.substarray
+    (uiop:define-package
+      :holai.thecops.substarray
       (:use :cl)
       (:shadow
+        A%
+        ARGS1
+        ARGS2
+        ARG~1497
+        ARG~1536
+        ARG~1573
+        ARG~1614
+        ARG~1698
+        ARG~1702
+        ARG~1726
+        ARG~1749
+        ARG~1864
+        ARG~1965
+        ARG~1969
+        ARG~1973
+        ARG~2023
+        ARG~2053
+        ARG~2084
+        ARG~2104
+        ARG~2108
+        ARG~2134
+        ARG~2162
+        ARG~2166
+        ENV
+        F
+        FARGS
+        G%
+        GARGS
+        H
+        H1
+        H2
+        L
+        L1
+        L2
+        N
+        OFF
+        P%
+        P1
+        P2
+        SUB
+        SUBA
+        SUBL
+        T%
+        T1
+        T2
+        T2%
+        TM
+        TM1
+        TM2
         Unify
+        V
+        X
+        X%
+        Y
         add_subst
         empty
         eq_lit
@@ -243,27 +489,119 @@
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.thecops.cop.subst)
-    (defpackage :holai.thecops.cop.subst
+    (uiop:define-package
+      :holai.thecops.cop.subst
       (:use :cl)
-      (:shadow eq unify unify_rename unify_rename_subst)
+      (:shadow
+        ARGS1
+        ARGS2
+        ARG~2190
+        ARG~2205
+        ARG~2244
+        ARG~2249
+        EXCEPTION~2211
+        EXCEPTION~2254
+        L1
+        L2
+        LIST
+        OFF
+        REST
+        REST%
+        S
+        S%
+        SUB
+        VARS
+        eq
+        unify
+        unify_rename
+        unify_rename_subst)
       (:export eq unify unify_rename unify_rename_subst))))
 
 (cl:eval-when
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.thecops.cop)
-    (defpackage :holai.thecops.cop
+    (uiop:define-package
+      :holai.thecops.cop
       (:use :cl)
-      (:shadow deepen deepen_to make-search_opts~1 search_opts strategy)
+      (:shadow
+        F
+        I%
+        N
+        OPT
+        PRF
+        S
+        X
+        deepen
+        deepen_to
+        make-search_opts~1
+        search_opts
+        strategy)
       (:export deepen deepen_to make-search_opts~1 search_opts search_opts~1 strategy))))
 
 (cl:eval-when
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.thecops.equality)
-    (defpackage :holai.thecops.equality
+    (uiop:define-package
+      :holai.thecops.equality
       (:use :cl)
       (:shadow
+        ACC
+        ARGS
+        ARG~2425
+        ARG~2470
+        ARG~2607
+        ARG~2711
+        ARG~2771
+        ATYS
+        CREATE_CONGRUENCE_AXIOM
+        CREATE_EQUIVALENCE_AXIOMS
+        CTYS
+        E%
+        EQ
+        EQS
+        EQS0
+        EQS1
+        EQUIVS
+        EQ_ELIM_RULE
+        EQ_THMS
+        EXCEPTION~2475
+        EXCEPTION~2478
+        EXCEPTION~2481
+        EXCEPTION~2484
+        EXCEPTION~2487
+        EXCEPTION~2490
+        EXCEPTION~2493
+        FCONGS
+        FM_CONSTS
+        FN
+        FUNS
+        IMP_ELIM_CONV
+        L
+        LARGS
+        LEN
+        NONEQS
+        OP
+        PCONGS
+        PFLAG
+        PRED
+        PREDS
+        PREDS1
+        R%
+        RARGS
+        RTY
+        SYM%
+        T%
+        TH
+        TH1
+        TH2
+        TM
+        TMS
+        TM_CONSTS
+        TY
+        TYINS
+        VEQ_TM
         create_congruence_axiom
         create_eq_axs
         create_equality_axioms
@@ -276,16 +614,18 @@
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.thecops.prepare)
-    (defpackage :holai.thecops.prepare
+    (uiop:define-package
+      :holai.thecops.prepare
       (:use :cl)
-      (:shadow PREPARE_COP_TAC)
+      (:shadow ARG~2845 ASL PREPARE_COP_TAC THS V W%)
       (:export PREPARE_COP_TAC))))
 
 (cl:eval-when
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.thecops.proof)
-    (defpackage :holai.thecops.proof
+    (uiop:define-package
+      :holai.thecops.proof
       (:use :cl)
       (:shadow Extension Lemma Reduction make-Extension make-Lemma make-Reduction)
       (:export Extension Lemma Reduction make-Extension make-Lemma make-Reduction))))
@@ -294,33 +634,107 @@
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.thecops.search)
-    (defpackage :holai.thecops.search
+    (uiop:define-package
+      :holai.thecops.search
       (:use :cl)
-      (:shadow cut prove_clause prove_lit)
+      (:shadow
+        ARG~2919
+        ARG~3058
+        ARG~3083
+        ARG~3151
+        ARG~3156
+        ARG~3173
+        ARG~3188
+        CL
+        CLA1
+        CL_HSH
+        CONTRA
+        EXTENSIONS
+        HSH
+        L
+        LEM
+        LEM1
+        LEMMAS
+        LIM
+        LIT
+        LITS
+        NEGLIT
+        OPT
+        P%
+        PATH
+        PRF1
+        PRFS
+        REDUCTIONS
+        SUB
+        SUB1
+        SUB2
+        VARS
+        X
+        XS
+        YS
+        cut
+        prove_clause
+        prove_lit)
       (:export cut prove_clause prove_lit))))
 
 (cl:eval-when
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.thecops.recon)
-    (defpackage :holai.thecops.recon
+    (uiop:define-package
+      :holai.thecops.recon
       (:use :cl)
-      (:shadow hashek_of_proof hol_negate)
+      (:shadow
+        ARG~3266
+        ARG~3318
+        CONTRA
+        CTH
+        EXCEPTION~3248
+        HTH
+        ITH
+        LEM
+        LEM%
+        LIT
+        LIT%
+        LITI
+        P%
+        PRF
+        PRFS
+        SUB
+        THS
+        TM
+        X
+        hashek_of_proof
+        hol_negate)
       (:export hashek_of_proof hol_negate))))
 
 (cl:eval-when
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.thecops.leancop)
-    (defpackage :holai.thecops.leancop
+    (uiop:define-package
+      :holai.thecops.leancop
       (:use :cl)
       (:shadow
         GEN_LEANCOP_TAC
+        GL
+        HASHEK
+        HASHEK_NEG
         LEANCOP
         LEANCOP_DEEPEN
         LEANCOP_TAC
+        LIM
+        OPT
         PREPARE_LEAN_TAC
+        PRF
+        PRFS
         PURE_LEANCOP
+        SUB
+        SUB0
+        TH
+        THS
+        THS%
+        TM
         start)
       (:export
         GEN_LEANCOP_TAC
@@ -335,11 +749,60 @@
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.thecops.ncmatrix)
-    (defpackage :holai.thecops.ncmatrix
+    (uiop:define-package
+      :holai.thecops.ncmatrix
       (:use :cl)
       (:shadow
+        A%
+        ACC
+        ARG~3541
+        ARG~3565
+        ARG~3583
+        ARG~3604
+        ARG~3623
+        ARG~3643
+        ARG~3666
+        ARG~3732
+        ARG~3743
+        ARG~3787
+        ARG~3807
+        ARG~3838
+        ARG~3874
+        ARG~3912
+        ARG~3932
+        ARG~3980
+        ARG~4018
+        ARG~4036
+        ARG~4061
+        ARG~4102
+        ARG~4123
+        C%
+        C%%
+        F
+        FL
+        FM
+        I%
+        J
+        K%
+        L
+        LIT%%
+        LM
         Lit%
+        M
+        M%
+        MAT%%
         Mat%
+        OFF
+        P%
+        R%
+        T%
+        T%%
+        UNIV
+        V
+        X
+        XS
+        Y
+        YS
         break_map
         clause_ground
         clause_lits
@@ -446,9 +909,22 @@
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.thecops.ncprint)
-    (defpackage :holai.thecops.ncprint
+    (uiop:define-package
+      :holai.thecops.ncprint
       (:use :cl)
       (:shadow
+        ARG~4175
+        ARG~4193
+        ARG~4228
+        C%
+        F
+        FI
+        FMT
+        I%
+        L
+        M
+        V
+        X
         pp_print_iclause
         pp_print_imatrix
         pp_print_index
@@ -487,13 +963,31 @@
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.thecops.ncproof)
-    (defpackage :holai.thecops.ncproof
+    (uiop:define-package
+      :holai.thecops.ncproof
       (:use :cl)
       (:shadow
+        ARG~4360
+        ARG~4366
+        ARG~4399
+        ARG~4405
+        ARG~4461
+        ARG~4492
+        CL
         Decomposition
         Extension
+        F
+        FC
+        FL
+        LIT
+        LITMAT
         Lemma
+        PRF
+        PRFS
+        RECON
         Reduction
+        SUB
+        X
         make-Decomposition
         make-Extension
         make-Lemma
@@ -524,11 +1018,49 @@
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.thecops.extclause)
-    (defpackage :holai.thecops.extclause
+    (uiop:define-package
+      :holai.thecops.extclause
       (:use :cl)
       (:shadow
+        ARG~4525
+        ARG~4542
+        ARG~4575
+        ARG~4598
+        ARG~4647
+        ARG~4679
+        ARG~4697
+        ARG~4710
+        ARG~4716
+        ARG~4739
+        ARG~4761
+        ARG~4767
+        ARG~4780
+        ARG~4804
+        C%
+        CLA
+        CLAB
+        CLAC
+        CLAEXT
+        CLAL
+        CLALR
+        CLAR
+        CLEXT
+        I%
+        IV
+        J
+        LIT%%
+        LM
+        LMEXT
         Litext
+        MAT%%
+        MATB
+        MATC
+        MATL
+        MATLR
+        MATR
         Matext
+        OFF
+        V
         assert_iclause
         assert_imatrix
         assert_matrix
@@ -561,18 +1093,139 @@
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.thecops.ncdatabase)
-    (defpackage :holai.thecops.ncdatabase
+    (uiop:define-package
+      :holai.thecops.ncdatabase
       (:use :cl)
-      (:shadow db db_entries insert_db matrix2db)
+      (:shadow
+        A%
+        ARG~4824
+        CLEXT
+        DB%
+        EXCEPTION~4853
+        EXCEPTION~4902
+        GROUND
+        L
+        LIT%%
+        M
+        MATC
+        OFF
+        P%
+        PREDB
+        V
+        db
+        db_entries
+        insert_db
+        matrix2db)
       (:export db db_entries insert_db matrix2db))))
 
 (cl:eval-when
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.thecops.ncsearch)
-    (defpackage :holai.thecops.ncsearch
+    (uiop:define-package
+      :holai.thecops.ncsearch
       (:use :cl)
       (:shadow
+        ACC
+        ALT1
+        ALT2
+        ARGS
+        ARGS1
+        ARGS2
+        ARG~4912
+        ARG~4938
+        ARG~4943
+        ARG~4992
+        ARG~5030
+        ARG~5055
+        ARG~5092
+        ARG~5117
+        ARG~5154
+        ARG~5220
+        ARG~5317
+        ARG~5423
+        ARG~5482
+        ARG~5514
+        ARG~5596
+        ARG~5627
+        ARG~5634
+        ARG~5646
+        ARG~5673
+        ARG~5732
+        ARG~5739
+        ARG~5787
+        ARG~5802
+        C%
+        CHECK%
+        CLA
+        CLA1
+        CLAB
+        CLAB1
+        CLAC
+        CLADE
+        CLEXT
+        CLEXT%
+        CONTRA
+        EXCEPTION~4918
+        EXCEPTION~4948
+        EXTENSIONS
+        F
+        GO
+        GROUND
+        I%
+        I%%
+        IDX
+        INDEX%
+        J
+        J%
+        K%
+        K1
+        K1%
+        L
+        L1
+        L2
+        LAZY~UNIT
+        LEM
+        LEM1
+        LEMMAS
+        LIM
+        LIT%%
+        LM
+        LMEXT
+        M
+        MAT1
+        MI
+        MI1
+        MI2
+        MI3
+        MIAB
+        NEGLIT
+        OFF
+        OPT
+        P%
+        PATH
+        PI%
+        POSITION
+        POSTFIX
+        PREFIX
+        PRF1
+        PRF2
+        PRFS
+        REDUCTIONS
+        REGULARITY
+        ST
+        SUB
+        SUB1
+        SUB2
+        SUB3
+        V
+        V1
+        VARS
+        X
+        XS
+        Y
+        YS
+        Z
         alt1
         alt2
         cut
@@ -607,11 +1260,82 @@
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.thecops.ncrecon)
-    (defpackage :holai.thecops.ncrecon
+    (uiop:define-package
+      :holai.thecops.ncrecon
       (:use :cl)
       (:shadow
+        ACC
+        ACC1
+        ACC2
+        ACC3
+        ARG~6176
+        ARG~6202
+        ARG~6225
+        ARG~6249
+        ARG~6286
+        ARG~6325
+        ARG~6381
+        ARG~6544
+        BOT
+        BOTJ
+        BOTSL
+        BOTSR
+        C%
+        CL
+        CLA
+        CLAC
+        CLAL
+        CLAR
+        CLEXT
         CONTRADICTION
+        DATA
         DISJ_CASES_LIST
+        DJS
+        E%
+        EXCEPTION~6106
+        FTM
+        I%
+        I%%
+        IDX
+        J
+        J%
+        K%
+        LEM
+        LIT%%
+        LITI
+        LMEXT
+        MAT%%
+        MATL
+        MATR
+        P%
+        P1
+        P2
+        POSTFIX
+        PREFIX
+        PREFIX_TH
+        PRF
+        PRFS
+        PRFS%
+        PROBLEM
+        PS
+        REL
+        SUB
+        TH
+        TH%
+        THI
+        THJ
+        THL
+        THR
+        TM
+        TMJ
+        TY
+        TYS
+        V
+        VS
+        X
+        XC
+        Y
+        YC
         bot_of_clause_ext
         bot_of_litmat_ext
         bot_of_proof
@@ -651,17 +1375,49 @@
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.thecops.nanocop)
-    (defpackage :holai.thecops.nanocop
+    (uiop:define-package
+      :holai.thecops.nanocop
       (:use :cl)
       (:shadow
+        ARG~6766
+        ARG~6808
+        ARG~6831
+        BOT
+        CLA
+        DATA
+        FOL
+        G%
+        GEN_EQ
         GEN_NANOCOP_TAC
+        GL
+        HASHEK
+        I%
+        IDX
+        LCONSTS
+        LIM
+        LIT%%
+        MAT%%
+        MATI
         NANOCOP
         NANOCOP_DEEPEN
         NANOCOP_TAC
+        OPT
         PREPARE_NANOCOP_TAC
+        PRF
+        PRFS
         PRINT_ID_TAC
         PRINT_TAC
         PURE_NANOCOP
+        S
+        SUB
+        SUB0
+        TH
+        THS
+        THS%
+        THS%%
+        TM
+        V
+        X
         fol_of_thm
         start)
       (:export
@@ -676,18 +1432,33 @@
         fol_of_thm
         start))))
 
-(cl:eval-when
-  (:compile-toplevel :load-toplevel :execute)
-  (cl:unless
-    (cl:find-package :holai.thecops)
-    (defpackage :holai.thecops
-      (:use :cl)
-      (:shadow LEANCOP LEANCOP_TAC NANOCOP NANOCOP_TAC offset_lit offset_term)
-      (:export LEANCOP LEANCOP_TAC NANOCOP NANOCOP_TAC offset_lit offset_term))))
-
-(defpackage :holai.thecops.hashek
+(uiop:define-package
+  :holai.thecops.hashek
   (:use :cl)
-  (:shadow MARK_ASSUMS MARK_CONCL hashek_def hashek_eq hashek_prop hashek_thm hashek_tm)
+  (:mix
+    :cl
+    :holai.basics
+    :holai.bool
+    :holai.class
+    :holai.drule
+    :holai.fusion.hol
+    :holai.lib
+    :holai.parser
+    :holai.runtime
+    :holai.simp
+    :holai.tactics)
+  (:shadow
+    G%
+    L
+    LABEL
+    MARK_ASSUMS
+    MARK_CONCL
+    TH
+    hashek_def
+    hashek_eq
+    hashek_prop
+    hashek_thm
+    hashek_tm)
   (:shadowing-import-from :holai.basics is_imp dest_imp)
   (:shadowing-import-from :holai.bool TRUTH DISCH CONJUNCTS CONJ)
   (:shadowing-import-from :holai.class TAUT REFUTE_THEN)
@@ -722,10 +1493,54 @@
     ALL_TAC)
   (:export MARK_ASSUMS MARK_CONCL hashek_def hashek_eq hashek_prop hashek_thm hashek_tm))
 
-(defpackage :holai.thecops.strom
+(uiop:define-package
+  :holai.thecops.strom
   (:use :cl)
+  (:mix :cl :holai.runtime)
   (:shadow
+    ARG~134
+    ARG~146
+    ARG~168
+    ARG~195
+    ARG~236
+    ARG~259
+    ARG~272
+    ARG~295
+    ARG~316
+    ARG~333
+    ARG~352
+    ARG~375
+    ARG~403
+    ARG~440
+    ARG~475
+    ARG~514
+    CONCAT%
+    CONCAT_MAP%
+    CUT%
+    EXCEPTION~170
+    EXCEPTION~219
+    EXCEPTION~248
+    EXCEPTION~377
+    EXCEPTION~405
+    EXCEPTION~427
+    EXCEPTION~477
     End_of_strom
+    F
+    H
+    I%
+    ITER%
+    L
+    LAST%
+    LS
+    N
+    P%
+    PAST
+    R%
+    RESULT
+    X
+    XS
+    Y
+    YS
     append
     cache
     concat
@@ -789,9 +1604,29 @@
     take_while
     to_list))
 
-(defpackage :holai.thecops.fol_term
+(uiop:define-package
+  :holai.thecops.fol_term
   (:use :cl)
+  (:mix :cl :holai.firstorder.utils :holai.meson :holai.runtime)
   (:shadow
+    A%
+    ACC
+    ARG~534
+    ARG~548
+    ARG~567
+    ARG~580
+    ARG~601
+    ARG~618
+    ARG~644
+    F
+    FA
+    FV
+    I%
+    L
+    P%
+    T%
+    V
+    X
     lit_ground
     lit_max_var
     map_lit_vars
@@ -823,9 +1658,24 @@
     term_max_var
     var))
 
-(defpackage :holai.thecops.print
+(uiop:define-package
+  :holai.thecops.print
   (:use :cl)
+  (:mix :cl :holai.meson :holai.meson.meson :holai.printer :holai.runtime)
   (:shadow
+    ARG~659
+    ARG~825
+    ARG~858
+    F
+    FN
+    I%
+    L
+    SEP
+    SEP%
+    START
+    STOP
+    X
+    XS
     pp_enclose
     pp_enclose_cut
     pp_enum
@@ -885,9 +1735,27 @@
     string_of_lit
     string_of_lits))
 
-(defpackage :holai.thecops.database
+(uiop:define-package
+  :holai.thecops.database
   (:use :cl)
-  (:shadow axioms2db clause_max_var db db_entries mapentry)
+  (:mix :cl :holai.firstorder.mapping :holai.lib :holai.runtime)
+  (:shadow
+    ARGS
+    ARG~917
+    ARG~951
+    CL
+    CL_REST
+    EXCEPTION~972
+    L
+    LIT
+    P%
+    TH
+    THS
+    axioms2db
+    clause_max_var
+    db
+    db_entries
+    mapentry)
   (:shadowing-import-from :cl +)
   (:shadowing-import-from :holai.firstorder.mapping fol_of_hol_clauses)
   (:shadowing-import-from :holai.lib map %>)
@@ -911,10 +1779,62 @@
   (:shadowing-import-from :holai.thecops.fol_term lit_max_var)
   (:export axioms2db clause_max_var db db_entries mapentry))
 
-(defpackage :holai.thecops.substlist
+(uiop:define-package
+  :holai.thecops.substlist
   (:use :cl)
+  (:mix :cl :holai.meson :holai.runtime)
   (:shadow
+    A%
+    ARGS
+    ARG~1026
+    ARG~1147
+    ARG~1151
+    ARG~1264
+    ARG~1371
+    ARG~1375
+    ARG~1396
+    ARG~1428
+    ARG~1444
+    ARG~1473
+    ARG~1486
+    ENV
+    EXCEPTION~1031
+    EXCEPTION~1115
+    EXCEPTION~1209
+    EXCEPTION~1232
+    EXCEPTION~1269
+    EXCEPTION~1322
+    EXCEPTION~1343
+    EXCEPTION~1401
+    EXCEPTION~1449
+    F
+    FA
+    FARGS
+    G%
+    GA
+    GARGS
+    H1
+    H2
+    L
+    L1
+    L2
+    OFF
+    P%
+    PA
+    Q
+    QA
+    SUB
+    T%
+    T1
+    T2
+    TM
+    TM1
+    TM2
     Unify
+    V
+    X
+    X%
+    Y
     add_subst
     empty
     eq_lit
@@ -967,10 +1887,65 @@
     unify_tms
     unify_tms_off))
 
-(defpackage :holai.thecops.substarray
+(uiop:define-package
+  :holai.thecops.substarray
   (:use :cl)
+  (:mix :cl :holai.meson :holai.runtime)
   (:shadow
+    A%
+    ARGS1
+    ARGS2
+    ARG~1497
+    ARG~1536
+    ARG~1573
+    ARG~1614
+    ARG~1698
+    ARG~1702
+    ARG~1726
+    ARG~1749
+    ARG~1864
+    ARG~1965
+    ARG~1969
+    ARG~1973
+    ARG~2023
+    ARG~2053
+    ARG~2084
+    ARG~2104
+    ARG~2108
+    ARG~2134
+    ARG~2162
+    ARG~2166
+    ENV
+    F
+    FARGS
+    G%
+    GARGS
+    H
+    H1
+    H2
+    L
+    L1
+    L2
+    N
+    OFF
+    P%
+    P1
+    P2
+    SUB
+    SUBA
+    SUBL
+    T%
+    T1
+    T2
+    T2%
+    TM
+    TM1
+    TM2
     Unify
+    V
+    X
+    X%
+    Y
     add_subst
     empty
     eq_lit
@@ -1034,9 +2009,33 @@
     unify_tms
     unify_tms_off))
 
-(defpackage :holai.thecops.cop.subst
+(uiop:define-package
+  :holai.thecops.cop.subst
   (:use :cl)
-  (:shadow eq unify unify_rename unify_rename_subst)
+  (:mix :cl :holai.runtime)
+  (:shadow
+    ARGS1
+    ARGS2
+    ARG~2190
+    ARG~2205
+    ARG~2244
+    ARG~2249
+    EXCEPTION~2211
+    EXCEPTION~2254
+    L1
+    L2
+    LIST
+    OFF
+    REST
+    REST%
+    S
+    S%
+    SUB
+    VARS
+    eq
+    unify
+    unify_rename
+    unify_rename_subst)
   (:shadowing-import-from :cl +)
   (:shadowing-import-from
     :holai.runtime
@@ -1077,9 +2076,11 @@
     unify_tms
     unify_tms_off))
 
-(defpackage :holai.thecops.cop
+(uiop:define-package
+  :holai.thecops.cop
   (:use :cl)
-  (:shadow deepen deepen_to make-search_opts~1 search_opts strategy)
+  (:mix :cl :holai.runtime)
+  (:shadow F I% N OPT PRF S X deepen deepen_to make-search_opts~1 search_opts strategy)
   (:shadowing-import-from :cl +)
   (:shadowing-import-from
     :holai.runtime
@@ -1094,9 +2095,80 @@
     >)
   (:export deepen deepen_to make-search_opts~1 search_opts search_opts~1 strategy))
 
-(defpackage :holai.thecops.equality
+(uiop:define-package
+  :holai.thecops.equality
   (:use :cl)
+  (:mix
+    :cl
+    :holai.basics
+    :holai.bool
+    :holai.class
+    :holai.drule
+    :holai.equal
+    :holai.fusion
+    :holai.fusion.hol
+    :holai.lib
+    :holai.meson.meson
+    :holai.parser
+    :holai.runtime
+    :holai.simp
+    :holai.tactics)
   (:shadow
+    ACC
+    ARGS
+    ARG~2425
+    ARG~2470
+    ARG~2607
+    ARG~2711
+    ARG~2771
+    ATYS
+    CREATE_CONGRUENCE_AXIOM
+    CREATE_EQUIVALENCE_AXIOMS
+    CTYS
+    E%
+    EQ
+    EQS
+    EQS0
+    EQS1
+    EQUIVS
+    EQ_ELIM_RULE
+    EQ_THMS
+    EXCEPTION~2475
+    EXCEPTION~2478
+    EXCEPTION~2481
+    EXCEPTION~2484
+    EXCEPTION~2487
+    EXCEPTION~2490
+    EXCEPTION~2493
+    FCONGS
+    FM_CONSTS
+    FN
+    FUNS
+    IMP_ELIM_CONV
+    L
+    LARGS
+    LEN
+    NONEQS
+    OP
+    PCONGS
+    PFLAG
+    PRED
+    PREDS
+    PREDS1
+    R%
+    RARGS
+    RTY
+    SYM%
+    T%
+    TH
+    TH1
+    TH2
+    TM
+    TMS
+    TM_CONSTS
+    TY
+    TYINS
+    VEQ_TM
     create_congruence_axiom
     create_eq_axs
     create_equality_axioms
@@ -1174,9 +2246,21 @@
   (:shadowing-import-from :holai.tactics THEN prove CONV_TAC)
   (:export create_eq_axs create_equality_axioms))
 
-(defpackage :holai.thecops.prepare
+(uiop:define-package
+  :holai.thecops.prepare
   (:use :cl)
-  (:shadow PREPARE_COP_TAC)
+  (:mix
+    :cl
+    :holai.bool
+    :holai.canon
+    :holai.class
+    :holai.equal
+    :holai.fusion.hol
+    :holai.lib
+    :holai.meson.meson
+    :holai.runtime
+    :holai.tactics)
+  (:shadow ARG~2845 ASL PREPARE_COP_TAC THS V W%)
   (:shadowing-import-from :holai.bool GEN_ALL)
   (:shadowing-import-from
     :holai.canon
@@ -1220,15 +2304,56 @@
   (:shadowing-import-from :holai.thecops.hashek MARK_CONCL MARK_ASSUMS)
   (:export PREPARE_COP_TAC))
 
-(defpackage :holai.thecops.proof
+(uiop:define-package
+  :holai.thecops.proof
   (:use :cl)
+  (:mix :cl :holai.runtime)
   (:shadow Extension Lemma Reduction make-Extension make-Lemma make-Reduction)
   (:shadowing-import-from :holai.runtime defvariant)
   (:export Extension Lemma Reduction make-Extension make-Lemma make-Reduction))
 
-(defpackage :holai.thecops.search
+(uiop:define-package
+  :holai.thecops.search
   (:use :cl)
-  (:shadow cut prove_clause prove_lit)
+  (:mix :cl :holai.firstorder :holai.firstorder.utils :holai.lib :holai.runtime)
+  (:shadow
+    ARG~2919
+    ARG~3058
+    ARG~3083
+    ARG~3151
+    ARG~3156
+    ARG~3173
+    ARG~3188
+    CL
+    CLA1
+    CL_HSH
+    CONTRA
+    EXTENSIONS
+    HSH
+    L
+    LEM
+    LEM1
+    LEMMAS
+    LIM
+    LIT
+    LITS
+    NEGLIT
+    OPT
+    P%
+    PATH
+    PRF1
+    PRFS
+    REDUCTIONS
+    SUB
+    SUB1
+    SUB2
+    VARS
+    X
+    XS
+    YS
+    cut
+    prove_clause
+    prove_lit)
   (:shadowing-import-from :cl -)
   (:shadowing-import-from :holai.firstorder copverb)
   (:shadowing-import-from :holai.firstorder.utils >>=)
@@ -1270,9 +2395,42 @@
   (:shadowing-import-from :holai.thecops.substarray inst_lit)
   (:export cut prove_clause prove_lit))
 
-(defpackage :holai.thecops.recon
+(uiop:define-package
+  :holai.thecops.recon
   (:use :cl)
-  (:shadow hashek_of_proof hol_negate)
+  (:mix
+    :cl
+    :holai.basics
+    :holai.bool
+    :holai.drule
+    :holai.firstorder.mapping
+    :holai.firstorder.utils.list
+    :holai.fusion.hol
+    :holai.lib
+    :holai.meson.meson
+    :holai.runtime)
+  (:shadow
+    ARG~3266
+    ARG~3318
+    CONTRA
+    CTH
+    EXCEPTION~3248
+    HTH
+    ITH
+    LEM
+    LEM%
+    LIT
+    LIT%
+    LITI
+    P%
+    PRF
+    PRFS
+    SUB
+    THS
+    TM
+    X
+    hashek_of_proof
+    hol_negate)
   (:shadowing-import-from :holai.basics dest_neg)
   (:shadowing-import-from :holai.bool mk_neg DISCH CONJ)
   (:shadowing-import-from :holai.drule PART_MATCH MATCH_MP)
@@ -1286,15 +2444,43 @@
   (:shadowing-import-from :holai.thecops.substarray inst_lit)
   (:export hashek_of_proof hol_negate))
 
-(defpackage :holai.thecops.leancop
+(uiop:define-package
+  :holai.thecops.leancop
   (:use :cl)
+  (:mix
+    :cl
+    :holai.basics
+    :holai.bool
+    :holai.canon
+    :holai.equal
+    :holai.firstorder
+    :holai.firstorder.mapping
+    :holai.fusion.hol
+    :holai.lib
+    :holai.meson.meson
+    :holai.runtime
+    :holai.tactics
+    :holai.theorems)
   (:shadow
     GEN_LEANCOP_TAC
+    GL
+    HASHEK
+    HASHEK_NEG
     LEANCOP
     LEANCOP_DEEPEN
     LEANCOP_TAC
+    LIM
+    OPT
     PREPARE_LEAN_TAC
+    PRF
+    PRFS
     PURE_LEANCOP
+    SUB
+    SUB0
+    TH
+    THS
+    THS%
+    TM
     start)
   (:shadowing-import-from :cl append +)
   (:shadowing-import-from :holai.basics genvar dest_forall)
@@ -1359,11 +2545,66 @@
     PURE_LEANCOP
     start))
 
-(defpackage :holai.thecops.ncmatrix
+(uiop:define-package
+  :holai.thecops.ncmatrix
   (:use :cl)
+  (:mix
+    :cl
+    :holai.firstorder.utils
+    :holai.firstorder.utils.list
+    :holai.meson
+    :holai.runtime)
   (:shadow
+    A%
+    ACC
+    ARG~3541
+    ARG~3565
+    ARG~3583
+    ARG~3604
+    ARG~3623
+    ARG~3643
+    ARG~3666
+    ARG~3732
+    ARG~3743
+    ARG~3787
+    ARG~3807
+    ARG~3838
+    ARG~3874
+    ARG~3912
+    ARG~3932
+    ARG~3980
+    ARG~4018
+    ARG~4036
+    ARG~4061
+    ARG~4102
+    ARG~4123
+    C%
+    C%%
+    F
+    FL
+    FM
+    I%
+    J
+    K%
+    L
+    LIT%%
+    LM
     Lit%
+    M
+    M%
+    MAT%%
     Mat%
+    OFF
+    P%
+    R%
+    T%
+    T%%
+    UNIV
+    V
+    X
+    XS
+    Y
+    YS
     break_map
     clause_ground
     clause_lits
@@ -1490,9 +2731,23 @@
     strip_disj
     strip_forallq))
 
-(defpackage :holai.thecops.ncprint
+(uiop:define-package
+  :holai.thecops.ncprint
   (:use :cl)
+  (:mix :cl :holai.printer :holai.runtime)
   (:shadow
+    ARG~4175
+    ARG~4193
+    ARG~4228
+    C%
+    F
+    FI
+    FMT
+    I%
+    L
+    M
+    V
+    X
     pp_print_iclause
     pp_print_imatrix
     pp_print_index
@@ -1553,13 +2808,32 @@
     string_of_matrix
     string_of_nclause))
 
-(defpackage :holai.thecops.ncproof
+(uiop:define-package
+  :holai.thecops.ncproof
   (:use :cl)
+  (:mix :cl :holai.runtime)
   (:shadow
+    ARG~4360
+    ARG~4366
+    ARG~4399
+    ARG~4405
+    ARG~4461
+    ARG~4492
+    CL
     Decomposition
     Extension
+    F
+    FC
+    FL
+    LIT
+    LITMAT
     Lemma
+    PRF
+    PRFS
+    RECON
     Reduction
+    SUB
+    X
     make-Decomposition
     make-Extension
     make-Lemma
@@ -1606,11 +2880,55 @@
     print_proofa
     string_of_inst_litmat))
 
-(defpackage :holai.thecops.extclause
+(uiop:define-package
+  :holai.thecops.extclause
   (:use :cl)
+  (:mix
+    :cl
+    :holai.firstorder.utils.list
+    :holai.firstorder.utils.pair
+    :holai.lib
+    :holai.runtime)
   (:shadow
+    ARG~4525
+    ARG~4542
+    ARG~4575
+    ARG~4598
+    ARG~4647
+    ARG~4679
+    ARG~4697
+    ARG~4710
+    ARG~4716
+    ARG~4739
+    ARG~4761
+    ARG~4767
+    ARG~4780
+    ARG~4804
+    C%
+    CLA
+    CLAB
+    CLAC
+    CLAEXT
+    CLAL
+    CLALR
+    CLAR
+    CLEXT
+    I%
+    IV
+    J
+    LIT%%
+    LM
+    LMEXT
     Litext
+    MAT%%
+    MATB
+    MATC
+    MATL
+    MATLR
+    MATR
     Matext
+    OFF
+    V
     assert_iclause
     assert_imatrix
     assert_matrix
@@ -1660,9 +2978,30 @@
     offset_iv
     offset_litmat_ext))
 
-(defpackage :holai.thecops.ncdatabase
+(uiop:define-package
+  :holai.thecops.ncdatabase
   (:use :cl)
-  (:shadow db db_entries insert_db matrix2db)
+  (:mix :cl :holai.lib :holai.runtime)
+  (:shadow
+    A%
+    ARG~4824
+    CLEXT
+    DB%
+    EXCEPTION~4853
+    EXCEPTION~4902
+    GROUND
+    L
+    LIT%%
+    M
+    MATC
+    OFF
+    P%
+    PREDB
+    V
+    db
+    db_entries
+    insert_db
+    matrix2db)
   (:shadowing-import-from :cl +)
   (:shadowing-import-from :holai.lib %>)
   (:shadowing-import-from
@@ -1692,9 +3031,111 @@
   (:shadowing-import-from :holai.thecops.ncmatrix matrix_max_var clause_ground)
   (:export db db_entries insert_db matrix2db))
 
-(defpackage :holai.thecops.ncsearch
+(uiop:define-package
+  :holai.thecops.ncsearch
   (:use :cl)
+  (:mix :cl :holai.firstorder :holai.firstorder.utils.list :holai.lib :holai.runtime)
   (:shadow
+    ACC
+    ALT1
+    ALT2
+    ARGS
+    ARGS1
+    ARGS2
+    ARG~4912
+    ARG~4938
+    ARG~4943
+    ARG~4992
+    ARG~5030
+    ARG~5055
+    ARG~5092
+    ARG~5117
+    ARG~5154
+    ARG~5220
+    ARG~5317
+    ARG~5423
+    ARG~5482
+    ARG~5514
+    ARG~5596
+    ARG~5627
+    ARG~5634
+    ARG~5646
+    ARG~5673
+    ARG~5732
+    ARG~5739
+    ARG~5787
+    ARG~5802
+    C%
+    CHECK%
+    CLA
+    CLA1
+    CLAB
+    CLAB1
+    CLAC
+    CLADE
+    CLEXT
+    CLEXT%
+    CONTRA
+    EXCEPTION~4918
+    EXCEPTION~4948
+    EXTENSIONS
+    F
+    GO
+    GROUND
+    I%
+    I%%
+    IDX
+    INDEX%
+    J
+    J%
+    K%
+    K1
+    K1%
+    L
+    L1
+    L2
+    LAZY~UNIT
+    LEM
+    LEM1
+    LEMMAS
+    LIM
+    LIT%%
+    LM
+    LMEXT
+    M
+    MAT1
+    MI
+    MI1
+    MI2
+    MI3
+    MIAB
+    NEGLIT
+    OFF
+    OPT
+    P%
+    PATH
+    PI%
+    POSITION
+    POSTFIX
+    PREFIX
+    PRF1
+    PRF2
+    PRFS
+    REDUCTIONS
+    REGULARITY
+    ST
+    SUB
+    SUB1
+    SUB2
+    SUB3
+    V
+    V1
+    VARS
+    X
+    XS
+    Y
+    YS
+    Z
     alt1
     alt2
     cut
@@ -1807,11 +3248,96 @@
     unify_vars
     unique))
 
-(defpackage :holai.thecops.ncrecon
+(uiop:define-package
+  :holai.thecops.ncrecon
   (:use :cl)
+  (:mix
+    :cl
+    :holai.basics
+    :holai.bool
+    :holai.class
+    :holai.firstorder
+    :holai.firstorder.mapping
+    :holai.firstorder.utils.list
+    :holai.fusion.hol
+    :holai.lib
+    :holai.meson
+    :holai.parser
+    :holai.printer
+    :holai.runtime)
   (:shadow
+    ACC
+    ACC1
+    ACC2
+    ACC3
+    ARG~6176
+    ARG~6202
+    ARG~6225
+    ARG~6249
+    ARG~6286
+    ARG~6325
+    ARG~6381
+    ARG~6544
+    BOT
+    BOTJ
+    BOTSL
+    BOTSR
+    C%
+    CL
+    CLA
+    CLAC
+    CLAL
+    CLAR
+    CLEXT
     CONTRADICTION
+    DATA
     DISJ_CASES_LIST
+    DJS
+    E%
+    EXCEPTION~6106
+    FTM
+    I%
+    I%%
+    IDX
+    J
+    J%
+    K%
+    LEM
+    LIT%%
+    LITI
+    LMEXT
+    MAT%%
+    MATL
+    MATR
+    P%
+    P1
+    P2
+    POSTFIX
+    PREFIX
+    PREFIX_TH
+    PRF
+    PRFS
+    PRFS%
+    PROBLEM
+    PS
+    REL
+    SUB
+    TH
+    TH%
+    THI
+    THJ
+    THL
+    THR
+    TM
+    TMJ
+    TY
+    TYS
+    V
+    VS
+    X
+    XC
+    Y
+    YC
     bot_of_clause_ext
     bot_of_litmat_ext
     bot_of_proof
@@ -1915,17 +3441,64 @@
     recon_data
     spec_vars))
 
-(defpackage :holai.thecops.nanocop
+(uiop:define-package
+  :holai.thecops.nanocop
   (:use :cl)
+  (:mix
+    :cl
+    :holai.bool
+    :holai.canon
+    :holai.equal
+    :holai.firstorder
+    :holai.firstorder.mapping
+    :holai.firstorder.utils
+    :holai.fusion.hol
+    :holai.lib
+    :holai.parser
+    :holai.printer
+    :holai.runtime
+    :holai.tactics
+    :holai.theorems)
   (:shadow
+    ARG~6766
+    ARG~6808
+    ARG~6831
+    BOT
+    CLA
+    DATA
+    FOL
+    G%
+    GEN_EQ
     GEN_NANOCOP_TAC
+    GL
+    HASHEK
+    I%
+    IDX
+    LCONSTS
+    LIM
+    LIT%%
+    MAT%%
+    MATI
     NANOCOP
     NANOCOP_DEEPEN
     NANOCOP_TAC
+    OPT
     PREPARE_NANOCOP_TAC
+    PRF
+    PRFS
     PRINT_ID_TAC
     PRINT_TAC
     PURE_NANOCOP
+    S
+    SUB
+    SUB0
+    TH
+    THS
+    THS%
+    THS%%
+    TM
+    V
+    X
     fol_of_thm
     start)
   (:shadowing-import-from :cl append +)
@@ -2012,9 +3585,25 @@
     fol_of_thm
     start))
 
-(defpackage :holai.thecops
+(uiop:define-package
+  :holai.thecops
   (:use :cl)
-  (:shadow LEANCOP LEANCOP_TAC NANOCOP NANOCOP_TAC offset_lit offset_term)
+  (:mix :cl :holai.meson :holai.runtime)
+  (:shadow
+    A%
+    ARG~1007
+    F
+    LEANCOP
+    LEANCOP_TAC
+    NANOCOP
+    NANOCOP_TAC
+    OFF
+    P%
+    PA
+    TM
+    V
+    offset_lit
+    offset_term)
   (:shadowing-import-from :cl +)
   (:shadowing-import-from :holai.meson make-Fvar make-Fnapp Fvar Fnapp)
   (:shadowing-import-from :holai.runtime tuple match list-map defunc)
@@ -2753,13 +4342,13 @@
 
 (defrecord
   search_opts~1
-  cut1
-  cut2
-  cut3
-  comp
-  improved_lemmas
-  improved_regularity
-  add_eq_symmetry)
+  #:cut1
+  #:cut2
+  #:cut3
+  #:comp
+  #:improved_lemmas
+  #:improved_regularity
+  #:add_eq_symmetry)
 
 (defparameter search_opts
   (make-search_opts~1
@@ -3023,7 +4612,7 @@
 
 (in-package :holai.thecops.proof)
 
-(defvariant proof (Lemma) (Reduction) (Extension field0 field1))
+(defvariant proof (Lemma) (Reduction) (Extension #:field0 #:field1))
 
 (in-package :holai.thecops)
 
@@ -3260,7 +4849,7 @@
 
 (in-package :holai.thecops.ncmatrix)
 
-(defvariant litmat (Lit% field0) (Mat% field0))
+(defvariant litmat (Lit% #:field0) (Mat% #:field0))
 
 (defunc map_litmat (fl fm arg~3541)
   (match arg~3541 ((Lit% lit%%) (#`fl lit%%)) ((Mat% mat%%) (#`fm mat%%))))
@@ -3493,8 +5082,8 @@
 (defvariant proof
   (Lemma)
   (Reduction)
-  (Decomposition field0 field1 field2)
-  (Extension field0 field1 field2))
+  (Decomposition #:field0 #:field1 #:field2)
+  (Extension #:field0 #:field1 #:field2))
 
 (defunc pp_print_proof (arg~4360 sub f arg~4366)
   (match arg~4360
@@ -3543,7 +5132,7 @@
 
 (in-package :holai.thecops.extclause)
 
-(defvariant litmat_ext (Litext field0 field1) (Matext field0 field1 field2))
+(defvariant litmat_ext (Litext #:field0 #:field1) (Matext #:field0 #:field1 #:field2))
 
 (defunc offset_iv (off arg~4525)
   (match arg~4525
@@ -4155,7 +5744,7 @@
         (assert-true (= (list-length tys) (list-length vs)) "thecops.ml" 1295 2)
         (list-fold-left2 (lambdac (th% ty v) (#`SPEC (inst_var sub ty v) th%)) th tys vs)))))
 
-(defrecord recon_data problem mapping sub)
+(defrecord recon_data #:problem #:mapping #:sub)
 
 (defunc clause_index_mapping (cl)
   (%>

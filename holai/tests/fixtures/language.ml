@@ -225,12 +225,21 @@ let language_module_function_escape () =
   let partial = Local.combine 20 in
   fun () ->
     int_list_string (Local.observe () @ [partial 22; Local.capture 22; !calls]);;
+(* Ordinary module values must remain lexical even beside foreign SPECIAL names. *)
+let language_module_special seed =
+  let module Local = struct
+    let unit = seed
+    let capture () = let unit = unit in fun n -> unit+n
+  end in
+  Local.capture ();;
 let language_observations () =
   let a1 = Language_a.tick () in let a2 = Language_alias.tick () in
   let b1 = Language_b.tick () in
   let local_a = language_local 10 in let local_b = language_local 30 in
   let la1 = local_a 3 in let la2 = local_a 3 in let lb1 = local_b 3 in
   let module_functions = language_module_function_escape () in
+  let special_a = language_module_special 20 in
+  let special_b = language_module_special 40 in
   let loop_sum,loop_count = language_loops () in
   let table = Hashtbl.create 1 in
   Hashtbl.add table (1,2) 4; Hashtbl.add table (1,2) 5;
@@ -259,6 +268,7 @@ let language_observations () =
    "language_function_entry_shadow=" ^ language_function_entry_shadow ();
    "language_function_case_shadow=" ^ language_function_case_shadow ();
    "language_module_function_scope=" ^ module_functions () ^ ":" ^ module_functions ();
+   "language_module_special=" ^ int_list_string [special_a 22;special_b 2;special_a 1];
    "language_loops=" ^ int_list_string [loop_sum;loop_count];
    "language_lazy=" ^ language_lazy ();
    "language_hash=" ^ int_list_string [first;replaced] ^ ":" ^

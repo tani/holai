@@ -1,4 +1,4 @@
-(defpackage :holai.runtime
+(uiop:define-package :holai.runtime
   (:use :cl)
   (:shadow :funcall :compare :partial := :< :> :<= :>= :Some :formatter :list-length)
   (:export :defunc :lambdac :labelsc :fletc :proof :function-value :funcall :partial :tuple :tuple-items :tuple-ref

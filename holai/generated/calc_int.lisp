@@ -10,101 +10,146 @@
 ;; (*              (c) Copyright, John Harrison 1998-2007                       *)
 ;; (* ========================================================================= *)
 
-(cl:eval-when
-  (:compile-toplevel :load-toplevel :execute)
-  (cl:unless
-    (cl:find-package :holai.calc_int)
-    (defpackage :holai.calc_int
-      (:use :cl)
-      (:shadow
-        REAL_ABS_NEG
-        REAL_ABS_NUM
-        REAL_ADD_AC
-        REAL_ADD_RID
-        REAL_ADD_RINV
-        REAL_EQ_ADD_LCANCEL
-        REAL_EQ_ADD_RCANCEL
-        REAL_INT_ABS_CONV
-        REAL_INT_ADD_CONV
-        REAL_INT_COMPUTE_CONV
-        REAL_INT_EQ_CONV
-        REAL_INT_GE_CONV
-        REAL_INT_GT_CONV
-        REAL_INT_LE_CONV
-        REAL_INT_LT_CONV
-        REAL_INT_MUL_CONV
-        REAL_INT_NEG_CONV
-        REAL_INT_POW_CONV
-        REAL_INT_REDUCE_CONV
-        REAL_INT_RED_CONV
-        REAL_INT_SUB_CONV
-        REAL_LE_LNEG
-        REAL_LE_NEG2
-        REAL_LE_RNEG
-        REAL_MUL_LNEG
-        REAL_MUL_LZERO
-        REAL_MUL_RNEG
-        REAL_MUL_RZERO
-        REAL_NEG_0
-        REAL_NEG_ADD
-        REAL_NEG_NEG
-        REAL_OF_NUM_POW
-        REAL_POW_NEG
-        dest_realintconst
-        is_ratconst
-        is_realintconst
-        mk_numconst
-        mk_realintconst
-        rat_of_term
-        real_int_compute_add_convs
-        real_int_red_conv_list
-        term_of_rat)
-      (:export
-        REAL_ABS_NEG
-        REAL_ABS_NUM
-        REAL_ADD_AC
-        REAL_ADD_RID
-        REAL_ADD_RINV
-        REAL_EQ_ADD_LCANCEL
-        REAL_EQ_ADD_RCANCEL
-        REAL_INT_ABS_CONV
-        REAL_INT_ADD_CONV
-        REAL_INT_COMPUTE_CONV
-        REAL_INT_EQ_CONV
-        REAL_INT_GE_CONV
-        REAL_INT_GT_CONV
-        REAL_INT_LE_CONV
-        REAL_INT_LT_CONV
-        REAL_INT_MUL_CONV
-        REAL_INT_NEG_CONV
-        REAL_INT_POW_CONV
-        REAL_INT_REDUCE_CONV
-        REAL_INT_RED_CONV
-        REAL_INT_SUB_CONV
-        REAL_LE_LNEG
-        REAL_LE_NEG2
-        REAL_LE_RNEG
-        REAL_MUL_LNEG
-        REAL_MUL_LZERO
-        REAL_MUL_RNEG
-        REAL_MUL_RZERO
-        REAL_NEG_0
-        REAL_NEG_ADD
-        REAL_NEG_NEG
-        REAL_OF_NUM_POW
-        REAL_POW_NEG
-        dest_realintconst
-        is_ratconst
-        is_realintconst
-        mk_realintconst
-        rat_of_term
-        real_int_compute_add_convs
-        real_int_red_conv_list
-        term_of_rat))))
-
-(defpackage :holai.calc_int
+(uiop:define-package
+  :holai.calc_int
   (:use :cl)
   (:shadow
+    ADD_TM
+    AMP_TM
+    ARGS
+    ARG~1730
+    ARG~1755
+    C%
+    CAST_TM
+    COMPSET
+    CONVLIST
+    CS
+    DEST
+    DIV_TM
+    EXCEPTION~1159
+    GCONV_NET
+    L
+    M
+    M%
+    MK_NUMCONST
+    M_TM
+    N
+    N%
+    NEG_TM
+    NEWC
+    NN
+    NTH
+    NUM2_EQ_CONV
+    NUM2_NE_CONV
+    N_TM
+    P%
+    PAT
+    PTH
+    PTH0
+    PTH1
+    PTH2
+    PTH3
+    PTH4
+    PTH5
+    PTH6
+    PTH_EQ1A
+    PTH_EQ1B
+    PTH_EQ2A
+    PTH_EQ2B
+    PTH_GE1
+    PTH_GE2A
+    PTH_GE2B
+    PTH_GE3
+    PTH_GT1
+    PTH_GT2A
+    PTH_GT2B
+    PTH_GT3
+    PTH_LE1
+    PTH_LE2A
+    PTH_LE2B
+    PTH_LE3
+    PTH_LT1
+    PTH_LT2A
+    PTH_LT2B
+    PTH_LT3
+    PTM
+    Q
+    R%
+    REAL_ABS_NEG
+    REAL_ABS_NUM
+    REAL_ADD_AC
+    REAL_ADD_RID
+    REAL_ADD_RINV
+    REAL_EQ_ADD_LCANCEL
+    REAL_EQ_ADD_RCANCEL
+    REAL_INT_ABS_CONV
+    REAL_INT_ADD_CONV
+    REAL_INT_COMPUTE_CONV
+    REAL_INT_EQ_CONV
+    REAL_INT_EQ_CONV%
+    REAL_INT_GE_CONV
+    REAL_INT_GE_CONV%
+    REAL_INT_GT_CONV
+    REAL_INT_GT_CONV%
+    REAL_INT_LE_CONV
+    REAL_INT_LE_CONV%
+    REAL_INT_LT_CONV
+    REAL_INT_LT_CONV%
+    REAL_INT_MUL_CONV
+    REAL_INT_NEG_CONV
+    REAL_INT_POW_CONV
+    REAL_INT_REDUCE_CONV
+    REAL_INT_RED_CONV
+    REAL_INT_SUB_CONV
+    REAL_LE_LNEG
+    REAL_LE_NEG2
+    REAL_LE_RNEG
+    REAL_MUL_LNEG
+    REAL_MUL_LZERO
+    REAL_MUL_RNEG
+    REAL_MUL_RZERO
+    REAL_NEG_0
+    REAL_NEG_ADD
+    REAL_NEG_NEG
+    REAL_OF_NUM_POW
+    REAL_POW_NEG
+    TH1
+    TH2
+    TH3
+    TH4
+    THE_CONV
+    TM
+    TM1
+    TTH
+    X
+    dest_realintconst
+    is_ratconst
+    is_realintconst
+    mk_numconst
+    mk_realintconst
+    rat_of_term
+    real_int_compute_add_convs
+    real_int_red_conv_list
+    term_of_rat)
+  (:import-from :holai.arith)
+  (:import-from :holai.basics)
+  (:import-from :holai.bool)
+  (:import-from :holai.calc_num)
+  (:import-from :holai.class)
+  (:import-from :holai.compute.compute)
+  (:import-from :holai.drule)
+  (:import-from :holai.equal)
+  (:import-from :holai.fusion.hol)
+  (:import-from :holai.lib)
+  (:import-from :holai.meson)
+  (:import-from :holai.nums)
+  (:import-from :holai.parser)
+  (:import-from :holai.realax)
+  (:import-from :holai.runtime)
+  (:import-from :holai.simp)
+  (:import-from :holai.tactics)
+  (:import-from :holai.theorems)
+  (:export
     REAL_ABS_NEG
     REAL_ABS_NUM
     REAL_ADD_AC
@@ -138,6 +183,147 @@
     REAL_NEG_NEG
     REAL_OF_NUM_POW
     REAL_POW_NEG
+    dest_realintconst
+    is_ratconst
+    is_realintconst
+    mk_realintconst
+    rat_of_term
+    real_int_compute_add_convs
+    real_int_red_conv_list
+    term_of_rat))
+
+(uiop:define-package
+  :holai.calc_int
+  (:use :cl)
+  (:mix
+    :cl
+    :holai.arith
+    :holai.basics
+    :holai.bool
+    :holai.calc_num
+    :holai.class
+    :holai.compute.compute
+    :holai.drule
+    :holai.equal
+    :holai.fusion.hol
+    :holai.lib
+    :holai.meson
+    :holai.nums
+    :holai.parser
+    :holai.realax
+    :holai.runtime
+    :holai.simp
+    :holai.tactics
+    :holai.theorems)
+  (:shadow
+    ADD_TM
+    AMP_TM
+    ARGS
+    ARG~1730
+    ARG~1755
+    C%
+    CAST_TM
+    COMPSET
+    CONVLIST
+    CS
+    DEST
+    DIV_TM
+    EXCEPTION~1159
+    GCONV_NET
+    L
+    M
+    M%
+    MK_NUMCONST
+    M_TM
+    N
+    N%
+    NEG_TM
+    NEWC
+    NN
+    NTH
+    NUM2_EQ_CONV
+    NUM2_NE_CONV
+    N_TM
+    P%
+    PAT
+    PTH
+    PTH0
+    PTH1
+    PTH2
+    PTH3
+    PTH4
+    PTH5
+    PTH6
+    PTH_EQ1A
+    PTH_EQ1B
+    PTH_EQ2A
+    PTH_EQ2B
+    PTH_GE1
+    PTH_GE2A
+    PTH_GE2B
+    PTH_GE3
+    PTH_GT1
+    PTH_GT2A
+    PTH_GT2B
+    PTH_GT3
+    PTH_LE1
+    PTH_LE2A
+    PTH_LE2B
+    PTH_LE3
+    PTH_LT1
+    PTH_LT2A
+    PTH_LT2B
+    PTH_LT3
+    PTM
+    Q
+    R%
+    REAL_ABS_NEG
+    REAL_ABS_NUM
+    REAL_ADD_AC
+    REAL_ADD_RID
+    REAL_ADD_RINV
+    REAL_EQ_ADD_LCANCEL
+    REAL_EQ_ADD_RCANCEL
+    REAL_INT_ABS_CONV
+    REAL_INT_ADD_CONV
+    REAL_INT_COMPUTE_CONV
+    REAL_INT_EQ_CONV
+    REAL_INT_EQ_CONV%
+    REAL_INT_GE_CONV
+    REAL_INT_GE_CONV%
+    REAL_INT_GT_CONV
+    REAL_INT_GT_CONV%
+    REAL_INT_LE_CONV
+    REAL_INT_LE_CONV%
+    REAL_INT_LT_CONV
+    REAL_INT_LT_CONV%
+    REAL_INT_MUL_CONV
+    REAL_INT_NEG_CONV
+    REAL_INT_POW_CONV
+    REAL_INT_REDUCE_CONV
+    REAL_INT_RED_CONV
+    REAL_INT_SUB_CONV
+    REAL_LE_LNEG
+    REAL_LE_NEG2
+    REAL_LE_RNEG
+    REAL_MUL_LNEG
+    REAL_MUL_LZERO
+    REAL_MUL_RNEG
+    REAL_MUL_RZERO
+    REAL_NEG_0
+    REAL_NEG_ADD
+    REAL_NEG_NEG
+    REAL_OF_NUM_POW
+    REAL_POW_NEG
+    TH1
+    TH2
+    TH3
+    TH4
+    THE_CONV
+    TM
+    TM1
+    TTH
+    X
     dest_realintconst
     is_ratconst
     is_realintconst

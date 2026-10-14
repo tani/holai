@@ -5,10 +5,10 @@
   (if (search "/generated/" (namestring (asdf:component-pathname component)))
       (let ((wall (get-internal-real-time)) (cpu (get-internal-run-time))
             (gc sb-ext:*gc-run-time*) (bytes (sb-ext:get-bytes-consed)))
-        (format t "~&START_LOAD ~a~%" (asdf:component-name component)) (finish-output)
+        (format t "~&START_LOAD ~a~%" (pathname-name (asdf:component-pathname component))) (finish-output)
         (prog1 (call-next-method)
           (format t "~&LOAD_METRIC ~a ~,6f ~,6f ~,6f ~d~%"
-            (asdf:component-name component)
+            (pathname-name (asdf:component-pathname component))
             (/ (- (get-internal-real-time) wall) (float internal-time-units-per-second 1d0))
             (/ (- (get-internal-run-time) cpu) (float internal-time-units-per-second 1d0))
             (/ (- sb-ext:*gc-run-time* gc) (float internal-time-units-per-second 1d0))

@@ -7,19 +7,70 @@
 ;; (*   (c) Copyright, Michael Faerber and Cezary Kaliszyk, 2014-2018.          *)
 ;; (* ========================================================================= *)
 
+(uiop:define-package
+  :holai.firstorder
+  (:use :cl)
+  (:shadow copverb)
+  (:import-from :holai.basics)
+  (:import-from :holai.bool)
+  (:import-from :holai.fusion)
+  (:import-from :holai.fusion.hol)
+  (:import-from :holai.lib)
+  (:import-from :holai.meson)
+  (:import-from :holai.meson.meson)
+  (:import-from :holai.printer)
+  (:import-from :holai.runtime)
+  (:export copverb))
+
 (cl:eval-when
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.firstorder.utils.pair)
-    (defpackage :holai.firstorder.utils.pair (:use :cl) (:shadow mapn) (:export mapn))))
+    (uiop:define-package
+      :holai.firstorder.utils.pair
+      (:use :cl)
+      (:shadow ARG~42 F X Y mapn)
+      (:export mapn))))
 
 (cl:eval-when
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.firstorder.utils.list)
-    (defpackage :holai.firstorder.utils.list
+    (uiop:define-package
+      :holai.firstorder.utils.list
       (:use :cl)
       (:shadow
+        ACC
+        ACC%
+        ACC%%
+        ARG~143
+        ARG~189
+        ARG~237
+        ARG~278
+        ARG~348
+        ARG~372
+        ARG~405
+        ARG~454
+        ARG~484
+        ARG~67
+        ARG~97
+        ELEM
+        F
+        GO
+        H
+        I%
+        L
+        LOOP
+        N
+        P%
+        REV
+        SF
+        SF%
+        T%
+        X
+        XS
+        Y
+        YS
         concat_map
         cons
         exists_unique
@@ -64,18 +115,95 @@
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.firstorder.utils)
-    (defpackage :holai.firstorder.utils
+    (uiop:define-package
+      :holai.firstorder.utils
       (:use :cl)
-      (:shadow % %> >>= const)
+      (:shadow % %> >>= ARG~23 F G% X Y const)
       (:export % %> >>= const))))
 
 (cl:eval-when
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.firstorder.mapping)
-    (defpackage :holai.firstorder.mapping
+    (uiop:define-package
+      :holai.firstorder.mapping
       (:use :cl)
       (:shadow
+        A%
+        A1
+        A2
+        ARGS
+        ARG~1047
+        ARG~1101
+        ARG~1104
+        ARG~533
+        ARG~551
+        ARG~870
+        ARG~910
+        ARG~934
+        ARG~939
+        B1
+        B2
+        BASICS
+        BOD
+        C1
+        C2
+        CONSTS
+        ENV
+        EQT
+        EXCEPTION~566
+        EXCEPTION~603
+        EXCEPTION~728
+        EXCEPTION~759
+        EXCEPTION~762
+        EXCEPTION~765
+        F
+        F%
+        FBOD
+        FF
+        FL
+        FLITS
+        FOL_OF_CONST%
+        FOL_OF_HOL_CLAUSE
+        FOL_OF_VAR%
+        FR
+        FV
+        GSTORE
+        GV
+        H
+        HLITS
+        HOL_OF_CONST%
+        HOL_OF_VAR%
+        INC_VCOUNTER
+        L
+        LCONSTS
+        M
+        MK_CONTRAPOSES
+        N
+        NW
+        P%
+        PRS
+        PRULES
+        Q
+        R%
+        RAWRULES
+        RESET_CONSTS%
+        RESET_VARS%
+        SOFAR
+        SRULES
+        T%
+        TH
+        THMS
+        TM
+        TM%
+        TY
+        TYS
+        TYS%
+        UNUSED
+        USED
+        V
+        VCOUNTER
+        VSTORE
         eqt
         fol_of_atom
         fol_of_const
@@ -113,21 +241,50 @@
         reset_consts
         reset_vars))))
 
-(cl:eval-when
-  (:compile-toplevel :load-toplevel :execute)
-  (cl:unless
-    (cl:find-package :holai.firstorder)
-    (defpackage :holai.firstorder (:use :cl) (:shadow copverb) (:export copverb))))
-
-(defpackage :holai.firstorder.utils.pair
+(uiop:define-package
+  :holai.firstorder.utils.pair
   (:use :cl)
-  (:shadow mapn)
+  (:mix :cl :holai.runtime)
+  (:shadow ARG~42 F X Y mapn)
   (:shadowing-import-from :holai.runtime tuple match defunc)
   (:export mapn))
 
-(defpackage :holai.firstorder.utils.list
+(uiop:define-package
+  :holai.firstorder.utils.list
   (:use :cl)
+  (:mix :cl :holai.runtime)
   (:shadow
+    ACC
+    ACC%
+    ACC%%
+    ARG~143
+    ARG~189
+    ARG~237
+    ARG~278
+    ARG~348
+    ARG~372
+    ARG~405
+    ARG~454
+    ARG~484
+    ARG~67
+    ARG~97
+    ELEM
+    F
+    GO
+    H
+    I%
+    L
+    LOOP
+    N
+    P%
+    REV
+    SF
+    SF%
+    T%
+    X
+    XS
+    Y
+    YS
     concat_map
     cons
     exists_unique
@@ -240,15 +397,104 @@
     union1
     union2))
 
-(defpackage :holai.firstorder.utils
+(uiop:define-package
+  :holai.firstorder.utils
   (:use :cl)
-  (:shadow % %> >>= const)
+  (:mix :cl :holai.runtime)
+  (:shadow % %> >>= ARG~23 F G% X Y const)
   (:shadowing-import-from :holai.runtime Some None match make-None defunc)
   (:export % %> >>= const))
 
-(defpackage :holai.firstorder.mapping
+(uiop:define-package
+  :holai.firstorder.mapping
   (:use :cl)
+  (:mix
+    :cl
+    :holai.basics
+    :holai.bool
+    :holai.fusion
+    :holai.fusion.hol
+    :holai.lib
+    :holai.meson
+    :holai.meson.meson
+    :holai.printer
+    :holai.runtime)
   (:shadow
+    A%
+    A1
+    A2
+    ARGS
+    ARG~1047
+    ARG~1101
+    ARG~1104
+    ARG~533
+    ARG~551
+    ARG~870
+    ARG~910
+    ARG~934
+    ARG~939
+    B1
+    B2
+    BASICS
+    BOD
+    C1
+    C2
+    CONSTS
+    ENV
+    EQT
+    EXCEPTION~566
+    EXCEPTION~603
+    EXCEPTION~728
+    EXCEPTION~759
+    EXCEPTION~762
+    EXCEPTION~765
+    F
+    F%
+    FBOD
+    FF
+    FL
+    FLITS
+    FOL_OF_CONST%
+    FOL_OF_HOL_CLAUSE
+    FOL_OF_VAR%
+    FR
+    FV
+    GSTORE
+    GV
+    H
+    HLITS
+    HOL_OF_CONST%
+    HOL_OF_VAR%
+    INC_VCOUNTER
+    L
+    LCONSTS
+    M
+    MK_CONTRAPOSES
+    N
+    NW
+    P%
+    PRS
+    PRULES
+    Q
+    R%
+    RAWRULES
+    RESET_CONSTS%
+    RESET_VARS%
+    SOFAR
+    SRULES
+    T%
+    TH
+    THMS
+    TM
+    TM%
+    TY
+    TYS
+    TYS%
+    UNUSED
+    USED
+    V
+    VCOUNTER
+    VSTORE
     eqt
     fol_of_atom
     fol_of_const
@@ -355,8 +601,10 @@
     reset_consts
     reset_vars))
 
-(defpackage :holai.firstorder
+(uiop:define-package
+  :holai.firstorder
   (:use :cl)
+  (:mix :cl :holai.runtime)
   (:shadow copverb)
   (:shadowing-import-from :holai.runtime ref)
   (:export copverb))

@@ -4,7 +4,7 @@
 (defmethod asdf:perform :before ((op asdf:compile-op) (component asdf:cl-source-file))
   (error "Unexpected compilation: ~a" (asdf:component-pathname component)))
 (defmethod asdf:perform :around ((op asdf:load-op) (component asdf:cl-source-file))
-  (if (string= (asdf:component-name component) "sets")
+  (if (string= (pathname-name (asdf:component-pathname component)) "sets")
       (progn
         (sb-sprof:start-profiling :mode :cpu :sample-interval 0.01 :max-samples 10000 :max-depth 128)
         (unwind-protect (time (call-next-method)) (sb-sprof:stop-profiling))

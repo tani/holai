@@ -10,25 +10,468 @@
 ;; (*              (c) Copyright, John Harrison 1998-2007                       *)
 ;; (* ========================================================================= *)
 
+(uiop:define-package
+  :holai.meson
+  (:use :cl)
+  (:shadow
+    ARG~3807
+    ASL
+    ASM_MESON_TAC
+    Atom
+    Conj
+    Cut
+    Disj
+    EXCEPTION~3929
+    Fnapp
+    Forallq
+    Fvar
+    GEN_MESON_TAC
+    MAX%
+    MESON
+    MESON_TAC
+    MIN%
+    STEP
+    Subgoal
+    TH
+    THS
+    TM
+    TM%
+    V
+    W%
+    make-Atom
+    make-Conj
+    make-Cut
+    make-Disj
+    make-Fnapp
+    make-Forallq
+    make-Fvar
+    make-Subgoal
+    meson_brand
+    meson_chatty
+    meson_dcutin
+    meson_depth
+    meson_prefine
+    meson_skew
+    meson_split_limit)
+  (:import-from :holai.basics)
+  (:import-from :holai.bool)
+  (:import-from :holai.canon)
+  (:import-from :holai.class)
+  (:import-from :holai.drule)
+  (:import-from :holai.equal)
+  (:import-from :holai.fusion)
+  (:import-from :holai.fusion.hol)
+  (:import-from :holai.lib)
+  (:import-from :holai.parser)
+  (:import-from :holai.runtime)
+  (:import-from :holai.simp)
+  (:import-from :holai.tactics)
+  (:import-from :holai.theorems)
+  (:export
+    ASM_MESON_TAC
+    Atom
+    Conj
+    Cut
+    Disj
+    Fnapp
+    Forallq
+    Fvar
+    GEN_MESON_TAC
+    MESON
+    MESON_TAC
+    Subgoal
+    make-Atom
+    make-Conj
+    make-Cut
+    make-Disj
+    make-Fnapp
+    make-Forallq
+    make-Fvar
+    make-Subgoal
+    meson_brand
+    meson_chatty
+    meson_dcutin
+    meson_depth
+    meson_prefine
+    meson_skew
+    meson_split_limit))
+
 (cl:eval-when
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.meson.meson)
-    (defpackage :holai.meson.meson
+    (uiop:define-package
+      :holai.meson.meson
       (:use :cl)
       (:shadow
+        A%
+        A1
+        A2
+        ACC
+        ACTH
+        ALLINS
+        ANCESTORS
+        APPRULE
+        ARGS
+        ARGS%
+        ARGS1
+        ARGS2
+        ARG~1005
+        ARG~1009
+        ARG~1034
+        ARG~1049
+        ARG~1090
+        ARG~1134
+        ARG~1189
+        ARG~1248
+        ARG~1263
+        ARG~1279
+        ARG~1303
+        ARG~1321
+        ARG~1424
+        ARG~1462
+        ARG~1525
+        ARG~1536
+        ARG~154
+        ARG~1544
+        ARG~1641
+        ARG~1662
+        ARG~1685
+        ARG~1693
+        ARG~1741
+        ARG~1756
+        ARG~178
+        ARG~1804
+        ARG~1819
+        ARG~2013
+        ARG~2018
+        ARG~2126
+        ARG~2180
+        ARG~2183
+        ARG~2213
+        ARG~2216
+        ARG~2237
+        ARG~2298
+        ARG~2305
+        ARG~2431
+        ARG~2448
+        ARG~2563
+        ARG~2608
+        ARG~2745
+        ARG~2849
+        ARG~2909
+        ARG~298
+        ARG~3456
+        ARG~3589
+        ARG~49
+        ARG~577
+        ARG~593
+        ARG~669
+        ARG~745
+        ARULES
+        ASL
+        ASSOCIATE
+        AT
+        ATOMS%
+        ATYS
+        B%
+        B1
+        B2
+        BASICS
+        BOD
         BRAND
         BRANDE
         BRAND_CONGS
         BRAND_TRANS
+        C%
+        C1
+        C2
+        CCOUNTER
+        CLAUSIFY
+        CLEAR_CONTRAPOS_CACHE%
+        CLS
+        CONC
         CONJUNCTS_THEN%
+        CONSTS
+        CONT
+        CREATE_CONGRUENCE_AXIOM
+        CREATE_EQUIVALENCE_AXIOMS
+        CRULES
+        CSTORE
+        CTH
+        CTYS
+        CURRENT
+        CURRENTCONSTS
+        CURRENTVARS
+        DEPTH
+        DISJ_AC
+        DJS
+        E%
+        ENV
+        EQ
+        EQS
+        EQS0
+        EQS1
+        EQT
+        EQUIVS
+        EQ_ELIM_RULE
+        EQ_THMS
+        EXCEPTION~1102
+        EXCEPTION~1181
+        EXCEPTION~120
+        EXCEPTION~1215
+        EXCEPTION~1447
+        EXCEPTION~1453
+        EXCEPTION~1559
+        EXCEPTION~1575
+        EXCEPTION~1731
+        EXCEPTION~1940
+        EXCEPTION~196
+        EXCEPTION~219
+        EXCEPTION~2316
+        EXCEPTION~233
+        EXCEPTION~2422
+        EXCEPTION~2613
+        EXCEPTION~2616
+        EXCEPTION~2619
+        EXCEPTION~2622
+        EXCEPTION~2625
+        EXCEPTION~2628
+        EXCEPTION~2631
+        EXCEPTION~3074
+        EXCEPTION~3123
+        EXCEPTION~317
+        EXCEPTION~3201
+        EXCEPTION~3275
+        EXCEPTION~434
+        EXCEPTION~465
+        EXCEPTION~468
+        EXCEPTION~471
+        EXCEPTION~778
+        EXCEPTION~849
+        EXCEPTION~87
+        EXCEPTION~880
+        EXCEPTION~945
+        EXCEPTION~948
+        EXCEPTION~972
+        EXCEPTION~975
+        EXPAND_GOAL%
+        EXPAND_GOALS
+        F
+        FALSE_TM
+        FARGS
+        FBOD
+        FCONGS
+        FF
+        FIND_EQS
+        FL
+        FLITS
+        FM_CONSTS
+        FN
+        FOL_OF_CONST%
+        FOL_OF_HOL_CLAUSE
+        FOL_OF_VAR%
+        FR
+        FSIZE
+        FTH
+        FTUP
+        FUNS
+        FV
+        G%
+        G%%
+        GARGS
+        GG
+        GI
+        GL
+        GL%
+        GLOBIN
+        GLOBINS
+        GRAB_CONSTANTS
+        GS
+        GS%
+        GSTORE
+        GV
+        GVS
+        H
+        H%
+        HLITS
+        HOL_G
+        HOL_NEGATE
+        HOL_OF_BUMPED_VAR
+        HOL_OF_CONST%
+        HOL_OF_VAR%
+        HTH
+        HV%
+        HYPS
+        I%
+        IMF_CONV
+        IMP_CONV
+        IMP_ELIM_CONV
+        INC
+        INCDEPTH
+        INCSIZE
+        INC_VCOUNTER
+        INPUT
+        INSTS
+        INSTS%
+        ITH
+        KEY
+        L
+        L1
+        L2
+        LARGS
+        LCONSTS
         LDISJ_CASES
+        LDJS
+        LE
+        LEN
+        LG%
+        LGOALS
+        LIS
+        LITS
+        LOCIN
+        LOCINS
+        LOFFSET
+        LSIZE
+        LTH
+        LTH1
+        LTH2
+        M
+        MAKE_HOL_CONTRAPOS%
+        MATCH_CONSTS
+        MAX%
+        MAXDEP
+        MAXINF
+        MCONSTS
+        MCONSTS%
+        MEMORY
+        MERGE_INST
+        MESON_TO_HOL%
+        MIN%
+        MK_CONTRAPOSES
+        MK_IHYP
+        N
+        NDJS
+        NEWANCESTORS
+        NEWHYPS
+        NEWINS
+        NEWINSTS
+        NEWOFFSET
+        NEWSIZE
+        NEWSTATE
+        NO
+        NONEQS
+        NW
+        OFF
+        OFFSET
+        OLDINSTS
+        OLD_DCUTIN
+        OP
+        OPTIMIZE_CLAUSE_ORDER
+        OTHERANC
+        OURANC
+        OURANCP
+        OURS
+        P%
+        P%%
+        P1
+        P2
+        PCONGS
+        PCONSTS
+        PFLAG
+        PINSTS
+        POLYMORPH
+        POLYMORPH_ALL
         POLY_ASSUME_TAC
+        PR
+        PRED
+        PREDS
+        PREDS1
+        PROOF
+        PRS
+        PRULES
+        PULL_CONV
         PURE_MESON_TAC
+        PUSH_CONV
+        Q
+        QPARTITION%
         QUANT_BOOL_CONV
+        R%
+        RARGS
+        RAWRULES
+        RDJS
         REFLEXATE
+        RESET_CONSTS%
+        RESET_VARS%
+        RG%
+        RGOALS
+        RSIZE
+        RTH
+        RTY
+        RULE
+        RULES
+        S
+        S1
+        S2
+        SETIFY%
         SIMPLE_MESON_REFUTE
+        SIZE
+        SIZE%
+        SOFAR
+        SOLVE
         SPLIT_TAC
+        SRULES
+        STATE
+        STS
+        STUP
+        SUBTERMS_IRREFL
+        SUBTERMS_REFL
+        T%
+        T%%
+        TAG
+        TH
+        TH%
+        TH%%
+        TH1
+        TH2
+        THETA
+        THMS
+        THS
+        THS%
+        THS%%
+        TM
+        TM%
+        TM1
+        TM1%
+        TM2
+        TM2%
+        TMS
+        TMS%
+        TM_CONSTS
+        TTAC
+        TUP
+        TVS
+        TY
+        TY1
+        TY2
+        TYINS
+        TYS
+        U
+        UNIQ%
+        UNUSED
+        USED
+        UTS
+        V
+        V%
+        VCOUNTER
+        VEQ_TM
+        VSTORE
+        W%
+        X
+        X%
+        Y
+        YES
+        ZTUP
         cacheconts
         checkan
         clear_contrapos_cache
@@ -159,84 +602,393 @@
         separate_insts
         solve_goal))))
 
-(cl:eval-when
-  (:compile-toplevel :load-toplevel :execute)
-  (cl:unless
-    (cl:find-package :holai.meson)
-    (defpackage :holai.meson
-      (:use :cl)
-      (:shadow
-        ASM_MESON_TAC
-        Atom
-        Conj
-        Cut
-        Disj
-        Fnapp
-        Forallq
-        Fvar
-        GEN_MESON_TAC
-        MESON
-        MESON_TAC
-        Subgoal
-        make-Atom
-        make-Conj
-        make-Cut
-        make-Disj
-        make-Fnapp
-        make-Forallq
-        make-Fvar
-        make-Subgoal
-        meson_brand
-        meson_chatty
-        meson_dcutin
-        meson_depth
-        meson_prefine
-        meson_skew
-        meson_split_limit)
-      (:export
-        ASM_MESON_TAC
-        Atom
-        Conj
-        Cut
-        Disj
-        Fnapp
-        Forallq
-        Fvar
-        GEN_MESON_TAC
-        MESON
-        MESON_TAC
-        Subgoal
-        make-Atom
-        make-Conj
-        make-Cut
-        make-Disj
-        make-Fnapp
-        make-Forallq
-        make-Fvar
-        make-Subgoal
-        meson_brand
-        meson_chatty
-        meson_dcutin
-        meson_depth
-        meson_prefine
-        meson_skew
-        meson_split_limit))))
-
-(defpackage :holai.meson.meson
+(uiop:define-package
+  :holai.meson.meson
   (:use :cl)
+  (:mix
+    :cl
+    :holai.basics
+    :holai.bool
+    :holai.class
+    :holai.drule
+    :holai.equal
+    :holai.fusion
+    :holai.fusion.hol
+    :holai.lib
+    :holai.parser
+    :holai.runtime
+    :holai.simp
+    :holai.tactics
+    :holai.theorems)
   (:shadow
+    A%
+    A1
+    A2
+    ACC
+    ACTH
+    ALLINS
+    ANCESTORS
+    APPRULE
+    ARGS
+    ARGS%
+    ARGS1
+    ARGS2
+    ARG~1005
+    ARG~1009
+    ARG~1034
+    ARG~1049
+    ARG~1090
+    ARG~1134
+    ARG~1189
+    ARG~1248
+    ARG~1263
+    ARG~1279
+    ARG~1303
+    ARG~1321
+    ARG~1424
+    ARG~1462
+    ARG~1525
+    ARG~1536
+    ARG~154
+    ARG~1544
+    ARG~1641
+    ARG~1662
+    ARG~1685
+    ARG~1693
+    ARG~1741
+    ARG~1756
+    ARG~178
+    ARG~1804
+    ARG~1819
+    ARG~2013
+    ARG~2018
+    ARG~2126
+    ARG~2180
+    ARG~2183
+    ARG~2213
+    ARG~2216
+    ARG~2237
+    ARG~2298
+    ARG~2305
+    ARG~2431
+    ARG~2448
+    ARG~2563
+    ARG~2608
+    ARG~2745
+    ARG~2849
+    ARG~2909
+    ARG~298
+    ARG~3456
+    ARG~3589
+    ARG~49
+    ARG~577
+    ARG~593
+    ARG~669
+    ARG~745
+    ARULES
+    ASL
+    ASSOCIATE
+    AT
+    ATOMS%
+    ATYS
+    B%
+    B1
+    B2
+    BASICS
+    BOD
     BRAND
     BRANDE
     BRAND_CONGS
     BRAND_TRANS
+    C%
+    C1
+    C2
+    CCOUNTER
+    CLAUSIFY
+    CLEAR_CONTRAPOS_CACHE%
+    CLS
+    CONC
     CONJUNCTS_THEN%
+    CONSTS
+    CONT
+    CREATE_CONGRUENCE_AXIOM
+    CREATE_EQUIVALENCE_AXIOMS
+    CRULES
+    CSTORE
+    CTH
+    CTYS
+    CURRENT
+    CURRENTCONSTS
+    CURRENTVARS
+    DEPTH
+    DISJ_AC
+    DJS
+    E%
+    ENV
+    EQ
+    EQS
+    EQS0
+    EQS1
+    EQT
+    EQUIVS
+    EQ_ELIM_RULE
+    EQ_THMS
+    EXCEPTION~1102
+    EXCEPTION~1181
+    EXCEPTION~120
+    EXCEPTION~1215
+    EXCEPTION~1447
+    EXCEPTION~1453
+    EXCEPTION~1559
+    EXCEPTION~1575
+    EXCEPTION~1731
+    EXCEPTION~1940
+    EXCEPTION~196
+    EXCEPTION~219
+    EXCEPTION~2316
+    EXCEPTION~233
+    EXCEPTION~2422
+    EXCEPTION~2613
+    EXCEPTION~2616
+    EXCEPTION~2619
+    EXCEPTION~2622
+    EXCEPTION~2625
+    EXCEPTION~2628
+    EXCEPTION~2631
+    EXCEPTION~3074
+    EXCEPTION~3123
+    EXCEPTION~317
+    EXCEPTION~3201
+    EXCEPTION~3275
+    EXCEPTION~434
+    EXCEPTION~465
+    EXCEPTION~468
+    EXCEPTION~471
+    EXCEPTION~778
+    EXCEPTION~849
+    EXCEPTION~87
+    EXCEPTION~880
+    EXCEPTION~945
+    EXCEPTION~948
+    EXCEPTION~972
+    EXCEPTION~975
+    EXPAND_GOAL%
+    EXPAND_GOALS
+    F
+    FALSE_TM
+    FARGS
+    FBOD
+    FCONGS
+    FF
+    FIND_EQS
+    FL
+    FLITS
+    FM_CONSTS
+    FN
+    FOL_OF_CONST%
+    FOL_OF_HOL_CLAUSE
+    FOL_OF_VAR%
+    FR
+    FSIZE
+    FTH
+    FTUP
+    FUNS
+    FV
+    G%
+    G%%
+    GARGS
+    GG
+    GI
+    GL
+    GL%
+    GLOBIN
+    GLOBINS
+    GRAB_CONSTANTS
+    GS
+    GS%
+    GSTORE
+    GV
+    GVS
+    H
+    H%
+    HLITS
+    HOL_G
+    HOL_NEGATE
+    HOL_OF_BUMPED_VAR
+    HOL_OF_CONST%
+    HOL_OF_VAR%
+    HTH
+    HV%
+    HYPS
+    I%
+    IMF_CONV
+    IMP_CONV
+    IMP_ELIM_CONV
+    INC
+    INCDEPTH
+    INCSIZE
+    INC_VCOUNTER
+    INPUT
+    INSTS
+    INSTS%
+    ITH
+    KEY
+    L
+    L1
+    L2
+    LARGS
+    LCONSTS
     LDISJ_CASES
+    LDJS
+    LE
+    LEN
+    LG%
+    LGOALS
+    LIS
+    LITS
+    LOCIN
+    LOCINS
+    LOFFSET
+    LSIZE
+    LTH
+    LTH1
+    LTH2
+    M
+    MAKE_HOL_CONTRAPOS%
+    MATCH_CONSTS
+    MAX%
+    MAXDEP
+    MAXINF
+    MCONSTS
+    MCONSTS%
+    MEMORY
+    MERGE_INST
+    MESON_TO_HOL%
+    MIN%
+    MK_CONTRAPOSES
+    MK_IHYP
+    N
+    NDJS
+    NEWANCESTORS
+    NEWHYPS
+    NEWINS
+    NEWINSTS
+    NEWOFFSET
+    NEWSIZE
+    NEWSTATE
+    NO
+    NONEQS
+    NW
+    OFF
+    OFFSET
+    OLDINSTS
+    OLD_DCUTIN
+    OP
+    OPTIMIZE_CLAUSE_ORDER
+    OTHERANC
+    OURANC
+    OURANCP
+    OURS
+    P%
+    P%%
+    P1
+    P2
+    PCONGS
+    PCONSTS
+    PFLAG
+    PINSTS
+    POLYMORPH
+    POLYMORPH_ALL
     POLY_ASSUME_TAC
+    PR
+    PRED
+    PREDS
+    PREDS1
+    PROOF
+    PRS
+    PRULES
+    PULL_CONV
     PURE_MESON_TAC
+    PUSH_CONV
+    Q
+    QPARTITION%
     QUANT_BOOL_CONV
+    R%
+    RARGS
+    RAWRULES
+    RDJS
     REFLEXATE
+    RESET_CONSTS%
+    RESET_VARS%
+    RG%
+    RGOALS
+    RSIZE
+    RTH
+    RTY
+    RULE
+    RULES
+    S
+    S1
+    S2
+    SETIFY%
     SIMPLE_MESON_REFUTE
+    SIZE
+    SIZE%
+    SOFAR
+    SOLVE
     SPLIT_TAC
+    SRULES
+    STATE
+    STS
+    STUP
+    SUBTERMS_IRREFL
+    SUBTERMS_REFL
+    T%
+    T%%
+    TAG
+    TH
+    TH%
+    TH%%
+    TH1
+    TH2
+    THETA
+    THMS
+    THS
+    THS%
+    THS%%
+    TM
+    TM%
+    TM1
+    TM1%
+    TM2
+    TM2%
+    TMS
+    TMS%
+    TM_CONSTS
+    TTAC
+    TUP
+    TVS
+    TY
+    TY1
+    TY2
+    TYINS
+    TYS
+    U
+    UNIQ%
+    UNUSED
+    USED
+    UTS
+    V
+    V%
+    VCOUNTER
+    VEQ_TM
+    VSTORE
+    W%
+    X
+    X%
+    Y
+    YES
+    ZTUP
     cacheconts
     checkan
     clear_contrapos_cache
@@ -581,21 +1333,46 @@
     separate_insts
     solve_goal))
 
-(defpackage :holai.meson
+(uiop:define-package
+  :holai.meson
   (:use :cl)
+  (:mix
+    :cl
+    :holai.basics
+    :holai.bool
+    :holai.canon
+    :holai.class
+    :holai.equal
+    :holai.fusion.hol
+    :holai.lib
+    :holai.runtime
+    :holai.tactics
+    :holai.theorems)
   (:shadow
+    ARG~3807
+    ASL
     ASM_MESON_TAC
     Atom
     Conj
     Cut
     Disj
+    EXCEPTION~3929
     Fnapp
     Forallq
     Fvar
     GEN_MESON_TAC
+    MAX%
     MESON
     MESON_TAC
+    MIN%
+    STEP
     Subgoal
+    TH
+    THS
+    TM
+    TM%
+    V
+    W%
     make-Atom
     make-Conj
     make-Cut
@@ -745,15 +1522,15 @@
 
 (define-exception Cut)
 
-(defvariant fol_term (Fvar field0) (Fnapp field0 field1))
+(defvariant fol_term (Fvar #:field0) (Fnapp #:field0 #:field1))
 
 (defvariant fol_form
-  (Atom field0)
-  (Conj field0 field1)
-  (Disj field0 field1)
-  (Forallq field0 field1))
+  (Atom #:field0)
+  (Conj #:field0 #:field1)
+  (Disj #:field0 #:field1)
+  (Forallq #:field0 #:field1))
 
-(defvariant fol_goal (Subgoal field0 field1 field2 field3 field4))
+(defvariant fol_goal (Subgoal #:field0 #:field1 #:field2 #:field3 #:field4))
 
 (in-package :holai.meson.meson)
 

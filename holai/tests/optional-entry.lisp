@@ -1,7 +1,7 @@
 (require :asdf)
 (asdf:initialize-source-registry `(:source-registry (:directory ,(truename ".")) :inherit-configuration))
 (setf asdf:*asdf-verbose* nil *compile-verbose* nil *load-verbose* nil)
-(asdf:load-system "holai-runtime")
+(asdf:load-system "holai/runtime")
 (defvar *optional-checks* 0)
 (defun check-optional (x)
   (incf *optional-checks*) (unless x (error "Optional entry check ~d failed" *optional-checks*)))

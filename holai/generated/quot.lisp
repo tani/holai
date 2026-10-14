@@ -10,18 +10,239 @@
 ;; (*              (c) Copyright, John Harrison 1998-2007                       *)
 ;; (* ========================================================================= *)
 
-(cl:eval-when
-  (:compile-toplevel :load-toplevel :execute)
-  (cl:unless
-    (cl:find-package :holai.quot)
-    (defpackage :holai.quot
-      (:use :cl)
-      (:shadow define_quotient_type lift_function lift_theorem)
-      (:export define_quotient_type lift_function lift_theorem))))
-
-(defpackage :holai.quot
+(uiop:define-package
+  :holai.quot
   (:use :cl)
-  (:shadow define_quotient_type lift_function lift_theorem)
+  (:shadow
+    ABS%%
+    ABSNAME
+    APOP
+    ARG~133
+    ARG~3
+    ARG~662
+    BOD
+    CON
+    CTH
+    DATM
+    DBOD
+    DEF
+    DEST
+    DETM
+    DME_TH
+    DMR
+    DTH
+    E%
+    EQS
+    EQV
+    EQVX
+    ETH
+    ETHLIST
+    ETY
+    EV
+    EVS
+    EVS%
+    EXCEPTION~235
+    EXCEPTION~373
+    EXCEPTION~520
+    EXTM
+    FCONV
+    FNAME
+    HYPS
+    ITH
+    JTH
+    LCON
+    LDEF
+    MEMS
+    MK
+    MRT
+    NEWARGS
+    PRED
+    PTH
+    PTY
+    QVS
+    RCON
+    RDEF
+    REFL_TH
+    RELS
+    REP
+    REPNAME
+    RTM
+    RV
+    RVS
+    S
+    SELECT_LEMMA
+    SYM_TH
+    TARGS
+    TH
+    TH0
+    TH1
+    TH2
+    TH2A
+    TH2B
+    TH2C
+    TH2D
+    TH2E
+    TH3
+    TH4
+    TH5
+    TH6
+    TH7
+    TH8
+    TH9
+    TRANS_TH
+    TRTHS
+    TY
+    TYBIJ
+    TYBIJ1
+    TYBIJ2
+    TYBL
+    TYBR
+    TYNAME
+    U
+    UCON
+    UXTM
+    V
+    WFVS
+    WTH
+    WTM
+    X
+    XTM
+    define_quotient_type
+    lift_function
+    lift_theorem)
+  (:import-from :holai.basics)
+  (:import-from :holai.bool)
+  (:import-from :holai.class)
+  (:import-from :holai.drule)
+  (:import-from :holai.equal)
+  (:import-from :holai.fusion)
+  (:import-from :holai.fusion.hol)
+  (:import-from :holai.lib)
+  (:import-from :holai.meson)
+  (:import-from :holai.parser)
+  (:import-from :holai.runtime)
+  (:import-from :holai.simp)
+  (:import-from :holai.tactics)
+  (:import-from :holai.thecops)
+  (:import-from :holai.theorems)
+  (:export define_quotient_type lift_function lift_theorem))
+
+(uiop:define-package
+  :holai.quot
+  (:use :cl)
+  (:mix
+    :cl
+    :holai.basics
+    :holai.bool
+    :holai.class
+    :holai.drule
+    :holai.equal
+    :holai.fusion
+    :holai.fusion.hol
+    :holai.lib
+    :holai.meson
+    :holai.parser
+    :holai.runtime
+    :holai.simp
+    :holai.tactics
+    :holai.theorems)
+  (:shadow
+    ABS%%
+    ABSNAME
+    APOP
+    ARG~133
+    ARG~3
+    ARG~662
+    BOD
+    CON
+    CTH
+    DATM
+    DBOD
+    DEF
+    DEST
+    DETM
+    DME_TH
+    DMR
+    DTH
+    E%
+    EQS
+    EQV
+    EQVX
+    ETH
+    ETHLIST
+    ETY
+    EV
+    EVS
+    EVS%
+    EXCEPTION~235
+    EXCEPTION~373
+    EXCEPTION~520
+    EXTM
+    FCONV
+    FNAME
+    HYPS
+    ITH
+    JTH
+    LCON
+    LDEF
+    MEMS
+    MK
+    MRT
+    NEWARGS
+    PRED
+    PTH
+    PTY
+    QVS
+    RCON
+    RDEF
+    REFL_TH
+    RELS
+    REP
+    REPNAME
+    RTM
+    RV
+    RVS
+    S
+    SELECT_LEMMA
+    SYM_TH
+    TARGS
+    TH
+    TH0
+    TH1
+    TH2
+    TH2A
+    TH2B
+    TH2C
+    TH2D
+    TH2E
+    TH3
+    TH4
+    TH5
+    TH6
+    TH7
+    TH8
+    TH9
+    TRANS_TH
+    TRTHS
+    TY
+    TYBIJ
+    TYBIJ1
+    TYBIJ2
+    TYBL
+    TYBR
+    TYNAME
+    U
+    UCON
+    UXTM
+    V
+    WFVS
+    WTH
+    WTM
+    X
+    XTM
+    define_quotient_type
+    lift_function
+    lift_theorem)
   (:shadowing-import-from :cl append)
   (:shadowing-import-from
     :holai.basics

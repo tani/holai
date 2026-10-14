@@ -7,53 +7,407 @@
 ;; (*              (c) Copyright, John Harrison 1998-2007                       *)
 ;; (* ========================================================================= *)
 
-(cl:eval-when
-  (:compile-toplevel :load-toplevel :execute)
-  (cl:unless
-    (cl:find-package :holai.normalizer)
-    (defpackage :holai.normalizer
-      (:use :cl)
-      (:shadow
-        DEZERO_RULE
-        MONOMIAL_ADD_CONV
-        MONOMIAL_DEONE
-        MONOMIAL_MUL
-        MONOMIAL_POW
-        NUM_NORMALIZE_CONV
-        PADD
-        PMM_CONV
-        PMUL
-        POLYNOMIAL_CONV
-        POLYNOMIAL_NEG_CONV
-        POLYNOMIAL_SUB_CONV
-        POWVAR_MUL_CONV
-        PPOW
-        SEMIRING_NORMALIZERS_CONV
-        dest_varpow
-        lexorder
-        powervars
-        powvar
-        vorder)
-      (:export NUM_NORMALIZE_CONV SEMIRING_NORMALIZERS_CONV))))
-
-(defpackage :holai.normalizer
+(uiop:define-package
+  :holai.normalizer
   (:use :cl)
   (:shadow
+    A%
+    ADD_TM
+    ARG~114
+    A_TM
+    B%
+    BOD
+    B_TM
+    C%
+    C_TM
+    D
+    DEG1
+    DEG2
+    DEST_ADD
+    DEST_MUL
+    DEST_POW
+    DEST_SUB
+    DEST_VARPOW
     DEZERO_RULE
+    D_TM
+    EXCEPTION~1220
+    EXCEPTION~1449
+    EXCEPTION~305
+    EXCEPTION~308
+    EXCEPTION~358
+    EXCEPTION~455
+    EXCEPTION~681
+    EXCEPTION~746
+    EXCEPTION~752
+    EXCEPTION~908
+    FN
+    IS_ADD
+    IS_MUL
+    IS_SEMIRING_CONSTANT
+    IS_SUB
+    L
+    L%
+    L1
+    L2
+    LEXORDER
+    LN
+    LOP
+    LX
+    LX_TM
+    LY
+    LY_TM
     MONOMIAL_ADD_CONV
     MONOMIAL_DEONE
     MONOMIAL_MUL
+    MONOMIAL_MUL_CONV
     MONOMIAL_POW
+    MONOMIAL_POW_CONV
+    MORDER
+    MUL_TM
+    M_TM
+    N
+    N1
+    N2
+    NEG_TM
+    NTHM_1
+    NTHM_2
+    NTM
     NUM_NORMALIZE_CONV
+    NUM_NORMALIZE_CONV%
+    ONEN_TM
+    ONE_TM
+    OP
+    ORD
     PADD
     PMM_CONV
     PMUL
+    POLYNOMIAL_ADD_CONV
     POLYNOMIAL_CONV
+    POLYNOMIAL_MONOMIAL_MUL_CONV
+    POLYNOMIAL_MUL_CONV
     POLYNOMIAL_NEG_CONV
+    POLYNOMIAL_POW_CONV
     POLYNOMIAL_SUB_CONV
+    POWERVARS
+    POWVAR
     POWVAR_MUL_CONV
+    POW_TM
     PPOW
+    PTHM_01
+    PTHM_02
+    PTHM_03
+    PTHM_04
+    PTHM_05
+    PTHM_06
+    PTHM_07
+    PTHM_08
+    PTHM_09
+    PTHM_10
+    PTHM_11
+    PTHM_12
+    PTHM_13
+    PTHM_14
+    PTHM_15
+    PTHM_16
+    PTHM_17
+    PTHM_18
+    PTHM_19
+    PTHM_20
+    PTHM_21
+    PTHM_22
+    PTHM_23
+    PTHM_24
+    PTHM_25
+    PTHM_26
+    PTHM_27
+    PTHM_28
+    PTHM_29
+    PTHM_30
+    PTHM_31
+    PTHM_32
+    PTHM_33
+    PTHM_34
+    PTHM_35
+    PTHM_36
+    PTHM_37
+    PTHM_38
+    PTMS
+    P_TM
+    Q_TM
+    R
+    R%
+    RN
+    RTH
+    RX
+    RX_TM
+    RY
+    RY_TM
+    SEMIRING_ADD_CONV
+    SEMIRING_MUL_CONV
     SEMIRING_NORMALIZERS_CONV
+    SEMIRING_POW_CONV
+    SEMIRING_PTHS
+    STH
+    SUB_TM
+    T%
+    TH
+    TH0
+    TH1
+    TH2
+    TH3
+    TH4
+    THL
+    THR
+    TM
+    TM1
+    TM2
+    TM3
+    TM4
+    TM5
+    TM6
+    TM7
+    TM8
+    TRUE_TM
+    TY
+    VARIABLE_ORDER
+    VDEGS1
+    VDEGS2
+    VL
+    VORDER
+    VPS
+    VR
+    VS1
+    VS2
+    X
+    X1
+    X2
+    XY
+    X_TM
+    Y
+    Y_TM
+    Z
+    ZERON_TM
+    ZERO_TM
+    Z_TM
+    dest_varpow
+    lexorder
+    powervars
+    powvar
+    vorder)
+  (:import-from :holai.arith)
+  (:import-from :holai.basics)
+  (:import-from :holai.bool)
+  (:import-from :holai.calc_num)
+  (:import-from :holai.drule)
+  (:import-from :holai.equal)
+  (:import-from :holai.fusion.hol)
+  (:import-from :holai.lib)
+  (:import-from :holai.meson)
+  (:import-from :holai.nums)
+  (:import-from :holai.parser)
+  (:import-from :holai.runtime)
+  (:import-from :holai.simp)
+  (:import-from :holai.tactics)
+  (:export NUM_NORMALIZE_CONV SEMIRING_NORMALIZERS_CONV))
+
+(uiop:define-package
+  :holai.normalizer
+  (:use :cl)
+  (:mix
+    :cl
+    :holai.arith
+    :holai.basics
+    :holai.bool
+    :holai.calc_num
+    :holai.drule
+    :holai.equal
+    :holai.fusion.hol
+    :holai.lib
+    :holai.meson
+    :holai.nums
+    :holai.parser
+    :holai.runtime
+    :holai.simp
+    :holai.tactics)
+  (:shadow
+    A%
+    ADD_TM
+    ARG~114
+    A_TM
+    B%
+    BOD
+    B_TM
+    C%
+    C_TM
+    D
+    DEG1
+    DEG2
+    DEST_ADD
+    DEST_MUL
+    DEST_POW
+    DEST_SUB
+    DEST_VARPOW
+    DEZERO_RULE
+    D_TM
+    EXCEPTION~1220
+    EXCEPTION~1449
+    EXCEPTION~305
+    EXCEPTION~308
+    EXCEPTION~358
+    EXCEPTION~455
+    EXCEPTION~681
+    EXCEPTION~746
+    EXCEPTION~752
+    EXCEPTION~908
+    FN
+    IS_ADD
+    IS_MUL
+    IS_SEMIRING_CONSTANT
+    IS_SUB
+    L
+    L%
+    L1
+    L2
+    LEXORDER
+    LN
+    LOP
+    LX
+    LX_TM
+    LY
+    LY_TM
+    MONOMIAL_ADD_CONV
+    MONOMIAL_DEONE
+    MONOMIAL_MUL
+    MONOMIAL_MUL_CONV
+    MONOMIAL_POW
+    MONOMIAL_POW_CONV
+    MORDER
+    MUL_TM
+    M_TM
+    N
+    N1
+    N2
+    NEG_TM
+    NTHM_1
+    NTHM_2
+    NTM
+    NUM_NORMALIZE_CONV
+    NUM_NORMALIZE_CONV%
+    ONEN_TM
+    ONE_TM
+    OP
+    ORD
+    PADD
+    PMM_CONV
+    PMUL
+    POLYNOMIAL_ADD_CONV
+    POLYNOMIAL_CONV
+    POLYNOMIAL_MONOMIAL_MUL_CONV
+    POLYNOMIAL_MUL_CONV
+    POLYNOMIAL_NEG_CONV
+    POLYNOMIAL_POW_CONV
+    POLYNOMIAL_SUB_CONV
+    POWERVARS
+    POWVAR
+    POWVAR_MUL_CONV
+    POW_TM
+    PPOW
+    PTHM_01
+    PTHM_02
+    PTHM_03
+    PTHM_04
+    PTHM_05
+    PTHM_06
+    PTHM_07
+    PTHM_08
+    PTHM_09
+    PTHM_10
+    PTHM_11
+    PTHM_12
+    PTHM_13
+    PTHM_14
+    PTHM_15
+    PTHM_16
+    PTHM_17
+    PTHM_18
+    PTHM_19
+    PTHM_20
+    PTHM_21
+    PTHM_22
+    PTHM_23
+    PTHM_24
+    PTHM_25
+    PTHM_26
+    PTHM_27
+    PTHM_28
+    PTHM_29
+    PTHM_30
+    PTHM_31
+    PTHM_32
+    PTHM_33
+    PTHM_34
+    PTHM_35
+    PTHM_36
+    PTHM_37
+    PTHM_38
+    PTMS
+    P_TM
+    Q_TM
+    R
+    R%
+    RN
+    RTH
+    RX
+    RX_TM
+    RY
+    RY_TM
+    SEMIRING_ADD_CONV
+    SEMIRING_MUL_CONV
+    SEMIRING_NORMALIZERS_CONV
+    SEMIRING_POW_CONV
+    SEMIRING_PTHS
+    STH
+    SUB_TM
+    T%
+    TH
+    TH0
+    TH1
+    TH2
+    TH3
+    TH4
+    THL
+    THR
+    TM
+    TM1
+    TM2
+    TM3
+    TM4
+    TM5
+    TM6
+    TM7
+    TM8
+    TRUE_TM
+    TY
+    VARIABLE_ORDER
+    VDEGS1
+    VDEGS2
+    VL
+    VORDER
+    VPS
+    VR
+    VS1
+    VS2
+    X
+    X1
+    X2
+    XY
+    X_TM
+    Y
+    Y_TM
+    Z
+    ZERON_TM
+    ZERO_TM
+    Z_TM
     dest_varpow
     lexorder
     powervars

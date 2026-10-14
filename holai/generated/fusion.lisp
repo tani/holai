@@ -10,31 +10,209 @@
 ;; (*              (c) Copyright, John Harrison 1998-2007                       *)
 ;; (* ========================================================================= *)
 
+(uiop:define-package
+  :holai.fusion
+  (:use :cl)
+  (:shadow
+    ARG~2170
+    EQ
+    EQ_TM
+    EXCEPTION~2174
+    L
+    R
+    S
+    T%
+    TH
+    TH%
+    TM
+    TY
+    TY1
+    TY2
+    aconv
+    bty
+    equals_thm
+    is_eq
+    mk_eq
+    mk_fun_ty)
+  (:import-from :holai.lib)
+  (:import-from :holai.runtime)
+  (:export aconv bty equals_thm is_eq mk_eq mk_fun_ty))
+
 (cl:eval-when
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.fusion.hol)
-    (defpackage :holai.fusion.hol
+    (uiop:define-package
+      :holai.fusion.hol
       (:use :cl)
       (:shadow
+        A
         ABS%
+        ABS%%
+        ABSNAME
+        ABSTY
+        ACC
+        ARG
+        ARGS
+        ARGS%
+        ARG~105
+        ARG~121
+        ARG~1284
+        ARG~142
+        ARG~1441
+        ARG~1454
+        ARG~1465
+        ARG~1485
+        ARG~1489
+        ARG~1544
+        ARG~1620
+        ARG~1710
+        ARG~1714
+        ARG~1753
+        ARG~1757
+        ARG~1789
+        ARG~1811
+        ARG~1837
+        ARG~1875
+        ARG~1932
+        ARG~1977
+        ARG~1981
+        ARG~224
+        ARG~238
+        ARG~24
+        ARG~312
+        ARG~322
+        ARG~332
+        ARG~342
+        ARG~352
+        ARG~364
+        ARG~38
+        ARG~388
+        ARG~408
+        ARG~440
+        ARG~455
+        ARG~470
+        ARG~485
+        ARG~65
+        ARG~732
+        ARG~768
+        ARG~805
+        ARITY
+        ASL
+        ASL1
+        ASL1%
+        ASL2
+        ASL2%
         ASSUME
+        ATY%
+        AVOID
         Abs
+        B
         BETA
+        BOD
+        BV
+        BVAR
+        C%
+        C1
+        C2
+        CNAME
         Clash
         Comb
         Const
         DEDUCT_ANTISYM_RULE
+        DTH
+        DTY
+        ENV
+        ENV%
+        EQ
+        EQL
         EQ_MP
+        EX
+        EXCEPTION~2074
+        EXCEPTION~2097
+        EXCEPTION~369
+        EXCEPTION~70
+        EXCEPTION~938
+        F
+        F%
+        H
+        H%
+        H1
+        H2
+        I%
+        IFREES
+        ILIST
+        ILIST%
         INST%
+        INST%%
+        INST_FN
+        INST_FUN
         INST_TYPE
+        L
+        L1
+        L1%
+        L2
+        L2%
+        M1
+        M2
         MK_COMB%
+        N
+        NAME
+        OENV
+        P
+        R
+        R1
+        R2
         REFL
+        REP
+        REPNAME
+        REPTY
+        RTY
+        S
+        S%
+        S1
+        S2
+        SS
+        SS%
         Sequent
+        T%
+        T%%
+        T1
+        T2
+        TH
+        THETA
+        TM
+        TM%
+        TM1
+        TM2
+        TML
         TRANS
+        TV
+        TY
+        TY%
+        TY1
+        TY2
+        TYCON
+        TYIN
+        TYNAME
+        TYOP
+        TYVARS%
         Tyapp
         Tyvar
+        UTY
+        V
+        V%
+        VSUBST%
         Var
+        W%
+        X
+        X%
+        X1
+        X2
+        Y
+        Y%
+        Y%%
+        Z
         alphaorder
         aty
         axioms
@@ -171,36 +349,178 @@
         vfree_in
         vsubst))))
 
-(cl:eval-when
-  (:compile-toplevel :load-toplevel :execute)
-  (cl:unless
-    (cl:find-package :holai.fusion)
-    (defpackage :holai.fusion
-      (:use :cl)
-      (:shadow aconv bty equals_thm is_eq mk_eq mk_fun_ty)
-      (:export aconv bty equals_thm is_eq mk_eq mk_fun_ty))))
-
-(defpackage :holai.fusion.hol
+(uiop:define-package
+  :holai.fusion.hol
   (:use :cl)
+  (:mix :cl :holai.lib :holai.runtime)
   (:shadow
+    A
     ABS%
+    ABS%%
+    ABSNAME
+    ABSTY
+    ACC
+    ARG
+    ARGS
+    ARGS%
+    ARG~105
+    ARG~121
+    ARG~1284
+    ARG~142
+    ARG~1441
+    ARG~1454
+    ARG~1465
+    ARG~1485
+    ARG~1489
+    ARG~1544
+    ARG~1620
+    ARG~1710
+    ARG~1714
+    ARG~1753
+    ARG~1757
+    ARG~1789
+    ARG~1811
+    ARG~1837
+    ARG~1875
+    ARG~1932
+    ARG~1977
+    ARG~1981
+    ARG~224
+    ARG~238
+    ARG~24
+    ARG~312
+    ARG~322
+    ARG~332
+    ARG~342
+    ARG~352
+    ARG~364
+    ARG~38
+    ARG~388
+    ARG~408
+    ARG~440
+    ARG~455
+    ARG~470
+    ARG~485
+    ARG~65
+    ARG~732
+    ARG~768
+    ARG~805
+    ARITY
+    ASL
+    ASL1
+    ASL1%
+    ASL2
+    ASL2%
     ASSUME
+    ATY%
+    AVOID
     Abs
+    B
     BETA
+    BOD
+    BV
+    BVAR
+    C%
+    C1
+    C2
+    CNAME
     Clash
     Comb
     Const
     DEDUCT_ANTISYM_RULE
+    DTH
+    DTY
+    ENV
+    ENV%
+    EQ
+    EQL
     EQ_MP
+    EX
+    EXCEPTION~2074
+    EXCEPTION~2097
+    EXCEPTION~369
+    EXCEPTION~70
+    EXCEPTION~938
+    F
+    F%
+    H
+    H%
+    H1
+    H2
+    I%
+    IFREES
+    ILIST
+    ILIST%
     INST%
+    INST%%
+    INST_FN
+    INST_FUN
     INST_TYPE
+    L
+    L1
+    L1%
+    L2
+    L2%
+    M1
+    M2
     MK_COMB%
+    N
+    NAME
+    OENV
+    P
+    R
+    R1
+    R2
     REFL
+    REP
+    REPNAME
+    REPTY
+    RTY
+    S
+    S%
+    S1
+    S2
+    SS
+    SS%
     Sequent
+    T%
+    T%%
+    T1
+    T2
+    TH
+    THETA
+    TM
+    TM%
+    TM1
+    TM2
+    TML
     TRANS
+    TV
+    TY
+    TY%
+    TY1
+    TY2
+    TYCON
+    TYIN
+    TYNAME
+    TYOP
+    TYVARS%
     Tyapp
     Tyvar
+    UTY
+    V
+    V%
+    VSUBST%
     Var
+    W%
+    X
+    X%
+    X1
+    X2
+    Y
+    Y%
+    Y%%
+    Z
     alphaorder
     aty
     axioms
@@ -384,9 +704,31 @@
     vfree_in
     vsubst))
 
-(defpackage :holai.fusion
+(uiop:define-package
+  :holai.fusion
   (:use :cl)
-  (:shadow aconv bty equals_thm is_eq mk_eq mk_fun_ty)
+  (:mix :cl :holai.runtime)
+  (:shadow
+    ARG~2170
+    EQ
+    EQ_TM
+    EXCEPTION~2174
+    L
+    R
+    S
+    T%
+    TH
+    TH%
+    TM
+    TY
+    TY1
+    TY2
+    aconv
+    bty
+    equals_thm
+    is_eq
+    mk_eq
+    mk_fun_ty)
   (:shadowing-import-from
     :holai.fusion.hol
     vsubst
@@ -541,15 +883,15 @@
 
 (in-package :holai.fusion.hol)
 
-(defvariant hol_type (Tyvar field0) (Tyapp field0 field1))
+(defvariant hol_type (Tyvar #:field0) (Tyapp #:field0 #:field1))
 
 (defvariant term
-  (Var field0 field1)
-  (Const field0 field1)
-  (Comb field0 field1)
-  (Abs field0 field1))
+  (Var #:field0 #:field1)
+  (Const #:field0 #:field1)
+  (Comb #:field0 #:field1)
+  (Abs #:field0 #:field1))
 
-(defvariant thm (Sequent field0))
+(defvariant thm (Sequent #:field0))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* List of current type constants with their arities.                        *)
@@ -914,7 +1256,7 @@
           (vsubst% theta)
           (failwith "vsubst: Bad substitution list"))))))
 
-(define-exception Clash field0)
+(define-exception Clash #:field0)
 
 (defparameter inst
   (labelsc

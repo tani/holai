@@ -1,7 +1,7 @@
 (require :asdf)
 (asdf:initialize-source-registry `(:source-registry (:directory ,(truename ".")) :inherit-configuration))
 (setf asdf:*asdf-verbose* nil *compile-verbose* nil *load-verbose* nil)
-(asdf:load-system "holai-runtime")
+(asdf:load-system "holai/runtime")
 (defvar *protocol-checks* 0)
 (defun ensure-protocol (test) (incf *protocol-checks*) (unless test (error "Protocol check ~d" *protocol-checks*)))
 (holai.runtime:defunc foo (a b c) (+ (* 100 a) (* 10 b) c))

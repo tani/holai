@@ -10,34 +10,114 @@
 ;; (*              (c) Copyright, John Harrison 1998-2007                       *)
 ;; (* ========================================================================= *)
 
-(cl:eval-when
-  (:compile-toplevel :load-toplevel :execute)
-  (cl:unless
-    (cl:find-package :holai.itab)
-    (defpackage :holai.itab
-      (:use :cl)
-      (:shadow
-        CONJUNCTS_THEN%
-        IMPLICATE
-        ITAUT
-        ITAUT_ITERDEEP_TAC
-        ITAUT_TAC
-        ITAUT_TAC%
-        UNIFY_ACCEPT_TAC
-        UNIFY_REFL_TAC)
-      (:export ITAUT ITAUT_TAC UNIFY_ACCEPT_TAC UNIFY_REFL_TAC))))
-
-(defpackage :holai.itab
+(uiop:define-package
+  :holai.itab
   (:use :cl)
   (:shadow
+    ARG~23
+    ARG~38
+    ARG~4
+    ASL
+    ATH
     CONJUNCTS_THEN%
+    CONSTR
+    CTH
+    F
+    GL
+    GL%
+    GV
+    I%
     IMPLICATE
+    INSTS
     ITAUT
     ITAUT_ITERDEEP_TAC
     ITAUT_TAC
     ITAUT_TAC%
+    LEFT_REVERSIBLE_TAC
+    MVS
+    N
+    RARGS
+    RARGS_VARS
+    RIGHT_REVERSIBLE_TAC
+    T%
+    TH
+    TH%
+    TH1
+    THE_GOAL
+    TM
+    TTAC
     UNIFY_ACCEPT_TAC
-    UNIFY_REFL_TAC)
+    UNIFY_REFL_TAC
+    V
+    W%
+    W_LHS
+    W_RHS)
+  (:import-from :holai.basics)
+  (:import-from :holai.bool)
+  (:import-from :holai.drule)
+  (:import-from :holai.equal)
+  (:import-from :holai.fusion)
+  (:import-from :holai.fusion.hol)
+  (:import-from :holai.lib)
+  (:import-from :holai.printer)
+  (:import-from :holai.runtime)
+  (:import-from :holai.tactics)
+  (:export ITAUT ITAUT_TAC UNIFY_ACCEPT_TAC UNIFY_REFL_TAC))
+
+(uiop:define-package
+  :holai.itab
+  (:use :cl)
+  (:mix
+    :cl
+    :holai.basics
+    :holai.bool
+    :holai.drule
+    :holai.equal
+    :holai.fusion
+    :holai.fusion.hol
+    :holai.lib
+    :holai.printer
+    :holai.runtime
+    :holai.tactics)
+  (:shadow
+    ARG~23
+    ARG~38
+    ARG~4
+    ASL
+    ATH
+    CONJUNCTS_THEN%
+    CONSTR
+    CTH
+    F
+    GL
+    GL%
+    GV
+    I%
+    IMPLICATE
+    INSTS
+    ITAUT
+    ITAUT_ITERDEEP_TAC
+    ITAUT_TAC
+    ITAUT_TAC%
+    LEFT_REVERSIBLE_TAC
+    MVS
+    N
+    RARGS
+    RARGS_VARS
+    RIGHT_REVERSIBLE_TAC
+    T%
+    TH
+    TH%
+    TH1
+    THE_GOAL
+    TM
+    TTAC
+    UNIFY_ACCEPT_TAC
+    UNIFY_REFL_TAC
+    V
+    W%
+    W_LHS
+    W_RHS)
   (:shadowing-import-from :cl not - +)
   (:shadowing-import-from
     :holai.basics

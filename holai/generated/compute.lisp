@@ -11,50 +11,284 @@
 ;; (*        Distributed under the same license as HOL Light.                    *)
 ;; (* ========================================================================== *)
 
+(uiop:define-package
+  :holai.compute
+  (:use :cl)
+  (:import-from :holai.basics)
+  (:import-from :holai.bool)
+  (:import-from :holai.class)
+  (:import-from :holai.drule)
+  (:import-from :holai.equal)
+  (:import-from :holai.fusion)
+  (:import-from :holai.fusion.hol)
+  (:import-from :holai.lib)
+  (:import-from :holai.pair)
+  (:import-from :holai.parser)
+  (:import-from :holai.printer)
+  (:import-from :holai.runtime)
+  (:import-from :holai.simp)
+  (:import-from :holai.tactics)
+  (:import-from :holai.theorems)
+  (:export))
+
 (cl:eval-when
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.compute.compute)
-    (defpackage :holai.compute.compute
+    (uiop:define-package
+      :holai.compute.compute
       (:use :cl)
       (:shadow
+        A%
+        ACT
+        ACTIONLIST
+        ARG
+        ARG%
+        ARGS
+        ARGS%
+        ARGSRD
+        ARGSSK
+        ARG~1131
+        ARG~1158
+        ARG~1216
+        ARG~1220
+        ARG~1222
+        ARG~1268
+        ARG~1276
+        ARG~1315
+        ARG~1320
+        ARG~1361
+        ARG~1376
+        ARG~1384
+        ARG~1399
+        ARG~1427
+        ARG~1471
+        ARG~1601
+        ARG~1686
+        ARG~1725
+        ARG~1729
+        ARG~1753
+        ARG~182
+        ARG~1823
+        ARG~1983
+        ARG~2
+        ARG~2063
+        ARG~213
+        ARG~2179
+        ARG~2276
+        ARG~2386
+        ARG~244
+        ARG~2502
+        ARG~2545
+        ARG~2608
+        ARG~2625
+        ARG~2654
+        ARG~2751
+        ARG~496
+        ARG~523
+        ARG~536
+        ARG~586
+        ARG~710
+        ARG~732
+        ARG~782
+        ARG~790
+        ARG~817
+        ARG~852
+        ARG~881
+        ARG~899
+        ARG~906
+        ARG~969
+        ARITY
         Abs
         App
+        B%
+        BASE
+        BASIC_RWS
+        BASIC_RWS0
+        BDS
+        BODY%
         BODY_CONJUNCTS
+        BVAR
         Bv
+        C%
+        C1
+        C2
+        CARGS
         CBV_CONV
+        CHK
+        CL
+        CLIST
+        CLOS%
+        COMPSET
+        CONV%
+        CS
+        CST%
+        CTX
         Clos
         Const
         Conv
         Conversion
         Cst
+        DB
+        DB%
+        DBLIST
+        DBSK
+        DEST
+        DEST_ACTION
+        DOWN
+        DR
+        DT
         Dead_code
+        E%
+        ECNV
+        ENV
+        ENV%
+        EQ_THM
         EVAL_CONV
         EVAL_RULE
         EVAL_TAC
+        EXCEPTION~12
+        EXCEPTION~1439
+        EXCEPTION~1622
+        EXCEPTION~172
+        EXCEPTION~1844
+        EXCEPTION~1887
+        EXCEPTION~1933
+        EXCEPTION~2568
+        EXCEPTION~270
+        EXCEPTION~295
+        EXCEPTION~329
+        EXCEPTION~404
+        EXCEPTION~42
+        EXCEPTION~56
+        EXCEPTION~794
+        EXCEPTION~912
         End_db
+        F
+        FCONV
+        FLAG
+        FREE
+        FREE%
+        FT
         FUNIFY
+        FV%
+        FVAL
         Fv
+        GEN_THM
+        GET_ACTIONS
+        H
+        HC
+        HCL
+        HCST
+        HEAD
+        HTBL
+        I%
+        IBDS
+        INSTED
+        ITER
+        L
+        L1
+        LEN
+        LHS%
+        LHS_LAMBDA_RULES
+        LT
+        LTHM
+        LV
+        MKA
+        MKL
         MK_abs
         MK_comb
+        MON
+        MONITORING%
+        MT
+        N
+        NAME
+        NAME%
+        NEWI
+        NEW_STATE
+        NPV
+        NRWS
         Need_arg
         Neutr
         No_match
+        OPT
         OR
+        P%
+        PARGS
+        PAT
+        PAT1
+        PATS
+        PATS%
+        PC
+        PHEAD
         Papp
         Pvar
+        R%
+        RAND%
+        RATOR%
+        REDUCED
+        RES
         RESTR_EVAL_CONV
         RESTR_EVAL_RULE
         RESTR_EVAL_TAC
+        RHS%
+        RHSC
         RIGHT_BETA
         RIGHT_ETA
+        RL
+        RLS
+        RULE_INST%
+        RW%
+        RWLIST
+        RWN
+        RWS%
         Rewrite
         Rrules
         Rw
         Rws
+        S
+        S%
+        SK
+        SKIP
+        SPEC_THM
+        STK
+        STK%
+        STK%%
+        STKA
+        T%
+        T%%
+        TAIL
+        TBDS
+        TH
+        TH%
+        TH%%
+        TH1
+        TH2
+        THA
+        THB
+        THE_CONV
+        THM
+        THM0
+        TIRHS
+        TITHM
+        TM
+        TMLIST
+        TRM
+        TRY_REC%
+        TY
+        TY%
+        TYI_DT
+        TYSUB
+        TYTHETA
         Try
         UNFUNIFY
+        UP
+        V
+        V%
+        VAR%
+        VENV
         WEAK_CBV_CONV
+        X
         Zabs
         Zrand
         Zrator
@@ -205,52 +439,277 @@
         strictify_thm
         the_compset))))
 
-(cl:eval-when
-  (:compile-toplevel :load-toplevel :execute)
-  (cl:unless
-    (cl:find-package :holai.compute)
-    (defpackage :holai.compute (:use :cl) (:export))))
-
-(defpackage :holai.compute.compute
+(uiop:define-package
+  :holai.compute.compute
   (:use :cl)
+  (:mix
+    :cl
+    :holai.basics
+    :holai.bool
+    :holai.class
+    :holai.drule
+    :holai.equal
+    :holai.fusion
+    :holai.fusion.hol
+    :holai.lib
+    :holai.pair
+    :holai.parser
+    :holai.printer
+    :holai.runtime
+    :holai.simp
+    :holai.tactics
+    :holai.theorems)
   (:shadow
+    A%
+    ACT
+    ACTIONLIST
+    ARG
+    ARG%
+    ARGS
+    ARGS%
+    ARGSRD
+    ARGSSK
+    ARG~1131
+    ARG~1158
+    ARG~1216
+    ARG~1220
+    ARG~1222
+    ARG~1268
+    ARG~1276
+    ARG~1315
+    ARG~1320
+    ARG~1361
+    ARG~1376
+    ARG~1384
+    ARG~1399
+    ARG~1427
+    ARG~1471
+    ARG~1601
+    ARG~1686
+    ARG~1725
+    ARG~1729
+    ARG~1753
+    ARG~182
+    ARG~1823
+    ARG~1983
+    ARG~2
+    ARG~2063
+    ARG~213
+    ARG~2179
+    ARG~2276
+    ARG~2386
+    ARG~244
+    ARG~2502
+    ARG~2545
+    ARG~2608
+    ARG~2625
+    ARG~2654
+    ARG~2751
+    ARG~496
+    ARG~523
+    ARG~536
+    ARG~586
+    ARG~710
+    ARG~732
+    ARG~782
+    ARG~790
+    ARG~817
+    ARG~852
+    ARG~881
+    ARG~899
+    ARG~906
+    ARG~969
+    ARITY
     Abs
     App
+    B%
+    BASE
+    BASIC_RWS
+    BASIC_RWS0
+    BDS
+    BODY%
     BODY_CONJUNCTS
+    BVAR
     Bv
+    C%
+    C1
+    C2
+    CARGS
     CBV_CONV
+    CHK
+    CL
+    CLIST
+    CLOS%
+    COMPSET
+    CONV%
+    CS
+    CST%
+    CTX
     Clos
     Const
     Conv
     Conversion
     Cst
+    DB
+    DB%
+    DBLIST
+    DBSK
+    DEST
+    DEST_ACTION
+    DOWN
+    DR
+    DT
     Dead_code
+    E%
+    ECNV
+    ENV
+    ENV%
+    EQ_THM
     EVAL_CONV
     EVAL_RULE
     EVAL_TAC
+    EXCEPTION~12
+    EXCEPTION~1439
+    EXCEPTION~1622
+    EXCEPTION~172
+    EXCEPTION~1844
+    EXCEPTION~1887
+    EXCEPTION~1933
+    EXCEPTION~2568
+    EXCEPTION~270
+    EXCEPTION~295
+    EXCEPTION~329
+    EXCEPTION~404
+    EXCEPTION~42
+    EXCEPTION~56
+    EXCEPTION~794
+    EXCEPTION~912
     End_db
+    F
+    FCONV
+    FLAG
+    FREE
+    FREE%
+    FT
     FUNIFY
+    FV%
+    FVAL
     Fv
+    GEN_THM
+    GET_ACTIONS
+    H
+    HC
+    HCL
+    HCST
+    HEAD
+    HTBL
+    I%
+    IBDS
+    INSTED
+    ITER
+    L
+    L1
+    LEN
+    LHS%
+    LHS_LAMBDA_RULES
+    LT
+    LTHM
+    LV
+    MKA
+    MKL
     MK_abs
     MK_comb
+    MON
+    MONITORING%
+    MT
+    N
+    NAME
+    NAME%
+    NEWI
+    NEW_STATE
+    NPV
+    NRWS
     Need_arg
     Neutr
     No_match
+    OPT
     OR
+    P%
+    PARGS
+    PAT
+    PAT1
+    PATS
+    PATS%
+    PC
+    PHEAD
     Papp
     Pvar
+    R%
+    RAND%
+    RATOR%
+    REDUCED
+    RES
     RESTR_EVAL_CONV
     RESTR_EVAL_RULE
     RESTR_EVAL_TAC
+    RHS%
+    RHSC
     RIGHT_BETA
     RIGHT_ETA
+    RL
+    RLS
+    RULE_INST%
+    RW%
+    RWLIST
+    RWN
+    RWS%
     Rewrite
     Rrules
     Rw
     Rws
+    S
+    S%
+    SK
+    SKIP
+    SPEC_THM
+    STK
+    STK%
+    STK%%
+    STKA
+    T%
+    T%%
+    TAIL
+    TBDS
+    TH
+    TH%
+    TH%%
+    TH1
+    TH2
+    THA
+    THB
+    THE_CONV
+    THM
+    THM0
+    TIRHS
+    TITHM
+    TM
+    TMLIST
+    TRM
+    TRY_REC%
+    TY
+    TY%
+    TYI_DT
+    TYSUB
+    TYTHETA
     Try
     UNFUNIFY
+    UP
+    V
+    V%
+    VAR%
+    VENV
     WEAK_CBV_CONV
+    X
     Zabs
     Zrand
     Zrator
@@ -539,7 +998,7 @@
     strictify_thm
     the_compset))
 
-(defpackage :holai.compute (:use :cl) (:export))
+(uiop:define-package :holai.compute (:use :cl) (:export))
 
 (in-package :holai.compute)
 
@@ -598,11 +1057,11 @@
 
 (defvariant stack
   (Ztop)
-  (Zrator field0 field1)
-  (Zrand field0 field1)
-  (Zabs field0 field1))
+  (Zrator #:field0 #:field1)
+  (Zrand #:field0 #:field1)
+  (Zabs #:field0 #:field1))
 
-(define-exception Dead_code field0)
+(define-exception Dead_code #:field0)
 
 (defparameter rhs_concl (o #'rand #'concl))
 
@@ -703,7 +1162,7 @@
     thm
     (if (is_neg (concl thm)) (#`EQF_INTRO thm) (#`EQT_INTRO thm))))
 
-(defvariant pattern (Pvar field0) (Papp field0 field1))
+(defvariant pattern (Pvar #:field0) (Papp #:field0 #:field1))
 
 (defunc check_arg_form (trm)
   (labelsc
@@ -738,13 +1197,18 @@
       ((tuple fv% (Papp head args)) (tuple (list-rev fv%) head args))
       (_ (failwith "check_arg_form: ill-formed lhs")))))
 
-(defrecord cst_rec head args rws skip)
+(defrecord cst_rec #:head #:args #:rws #:skip)
 
-(defrecord clos_rec env term)
+(defrecord clos_rec #:env #:term)
 
-(defvariant fterm (Const field0) (Neutr) (Clos field0))
+(defvariant fterm (Const #:field0) (Neutr) (Clos #:field0))
 
-(defvariant dterm (Bv field0) (Fv) (Cst field0 field1) (App field0 field1) (Abs field0))
+(defvariant dterm
+  (Bv #:field0)
+  (Fv)
+  (Cst #:field0 #:field1)
+  (App #:field0 #:field1)
+  (Abs #:field0))
 
 ;; (* Invariant: the first arg of App never is an App. *)
 
@@ -772,15 +1236,15 @@
             (v% v%))))
         (tyi_dt v)))))
 
-(defvariant action (Rewrite field0) (Conv field0))
+(defvariant action (Rewrite #:field0) (Conv #:field0))
 
-(defrecord try_rec hcst rws tail)
+(defrecord try_rec #:hcst #:rws #:tail)
 
-(defvariant db (End_db) (Try field0) (Need_arg field0))
+(defvariant db (End_db) (Try #:field0) (Need_arg #:field0))
 
-(defrecord rewrite_rec cst lhs npv rhs thm)
+(defrecord rewrite_rec #:cst #:lhs #:npv #:rhs #:thm)
 
-(defvariant rewrite (Rw field0))
+(defvariant rewrite (Rw #:field0))
 
 (defunc add_in_db (arg~586)
   (match arg~586
@@ -824,7 +1288,7 @@
         (if (<= n len) (chop_list (- len n) args) (tuple nil args))))
     ((None) (tuple nil args))))
 
-(defvariant compset (Rws field0))
+(defvariant compset (Rws #:field0))
 
 (defunc empty_rws (arg~782)
   (match arg~782 ((cl:type holai.runtime::unit-value) (make-Rws (table-create 100)))))
@@ -1003,7 +1467,7 @@
                 (cl:declare (cl:ignorable rwlist))
                 rwlist))))))))
 
-(defvariant transform (Conversion field0) (Rrules field0))
+(defvariant transform (Conversion #:field0) (Rrules #:field0))
 
 ;; (*---------------------------------------------------------------------------*)
 ;; (* Compute the "attachments" for each element of the compset. Fortunately,   *)
@@ -1114,7 +1578,7 @@
         (raise (make-No_match))))
     (_ (raise (make-No_match)))))
 
-(defrecord rule_inst rule inst)
+(defrecord rule_inst #:rule #:inst)
 
 (defunc try_rwn (ibds lt)
   (labelsc

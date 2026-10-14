@@ -10,82 +10,164 @@
 ;; (*              (c) Copyright, John Harrison 1998-2007                       *)
 ;; (* ========================================================================= *)
 
-(cl:eval-when
-  (:compile-toplevel :load-toplevel :execute)
-  (cl:unless
-    (cl:find-package :holai.wf)
-    (defpackage :holai.wf
-      (:use :cl)
-      (:shadow
-        MEASURE
-        MEASURE_LE
-        MINIMAL_BAD_SEQUENCE
-        WF
-        WF_ANTISYM
-        WF_DCHAIN
-        WF_DHAIN_TRANSITIVE
-        WF_EQ
-        WF_EREC
-        WF_FALSE
-        WF_IND
-        WF_INDUCT_TAC
-        WF_LEX
-        WF_LEX_DEPENDENT
-        WF_MEASURE
-        WF_MEASURE_GEN
-        WF_POINTWISE
-        WF_REC
-        WF_REC_EXISTS
-        WF_REC_INVARIANT
-        WF_REC_TAIL
-        WF_REC_TAIL_GENERAL
-        WF_REC_WF
-        WF_REC_num
-        WF_REFL
-        WF_RESTRICT
-        WF_SUBSET
-        WF_UREC
-        WF_UREC_WF
-        WF_num
-        qqconvs)
-      (:export
-        MEASURE
-        MEASURE_LE
-        MINIMAL_BAD_SEQUENCE
-        WF
-        WF_ANTISYM
-        WF_DCHAIN
-        WF_DHAIN_TRANSITIVE
-        WF_EQ
-        WF_EREC
-        WF_FALSE
-        WF_IND
-        WF_INDUCT_TAC
-        WF_LEX
-        WF_LEX_DEPENDENT
-        WF_MEASURE
-        WF_MEASURE_GEN
-        WF_POINTWISE
-        WF_REC
-        WF_REC_EXISTS
-        WF_REC_INVARIANT
-        WF_REC_TAIL
-        WF_REC_TAIL_GENERAL
-        WF_REC_WF
-        WF_REC_num
-        WF_REFL
-        WF_RESTRICT
-        WF_SUBSET
-        WF_UREC
-        WF_UREC_WF
-        WF_num))))
-
-(defpackage :holai.wf
+(uiop:define-package
+  :holai.wf
   (:use :cl)
   (:shadow
+    ARG~1460
+    ASL
+    EQCONV
+    EXCEPTION~1448
+    FVS
+    GL
+    GV
+    LEMMA
+    LEMMA1
+    LEMMA2
     MEASURE
     MEASURE_LE
     MINIMAL_BAD_SEQUENCE
+    PAT
+    PTH
+    QQCONV
+    QQCONVS
+    T%
+    TH
+    TH0
+    TH1
+    TH2
+    TM
+    W%
+    WF
+    WF_ANTISYM
+    WF_DCHAIN
+    WF_DHAIN_TRANSITIVE
+    WF_EQ
+    WF_EREC
+    WF_FALSE
+    WF_IND
+    WF_INDUCT_TAC
+    WF_LEX
+    WF_LEX_DEPENDENT
+    WF_MEASURE
+    WF_MEASURE_GEN
+    WF_POINTWISE
+    WF_REC
+    WF_REC_EXISTS
+    WF_REC_INVARIANT
+    WF_REC_TAIL
+    WF_REC_TAIL_GENERAL
+    WF_REC_WF
+    WF_REC_num
+    WF_REFL
+    WF_RESTRICT
+    WF_SUBSET
+    WF_UREC
+    WF_UREC_WF
+    WF_num
+    qqconvs)
+  (:import-from :holai.arith)
+  (:import-from :holai.basics)
+  (:import-from :holai.bool)
+  (:import-from :holai.class)
+  (:import-from :holai.drule)
+  (:import-from :holai.equal)
+  (:import-from :holai.fusion)
+  (:import-from :holai.fusion.hol)
+  (:import-from :holai.ind_defs)
+  (:import-from :holai.lib)
+  (:import-from :holai.meson)
+  (:import-from :holai.nums)
+  (:import-from :holai.pair)
+  (:import-from :holai.parser)
+  (:import-from :holai.printer)
+  (:import-from :holai.recursion)
+  (:import-from :holai.runtime)
+  (:import-from :holai.simp)
+  (:import-from :holai.tactics)
+  (:import-from :holai.theorems)
+  (:export
+    MEASURE
+    MEASURE_LE
+    MINIMAL_BAD_SEQUENCE
+    WF
+    WF_ANTISYM
+    WF_DCHAIN
+    WF_DHAIN_TRANSITIVE
+    WF_EQ
+    WF_EREC
+    WF_FALSE
+    WF_IND
+    WF_INDUCT_TAC
+    WF_LEX
+    WF_LEX_DEPENDENT
+    WF_MEASURE
+    WF_MEASURE_GEN
+    WF_POINTWISE
+    WF_REC
+    WF_REC_EXISTS
+    WF_REC_INVARIANT
+    WF_REC_TAIL
+    WF_REC_TAIL_GENERAL
+    WF_REC_WF
+    WF_REC_num
+    WF_REFL
+    WF_RESTRICT
+    WF_SUBSET
+    WF_UREC
+    WF_UREC_WF
+    WF_num))
+
+(uiop:define-package
+  :holai.wf
+  (:use :cl)
+  (:mix
+    :cl
+    :holai.arith
+    :holai.basics
+    :holai.bool
+    :holai.class
+    :holai.drule
+    :holai.equal
+    :holai.fusion
+    :holai.fusion.hol
+    :holai.ind_defs
+    :holai.lib
+    :holai.meson
+    :holai.nums
+    :holai.pair
+    :holai.parser
+    :holai.printer
+    :holai.recursion
+    :holai.runtime
+    :holai.simp
+    :holai.tactics
+    :holai.theorems)
+  (:shadow
+    ARG~1460
+    ASL
+    EQCONV
+    EXCEPTION~1448
+    FVS
+    GL
+    GV
+    LEMMA
+    LEMMA1
+    LEMMA2
+    MEASURE
+    MEASURE_LE
+    MINIMAL_BAD_SEQUENCE
+    PAT
+    PTH
+    QQCONV
+    QQCONVS
+    T%
+    TH
+    TH0
+    TH1
+    TH2
+    TM
+    W%
     WF
     WF_ANTISYM
     WF_DCHAIN

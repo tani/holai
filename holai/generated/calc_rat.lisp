@@ -10,136 +10,89 @@
 ;; (*              (c) Copyright, John Harrison 1998-2007                       *)
 ;; (* ========================================================================= *)
 
-(cl:eval-when
-  (:compile-toplevel :load-toplevel :execute)
-  (cl:unless
-    (cl:find-package :holai.calc_rat)
-    (defpackage :holai.calc_rat
-      (:use :cl)
-      (:shadow
-        ASM_REAL_ARITH_TAC
-        BASIC_REAL_FIELD
-        DECIMAL
-        GEN_REAL_ARITH
-        RAT_LEMMA1
-        RAT_LEMMA2
-        RAT_LEMMA3
-        RAT_LEMMA4
-        RAT_LEMMA5
-        RAW_REAL_RAT_ADD_CONV
-        RAW_REAL_RAT_EQ_CONV
-        RAW_REAL_RAT_LE_CONV
-        RAW_REAL_RAT_LT_CONV
-        RAW_REAL_RAT_MUL_CONV
-        REAL_ARITH
-        REAL_ARITH_TAC
-        REAL_FIELD
-        REAL_GROW_SHRINK
-        REAL_IDEAL_CONV
-        REAL_INT_RAT_CONV
-        REAL_LE_TRANS_LE
-        REAL_LE_TRANS_LT
-        REAL_LE_TRANS_LTE
-        REAL_POLY_ADD_CONV
-        REAL_POLY_CONV
-        REAL_POLY_CONV%
-        REAL_POLY_MUL_CONV
-        REAL_POLY_NEG_CONV
-        REAL_POLY_POW_CONV
-        REAL_POLY_SUB_CONV
-        REAL_RAT_ABS_CONV
-        REAL_RAT_ADD_CONV
-        REAL_RAT_COMPUTE_CONV
-        REAL_RAT_DIV_CONV
-        REAL_RAT_EQ_CONV
-        REAL_RAT_GE_CONV
-        REAL_RAT_GT_CONV
-        REAL_RAT_INV_CONV
-        REAL_RAT_LE_CONV
-        REAL_RAT_LT_CONV
-        REAL_RAT_MAX_CONV
-        REAL_RAT_MIN_CONV
-        REAL_RAT_MUL_CONV
-        REAL_RAT_NEG_CONV
-        REAL_RAT_POW_CONV
-        REAL_RAT_REDUCE_CONV
-        REAL_RAT_RED_CONV
-        REAL_RAT_SGN_CONV
-        REAL_RAT_SUB_CONV
-        REAL_RING
-        REAL_SHRINK_EQ
-        REAL_SHRINK_GALOIS
-        REAL_SHRINK_GROW
-        REAL_SHRINK_GROW_EQ
-        REAL_SHRINK_LE
-        REAL_SHRINK_LT
-        REAL_SHRINK_RANGE
-        is_freeinv
-        real_ideal_cofactors
-        real_rat_compute_add_convs
-        real_rat_red_conv_list)
-      (:export
-        ASM_REAL_ARITH_TAC
-        DECIMAL
-        GEN_REAL_ARITH
-        RAT_LEMMA1
-        RAT_LEMMA2
-        RAT_LEMMA3
-        RAT_LEMMA4
-        RAT_LEMMA5
-        REAL_ARITH
-        REAL_ARITH_TAC
-        REAL_FIELD
-        REAL_GROW_SHRINK
-        REAL_IDEAL_CONV
-        REAL_INT_RAT_CONV
-        REAL_LE_TRANS_LE
-        REAL_LE_TRANS_LT
-        REAL_LE_TRANS_LTE
-        REAL_POLY_ADD_CONV
-        REAL_POLY_CONV
-        REAL_POLY_MUL_CONV
-        REAL_POLY_NEG_CONV
-        REAL_POLY_POW_CONV
-        REAL_POLY_SUB_CONV
-        REAL_RAT_ABS_CONV
-        REAL_RAT_ADD_CONV
-        REAL_RAT_COMPUTE_CONV
-        REAL_RAT_DIV_CONV
-        REAL_RAT_EQ_CONV
-        REAL_RAT_GE_CONV
-        REAL_RAT_GT_CONV
-        REAL_RAT_INV_CONV
-        REAL_RAT_LE_CONV
-        REAL_RAT_LT_CONV
-        REAL_RAT_MAX_CONV
-        REAL_RAT_MIN_CONV
-        REAL_RAT_MUL_CONV
-        REAL_RAT_NEG_CONV
-        REAL_RAT_POW_CONV
-        REAL_RAT_REDUCE_CONV
-        REAL_RAT_RED_CONV
-        REAL_RAT_SGN_CONV
-        REAL_RAT_SUB_CONV
-        REAL_RING
-        REAL_SHRINK_EQ
-        REAL_SHRINK_GALOIS
-        REAL_SHRINK_GROW
-        REAL_SHRINK_GROW_EQ
-        REAL_SHRINK_LE
-        REAL_SHRINK_LT
-        REAL_SHRINK_RANGE
-        real_ideal_cofactors
-        real_rat_compute_add_convs
-        real_rat_red_conv_list))))
-
-(defpackage :holai.calc_rat
+(uiop:define-package
+  :holai.calc_rat
   (:use :cl)
   (:shadow
+    ABS_TM
+    ADD_TM
+    ARGS
+    ARG~1618
+    ARG~1643
     ASM_REAL_ARITH_TAC
+    AVS
     BASIC_REAL_FIELD
+    BOD
+    C%
+    CFS
+    CJS
+    COMPSET
+    CONV1
+    CONVLIST
+    CORE_RULE
+    CS
+    D
+    D1
+    D1%
+    D1N
+    D2
+    D2%
+    D2N
     DECIMAL
+    DEST_ADDOP
+    DEST_DIV
+    DEST_DIVOP
+    DEST_EQ%
+    DEST_LE
+    DEST_LT
+    DEST_MULOP
+    DIV_CONV
+    DIV_TM
+    EASY_NZ_CONV
+    EXCEPTION~2120
+    EXCEPTION~2322
+    EXCEPTION~729
+    EXCEPTION~732
+    FN
+    GCONV_NET
     GEN_REAL_ARITH
+    HYPS
+    IDEAL
+    INIT
+    INV_TM
+    IS_DIV
+    IS_FREEINV
+    IS_INV
+    ITMS
+    L
+    LEMMA
+    LOP
+    LX
+    LY
+    M
+    MAX_TM
+    MIN_TM
+    MK_ADD
+    MK_MUL
+    MUL_TM
+    NEG_TM
+    NEWC
+    NORM_NET
+    OP
+    PAT
+    POW_TM
+    PRENEX_CONV%
+    PROVER%
+    PTH
+    PTH1
+    PTH2
+    PTH_CANCEL
+    PTH_NOCANCEL
+    PTM
+    PURE
+    R%
+    R1
+    R2
     RAT_LEMMA1
     RAT_LEMMA2
     RAT_LEMMA3
@@ -154,6 +107,152 @@
     REAL_ARITH_TAC
     REAL_FIELD
     REAL_GROW_SHRINK
+    REAL_IDEAL_COFACTORS%
+    REAL_IDEAL_CONV
+    REAL_INTEGRAL
+    REAL_INT_RAT_CONV
+    REAL_LE_TRANS_LE
+    REAL_LE_TRANS_LT
+    REAL_LE_TRANS_LTE
+    REAL_POLY_ADD_CONV
+    REAL_POLY_ADD_CONV%
+    REAL_POLY_CONV
+    REAL_POLY_CONV%
+    REAL_POLY_MUL_CONV
+    REAL_POLY_MUL_CONV%
+    REAL_POLY_NEG_CONV
+    REAL_POLY_NEG_CONV%
+    REAL_POLY_POW_CONV
+    REAL_POLY_POW_CONV%
+    REAL_POLY_SUB_CONV
+    REAL_POLY_SUB_CONV%
+    REAL_RABINOWITSCH
+    REAL_RAT_ABS_CONV
+    REAL_RAT_ADD_CONV
+    REAL_RAT_COMPUTE_CONV
+    REAL_RAT_DIV_CONV
+    REAL_RAT_EQ_CONV
+    REAL_RAT_GE_CONV
+    REAL_RAT_GT_CONV
+    REAL_RAT_INV_CONV
+    REAL_RAT_LE_CONV
+    REAL_RAT_LT_CONV
+    REAL_RAT_MAX_CONV
+    REAL_RAT_MIN_CONV
+    REAL_RAT_MUL_CONV
+    REAL_RAT_NEG_CONV
+    REAL_RAT_POW_CONV
+    REAL_RAT_REDUCE_CONV
+    REAL_RAT_RED_CONV
+    REAL_RAT_SGN_CONV
+    REAL_RAT_SUB_CONV
+    REAL_RING
+    REAL_RING%
+    REAL_SHRINK_EQ
+    REAL_SHRINK_GALOIS
+    REAL_SHRINK_GROW
+    REAL_SHRINK_GROW_EQ
+    REAL_SHRINK_LE
+    REAL_SHRINK_LT
+    REAL_SHRINK_RANGE
+    REAL_TY
+    RX
+    RY
+    SETUP_CONV
+    SUB_TM
+    T%
+    TH
+    TH%
+    TH0
+    TH1
+    TH2
+    TH3
+    THE_CONV
+    THS
+    TM
+    TM%
+    TM0
+    TM2
+    TM3
+    TMS
+    U1
+    U1%
+    U1N
+    U2
+    U2%
+    U2N
+    V1
+    V1%
+    V1N
+    V2
+    V2%
+    V2N
+    X1
+    X1%
+    X1N
+    X2
+    X2%
+    X2N
+    X3
+    X3%
+    X3N
+    X3N%
+    X3N%%
+    Y1
+    Y1%
+    Y1N
+    Y2
+    Y2%
+    Y2N
+    Y3
+    Y3%
+    Y3N
+    Y3N%
+    Y3N%%
+    is_freeinv
+    real_ideal_cofactors
+    real_rat_compute_add_convs
+    real_rat_red_conv_list)
+  (:import-from :holai.arith)
+  (:import-from :holai.basics)
+  (:import-from :holai.bool)
+  (:import-from :holai.calc_int)
+  (:import-from :holai.calc_num)
+  (:import-from :holai.canon)
+  (:import-from :holai.class)
+  (:import-from :holai.compute.compute)
+  (:import-from :holai.drule)
+  (:import-from :holai.equal)
+  (:import-from :holai.fusion.hol)
+  (:import-from :holai.grobner)
+  (:import-from :holai.lib)
+  (:import-from :holai.meson)
+  (:import-from :holai.nets)
+  (:import-from :holai.normalizer)
+  (:import-from :holai.nums)
+  (:import-from :holai.pair)
+  (:import-from :holai.parser)
+  (:import-from :holai.printer)
+  (:import-from :holai.real)
+  (:import-from :holai.realarith)
+  (:import-from :holai.realax)
+  (:import-from :holai.runtime)
+  (:import-from :holai.simp)
+  (:import-from :holai.tactics)
+  (:import-from :holai.theorems)
+  (:export
+    ASM_REAL_ARITH_TAC
+    DECIMAL
+    GEN_REAL_ARITH
+    RAT_LEMMA1
+    RAT_LEMMA2
+    RAT_LEMMA3
+    RAT_LEMMA4
+    RAT_LEMMA5
+    REAL_ARITH
+    REAL_ARITH_TAC
+    REAL_FIELD
+    REAL_GROW_SHRINK
     REAL_IDEAL_CONV
     REAL_INT_RAT_CONV
     REAL_LE_TRANS_LE
@@ -161,7 +260,6 @@
     REAL_LE_TRANS_LTE
     REAL_POLY_ADD_CONV
     REAL_POLY_CONV
-    REAL_POLY_CONV%
     REAL_POLY_MUL_CONV
     REAL_POLY_NEG_CONV
     REAL_POLY_POW_CONV
@@ -193,6 +291,238 @@
     REAL_SHRINK_LE
     REAL_SHRINK_LT
     REAL_SHRINK_RANGE
+    real_ideal_cofactors
+    real_rat_compute_add_convs
+    real_rat_red_conv_list))
+
+(uiop:define-package
+  :holai.calc_rat
+  (:use :cl)
+  (:mix
+    :cl
+    :holai.arith
+    :holai.basics
+    :holai.bool
+    :holai.calc_int
+    :holai.calc_num
+    :holai.canon
+    :holai.class
+    :holai.compute.compute
+    :holai.drule
+    :holai.equal
+    :holai.fusion.hol
+    :holai.grobner
+    :holai.lib
+    :holai.meson
+    :holai.nets
+    :holai.normalizer
+    :holai.nums
+    :holai.pair
+    :holai.parser
+    :holai.printer
+    :holai.real
+    :holai.realarith
+    :holai.realax
+    :holai.runtime
+    :holai.simp
+    :holai.tactics
+    :holai.theorems)
+  (:shadow
+    ABS_TM
+    ADD_TM
+    ARGS
+    ARG~1618
+    ARG~1643
+    ASM_REAL_ARITH_TAC
+    AVS
+    BASIC_REAL_FIELD
+    BOD
+    C%
+    CFS
+    CJS
+    COMPSET
+    CONV1
+    CONVLIST
+    CORE_RULE
+    CS
+    D
+    D1
+    D1%
+    D1N
+    D2
+    D2%
+    D2N
+    DECIMAL
+    DEST_ADDOP
+    DEST_DIV
+    DEST_DIVOP
+    DEST_EQ%
+    DEST_LE
+    DEST_LT
+    DEST_MULOP
+    DIV_CONV
+    DIV_TM
+    EASY_NZ_CONV
+    EXCEPTION~2120
+    EXCEPTION~2322
+    EXCEPTION~729
+    EXCEPTION~732
+    FN
+    GCONV_NET
+    GEN_REAL_ARITH
+    HYPS
+    IDEAL
+    INIT
+    INV_TM
+    IS_DIV
+    IS_FREEINV
+    IS_INV
+    ITMS
+    L
+    LEMMA
+    LOP
+    LX
+    LY
+    M
+    MAX_TM
+    MIN_TM
+    MK_ADD
+    MK_MUL
+    MUL_TM
+    NEG_TM
+    NEWC
+    NORM_NET
+    OP
+    PAT
+    POW_TM
+    PRENEX_CONV%
+    PROVER%
+    PTH
+    PTH1
+    PTH2
+    PTH_CANCEL
+    PTH_NOCANCEL
+    PTM
+    PURE
+    R%
+    R1
+    R2
+    RAT_LEMMA1
+    RAT_LEMMA2
+    RAT_LEMMA3
+    RAT_LEMMA4
+    RAT_LEMMA5
+    RAW_REAL_RAT_ADD_CONV
+    RAW_REAL_RAT_EQ_CONV
+    RAW_REAL_RAT_LE_CONV
+    RAW_REAL_RAT_LT_CONV
+    RAW_REAL_RAT_MUL_CONV
+    REAL_ARITH
+    REAL_ARITH_TAC
+    REAL_FIELD
+    REAL_GROW_SHRINK
+    REAL_IDEAL_COFACTORS%
+    REAL_IDEAL_CONV
+    REAL_INTEGRAL
+    REAL_INT_RAT_CONV
+    REAL_LE_TRANS_LE
+    REAL_LE_TRANS_LT
+    REAL_LE_TRANS_LTE
+    REAL_POLY_ADD_CONV
+    REAL_POLY_ADD_CONV%
+    REAL_POLY_CONV
+    REAL_POLY_CONV%
+    REAL_POLY_MUL_CONV
+    REAL_POLY_MUL_CONV%
+    REAL_POLY_NEG_CONV
+    REAL_POLY_NEG_CONV%
+    REAL_POLY_POW_CONV
+    REAL_POLY_POW_CONV%
+    REAL_POLY_SUB_CONV
+    REAL_POLY_SUB_CONV%
+    REAL_RABINOWITSCH
+    REAL_RAT_ABS_CONV
+    REAL_RAT_ADD_CONV
+    REAL_RAT_COMPUTE_CONV
+    REAL_RAT_DIV_CONV
+    REAL_RAT_EQ_CONV
+    REAL_RAT_GE_CONV
+    REAL_RAT_GT_CONV
+    REAL_RAT_INV_CONV
+    REAL_RAT_LE_CONV
+    REAL_RAT_LT_CONV
+    REAL_RAT_MAX_CONV
+    REAL_RAT_MIN_CONV
+    REAL_RAT_MUL_CONV
+    REAL_RAT_NEG_CONV
+    REAL_RAT_POW_CONV
+    REAL_RAT_REDUCE_CONV
+    REAL_RAT_RED_CONV
+    REAL_RAT_SGN_CONV
+    REAL_RAT_SUB_CONV
+    REAL_RING
+    REAL_RING%
+    REAL_SHRINK_EQ
+    REAL_SHRINK_GALOIS
+    REAL_SHRINK_GROW
+    REAL_SHRINK_GROW_EQ
+    REAL_SHRINK_LE
+    REAL_SHRINK_LT
+    REAL_SHRINK_RANGE
+    REAL_TY
+    RX
+    RY
+    SETUP_CONV
+    SUB_TM
+    T%
+    TH
+    TH%
+    TH0
+    TH1
+    TH2
+    TH3
+    THE_CONV
+    THS
+    TM
+    TM%
+    TM0
+    TM2
+    TM3
+    TMS
+    U1
+    U1%
+    U1N
+    U2
+    U2%
+    U2N
+    V1
+    V1%
+    V1N
+    V2
+    V2%
+    V2N
+    X1
+    X1%
+    X1N
+    X2
+    X2%
+    X2N
+    X3
+    X3%
+    X3N
+    X3N%
+    X3N%%
+    Y1
+    Y1%
+    Y1N
+    Y2
+    Y2%
+    Y2N
+    Y3
+    Y3%
+    Y3N
+    Y3N%
+    Y3N%%
     is_freeinv
     real_ideal_cofactors
     real_rat_compute_add_convs

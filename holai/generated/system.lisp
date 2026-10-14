@@ -7,18 +7,18 @@
 ;; (*              (c) Copyright, John Harrison 1998-2014                       *)
 ;; (* ========================================================================= *)
 
-(cl:eval-when
-  (:compile-toplevel :load-toplevel :execute)
-  (cl:unless
-    (cl:find-package :holai.system)
-    (defpackage :holai.system
-      (:use :cl)
-      (:shadow pp_print_num print_num)
-      (:export pp_print_num print_num))))
-
-(defpackage :holai.system
+(uiop:define-package
+  :holai.system
   (:use :cl)
-  (:shadow pp_print_num print_num)
+  (:shadow FMT N pp_print_num print_num)
+  (:import-from :holai.runtime)
+  (:export pp_print_num print_num))
+
+(uiop:define-package
+  :holai.system
+  (:use :cl)
+  (:mix :cl :holai.runtime)
+  (:shadow FMT N pp_print_num print_num)
   (:shadowing-import-from
     :holai.runtime
     unit

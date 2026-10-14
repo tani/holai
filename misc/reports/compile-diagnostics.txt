@@ -1,22 +1,54 @@
-COMPILED_UNIT holai/runtime/package
-COMPILED_UNIT holai/runtime/pattern
-COMPILED_UNIT holai/runtime/core
-COMPILED_UNIT holai/runtime/format
-COMPILED_UNIT holai/runtime/stdlib
-COMPILED_UNIT system
-COMPILED_UNIT lib
-COMPILED_UNIT fusion
-COMPILED_UNIT basics
-COMPILED_UNIT nets
-COMPILED_UNIT printer
-COMPILED_UNIT preterm
-COMPILED_UNIT parser
-COMPILED_UNIT equal
-COMPILED_UNIT bool
-COMPILED_UNIT drule
-COMPILED_UNIT tactics
-COMPILED_UNIT itab
-COMPILED_UNIT simp
+COMPILED_UNIT holai/runtime/package.lisp
+LOADED_UNIT holai/runtime/package.lisp
+COMPILED_UNIT holai/runtime/pattern.lisp
+LOADED_UNIT holai/runtime/pattern.lisp
+COMPILED_UNIT holai/runtime/core.lisp
+LOADED_UNIT holai/runtime/core.lisp
+COMPILED_UNIT holai/runtime/format.lisp
+LOADED_UNIT holai/runtime/format.lisp
+COMPILED_UNIT holai/runtime/stdlib.lisp
+LOADED_UNIT holai/runtime/stdlib.lisp
+COMPILED_UNIT holai/generated/system.lisp
+INFERRED_UNIT holai/generated/system.lisp
+LOADED_UNIT holai/generated/system.lisp
+COMPILED_UNIT holai/generated/lib.lisp
+INFERRED_UNIT holai/generated/lib.lisp
+LOADED_UNIT holai/generated/lib.lisp
+COMPILED_UNIT holai/generated/fusion.lisp
+INFERRED_UNIT holai/generated/fusion.lisp
+LOADED_UNIT holai/generated/fusion.lisp
+COMPILED_UNIT holai/generated/basics.lisp
+INFERRED_UNIT holai/generated/basics.lisp
+LOADED_UNIT holai/generated/basics.lisp
+COMPILED_UNIT holai/generated/nets.lisp
+INFERRED_UNIT holai/generated/nets.lisp
+LOADED_UNIT holai/generated/nets.lisp
+COMPILED_UNIT holai/generated/printer.lisp
+INFERRED_UNIT holai/generated/printer.lisp
+LOADED_UNIT holai/generated/printer.lisp
+COMPILED_UNIT holai/generated/preterm.lisp
+INFERRED_UNIT holai/generated/preterm.lisp
+LOADED_UNIT holai/generated/preterm.lisp
+COMPILED_UNIT holai/generated/parser.lisp
+INFERRED_UNIT holai/generated/parser.lisp
+LOADED_UNIT holai/generated/parser.lisp
+COMPILED_UNIT holai/generated/equal.lisp
+INFERRED_UNIT holai/generated/equal.lisp
+LOADED_UNIT holai/generated/equal.lisp
+COMPILED_UNIT holai/generated/bool.lisp
+INFERRED_UNIT holai/generated/bool.lisp
+LOADED_UNIT holai/generated/bool.lisp
+COMPILED_UNIT holai/generated/drule.lisp
+INFERRED_UNIT holai/generated/drule.lisp
+LOADED_UNIT holai/generated/drule.lisp
+COMPILED_UNIT holai/generated/tactics.lisp
+INFERRED_UNIT holai/generated/tactics.lisp
+LOADED_UNIT holai/generated/tactics.lisp
+COMPILED_UNIT holai/generated/itab.lisp
+INFERRED_UNIT holai/generated/itab.lisp
+LOADED_UNIT holai/generated/itab.lisp
+COMPILED_UNIT holai/generated/simp.lisp
+INFERRED_UNIT holai/generated/simp.lisp
 Searching with limit 0
 Searching with limit 1
 Searching with limit 2
@@ -27,7 +59,9 @@ Searching with limit 1
 Searching with limit 2
 Searching with limit 3
 Searching with limit 4
-COMPILED_UNIT theorems
+LOADED_UNIT holai/generated/simp.lisp
+COMPILED_UNIT holai/generated/theorems.lisp
+INFERRED_UNIT holai/generated/theorems.lisp
 Searching with limit 0
 Searching with limit 1
 Searching with limit 0
@@ -205,10 +239,14 @@ Searching with limit 3
 Searching with limit 0
 Searching with limit 1
 Searching with limit 2
-COMPILED_UNIT ind_defs
+LOADED_UNIT holai/generated/theorems.lisp
+COMPILED_UNIT holai/generated/ind_defs.lisp
+INFERRED_UNIT holai/generated/ind_defs.lisp
 Searching with limit 0
 Searching with limit 1
-COMPILED_UNIT class
+LOADED_UNIT holai/generated/ind_defs.lisp
+COMPILED_UNIT holai/generated/class.lisp
+INFERRED_UNIT holai/generated/class.lisp
 Searching with limit 0
 Searching with limit 1
 Searching with limit 2
@@ -216,15 +254,29 @@ Searching with limit 0
 Searching with limit 1
 Warning: inventing type variables
 Warning: inventing type variables
-COMPILED_UNIT trivia
-COMPILED_UNIT canon
+LOADED_UNIT holai/generated/class.lisp
+COMPILED_UNIT holai/generated/trivia.lisp
+INFERRED_UNIT holai/generated/trivia.lisp
+LOADED_UNIT holai/generated/trivia.lisp
+COMPILED_UNIT holai/generated/canon.lisp
+INFERRED_UNIT holai/generated/canon.lisp
 Warning: inventing type variables
 Warning: inventing type variables
-COMPILED_UNIT meson
-COMPILED_UNIT firstorder
-COMPILED_UNIT metis
-COMPILED_UNIT thecops
-COMPILED_UNIT quot
+LOADED_UNIT holai/generated/canon.lisp
+COMPILED_UNIT holai/generated/meson.lisp
+INFERRED_UNIT holai/generated/meson.lisp
+LOADED_UNIT holai/generated/meson.lisp
+COMPILED_UNIT holai/generated/firstorder.lisp
+INFERRED_UNIT holai/generated/firstorder.lisp
+LOADED_UNIT holai/generated/firstorder.lisp
+COMPILED_UNIT holai/generated/metis.lisp
+INFERRED_UNIT holai/generated/metis.lisp
+LOADED_UNIT holai/generated/metis.lisp
+COMPILED_UNIT holai/generated/thecops.lisp
+INFERRED_UNIT holai/generated/thecops.lisp
+LOADED_UNIT holai/generated/thecops.lisp
+COMPILED_UNIT holai/generated/quot.lisp
+INFERRED_UNIT holai/generated/quot.lisp
 0..0..1..3..7..15..26..54..86..136..solved at 208
 0..0..1..solved at 4
 0..0..solved at 2
@@ -238,6 +290,7 @@ COMPILED_UNIT quot
 0..0..1..2..6..11..22..41..76..solved at 108
 0..0..1..solved at 4
 0..0..solved at 2
+LOADED_UNIT holai/generated/quot.lisp
 
 ; file: /home/tani/ghq/github.com/tani/holai/holai/generated/impconv.lisp
 ; in:
@@ -250,7 +303,7 @@ COMPILED_UNIT quot
 ;                   (HANDLER-CASE
 ;                    (MATCH #
 ;                      #)
-;                    (HOLAI.RUNTIME:OCAML-CONDITION # #)))
+;                    (OCAML-CONDITION # #)))
 ;                  (MAP_CONCLUSION (F TH)
 ;                   (MATCH (UNDISCH_TERM TH)
 ;                     (# #))))
@@ -263,13 +316,9 @@ COMPILED_UNIT quot
 ;                (LET* #
 ;                  #
 ;                  #)))))
-;     (HOLAI.RUNTIME:MATCH HOLAI.IMPCONV::EXCEPTION~2995
-;       ((HOLAI.RUNTIME:FAILURE HOLAI.IMPCONV::_)
-;        (HOLAI.RUNTIME:MATCH ((LAMBDA # #) HOLAI.IMPCONV::AVS% HOLAI.IMPCONV::R%)
-;          ((HOLAI.RUNTIME:TUPLE HOLAI.IMPCONV::TH2 HOLAI.IMPCONV::HO2
-;                                HOLAI.IMPCONV::VS2)
-;           (HOLAI.RUNTIME:TUPLE # HOLAI.IMPCONV::HO2 HOLAI.IMPCONV::VS2))))
-;       (HOLAI.IMPCONV::_ (HOLAI.RUNTIME:RAISE HOLAI.IMPCONV::EXCEPTION~2995)))
+;     (HOLAI.RUNTIME:MATCH HOLAI.IMPCONV::EXCEPTION~902
+;       ((HOLAI.RUNTIME:FAILURE HOLAI.IMPCONV::_) HOLAI.IMPCONV::ACC)
+;       (HOLAI.IMPCONV::_ (HOLAI.RUNTIME:RAISE HOLAI.IMPCONV::EXCEPTION~902)))
 ; --> BLOCK BLOCK PROGN IF TYPEP 
 ; ==>
 ;   1
@@ -277,8 +326,11 @@ COMPILED_UNIT quot
 ; note: deleting unreachable code
 ; 
 ; note: deleting unreachable code
-COMPILED_UNIT impconv
-COMPILED_UNIT pair
+COMPILED_UNIT holai/generated/impconv.lisp
+INFERRED_UNIT holai/generated/impconv.lisp
+LOADED_UNIT holai/generated/impconv.lisp
+COMPILED_UNIT holai/generated/pair.lisp
+INFERRED_UNIT holai/generated/pair.lisp
 0..0..solved at 2
 0..0..1..solved at 4
 0..0..1..2..solved at 6
@@ -302,16 +354,24 @@ Warning: inventing type variables
 0..0..1..5..13..solved at 26
 0..0..solved at 2
 Warning: inventing type variables
-COMPILED_UNIT compute
-COMPILED_UNIT nums
+LOADED_UNIT holai/generated/pair.lisp
+COMPILED_UNIT holai/generated/compute.lisp
+INFERRED_UNIT holai/generated/compute.lisp
+LOADED_UNIT holai/generated/compute.lisp
+COMPILED_UNIT holai/generated/nums.lisp
+INFERRED_UNIT holai/generated/nums.lisp
 0..0..2..solved at 5
 0..0..solved at 2
 0..0..1..3..solved at 9
 0..0..1..2..5..9..15..29..44..68..142..260..solved at 420
 0..0..solved at 3
 0..0..solved at 2
-COMPILED_UNIT recursion
-COMPILED_UNIT arith
+LOADED_UNIT holai/generated/nums.lisp
+COMPILED_UNIT holai/generated/recursion.lisp
+INFERRED_UNIT holai/generated/recursion.lisp
+LOADED_UNIT holai/generated/recursion.lisp
+COMPILED_UNIT holai/generated/arith.lisp
+INFERRED_UNIT holai/generated/arith.lisp
 0..0..solved at 2
 0..0..1..2..solved at 6
 0..0..1..2..7..14..35..62..solved at 73
@@ -507,7 +567,9 @@ Searching with limit 1
 0..0..0..1..2..3..solved at 8
 0..0..0..1..2..3..7..14..22..33..57..84..141..221..305..441..638..849..solved at 1042
 0..0..0..1..2..3..4..5..6..11..16..21..40..59..78..103..128..153..192..231..270..358..446..534..650..766..882..1036..1190..1344..solved at 3172
-COMPILED_UNIT wf
+LOADED_UNIT holai/generated/arith.lisp
+COMPILED_UNIT holai/generated/wf.lisp
+INFERRED_UNIT holai/generated/wf.lisp
 0..0..solved at 2
 0..0..solved at 2
 0..0..0..0..2..5..8..25..57..89..solved at 97
@@ -613,7 +675,9 @@ Warning: inventing type variables
 Warning: inventing type variables
 0..0..0..solved at 3
 0..0..solved at 2
-COMPILED_UNIT calc_num
+LOADED_UNIT holai/generated/wf.lisp
+COMPILED_UNIT holai/generated/calc_num.lisp
+INFERRED_UNIT holai/generated/calc_num.lisp
 0..0..1..2..8..18..solved at 48
 0..0..1..2..8..18..solved at 55
 0..0..1..2..10..24..118..279..1321..3190..solved at 4661
@@ -658,7 +722,9 @@ Warning: inventing type variables
 0..0..1..solved at 5
 0..0..solved at 2
 0..0..1..solved at 4
-COMPILED_UNIT normalizer
+LOADED_UNIT holai/generated/calc_num.lisp
+COMPILED_UNIT holai/generated/normalizer.lisp
+INFERRED_UNIT holai/generated/normalizer.lisp
 0..0..solved at 2
 0..0..1..2..solved at 9
 0..0..1..2..9..20..73..154..solved at 284
@@ -671,7 +737,9 @@ COMPILED_UNIT normalizer
 0..0..1..2..solved at 6
 0..0..solved at 2
 0..0..solved at 2
-COMPILED_UNIT grobner
+LOADED_UNIT holai/generated/normalizer.lisp
+COMPILED_UNIT holai/generated/grobner.lisp
+INFERRED_UNIT holai/generated/grobner.lisp
 0..0..2..4..10..20..52..96..204..356..638..1042..1916..3036..solved at 4498
 0..0..1..2..7..16..42..78..161..285..685..solved at 954
 0..0..1..2..7..16..42..78..160..281..solved at 672
@@ -684,7 +752,9 @@ COMPILED_UNIT grobner
 0..0..2..4..12..22..solved at 41
 0..0..1..2..7..solved at 21
 0..0..1..2..7..solved at 18
-COMPILED_UNIT ind_types
+LOADED_UNIT holai/generated/grobner.lisp
+COMPILED_UNIT holai/generated/ind_types.lisp
+INFERRED_UNIT holai/generated/ind_types.lisp
 Searching with limit 0
 Searching with limit 1
 Searching with limit 2
@@ -744,7 +814,9 @@ Warning: inventing type variables
 Warning: inventing type variables
 0..0..1..solved at 4
 0..0..solved at 2
-COMPILED_UNIT lists
+LOADED_UNIT holai/generated/ind_types.lisp
+COMPILED_UNIT holai/generated/lists.lisp
+INFERRED_UNIT holai/generated/lists.lisp
 0..0..1..2..solved at 6
 0..0..solved at 2
 0..0..solved at 2
@@ -923,7 +995,9 @@ Warning: inventing type variables
 0..0..2..solved at 5
 0..0..2..solved at 5
 0..0..solved at 2
-COMPILED_UNIT realax
+LOADED_UNIT holai/generated/lists.lisp
+COMPILED_UNIT holai/generated/realax.lisp
+INFERRED_UNIT holai/generated/realax.lisp
 Searching with limit 0
 Searching with limit 1
 Searching with limit 2
@@ -948,7 +1022,9 @@ Searching with limit 2
 0..0..3..12..23..40..63..solved at 72
 0..0..3..6..18..34..61..94..145..206..solved at 249
 0..0..3..14..36..111..307..901..solved at 935
-COMPILED_UNIT calc_int
+LOADED_UNIT holai/generated/realax.lisp
+COMPILED_UNIT holai/generated/calc_int.lisp
+INFERRED_UNIT holai/generated/calc_int.lisp
 0..0..solved at 2
 0..0..1..2..solved at 6
 0..0..1..2..7..14..35..62..solved at 73
@@ -964,7 +1040,9 @@ COMPILED_UNIT calc_int
 0..0..1..2..solved at 6
 0..0..1..2..6..11..19..36..53..76..121..solved at 164
 0..0..3..solved at 9
-COMPILED_UNIT realarith
+LOADED_UNIT holai/generated/calc_int.lisp
+COMPILED_UNIT holai/generated/realarith.lisp
+INFERRED_UNIT holai/generated/realarith.lisp
 0..0..1..7..solved at 12
 0..0..1..5..12..24..solved at 30
 0..0..1..5..12..23..solved at 30
@@ -994,8 +1072,10 @@ COMPILED_UNIT realarith
 0..0..1..2..5..18..35..solved at 63
 0..0..1..2..solved at 6
 0..0..2..4..10..18..34..76..138..336..872..2366..solved at 5076
-CPU time (user): 0.3021400000000014d0
-COMPILED_UNIT real
+CPU time (user): 0.2125950000000003d0
+LOADED_UNIT holai/generated/realarith.lisp
+COMPILED_UNIT holai/generated/real.lisp
+INFERRED_UNIT holai/generated/real.lisp
 0..0..1..2..7..14..37..72..174..325..solved at 392
 0..0..2..solved at 5
 0..0..1..2..6..11..21..34..52..73..solved at 103
@@ -1101,7 +1181,9 @@ COMPILED_UNIT real
 0..0..1..2..5..9..15..30..47..76..solved at 158
 0..0..1..2..3..7..13..21..solved at 30
 0..0..1..2..4..9..15..21..35..solved at 48
-COMPILED_UNIT calc_rat
+LOADED_UNIT holai/generated/real.lisp
+COMPILED_UNIT holai/generated/calc_rat.lisp
+INFERRED_UNIT holai/generated/calc_rat.lisp
 0..0..3..solved at 6
 0..0..1..4..12..53..156..809..solved at 3536
 0..0..1..2..solved at 6
@@ -1138,7 +1220,9 @@ Generating HOL version of proof
 0..0..1..solved at 4
 0..0..1..solved at 4
 0..0..1..2..solved at 6
-COMPILED_UNIT int
+LOADED_UNIT holai/generated/calc_rat.lisp
+COMPILED_UNIT holai/generated/int.lisp
+INFERRED_UNIT holai/generated/int.lisp
 0..0..1..3..solved at 7
 0..0..1..solved at 5
 0..0..1..solved at 4
@@ -2619,7 +2703,9 @@ Translating certificate to HOL inferences
 0..0..2..4..solved at 8
 0..0..solved at 2
 0..0..solved at 2
-COMPILED_UNIT sets
+LOADED_UNIT holai/generated/int.lisp
+COMPILED_UNIT holai/generated/sets.lisp
+INFERRED_UNIT holai/generated/sets.lisp
 0..0..solved at 2
 0..0..0..solved at 3
 0..0..solved at 2
@@ -3521,7 +3607,7 @@ Warning: inventing type variables
 0..0..solved at 2
 0..0..1..2..9..19..31..63..105..solved at 121
 0..0..solved at 2
-CPU time (user): 0.0065400000000011005d0
+CPU time (user): 0.006517999999999802d0
 0..0..1..3..8..14..33..66..99..154..219..284..365..450..535..843..1220..1621..2226..2892..3660..5020..6510..8326..10667..13397..16922..20942..25267..30727..solved at 35152
 0..0..solved at 2
 0..0..solved at 2
@@ -4544,7 +4630,9 @@ Warning: inventing type variables
 0..0..0..1..3..5..7..9..11..solved at 18
 0..0..0..1..2..3..solved at 8
 0..0..0..1..2..3..solved at 8
-COMPILED_UNIT iterate
+LOADED_UNIT holai/generated/sets.lisp
+COMPILED_UNIT holai/generated/iterate.lisp
+INFERRED_UNIT holai/generated/iterate.lisp
 0..0..1..7..solved at 11
 0..0..0..4..13..solved at 25
 0..0..2..7..15..39..100..234..587..1410..3140..7378..16891..solved at 18714
@@ -5146,7 +5234,9 @@ Warning: inventing type variables
 Warning: inventing type variables
 0..0..solved at 2
 0..0..solved at 2
-COMPILED_UNIT cart
+LOADED_UNIT holai/generated/iterate.lisp
+COMPILED_UNIT holai/generated/cart.lisp
+INFERRED_UNIT holai/generated/cart.lisp
 0..0..1..2..5..9..15..solved at 31
 0..0..2..solved at 6
 0..0..1..2..5..11..solved at 17
@@ -5414,7 +5504,9 @@ COMPILED_UNIT cart
 0..0..solved at 2
 0..0..1..solved at 4
 0..0..1..solved at 4
-COMPILED_UNIT define
+LOADED_UNIT holai/generated/cart.lisp
+COMPILED_UNIT holai/generated/define.lisp
+INFERRED_UNIT holai/generated/define.lisp
 Warning: inventing type variables
 Warning: inventing type variables
 Warning: inventing type variables
@@ -5605,6 +5697,10 @@ Warning: inventing type variables
 0..0..solved at 2
 Warning: inventing type variables
 0..0..0..solved at 3
+LOADED_UNIT holai/generated/define.lisp
+COMPILED_UNIT holai/all.lisp
+INFERRED_UNIT holai/all.lisp
+LOADED_UNIT holai/all.lisp
 ; 
 ; compilation unit finished
 ;   printed 2 notes

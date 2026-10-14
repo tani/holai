@@ -87,8 +87,9 @@ type context = {
  next:int ref; mutable imports:binding SM.t; mutable exports:binding SM.t;
  mutable dependencies:string list; mutable rules:int SM.t;
  lexical_prefix:string option; mutable metadata:Sexp.t list;
- reference_observer:(binding -> unit) ref; mutable owned_logicals:SS.t option }
-let context ?(counter=ref 0) ?(reference_observer=ref (fun (_:binding) -> ())) ?lexical_prefix package source text items =
+ reference_observer:(binding -> unit) ref; mutable owned_logicals:SS.t option;
+ reader_owner:context option; mutable used_packages:SS.t }
+let context ?(counter=ref 0) ?(reference_observer=ref (fun (_:binding) -> ())) ?lexical_prefix ?reader_owner package source text items =
  let own=own_names items in
  let totals=List.fold_left (fun m s -> SM.add s (1+Option.value (SM.find_opt s m) ~default:0) m) SM.empty own in
  let spellings,_=List.fold_left (fun (names,used) source ->
@@ -97,11 +98,25 @@ let context ?(counter=ref 0) ?(reference_observer=ref (fun (_:binding) -> ())) ?
    SM.add source (printed,logical) names,SS.add logical used)
    (SM.empty,SS.empty) (List.sort_uniq compare_source_names own) in
  {package;source;text;own;spellings;totals;occurrences=SM.empty;globals=SS.empty;local_functions=SS.empty;local_symbols=SS.empty;makers=SS.empty;next=counter;
-  imports=SM.empty;exports=SM.empty;dependencies=[];rules=SM.empty;lexical_prefix;metadata=[];reference_observer;owned_logicals=None}
+  imports=SM.empty;exports=SM.empty;dependencies=[];rules=SM.empty;lexical_prefix;metadata=[];reference_observer;owned_logicals=None;
+  reader_owner;used_packages=SS.empty}
+let reader_owner c = Option.value c.reader_owner ~default:c
+let use_package c package =
+ let owner=reader_owner c in
+ if package<>"" && package<>owner.package then owner.used_packages<-SS.add package owner.used_packages
 let fresh c stem = incr c.next; stem^"~"^string_of_int !(c.next)
 let spelling c s =
  match SM.find_opt s c.spellings with Some spelling -> spelling | None ->
  let printed=Sexp.symbol (source_spelling s) in printed,String.uppercase_ascii printed
+(* Synthetic lexical binders share the same reader-package shadow authority,
+   without allocating a source binding or consuming another source-map ID. *)
+let synthetic_local c printed =
+ let owner=reader_owner c in
+ let printed,logical=allocate_suffix (fun logical ->
+   SS.mem logical owner.globals || SM.mem logical owner.imports ||
+   List.exists (fun source -> snd (spelling owner source)=logical) owner.own) printed in
+ owner.local_symbols<-SS.add logical owner.local_symbols;
+ printed
 let global ?(reserved_targets=SS.empty) c source_name kind =
  let n=1+Option.value (SM.find_opt source_name c.occurrences) ~default:0 in
  c.occurrences<-SM.add source_name n c.occurrences;
@@ -112,7 +127,10 @@ let global ?(reserved_targets=SS.empty) c source_name kind =
  let printed,logical=match c.lexical_prefix with
  | None -> printed,String.uppercase_ascii printed
  | Some prefix ->
-   let occupied logical = SS.mem logical reserved_targets || SS.mem logical c.local_symbols in
+   let owner=reader_owner c in
+   let occupied logical =
+     SS.mem logical reserved_targets || SS.mem logical c.local_symbols ||
+     SS.mem logical owner.globals || SM.mem logical owner.imports in
    let printed,logical=
      if not (occupied (String.uppercase_ascii printed)) then printed,String.uppercase_ascii printed
      else (
@@ -128,6 +146,7 @@ let global ?(reserved_targets=SS.empty) c source_name kind =
          versions 1 targets) c.totals SS.empty in
        allocate_suffix (fun logical -> occupied logical || SS.mem logical planned) printed) in
    c.local_symbols<-SS.add logical c.local_symbols;
+   let owner=reader_owner c in owner.local_symbols<-SS.add logical owner.local_symbols;
    printed,logical in
  incr c.next;
  let proof_combinator =
@@ -138,15 +157,19 @@ let global ?(reserved_targets=SS.empty) c source_name kind =
  let b={id= !(c.next);source_name;package=(if c.lexical_prefix=None then c.package else "");printed;logical;kind;labels=[];proof_combinator} in
  (match kind with Value -> c.globals<-SS.add logical c.globals | _ -> ()); b
 let local ?(reserved_targets=SS.empty) c env source_name kind =
+ let owner=reader_owner c in
  let printed,logical=spelling c source_name in
  let forbidden logical =
    SS.mem logical reserved_targets ||
-   List.mem logical control_names || SS.mem logical c.globals || SM.mem logical c.imports ||
+   List.mem logical control_names || SS.mem logical c.globals ||
+   SS.mem logical owner.globals || SM.mem logical owner.imports ||
    SM.exists (fun _ (b:binding) -> b.logical=logical) env.values ||
-   List.exists (fun source -> snd (spelling c source)=logical) c.own in
+   List.exists (fun source -> snd (spelling c source)=logical) c.own ||
+   List.exists (fun source -> snd (spelling owner source)=logical) owner.own in
  let printed,logical=allocate_suffix forbidden printed in
- (match kind with Function _ -> c.local_functions<-SS.add printed c.local_functions | _ -> ());
+ (match kind with Function _ -> owner.local_functions<-SS.add printed owner.local_functions | _ -> ());
  c.local_symbols<-SS.add logical c.local_symbols;
+ owner.local_symbols<-SS.add logical owner.local_symbols;
  incr c.next; {id= !(c.next);source_name;package="";printed;logical;kind;labels=[];proof_combinator=false}
 let external_binding package name kind =
  (* Fixed foreign targets retain their native spelling, including CL constants. *)
@@ -154,17 +177,18 @@ let external_binding package name kind =
  {id=0;source_name=name;package;printed;logical=String.uppercase_ascii printed;kind;labels=[];proof_combinator=false}
 let reference c (b:binding) =
  !(c.reference_observer) b;
- if b.package="" || b.package=c.package then b.printed
- else if c.lexical_prefix<>None then b.package^":"^b.printed
+ use_package c b.package;
+ let owner=reader_owner c in
+ if b.package="" || b.package=owner.package then b.printed
  else
- let owned=match c.owned_logicals with Some set -> set | None ->
-   let set=List.fold_left (fun set s -> let _,k=spelling c s in SS.add ("MAKE-"^k) (SS.add k set)) SS.empty c.own in
-   c.owned_logicals<-Some set;set in
- let own_conflict=SS.mem b.logical c.local_symbols || SS.mem b.logical owned in
- match SM.find_opt b.logical c.imports with
+ let owned=match owner.owned_logicals with Some set -> set | None ->
+   let set=List.fold_left (fun set s -> let _,k=spelling owner s in SS.add ("MAKE-"^k) (SS.add k set)) SS.empty owner.own in
+   owner.owned_logicals<-Some set;set in
+ let own_conflict=SS.mem b.logical owner.local_symbols || SS.mem b.logical owned in
+ match SM.find_opt b.logical owner.imports with
  | Some old when old.package<>b.package || old.printed<>b.printed -> b.package^":"^b.printed
  | _ when own_conflict -> b.package^":"^b.printed
- | _ -> c.imports<-SM.add b.logical b c.imports; b.printed
+ | _ -> owner.imports<-SM.add b.logical b owner.imports; b.printed
 let runtime c name = reference c (external_binding "holai.runtime" name Value)
 let mark c loc rule form =
  incr c.next;

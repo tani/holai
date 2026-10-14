@@ -6,7 +6,7 @@
     `(:source-registry (:directory ,root)
       :inherit-configuration)))
 (setf asdf:*asdf-verbose* nil *compile-verbose* nil *load-verbose* nil)
-(asdf:load-system "holai-runtime")
+(asdf:load-system "holai/runtime")
 (holai.runtime:catch-break t)
 (let ((caught (handler-case
                  (progn

@@ -25,22 +25,98 @@
 ;; GNU LGPL version 2.1 with the OCaml linking exception.
 ;; See vendor/ocaml-stdlib/COPYRIGHT, LGPL-2.1 and the retained original sources.
 
+(uiop:define-package
+  :holai.metis
+  (:use :cl)
+  (:shadow ASM_METIS_TAC METIS METIS_TAC THS TM metisverb)
+  (:import-from :holai.basics)
+  (:import-from :holai.bool)
+  (:import-from :holai.canon)
+  (:import-from :holai.class)
+  (:import-from :holai.drule)
+  (:import-from :holai.equal)
+  (:import-from :holai.firstorder)
+  (:import-from :holai.firstorder.utils.list)
+  (:import-from :holai.fusion)
+  (:import-from :holai.fusion.hol)
+  (:import-from :holai.lib)
+  (:import-from :holai.meson.meson)
+  (:import-from :holai.parser)
+  (:import-from :holai.preterm)
+  (:import-from :holai.printer)
+  (:import-from :holai.runtime)
+  (:import-from :holai.simp)
+  (:import-from :holai.tactics)
+  (:import-from :holai.theorems)
+  (:export ASM_METIS_TAC METIS METIS_TAC metisverb))
+
 (cl:eval-when
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.metis.metis_prover.word)
-    (defpackage :holai.metis.metis_prover.word
+    (uiop:define-package
+      :holai.metis.metis_prover.word
       (:use :cl)
-      (:shadow andb compare fromInt minus notb orb shiftLeft shiftRight toInt xorb)
+      (:shadow
+        ARG~13
+        ARG~25
+        ARG~37
+        ARG~49
+        ARG~61
+        ARG~73
+        X
+        Y
+        andb
+        compare
+        fromInt
+        minus
+        notb
+        orb
+        shiftLeft
+        shiftRight
+        toInt
+        xorb)
       (:export andb compare fromInt minus notb orb shiftLeft shiftRight toInt xorb))))
 
 (cl:eval-when
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.metis.metis_prover.mlist)
-    (defpackage :holai.metis.metis_prover.mlist
+    (uiop:define-package
+      :holai.metis.metis_prover.mlist
       (:use :cl)
       (:shadow
+        A%
+        ACC
+        ARG~128
+        ARG~136
+        ARG~175
+        ARG~210
+        ARG~251
+        ARG~286
+        ARG~300
+        ARG~303
+        B%
+        CMP
+        EXCEPTION~164
+        F
+        GO
+        H
+        I%
+        L
+        L%
+        M
+        N
+        NCMP
+        NXS
+        NYS
+        P%
+        REVDIV
+        S
+        T%
+        X
+        XS
+        Y
         enumerate
         find
         first
@@ -60,19 +136,57 @@
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.metis.metis_prover.option)
-    (defpackage :holai.metis.metis_prover.option
+    (uiop:define-package
+      :holai.metis.metis_prover.option
       (:use :cl)
-      (:shadow bind is_some value)
+      (:shadow ARG~336 DEFAULT F OPT X bind is_some value)
       (:export bind is_some value))))
 
 (cl:eval-when
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.metis.metis_prover.useful)
-    (defpackage :holai.metis.metis_prover.useful
+    (uiop:define-package
+      :holai.metis.metis_prover.useful
       (:use :cl)
       (:shadow
+        A%
+        ARG~441
+        ARG~445
+        ARG~589
+        ARG~606
+        ARG~637
+        ARG~654
+        ARG~672
+        B%
         Bug
+        C%
+        CMP
+        EXCEPTION~388
+        F
+        K%
+        LEN
+        LEX%
+        M
+        N
+        P%
+        POS
+        PRED
+        S
+        STRIP
+        X
+        X1
+        X2
+        XCMP
+        XS
+        XS%
+        Y
+        Y1
+        Y2
+        YCMP
+        YS
+        YS%
+        Z
         boolCompare
         critical
         divides
@@ -121,14 +235,150 @@
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.metis.metis_prover.pmap)
-    (defpackage :holai.metis.metis_prover.pmap
+    (uiop:define-package
+      :holai.metis.metis_prover.pmap
       (:use :cl)
       (:shadow
+        ACC
+        ARG~1105
+        ARG~1165
+        ARG~1567
+        ARG~2912
+        ARG~2929
+        ARG~2943
+        ARG~2980
+        ARG~2990
+        ARG~3020
+        ARG~3041
+        ARG~3057
+        ARG~3088
+        ARG~3110
+        ARG~3152
+        ARG~3157
+        ARG~3161
+        ARG~3189
+        ARG~3193
+        ARG~3223
+        ARG~3227
+        ARG~3248
+        ARG~3258
+        ARG~3269
+        ARG~3287
+        ARG~3305
+        ARG~3319
+        ARG~3379
+        ARG~3454
+        ARG~3552
+        ARG~3556
+        ARG~3576
+        ARG~3606
+        ARG~3610
+        ARG~3630
+        ARG~3660
+        ARG~3664
+        ARG~3705
+        ARG~3709
+        ARG~3733
+        ARG~3751
+        ARG~3769
+        ARG~729
+        ARG~735
+        ARG~870
+        B%
+        BOTH
+        C%
+        C%%
+        COMPAREKEY
+        COMPAREVALUE
+        DKEY
+        EQUALKEY%
+        EQUALVALUE
         Empty
+        F
+        F1
+        F2
+        FB
+        FIRST%
+        I1
+        I2
+        INODE
+        INS
+        INSERT%%
+        IO
+        IO1
+        IO1%
+        IO2
+        IO2%
+        ITER
+        K%
+        K1
+        K2
+        KEY
+        KEY1
+        KEY2
+        KEY_VALUE
+        KV
+        KVO
+        L
+        LEFT
+        LEFT%
+        LEFTTREE
+        LEFT_NODE
+        LEFT_RIGHT
+        LEFT_RIGHT%
         Left_to_right_iterator
+        M
+        M1
+        M2
+        MS
+        MS%
         Map%
+        N
+        N%
+        N1
+        N2
+        NODE%
+        NODE%%
+        NODE1
+        NODE2
+        NODES
+        NODES%
+        NP
+        P%
+        P1
+        P2
+        PATH
+        PKEY
+        PNODE
+        PRED
+        PRIORITY
+        R%
+        REST
+        RIGHT
+        RIGHT%
+        RIGHTTREE
         Right_to_left_iterator
+        S
+        SECOND
+        SIZE%
+        SIZE%%
+        SNODE
+        STEP
+        T1
+        T2
+        TREE%
+        TREE%%
+        TREE1
+        TREE2
         Tree
+        V
+        V1
+        V2
+        VALUE
+        VALUE%
+        VO
+        WENTLEFT
+        X
         addLeftToRightIterator
         addRightToLeftIterator
         addSidePath
@@ -417,10 +667,102 @@
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.metis.metis_prover.pset)
-    (defpackage :holai.metis.metis_prover.pset
+    (uiop:define-package
+      :holai.metis.metis_prover.pset
       (:use :cl)
       (:shadow
+        ACC
+        ARG~3816
+        ARG~3826
+        ARG~3834
+        ARG~3848
+        ARG~3856
+        ARG~3869
+        ARG~3894
+        ARG~3903
+        ARG~3912
+        ARG~3934
+        ARG~3944
+        ARG~3959
+        ARG~3976
+        ARG~3991
+        ARG~4008
+        ARG~4026
+        ARG~4041
+        ARG~4056
+        ARG~4077
+        ARG~4100
+        ARG~4121
+        ARG~4124
+        ARG~4148
+        ARG~4151
+        ARG~4175
+        ARG~4178
+        ARG~4191
+        ARG~4194
+        ARG~4209
+        ARG~4217
+        ARG~4232
+        ARG~4240
+        ARG~4265
+        ARG~4273
+        ARG~4287
+        ARG~4300
+        ARG~4315
+        ARG~4328
+        ARG~4343
+        ARG~4351
+        ARG~4375
+        ARG~4383
+        ARG~4407
+        ARG~4415
+        ARG~4429
+        ARG~4437
+        ARG~4451
+        ARG~4459
+        ARG~4473
+        ARG~4481
+        ARG~4495
+        ARG~4503
+        ARG~4515
+        ARG~4517
+        ARG~4524
+        ARG~4526
+        ARG~4533
+        ARG~4536
+        ARG~4549
+        ARG~4552
+        ARG~4565
+        ARG~4568
+        ARG~4580
+        ARG~4583
+        ARG~4597
+        ARG~4614
+        ARG~4645
+        ARG~4654
+        CMP
+        ELT
+        ELT%
+        ELTS
+        F
+        INC
+        ITER
+        L
+        M
+        M%
+        M1
+        M2
+        MF
+        MP%
+        MPRED
+        MS
+        N
+        P%
+        PRED
+        SET%
+        SETS
         Set
+        X
         add
         addList
         advanceIterator
@@ -540,13 +882,14 @@
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.metis.metis_prover.mmap)
-    (defpackage :holai.metis.metis_prover.mmap (:use :cl) (:export))))
+    (uiop:define-package :holai.metis.metis_prover.mmap (:use :cl) (:export))))
 
 (cl:eval-when
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.metis.metis_prover.intmap.ordered)
-    (defpackage :holai.metis.metis_prover.intmap.ordered
+    (uiop:define-package
+      :holai.metis.metis_prover.intmap.ordered
       (:use :cl)
       (:shadow compare)
       (:export compare))))
@@ -555,13 +898,90 @@
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.metis.metis_prover.intmap.include~4681.ma)
-    (defpackage :holai.metis.metis_prover.intmap.include~4681.ma
+    (uiop:define-package
+      :holai.metis.metis_prover.intmap.include~4681.ma
       (:use :cl)
       (:shadow
+        ACCU
+        ARG~4686
+        ARG~4902
+        ARG~4912
+        ARG~4994
+        ARG~5029
+        ARG~5059
+        ARG~5080
+        ARG~5143
+        ARG~5208
+        ARG~5274
+        ARG~5302
+        ARG~5329
+        ARG~5492
+        ARG~5790
+        ARG~5845
+        ARG~5864
+        C
+        D
+        D%
+        D1
+        D1%
+        D2
+        D2%
+        DATA
         Empty%
         End
+        F
+        H
+        H1
+        H2
+        HL
+        HR
+        K
+        L
+        L%
+        L1
+        L1%
+        L2
+        L2%
+        LD
+        LH
+        LL
+        LR
+        LRD
+        LRL
+        LRR
+        LRV
+        LV
+        M
         More
         Node
+        P
+        PRES
+        PVD
+        R
+        R%
+        R1
+        R1%
+        R2
+        R2%
+        RD
+        RH
+        RL
+        RLD
+        RLL
+        RLR
+        RLV
+        RR
+        RV
+        S
+        S1
+        S2
+        T%
+        T1
+        T2
+        V
+        V1
+        V2
+        X
         add
         add_max_binding
         add_min_binding
@@ -614,9 +1034,32 @@
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.metis.metis_prover.intmap.include~4681)
-    (defpackage :holai.metis.metis_prover.intmap.include~4681
+    (uiop:define-package
+      :holai.metis.metis_prover.intmap.include~4681
       (:use :cl)
       (:shadow
+        ACC
+        ARG~5894
+        ARG~5903
+        ARG~5943
+        ARG~5960
+        ARG~5980
+        ARG~6021
+        B%
+        EXCEPTION~5920
+        EXCEPTION~5932
+        F
+        F%
+        K%
+        L
+        M
+        M1
+        M2
+        S
+        TM
+        V
+        X
+        Y
         delete
         exists
         f%
@@ -660,13 +1103,14 @@
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.metis.metis_prover.intmap)
-    (defpackage :holai.metis.metis_prover.intmap (:use :cl) (:export))))
+    (uiop:define-package :holai.metis.metis_prover.intmap (:use :cl) (:export))))
 
 (cl:eval-when
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.metis.metis_prover.stringmap.ordered)
-    (defpackage :holai.metis.metis_prover.stringmap.ordered
+    (uiop:define-package
+      :holai.metis.metis_prover.stringmap.ordered
       (:use :cl)
       (:shadow compare)
       (:export compare))))
@@ -675,13 +1119,90 @@
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.metis.metis_prover.stringmap.include~6119.ma)
-    (defpackage :holai.metis.metis_prover.stringmap.include~6119.ma
+    (uiop:define-package
+      :holai.metis.metis_prover.stringmap.include~6119.ma
       (:use :cl)
       (:shadow
+        ACCU
+        ARG~6124
+        ARG~6340
+        ARG~6350
+        ARG~6432
+        ARG~6467
+        ARG~6497
+        ARG~6518
+        ARG~6581
+        ARG~6646
+        ARG~6712
+        ARG~6740
+        ARG~6767
+        ARG~6930
+        ARG~7228
+        ARG~7283
+        ARG~7302
+        C
+        D
+        D%
+        D1
+        D1%
+        D2
+        D2%
+        DATA
         Empty%
         End
+        F
+        H
+        H1
+        H2
+        HL
+        HR
+        K
+        L
+        L%
+        L1
+        L1%
+        L2
+        L2%
+        LD
+        LH
+        LL
+        LR
+        LRD
+        LRL
+        LRR
+        LRV
+        LV
+        M
         More
         Node
+        P
+        PRES
+        PVD
+        R
+        R%
+        R1
+        R1%
+        R2
+        R2%
+        RD
+        RH
+        RL
+        RLD
+        RLL
+        RLR
+        RLV
+        RR
+        RV
+        S
+        S1
+        S2
+        T%
+        T1
+        T2
+        V
+        V1
+        V2
+        X
         add
         add_max_binding
         add_min_binding
@@ -734,9 +1255,32 @@
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.metis.metis_prover.stringmap.include~6119)
-    (defpackage :holai.metis.metis_prover.stringmap.include~6119
+    (uiop:define-package
+      :holai.metis.metis_prover.stringmap.include~6119
       (:use :cl)
       (:shadow
+        ACC
+        ARG~7332
+        ARG~7341
+        ARG~7381
+        ARG~7398
+        ARG~7418
+        ARG~7459
+        B%
+        EXCEPTION~7358
+        EXCEPTION~7370
+        F
+        F%
+        K%
+        L
+        M
+        M1
+        M2
+        S
+        TM
+        V
+        X
+        Y
         delete
         exists
         f%
@@ -780,19 +1324,20 @@
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.metis.metis_prover.stringmap)
-    (defpackage :holai.metis.metis_prover.stringmap (:use :cl) (:export))))
+    (uiop:define-package :holai.metis.metis_prover.stringmap (:use :cl) (:export))))
 
 (cl:eval-when
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.metis.metis_prover.mset)
-    (defpackage :holai.metis.metis_prover.mset (:use :cl) (:export))))
+    (uiop:define-package :holai.metis.metis_prover.mset (:use :cl) (:export))))
 
 (cl:eval-when
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.metis.metis_prover.intset.ordered)
-    (defpackage :holai.metis.metis_prover.intset.ordered
+    (uiop:define-package
+      :holai.metis.metis_prover.intset.ordered
       (:use :cl)
       (:shadow compare)
       (:export compare))))
@@ -801,15 +1346,79 @@
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.metis.metis_prover.intset.include~7557.se)
-    (defpackage :holai.metis.metis_prover.intset.include~7557.se
+    (uiop:define-package
+      :holai.metis.metis_prover.intset.include~7557.se
       (:use :cl)
       (:shadow
+        ACCU
+        ARG~7562
+        ARG~7757
+        ARG~7828
+        ARG~7849
+        ARG~7939
+        ARG~7956
+        ARG~8035
+        ARG~8107
+        ARG~8116
+        ARG~8147
+        ARG~8615
+        ARG~8639
+        ARG~8662
+        ARG~8681
+        C
+        E
+        E1
+        E1%
+        E2
+        E2%
         Empty%
         End
+        F
         Found
+        H
+        H1
+        H2
+        HL
+        HR
+        L
+        L1
+        L1%
+        L2
+        L2%
+        LH
+        LL
+        LR
+        LRL
+        LRR
+        LRV
+        LV
         More
         Node
         NotFound
+        P
+        PRES
+        R
+        R1
+        R1%
+        R2
+        R2%
+        RH
+        RL
+        RLL
+        RLR
+        RLV
+        RR
+        RV
+        S
+        S1
+        S2
+        T%
+        T1
+        T2
+        V
+        V1
+        V2
+        X
         add
         add_max_element
         add_min_element
@@ -872,9 +1481,24 @@
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.metis.metis_prover.intset.include~7557)
-    (defpackage :holai.metis.metis_prover.intset.include~7557
+    (uiop:define-package
+      :holai.metis.metis_prover.intset.include~7557
       (:use :cl)
       (:shadow
+        A%
+        ACC
+        ARG~8791
+        ARG~8810
+        ARG~8836
+        C%
+        F
+        GO
+        L
+        P%
+        S
+        S%
+        SS
+        X
         add
         all
         compare
@@ -932,19 +1556,49 @@
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.metis.metis_prover.intset)
-    (defpackage :holai.metis.metis_prover.intset (:use :cl) (:export))))
+    (uiop:define-package :holai.metis.metis_prover.intset (:use :cl) (:export))))
 
 (cl:eval-when
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.metis.metis_prover.heap)
-    (defpackage :holai.metis.metis_prover.heap
+    (uiop:define-package
+      :holai.metis.metis_prover.heap
       (:use :cl)
       (:shadow
+        A%
+        A1
+        A2
+        AP
+        ARG~8895
+        ARG~8908
+        ARG~8943
+        ARG~9011
+        ARG~9037
+        ARG~9054
+        ARG~9074
+        ARG~9111
+        ARG~9141
+        B%
+        B1
+        B2
+        CMP
+        D
         Em
         Empty
+        F
+        H
+        H%
+        H1
+        H2
         Heap
+        MRG
+        N
+        R%
+        REST
         Tr
+        X
+        Y
         add
         ap
         app
@@ -989,7 +1643,8 @@
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.metis.metis_prover.name.ordered)
-    (defpackage :holai.metis.metis_prover.name.ordered
+    (uiop:define-package
+      :holai.metis.metis_prover.name.ordered
       (:use :cl)
       (:shadow compare)
       (:export compare))))
@@ -998,13 +1653,90 @@
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.metis.metis_prover.name.map.ma)
-    (defpackage :holai.metis.metis_prover.name.map.ma
+    (uiop:define-package
+      :holai.metis.metis_prover.name.map.ma
       (:use :cl)
       (:shadow
+        ACCU
+        ARG~10102
+        ARG~10400
+        ARG~10455
+        ARG~10474
+        ARG~9296
+        ARG~9512
+        ARG~9522
+        ARG~9604
+        ARG~9639
+        ARG~9669
+        ARG~9690
+        ARG~9753
+        ARG~9818
+        ARG~9884
+        ARG~9912
+        ARG~9939
+        C
+        D
+        D%
+        D1
+        D1%
+        D2
+        D2%
+        DATA
         Empty%
         End
+        F
+        H
+        H1
+        H2
+        HL
+        HR
+        K
+        L
+        L%
+        L1
+        L1%
+        L2
+        L2%
+        LD
+        LH
+        LL
+        LR
+        LRD
+        LRL
+        LRR
+        LRV
+        LV
+        M
         More
         Node
+        P
+        PRES
+        PVD
+        R
+        R%
+        R1
+        R1%
+        R2
+        R2%
+        RD
+        RH
+        RL
+        RLD
+        RLL
+        RLR
+        RLV
+        RR
+        RV
+        S
+        S1
+        S2
+        T%
+        T1
+        T2
+        V
+        V1
+        V2
+        X
         add
         add_max_binding
         add_min_binding
@@ -1057,9 +1789,32 @@
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.metis.metis_prover.name.map)
-    (defpackage :holai.metis.metis_prover.name.map
+    (uiop:define-package
+      :holai.metis.metis_prover.name.map
       (:use :cl)
       (:shadow
+        ACC
+        ARG~10504
+        ARG~10513
+        ARG~10553
+        ARG~10570
+        ARG~10590
+        ARG~10631
+        B%
+        EXCEPTION~10530
+        EXCEPTION~10542
+        F
+        F%
+        K%
+        L
+        M
+        M1
+        M2
+        S
+        TM
+        V
+        X
+        Y
         delete
         exists
         f%
@@ -1103,15 +1858,79 @@
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.metis.metis_prover.name.set.se)
-    (defpackage :holai.metis.metis_prover.name.set.se
+    (uiop:define-package
+      :holai.metis.metis_prover.name.set.se
       (:use :cl)
       (:shadow
+        ACCU
+        ARG~10730
+        ARG~10925
+        ARG~10996
+        ARG~11017
+        ARG~11107
+        ARG~11124
+        ARG~11203
+        ARG~11275
+        ARG~11284
+        ARG~11315
+        ARG~11783
+        ARG~11807
+        ARG~11830
+        ARG~11849
+        C
+        E
+        E1
+        E1%
+        E2
+        E2%
         Empty%
         End
+        F
         Found
+        H
+        H1
+        H2
+        HL
+        HR
+        L
+        L1
+        L1%
+        L2
+        L2%
+        LH
+        LL
+        LR
+        LRL
+        LRR
+        LRV
+        LV
         More
         Node
         NotFound
+        P
+        PRES
+        R
+        R1
+        R1%
+        R2
+        R2%
+        RH
+        RL
+        RLL
+        RLR
+        RLV
+        RR
+        RV
+        S
+        S1
+        S2
+        T%
+        T1
+        T2
+        V
+        V1
+        V2
+        X
         add
         add_max_element
         add_min_element
@@ -1174,9 +1993,24 @@
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.metis.metis_prover.name.set)
-    (defpackage :holai.metis.metis_prover.name.set
+    (uiop:define-package
+      :holai.metis.metis_prover.name.set
       (:use :cl)
       (:shadow
+        A%
+        ACC
+        ARG~11959
+        ARG~11978
+        ARG~12004
+        C%
+        F
+        GO
+        L
+        P%
+        S
+        S%
+        SS
+        X
         add
         all
         compare
@@ -1234,9 +2068,22 @@
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.metis.metis_prover.name)
-    (defpackage :holai.metis.metis_prover.name
+    (uiop:define-package
+      :holai.metis.metis_prover.name
       (:use :cl)
       (:shadow
+        ARG~9210
+        AVOID
+        C%
+        I%
+        ISDIGITORPRIME
+        N
+        N%
+        N1
+        N2
+        N_I
+        S
+        VARIANT%
         compare
         equal
         fromString
@@ -1265,7 +2112,8 @@
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.metis.metis_prover.name_arity.ordered)
-    (defpackage :holai.metis.metis_prover.name_arity.ordered
+    (uiop:define-package
+      :holai.metis.metis_prover.name_arity.ordered
       (:use :cl)
       (:shadow compare)
       (:export compare))))
@@ -1274,13 +2122,90 @@
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.metis.metis_prover.name_arity.map.include~12152.ma)
-    (defpackage :holai.metis.metis_prover.name_arity.map.include~12152.ma
+    (uiop:define-package
+      :holai.metis.metis_prover.name_arity.map.include~12152.ma
       (:use :cl)
       (:shadow
+        ACCU
+        ARG~12157
+        ARG~12373
+        ARG~12383
+        ARG~12465
+        ARG~12500
+        ARG~12530
+        ARG~12551
+        ARG~12614
+        ARG~12679
+        ARG~12745
+        ARG~12773
+        ARG~12800
+        ARG~12963
+        ARG~13261
+        ARG~13316
+        ARG~13335
+        C
+        D
+        D%
+        D1
+        D1%
+        D2
+        D2%
+        DATA
         Empty%
         End
+        F
+        H
+        H1
+        H2
+        HL
+        HR
+        K
+        L
+        L%
+        L1
+        L1%
+        L2
+        L2%
+        LD
+        LH
+        LL
+        LR
+        LRD
+        LRL
+        LRR
+        LRV
+        LV
+        M
         More
         Node
+        P
+        PRES
+        PVD
+        R
+        R%
+        R1
+        R1%
+        R2
+        R2%
+        RD
+        RH
+        RL
+        RLD
+        RLL
+        RLR
+        RLV
+        RR
+        RV
+        S
+        S1
+        S2
+        T%
+        T1
+        T2
+        V
+        V1
+        V2
+        X
         add
         add_max_binding
         add_min_binding
@@ -1333,9 +2258,32 @@
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.metis.metis_prover.name_arity.map.include~12152)
-    (defpackage :holai.metis.metis_prover.name_arity.map.include~12152
+    (uiop:define-package
+      :holai.metis.metis_prover.name_arity.map.include~12152
       (:use :cl)
       (:shadow
+        ACC
+        ARG~13365
+        ARG~13374
+        ARG~13414
+        ARG~13431
+        ARG~13451
+        ARG~13492
+        B%
+        EXCEPTION~13391
+        EXCEPTION~13403
+        F
+        F%
+        K%
+        L
+        M
+        M1
+        M2
+        S
+        TM
+        V
+        X
+        Y
         delete
         exists
         f%
@@ -1379,24 +2327,89 @@
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.metis.metis_prover.name_arity.map)
-    (defpackage :holai.metis.metis_prover.name_arity.map
+    (uiop:define-package
+      :holai.metis.metis_prover.name_arity.map
       (:use :cl)
-      (:shadow compose pk)
+      (:shadow A% ARG~13591 M1 M2 N PK compose pk)
       (:export compose))))
 
 (cl:eval-when
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.metis.metis_prover.name_arity.set.include~13610.se)
-    (defpackage :holai.metis.metis_prover.name_arity.set.include~13610.se
+    (uiop:define-package
+      :holai.metis.metis_prover.name_arity.set.include~13610.se
       (:use :cl)
       (:shadow
+        ACCU
+        ARG~13615
+        ARG~13810
+        ARG~13881
+        ARG~13902
+        ARG~13992
+        ARG~14009
+        ARG~14088
+        ARG~14160
+        ARG~14169
+        ARG~14200
+        ARG~14668
+        ARG~14692
+        ARG~14715
+        ARG~14734
+        C
+        E
+        E1
+        E1%
+        E2
+        E2%
         Empty%
         End
+        F
         Found
+        H
+        H1
+        H2
+        HL
+        HR
+        L
+        L1
+        L1%
+        L2
+        L2%
+        LH
+        LL
+        LR
+        LRL
+        LRR
+        LRV
+        LV
         More
         Node
         NotFound
+        P
+        PRES
+        R
+        R1
+        R1%
+        R2
+        R2%
+        RH
+        RL
+        RLL
+        RLR
+        RLV
+        RR
+        RV
+        S
+        S1
+        S2
+        T%
+        T1
+        T2
+        V
+        V1
+        V2
+        X
         add
         add_max_element
         add_min_element
@@ -1459,9 +2472,24 @@
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.metis.metis_prover.name_arity.set.include~13610)
-    (defpackage :holai.metis.metis_prover.name_arity.set.include~13610
+    (uiop:define-package
+      :holai.metis.metis_prover.name_arity.set.include~13610
       (:use :cl)
       (:shadow
+        A%
+        ACC
+        ARG~14844
+        ARG~14863
+        ARG~14889
+        C%
+        F
+        GO
+        L
+        P%
+        S
+        S%
+        SS
+        X
         add
         all
         compare
@@ -1519,7 +2547,8 @@
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.metis.metis_prover.name_arity.set)
-    (defpackage :holai.metis.metis_prover.name_arity.set
+    (uiop:define-package
+      :holai.metis.metis_prover.name_arity.set
       (:use :cl)
       (:shadow allNullary)
       (:export allNullary))))
@@ -1528,16 +2557,41 @@
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.metis.metis_prover.name_arity)
-    (defpackage :holai.metis.metis_prover.name_arity
+    (uiop:define-package
+      :holai.metis.metis_prover.name_arity
       (:use :cl)
-      (:shadow arity binary compare equal name nary nullary ternary unary)
+      (:shadow
+        ARG~12056
+        ARG~12065
+        ARG~12098
+        ARG~12102
+        ARG~12127
+        ARG~12131
+        C%
+        I%
+        I1
+        I2
+        N
+        N1
+        N2
+        N_I
+        arity
+        binary
+        compare
+        equal
+        name
+        nary
+        nullary
+        ternary
+        unary)
       (:export arity binary compare equal name nary nullary ternary unary))))
 
 (cl:eval-when
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.metis.metis_prover.term.ordered)
-    (defpackage :holai.metis.metis_prover.term.ordered
+    (uiop:define-package
+      :holai.metis.metis_prover.term.ordered
       (:use :cl)
       (:shadow compare)
       (:export compare))))
@@ -1546,13 +2600,90 @@
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.metis.metis_prover.term.map)
-    (defpackage :holai.metis.metis_prover.term.map
+    (uiop:define-package
+      :holai.metis.metis_prover.term.map
       (:use :cl)
       (:shadow
+        ACCU
+        ARG~16145
+        ARG~16361
+        ARG~16371
+        ARG~16453
+        ARG~16488
+        ARG~16518
+        ARG~16539
+        ARG~16602
+        ARG~16667
+        ARG~16733
+        ARG~16761
+        ARG~16788
+        ARG~16951
+        ARG~17249
+        ARG~17304
+        ARG~17323
+        C
+        D
+        D%
+        D1
+        D1%
+        D2
+        D2%
+        DATA
         Empty%
         End
+        F
+        H
+        H1
+        H2
+        HL
+        HR
+        K
+        L
+        L%
+        L1
+        L1%
+        L2
+        L2%
+        LD
+        LH
+        LL
+        LR
+        LRD
+        LRL
+        LRR
+        LRV
+        LV
+        M
         More
         Node
+        P
+        PRES
+        PVD
+        R
+        R%
+        R1
+        R1%
+        R2
+        R2%
+        RD
+        RH
+        RL
+        RLD
+        RLL
+        RLR
+        RLV
+        RR
+        RV
+        S
+        S1
+        S2
+        T%
+        T1
+        T2
+        V
+        V1
+        V2
+        X
         add
         add_max_binding
         add_min_binding
@@ -1605,15 +2736,79 @@
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.metis.metis_prover.term.set)
-    (defpackage :holai.metis.metis_prover.term.set
+    (uiop:define-package
+      :holai.metis.metis_prover.term.set
       (:use :cl)
       (:shadow
+        ACCU
+        ARG~17356
+        ARG~17551
+        ARG~17622
+        ARG~17643
+        ARG~17733
+        ARG~17750
+        ARG~17829
+        ARG~17901
+        ARG~17910
+        ARG~17941
+        ARG~18409
+        ARG~18433
+        ARG~18456
+        ARG~18475
+        C
+        E
+        E1
+        E1%
+        E2
+        E2%
         Empty%
         End
+        F
         Found
+        H
+        H1
+        H2
+        HL
+        HR
+        L
+        L1
+        L1%
+        L2
+        L2%
+        LH
+        LL
+        LR
+        LRL
+        LRR
+        LRV
+        LV
         More
         Node
         NotFound
+        P
+        PRES
+        R
+        R1
+        R1%
+        R2
+        R2%
+        RH
+        RL
+        RLL
+        RLR
+        RLV
+        RR
+        RV
+        S
+        S1
+        S2
+        T%
+        T1
+        T2
+        V
+        V1
+        V2
+        X
         add
         add_max_element
         add_min_element
@@ -1676,11 +2871,93 @@
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.metis.metis_prover.term)
-    (defpackage :holai.metis.metis_prover.term
+    (uiop:define-package
+      :holai.metis.metis_prover.term
       (:use :cl)
       (:shadow
+        A%
+        A1
+        A2
+        ACC
+        ACC%
+        ARG
+        ARG%
+        ARGS
+        ARG~14948
+        ARG~14965
+        ARG~14977
+        ARG~15022
+        ARG~15064
+        ARG~15107
+        ARG~15125
+        ARG~15143
+        ARG~15185
+        ARG~15226
+        ARG~15356
+        ARG~15407
+        ARG~15427
+        ARG~15481
+        ARG~15549
+        ARG~15571
+        ARG~15615
+        ARG~15655
+        ARG~15695
+        ARG~15741
+        ARG~15802
+        ARG~15861
+        ARG~15925
+        ARG~15985
+        ARG~16007
+        ARG~16060
+        ARG~16108
+        ATM
+        AV
+        B%
+        C%
+        C%%
+        CMP
+        F
+        F1
+        F2
+        FREE
+        FS
+        FTM
+        F_A
         Fn
+        H
+        I%
+        L
+        LETC
+        N
+        PATH
+        PRED
+        RES
+        REST
+        REST%
+        S
+        SEARCH
+        STRIP
+        SUBTMS
+        SZ
+        T%
+        TM
+        TM%
+        TM1
+        TM1%
+        TM2
+        TM2%
+        TMS
+        TMS1
+        TMS2
+        TY
+        V
+        V%
+        V1
+        V2
+        VS
         Var
+        W%
+        X
         appName
         avoid
         cmp
@@ -1805,10 +3082,81 @@
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.metis.metis_prover.substitute)
-    (defpackage :holai.metis.metis_prover.substitute
+    (uiop:define-package
+      :holai.metis.metis_prover.substitute
       (:use :cl)
       (:shadow
+        ADD
+        ARGS
+        ARGS%
+        ARGS1
+        ARGS2
+        ARG~18511
+        ARG~18520
+        ARG~18529
+        ARG~18540
+        ARG~18558
+        ARG~18575
+        ARG~18588
+        ARG~18599
+        ARG~18604
+        ARG~18638
+        ARG~18695
+        ARG~18701
+        ARG~18731
+        ARG~18737
+        ARG~18768
+        ARG~18774
+        ARG~18805
+        ARG~18809
+        ARG~18814
+        ARG~18857
+        ARG~18861
+        ARG~18907
+        ARG~18928
+        ARG~18946
+        ARG~18965
+        ARG~18987
+        ARG~19010
+        ARG~19102
+        ARG~19132
+        B%
+        COMPATIBLE
+        F
+        F1
+        F2
+        INV
+        ISNOTID
+        ISRESTRICTEDVAR
+        L
+        M
+        M%
+        M1
+        M2
+        MATCHLIST
+        REST
+        S
+        S1
+        S2
+        SOLVE
+        SOLVE%
+        SUB
+        SUB%
+        SUB1
+        SUB2
         Subst%
+        T%
+        TM
+        TM%
+        TM1
+        TM1%
+        TM2
+        TM2%
+        TMSUB
+        V
+        VARSET
+        V_TM
+        W%
         add
         compatible
         compose
@@ -1878,7 +3226,8 @@
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.metis.metis_prover.atom.ordered)
-    (defpackage :holai.metis.metis_prover.atom.ordered
+    (uiop:define-package
+      :holai.metis.metis_prover.atom.ordered
       (:use :cl)
       (:shadow compare)
       (:export compare))))
@@ -1887,13 +3236,90 @@
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.metis.metis_prover.atom.map.ma)
-    (defpackage :holai.metis.metis_prover.atom.map.ma
+    (uiop:define-package
+      :holai.metis.metis_prover.atom.map.ma
       (:use :cl)
       (:shadow
+        ACCU
+        ARG~19939
+        ARG~20155
+        ARG~20165
+        ARG~20247
+        ARG~20282
+        ARG~20312
+        ARG~20333
+        ARG~20396
+        ARG~20461
+        ARG~20527
+        ARG~20555
+        ARG~20582
+        ARG~20745
+        ARG~21043
+        ARG~21098
+        ARG~21117
+        C
+        D
+        D%
+        D1
+        D1%
+        D2
+        D2%
+        DATA
         Empty%
         End
+        F
+        H
+        H1
+        H2
+        HL
+        HR
+        K
+        L
+        L%
+        L1
+        L1%
+        L2
+        L2%
+        LD
+        LH
+        LL
+        LR
+        LRD
+        LRL
+        LRR
+        LRV
+        LV
+        M
         More
         Node
+        P
+        PRES
+        PVD
+        R
+        R%
+        R1
+        R1%
+        R2
+        R2%
+        RD
+        RH
+        RL
+        RLD
+        RLL
+        RLR
+        RLV
+        RR
+        RV
+        S
+        S1
+        S2
+        T%
+        T1
+        T2
+        V
+        V1
+        V2
+        X
         add
         add_max_binding
         add_min_binding
@@ -1946,9 +3372,32 @@
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.metis.metis_prover.atom.map)
-    (defpackage :holai.metis.metis_prover.atom.map
+    (uiop:define-package
+      :holai.metis.metis_prover.atom.map
       (:use :cl)
       (:shadow
+        ACC
+        ARG~21147
+        ARG~21156
+        ARG~21196
+        ARG~21213
+        ARG~21233
+        ARG~21274
+        B%
+        EXCEPTION~21173
+        EXCEPTION~21185
+        F
+        F%
+        K%
+        L
+        M
+        M1
+        M2
+        S
+        TM
+        V
+        X
+        Y
         delete
         exists
         f%
@@ -1992,15 +3441,79 @@
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.metis.metis_prover.atom.set.se)
-    (defpackage :holai.metis.metis_prover.atom.set.se
+    (uiop:define-package
+      :holai.metis.metis_prover.atom.set.se
       (:use :cl)
       (:shadow
+        ACCU
+        ARG~21373
+        ARG~21568
+        ARG~21639
+        ARG~21660
+        ARG~21750
+        ARG~21767
+        ARG~21846
+        ARG~21918
+        ARG~21927
+        ARG~21958
+        ARG~22426
+        ARG~22450
+        ARG~22473
+        ARG~22492
+        C
+        E
+        E1
+        E1%
+        E2
+        E2%
         Empty%
         End
+        F
         Found
+        H
+        H1
+        H2
+        HL
+        HR
+        L
+        L1
+        L1%
+        L2
+        L2%
+        LH
+        LL
+        LR
+        LRL
+        LRR
+        LRV
+        LV
         More
         Node
         NotFound
+        P
+        PRES
+        R
+        R1
+        R1%
+        R2
+        R2%
+        RH
+        RL
+        RLL
+        RLR
+        RLV
+        RR
+        RV
+        S
+        S1
+        S2
+        T%
+        T1
+        T2
+        V
+        V1
+        V2
+        X
         add
         add_max_element
         add_min_element
@@ -2063,9 +3576,24 @@
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.metis.metis_prover.atom.set)
-    (defpackage :holai.metis.metis_prover.atom.set
+    (uiop:define-package
+      :holai.metis.metis_prover.atom.set
       (:use :cl)
       (:shadow
+        A%
+        ACC
+        ARG~22602
+        ARG~22621
+        ARG~22647
+        C%
+        F
+        GO
+        L
+        P%
+        S
+        S%
+        SS
+        X
         add
         all
         compare
@@ -2123,9 +3651,84 @@
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.metis.metis_prover.atom)
-    (defpackage :holai.metis.metis_prover.atom
+    (uiop:define-package
+      :holai.metis.metis_prover.atom
       (:use :cl)
       (:shadow
+        A%
+        ACC
+        ACC%
+        ADDARG
+        ADDTM
+        ARG
+        ARGS
+        ARG~19237
+        ARG~19246
+        ARG~19270
+        ARG~19292
+        ARG~19314
+        ARG~19331
+        ARG~19364
+        ARG~19382
+        ARG~19386
+        ARG~19422
+        ARG~19462
+        ARG~19466
+        ARG~19471
+        ARG~19505
+        ARG~19510
+        ARG~19566
+        ARG~19586
+        ARG~19610
+        ARG~19632
+        ARG~19659
+        ARG~19663
+        ARG~19668
+        ARG~19712
+        ARG~19716
+        ARG~19721
+        ARG~19861
+        ARG~19864
+        ARG~19884
+        ARG~19888
+        ARG~19894
+        ATM
+        ATM1
+        ATM2
+        B%
+        C%
+        F
+        H
+        I%
+        L
+        MATCHARG
+        N
+        P%
+        P1
+        P2
+        PATH
+        PRED
+        R%
+        REL
+        RES
+        S
+        SUB
+        SUB%
+        SUBTERM%
+        T%
+        TM
+        TM%
+        TM1
+        TM2
+        TMS
+        TMS%
+        TMS1
+        TMS2
+        UNIFYARG
+        V
+        X
+        Y
+        Z
         addArg
         addTm
         arguments
@@ -2208,7 +3811,8 @@
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.metis.metis_prover.formula.ordered)
-    (defpackage :holai.metis.metis_prover.formula.ordered
+    (uiop:define-package
+      :holai.metis.metis_prover.formula.ordered
       (:use :cl)
       (:shadow compare)
       (:export compare))))
@@ -2217,13 +3821,90 @@
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.metis.metis_prover.formula.map.ma)
-    (defpackage :holai.metis.metis_prover.formula.map.ma
+    (uiop:define-package
+      :holai.metis.metis_prover.formula.map.ma
       (:use :cl)
       (:shadow
+        ACCU
+        ARG~25472
+        ARG~25688
+        ARG~25698
+        ARG~25780
+        ARG~25815
+        ARG~25845
+        ARG~25866
+        ARG~25929
+        ARG~25994
+        ARG~26060
+        ARG~26088
+        ARG~26115
+        ARG~26278
+        ARG~26576
+        ARG~26631
+        ARG~26650
+        C
+        D
+        D%
+        D1
+        D1%
+        D2
+        D2%
+        DATA
         Empty%
         End
+        F
+        H
+        H1
+        H2
+        HL
+        HR
+        K
+        L
+        L%
+        L1
+        L1%
+        L2
+        L2%
+        LD
+        LH
+        LL
+        LR
+        LRD
+        LRL
+        LRR
+        LRV
+        LV
+        M
         More
         Node
+        P
+        PRES
+        PVD
+        R
+        R%
+        R1
+        R1%
+        R2
+        R2%
+        RD
+        RH
+        RL
+        RLD
+        RLL
+        RLR
+        RLV
+        RR
+        RV
+        S
+        S1
+        S2
+        T%
+        T1
+        T2
+        V
+        V1
+        V2
+        X
         add
         add_max_binding
         add_min_binding
@@ -2276,9 +3957,32 @@
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.metis.metis_prover.formula.map)
-    (defpackage :holai.metis.metis_prover.formula.map
+    (uiop:define-package
+      :holai.metis.metis_prover.formula.map
       (:use :cl)
       (:shadow
+        ACC
+        ARG~26680
+        ARG~26689
+        ARG~26729
+        ARG~26746
+        ARG~26766
+        ARG~26807
+        B%
+        EXCEPTION~26706
+        EXCEPTION~26718
+        F
+        F%
+        K%
+        L
+        M
+        M1
+        M2
+        S
+        TM
+        V
+        X
+        Y
         delete
         exists
         f%
@@ -2322,15 +4026,79 @@
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.metis.metis_prover.formula.set.se)
-    (defpackage :holai.metis.metis_prover.formula.set.se
+    (uiop:define-package
+      :holai.metis.metis_prover.formula.set.se
       (:use :cl)
       (:shadow
+        ACCU
+        ARG~26906
+        ARG~27101
+        ARG~27172
+        ARG~27193
+        ARG~27283
+        ARG~27300
+        ARG~27379
+        ARG~27451
+        ARG~27460
+        ARG~27491
+        ARG~27959
+        ARG~27983
+        ARG~28006
+        ARG~28025
+        C
+        E
+        E1
+        E1%
+        E2
+        E2%
         Empty%
         End
+        F
         Found
+        H
+        H1
+        H2
+        HL
+        HR
+        L
+        L1
+        L1%
+        L2
+        L2%
+        LH
+        LL
+        LR
+        LRL
+        LRR
+        LRV
+        LV
         More
         Node
         NotFound
+        P
+        PRES
+        R
+        R1
+        R1%
+        R2
+        R2%
+        RH
+        RL
+        RLL
+        RLR
+        RLV
+        RR
+        RV
+        S
+        S1
+        S2
+        T%
+        T1
+        T2
+        V
+        V1
+        V2
+        X
         add
         add_max_element
         add_min_element
@@ -2393,9 +4161,24 @@
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.metis.metis_prover.formula.set)
-    (defpackage :holai.metis.metis_prover.formula.set
+    (uiop:define-package
+      :holai.metis.metis_prover.formula.set
       (:use :cl)
       (:shadow
+        A%
+        ACC
+        ARG~28135
+        ARG~28154
+        ARG~28180
+        C%
+        F
+        GO
+        L
+        P%
+        S
+        S%
+        SS
+        X
         add
         all
         compare
@@ -2453,19 +4236,123 @@
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.metis.metis_prover.formula)
-    (defpackage :holai.metis.metis_prover.formula
+    (uiop:define-package
+      :holai.metis.metis_prover.formula
       (:use :cl)
       (:shadow
+        ACC
+        ARG~22710
+        ARG~22718
+        ARG~22754
+        ARG~22890
+        ARG~23026
+        ARG~23162
+        ARG~23295
+        ARG~23310
+        ARG~23327
+        ARG~23355
+        ARG~23376
+        ARG~23394
+        ARG~23409
+        ARG~23463
+        ARG~23484
+        ARG~23502
+        ARG~23517
+        ARG~23571
+        ARG~23592
+        ARG~23610
+        ARG~23625
+        ARG~23671
+        ARG~23690
+        ARG~23713
+        ARG~23717
+        ARG~23738
+        ARG~23761
+        ARG~23780
+        ARG~23803
+        ARG~23807
+        ARG~23828
+        ARG~23854
+        ARG~24008
+        ARG~24316
+        ARG~24455
+        ARG~24461
+        ARG~24748
+        ARG~24769
+        ARG~24790
+        ARG~24811
+        ARG~24832
+        ARG~24853
+        ARG~24905
+        ARG~25008
+        ARG~25091
+        ASMS
+        ATM
+        ATM1
+        ATM2
+        A_B
         And
         Atom
+        B%
+        BODY%
+        BV
+        C%
+        CMP
+        CONN
+        CS
         Exists
+        F
+        F1
+        F1_F2
+        F2
+        FLAT%
+        FM
+        FM1
+        FM2
+        FMS
+        FMS%
+        FS
+        FUNCS
+        FV
         False_
         Forall
+        GOAL
         Iff
         Imp
+        N
         Not
         Or
+        P%
+        P%%
+        P1
+        P2
+        POL
+        Q
+        Q%
+        Q1
+        Q2
+        QUANT
+        RELS
+        S
+        STRIP
+        SUB
+        SUB%
+        SZ
+        TM
+        TMS
+        TMS%
         True_
+        V
+        V%
+        V1
+        V2
+        VARS
+        VARS%
+        VS
+        VS%
+        W%
+        X
+        Y
         add
         add_asms
         add_var_asms
@@ -2656,7 +4543,8 @@
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.metis.metis_prover.literal.ordered)
-    (defpackage :holai.metis.metis_prover.literal.ordered
+    (uiop:define-package
+      :holai.metis.metis_prover.literal.ordered
       (:use :cl)
       (:shadow compare)
       (:export compare))))
@@ -2665,13 +4553,90 @@
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.metis.metis_prover.literal.map.ma)
-    (defpackage :holai.metis.metis_prover.literal.map.ma
+    (uiop:define-package
+      :holai.metis.metis_prover.literal.map.ma
       (:use :cl)
       (:shadow
+        ACCU
+        ARG~28742
+        ARG~28958
+        ARG~28968
+        ARG~29050
+        ARG~29085
+        ARG~29115
+        ARG~29136
+        ARG~29199
+        ARG~29264
+        ARG~29330
+        ARG~29358
+        ARG~29385
+        ARG~29548
+        ARG~29846
+        ARG~29901
+        ARG~29920
+        C
+        D
+        D%
+        D1
+        D1%
+        D2
+        D2%
+        DATA
         Empty%
         End
+        F
+        H
+        H1
+        H2
+        HL
+        HR
+        K
+        L
+        L%
+        L1
+        L1%
+        L2
+        L2%
+        LD
+        LH
+        LL
+        LR
+        LRD
+        LRL
+        LRR
+        LRV
+        LV
+        M
         More
         Node
+        P
+        PRES
+        PVD
+        R
+        R%
+        R1
+        R1%
+        R2
+        R2%
+        RD
+        RH
+        RL
+        RLD
+        RLL
+        RLR
+        RLV
+        RR
+        RV
+        S
+        S1
+        S2
+        T%
+        T1
+        T2
+        V
+        V1
+        V2
+        X
         add
         add_max_binding
         add_min_binding
@@ -2724,9 +4689,32 @@
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.metis.metis_prover.literal.map)
-    (defpackage :holai.metis.metis_prover.literal.map
+    (uiop:define-package
+      :holai.metis.metis_prover.literal.map
       (:use :cl)
       (:shadow
+        ACC
+        ARG~29950
+        ARG~29959
+        ARG~29999
+        ARG~30016
+        ARG~30036
+        ARG~30077
+        B%
+        EXCEPTION~29976
+        EXCEPTION~29988
+        F
+        F%
+        K%
+        L
+        M
+        M1
+        M2
+        S
+        TM
+        V
+        X
+        Y
         delete
         exists
         f%
@@ -2770,15 +4758,79 @@
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.metis.metis_prover.literal.set.include~30172.se)
-    (defpackage :holai.metis.metis_prover.literal.set.include~30172.se
+    (uiop:define-package
+      :holai.metis.metis_prover.literal.set.include~30172.se
       (:use :cl)
       (:shadow
+        ACCU
+        ARG~30177
+        ARG~30372
+        ARG~30443
+        ARG~30464
+        ARG~30554
+        ARG~30571
+        ARG~30650
+        ARG~30722
+        ARG~30731
+        ARG~30762
+        ARG~31230
+        ARG~31254
+        ARG~31277
+        ARG~31296
+        C
+        E
+        E1
+        E1%
+        E2
+        E2%
         Empty%
         End
+        F
         Found
+        H
+        H1
+        H2
+        HL
+        HR
+        L
+        L1
+        L1%
+        L2
+        L2%
+        LH
+        LL
+        LR
+        LRL
+        LRR
+        LRV
+        LV
         More
         Node
         NotFound
+        P
+        PRES
+        R
+        R1
+        R1%
+        R2
+        R2%
+        RH
+        RL
+        RLL
+        RLR
+        RLV
+        RR
+        RV
+        S
+        S1
+        S2
+        T%
+        T1
+        T2
+        V
+        V1
+        V2
+        X
         add
         add_max_element
         add_min_element
@@ -2841,9 +4893,24 @@
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.metis.metis_prover.literal.set.include~30172)
-    (defpackage :holai.metis.metis_prover.literal.set.include~30172
+    (uiop:define-package
+      :holai.metis.metis_prover.literal.set.include~30172
       (:use :cl)
       (:shadow
+        A%
+        ACC
+        ARG~31406
+        ARG~31425
+        ARG~31451
+        C%
+        F
+        GO
+        L
+        P%
+        S
+        S%
+        SS
+        X
         add
         all
         compare
@@ -2901,9 +4968,31 @@
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.metis.metis_prover.literal.set)
-    (defpackage :holai.metis.metis_prover.literal.set
+    (uiop:define-package
+      :holai.metis.metis_prover.literal.set
       (:use :cl)
       (:shadow
+        ARG~31512
+        ARG~31530
+        ARG~31548
+        ARG~31572
+        ARG~31590
+        ARG~31608
+        ARG~31626
+        ARG~31646
+        CL
+        EQ
+        EQ%
+        F
+        LIT
+        LIT%
+        LITS
+        LITS%
+        SET
+        SUB
+        SUBSTLIT
+        V
+        Z
         conjoin
         disjoin
         f
@@ -2938,7 +5027,8 @@
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.metis.metis_prover.literal.set_ordered)
-    (defpackage :holai.metis.metis_prover.literal.set_ordered
+    (uiop:define-package
+      :holai.metis.metis_prover.literal.set_ordered
       (:use :cl)
       (:shadow compare)
       (:export compare))))
@@ -2947,13 +5037,90 @@
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.metis.metis_prover.literal.set_map.ma)
-    (defpackage :holai.metis.metis_prover.literal.set_map.ma
+    (uiop:define-package
+      :holai.metis.metis_prover.literal.set_map.ma
       (:use :cl)
       (:shadow
+        ACCU
+        ARG~31727
+        ARG~31943
+        ARG~31953
+        ARG~32035
+        ARG~32070
+        ARG~32100
+        ARG~32121
+        ARG~32184
+        ARG~32249
+        ARG~32315
+        ARG~32343
+        ARG~32370
+        ARG~32533
+        ARG~32831
+        ARG~32886
+        ARG~32905
+        C
+        D
+        D%
+        D1
+        D1%
+        D2
+        D2%
+        DATA
         Empty%
         End
+        F
+        H
+        H1
+        H2
+        HL
+        HR
+        K
+        L
+        L%
+        L1
+        L1%
+        L2
+        L2%
+        LD
+        LH
+        LL
+        LR
+        LRD
+        LRL
+        LRR
+        LRV
+        LV
+        M
         More
         Node
+        P
+        PRES
+        PVD
+        R
+        R%
+        R1
+        R1%
+        R2
+        R2%
+        RD
+        RH
+        RL
+        RLD
+        RLL
+        RLR
+        RLV
+        RR
+        RV
+        S
+        S1
+        S2
+        T%
+        T1
+        T2
+        V
+        V1
+        V2
+        X
         add
         add_max_binding
         add_min_binding
@@ -3006,9 +5173,32 @@
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.metis.metis_prover.literal.set_map)
-    (defpackage :holai.metis.metis_prover.literal.set_map
+    (uiop:define-package
+      :holai.metis.metis_prover.literal.set_map
       (:use :cl)
       (:shadow
+        ACC
+        ARG~32935
+        ARG~32944
+        ARG~32984
+        ARG~33001
+        ARG~33021
+        ARG~33062
+        B%
+        EXCEPTION~32961
+        EXCEPTION~32973
+        F
+        F%
+        K%
+        L
+        M
+        M1
+        M2
+        S
+        TM
+        V
+        X
+        Y
         delete
         exists
         f%
@@ -3052,15 +5242,79 @@
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.metis.metis_prover.literal.set_set.se)
-    (defpackage :holai.metis.metis_prover.literal.set_set.se
+    (uiop:define-package
+      :holai.metis.metis_prover.literal.set_set.se
       (:use :cl)
       (:shadow
+        ACCU
+        ARG~33161
+        ARG~33356
+        ARG~33427
+        ARG~33448
+        ARG~33538
+        ARG~33555
+        ARG~33634
+        ARG~33706
+        ARG~33715
+        ARG~33746
+        ARG~34214
+        ARG~34238
+        ARG~34261
+        ARG~34280
+        C
+        E
+        E1
+        E1%
+        E2
+        E2%
         Empty%
         End
+        F
         Found
+        H
+        H1
+        H2
+        HL
+        HR
+        L
+        L1
+        L1%
+        L2
+        L2%
+        LH
+        LL
+        LR
+        LRL
+        LRR
+        LRV
+        LV
         More
         Node
         NotFound
+        P
+        PRES
+        R
+        R1
+        R1%
+        R2
+        R2%
+        RH
+        RL
+        RLL
+        RLR
+        RLV
+        RR
+        RV
+        S
+        S1
+        S2
+        T%
+        T1
+        T2
+        V
+        V1
+        V2
+        X
         add
         add_max_element
         add_min_element
@@ -3123,9 +5377,24 @@
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.metis.metis_prover.literal.set_set)
-    (defpackage :holai.metis.metis_prover.literal.set_set
+    (uiop:define-package
+      :holai.metis.metis_prover.literal.set_set
       (:use :cl)
       (:shadow
+        A%
+        ACC
+        ARG~34390
+        ARG~34409
+        ARG~34435
+        C%
+        F
+        GO
+        L
+        P%
+        S
+        S%
+        SS
+        X
         add
         all
         compare
@@ -3183,9 +5452,55 @@
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.metis.metis_prover.literal)
-    (defpackage :holai.metis.metis_prover.literal
+    (uiop:define-package
+      :holai.metis.metis_prover.literal
       (:use :cl)
       (:shadow
+        A%
+        ARG~28232
+        ARG~28241
+        ARG~28279
+        ARG~28311
+        ARG~28330
+        ARG~28358
+        ARG~28375
+        ARG~28395
+        ARG~28410
+        ARG~28414
+        ARG~28447
+        ARG~28488
+        ARG~28514
+        ARG~28518
+        ARG~28543
+        ARG~28547
+        ARG~28578
+        ARG~28605
+        ARG~28632
+        ARG~28658
+        ARG~28677
+        ARG~28690
+        ARG~28700
+        ARG~28710
+        ARG~28720
+        ATM
+        ATM%
+        ATM1
+        ATM2
+        B%
+        LIT
+        LITERAL
+        L_R
+        P1
+        P2
+        PATH
+        PATH_TM
+        POL
+        POL1
+        POL2
+        REL
+        SUB
+        TM
+        V
         arguments
         arity
         atom
@@ -3282,17 +5597,57 @@
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.metis.metis_prover.thm)
-    (defpackage :holai.metis.metis_prover.thm
+    (uiop:define-package
+      :holai.metis.metis_prover.thm
       (:use :cl)
       (:shadow
+        ARG~34497
+        ARG~34506
+        ARG~34517
+        ARG~34567
+        ARG~34599
+        ARG~34611
+        ARG~34641
+        ARG~34652
+        ARG~34662
+        ARG~34680
+        ARG~34699
+        ARG~34776
+        ARG~34815
+        ARG~34819
+        ATM
         Assume%
         Axiom%
+        CHK
+        CL
+        CL%
+        CL1
+        CL1%
+        CL2
+        CL2%
+        EQLIT
         Equality%
         Factor
+        INF%
+        INFTYPE
+        LIT
+        LIT%
+        PATH
+        POL
         Refl%
         Resolve%
+        S
+        SET
+        SUB
         Subst%
+        T%
+        TH
+        TH1
+        TH2
+        THS
+        TM
         Thm
+        V
         assume
         axiom
         chk
@@ -3370,15 +5725,92 @@
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.metis.metis_prover.proof)
-    (defpackage :holai.metis.metis_prover.proof
+    (uiop:define-package
+      :holai.metis.metis_prover.proof
       (:use :cl)
       (:shadow
+        A%
+        A%%
+        ACC
+        ACC%
+        ADDPROOF
+        ADDTHMS
+        ARG~34914
+        ARG~34947
+        ARG~35003
+        ARG~35037
+        ARG~35134
+        ARG~35138
+        ARG~35224
+        ARG~35393
+        ARG~35529
+        ARG~35575
+        ARG~35730
+        ATM
+        ATM%
         Assume
         Axiom
+        CANDIDATES
+        CHECKLIT
+        CL
+        CL%
+        CL1
+        CL1%
+        CL2
+        CL2%
+        EMPTYTHMS
         Equality
+        F
+        F%
+        FREE
+        F_A
+        F_A%
+        I%
+        INC
+        INF%
+        INFO
+        INFS
+        ITMS
+        L1
+        L2
+        L3
+        LIT
+        LIT%
+        LITS
+        MKPROOF
+        MKTHMS
+        NEQ
+        OTHERS
+        PARS
+        PATH
+        PATH%
+        POL
+        POL%
+        R%
+        RECON
         Refl
         Resolve
+        S
+        SET
+        SUB
+        SUB%
+        SYNC
         Subst
+        T%
+        TH
+        TH%
+        TH1
+        TH2
+        THMINF
+        THS
+        THS%
+        TH_INF
+        TM
+        TM%
+        V
+        X
+        Y
+        Z
         addProof
         addThms
         checkLit
@@ -3432,14 +5864,135 @@
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.metis.metis_prover.rule)
-    (defpackage :holai.metis.metis_prover.rule
+    (uiop:define-package
+      :holai.metis.metis_prover.rule
       (:use :cl)
       (:shadow
+        A%
+        ACC
+        ACC%
+        APART%
+        APART%%
+        ARG~35939
+        ARG~35969
+        ARG~36004
+        ARG~36010
+        ARG~36108
+        ARG~36115
+        ARG~36119
+        ARG~36237
+        ARG~36269
+        ARG~36300
+        ARG~36411
+        ARG~36494
+        ARG~36612
+        ARG~36644
+        ARG~36675
+        ARG~36780
+        ARG~36842
+        ARG~36874
+        ARG~36955
+        ARG~36996
+        ARG~37011
+        ARG~37076
+        ARG~37091
+        ARG~37192
+        ARG~37214
+        ARG~37257
+        ARG~37455
+        ARG~37487
+        ARG~37491
+        ARG~37534
+        ARG~37584
+        ARG~37639
+        ARG~37643
+        ARG~37719
+        ARG~37782
+        ASSUMELIT
+        ASSUMETH
+        ATM
+        ATM%
         Apart
+        CL
+        CONG
+        CONV
+        CONV1
+        CONV2
+        CONVS
+        EDGE
+        EDGES
+        EQN
+        EQN1
+        EQN2
+        EQS
+        EQTH
+        EXCEPTION~36181
+        EXCEPTION~36564
+        EXCEPTION~36797
+        EXPAND
+        F
+        FACT%
         Factor_edge
+        G%
+        H
+        I%
+        INIT
+        IRREFL
         Joinable
         Joined
+        LIT
+        LIT%
+        LIT%%
+        LITERULE
+        LITERULE1
+        LITERULE2
+        LITERULES
+        LITS
+        LITTH
+        N
+        OTHERS
+        OTHERS%
+        PATH
+        POL
+        POL%
+        R%
+        REFLLIT
+        REFLTH
+        REM
+        RES
+        RES1
+        RES2
+        RESULT
+        RULE
+        RULE1
+        RULE2
+        RULES
         Refl_edge
+        SUB
+        SUB%
+        SUB_EDGES
+        SUB_EDGES%
+        SYMTH
+        T%
+        TH
+        TH%
+        TH%%
+        TH1
+        TH2
+        TM
+        TM%
+        TM%%
+        T_U
+        U
+        UPDATE
+        X
+        XS
+        X_Y
+        Y
+        YI
+        YS
+        Y_Z
+        Z
         addFactorEdge
         addIrreflEdge
         addReflEdge
@@ -3641,16 +6194,198 @@
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.metis.metis_prover.model)
-    (defpackage :holai.metis.metis_prover.model
+    (uiop:define-package
+      :holai.metis.metis_prover.model
       (:use :cl)
       (:shadow
+        A%
+        ACC
+        ACC%
+        ADD
+        ADDPROJ
+        ARG~38014
+        ARG~38022
+        ARG~38050
+        ARG~38070
+        ARG~38096
+        ARG~38299
+        ARG~38339
+        ARG~38355
+        ARG~38374
+        ARG~38483
+        ARG~38657
+        ARG~38675
+        ARG~38708
+        ARG~38742
+        ARG~38774
+        ARG~38791
+        ARG~38810
+        ARG~38832
+        ARG~38851
+        ARG~38861
+        ARG~38872
+        ARG~38882
+        ARG~38892
+        ARG~38901
+        ARG~38911
+        ARG~38921
+        ARG~39077
+        ARG~39100
+        ARG~39138
+        ARG~39166
+        ARG~39201
+        ARG~39213
+        ARG~39227
+        ARG~39267
+        ARG~39303
+        ARG~39324
+        ARG~39360
+        ARG~39396
+        ARG~39405
+        ARG~39441
+        ARG~39477
+        ARG~39691
+        ARG~39696
+        ARG~39749
+        ARG~39817
+        ARG~40094
+        ARG~40172
+        ARG~40184
+        ARG~40197
+        ARG~40234
+        ARG~40239
+        ARG~40427
+        ARG~40518
+        ARG~40551
+        ARG~40589
+        ARG~40637
+        ARG~40645
+        ARG~40654
+        ARG~40691
+        ARG~40871
+        ARG~41022
+        ARG~41061
+        ARG~41209
+        ARG~41351
+        ARG~41424
+        ARG~41506
+        ARG~41563
+        ARG~41610
+        ARG~41632
+        ARITY
+        ATM
         Array_table
+        B%
+        CARRY
+        CL
+        ELT
+        ELTS
+        ELTS%
+        F
+        FILT
+        FILTERELEMENTS
+        FIX%
+        FIX1
+        FIX2
+        FIXED%
+        FIXFN
+        FIXFNS
+        FIXMAP%
+        FIXREL
+        FIXRELS
+        FM
+        FNMAP
+        FNS
+        FNS%
+        FNS1
+        FNS2
+        FOLD
+        FUNC
+        FUNC_ELTS_ELT
+        FUNC_XS
+        FV
+        F_TMS
         Forgetful_table
         Function_perturbation
+        I%
+        I%%
+        INC
+        INTERPRET
+        INTERPRET%
+        J
+        LIT
+        M
+        M%
+        MAXCHECKS
+        MAXCHECKS%
+        MKPROJ
+        MODELTM
         Model_fn
         Model_var
+        N
+        NAME_ARITY
+        NAME_ARITY_FUN
+        NAME_ARITY_REL
+        N_A
+        N_ELTS
+        ONTARGET
+        P%
+        PERT
+        PERTS
+        POL
+        PRED
+        Q
+        R
+        R%
+        RANDOMCHECK
+        REL
+        RELMAP
+        RELS
+        RELS%
+        RELS1
+        RELS2
+        REL_ELTS
+        REL_XS
+        RNDFNS
+        RNDRELS
         Relation_perturbation
+        S
+        SCORE
+        SPACE
+        SUC2FN
+        SUCFN%
+        SZ
+        T%
+        TABLE
+        TABLES%
+        TARGET
+        TM
+        TMS
+        TMS%
+        UNION%%
+        V
+        V%
+        V%%
+        VARS
+        VF
+        VM
+        VN
+        VR
+        VS
+        VS%
+        VT
+        VV
+        VV%
+        V_I
         Valuation
+        X
+        X%
+        XS
+        Y
+        Y%
+        YS
+        Z
+        ZERO
         add
         addFn
         addName
@@ -4076,15 +6811,126 @@
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.metis.metis_prover.term_net)
-    (defpackage :holai.metis.metis_prover.term_net
+    (uiop:define-package
+      :holai.metis.metis_prover.term_net
       (:use :cl)
       (:shadow
+        A
+        A%
+        ACC
+        ARG~41686
+        ARG~41742
+        ARG~41746
+        ARG~41811
+        ARG~41832
+        ARG~41886
+        ARG~41951
+        ARG~42088
+        ARG~42190
+        ARG~42224
+        ARG~42242
+        ARG~42268
+        ARG~42282
+        ARG~42309
+        ARG~42325
+        ARG~42461
+        ARG~42478
+        ARG~42501
+        ARG~42506
+        ARG~42541
+        ARG~42560
+        ARG~42572
+        ARG~42611
+        ARG~42642
+        ARG~42685
+        ARG~42726
+        ARG~42759
+        ARG~42763
+        ARG~42800
+        ARG~42818
+        ARG~42900
+        ARG~42958
+        ARG~43054
+        ARG~43089
+        ARG~43240
+        ARG~43243
+        ARG~43257
+        ARG~43281
+        ARG~43441
+        ARG~43464
+        ARG~43481
+        ARG~43670
+        ARG~43692
+        B%
+        C%
+        EXCEPTION~42510
+        EXCEPTION~42636
+        EXCEPTION~43414
+        EXCEPTION~43643
+        EXCEPTION~43871
+        F
+        F1
+        F1%
+        F2
+        F2%
+        FIFO
+        FILT
+        FNS
+        FOLD%
+        FS
+        FS%
         Fn
+        G%
+        GETFNS
+        HARVEST
+        I%
+        INC%
+        INPUT1
+        K%
+        KS
+        KS%
+        L
+        L%
+        M
         Multiple
+        N
+        N%
+        N1
+        N2
+        NET%
         Net
+        P%
+        PARM
+        PAT
+        PAT%
+        PATS
+        PRED
+        Q1
+        Q1_Q2
+        Q2
+        QS
+        QSUB
+        QSUB%
+        QTM
+        QTM%
+        QTMS
+        QTMS%
+        REST
+        REST%
         Result
+        S
+        STACK
         Single
+        T%
+        TM
+        TMS
+        TM_A
+        V
+        VS
+        VS%
         Var
+        X
+        Y
         add
         addFn
         addQterm
@@ -4225,9 +7071,21 @@
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.metis.metis_prover.atom_net)
-    (defpackage :holai.metis.metis_prover.atom_net
+    (uiop:define-package
+      :holai.metis.metis_prover.atom_net
       (:use :cl)
       (:shadow
+        A%
+        ARG~43900
+        ARG~43920
+        ARG~43937
+        ATM
+        ATM_A
+        ATOM%
+        L
+        N
+        NET
+        PARM
         atomToTerm
         filter
         fromList
@@ -4256,9 +7114,32 @@
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.metis.metis_prover.literal_net)
-    (defpackage :holai.metis.metis_prover.literal_net
+    (uiop:define-package
+      :holai.metis.metis_prover.literal_net
       (:use :cl)
       (:shadow
+        A%
+        ARG~44001
+        ARG~44010
+        ARG~44027
+        ARG~44031
+        ARG~44068
+        ARG~44086
+        ARG~44112
+        ARG~44116
+        ARG~44137
+        ARG~44141
+        ARG~44162
+        ARG~44166
+        ATM
+        L
+        LIT_A
+        N
+        NEGATIVE
+        NET
+        PARM
+        POSITIVE
+        PRED
         filter
         fromList
         insert
@@ -4291,9 +7172,100 @@
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.metis.metis_prover.subsume)
-    (defpackage :holai.metis.metis_prover.subsume
+    (uiop:define-package
+      :holai.metis.metis_prover.subsume
       (:use :cl)
       (:shadow
+        A%
+        ACC
+        ADDID
+        ARG~44190
+        ARG~44218
+        ARG~44276
+        ARG~44280
+        ARG~44309
+        ARG~44322
+        ARG~44355
+        ARG~44375
+        ARG~44395
+        ARG~44400
+        ARG~44544
+        ARG~44550
+        ARG~44581
+        ARG~44645
+        ARG~44676
+        ARG~44726
+        ARG~44830
+        ARG~44889
+        ARG~44906
+        ARG~44964
+        C%
+        CANDS
+        CL
+        CL%
+        CLAUSES
+        CLAUSES%
+        EMPTY%
+        EMPTY%%
+        F
+        FSTCANDS
+        FSTLIT
+        FSTLITS
+        FSTLITS%
+        ID
+        ID1
+        ID2
+        ID_LEN
+        ID_LENGTH
+        LEN
+        LEN1
+        LEN2
+        LIT
+        LIT%
+        LITS
+        LITS%
+        LITS%%
+        MAX%
+        MKSUBSL
+        N
+        NEXTID
+        NEXTID%
+        NONFSTLITS
+        NONUNIT
+        NONUNIT%
+        OTHERLITS
+        OTHERLITS%
+        OTHERS
+        OTHERS%
+        PRED
+        PRED3
+        PREDID
+        S
+        SEARCH
+        SET
+        SET1
+        SET2
+        SNDCANDS
+        SNDLIT
+        SNDLIT%
+        SNDLITS
+        SNDLITS%
+        SNDLIT_OTHERLITS
+        SUB
+        SUB%
+        SUB%%
+        SUBCL%
+        SUBLIT
+        SUBS%
+        SUBSL
+        SUBSUME%
+        SUBUNIT
+        SUB_SUBSL
+        UNITN
+        UNITN%
+        X
+        XS
+        YS
         addSym
         clauseStrictlySubsumes
         clauseSubsumes
@@ -4370,10 +7342,59 @@
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.metis.metis_prover.knuth_bendix_order)
-    (defpackage :holai.metis.metis_prover.knuth_bendix_order
+    (uiop:define-package
+      :holai.metis.metis_prover.knuth_bendix_order
       (:use :cl)
       (:shadow
+        A%
+        A1
+        A2
+        ARG~45108
+        ARG~45148
+        ARG~45152
+        ARG~45193
+        ARG~45208
+        ARG~45226
+        ARG~45251
+        ARG~45255
+        ARG~45287
+        ARG~45351
+        ARG~45358
+        ARG~45376
+        C%
+        C1
+        C2
+        F
+        F1
+        F2
+        L
+        M
+        M1
+        M2
+        N
+        N1
+        N2
+        PRECEDENCE
+        PRECEDENCECMP
+        PRECEDENCELESS
+        TM
+        TM1
+        TM2
+        TMS
+        V
+        W%
+        W1
+        W2
+        WEIGHT%
+        WEIGHTCMP
+        WEIGHTDIFFERENCE
+        WEIGHTDIFFGREATER
+        WEIGHTDIFFLESS
+        WEIGHTLESS
+        WT
         Weight
+        X
+        Y
         add
         arityPrecedence
         compare
@@ -4425,13 +7446,165 @@
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.metis.metis_prover.rewrite)
-    (defpackage :holai.metis.metis_prover.rewrite
+    (uiop:define-package
+      :holai.metis.metis_prover.rewrite
       (:use :cl)
       (:shadow
+        ACC
+        ADD%
+        ADDRED
+        ADDREDS
+        ADDSUBTERM
+        ADDSUBTMS
+        ANY
+        ARG~45646
+        ARG~45678
+        ARG~45690
+        ARG~45700
+        ARG~45703
+        ARG~45729
+        ARG~45761
+        ARG~45803
+        ARG~45859
+        ARG~45895
+        ARG~45936
+        ARG~45940
+        ARG~46017
+        ARG~46035
+        ARG~46038
+        ARG~46130
+        ARG~46312
+        ARG~46322
+        ARG~46349
+        ARG~46384
+        ARG~46396
+        ARG~46399
+        ARG~46421
+        ARG~46424
+        ARG~46484
+        ARG~46575
+        ARG~46684
+        ARG~46742
+        ARG~46766
+        ARG~46790
+        ARG~46814
+        ARG~46839
+        ARG~46846
+        ARG~46933
+        ARG~46977
+        ARG~47037
+        ARG~47070
+        ARG~47099
+        ARG~47103
+        ARG~47384
+        ARG~47395
+        ARG~47439
+        ARG~47451
+        ARG~47531
+        ARG~47614
+        ARG~47646
+        ARG~47673
+        ARG~47675
+        B%
+        C%
+        CHANGED
+        CHANGED%
+        CHECKVALIDREWR
+        CONV
+        CONV%
+        DIR
+        EQ
+        EQ0
+        EQN
+        EQN0
+        EQNID
+        EQNRED
+        EQNS
+        EQN_ORT
+        F
+        FILT
+        FINDRED
+        I%
+        ID
+        ID%
+        IDENTICAL
+        ID_EQN
+        J
+        KNOWN
+        KNOWN%
+        KNOWNRED
+        L
+        L0
+        LEFT
+        LIT
+        LIT%
+        LITERULE
+        LITS
+        LITS%
+        LITTH
+        LR
+        L_R
         Left_to_right
+        M
+        MK_LITERULE
+        NEQ
+        NEQ%
+        NEQ_CONV
+        NET%
+        NEWX
         Neq_convs
+        ORD
+        ORDER%
+        ORIENTED
+        ORT
+        ORT%
+        ORT0
+        ORTO
+        PATH
+        R%
+        R0
+        REDEX
+        REDEXES
+        REDEXES%
+        REDS
+        RES
+        REWR
+        REWRITE%%
+        REWR_CONV%
+        REWR_LIT
+        REWR_LITERULE
+        REWR_NEQ_LIT
+        REWR_NEQ_LITS
+        RPL
+        RPL%
+        RW
+        RW%
         Rewrite%
         Right_to_left
+        SAME_REDEXES
+        SET
+        SPL
+        SPL%
+        STRONGEQN
+        SUB
+        SUBTERMRED
+        SUBTERMS
+        SUBTERMS%
+        SUBTMS
+        TERMRED
+        TH
+        TH%
+        THS
+        TM
+        TM%
+        TMS
+        TODO
+        TODO%
+        WAITING
+        WAITING%
+        X
+        Y
+        Z
         add
         add%
         addEqn
@@ -4596,9 +7769,39 @@
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.metis.metis_prover.units)
-    (defpackage :holai.metis.metis_prover.units
+    (uiop:define-package
+      :holai.metis.metis_prover.units
       (:use :cl)
       (:shadow
+        ARG~47693
+        ARG~47712
+        ARG~47715
+        ARG~47771
+        ARG~47785
+        ARG~47790
+        ARG~47826
+        ARG~47909
+        CHECK%
+        LIT
+        LIT%
+        NET%
+        NET%%
+        NEWLITS
+        NEWS
+        NEWS%
+        NEWS_TH
+        POL
+        RED
+        RED1
+        RTH
+        RTH%
+        SUB
+        TH
+        TH%
+        TM
+        U
+        UNITS%
+        UTH
         Units
         add
         addList
@@ -4617,13 +7820,112 @@
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.metis.metis_prover.clause)
-    (defpackage :holai.metis.metis_prover.clause
+    (uiop:define-package
+      :holai.metis.metis_prover.clause
       (:use :cl)
       (:shadow
+        ACC
+        ACC%
+        ADDEQ
+        ADDLIT%
+        ADDTM
+        APPLY%
+        ARG~47943
+        ARG~47958
+        ARG~47979
+        ARG~48002
+        ARG~48010
+        ARG~48019
+        ARG~48053
+        ARG~48063
+        ARG~48092
+        ARG~48096
+        ARG~48140
+        ARG~48164
+        ARG~48174
+        ARG~48192
+        ARG~48217
+        ARG~48241
+        ARG~48274
+        ARG~48286
+        ARG~48313
+        ARG~48320
+        ARG~48342
+        ARG~48394
+        ARG~48399
+        ARG~48450
+        ARG~48468
+        ARG~48495
+        ARG~48515
+        ARG~48574
+        ARG~48603
+        ARG~48607
+        ARG~48692
+        ARG~48698
+        ATM
+        ATM%
+        C%
+        CL
+        CL%
+        CL1
+        CL2
+        CMP
         Clause
+        EQN
+        EQN%
+        I%
+        ID%
+        INFO
+        ISLARGER
+        L
+        LESS
+        LIT
+        LIT1
+        LIT1%
+        LIT2
+        LIT2%
+        LITS
+        LITSET
+        L_R
+        N
+        NEWI
         No_literal_order
+        ORDERING
+        ORDERLITERALS
+        ORDERTERMS
+        ORT
+        ORT1
+        P%
+        PARAMETERS%
+        PATH
+        PATH2
+        POL
+        POL%
         Positive_literal_order
+        R%
+        RESULT
+        REWR
+        S
+        SIMP
+        SUB
+        SUBS%
+        TH
+        TH1
+        TH1%
+        TH2
+        TH2%
+        THM%
+        THM%%
+        TM
+        TM1
+        TM2
+        TMS
+        UNITS
         Unsigned_literal_order
+        X
+        XS
+        Y
+        YS
         addEq
         addLit
         addLit%
@@ -4717,7 +8019,8 @@
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.metis.metis_prover.ax_cj)
-    (defpackage :holai.metis.metis_prover.ax_cj
+    (uiop:define-package
+      :holai.metis.metis_prover.ax_cj
       (:use :cl)
       (:shadow ax_cj_cl ax_cj_thm make-ax_cj_cl make-ax_cj_thm)
       (:export ax_cj_cl ax_cj_thm make-ax_cj_cl make-ax_cj_thm))))
@@ -4726,10 +8029,126 @@
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.metis.metis_prover.active)
-    (defpackage :holai.metis.metis_prover.active
+    (uiop:define-package
+      :holai.metis.metis_prover.active
       (:use :cl)
       (:shadow
+        ACC
+        ACC%
+        ACTIVE%
+        ACTIVE%%
+        ACTIVE_SUBSUME_ACC
+        ADD%
+        ADDEQUATION
+        ADDORDERED
+        ADDRED
+        ADDREDUCE
+        ADDREWR
+        ADDUNORDERED
+        ALLSUBTERMS
+        ALLSUBTERMS%
+        ARG~48826
+        ARG~48918
+        ARG~48928
+        ARG~48932
+        ARG~48955
+        ARG~49191
+        ARG~49225
+        ARG~49257
+        ARG~49289
+        ARG~49427
+        ARG~49433
+        ARG~49478
+        ARG~49485
+        ARG~49526
+        ARG~49533
+        ARG~49640
+        ARG~49675
+        ARG~49709
+        ARG~49751
+        ARG~49767
+        ARG~49801
+        ARG~49844
+        ARG~49959
+        ARG~49968
+        ARG~50041
+        ARG~50163
+        ARG~50214
+        ARG~50234
+        ARG~50266
+        ARG~50330
+        ATM
+        AXIOMS%
+        AXIOMS_THM
         Active
+        CL
+        CL%
+        CL%%
+        CLAUSE
+        CLAUSEPRED
+        CLAUSES%
+        CLAUSES%%
+        CLS
+        CLS%
+        CL_LIT
+        CL_LIT_ORT_TM
+        CL_LIT_PATH_TM
+        CONJECTURE
+        CONJECTURE_THM
+        CP1
+        CP1_4
+        EQNS
+        EQN_ORT
+        EQUATIONS
+        EQUATIONS%
+        ID%
+        IDPRED
+        IDS
+        IDS%
+        ISVALIDREWR
+        L
+        LIT
+        LITERALS
+        LITERALS%
+        LITS
+        L_R
+        MK_CLAUSE%
+        N
+        ORD
+        ORDER
+        ORDERING
+        ORT
+        PARA
+        PARAMETERS%
+        PARAMS
+        PATH
+        POSTFACTOR
+        PREFACTOR
+        R%
+        REDEXRESIDUES
+        REMOVE%
+        RESOLVE
+        REWR
+        REWRITE
+        REWRITE%
+        REWR_IDS
+        S
+        SIMP
+        SUB
+        SUBS%
+        SUBSUME
+        SUBSUME%
+        SUBTERMS
+        SUBTERMS%
+        SUBTMS
+        TH
+        TM
+        TM%
+        UNITS
+        UNITS%
+        UTILITY
+        W%
+        X
         active_t
         add
         add%
@@ -4852,10 +8271,80 @@
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.metis.metis_prover.waiting)
-    (defpackage :holai.metis.metis_prover.waiting
+    (uiop:define-package
+      :holai.metis.metis_prover.waiting
       (:use :cl)
       (:shadow
+        ACC
+        ADDCL
+        ARG~50465
+        ARG~50510
+        ARG~50533
+        ARG~50586
+        ARG~50591
+        ARG~50652
+        ARG~50785
+        ARG~50845
+        ARG~50867
+        ARG~50870
+        ARG~50911
+        ARG~50949
+        AXIOMS%
+        AXIOMS_CL
+        CHECK%
+        CL
+        CLAUSES
+        CLAUSES%
+        CLS
+        CONJECTURE
+        CONJECTURE_CL
+        DCL
+        DIST
+        DIST%
+        FV
+        FVS
+        INITIALPERTURBATIONS
+        LITERALSW
+        LITERALSWEIGHT
+        LITS
+        M
+        MAXCHECKS
+        MAXIOMS
+        MCL
+        MCLS
+        MCONJECTURE
+        MODEL
+        MODELPARAMETERS%
+        MODELS
+        MODELSP
+        MODELSW
+        MODS
+        N
+        PARAMETERS%
+        PARM
+        PARMS
+        PERTURB
+        PERTURBATIONS
+        PERTURBCLAUSE
+        PERTURBCLAUSES
+        SYMBOLSW
+        SYMBOLSWEIGHT
+        VARIABLESW
+        VARIABLESWEIGHT
+        VF
+        VM
+        VN
+        VT
+        VV
+        W%
+        W1
+        W2
+        WAITING%
+        WAITING%%
+        WEIGHT
+        WEIGHT%
         Waiting
+        Z
         add
         add%
         addCl
@@ -4924,14 +8413,34 @@
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.metis.metis_prover.resolution)
-    (defpackage :holai.metis.metis_prover.resolution
+    (uiop:define-package
+      :holai.metis.metis_prover.resolution
       (:use :cl)
       (:shadow
+        A%
+        ACTIVE%
+        ACTIVE%%
+        ACTIVEPARM
+        ARG~51027
+        ARG~51036
+        CL
+        CLS
         Contradiction
+        D
+        DEC
         Decided
+        PARAMETERS%
+        RES
+        RES%
         Resolution
+        SAT
         Satisfiable
+        THS
         Undecided
+        W%
+        WAITING%
+        WAITING%%
+        WAITINGPARM
         active
         default
         iterate
@@ -4973,33 +8482,68 @@
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.metis.metis_prover.loop)
-    (defpackage :holai.metis.metis_prover.loop
+    (uiop:define-package
+      :holai.metis.metis_prover.loop
       (:use :cl)
-      (:shadow loop run)
+      (:shadow DEC RES RES% RULES THM THS loop run)
       (:export loop run))))
 
 (cl:eval-when
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.metis.metis_prover)
-    (defpackage :holai.metis.metis_prover (:use :cl) (:export))))
+    (uiop:define-package :holai.metis.metis_prover (:use :cl) (:export))))
 
 (cl:eval-when
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.metis.metis_debug)
-    (defpackage :holai.metis.metis_debug
+    (uiop:define-package
+      :holai.metis.metis_debug
       (:use :cl)
-      (:shadow hide_types print_varandtype show_types)
+      (:shadow
+        ARGS
+        ARG~51230
+        ARG~51238
+        EXCEPTION~51240
+        FMT
+        HIDE_TYPES%
+        HOP
+        S
+        SHOW_TYPES%
+        TM
+        TY
+        hide_types
+        print_varandtype
+        show_types)
       (:export hide_types print_varandtype show_types))))
 
 (cl:eval-when
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.metis.preterm)
-    (defpackage :holai.metis.preterm
+    (uiop:define-package
+      :holai.metis.preterm
       (:use :cl)
       (:shadow
+        ACC
+        ARG~51263
+        ARG~51279
+        ARG~51295
+        ARG~51311
+        ARG~51363
+        ARG~51381
+        ARG~51423
+        H
+        L
+        PS
+        PT
+        PTM
+        PTY
+        R%
+        S
+        T%
+        X
         env_of_preterm
         env_of_th
         env_of_ths
@@ -5026,9 +8570,33 @@
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.metis.metis_mapping)
-    (defpackage :holai.metis.metis_mapping
+    (uiop:define-package
+      :holai.metis.metis_mapping
       (:use :cl)
       (:shadow
+        ARGS
+        ARG~51507
+        ARG~51537
+        ARG~51549
+        ARG~51574
+        ARG~51592
+        ARG~51617
+        ENV
+        F
+        FAT
+        FOL_OF_CONST%
+        HOL_OF_CONST%
+        P%
+        PARGS
+        PAT
+        PF
+        POL
+        PP
+        RESET_CONSTS%
+        S
+        T%
+        X
+        XS
         fol_of_const
         hol_of_atom
         hol_of_clause
@@ -5069,19 +8637,61 @@
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.metis.metis_path)
-    (defpackage :holai.metis.metis_path
+    (uiop:define-package
+      :holai.metis.metis_path
       (:use :cl)
-      (:shadow hol_of_atom_path hol_of_literal_path hol_of_term_path)
+      (:shadow
+        ARGS
+        ARG~51737
+        ARG~51751
+        ARITY
+        ATOM%
+        F
+        I%
+        IS
+        P%
+        PATH
+        PATH%
+        POL
+        S
+        TM
+        TM%
+        hol_of_atom_path
+        hol_of_literal_path
+        hol_of_term_path)
       (:export hol_of_atom_path hol_of_literal_path hol_of_term_path))))
 
 (cl:eval-when
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.metis.metis_unify)
-    (defpackage :holai.metis.metis_unify
+    (uiop:define-package
+      :holai.metis.metis_unify
       (:use :cl)
       (:shadow
+        ARGS
+        ARG~51925
+        ARG~51973
+        ATOM%
+        EXCEPTION~51909
+        EXCEPTION~51939
+        EXCEPTION~51980
+        F
+        FAT
+        HARGS
+        HF
+        HL
+        HR
+        HTM
+        HTM%
+        M
+        P%
+        POL
+        TM
+        TM%
         Unify
+        V
+        VARS
         make-Unify
         unify_fo_ho_atom
         unify_fo_ho_literal
@@ -5099,18 +8709,144 @@
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.metis.metis_rules)
-    (defpackage :holai.metis.metis_rules
+    (uiop:define-package
+      :holai.metis.metis_rules
       (:use :cl)
-      (:shadow DISCH_DISJ DISCH_DISJS FRONT RESOLVE RESOLVE_N)
+      (:shadow
+        ARG~52075
+        ATOM%
+        CONC
+        CONC%
+        DISCH_DISJ
+        DISCH_DISJS
+        DISJ%
+        DISJ%%
+        EQ
+        EXCEPTION~52130
+        EXCEPTION~52203
+        FRONT
+        IMPL
+        IMPL_NOT
+        IMPL_NOT_L
+        IMPL_NOT_R
+        L
+        LIT
+        R%
+        R1
+        R2
+        RES
+        RESOLVE
+        RESOLVE_1
+        RESOLVE_2L
+        RESOLVE_2R
+        RESOLVE_3
+        RESOLVE_N
+        REST
+        TH
+        TH1
+        TH1%
+        TH2
+        TH2%
+        THM
+        TM
+        TM%
+        TMS)
       (:export DISCH_DISJ DISCH_DISJS FRONT RESOLVE RESOLVE_N))))
 
 (cl:eval-when
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.metis.metis_reconstruct2)
-    (defpackage :holai.metis.metis_reconstruct2
+    (uiop:define-package
+      :holai.metis.metis_reconstruct2
       (:use :cl)
       (:shadow
+        ARG~52241
+        ARG~52286
+        ARG~52354
+        ARG~52375
+        ARG~52394
+        ARG~52419
+        ARG~52442
+        ARG~52517
+        ARG~52543
+        ARG~52607
+        ARG~52633
+        ARG~52665
+        ARG~52735
+        ATOM%
+        AX
+        AXIOMS%
+        CANDS
+        CLAUSE
+        CLAUSEL
+        CONV
+        DISJS
+        ENV
+        ENV%
+        EXCEPTION~52230
+        EXCEPTION~52337
+        EXCEPTION~53033
+        F
+        FLIT
+        FPATH
+        FS
+        FSUB
+        FSUBL
+        FT
+        FTH
+        FTH1
+        FTH2
+        H
+        HATOM
+        HEQ
+        HLIT
+        HLIT%
+        HLIT%%
+        HPATH
+        HS
+        HS%
+        HSUB
+        HT
+        HT%
+        HTH
+        HTH%
+        HTH%%
+        IT
+        M
+        M%
+        MAXS
+        MS
+        PTY
+        S
+        SUB
+        SUB%
+        T%
+        T1
+        T1%
+        T2
+        T2%
+        TERM
+        TH1
+        TH2
+        TM
+        TM1
+        TM2
+        TMINST
+        TMINSTS
+        TMVARS
+        TY
+        TYINST
+        TYINSTS
+        TYINSTS%
+        TYVARS%
+        V
+        V%
+        VARS
+        X
+        XS
+        Y
+        YS
         hol_of_thm
         match_elems
         match_fo_ho_clause
@@ -5133,9 +8869,29 @@
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.metis.metis_generate)
-    (defpackage :holai.metis.metis_generate
+    (uiop:define-package
+      :holai.metis.metis_generate
       (:use :cl)
       (:shadow
+        ARGS
+        CONSTS
+        ENV
+        EXCEPTION~53165
+        EXCEPTION~53234
+        F
+        FF
+        FLITS
+        HLITS
+        L
+        L%
+        LCONSTS
+        POL
+        R%
+        R%%
+        SET
+        TH
+        TM
+        TM%
         metis_name
         metis_of_atom
         metis_of_clause
@@ -5154,15 +8910,39 @@
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.metis.metis)
-    (defpackage :holai.metis.metis
+    (uiop:define-package
+      :holai.metis.metis
       (:use :cl)
       (:shadow
+        ALLHYPS
+        ARG~53322
+        ARG~53413
+        ARG~53480
+        ASL
+        E%
+        EXCEPTION~53422
+        F
         FOL_PREPARE_TAC
+        G%
         GEN_METIS_TAC
+        H
         PRINT_ID_TAC
         PRINT_TAC
+        PROOF
         PURE_METIS_TAC
+        RES
+        RESET
+        RULES
+        S
         SIMPLE_METIS_REFUTE
+        T%
+        TH
+        THS
+        THS%
+        TIV
+        V
+        W%
+        Y
         reset
         split_limit
         without_warnings)
@@ -5176,25 +8956,69 @@
         split_limit
         without_warnings))))
 
-(cl:eval-when
-  (:compile-toplevel :load-toplevel :execute)
-  (cl:unless
-    (cl:find-package :holai.metis)
-    (defpackage :holai.metis
-      (:use :cl)
-      (:shadow ASM_METIS_TAC METIS METIS_TAC metisverb)
-      (:export ASM_METIS_TAC METIS METIS_TAC metisverb))))
-
-(defpackage :holai.metis.metis_prover.word
+(uiop:define-package
+  :holai.metis.metis_prover.word
   (:use :cl)
-  (:shadow andb compare fromInt minus notb orb shiftLeft shiftRight toInt xorb)
+  (:mix :cl :holai.runtime)
+  (:shadow
+    ARG~13
+    ARG~25
+    ARG~37
+    ARG~49
+    ARG~61
+    ARG~73
+    X
+    Y
+    andb
+    compare
+    fromInt
+    minus
+    notb
+    orb
+    shiftLeft
+    shiftRight
+    toInt
+    xorb)
   (:shadowing-import-from :cl logxor lognot logior logand -)
   (:shadowing-import-from :holai.runtime tuple match int-lsr int-lsl defunc)
   (:export andb compare fromInt minus notb orb shiftLeft shiftRight toInt xorb))
 
-(defpackage :holai.metis.metis_prover.mlist
+(uiop:define-package
+  :holai.metis.metis_prover.mlist
   (:use :cl)
+  (:mix :cl :holai.lib :holai.runtime)
   (:shadow
+    A%
+    ACC
+    ARG~128
+    ARG~136
+    ARG~175
+    ARG~210
+    ARG~251
+    ARG~286
+    ARG~300
+    ARG~303
+    B%
+    CMP
+    EXCEPTION~164
+    F
+    GO
+    H
+    I%
+    L
+    L%
+    M
+    N
+    NCMP
+    NXS
+    NYS
+    P%
+    REVDIV
+    S
+    T%
+    X
+    XS
+    Y
     enumerate
     find
     first
@@ -5234,16 +9058,56 @@
     ==)
   (:export enumerate find first foldl foldr null revDivide sortMap tabulate updateNth))
 
-(defpackage :holai.metis.metis_prover.option
+(uiop:define-package
+  :holai.metis.metis_prover.option
   (:use :cl)
-  (:shadow bind is_some value)
+  (:mix :cl :holai.runtime)
+  (:shadow ARG~336 DEFAULT F OPT X bind is_some value)
   (:shadowing-import-from :holai.runtime Some None match make-None defunc)
   (:export bind is_some value))
 
-(defpackage :holai.metis.metis_prover.useful
+(uiop:define-package
+  :holai.metis.metis_prover.useful
   (:use :cl)
+  (:mix :cl :holai.lib :holai.runtime)
   (:shadow
+    A%
+    ARG~441
+    ARG~445
+    ARG~589
+    ARG~606
+    ARG~637
+    ARG~654
+    ARG~672
+    B%
     Bug
+    C%
+    CMP
+    EXCEPTION~388
+    F
+    K%
+    LEN
+    LEX%
+    M
+    N
+    P%
+    POS
+    PRED
+    S
+    STRIP
+    X
+    X1
+    X2
+    XCMP
+    XS
+    XS%
+    Y
+    Y1
+    Y2
+    YCMP
+    YS
+    YS%
+    Z
     boolCompare
     critical
     divides
@@ -5316,14 +9180,151 @@
     stripSuffix
     total))
 
-(defpackage :holai.metis.metis_prover.pmap
+(uiop:define-package
+  :holai.metis.metis_prover.pmap
   (:use :cl)
+  (:mix :cl :holai.lib :holai.runtime)
   (:shadow
+    ACC
+    ARG~1105
+    ARG~1165
+    ARG~1567
+    ARG~2912
+    ARG~2929
+    ARG~2943
+    ARG~2980
+    ARG~2990
+    ARG~3020
+    ARG~3041
+    ARG~3057
+    ARG~3088
+    ARG~3110
+    ARG~3152
+    ARG~3157
+    ARG~3161
+    ARG~3189
+    ARG~3193
+    ARG~3223
+    ARG~3227
+    ARG~3248
+    ARG~3258
+    ARG~3269
+    ARG~3287
+    ARG~3305
+    ARG~3319
+    ARG~3379
+    ARG~3454
+    ARG~3552
+    ARG~3556
+    ARG~3576
+    ARG~3606
+    ARG~3610
+    ARG~3630
+    ARG~3660
+    ARG~3664
+    ARG~3705
+    ARG~3709
+    ARG~3733
+    ARG~3751
+    ARG~3769
+    ARG~729
+    ARG~735
+    ARG~870
+    B%
+    BOTH
+    C%
+    C%%
+    COMPAREKEY
+    COMPAREVALUE
+    DKEY
+    EQUALKEY%
+    EQUALVALUE
     Empty
+    F
+    F1
+    F2
+    FB
+    FIRST%
+    I1
+    I2
+    INODE
+    INS
+    INSERT%%
+    IO
+    IO1
+    IO1%
+    IO2
+    IO2%
+    ITER
+    K%
+    K1
+    K2
+    KEY
+    KEY1
+    KEY2
+    KEY_VALUE
+    KV
+    KVO
+    L
+    LEFT
+    LEFT%
+    LEFTTREE
+    LEFT_NODE
+    LEFT_RIGHT
+    LEFT_RIGHT%
     Left_to_right_iterator
+    M
+    M1
+    M2
+    MS
+    MS%
     Map%
+    N
+    N%
+    N1
+    N2
+    NODE%
+    NODE%%
+    NODE1
+    NODE2
+    NODES
+    NODES%
+    NP
+    P%
+    P1
+    P2
+    PATH
+    PKEY
+    PNODE
+    PRED
+    PRIORITY
+    R%
+    REST
+    RIGHT
+    RIGHT%
+    RIGHTTREE
     Right_to_left_iterator
+    S
+    SECOND
+    SIZE%
+    SIZE%%
+    SNODE
+    STEP
+    T1
+    T2
+    TREE%
+    TREE%%
+    TREE1
+    TREE2
     Tree
+    V
+    V1
+    V2
+    VALUE
+    VALUE%
+    VO
+    WENTLEFT
+    X
     addLeftToRightIterator
     addRightToLeftIterator
     addSidePath
@@ -5638,10 +9639,103 @@
     updateTreePath
     values))
 
-(defpackage :holai.metis.metis_prover.pset
+(uiop:define-package
+  :holai.metis.metis_prover.pset
   (:use :cl)
+  (:mix :cl :holai.runtime)
   (:shadow
+    ACC
+    ARG~3816
+    ARG~3826
+    ARG~3834
+    ARG~3848
+    ARG~3856
+    ARG~3869
+    ARG~3894
+    ARG~3903
+    ARG~3912
+    ARG~3934
+    ARG~3944
+    ARG~3959
+    ARG~3976
+    ARG~3991
+    ARG~4008
+    ARG~4026
+    ARG~4041
+    ARG~4056
+    ARG~4077
+    ARG~4100
+    ARG~4121
+    ARG~4124
+    ARG~4148
+    ARG~4151
+    ARG~4175
+    ARG~4178
+    ARG~4191
+    ARG~4194
+    ARG~4209
+    ARG~4217
+    ARG~4232
+    ARG~4240
+    ARG~4265
+    ARG~4273
+    ARG~4287
+    ARG~4300
+    ARG~4315
+    ARG~4328
+    ARG~4343
+    ARG~4351
+    ARG~4375
+    ARG~4383
+    ARG~4407
+    ARG~4415
+    ARG~4429
+    ARG~4437
+    ARG~4451
+    ARG~4459
+    ARG~4473
+    ARG~4481
+    ARG~4495
+    ARG~4503
+    ARG~4515
+    ARG~4517
+    ARG~4524
+    ARG~4526
+    ARG~4533
+    ARG~4536
+    ARG~4549
+    ARG~4552
+    ARG~4565
+    ARG~4568
+    ARG~4580
+    ARG~4583
+    ARG~4597
+    ARG~4614
+    ARG~4645
+    ARG~4654
+    CMP
+    ELT
+    ELT%
+    ELTS
+    F
+    INC
+    ITER
+    L
+    M
+    M%
+    M1
+    M2
+    MF
+    MP%
+    MPRED
+    MS
+    N
+    P%
+    PRED
+    SET%
+    SETS
     Set
+    X
     add
     addList
     advanceIterator
@@ -5788,21 +9882,101 @@
     union
     unionList))
 
-(defpackage :holai.metis.metis_prover.mmap (:use :cl) (:export))
+(uiop:define-package :holai.metis.metis_prover.mmap (:use :cl) (:export))
 
-(defpackage :holai.metis.metis_prover.intmap.ordered
+(uiop:define-package
+  :holai.metis.metis_prover.intmap.ordered
   (:use :cl)
+  (:mix :cl :holai.runtime)
   (:shadow compare)
   (:shadowing-import-from :holai.runtime function-value)
   (:export compare))
 
-(defpackage :holai.metis.metis_prover.intmap.include~4681.ma
+(uiop:define-package
+  :holai.metis.metis_prover.intmap.include~4681.ma
   (:use :cl)
+  (:mix :cl :holai.runtime)
   (:shadow
+    ACCU
+    ARG~4686
+    ARG~4902
+    ARG~4912
+    ARG~4994
+    ARG~5029
+    ARG~5059
+    ARG~5080
+    ARG~5143
+    ARG~5208
+    ARG~5274
+    ARG~5302
+    ARG~5329
+    ARG~5492
+    ARG~5790
+    ARG~5845
+    ARG~5864
+    C
+    D
+    D%
+    D1
+    D1%
+    D2
+    D2%
+    DATA
     Empty%
     End
+    F
+    H
+    H1
+    H2
+    HL
+    HR
+    K
+    L
+    L%
+    L1
+    L1%
+    L2
+    L2%
+    LD
+    LH
+    LL
+    LR
+    LRD
+    LRL
+    LRR
+    LRV
+    LV
+    M
     More
     Node
+    P
+    PRES
+    PVD
+    R
+    R%
+    R1
+    R1%
+    R2
+    R2%
+    RD
+    RH
+    RL
+    RLD
+    RLL
+    RLR
+    RLV
+    RR
+    RV
+    S
+    S1
+    S2
+    T%
+    T1
+    T2
+    V
+    V1
+    V2
+    X
     add
     add_max_binding
     add_min_binding
@@ -5873,9 +10047,33 @@
     singleton
     union))
 
-(defpackage :holai.metis.metis_prover.intmap.include~4681
+(uiop:define-package
+  :holai.metis.metis_prover.intmap.include~4681
   (:use :cl)
+  (:mix :cl :holai.runtime)
   (:shadow
+    ACC
+    ARG~5894
+    ARG~5903
+    ARG~5943
+    ARG~5960
+    ARG~5980
+    ARG~6021
+    B%
+    EXCEPTION~5920
+    EXCEPTION~5932
+    F
+    F%
+    K%
+    L
+    M
+    M1
+    M2
+    S
+    TM
+    V
+    X
+    Y
     delete
     exists
     f%
@@ -5944,7 +10142,8 @@
     transform
     union))
 
-(defpackage :holai.metis.metis_prover.intmap
+(uiop:define-package
+  :holai.metis.metis_prover.intmap
   (:use :cl)
   (:shadowing-import-from
     :holai.metis.metis_prover.intmap.include~4681
@@ -5986,19 +10185,99 @@
     transform
     union))
 
-(defpackage :holai.metis.metis_prover.stringmap.ordered
+(uiop:define-package
+  :holai.metis.metis_prover.stringmap.ordered
   (:use :cl)
+  (:mix :cl :holai.runtime)
   (:shadow compare)
   (:shadowing-import-from :holai.runtime function-value)
   (:export compare))
 
-(defpackage :holai.metis.metis_prover.stringmap.include~6119.ma
+(uiop:define-package
+  :holai.metis.metis_prover.stringmap.include~6119.ma
   (:use :cl)
+  (:mix :cl :holai.runtime)
   (:shadow
+    ACCU
+    ARG~6124
+    ARG~6340
+    ARG~6350
+    ARG~6432
+    ARG~6467
+    ARG~6497
+    ARG~6518
+    ARG~6581
+    ARG~6646
+    ARG~6712
+    ARG~6740
+    ARG~6767
+    ARG~6930
+    ARG~7228
+    ARG~7283
+    ARG~7302
+    C
+    D
+    D%
+    D1
+    D1%
+    D2
+    D2%
+    DATA
     Empty%
     End
+    F
+    H
+    H1
+    H2
+    HL
+    HR
+    K
+    L
+    L%
+    L1
+    L1%
+    L2
+    L2%
+    LD
+    LH
+    LL
+    LR
+    LRD
+    LRL
+    LRR
+    LRV
+    LV
+    M
     More
     Node
+    P
+    PRES
+    PVD
+    R
+    R%
+    R1
+    R1%
+    R2
+    R2%
+    RD
+    RH
+    RL
+    RLD
+    RLL
+    RLR
+    RLV
+    RR
+    RV
+    S
+    S1
+    S2
+    T%
+    T1
+    T2
+    V
+    V1
+    V2
+    X
     add
     add_max_binding
     add_min_binding
@@ -6069,9 +10348,33 @@
     singleton
     union))
 
-(defpackage :holai.metis.metis_prover.stringmap.include~6119
+(uiop:define-package
+  :holai.metis.metis_prover.stringmap.include~6119
   (:use :cl)
+  (:mix :cl :holai.runtime)
   (:shadow
+    ACC
+    ARG~7332
+    ARG~7341
+    ARG~7381
+    ARG~7398
+    ARG~7418
+    ARG~7459
+    B%
+    EXCEPTION~7358
+    EXCEPTION~7370
+    F
+    F%
+    K%
+    L
+    M
+    M1
+    M2
+    S
+    TM
+    V
+    X
+    Y
     delete
     exists
     f%
@@ -6140,7 +10443,8 @@
     transform
     union))
 
-(defpackage :holai.metis.metis_prover.stringmap
+(uiop:define-package
+  :holai.metis.metis_prover.stringmap
   (:use :cl)
   (:shadowing-import-from
     :holai.metis.metis_prover.stringmap.include~6119
@@ -6182,23 +10486,90 @@
     transform
     union))
 
-(defpackage :holai.metis.metis_prover.mset (:use :cl) (:export))
+(uiop:define-package :holai.metis.metis_prover.mset (:use :cl) (:export))
 
-(defpackage :holai.metis.metis_prover.intset.ordered
+(uiop:define-package
+  :holai.metis.metis_prover.intset.ordered
   (:use :cl)
+  (:mix :cl :holai.runtime)
   (:shadow compare)
   (:shadowing-import-from :holai.runtime function-value)
   (:export compare))
 
-(defpackage :holai.metis.metis_prover.intset.include~7557.se
+(uiop:define-package
+  :holai.metis.metis_prover.intset.include~7557.se
   (:use :cl)
+  (:mix :cl :holai.runtime)
   (:shadow
+    ACCU
+    ARG~7562
+    ARG~7757
+    ARG~7828
+    ARG~7849
+    ARG~7939
+    ARG~7956
+    ARG~8035
+    ARG~8107
+    ARG~8116
+    ARG~8147
+    ARG~8615
+    ARG~8639
+    ARG~8662
+    ARG~8681
+    C
+    E
+    E1
+    E1%
+    E2
+    E2%
     Empty%
     End
+    F
     Found
+    H
+    H1
+    H2
+    HL
+    HR
+    L
+    L1
+    L1%
+    L2
+    L2%
+    LH
+    LL
+    LR
+    LRL
+    LRR
+    LRV
+    LV
     More
     Node
     NotFound
+    P
+    PRES
+    R
+    R1
+    R1%
+    R2
+    R2%
+    RH
+    RL
+    RLL
+    RLR
+    RLV
+    RR
+    RV
+    S
+    S1
+    S2
+    T%
+    T1
+    T2
+    V
+    V1
+    V2
+    X
     add
     add_max_element
     add_min_element
@@ -6273,9 +10644,25 @@
     subset
     union))
 
-(defpackage :holai.metis.metis_prover.intset.include~7557
+(uiop:define-package
+  :holai.metis.metis_prover.intset.include~7557
   (:use :cl)
+  (:mix :cl :holai.runtime)
   (:shadow
+    A%
+    ACC
+    ARG~8791
+    ARG~8810
+    ARG~8836
+    C%
+    F
+    GO
+    L
+    P%
+    S
+    S%
+    SS
+    X
     add
     all
     compare
@@ -6354,7 +10741,8 @@
     transform
     union))
 
-(defpackage :holai.metis.metis_prover.intset
+(uiop:define-package
+  :holai.metis.metis_prover.intset
   (:use :cl)
   (:shadowing-import-from
     :holai.metis.metis_prover.intset.include~7557
@@ -6410,13 +10798,44 @@
     transform
     union))
 
-(defpackage :holai.metis.metis_prover.heap
+(uiop:define-package
+  :holai.metis.metis_prover.heap
   (:use :cl)
+  (:mix :cl :holai.runtime)
   (:shadow
+    A%
+    A1
+    A2
+    AP
+    ARG~8895
+    ARG~8908
+    ARG~8943
+    ARG~9011
+    ARG~9037
+    ARG~9054
+    ARG~9074
+    ARG~9111
+    ARG~9141
+    B%
+    B1
+    B2
+    CMP
+    D
     Em
     Empty
+    F
+    H
+    H%
+    H1
+    H2
     Heap
+    MRG
+    N
+    R%
+    REST
     Tr
+    X
+    Y
     add
     ap
     app
@@ -6474,18 +10893,97 @@
     toString
     top))
 
-(defpackage :holai.metis.metis_prover.name.ordered
+(uiop:define-package
+  :holai.metis.metis_prover.name.ordered
   (:use :cl)
   (:shadow compare)
   (:export compare))
 
-(defpackage :holai.metis.metis_prover.name.map.ma
+(uiop:define-package
+  :holai.metis.metis_prover.name.map.ma
   (:use :cl)
+  (:mix :cl :holai.runtime)
   (:shadow
+    ACCU
+    ARG~10102
+    ARG~10400
+    ARG~10455
+    ARG~10474
+    ARG~9296
+    ARG~9512
+    ARG~9522
+    ARG~9604
+    ARG~9639
+    ARG~9669
+    ARG~9690
+    ARG~9753
+    ARG~9818
+    ARG~9884
+    ARG~9912
+    ARG~9939
+    C
+    D
+    D%
+    D1
+    D1%
+    D2
+    D2%
+    DATA
     Empty%
     End
+    F
+    H
+    H1
+    H2
+    HL
+    HR
+    K
+    L
+    L%
+    L1
+    L1%
+    L2
+    L2%
+    LD
+    LH
+    LL
+    LR
+    LRD
+    LRL
+    LRR
+    LRV
+    LV
+    M
     More
     Node
+    P
+    PRES
+    PVD
+    R
+    R%
+    R1
+    R1%
+    R2
+    R2%
+    RD
+    RH
+    RL
+    RLD
+    RLL
+    RLR
+    RLV
+    RR
+    RV
+    S
+    S1
+    S2
+    T%
+    T1
+    T2
+    V
+    V1
+    V2
+    X
     add
     add_max_binding
     add_min_binding
@@ -6556,9 +11054,33 @@
     singleton
     union))
 
-(defpackage :holai.metis.metis_prover.name.map
+(uiop:define-package
+  :holai.metis.metis_prover.name.map
   (:use :cl)
+  (:mix :cl :holai.runtime)
   (:shadow
+    ACC
+    ARG~10504
+    ARG~10513
+    ARG~10553
+    ARG~10570
+    ARG~10590
+    ARG~10631
+    B%
+    EXCEPTION~10530
+    EXCEPTION~10542
+    F
+    F%
+    K%
+    L
+    M
+    M1
+    M2
+    S
+    TM
+    V
+    X
+    Y
     delete
     exists
     f%
@@ -6627,15 +11149,80 @@
     transform
     union))
 
-(defpackage :holai.metis.metis_prover.name.set.se
+(uiop:define-package
+  :holai.metis.metis_prover.name.set.se
   (:use :cl)
+  (:mix :cl :holai.runtime)
   (:shadow
+    ACCU
+    ARG~10730
+    ARG~10925
+    ARG~10996
+    ARG~11017
+    ARG~11107
+    ARG~11124
+    ARG~11203
+    ARG~11275
+    ARG~11284
+    ARG~11315
+    ARG~11783
+    ARG~11807
+    ARG~11830
+    ARG~11849
+    C
+    E
+    E1
+    E1%
+    E2
+    E2%
     Empty%
     End
+    F
     Found
+    H
+    H1
+    H2
+    HL
+    HR
+    L
+    L1
+    L1%
+    L2
+    L2%
+    LH
+    LL
+    LR
+    LRL
+    LRR
+    LRV
+    LV
     More
     Node
     NotFound
+    P
+    PRES
+    R
+    R1
+    R1%
+    R2
+    R2%
+    RH
+    RL
+    RLL
+    RLR
+    RLV
+    RR
+    RV
+    S
+    S1
+    S2
+    T%
+    T1
+    T2
+    V
+    V1
+    V2
+    X
     add
     add_max_element
     add_min_element
@@ -6710,9 +11297,25 @@
     subset
     union))
 
-(defpackage :holai.metis.metis_prover.name.set
+(uiop:define-package
+  :holai.metis.metis_prover.name.set
   (:use :cl)
+  (:mix :cl :holai.runtime)
   (:shadow
+    A%
+    ACC
+    ARG~11959
+    ARG~11978
+    ARG~12004
+    C%
+    F
+    GO
+    L
+    P%
+    S
+    S%
+    SS
+    X
     add
     all
     compare
@@ -6791,9 +11394,23 @@
     transform
     union))
 
-(defpackage :holai.metis.metis_prover.name
+(uiop:define-package
+  :holai.metis.metis_prover.name
   (:use :cl)
+  (:mix :cl :holai.runtime)
   (:shadow
+    ARG~9210
+    AVOID
+    C%
+    I%
+    ISDIGITORPRIME
+    N
+    N%
+    N1
+    N2
+    N_I
+    S
+    VARIANT%
     compare
     equal
     fromString
@@ -6837,18 +11454,97 @@
     variantNum
     variantPrime))
 
-(defpackage :holai.metis.metis_prover.name_arity.ordered
+(uiop:define-package
+  :holai.metis.metis_prover.name_arity.ordered
   (:use :cl)
   (:shadow compare)
   (:export compare))
 
-(defpackage :holai.metis.metis_prover.name_arity.map.include~12152.ma
+(uiop:define-package
+  :holai.metis.metis_prover.name_arity.map.include~12152.ma
   (:use :cl)
+  (:mix :cl :holai.runtime)
   (:shadow
+    ACCU
+    ARG~12157
+    ARG~12373
+    ARG~12383
+    ARG~12465
+    ARG~12500
+    ARG~12530
+    ARG~12551
+    ARG~12614
+    ARG~12679
+    ARG~12745
+    ARG~12773
+    ARG~12800
+    ARG~12963
+    ARG~13261
+    ARG~13316
+    ARG~13335
+    C
+    D
+    D%
+    D1
+    D1%
+    D2
+    D2%
+    DATA
     Empty%
     End
+    F
+    H
+    H1
+    H2
+    HL
+    HR
+    K
+    L
+    L%
+    L1
+    L1%
+    L2
+    L2%
+    LD
+    LH
+    LL
+    LR
+    LRD
+    LRL
+    LRR
+    LRV
+    LV
+    M
     More
     Node
+    P
+    PRES
+    PVD
+    R
+    R%
+    R1
+    R1%
+    R2
+    R2%
+    RD
+    RH
+    RL
+    RLD
+    RLL
+    RLR
+    RLV
+    RR
+    RV
+    S
+    S1
+    S2
+    T%
+    T1
+    T2
+    V
+    V1
+    V2
+    X
     add
     add_max_binding
     add_min_binding
@@ -6919,9 +11615,33 @@
     singleton
     union))
 
-(defpackage :holai.metis.metis_prover.name_arity.map.include~12152
+(uiop:define-package
+  :holai.metis.metis_prover.name_arity.map.include~12152
   (:use :cl)
+  (:mix :cl :holai.runtime)
   (:shadow
+    ACC
+    ARG~13365
+    ARG~13374
+    ARG~13414
+    ARG~13431
+    ARG~13451
+    ARG~13492
+    B%
+    EXCEPTION~13391
+    EXCEPTION~13403
+    F
+    F%
+    K%
+    L
+    M
+    M1
+    M2
+    S
+    TM
+    V
+    X
+    Y
     delete
     exists
     f%
@@ -6990,9 +11710,11 @@
     transform
     union))
 
-(defpackage :holai.metis.metis_prover.name_arity.map
+(uiop:define-package
+  :holai.metis.metis_prover.name_arity.map
   (:use :cl)
-  (:shadow compose pk)
+  (:mix :cl :holai.runtime)
+  (:shadow A% ARG~13591 M1 M2 N PK compose pk)
   (:shadowing-import-from
     :holai.metis.metis_prover.name_arity.map.include~12152
     union
@@ -7035,15 +11757,80 @@
     transform
     union))
 
-(defpackage :holai.metis.metis_prover.name_arity.set.include~13610.se
+(uiop:define-package
+  :holai.metis.metis_prover.name_arity.set.include~13610.se
   (:use :cl)
+  (:mix :cl :holai.runtime)
   (:shadow
+    ACCU
+    ARG~13615
+    ARG~13810
+    ARG~13881
+    ARG~13902
+    ARG~13992
+    ARG~14009
+    ARG~14088
+    ARG~14160
+    ARG~14169
+    ARG~14200
+    ARG~14668
+    ARG~14692
+    ARG~14715
+    ARG~14734
+    C
+    E
+    E1
+    E1%
+    E2
+    E2%
     Empty%
     End
+    F
     Found
+    H
+    H1
+    H2
+    HL
+    HR
+    L
+    L1
+    L1%
+    L2
+    L2%
+    LH
+    LL
+    LR
+    LRL
+    LRR
+    LRV
+    LV
     More
     Node
     NotFound
+    P
+    PRES
+    R
+    R1
+    R1%
+    R2
+    R2%
+    RH
+    RL
+    RLL
+    RLR
+    RLV
+    RR
+    RV
+    S
+    S1
+    S2
+    T%
+    T1
+    T2
+    V
+    V1
+    V2
+    X
     add
     add_max_element
     add_min_element
@@ -7118,9 +11905,25 @@
     subset
     union))
 
-(defpackage :holai.metis.metis_prover.name_arity.set.include~13610
+(uiop:define-package
+  :holai.metis.metis_prover.name_arity.set.include~13610
   (:use :cl)
+  (:mix :cl :holai.runtime)
   (:shadow
+    A%
+    ACC
+    ARG~14844
+    ARG~14863
+    ARG~14889
+    C%
+    F
+    GO
+    L
+    P%
+    S
+    S%
+    SS
+    X
     add
     all
     compare
@@ -7199,7 +12002,8 @@
     transform
     union))
 
-(defpackage :holai.metis.metis_prover.name_arity.set
+(uiop:define-package
+  :holai.metis.metis_prover.name_arity.set
   (:use :cl)
   (:shadow allNullary)
   (:shadowing-import-from :holai.metis.metis_prover.name_arity nullary)
@@ -7258,25 +12062,129 @@
     transform
     union))
 
-(defpackage :holai.metis.metis_prover.name_arity
+(uiop:define-package
+  :holai.metis.metis_prover.name_arity
   (:use :cl)
-  (:shadow arity binary compare equal name nary nullary ternary unary)
+  (:mix :cl :holai.runtime)
+  (:shadow
+    ARG~12056
+    ARG~12065
+    ARG~12098
+    ARG~12102
+    ARG~12127
+    ARG~12131
+    C%
+    I%
+    I1
+    I2
+    N
+    N1
+    N2
+    N_I
+    arity
+    binary
+    compare
+    equal
+    name
+    nary
+    nullary
+    ternary
+    unary)
   (:shadowing-import-from :holai.metis.metis_prover.useful intCompare)
   (:shadowing-import-from :holai.runtime tuple match defunc = <>)
   (:export arity binary compare equal name nary nullary ternary unary))
 
-(defpackage :holai.metis.metis_prover.term.ordered
+(uiop:define-package
+  :holai.metis.metis_prover.term.ordered
   (:use :cl)
   (:shadow compare)
   (:export compare))
 
-(defpackage :holai.metis.metis_prover.term.map
+(uiop:define-package
+  :holai.metis.metis_prover.term.map
   (:use :cl)
+  (:mix :cl :holai.runtime)
   (:shadow
+    ACCU
+    ARG~16145
+    ARG~16361
+    ARG~16371
+    ARG~16453
+    ARG~16488
+    ARG~16518
+    ARG~16539
+    ARG~16602
+    ARG~16667
+    ARG~16733
+    ARG~16761
+    ARG~16788
+    ARG~16951
+    ARG~17249
+    ARG~17304
+    ARG~17323
+    C
+    D
+    D%
+    D1
+    D1%
+    D2
+    D2%
+    DATA
     Empty%
     End
+    F
+    H
+    H1
+    H2
+    HL
+    HR
+    K
+    L
+    L%
+    L1
+    L1%
+    L2
+    L2%
+    LD
+    LH
+    LL
+    LR
+    LRD
+    LRL
+    LRR
+    LRV
+    LV
+    M
     More
     Node
+    P
+    PRES
+    PVD
+    R
+    R%
+    R1
+    R1%
+    R2
+    R2%
+    RD
+    RH
+    RL
+    RLD
+    RLL
+    RLR
+    RLV
+    RR
+    RV
+    S
+    S1
+    S2
+    T%
+    T1
+    T2
+    V
+    V1
+    V2
+    X
     add
     add_max_binding
     add_min_binding
@@ -7347,15 +12255,80 @@
     singleton
     union))
 
-(defpackage :holai.metis.metis_prover.term.set
+(uiop:define-package
+  :holai.metis.metis_prover.term.set
   (:use :cl)
+  (:mix :cl :holai.runtime)
   (:shadow
+    ACCU
+    ARG~17356
+    ARG~17551
+    ARG~17622
+    ARG~17643
+    ARG~17733
+    ARG~17750
+    ARG~17829
+    ARG~17901
+    ARG~17910
+    ARG~17941
+    ARG~18409
+    ARG~18433
+    ARG~18456
+    ARG~18475
+    C
+    E
+    E1
+    E1%
+    E2
+    E2%
     Empty%
     End
+    F
     Found
+    H
+    H1
+    H2
+    HL
+    HR
+    L
+    L1
+    L1%
+    L2
+    L2%
+    LH
+    LL
+    LR
+    LRL
+    LRR
+    LRV
+    LV
     More
     Node
     NotFound
+    P
+    PRES
+    R
+    R1
+    R1%
+    R2
+    R2%
+    RH
+    RL
+    RLL
+    RLR
+    RLV
+    RR
+    RV
+    S
+    S1
+    S2
+    T%
+    T1
+    T2
+    V
+    V1
+    V2
+    X
     add
     add_max_element
     add_min_element
@@ -7430,11 +12403,94 @@
     subset
     union))
 
-(defpackage :holai.metis.metis_prover.term
+(uiop:define-package
+  :holai.metis.metis_prover.term
   (:use :cl)
+  (:mix :cl :holai.lib :holai.runtime)
   (:shadow
+    A%
+    A1
+    A2
+    ACC
+    ACC%
+    ARG
+    ARG%
+    ARGS
+    ARG~14948
+    ARG~14965
+    ARG~14977
+    ARG~15022
+    ARG~15064
+    ARG~15107
+    ARG~15125
+    ARG~15143
+    ARG~15185
+    ARG~15226
+    ARG~15356
+    ARG~15407
+    ARG~15427
+    ARG~15481
+    ARG~15549
+    ARG~15571
+    ARG~15615
+    ARG~15655
+    ARG~15695
+    ARG~15741
+    ARG~15802
+    ARG~15861
+    ARG~15925
+    ARG~15985
+    ARG~16007
+    ARG~16060
+    ARG~16108
+    ATM
+    AV
+    B%
+    C%
+    C%%
+    CMP
+    F
+    F1
+    F2
+    FREE
+    FS
+    FTM
+    F_A
     Fn
+    H
+    I%
+    L
+    LETC
+    N
+    PATH
+    PRED
+    RES
+    REST
+    REST%
+    S
+    SEARCH
+    STRIP
+    SUBTMS
+    SZ
+    T%
+    TM
+    TM%
+    TM1
+    TM1%
+    TM2
+    TM2%
+    TMS
+    TMS1
+    TMS2
+    TY
+    V
+    V%
+    V1
+    V2
+    VS
     Var
+    W%
+    X
     appName
     avoid
     cmp
@@ -7593,10 +12649,82 @@
     variantNum
     variantPrime))
 
-(defpackage :holai.metis.metis_prover.substitute
+(uiop:define-package
+  :holai.metis.metis_prover.substitute
   (:use :cl)
+  (:mix :cl :holai.lib :holai.runtime)
   (:shadow
+    ADD
+    ARGS
+    ARGS%
+    ARGS1
+    ARGS2
+    ARG~18511
+    ARG~18520
+    ARG~18529
+    ARG~18540
+    ARG~18558
+    ARG~18575
+    ARG~18588
+    ARG~18599
+    ARG~18604
+    ARG~18638
+    ARG~18695
+    ARG~18701
+    ARG~18731
+    ARG~18737
+    ARG~18768
+    ARG~18774
+    ARG~18805
+    ARG~18809
+    ARG~18814
+    ARG~18857
+    ARG~18861
+    ARG~18907
+    ARG~18928
+    ARG~18946
+    ARG~18965
+    ARG~18987
+    ARG~19010
+    ARG~19102
+    ARG~19132
+    B%
+    COMPATIBLE
+    F
+    F1
+    F2
+    INV
+    ISNOTID
+    ISRESTRICTEDVAR
+    L
+    M
+    M%
+    M1
+    M2
+    MATCHLIST
+    REST
+    S
+    S1
+    S2
+    SOLVE
+    SOLVE%
+    SUB
+    SUB%
+    SUB1
+    SUB2
     Subst%
+    T%
+    TM
+    TM%
+    TM1
+    TM1%
+    TM2
+    TM2%
+    TMSUB
+    V
+    VARSET
+    V_TM
+    W%
     add
     compatible
     compose
@@ -7692,18 +12820,97 @@
     unify
     union))
 
-(defpackage :holai.metis.metis_prover.atom.ordered
+(uiop:define-package
+  :holai.metis.metis_prover.atom.ordered
   (:use :cl)
   (:shadow compare)
   (:export compare))
 
-(defpackage :holai.metis.metis_prover.atom.map.ma
+(uiop:define-package
+  :holai.metis.metis_prover.atom.map.ma
   (:use :cl)
+  (:mix :cl :holai.runtime)
   (:shadow
+    ACCU
+    ARG~19939
+    ARG~20155
+    ARG~20165
+    ARG~20247
+    ARG~20282
+    ARG~20312
+    ARG~20333
+    ARG~20396
+    ARG~20461
+    ARG~20527
+    ARG~20555
+    ARG~20582
+    ARG~20745
+    ARG~21043
+    ARG~21098
+    ARG~21117
+    C
+    D
+    D%
+    D1
+    D1%
+    D2
+    D2%
+    DATA
     Empty%
     End
+    F
+    H
+    H1
+    H2
+    HL
+    HR
+    K
+    L
+    L%
+    L1
+    L1%
+    L2
+    L2%
+    LD
+    LH
+    LL
+    LR
+    LRD
+    LRL
+    LRR
+    LRV
+    LV
+    M
     More
     Node
+    P
+    PRES
+    PVD
+    R
+    R%
+    R1
+    R1%
+    R2
+    R2%
+    RD
+    RH
+    RL
+    RLD
+    RLL
+    RLR
+    RLV
+    RR
+    RV
+    S
+    S1
+    S2
+    T%
+    T1
+    T2
+    V
+    V1
+    V2
+    X
     add
     add_max_binding
     add_min_binding
@@ -7774,9 +12981,33 @@
     singleton
     union))
 
-(defpackage :holai.metis.metis_prover.atom.map
+(uiop:define-package
+  :holai.metis.metis_prover.atom.map
   (:use :cl)
+  (:mix :cl :holai.runtime)
   (:shadow
+    ACC
+    ARG~21147
+    ARG~21156
+    ARG~21196
+    ARG~21213
+    ARG~21233
+    ARG~21274
+    B%
+    EXCEPTION~21173
+    EXCEPTION~21185
+    F
+    F%
+    K%
+    L
+    M
+    M1
+    M2
+    S
+    TM
+    V
+    X
+    Y
     delete
     exists
     f%
@@ -7845,15 +13076,80 @@
     transform
     union))
 
-(defpackage :holai.metis.metis_prover.atom.set.se
+(uiop:define-package
+  :holai.metis.metis_prover.atom.set.se
   (:use :cl)
+  (:mix :cl :holai.runtime)
   (:shadow
+    ACCU
+    ARG~21373
+    ARG~21568
+    ARG~21639
+    ARG~21660
+    ARG~21750
+    ARG~21767
+    ARG~21846
+    ARG~21918
+    ARG~21927
+    ARG~21958
+    ARG~22426
+    ARG~22450
+    ARG~22473
+    ARG~22492
+    C
+    E
+    E1
+    E1%
+    E2
+    E2%
     Empty%
     End
+    F
     Found
+    H
+    H1
+    H2
+    HL
+    HR
+    L
+    L1
+    L1%
+    L2
+    L2%
+    LH
+    LL
+    LR
+    LRL
+    LRR
+    LRV
+    LV
     More
     Node
     NotFound
+    P
+    PRES
+    R
+    R1
+    R1%
+    R2
+    R2%
+    RH
+    RL
+    RLL
+    RLR
+    RLV
+    RR
+    RV
+    S
+    S1
+    S2
+    T%
+    T1
+    T2
+    V
+    V1
+    V2
+    X
     add
     add_max_element
     add_min_element
@@ -7928,9 +13224,25 @@
     subset
     union))
 
-(defpackage :holai.metis.metis_prover.atom.set
+(uiop:define-package
+  :holai.metis.metis_prover.atom.set
   (:use :cl)
+  (:mix :cl :holai.runtime)
   (:shadow
+    A%
+    ACC
+    ARG~22602
+    ARG~22621
+    ARG~22647
+    C%
+    F
+    GO
+    L
+    P%
+    S
+    S%
+    SS
+    X
     add
     all
     compare
@@ -8009,9 +13321,85 @@
     transform
     union))
 
-(defpackage :holai.metis.metis_prover.atom
+(uiop:define-package
+  :holai.metis.metis_prover.atom
   (:use :cl)
+  (:mix :cl :holai.lib :holai.runtime)
   (:shadow
+    A%
+    ACC
+    ACC%
+    ADDARG
+    ADDTM
+    ARG
+    ARGS
+    ARG~19237
+    ARG~19246
+    ARG~19270
+    ARG~19292
+    ARG~19314
+    ARG~19331
+    ARG~19364
+    ARG~19382
+    ARG~19386
+    ARG~19422
+    ARG~19462
+    ARG~19466
+    ARG~19471
+    ARG~19505
+    ARG~19510
+    ARG~19566
+    ARG~19586
+    ARG~19610
+    ARG~19632
+    ARG~19659
+    ARG~19663
+    ARG~19668
+    ARG~19712
+    ARG~19716
+    ARG~19721
+    ARG~19861
+    ARG~19864
+    ARG~19884
+    ARG~19888
+    ARG~19894
+    ATM
+    ATM1
+    ATM2
+    B%
+    C%
+    F
+    H
+    I%
+    L
+    MATCHARG
+    N
+    P%
+    P1
+    P2
+    PATH
+    PRED
+    R%
+    REL
+    RES
+    S
+    SUB
+    SUB%
+    SUBTERM%
+    T%
+    TM
+    TM%
+    TM1
+    TM2
+    TMS
+    TMS%
+    TMS1
+    TMS2
+    UNIFYARG
+    V
+    X
+    Y
+    Z
     addArg
     addTm
     arguments
@@ -8122,18 +13510,97 @@
     typedSymbols
     unify))
 
-(defpackage :holai.metis.metis_prover.formula.ordered
+(uiop:define-package
+  :holai.metis.metis_prover.formula.ordered
   (:use :cl)
   (:shadow compare)
   (:export compare))
 
-(defpackage :holai.metis.metis_prover.formula.map.ma
+(uiop:define-package
+  :holai.metis.metis_prover.formula.map.ma
   (:use :cl)
+  (:mix :cl :holai.runtime)
   (:shadow
+    ACCU
+    ARG~25472
+    ARG~25688
+    ARG~25698
+    ARG~25780
+    ARG~25815
+    ARG~25845
+    ARG~25866
+    ARG~25929
+    ARG~25994
+    ARG~26060
+    ARG~26088
+    ARG~26115
+    ARG~26278
+    ARG~26576
+    ARG~26631
+    ARG~26650
+    C
+    D
+    D%
+    D1
+    D1%
+    D2
+    D2%
+    DATA
     Empty%
     End
+    F
+    H
+    H1
+    H2
+    HL
+    HR
+    K
+    L
+    L%
+    L1
+    L1%
+    L2
+    L2%
+    LD
+    LH
+    LL
+    LR
+    LRD
+    LRL
+    LRR
+    LRV
+    LV
+    M
     More
     Node
+    P
+    PRES
+    PVD
+    R
+    R%
+    R1
+    R1%
+    R2
+    R2%
+    RD
+    RH
+    RL
+    RLD
+    RLL
+    RLR
+    RLV
+    RR
+    RV
+    S
+    S1
+    S2
+    T%
+    T1
+    T2
+    V
+    V1
+    V2
+    X
     add
     add_max_binding
     add_min_binding
@@ -8204,9 +13671,33 @@
     singleton
     union))
 
-(defpackage :holai.metis.metis_prover.formula.map
+(uiop:define-package
+  :holai.metis.metis_prover.formula.map
   (:use :cl)
+  (:mix :cl :holai.runtime)
   (:shadow
+    ACC
+    ARG~26680
+    ARG~26689
+    ARG~26729
+    ARG~26746
+    ARG~26766
+    ARG~26807
+    B%
+    EXCEPTION~26706
+    EXCEPTION~26718
+    F
+    F%
+    K%
+    L
+    M
+    M1
+    M2
+    S
+    TM
+    V
+    X
+    Y
     delete
     exists
     f%
@@ -8275,15 +13766,80 @@
     transform
     union))
 
-(defpackage :holai.metis.metis_prover.formula.set.se
+(uiop:define-package
+  :holai.metis.metis_prover.formula.set.se
   (:use :cl)
+  (:mix :cl :holai.runtime)
   (:shadow
+    ACCU
+    ARG~26906
+    ARG~27101
+    ARG~27172
+    ARG~27193
+    ARG~27283
+    ARG~27300
+    ARG~27379
+    ARG~27451
+    ARG~27460
+    ARG~27491
+    ARG~27959
+    ARG~27983
+    ARG~28006
+    ARG~28025
+    C
+    E
+    E1
+    E1%
+    E2
+    E2%
     Empty%
     End
+    F
     Found
+    H
+    H1
+    H2
+    HL
+    HR
+    L
+    L1
+    L1%
+    L2
+    L2%
+    LH
+    LL
+    LR
+    LRL
+    LRR
+    LRV
+    LV
     More
     Node
     NotFound
+    P
+    PRES
+    R
+    R1
+    R1%
+    R2
+    R2%
+    RH
+    RL
+    RLL
+    RLR
+    RLV
+    RR
+    RV
+    S
+    S1
+    S2
+    T%
+    T1
+    T2
+    V
+    V1
+    V2
+    X
     add
     add_max_element
     add_min_element
@@ -8358,9 +13914,25 @@
     subset
     union))
 
-(defpackage :holai.metis.metis_prover.formula.set
+(uiop:define-package
+  :holai.metis.metis_prover.formula.set
   (:use :cl)
+  (:mix :cl :holai.runtime)
   (:shadow
+    A%
+    ACC
+    ARG~28135
+    ARG~28154
+    ARG~28180
+    C%
+    F
+    GO
+    L
+    P%
+    S
+    S%
+    SS
+    X
     add
     all
     compare
@@ -8439,19 +14011,124 @@
     transform
     union))
 
-(defpackage :holai.metis.metis_prover.formula
+(uiop:define-package
+  :holai.metis.metis_prover.formula
   (:use :cl)
+  (:mix :cl :holai.lib :holai.runtime)
   (:shadow
+    ACC
+    ARG~22710
+    ARG~22718
+    ARG~22754
+    ARG~22890
+    ARG~23026
+    ARG~23162
+    ARG~23295
+    ARG~23310
+    ARG~23327
+    ARG~23355
+    ARG~23376
+    ARG~23394
+    ARG~23409
+    ARG~23463
+    ARG~23484
+    ARG~23502
+    ARG~23517
+    ARG~23571
+    ARG~23592
+    ARG~23610
+    ARG~23625
+    ARG~23671
+    ARG~23690
+    ARG~23713
+    ARG~23717
+    ARG~23738
+    ARG~23761
+    ARG~23780
+    ARG~23803
+    ARG~23807
+    ARG~23828
+    ARG~23854
+    ARG~24008
+    ARG~24316
+    ARG~24455
+    ARG~24461
+    ARG~24748
+    ARG~24769
+    ARG~24790
+    ARG~24811
+    ARG~24832
+    ARG~24853
+    ARG~24905
+    ARG~25008
+    ARG~25091
+    ASMS
+    ATM
+    ATM1
+    ATM2
+    A_B
     And
     Atom
+    B%
+    BODY%
+    BV
+    C%
+    CMP
+    CONN
+    CS
     Exists
+    F
+    F1
+    F1_F2
+    F2
+    FLAT%
+    FM
+    FM1
+    FM2
+    FMS
+    FMS%
+    FS
+    FUNCS
+    FV
     False_
     Forall
+    GOAL
     Iff
     Imp
+    N
     Not
     Or
+    P%
+    P%%
+    P1
+    P2
+    POL
+    Q
+    Q%
+    Q1
+    Q2
+    QUANT
+    RELS
+    S
+    STRIP
+    SUB
+    SUB%
+    SZ
+    TM
+    TMS
+    TMS%
     True_
+    V
+    V%
+    V1
+    V2
+    VARS
+    VARS%
+    VS
+    VS%
+    W%
+    X
+    Y
     add
     add_asms
     add_var_asms
@@ -8673,18 +14350,97 @@
     truthName
     universalName))
 
-(defpackage :holai.metis.metis_prover.literal.ordered
+(uiop:define-package
+  :holai.metis.metis_prover.literal.ordered
   (:use :cl)
   (:shadow compare)
   (:export compare))
 
-(defpackage :holai.metis.metis_prover.literal.map.ma
+(uiop:define-package
+  :holai.metis.metis_prover.literal.map.ma
   (:use :cl)
+  (:mix :cl :holai.runtime)
   (:shadow
+    ACCU
+    ARG~28742
+    ARG~28958
+    ARG~28968
+    ARG~29050
+    ARG~29085
+    ARG~29115
+    ARG~29136
+    ARG~29199
+    ARG~29264
+    ARG~29330
+    ARG~29358
+    ARG~29385
+    ARG~29548
+    ARG~29846
+    ARG~29901
+    ARG~29920
+    C
+    D
+    D%
+    D1
+    D1%
+    D2
+    D2%
+    DATA
     Empty%
     End
+    F
+    H
+    H1
+    H2
+    HL
+    HR
+    K
+    L
+    L%
+    L1
+    L1%
+    L2
+    L2%
+    LD
+    LH
+    LL
+    LR
+    LRD
+    LRL
+    LRR
+    LRV
+    LV
+    M
     More
     Node
+    P
+    PRES
+    PVD
+    R
+    R%
+    R1
+    R1%
+    R2
+    R2%
+    RD
+    RH
+    RL
+    RLD
+    RLL
+    RLR
+    RLV
+    RR
+    RV
+    S
+    S1
+    S2
+    T%
+    T1
+    T2
+    V
+    V1
+    V2
+    X
     add
     add_max_binding
     add_min_binding
@@ -8755,9 +14511,33 @@
     singleton
     union))
 
-(defpackage :holai.metis.metis_prover.literal.map
+(uiop:define-package
+  :holai.metis.metis_prover.literal.map
   (:use :cl)
+  (:mix :cl :holai.runtime)
   (:shadow
+    ACC
+    ARG~29950
+    ARG~29959
+    ARG~29999
+    ARG~30016
+    ARG~30036
+    ARG~30077
+    B%
+    EXCEPTION~29976
+    EXCEPTION~29988
+    F
+    F%
+    K%
+    L
+    M
+    M1
+    M2
+    S
+    TM
+    V
+    X
+    Y
     delete
     exists
     f%
@@ -8826,15 +14606,80 @@
     transform
     union))
 
-(defpackage :holai.metis.metis_prover.literal.set.include~30172.se
+(uiop:define-package
+  :holai.metis.metis_prover.literal.set.include~30172.se
   (:use :cl)
+  (:mix :cl :holai.runtime)
   (:shadow
+    ACCU
+    ARG~30177
+    ARG~30372
+    ARG~30443
+    ARG~30464
+    ARG~30554
+    ARG~30571
+    ARG~30650
+    ARG~30722
+    ARG~30731
+    ARG~30762
+    ARG~31230
+    ARG~31254
+    ARG~31277
+    ARG~31296
+    C
+    E
+    E1
+    E1%
+    E2
+    E2%
     Empty%
     End
+    F
     Found
+    H
+    H1
+    H2
+    HL
+    HR
+    L
+    L1
+    L1%
+    L2
+    L2%
+    LH
+    LL
+    LR
+    LRL
+    LRR
+    LRV
+    LV
     More
     Node
     NotFound
+    P
+    PRES
+    R
+    R1
+    R1%
+    R2
+    R2%
+    RH
+    RL
+    RLL
+    RLR
+    RLV
+    RR
+    RV
+    S
+    S1
+    S2
+    T%
+    T1
+    T2
+    V
+    V1
+    V2
+    X
     add
     add_max_element
     add_min_element
@@ -8909,9 +14754,25 @@
     subset
     union))
 
-(defpackage :holai.metis.metis_prover.literal.set.include~30172
+(uiop:define-package
+  :holai.metis.metis_prover.literal.set.include~30172
   (:use :cl)
+  (:mix :cl :holai.runtime)
   (:shadow
+    A%
+    ACC
+    ARG~31406
+    ARG~31425
+    ARG~31451
+    C%
+    F
+    GO
+    L
+    P%
+    S
+    S%
+    SS
+    X
     add
     all
     compare
@@ -8990,9 +14851,32 @@
     transform
     union))
 
-(defpackage :holai.metis.metis_prover.literal.set
+(uiop:define-package
+  :holai.metis.metis_prover.literal.set
   (:use :cl)
+  (:mix :cl :holai.runtime)
   (:shadow
+    ARG~31512
+    ARG~31530
+    ARG~31548
+    ARG~31572
+    ARG~31590
+    ARG~31608
+    ARG~31626
+    ARG~31646
+    CL
+    EQ
+    EQ%
+    F
+    LIT
+    LIT%
+    LITS
+    LITS%
+    SET
+    SUB
+    SUBSTLIT
+    V
+    Z
     conjoin
     disjoin
     f
@@ -9088,18 +14972,97 @@
     typedSymbols
     union))
 
-(defpackage :holai.metis.metis_prover.literal.set_ordered
+(uiop:define-package
+  :holai.metis.metis_prover.literal.set_ordered
   (:use :cl)
   (:shadow compare)
   (:export compare))
 
-(defpackage :holai.metis.metis_prover.literal.set_map.ma
+(uiop:define-package
+  :holai.metis.metis_prover.literal.set_map.ma
   (:use :cl)
+  (:mix :cl :holai.runtime)
   (:shadow
+    ACCU
+    ARG~31727
+    ARG~31943
+    ARG~31953
+    ARG~32035
+    ARG~32070
+    ARG~32100
+    ARG~32121
+    ARG~32184
+    ARG~32249
+    ARG~32315
+    ARG~32343
+    ARG~32370
+    ARG~32533
+    ARG~32831
+    ARG~32886
+    ARG~32905
+    C
+    D
+    D%
+    D1
+    D1%
+    D2
+    D2%
+    DATA
     Empty%
     End
+    F
+    H
+    H1
+    H2
+    HL
+    HR
+    K
+    L
+    L%
+    L1
+    L1%
+    L2
+    L2%
+    LD
+    LH
+    LL
+    LR
+    LRD
+    LRL
+    LRR
+    LRV
+    LV
+    M
     More
     Node
+    P
+    PRES
+    PVD
+    R
+    R%
+    R1
+    R1%
+    R2
+    R2%
+    RD
+    RH
+    RL
+    RLD
+    RLL
+    RLR
+    RLV
+    RR
+    RV
+    S
+    S1
+    S2
+    T%
+    T1
+    T2
+    V
+    V1
+    V2
+    X
     add
     add_max_binding
     add_min_binding
@@ -9170,9 +15133,33 @@
     singleton
     union))
 
-(defpackage :holai.metis.metis_prover.literal.set_map
+(uiop:define-package
+  :holai.metis.metis_prover.literal.set_map
   (:use :cl)
+  (:mix :cl :holai.runtime)
   (:shadow
+    ACC
+    ARG~32935
+    ARG~32944
+    ARG~32984
+    ARG~33001
+    ARG~33021
+    ARG~33062
+    B%
+    EXCEPTION~32961
+    EXCEPTION~32973
+    F
+    F%
+    K%
+    L
+    M
+    M1
+    M2
+    S
+    TM
+    V
+    X
+    Y
     delete
     exists
     f%
@@ -9241,15 +15228,80 @@
     transform
     union))
 
-(defpackage :holai.metis.metis_prover.literal.set_set.se
+(uiop:define-package
+  :holai.metis.metis_prover.literal.set_set.se
   (:use :cl)
+  (:mix :cl :holai.runtime)
   (:shadow
+    ACCU
+    ARG~33161
+    ARG~33356
+    ARG~33427
+    ARG~33448
+    ARG~33538
+    ARG~33555
+    ARG~33634
+    ARG~33706
+    ARG~33715
+    ARG~33746
+    ARG~34214
+    ARG~34238
+    ARG~34261
+    ARG~34280
+    C
+    E
+    E1
+    E1%
+    E2
+    E2%
     Empty%
     End
+    F
     Found
+    H
+    H1
+    H2
+    HL
+    HR
+    L
+    L1
+    L1%
+    L2
+    L2%
+    LH
+    LL
+    LR
+    LRL
+    LRR
+    LRV
+    LV
     More
     Node
     NotFound
+    P
+    PRES
+    R
+    R1
+    R1%
+    R2
+    R2%
+    RH
+    RL
+    RLL
+    RLR
+    RLV
+    RR
+    RV
+    S
+    S1
+    S2
+    T%
+    T1
+    T2
+    V
+    V1
+    V2
+    X
     add
     add_max_element
     add_min_element
@@ -9324,9 +15376,25 @@
     subset
     union))
 
-(defpackage :holai.metis.metis_prover.literal.set_set
+(uiop:define-package
+  :holai.metis.metis_prover.literal.set_set
   (:use :cl)
+  (:mix :cl :holai.runtime)
   (:shadow
+    A%
+    ACC
+    ARG~34390
+    ARG~34409
+    ARG~34435
+    C%
+    F
+    GO
+    L
+    P%
+    S
+    S%
+    SS
+    X
     add
     all
     compare
@@ -9405,9 +15473,56 @@
     transform
     union))
 
-(defpackage :holai.metis.metis_prover.literal
+(uiop:define-package
+  :holai.metis.metis_prover.literal
   (:use :cl)
+  (:mix :cl :holai.lib :holai.runtime)
   (:shadow
+    A%
+    ARG~28232
+    ARG~28241
+    ARG~28279
+    ARG~28311
+    ARG~28330
+    ARG~28358
+    ARG~28375
+    ARG~28395
+    ARG~28410
+    ARG~28414
+    ARG~28447
+    ARG~28488
+    ARG~28514
+    ARG~28518
+    ARG~28543
+    ARG~28547
+    ARG~28578
+    ARG~28605
+    ARG~28632
+    ARG~28658
+    ARG~28677
+    ARG~28690
+    ARG~28700
+    ARG~28710
+    ARG~28720
+    ATM
+    ATM%
+    ATM1
+    ATM2
+    B%
+    LIT
+    LITERAL
+    L_R
+    P1
+    P2
+    PATH
+    PATH_TM
+    POL
+    POL1
+    POL2
+    REL
+    SUB
+    TM
+    V
     arguments
     arity
     atom
@@ -9506,17 +15621,58 @@
     typedSymbols
     unify))
 
-(defpackage :holai.metis.metis_prover.thm
+(uiop:define-package
+  :holai.metis.metis_prover.thm
   (:use :cl)
+  (:mix :cl :holai.lib :holai.runtime)
   (:shadow
+    ARG~34497
+    ARG~34506
+    ARG~34517
+    ARG~34567
+    ARG~34599
+    ARG~34611
+    ARG~34641
+    ARG~34652
+    ARG~34662
+    ARG~34680
+    ARG~34699
+    ARG~34776
+    ARG~34815
+    ARG~34819
+    ATM
     Assume%
     Axiom%
+    CHK
+    CL
+    CL%
+    CL1
+    CL1%
+    CL2
+    CL2%
+    EQLIT
     Equality%
     Factor
+    INF%
+    INFTYPE
+    LIT
+    LIT%
+    PATH
+    POL
     Refl%
     Resolve%
+    S
+    SET
+    SUB
     Subst%
+    T%
+    TH
+    TH1
+    TH2
+    THS
+    TM
     Thm
+    V
     assume
     axiom
     chk
@@ -9631,15 +15787,93 @@
     subst
     toString))
 
-(defpackage :holai.metis.metis_prover.proof
+(uiop:define-package
+  :holai.metis.metis_prover.proof
   (:use :cl)
+  (:mix :cl :holai.lib :holai.runtime)
   (:shadow
+    A%
+    A%%
+    ACC
+    ACC%
+    ADDPROOF
+    ADDTHMS
+    ARG~34914
+    ARG~34947
+    ARG~35003
+    ARG~35037
+    ARG~35134
+    ARG~35138
+    ARG~35224
+    ARG~35393
+    ARG~35529
+    ARG~35575
+    ARG~35730
+    ATM
+    ATM%
     Assume
     Axiom
+    CANDIDATES
+    CHECKLIT
+    CL
+    CL%
+    CL1
+    CL1%
+    CL2
+    CL2%
+    EMPTYTHMS
     Equality
+    F
+    F%
+    FREE
+    F_A
+    F_A%
+    I%
+    INC
+    INF%
+    INFO
+    INFS
+    ITMS
+    L1
+    L2
+    L3
+    LIT
+    LIT%
+    LITS
+    MKPROOF
+    MKTHMS
+    NEQ
+    OTHERS
+    PARS
+    PATH
+    PATH%
+    POL
+    POL%
+    R%
+    RECON
     Refl
     Resolve
+    S
+    SET
+    SUB
+    SUB%
+    SYNC
     Subst
+    T%
+    TH
+    TH%
+    TH1
+    TH2
+    THMINF
+    THS
+    THS%
+    TH_INF
+    TM
+    TM%
+    V
+    X
+    Y
+    Z
     addProof
     addThms
     checkLit
@@ -9755,14 +15989,136 @@
     reconstructSubst
     thmToInference))
 
-(defpackage :holai.metis.metis_prover.rule
+(uiop:define-package
+  :holai.metis.metis_prover.rule
   (:use :cl)
+  (:mix :cl :holai.lib :holai.runtime)
   (:shadow
+    A%
+    ACC
+    ACC%
+    APART%
+    APART%%
+    ARG~35939
+    ARG~35969
+    ARG~36004
+    ARG~36010
+    ARG~36108
+    ARG~36115
+    ARG~36119
+    ARG~36237
+    ARG~36269
+    ARG~36300
+    ARG~36411
+    ARG~36494
+    ARG~36612
+    ARG~36644
+    ARG~36675
+    ARG~36780
+    ARG~36842
+    ARG~36874
+    ARG~36955
+    ARG~36996
+    ARG~37011
+    ARG~37076
+    ARG~37091
+    ARG~37192
+    ARG~37214
+    ARG~37257
+    ARG~37455
+    ARG~37487
+    ARG~37491
+    ARG~37534
+    ARG~37584
+    ARG~37639
+    ARG~37643
+    ARG~37719
+    ARG~37782
+    ASSUMELIT
+    ASSUMETH
+    ATM
+    ATM%
     Apart
+    CL
+    CONG
+    CONV
+    CONV1
+    CONV2
+    CONVS
+    EDGE
+    EDGES
+    EQN
+    EQN1
+    EQN2
+    EQS
+    EQTH
+    EXCEPTION~36181
+    EXCEPTION~36564
+    EXCEPTION~36797
+    EXPAND
+    F
+    FACT%
     Factor_edge
+    G%
+    H
+    I%
+    INIT
+    IRREFL
     Joinable
     Joined
+    LIT
+    LIT%
+    LIT%%
+    LITERULE
+    LITERULE1
+    LITERULE2
+    LITERULES
+    LITS
+    LITTH
+    N
+    OTHERS
+    OTHERS%
+    PATH
+    POL
+    POL%
+    R%
+    REFLLIT
+    REFLTH
+    REM
+    RES
+    RES1
+    RES2
+    RESULT
+    RULE
+    RULE1
+    RULE2
+    RULES
     Refl_edge
+    SUB
+    SUB%
+    SUB_EDGES
+    SUB_EDGES%
+    SYMTH
+    T%
+    TH
+    TH%
+    TH%%
+    TH1
+    TH2
+    TM
+    TM%
+    TM%%
+    T_U
+    U
+    UPDATE
+    X
+    XS
+    X_Y
+    Y
+    YI
+    YS
+    Y_Z
+    Z
     addFactorEdge
     addIrreflEdge
     addReflEdge
@@ -10021,16 +16377,199 @@
     zVar
     zVarName))
 
-(defpackage :holai.metis.metis_prover.model
+(uiop:define-package
+  :holai.metis.metis_prover.model
   (:use :cl)
+  (:mix :cl :holai.lib :holai.runtime)
   (:shadow
+    A%
+    ACC
+    ACC%
+    ADD
+    ADDPROJ
+    ARG~38014
+    ARG~38022
+    ARG~38050
+    ARG~38070
+    ARG~38096
+    ARG~38299
+    ARG~38339
+    ARG~38355
+    ARG~38374
+    ARG~38483
+    ARG~38657
+    ARG~38675
+    ARG~38708
+    ARG~38742
+    ARG~38774
+    ARG~38791
+    ARG~38810
+    ARG~38832
+    ARG~38851
+    ARG~38861
+    ARG~38872
+    ARG~38882
+    ARG~38892
+    ARG~38901
+    ARG~38911
+    ARG~38921
+    ARG~39077
+    ARG~39100
+    ARG~39138
+    ARG~39166
+    ARG~39201
+    ARG~39213
+    ARG~39227
+    ARG~39267
+    ARG~39303
+    ARG~39324
+    ARG~39360
+    ARG~39396
+    ARG~39405
+    ARG~39441
+    ARG~39477
+    ARG~39691
+    ARG~39696
+    ARG~39749
+    ARG~39817
+    ARG~40094
+    ARG~40172
+    ARG~40184
+    ARG~40197
+    ARG~40234
+    ARG~40239
+    ARG~40427
+    ARG~40518
+    ARG~40551
+    ARG~40589
+    ARG~40637
+    ARG~40645
+    ARG~40654
+    ARG~40691
+    ARG~40871
+    ARG~41022
+    ARG~41061
+    ARG~41209
+    ARG~41351
+    ARG~41424
+    ARG~41506
+    ARG~41563
+    ARG~41610
+    ARG~41632
+    ARITY
+    ATM
     Array_table
+    B%
+    CARRY
+    CL
+    ELT
+    ELTS
+    ELTS%
+    F
+    FILT
+    FILTERELEMENTS
+    FIX%
+    FIX1
+    FIX2
+    FIXED%
+    FIXFN
+    FIXFNS
+    FIXMAP%
+    FIXREL
+    FIXRELS
+    FM
+    FNMAP
+    FNS
+    FNS%
+    FNS1
+    FNS2
+    FOLD
+    FUNC
+    FUNC_ELTS_ELT
+    FUNC_XS
+    FV
+    F_TMS
     Forgetful_table
     Function_perturbation
+    I%
+    I%%
+    INC
+    INTERPRET
+    INTERPRET%
+    J
+    LIT
+    M
+    M%
+    MAXCHECKS
+    MAXCHECKS%
+    MKPROJ
+    MODELTM
     Model_fn
     Model_var
+    N
+    NAME_ARITY
+    NAME_ARITY_FUN
+    NAME_ARITY_REL
+    N_A
+    N_ELTS
+    ONTARGET
+    P%
+    PERT
+    PERTS
+    POL
+    PRED
+    Q
+    R
+    R%
+    RANDOMCHECK
+    REL
+    RELMAP
+    RELS
+    RELS%
+    RELS1
+    RELS2
+    REL_ELTS
+    REL_XS
+    RNDFNS
+    RNDRELS
     Relation_perturbation
+    S
+    SCORE
+    SPACE
+    SUC2FN
+    SUCFN%
+    SZ
+    T%
+    TABLE
+    TABLES%
+    TARGET
+    TM
+    TMS
+    TMS%
+    UNION%%
+    V
+    V%
+    V%%
+    VARS
+    VF
+    VM
+    VN
+    VR
+    VS
+    VS%
+    VT
+    VV
+    VV%
+    V_I
     Valuation
+    X
+    X%
+    XS
+    Y
+    Y%
+    YS
+    Z
+    ZERO
     add
     addFn
     addName
@@ -10545,15 +17084,127 @@
     zeroElement
     zeroValuation))
 
-(defpackage :holai.metis.metis_prover.term_net
+(uiop:define-package
+  :holai.metis.metis_prover.term_net
   (:use :cl)
+  (:mix :cl :holai.lib :holai.runtime)
   (:shadow
+    A
+    A%
+    ACC
+    ARG~41686
+    ARG~41742
+    ARG~41746
+    ARG~41811
+    ARG~41832
+    ARG~41886
+    ARG~41951
+    ARG~42088
+    ARG~42190
+    ARG~42224
+    ARG~42242
+    ARG~42268
+    ARG~42282
+    ARG~42309
+    ARG~42325
+    ARG~42461
+    ARG~42478
+    ARG~42501
+    ARG~42506
+    ARG~42541
+    ARG~42560
+    ARG~42572
+    ARG~42611
+    ARG~42642
+    ARG~42685
+    ARG~42726
+    ARG~42759
+    ARG~42763
+    ARG~42800
+    ARG~42818
+    ARG~42900
+    ARG~42958
+    ARG~43054
+    ARG~43089
+    ARG~43240
+    ARG~43243
+    ARG~43257
+    ARG~43281
+    ARG~43441
+    ARG~43464
+    ARG~43481
+    ARG~43670
+    ARG~43692
+    B%
+    C%
+    EXCEPTION~42510
+    EXCEPTION~42636
+    EXCEPTION~43414
+    EXCEPTION~43643
+    EXCEPTION~43871
+    F
+    F1
+    F1%
+    F2
+    F2%
+    FIFO
+    FILT
+    FNS
+    FOLD%
+    FS
+    FS%
     Fn
+    G%
+    GETFNS
+    HARVEST
+    I%
+    INC%
+    INPUT1
+    K%
+    KS
+    KS%
+    L
+    L%
+    M
     Multiple
+    N
+    N%
+    N1
+    N2
+    NET%
     Net
+    P%
+    PARM
+    PAT
+    PAT%
+    PATS
+    PRED
+    Q1
+    Q1_Q2
+    Q2
+    QS
+    QSUB
+    QSUB%
+    QTM
+    QTM%
+    QTMS
+    QTMS%
+    REST
+    REST%
     Result
+    S
+    STACK
     Single
+    T%
+    TM
+    TMS
+    TM_A
+    V
+    VS
+    VS%
     Var
+    X
+    Y
     add
     addFn
     addQterm
@@ -10730,9 +17381,22 @@
     unifyQtermTerm
     unseenInc))
 
-(defpackage :holai.metis.metis_prover.atom_net
+(uiop:define-package
+  :holai.metis.metis_prover.atom_net
   (:use :cl)
+  (:mix :cl :holai.runtime)
   (:shadow
+    A%
+    ARG~43900
+    ARG~43920
+    ARG~43937
+    ATM
+    ATM_A
+    ATOM%
+    L
+    N
+    NET
+    PARM
     atomToTerm
     filter
     fromList
@@ -10769,9 +17433,33 @@
     toString
     unify))
 
-(defpackage :holai.metis.metis_prover.literal_net
+(uiop:define-package
+  :holai.metis.metis_prover.literal_net
   (:use :cl)
+  (:mix :cl :holai.runtime)
   (:shadow
+    A%
+    ARG~44001
+    ARG~44010
+    ARG~44027
+    ARG~44031
+    ARG~44068
+    ARG~44086
+    ARG~44112
+    ARG~44116
+    ARG~44137
+    ARG~44141
+    ARG~44162
+    ARG~44166
+    ATM
+    L
+    LIT_A
+    N
+    NEGATIVE
+    NET
+    PARM
+    POSITIVE
+    PRED
     filter
     fromList
     insert
@@ -10811,9 +17499,101 @@
     toString
     unify))
 
-(defpackage :holai.metis.metis_prover.subsume
+(uiop:define-package
+  :holai.metis.metis_prover.subsume
   (:use :cl)
+  (:mix :cl :holai.lib :holai.runtime)
   (:shadow
+    A%
+    ACC
+    ADDID
+    ARG~44190
+    ARG~44218
+    ARG~44276
+    ARG~44280
+    ARG~44309
+    ARG~44322
+    ARG~44355
+    ARG~44375
+    ARG~44395
+    ARG~44400
+    ARG~44544
+    ARG~44550
+    ARG~44581
+    ARG~44645
+    ARG~44676
+    ARG~44726
+    ARG~44830
+    ARG~44889
+    ARG~44906
+    ARG~44964
+    C%
+    CANDS
+    CL
+    CL%
+    CLAUSES
+    CLAUSES%
+    EMPTY%
+    EMPTY%%
+    F
+    FSTCANDS
+    FSTLIT
+    FSTLITS
+    FSTLITS%
+    ID
+    ID1
+    ID2
+    ID_LEN
+    ID_LENGTH
+    LEN
+    LEN1
+    LEN2
+    LIT
+    LIT%
+    LITS
+    LITS%
+    LITS%%
+    MAX%
+    MKSUBSL
+    N
+    NEXTID
+    NEXTID%
+    NONFSTLITS
+    NONUNIT
+    NONUNIT%
+    OTHERLITS
+    OTHERLITS%
+    OTHERS
+    OTHERS%
+    PRED
+    PRED3
+    PREDID
+    S
+    SEARCH
+    SET
+    SET1
+    SET2
+    SNDCANDS
+    SNDLIT
+    SNDLIT%
+    SNDLITS
+    SNDLITS%
+    SNDLIT_OTHERLITS
+    SUB
+    SUB%
+    SUB%%
+    SUBCL%
+    SUBLIT
+    SUBS%
+    SUBSL
+    SUBSUME%
+    SUBUNIT
+    SUB_SUBSL
+    UNITN
+    UNITN%
+    X
+    XS
+    YS
     addSym
     clauseStrictlySubsumes
     clauseSubsumes
@@ -10930,10 +17710,60 @@
     toString
     unitSubsumes))
 
-(defpackage :holai.metis.metis_prover.knuth_bendix_order
+(uiop:define-package
+  :holai.metis.metis_prover.knuth_bendix_order
   (:use :cl)
+  (:mix :cl :holai.lib :holai.runtime)
   (:shadow
+    A%
+    A1
+    A2
+    ARG~45108
+    ARG~45148
+    ARG~45152
+    ARG~45193
+    ARG~45208
+    ARG~45226
+    ARG~45251
+    ARG~45255
+    ARG~45287
+    ARG~45351
+    ARG~45358
+    ARG~45376
+    C%
+    C1
+    C2
+    F
+    F1
+    F2
+    L
+    M
+    M1
+    M2
+    N
+    N1
+    N2
+    PRECEDENCE
+    PRECEDENCECMP
+    PRECEDENCELESS
+    TM
+    TM1
+    TM2
+    TMS
+    V
+    W%
+    W1
+    W2
+    WEIGHT%
+    WEIGHTCMP
+    WEIGHTDIFFERENCE
+    WEIGHTDIFFGREATER
+    WEIGHTDIFFLESS
+    WEIGHTLESS
+    WT
     Weight
+    X
+    Y
     add
     arityPrecedence
     compare
@@ -11015,13 +17845,166 @@
     weightTerm
     weightZero))
 
-(defpackage :holai.metis.metis_prover.rewrite
+(uiop:define-package
+  :holai.metis.metis_prover.rewrite
   (:use :cl)
+  (:mix :cl :holai.lib :holai.runtime)
   (:shadow
+    ACC
+    ADD%
+    ADDRED
+    ADDREDS
+    ADDSUBTERM
+    ADDSUBTMS
+    ANY
+    ARG~45646
+    ARG~45678
+    ARG~45690
+    ARG~45700
+    ARG~45703
+    ARG~45729
+    ARG~45761
+    ARG~45803
+    ARG~45859
+    ARG~45895
+    ARG~45936
+    ARG~45940
+    ARG~46017
+    ARG~46035
+    ARG~46038
+    ARG~46130
+    ARG~46312
+    ARG~46322
+    ARG~46349
+    ARG~46384
+    ARG~46396
+    ARG~46399
+    ARG~46421
+    ARG~46424
+    ARG~46484
+    ARG~46575
+    ARG~46684
+    ARG~46742
+    ARG~46766
+    ARG~46790
+    ARG~46814
+    ARG~46839
+    ARG~46846
+    ARG~46933
+    ARG~46977
+    ARG~47037
+    ARG~47070
+    ARG~47099
+    ARG~47103
+    ARG~47384
+    ARG~47395
+    ARG~47439
+    ARG~47451
+    ARG~47531
+    ARG~47614
+    ARG~47646
+    ARG~47673
+    ARG~47675
+    B%
+    C%
+    CHANGED
+    CHANGED%
+    CHECKVALIDREWR
+    CONV
+    CONV%
+    DIR
+    EQ
+    EQ0
+    EQN
+    EQN0
+    EQNID
+    EQNRED
+    EQNS
+    EQN_ORT
+    F
+    FILT
+    FINDRED
+    I%
+    ID
+    ID%
+    IDENTICAL
+    ID_EQN
+    J
+    KNOWN
+    KNOWN%
+    KNOWNRED
+    L
+    L0
+    LEFT
+    LIT
+    LIT%
+    LITERULE
+    LITS
+    LITS%
+    LITTH
+    LR
+    L_R
     Left_to_right
+    M
+    MK_LITERULE
+    NEQ
+    NEQ%
+    NEQ_CONV
+    NET%
+    NEWX
     Neq_convs
+    ORD
+    ORDER%
+    ORIENTED
+    ORT
+    ORT%
+    ORT0
+    ORTO
+    PATH
+    R%
+    R0
+    REDEX
+    REDEXES
+    REDEXES%
+    REDS
+    RES
+    REWR
+    REWRITE%%
+    REWR_CONV%
+    REWR_LIT
+    REWR_LITERULE
+    REWR_NEQ_LIT
+    REWR_NEQ_LITS
+    RPL
+    RPL%
+    RW
+    RW%
     Rewrite%
     Right_to_left
+    SAME_REDEXES
+    SET
+    SPL
+    SPL%
+    STRONGEQN
+    SUB
+    SUBTERMRED
+    SUBTERMS
+    SUBTERMS%
+    SUBTMS
+    TERMRED
+    TH
+    TH%
+    THS
+    TM
+    TM%
+    TMS
+    TODO
+    TODO%
+    WAITING
+    WAITING%
+    X
+    Y
+    Z
     add
     add%
     addEqn
@@ -11254,9 +18237,40 @@
     updateWaiting
     wellOriented))
 
-(defpackage :holai.metis.metis_prover.units
+(uiop:define-package
+  :holai.metis.metis_prover.units
   (:use :cl)
+  (:mix :cl :holai.runtime)
   (:shadow
+    ARG~47693
+    ARG~47712
+    ARG~47715
+    ARG~47771
+    ARG~47785
+    ARG~47790
+    ARG~47826
+    ARG~47909
+    CHECK%
+    LIT
+    LIT%
+    NET%
+    NET%%
+    NEWLITS
+    NEWS
+    NEWS%
+    NEWS_TH
+    POL
+    RED
+    RED1
+    RTH
+    RTH%
+    SUB
+    TH
+    TH%
+    TM
+    U
+    UNITS%
+    UTH
     Units
     add
     addList
@@ -11302,13 +18316,113 @@
     defunc)
   (:export Units add addList empty make-Units matchUnits reduce size toString))
 
-(defpackage :holai.metis.metis_prover.clause
+(uiop:define-package
+  :holai.metis.metis_prover.clause
   (:use :cl)
+  (:mix :cl :holai.lib :holai.runtime)
   (:shadow
+    ACC
+    ACC%
+    ADDEQ
+    ADDLIT%
+    ADDTM
+    APPLY%
+    ARG~47943
+    ARG~47958
+    ARG~47979
+    ARG~48002
+    ARG~48010
+    ARG~48019
+    ARG~48053
+    ARG~48063
+    ARG~48092
+    ARG~48096
+    ARG~48140
+    ARG~48164
+    ARG~48174
+    ARG~48192
+    ARG~48217
+    ARG~48241
+    ARG~48274
+    ARG~48286
+    ARG~48313
+    ARG~48320
+    ARG~48342
+    ARG~48394
+    ARG~48399
+    ARG~48450
+    ARG~48468
+    ARG~48495
+    ARG~48515
+    ARG~48574
+    ARG~48603
+    ARG~48607
+    ARG~48692
+    ARG~48698
+    ATM
+    ATM%
+    C%
+    CL
+    CL%
+    CL1
+    CL2
+    CMP
     Clause
+    EQN
+    EQN%
+    I%
+    ID%
+    INFO
+    ISLARGER
+    L
+    LESS
+    LIT
+    LIT1
+    LIT1%
+    LIT2
+    LIT2%
+    LITS
+    LITSET
+    L_R
+    N
+    NEWI
     No_literal_order
+    ORDERING
+    ORDERLITERALS
+    ORDERTERMS
+    ORT
+    ORT1
+    P%
+    PARAMETERS%
+    PATH
+    PATH2
+    POL
+    POL%
     Positive_literal_order
+    R%
+    RESULT
+    REWR
+    S
+    SIMP
+    SUB
+    SUBS%
+    TH
+    TH1
+    TH1%
+    TH2
+    TH2%
+    THM%
+    THM%%
+    TM
+    TM1
+    TM2
+    TMS
+    UNITS
     Unsigned_literal_order
+    X
+    XS
+    Y
+    YS
     addEq
     addLit
     addLit%
@@ -11453,16 +18567,135 @@
     thm
     toString))
 
-(defpackage :holai.metis.metis_prover.ax_cj
+(uiop:define-package
+  :holai.metis.metis_prover.ax_cj
   (:use :cl)
+  (:mix :cl :holai.runtime)
   (:shadow ax_cj_cl ax_cj_thm make-ax_cj_cl make-ax_cj_thm)
   (:shadowing-import-from :holai.runtime defrecord)
   (:export ax_cj_cl ax_cj_thm make-ax_cj_cl make-ax_cj_thm))
 
-(defpackage :holai.metis.metis_prover.active
+(uiop:define-package
+  :holai.metis.metis_prover.active
   (:use :cl)
+  (:mix :cl :holai.lib :holai.runtime)
   (:shadow
+    ACC
+    ACC%
+    ACTIVE%
+    ACTIVE%%
+    ACTIVE_SUBSUME_ACC
+    ADD%
+    ADDEQUATION
+    ADDORDERED
+    ADDRED
+    ADDREDUCE
+    ADDREWR
+    ADDUNORDERED
+    ALLSUBTERMS
+    ALLSUBTERMS%
+    ARG~48826
+    ARG~48918
+    ARG~48928
+    ARG~48932
+    ARG~48955
+    ARG~49191
+    ARG~49225
+    ARG~49257
+    ARG~49289
+    ARG~49427
+    ARG~49433
+    ARG~49478
+    ARG~49485
+    ARG~49526
+    ARG~49533
+    ARG~49640
+    ARG~49675
+    ARG~49709
+    ARG~49751
+    ARG~49767
+    ARG~49801
+    ARG~49844
+    ARG~49959
+    ARG~49968
+    ARG~50041
+    ARG~50163
+    ARG~50214
+    ARG~50234
+    ARG~50266
+    ARG~50330
+    ATM
+    AXIOMS%
+    AXIOMS_THM
     Active
+    CL
+    CL%
+    CL%%
+    CLAUSE
+    CLAUSEPRED
+    CLAUSES%
+    CLAUSES%%
+    CLS
+    CLS%
+    CL_LIT
+    CL_LIT_ORT_TM
+    CL_LIT_PATH_TM
+    CONJECTURE
+    CONJECTURE_THM
+    CP1
+    CP1_4
+    EQNS
+    EQN_ORT
+    EQUATIONS
+    EQUATIONS%
+    ID%
+    IDPRED
+    IDS
+    IDS%
+    ISVALIDREWR
+    L
+    LIT
+    LITERALS
+    LITERALS%
+    LITS
+    L_R
+    MK_CLAUSE%
+    N
+    ORD
+    ORDER
+    ORDERING
+    ORT
+    PARA
+    PARAMETERS%
+    PARAMS
+    PATH
+    POSTFACTOR
+    PREFACTOR
+    R%
+    REDEXRESIDUES
+    REMOVE%
+    RESOLVE
+    REWR
+    REWRITE
+    REWRITE%
+    REWR_IDS
+    S
+    SIMP
+    SUB
+    SUBS%
+    SUBSUME
+    SUBSUME%
+    SUBTERMS
+    SUBTERMS%
+    SUBTMS
+    TH
+    TM
+    TM%
+    UNITS
+    UNITS%
+    UTILITY
+    W%
+    X
     active_t
     add
     add%
@@ -11651,10 +18884,81 @@
     toString
     unorderedRedexResidues))
 
-(defpackage :holai.metis.metis_prover.waiting
+(uiop:define-package
+  :holai.metis.metis_prover.waiting
   (:use :cl)
+  (:mix :cl :holai.lib :holai.runtime)
   (:shadow
+    ACC
+    ADDCL
+    ARG~50465
+    ARG~50510
+    ARG~50533
+    ARG~50586
+    ARG~50591
+    ARG~50652
+    ARG~50785
+    ARG~50845
+    ARG~50867
+    ARG~50870
+    ARG~50911
+    ARG~50949
+    AXIOMS%
+    AXIOMS_CL
+    CHECK%
+    CL
+    CLAUSES
+    CLAUSES%
+    CLS
+    CONJECTURE
+    CONJECTURE_CL
+    DCL
+    DIST
+    DIST%
+    FV
+    FVS
+    INITIALPERTURBATIONS
+    LITERALSW
+    LITERALSWEIGHT
+    LITS
+    M
+    MAXCHECKS
+    MAXIOMS
+    MCL
+    MCLS
+    MCONJECTURE
+    MODEL
+    MODELPARAMETERS%
+    MODELS
+    MODELSP
+    MODELSW
+    MODS
+    N
+    PARAMETERS%
+    PARM
+    PARMS
+    PERTURB
+    PERTURBATIONS
+    PERTURBCLAUSE
+    PERTURBCLAUSES
+    SYMBOLSW
+    SYMBOLSWEIGHT
+    VARIABLESW
+    VARIABLESWEIGHT
+    VF
+    VM
+    VN
+    VT
+    VV
+    W%
+    W1
+    W2
+    WAITING%
+    WAITING%%
+    WEIGHT
+    WEIGHT%
     Waiting
+    Z
     add
     add%
     addCl
@@ -11753,14 +19057,35 @@
     toString
     waiting_t))
 
-(defpackage :holai.metis.metis_prover.resolution
+(uiop:define-package
+  :holai.metis.metis_prover.resolution
   (:use :cl)
+  (:mix :cl :holai.runtime)
   (:shadow
+    A%
+    ACTIVE%
+    ACTIVE%%
+    ACTIVEPARM
+    ARG~51027
+    ARG~51036
+    CL
+    CLS
     Contradiction
+    D
+    DEC
     Decided
+    PARAMETERS%
+    RES
+    RES%
     Resolution
+    SAT
     Satisfiable
+    THS
     Undecided
+    W%
+    WAITING%
+    WAITING%%
+    WAITINGPARM
     active
     default
     iterate
@@ -11811,9 +19136,11 @@
     resolution_t
     waiting))
 
-(defpackage :holai.metis.metis_prover.loop
+(uiop:define-package
+  :holai.metis.metis_prover.loop
   (:use :cl)
-  (:shadow loop run)
+  (:mix :cl :holai.runtime)
+  (:shadow DEC RES RES% RULES THM THS loop run)
   (:shadowing-import-from :holai.metis.metis_prover.ax_cj make-ax_cj_thm)
   (:shadowing-import-from
     :holai.metis.metis_prover.resolution
@@ -11827,11 +19154,27 @@
   (:shadowing-import-from :holai.runtime Some None match make-Some failwith defunc)
   (:export loop run))
 
-(defpackage :holai.metis.metis_prover (:use :cl) (:export))
+(uiop:define-package :holai.metis.metis_prover (:use :cl) (:export))
 
-(defpackage :holai.metis.metis_debug
+(uiop:define-package
+  :holai.metis.metis_debug
   (:use :cl)
-  (:shadow hide_types print_varandtype show_types)
+  (:mix :cl :holai.basics :holai.fusion.hol :holai.lib :holai.printer :holai.runtime)
+  (:shadow
+    ARGS
+    ARG~51230
+    ARG~51238
+    EXCEPTION~51240
+    FMT
+    HIDE_TYPES%
+    HOP
+    S
+    SHOW_TYPES%
+    TM
+    TY
+    hide_types
+    print_varandtype
+    show_types)
   (:shadowing-import-from :holai.basics strip_comb)
   (:shadowing-import-from :holai.fusion.hol type_of is_var)
   (:shadowing-import-from :holai.lib fail)
@@ -11856,9 +19199,29 @@
     =)
   (:export hide_types print_varandtype show_types))
 
-(defpackage :holai.metis.preterm
+(uiop:define-package
+  :holai.metis.preterm
   (:use :cl)
+  (:mix :cl :holai.fusion.hol :holai.lib :holai.parser :holai.preterm :holai.runtime)
   (:shadow
+    ACC
+    ARG~51263
+    ARG~51279
+    ARG~51295
+    ARG~51311
+    ARG~51363
+    ARG~51381
+    ARG~51423
+    H
+    L
+    PS
+    PT
+    PTM
+    PTY
+    R%
+    S
+    T%
+    X
     env_of_preterm
     env_of_th
     env_of_ths
@@ -11911,9 +19274,41 @@
     mk_negp
     unconst_preterm))
 
-(defpackage :holai.metis.metis_mapping
+(uiop:define-package
+  :holai.metis.metis_mapping
   (:use :cl)
+  (:mix
+    :cl
+    :holai.basics
+    :holai.fusion.hol
+    :holai.lib
+    :holai.meson.meson
+    :holai.preterm
+    :holai.runtime)
   (:shadow
+    ARGS
+    ARG~51507
+    ARG~51537
+    ARG~51549
+    ARG~51574
+    ARG~51592
+    ARG~51617
+    ENV
+    F
+    FAT
+    FOL_OF_CONST%
+    HOL_OF_CONST%
+    P%
+    PARGS
+    PAT
+    PF
+    POL
+    PP
+    RESET_CONSTS%
+    S
+    T%
+    X
+    XS
     fol_of_const
     hol_of_atom
     hol_of_clause
@@ -11980,9 +19375,29 @@
     typecheck
     typecheckl))
 
-(defpackage :holai.metis.metis_path
+(uiop:define-package
+  :holai.metis.metis_path
   (:use :cl)
-  (:shadow hol_of_atom_path hol_of_literal_path hol_of_term_path)
+  (:mix :cl :holai.lib :holai.runtime)
+  (:shadow
+    ARGS
+    ARG~51737
+    ARG~51751
+    ARITY
+    ATOM%
+    F
+    I%
+    IS
+    P%
+    PATH
+    PATH%
+    POL
+    S
+    TM
+    TM%
+    hol_of_atom_path
+    hol_of_literal_path
+    hol_of_term_path)
   (:shadowing-import-from :cl -)
   (:shadowing-import-from :holai.lib length)
   (:shadowing-import-from :holai.metis.metis_prover.term make-Fn Fn)
@@ -11999,9 +19414,39 @@
     <)
   (:export hol_of_atom_path hol_of_literal_path hol_of_term_path))
 
-(defpackage :holai.metis.metis_unify
+(uiop:define-package
+  :holai.metis.metis_unify
   (:use :cl)
-  (:shadow Unify make-Unify unify_fo_ho_atom unify_fo_ho_literal unify_fo_ho_term verb)
+  (:mix :cl :holai.basics :holai.fusion.hol :holai.lib :holai.printer :holai.runtime)
+  (:shadow
+    ARGS
+    ARG~51925
+    ARG~51973
+    ATOM%
+    EXCEPTION~51909
+    EXCEPTION~51939
+    EXCEPTION~51980
+    F
+    FAT
+    HARGS
+    HF
+    HL
+    HR
+    HTM
+    HTM%
+    M
+    P%
+    POL
+    TM
+    TM%
+    Unify
+    V
+    VARS
+    make-Unify
+    unify_fo_ho_atom
+    unify_fo_ho_literal
+    unify_fo_ho_term
+    verb)
   (:shadowing-import-from :cl not)
   (:shadowing-import-from :holai.basics strip_comb dest_neg)
   (:shadowing-import-from :holai.fusion.hol is_var is_const dest_eq)
@@ -12030,9 +19475,60 @@
     =)
   (:export Unify make-Unify unify_fo_ho_atom unify_fo_ho_literal unify_fo_ho_term verb))
 
-(defpackage :holai.metis.metis_rules
+(uiop:define-package
+  :holai.metis.metis_rules
   (:use :cl)
-  (:shadow DISCH_DISJ DISCH_DISJS FRONT RESOLVE RESOLVE_N)
+  (:mix
+    :cl
+    :holai.basics
+    :holai.bool
+    :holai.canon
+    :holai.class
+    :holai.fusion
+    :holai.fusion.hol
+    :holai.lib
+    :holai.parser
+    :holai.runtime
+    :holai.simp)
+  (:shadow
+    ARG~52075
+    ATOM%
+    CONC
+    CONC%
+    DISCH_DISJ
+    DISCH_DISJS
+    DISJ%
+    DISJ%%
+    EQ
+    EXCEPTION~52130
+    EXCEPTION~52203
+    FRONT
+    IMPL
+    IMPL_NOT
+    IMPL_NOT_L
+    IMPL_NOT_R
+    L
+    LIT
+    R%
+    R1
+    R2
+    RES
+    RESOLVE
+    RESOLVE_1
+    RESOLVE_2L
+    RESOLVE_2R
+    RESOLVE_3
+    RESOLVE_N
+    REST
+    TH
+    TH1
+    TH1%
+    TH2
+    TH2%
+    THM
+    TM
+    TM%
+    TMS)
   (:shadowing-import-from :holai.basics disjuncts dest_neg)
   (:shadowing-import-from :holai.bool SPECL SPEC MP mk_neg list_mk_disj DISCH)
   (:shadowing-import-from :holai.canon DISJ_ACI_RULE)
@@ -12055,9 +19551,112 @@
   (:shadowing-import-from :holai.simp PURE_ONCE_REWRITE_RULE)
   (:export DISCH_DISJ DISCH_DISJS FRONT RESOLVE RESOLVE_N))
 
-(defpackage :holai.metis.metis_reconstruct2
+(uiop:define-package
+  :holai.metis.metis_reconstruct2
   (:use :cl)
+  (:mix
+    :cl
+    :holai.basics
+    :holai.bool
+    :holai.canon
+    :holai.class
+    :holai.drule
+    :holai.equal
+    :holai.firstorder.utils.list
+    :holai.fusion
+    :holai.fusion.hol
+    :holai.lib
+    :holai.preterm
+    :holai.printer
+    :holai.runtime
+    :holai.simp)
   (:shadow
+    ARG~52241
+    ARG~52286
+    ARG~52354
+    ARG~52375
+    ARG~52394
+    ARG~52419
+    ARG~52442
+    ARG~52517
+    ARG~52543
+    ARG~52607
+    ARG~52633
+    ARG~52665
+    ARG~52735
+    ATOM%
+    AX
+    AXIOMS%
+    CANDS
+    CLAUSE
+    CLAUSEL
+    CONV
+    DISJS
+    ENV
+    ENV%
+    EXCEPTION~52230
+    EXCEPTION~52337
+    EXCEPTION~53033
+    F
+    FLIT
+    FPATH
+    FS
+    FSUB
+    FSUBL
+    FT
+    FTH
+    FTH1
+    FTH2
+    H
+    HATOM
+    HEQ
+    HLIT
+    HLIT%
+    HLIT%%
+    HPATH
+    HS
+    HS%
+    HSUB
+    HT
+    HT%
+    HTH
+    HTH%
+    HTH%%
+    IT
+    M
+    M%
+    MAXS
+    MS
+    PTY
+    S
+    SUB
+    SUB%
+    T%
+    T1
+    T1%
+    T2
+    T2%
+    TERM
+    TH1
+    TH2
+    TM
+    TM1
+    TM2
+    TMINST
+    TMINSTS
+    TMVARS
+    TY
+    TYINST
+    TYINSTS
+    TYINSTS%
+    TYVARS%
+    V
+    V%
+    VARS
+    X
+    XS
+    Y
+    YS
     hol_of_thm
     match_elems
     match_fo_ho_clause
@@ -12165,9 +19764,30 @@
     string_of_tyinst
     term_eq_mod_type))
 
-(defpackage :holai.metis.metis_generate
+(uiop:define-package
+  :holai.metis.metis_generate
   (:use :cl)
+  (:mix :cl :holai.basics :holai.fusion.hol :holai.lib :holai.meson.meson :holai.runtime)
   (:shadow
+    ARGS
+    CONSTS
+    ENV
+    EXCEPTION~53165
+    EXCEPTION~53234
+    F
+    FF
+    FLITS
+    HLITS
+    L
+    L%
+    LCONSTS
+    POL
+    R%
+    R%%
+    SET
+    TH
+    TM
+    TM%
     metis_name
     metis_of_atom
     metis_of_clause
@@ -12202,15 +19822,55 @@
     metis_of_literal
     metis_of_term))
 
-(defpackage :holai.metis.metis
+(uiop:define-package
+  :holai.metis.metis
   (:use :cl)
+  (:mix
+    :cl
+    :holai.basics
+    :holai.bool
+    :holai.canon
+    :holai.class
+    :holai.equal
+    :holai.fusion.hol
+    :holai.lib
+    :holai.meson.meson
+    :holai.parser
+    :holai.preterm
+    :holai.printer
+    :holai.runtime
+    :holai.tactics
+    :holai.theorems)
   (:shadow
+    ALLHYPS
+    ARG~53322
+    ARG~53413
+    ARG~53480
+    ASL
+    E%
+    EXCEPTION~53422
+    F
     FOL_PREPARE_TAC
+    G%
     GEN_METIS_TAC
+    H
     PRINT_ID_TAC
     PRINT_TAC
+    PROOF
     PURE_METIS_TAC
+    RES
+    RESET
+    RULES
+    S
     SIMPLE_METIS_REFUTE
+    T%
+    TH
+    THS
+    THS%
+    TIV
+    V
+    W%
+    Y
     reset
     split_limit
     without_warnings)
@@ -12305,9 +19965,11 @@
     split_limit
     without_warnings))
 
-(defpackage :holai.metis
+(uiop:define-package
+  :holai.metis
   (:use :cl)
-  (:shadow ASM_METIS_TAC METIS METIS_TAC metisverb)
+  (:mix :cl :holai.lib :holai.runtime :holai.tactics)
+  (:shadow ASM_METIS_TAC METIS METIS_TAC THS TM metisverb)
   (:shadowing-import-from :holai.lib K)
   (:shadowing-import-from :holai.metis.metis GEN_METIS_TAC)
   (:shadowing-import-from :holai.runtime tuple ref defunc)
@@ -12432,7 +20094,7 @@
 
 (defunc isDigit (c%) (cl:and (<= (cl:code-char 48) c%) (<= c% (cl:code-char 57))))
 
-(define-exception Bug field0)
+(define-exception Bug #:field0)
 
 (defunc total (f x)
   (handler-case
@@ -12556,9 +20218,9 @@
 
 (defparameter comparePriority #'holai.metis.metis_prover.word:compare)
 
-(defvariant tree (Empty) (Tree field0))
+(defvariant tree (Empty) (Tree #:field0))
 
-(defrecord node size priority left key value right)
+(defrecord node #:size #:priority #:left #:key #:value #:right)
 
 (defunc lowerPriorityNode (node1 node2)
   (match (tuple node1 node2)
@@ -13353,8 +21015,8 @@
                     (tuple key_value (make-Tree node%%))))))))))))
 
 (defvariant iterator
-  (Left_to_right_iterator field0 field1 field2)
-  (Right_to_left_iterator field0 field1 field2))
+  (Left_to_right_iterator #:field0 #:field1 #:field2)
+  (Right_to_left_iterator #:field0 #:field1 #:field2))
 
 (defunc fromSpineLeftToRightIterator (nodes)
   (match nodes
@@ -13450,7 +21112,7 @@
                 (cl:declare (cl:ignorable io1% io2%))
                 (equalIterator equalKey% equalValue io1% io2%)))))))))
 
-(defvariant map (Map% field0 field1))
+(defvariant map (Map% #:field0 #:field1))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Map debugging functions.                                                  *)
@@ -13907,7 +21569,7 @@
 
 (in-package :holai.metis.metis_prover.pset)
 
-(defvariant set (Set field0))
+(defvariant set (Set #:field0))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Converting to and from maps.                                              *)
@@ -14255,7 +21917,7 @@
 
 (in-package :holai.metis.metis_prover.intmap.include~4681.ma)
 
-(defvariant t% (Empty%) (Node (:record l v d r h)))
+(defvariant t% (Empty%) (Node (:record #:l #:v #:d #:r #:h)))
 
 (defunc height (arg~4686) (match arg~4686 ((Empty%) 0) ((Node :h h) h)))
 
@@ -14482,7 +22144,7 @@
         (cl:declare (cl:ignorable l% pvd r%))
         (if pvd (if (cl:and (== l l%) (== r r%)) m (join l% v d r%)) (concat l% r%))))))
 
-(defvariant enumeration (End) (More field0 field1 field2 field3))
+(defvariant enumeration (End) (More #:field0 #:field1 #:field2 #:field3))
 
 (defunc cardinal (arg~5845)
   (match arg~5845 ((Empty%) 0) ((Node :l l :r r) (+ (+ (cardinal l) 1) (cardinal r)))))
@@ -14587,7 +22249,7 @@
 
 (in-package :holai.metis.metis_prover.stringmap.include~6119.ma)
 
-(defvariant t% (Empty%) (Node (:record l v d r h)))
+(defvariant t% (Empty%) (Node (:record #:l #:v #:d #:r #:h)))
 
 (defunc height (arg~6124) (match arg~6124 ((Empty%) 0) ((Node :h h) h)))
 
@@ -14814,7 +22476,7 @@
         (cl:declare (cl:ignorable l% pvd r%))
         (if pvd (if (cl:and (== l l%) (== r r%)) m (join l% v d r%)) (concat l% r%))))))
 
-(defvariant enumeration (End) (More field0 field1 field2 field3))
+(defvariant enumeration (End) (More #:field0 #:field1 #:field2 #:field3))
 
 (defunc cardinal (arg~7283)
   (match arg~7283 ((Empty%) 0) ((Node :l l :r r) (+ (+ (cardinal l) 1) (cardinal r)))))
@@ -14923,7 +22585,7 @@
 
 (in-package :holai.metis.metis_prover.intset.include~7557.se)
 
-(defvariant t% (Empty%) (Node (:record l v r h)))
+(defvariant t% (Empty%) (Node (:record #:l #:v #:r #:h)))
 
 ;; (* Sets are represented by balanced binary trees (the heights of the
 ;;        children differ by at most 2 *)
@@ -15143,7 +22805,7 @@
         ((tuple l2 cl:nil r2) (concat (inter l1 l2) (inter r1 r2)))
         ((tuple l2 cl:t r2) (join (inter l1 l2) v1 (inter r1 r2)))))))
 
-(defvariant split_bis (Found) (NotFound field0 field1))
+(defvariant split_bis (Found) (NotFound #:field0 #:field1))
 
 (defunc diff (s1 s2)
   (match (tuple s1 s2)
@@ -15154,7 +22816,7 @@
         ((tuple l2 cl:nil r2) (join (diff l1 l2) v1 (diff r1 r2)))
         ((tuple l2 cl:t r2) (concat (diff l1 l2) (diff r1 r2)))))))
 
-(defvariant enumeration (End) (More field0 field1 field2))
+(defvariant enumeration (End) (More #:field0 #:field1 #:field2))
 
 (defunc cons_enum (s e)
   (match s ((Empty%) e) ((Node :l l :v v :r r) (cons_enum l (make-More v r e)))))
@@ -15290,9 +22952,9 @@
 
 (define-exception Empty)
 
-(defvariant node (Em) (Tr field0 field1 field2 field3))
+(defvariant node (Em) (Tr #:field0 #:field1 #:field2 #:field3))
 
-(defvariant heap (Heap field0 field1 field2))
+(defvariant heap (Heap #:field0 #:field1 #:field2))
 
 (defunc rank (arg~8895) (match arg~8895 ((Em) 0) ((Tr r% _ _ _) r%)))
 
@@ -15413,7 +23075,7 @@
 
 (in-package :holai.metis.metis_prover.name.map.ma)
 
-(defvariant t% (Empty%) (Node (:record l v d r h)))
+(defvariant t% (Empty%) (Node (:record #:l #:v #:d #:r #:h)))
 
 (defunc height (arg~9296) (match arg~9296 ((Empty%) 0) ((Node :h h) h)))
 
@@ -15640,7 +23302,7 @@
         (cl:declare (cl:ignorable l% pvd r%))
         (if pvd (if (cl:and (== l l%) (== r r%)) m (join l% v d r%)) (concat l% r%))))))
 
-(defvariant enumeration (End) (More field0 field1 field2 field3))
+(defvariant enumeration (End) (More #:field0 #:field1 #:field2 #:field3))
 
 (defunc cardinal (arg~10455)
   (match arg~10455 ((Empty%) 0) ((Node :l l :r r) (+ (+ (cardinal l) 1) (cardinal r)))))
@@ -15732,7 +23394,7 @@
 
 (in-package :holai.metis.metis_prover.name.set.se)
 
-(defvariant t% (Empty%) (Node (:record l v r h)))
+(defvariant t% (Empty%) (Node (:record #:l #:v #:r #:h)))
 
 ;; (* Sets are represented by balanced binary trees (the heights of the
 ;;        children differ by at most 2 *)
@@ -15952,7 +23614,7 @@
         ((tuple l2 cl:nil r2) (concat (inter l1 l2) (inter r1 r2)))
         ((tuple l2 cl:t r2) (join (inter l1 l2) v1 (inter r1 r2)))))))
 
-(defvariant split_bis (Found) (NotFound field0 field1))
+(defvariant split_bis (Found) (NotFound #:field0 #:field1))
 
 (defunc diff (s1 s2)
   (match (tuple s1 s2)
@@ -15963,7 +23625,7 @@
         ((tuple l2 cl:nil r2) (join (diff l1 l2) v1 (diff r1 r2)))
         ((tuple l2 cl:t r2) (concat (diff l1 l2) (diff r1 r2)))))))
 
-(defvariant enumeration (End) (More field0 field1 field2))
+(defvariant enumeration (End) (More #:field0 #:field1 #:field2))
 
 (defunc cons_enum (s e)
   (match s ((Empty%) e) ((Node :l l :v v :r r) (cons_enum l (make-More v r e)))))
@@ -16149,7 +23811,7 @@
 
 (in-package :holai.metis.metis_prover.name_arity.map.include~12152.ma)
 
-(defvariant t% (Empty%) (Node (:record l v d r h)))
+(defvariant t% (Empty%) (Node (:record #:l #:v #:d #:r #:h)))
 
 (defunc height (arg~12157) (match arg~12157 ((Empty%) 0) ((Node :h h) h)))
 
@@ -16376,7 +24038,7 @@
         (cl:declare (cl:ignorable l% pvd r%))
         (if pvd (if (cl:and (== l l%) (== r r%)) m (join l% v d r%)) (concat l% r%))))))
 
-(defvariant enumeration (End) (More field0 field1 field2 field3))
+(defvariant enumeration (End) (More #:field0 #:field1 #:field2 #:field3))
 
 (defunc cardinal (arg~13316)
   (match arg~13316 ((Empty%) 0) ((Node :l l :r r) (+ (+ (cardinal l) 1) (cardinal r)))))
@@ -16481,7 +24143,7 @@
 
 (in-package :holai.metis.metis_prover.name_arity.set.include~13610.se)
 
-(defvariant t% (Empty%) (Node (:record l v r h)))
+(defvariant t% (Empty%) (Node (:record #:l #:v #:r #:h)))
 
 ;; (* Sets are represented by balanced binary trees (the heights of the
 ;;        children differ by at most 2 *)
@@ -16701,7 +24363,7 @@
         ((tuple l2 cl:nil r2) (concat (inter l1 l2) (inter r1 r2)))
         ((tuple l2 cl:t r2) (join (inter l1 l2) v1 (inter r1 r2)))))))
 
-(defvariant split_bis (Found) (NotFound field0 field1))
+(defvariant split_bis (Found) (NotFound #:field0 #:field1))
 
 (defunc diff (s1 s2)
   (match (tuple s1 s2)
@@ -16712,7 +24374,7 @@
         ((tuple l2 cl:nil r2) (join (diff l1 l2) v1 (diff r1 r2)))
         ((tuple l2 cl:t r2) (concat (diff l1 l2) (diff r1 r2)))))))
 
-(defvariant enumeration (End) (More field0 field1 field2))
+(defvariant enumeration (End) (More #:field0 #:field1 #:field2))
 
 (defunc cons_enum (s e)
   (match s ((Empty%) e) ((Node :l l :v v :r r) (cons_enum l (make-More v r e)))))
@@ -16852,7 +24514,7 @@
 
 (in-package :holai.metis.metis_prover.term)
 
-(defvariant term (Var field0) (Fn field0))
+(defvariant term (Var #:field0) (Fn #:field0))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Constructors and destructors.                                             *)
@@ -17219,7 +24881,7 @@
 
 (in-package :holai.metis.metis_prover.term.map)
 
-(defvariant t% (Empty%) (Node (:record l v d r h)))
+(defvariant t% (Empty%) (Node (:record #:l #:v #:d #:r #:h)))
 
 (defunc height (arg~16145) (match arg~16145 ((Empty%) 0) ((Node :h h) h)))
 
@@ -17446,7 +25108,7 @@
         (cl:declare (cl:ignorable l% pvd r%))
         (if pvd (if (cl:and (== l l%) (== r r%)) m (join l% v d r%)) (concat l% r%))))))
 
-(defvariant enumeration (End) (More field0 field1 field2 field3))
+(defvariant enumeration (End) (More #:field0 #:field1 #:field2 #:field3))
 
 (defunc cardinal (arg~17304)
   (match arg~17304 ((Empty%) 0) ((Node :l l :r r) (+ (+ (cardinal l) 1) (cardinal r)))))
@@ -17463,7 +25125,7 @@
 
 (in-package :holai.metis.metis_prover.term.set)
 
-(defvariant t% (Empty%) (Node (:record l v r h)))
+(defvariant t% (Empty%) (Node (:record #:l #:v #:r #:h)))
 
 ;; (* Sets are represented by balanced binary trees (the heights of the
 ;;        children differ by at most 2 *)
@@ -17683,7 +25345,7 @@
         ((tuple l2 cl:nil r2) (concat (inter l1 l2) (inter r1 r2)))
         ((tuple l2 cl:t r2) (join (inter l1 l2) v1 (inter r1 r2)))))))
 
-(defvariant split_bis (Found) (NotFound field0 field1))
+(defvariant split_bis (Found) (NotFound #:field0 #:field1))
 
 (defunc diff (s1 s2)
   (match (tuple s1 s2)
@@ -17694,7 +25356,7 @@
         ((tuple l2 cl:nil r2) (join (diff l1 l2) v1 (diff r1 r2)))
         ((tuple l2 cl:t r2) (concat (diff l1 l2) (diff r1 r2)))))))
 
-(defvariant enumeration (End) (More field0 field1 field2))
+(defvariant enumeration (End) (More #:field0 #:field1 #:field2))
 
 (defunc cons_enum (s e)
   (match s ((Empty%) e) ((Node :l l :v v :r r) (cons_enum l (make-More v r e)))))
@@ -17761,7 +25423,7 @@
 
 (in-package :holai.metis.metis_prover.substitute)
 
-(defvariant subst (Subst% field0))
+(defvariant subst (Subst% #:field0))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Basic operations.                                                         *)
@@ -18337,7 +25999,7 @@
 
 (in-package :holai.metis.metis_prover.atom.map.ma)
 
-(defvariant t% (Empty%) (Node (:record l v d r h)))
+(defvariant t% (Empty%) (Node (:record #:l #:v #:d #:r #:h)))
 
 (defunc height (arg~19939) (match arg~19939 ((Empty%) 0) ((Node :h h) h)))
 
@@ -18564,7 +26226,7 @@
         (cl:declare (cl:ignorable l% pvd r%))
         (if pvd (if (cl:and (== l l%) (== r r%)) m (join l% v d r%)) (concat l% r%))))))
 
-(defvariant enumeration (End) (More field0 field1 field2 field3))
+(defvariant enumeration (End) (More #:field0 #:field1 #:field2 #:field3))
 
 (defunc cardinal (arg~21098)
   (match arg~21098 ((Empty%) 0) ((Node :l l :r r) (+ (+ (cardinal l) 1) (cardinal r)))))
@@ -18656,7 +26318,7 @@
 
 (in-package :holai.metis.metis_prover.atom.set.se)
 
-(defvariant t% (Empty%) (Node (:record l v r h)))
+(defvariant t% (Empty%) (Node (:record #:l #:v #:r #:h)))
 
 ;; (* Sets are represented by balanced binary trees (the heights of the
 ;;        children differ by at most 2 *)
@@ -18876,7 +26538,7 @@
         ((tuple l2 cl:nil r2) (concat (inter l1 l2) (inter r1 r2)))
         ((tuple l2 cl:t r2) (join (inter l1 l2) v1 (inter r1 r2)))))))
 
-(defvariant split_bis (Found) (NotFound field0 field1))
+(defvariant split_bis (Found) (NotFound #:field0 #:field1))
 
 (defunc diff (s1 s2)
   (match (tuple s1 s2)
@@ -18887,7 +26549,7 @@
         ((tuple l2 cl:nil r2) (join (diff l1 l2) v1 (diff r1 r2)))
         ((tuple l2 cl:t r2) (concat (diff l1 l2) (diff r1 r2)))))))
 
-(defvariant enumeration (End) (More field0 field1 field2))
+(defvariant enumeration (End) (More #:field0 #:field1 #:field2))
 
 (defunc cons_enum (s e)
   (match s ((Empty%) e) ((Node :l l :v v :r r) (cons_enum l (make-More v r e)))))
@@ -19025,14 +26687,14 @@
 (defvariant formula
   (True_)
   (False_)
-  (Atom field0)
-  (Not field0)
-  (And field0 field1)
-  (Or field0 field1)
-  (Imp field0 field1)
-  (Iff field0 field1)
-  (Forall field0 field1)
-  (Exists field0 field1))
+  (Atom #:field0)
+  (Not #:field0)
+  (And #:field0 #:field1)
+  (Or #:field0 #:field1)
+  (Imp #:field0 #:field1)
+  (Iff #:field0 #:field1)
+  (Forall #:field0 #:field1)
+  (Exists #:field0 #:field1))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Constructors and destructors.                                             *)
@@ -19674,7 +27336,7 @@
 
 (in-package :holai.metis.metis_prover.formula.map.ma)
 
-(defvariant t% (Empty%) (Node (:record l v d r h)))
+(defvariant t% (Empty%) (Node (:record #:l #:v #:d #:r #:h)))
 
 (defunc height (arg~25472) (match arg~25472 ((Empty%) 0) ((Node :h h) h)))
 
@@ -19901,7 +27563,7 @@
         (cl:declare (cl:ignorable l% pvd r%))
         (if pvd (if (cl:and (== l l%) (== r r%)) m (join l% v d r%)) (concat l% r%))))))
 
-(defvariant enumeration (End) (More field0 field1 field2 field3))
+(defvariant enumeration (End) (More #:field0 #:field1 #:field2 #:field3))
 
 (defunc cardinal (arg~26631)
   (match arg~26631 ((Empty%) 0) ((Node :l l :r r) (+ (+ (cardinal l) 1) (cardinal r)))))
@@ -19994,7 +27656,7 @@
 
 (in-package :holai.metis.metis_prover.formula.set.se)
 
-(defvariant t% (Empty%) (Node (:record l v r h)))
+(defvariant t% (Empty%) (Node (:record #:l #:v #:r #:h)))
 
 ;; (* Sets are represented by balanced binary trees (the heights of the
 ;;        children differ by at most 2 *)
@@ -20214,7 +27876,7 @@
         ((tuple l2 cl:nil r2) (concat (inter l1 l2) (inter r1 r2)))
         ((tuple l2 cl:t r2) (join (inter l1 l2) v1 (inter r1 r2)))))))
 
-(defvariant split_bis (Found) (NotFound field0 field1))
+(defvariant split_bis (Found) (NotFound #:field0 #:field1))
 
 (defunc diff (s1 s2)
   (match (tuple s1 s2)
@@ -20225,7 +27887,7 @@
         ((tuple l2 cl:nil r2) (join (diff l1 l2) v1 (diff r1 r2)))
         ((tuple l2 cl:t r2) (concat (diff l1 l2) (diff r1 r2)))))))
 
-(defvariant enumeration (End) (More field0 field1 field2))
+(defvariant enumeration (End) (More #:field0 #:field1 #:field2))
 
 (defunc cons_enum (s e)
   (match s ((Empty%) e) ((Node :l l :v v :r r) (cons_enum l (make-More v r e)))))
@@ -20583,7 +28245,7 @@
 
 (in-package :holai.metis.metis_prover.literal.map.ma)
 
-(defvariant t% (Empty%) (Node (:record l v d r h)))
+(defvariant t% (Empty%) (Node (:record #:l #:v #:d #:r #:h)))
 
 (defunc height (arg~28742) (match arg~28742 ((Empty%) 0) ((Node :h h) h)))
 
@@ -20810,7 +28472,7 @@
         (cl:declare (cl:ignorable l% pvd r%))
         (if pvd (if (cl:and (== l l%) (== r r%)) m (join l% v d r%)) (concat l% r%))))))
 
-(defvariant enumeration (End) (More field0 field1 field2 field3))
+(defvariant enumeration (End) (More #:field0 #:field1 #:field2 #:field3))
 
 (defunc cardinal (arg~29901)
   (match arg~29901 ((Empty%) 0) ((Node :l l :r r) (+ (+ (cardinal l) 1) (cardinal r)))))
@@ -20905,7 +28567,7 @@
 
 (in-package :holai.metis.metis_prover.literal.set.include~30172.se)
 
-(defvariant t% (Empty%) (Node (:record l v r h)))
+(defvariant t% (Empty%) (Node (:record #:l #:v #:r #:h)))
 
 ;; (* Sets are represented by balanced binary trees (the heights of the
 ;;        children differ by at most 2 *)
@@ -21125,7 +28787,7 @@
         ((tuple l2 cl:nil r2) (concat (inter l1 l2) (inter r1 r2)))
         ((tuple l2 cl:t r2) (join (inter l1 l2) v1 (inter r1 r2)))))))
 
-(defvariant split_bis (Found) (NotFound field0 field1))
+(defvariant split_bis (Found) (NotFound #:field0 #:field1))
 
 (defunc diff (s1 s2)
   (match (tuple s1 s2)
@@ -21136,7 +28798,7 @@
         ((tuple l2 cl:nil r2) (join (diff l1 l2) v1 (diff r1 r2)))
         ((tuple l2 cl:t r2) (concat (diff l1 l2) (diff r1 r2)))))))
 
-(defvariant enumeration (End) (More field0 field1 field2))
+(defvariant enumeration (End) (More #:field0 #:field1 #:field2))
 
 (defunc cons_enum (s e)
   (match s ((Empty%) e) ((Node :l l :v v :r r) (cons_enum l (make-More v r e)))))
@@ -21367,7 +29029,7 @@
 
 (in-package :holai.metis.metis_prover.literal.set_map.ma)
 
-(defvariant t% (Empty%) (Node (:record l v d r h)))
+(defvariant t% (Empty%) (Node (:record #:l #:v #:d #:r #:h)))
 
 (defunc height (arg~31727) (match arg~31727 ((Empty%) 0) ((Node :h h) h)))
 
@@ -21594,7 +29256,7 @@
         (cl:declare (cl:ignorable l% pvd r%))
         (if pvd (if (cl:and (== l l%) (== r r%)) m (join l% v d r%)) (concat l% r%))))))
 
-(defvariant enumeration (End) (More field0 field1 field2 field3))
+(defvariant enumeration (End) (More #:field0 #:field1 #:field2 #:field3))
 
 (defunc cardinal (arg~32886)
   (match arg~32886 ((Empty%) 0) ((Node :l l :r r) (+ (+ (cardinal l) 1) (cardinal r)))))
@@ -21687,7 +29349,7 @@
 
 (in-package :holai.metis.metis_prover.literal.set_set.se)
 
-(defvariant t% (Empty%) (Node (:record l v r h)))
+(defvariant t% (Empty%) (Node (:record #:l #:v #:r #:h)))
 
 ;; (* Sets are represented by balanced binary trees (the heights of the
 ;;        children differ by at most 2 *)
@@ -21907,7 +29569,7 @@
         ((tuple l2 cl:nil r2) (concat (inter l1 l2) (inter r1 r2)))
         ((tuple l2 cl:t r2) (join (inter l1 l2) v1 (inter r1 r2)))))))
 
-(defvariant split_bis (Found) (NotFound field0 field1))
+(defvariant split_bis (Found) (NotFound #:field0 #:field1))
 
 (defunc diff (s1 s2)
   (match (tuple s1 s2)
@@ -21918,7 +29580,7 @@
         ((tuple l2 cl:nil r2) (join (diff l1 l2) v1 (diff r1 r2)))
         ((tuple l2 cl:t r2) (concat (diff l1 l2) (diff r1 r2)))))))
 
-(defvariant enumeration (End) (More field0 field1 field2))
+(defvariant enumeration (End) (More #:field0 #:field1 #:field2))
 
 (defunc cons_enum (s e)
   (match s ((Empty%) e) ((Node :l l :v v :r r) (cons_enum l (make-More v r e)))))
@@ -22062,7 +29724,7 @@
   (Refl%)
   (Equality%))
 
-(defvariant thm (Thm field0 field1))
+(defvariant thm (Thm #:field0 #:field1))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Theorem destructors.                                                      *)
@@ -22288,12 +29950,12 @@
 (in-package :holai.metis.metis_prover.proof)
 
 (defvariant inference
-  (Axiom field0)
-  (Assume field0)
-  (Subst field0 field1)
-  (Resolve field0 field1 field2)
-  (Refl field0)
-  (Equality field0 field1 field2))
+  (Axiom #:field0)
+  (Assume #:field0)
+  (Subst #:field0 #:field1)
+  (Resolve #:field0 #:field1 #:field2)
+  (Refl #:field0)
+  (Equality #:field0 #:field1 #:field2))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Reconstructing single inferences.                                         *)
@@ -23171,9 +30833,9 @@
 (defunc freshVars (th)
   (subst (holai.metis.metis_prover.substitute:freshVars (freeVars th)) th))
 
-(defvariant edge (Factor_edge field0 field1) (Refl_edge field0 field1))
+(defvariant edge (Factor_edge #:field0 #:field1) (Refl_edge #:field0 #:field1))
 
-(defvariant joinStatus (Joined) (Joinable field0) (Apart))
+(defvariant joinStatus (Joined) (Joinable #:field0) (Apart))
 
 (defunc joinEdge (sub edge)
   (let
@@ -23362,7 +31024,7 @@
 
 (defunc minMaxInterval (i% j) (interval i% (- (+ 1 j) i%)))
 
-(defrecord size size)
+(defrecord size #:size)
 
 (defparameter zeroElement 0)
 
@@ -23388,7 +31050,7 @@
           (match elts (nil acc) ((cl:cons elt elts%) (f (+ (* n acc) elt) elts%)))))
         (f 0)))))
 
-(defrecord fixed functions relations)
+(defrecord fixed #:functions #:relations)
 
 (defparameter uselessFixedFunction (K (K (make-None))))
 
@@ -23484,7 +31146,7 @@
     (cl:declare (cl:ignorable fns rels))
     (make-fixed :functions fns :relations rels)))
 
-(defrecord fixedMap functionMap relationMap)
+(defrecord fixedMap #:functionMap #:relationMap)
 
 (defunc mapFixed (fixMap% fix%)
   (match (tuple fixMap% fix%)
@@ -24016,7 +31678,7 @@
 
 (defparameter listFixed (mapFixed fixMap baseFix))
 
-(defvariant valuation (Valuation field0))
+(defvariant valuation (Valuation #:field0))
 
 (defparameter emptyValuation
   (make-Valuation (holai.metis.metis_prover.name.map:newMap unit)))
@@ -24081,7 +31743,7 @@
 
 (defparameter cUNKNOWN (- 1))
 
-(defvariant table (Forgetful_table) (Array_table field0))
+(defvariant table (Forgetful_table) (Array_table #:field0))
 
 (defunc newTable (n arity)
   (match (elementListSpace (make-size :size n) arity)
@@ -24112,7 +31774,7 @@
             (cl:declare (cl:ignorable i%))
             (match (array-set a% i% r%) ((cl:type holai.runtime::unit-value) unit))))))))
 
-(defrecord tables domainSize rangeSize tableMap)
+(defrecord tables #:domainSize #:rangeSize #:tableMap)
 
 (defunc newTables (n vR)
   (make-tables :domainSize n :rangeSize vR :tableMap (ref (newMap unit))))
@@ -24149,9 +31811,15 @@
             (cl:declare (cl:ignorable a% table))
             (updateTable vN table (tuple elts r%))))))))
 
-(defrecord parameters sizep fixed)
+(defrecord parameters #:sizep #:fixed)
 
-(defrecord model sizem fixedFunctions fixedRelations randomFunctions randomRelations)
+(defrecord
+  model
+  #:sizem
+  #:fixedFunctions
+  #:fixedRelations
+  #:randomFunctions
+  #:randomRelations)
 
 (defunc newModel (arg~40589)
   (match arg~40589
@@ -24371,7 +32039,7 @@
           (match (updateTables rndRels (tuple rel_elts (boolToInt pol)))
             ((cl:type holai.runtime::unit-value) unit)))))))
 
-(defvariant modelTerm (Model_var) (Model_fn field0 field1 field2))
+(defvariant modelTerm (Model_var) (Model_fn #:field0 #:field1 #:field2))
 
 (defunc modelTerm (vM vV)
   (labelsc
@@ -24385,8 +32053,8 @@
     #'modelTm))
 
 (defvariant perturbation
-  (Function_perturbation field0 field1)
-  (Relation_perturbation field0 field1))
+  (Function_perturbation #:field0 #:field1)
+  (Relation_perturbation #:field0 #:field1))
 
 (defunc perturb (vM pert)
   (match pert
@@ -24495,7 +32163,7 @@
 
 (defparameter anonymousVar (holai.metis.metis_prover.term:make-Var anonymousName))
 
-(defvariant qterm (Var) (Fn field0 field1))
+(defvariant qterm (Var) (Fn #:field0 #:field1))
 
 (defunc cmp (arg~41686)
   (match arg~41686
@@ -24606,11 +32274,11 @@
     ((Fn (tuple f _) l)
       (holai.metis.metis_prover.term:make-Fn (tuple f (list-map #'qtermToTerm l))))))
 
-(defrecord parameters fifo)
+(defrecord parameters #:fifo)
 
-(defvariant net (Result field0) (Single field0 field1) (Multiple field0 field1))
+(defvariant net (Result #:field0) (Single #:field0 #:field1) (Multiple #:field0 #:field1))
 
-(defvariant termNet (Net field0 field1 field2))
+(defvariant termNet (Net #:field0 #:field1 #:field2))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Basic operations.                                                         *)
@@ -25098,7 +32766,7 @@
 
 (in-package :holai.metis.metis_prover.literal_net)
 
-(defrecord literalNet positive negative)
+(defrecord literalNet #:positive #:negative)
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Basic operations.                                                         *)
@@ -25245,9 +32913,9 @@
 
 (defunc idSetIntersect (set1 set2) (intersect set1 set2))
 
-(defrecord nonunit_t nextId clauses fstLits sndLits)
+(defrecord nonunit_t #:nextId #:clauses #:fstLits #:sndLits)
 
-(defrecord subsume empty unitn nonunit)
+(defrecord subsume #:empty #:unitn #:nonunit)
 
 (defunc newSubsume (arg~44355)
   (match arg~44355
@@ -25583,7 +33251,7 @@
     ((Some (tuple x y)) (#`f x y))
     ((None) (raise (make-Bug "firstNotEqualTerm")))))
 
-(defrecord kbo weight precedence)
+(defrecord kbo #:weight #:precedence)
 
 ;; (* Default weight = uniform *)
 
@@ -25607,7 +33275,7 @@
 
 (defparameter default (make-kbo :weight uniformWeight :precedence #'arityPrecedence))
 
-(defvariant weight (Weight field0 field1))
+(defvariant weight (Weight #:field0 #:field1))
 
 (defparameter weightEmpty (newMap unit))
 
@@ -25747,9 +33415,9 @@
 (defunc toStringOrientOption (orto)
   (match orto ((Some ort) (toStringOrient ort)) ((None) "<->")))
 
-(defrecord rewrite_t order known redexes subterms waiting)
+(defrecord rewrite_t #:order #:known #:redexes #:subterms #:waiting)
 
-(defvariant rewrite (Rewrite% field0))
+(defvariant rewrite (Rewrite% #:field0))
 
 (defunc updateWaiting (rw waiting)
   (match rw
@@ -26061,7 +33729,7 @@
             (cl:declare (cl:ignorable th))
             (lambdac (tm) (if (equal tm l) (tuple r% th) (failwith "mkNeqConv: LR")))))))))
 
-(defvariant neqConvs (Neq_convs field0))
+(defvariant neqConvs (Neq_convs #:field0))
 
 (defparameter neqConvsEmpty
   (make-Neq_convs (holai.metis.metis_prover.literal.map:newMap unit)))
@@ -26595,7 +34263,7 @@
 
 (in-package :holai.metis.metis_prover.units)
 
-(defvariant units (Units field0))
+(defvariant units (Units #:field0))
 
 (defparameter empty (make-Units (newNet (make-parameters :fifo cl:nil))))
 
@@ -26718,11 +34386,11 @@
   (Unsigned_literal_order)
   (Positive_literal_order))
 
-(defrecord parameters ordering orderLiterals orderTerms)
+(defrecord parameters #:ordering #:orderLiterals #:orderTerms)
 
-(defrecord clauseInfo parameters id thm)
+(defrecord clauseInfo #:parameters #:id #:thm)
 
-(defvariant clause (Clause field0))
+(defvariant clause (Clause #:field0))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Pretty printing.                                                          *)
@@ -27094,31 +34762,31 @@
 
 (in-package :holai.metis.metis_prover.ax_cj)
 
-(defrecord ax_cj_thm axioms_thm conjecture_thm)
+(defrecord ax_cj_thm #:axioms_thm #:conjecture_thm)
 
-(defrecord ax_cj_cl axioms_cl conjecture_cl)
+(defrecord ax_cj_cl #:axioms_cl #:conjecture_cl)
 
 (in-package :holai.metis.metis_prover)
 
 (in-package :holai.metis.metis_prover.active)
 
-(defrecord simplify~1 subsumes reduce rewrites)
+(defrecord simplify~1 #:subsumes #:reduce #:rewrites)
 
-(defrecord parameters clause prefactor postfactor)
+(defrecord parameters #:clause #:prefactor #:postfactor)
 
 (defrecord
   active_t
-  parameters
-  clauses
-  units
-  rewrite
-  subsume
-  literals
-  equations
-  subterms
-  allSubterms)
+  #:parameters
+  #:clauses
+  #:units
+  #:rewrite
+  #:subsume
+  #:literals
+  #:equations
+  #:subterms
+  #:allSubterms)
 
-(defvariant active (Active field0))
+(defvariant active (Active #:field0))
 
 (defunc getSubsume (arg~48826) (match arg~48826 ((Active (active_t :subsume s)) s)))
 
@@ -27908,13 +35576,19 @@
 
 (in-package :holai.metis.metis_prover.waiting)
 
-(defrecord modelParameters model initialPerturbations maxChecks perturbations weight)
+(defrecord
+  modelParameters
+  #:model
+  #:initialPerturbations
+  #:maxChecks
+  #:perturbations
+  #:weight)
 
-(defrecord parameters symbolsWeight variablesWeight literalsWeight modelsP)
+(defrecord parameters #:symbolsWeight #:variablesWeight #:literalsWeight #:modelsP)
 
-(defrecord waiting_t parameters clauses models)
+(defrecord waiting_t #:parameters #:clauses #:models)
 
-(defvariant waiting (Waiting field0))
+(defvariant waiting (Waiting #:field0))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Basic operations.                                                         *)
@@ -28169,11 +35843,11 @@
 
 (in-package :holai.metis.metis_prover.resolution)
 
-(defrecord parameters activeP waitingP)
+(defrecord parameters #:activeP #:waitingP)
 
-(defrecord resolution_t parameters active waiting)
+(defrecord resolution_t #:parameters #:active #:waiting)
 
-(defvariant resolution (Resolution field0))
+(defvariant resolution (Resolution #:field0))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Basic operations.                                                         *)
@@ -28218,9 +35892,9 @@
 (defunc waiting (arg~51036)
   (match arg~51036 ((Resolution (resolution_t :waiting w%)) w%)))
 
-(defvariant decision (Contradiction field0) (Satisfiable field0))
+(defvariant decision (Contradiction #:field0) (Satisfiable #:field0))
 
-(defvariant state (Decided field0) (Undecided field0))
+(defvariant state (Decided #:field0) (Undecided #:field0))
 
 (defunc iterate (res)
   (match res

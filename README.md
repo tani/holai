@@ -44,7 +44,7 @@ revision used by the comparison scripts.
 
 ```sh
 make build                         # bin/ml2cl, built from the OCaml sources
-make regenerate                    # Lisp, source maps and ASDF load manifest
+make regenerate                    # Lisp, source maps and package-provider data
 make test                          # full OCaml/SBCL differential validation
 make clean-build                   # isolated source build; compare 94 outputs
 misc/scripts/run-sbcl.sh                 # load the generated core in fresh SBCL
@@ -57,9 +57,22 @@ in the test runner; `misc/scripts/compile-core.sh` provides the same setting.
 The core uses a 256 MiB control stack. Linux is required for the peak-RSS
 measurement scripts, which use per-child `wait4.ru_maxrss`.
 
-The translator CLI is `ml2cl`; production Lisp packages are `holai.*` (runtime `holai.runtime`), and ASDF systems are `holai-runtime` and `holai-generated`.
+The translator CLI is `ml2cl`; production Lisp packages remain `holai.*`
+(runtime `holai.runtime`). The single root `holai.asd` defines `holai` and
+`holai/runtime`; generated `holai/generated/<stem>` systems use genuine
+package inference. There are no old-system aliases.
 For example, `ocamlrun bin/ml2cl translate --output-dir holai/generated <files...>`
 translates inputs; `scan` reports supported constructs and source diagnostics.
+
+Require ASDF, register only the repository root in its source registry, then
+use `(asdf:load-system "holai")` for the complete core or
+`(asdf:load-system "holai/runtime")` for the runtime alone. The latter does not
+initialize the HOL core. `holai/all.lisp` is the inferred terminal-core entry.
+Generated `package-systems.sexp` registers all physical files' package providers;
+predecessor dependencies retain the original 46-file initialization order.
+The public package API, private constructors and source algorithms are unchanged.
+UIOP declarations reduce avoidable prefixes while preserving canonical imports,
+lexical reader ownership and CL-first control semantics.
 
 ## Generated names
 
@@ -162,7 +175,8 @@ hygiene, plus eight direct reader-headed consumer checks.
 One new tactical observation adds computed-head/evaluation-count coverage
 beside existing partial/excess paths. Six language observations covered
 local function groups. All seven added rows matched OCaml/SBCL exactly in that release.
-The existing 11 fixture components and 51 production units are unchanged.
+That preceding release retained 11 fixture components and 51 production units;
+the current inferred entry raises production compilation to 52 units.
 
 ### Shallow generated calls and local functions
 
@@ -245,23 +259,40 @@ IR at macro expansion time and standard Common Lisp control/binding forms.
 Constructor/record descriptors are resolved before execution; guards and OR
 binding joins preserve clause order. See [PATTERN-MATCH.md](misc/reports/PATTERN-MATCH.md).
 
-The current DESIGN §36 variant passed `nix develop path:. --command make release`
-in 218.79 seconds on aarch64-linux with OCaml 4.14.2, Camlp5 8.02.01 and SBCL 2.3.9.nixos.
-122 existing native checks, 69 independent PROOF checks, 27 calling-protocol,
+The latest DESIGN §37 unified ASDF/UIOP cutover passed
+`nix develop path:. --command make release` (exit 0) in 226.10 seconds on
+aarch64-linux with OCaml 4.14.2, Camlp5 8.02.01 and SBCL 2.3.9.nixos.
+123 native checks, 69 independent PROOF checks, 27 calling-protocol,
 84 OPTIONAL-entry, 16 tuple and 46 structural-pattern checks passed.
-All 1,142 OCaml/SBCL output rows matched (1,135 serialized observations and
-seven actual side-effect rows). All 46 inputs initialized with 22 types,
-303 constants, 263 definitions and exactly the three original source axioms.
-The 5,519 OCaml/5,517 SBCL initialization rows retain the documented exact
+All 1,143 OCaml/SBCL output rows matched (1,136 serialized observations and
+seven actual side-effect rows). All 46 inputs initialized in original order
+with 22 types, 303 constants, 263 definitions and exactly the three source axioms.
+The 5,519 OCaml/5,517 SBCL initialization rows retain exactly the documented
 two OCaml-only messages; raw initialization transcripts are not identical.
-All 194,839 core/206,245 fixture-inclusive map entries passed audit, and ten
-rejection checks kept output unchanged. Fresh-cache compilation of 51
-production units had zero errors, warnings or style warnings; all 94 clean
-outputs were identical and all 55 retained input hashes unchanged.
-The release ZIP's 305 members (304 payload files plus RELEASE-MANIFEST.json)
-were verified. Generated core Lisp totals
-5,727,348 bytes after final header formatting; this is an inventory, not a
-performance measurement.
+All 194,839 core/206,277 fixture-inclusive map entries passed audit, and ten
+rejection checks kept output unchanged. Fresh-cache diagnostics recorded 52
+unique production source paths in manifest compile/load order, including 47
+genuinely inferred core/entry components, with zero errors, warnings, style
+warnings or notices. All 94 clean outputs were identical and all 55 retained
+input hashes unchanged.
+
+Fresh ASDF 3.3.1 smokes loaded runtime alone, the complete inferred 46-source
+core, and `holai/generated/fusion` without parser/later theories. The full-core
+smoke proved a closed `p ==> p`, checked private constructors and preserved
+the original three axioms after reload. The lexical-module UNIT escaped-closure
+regression passed alongside existing private/namespace/parent-capture coverage:
+independent lexical seeds do not alter runtime UNIT.
+Only the five shared-package runtime files are explicit components, in the
+same root `holai.asd`; `holai/all.lisp` is a genuinely inferred entry.
+Safe CL-first UIOP foreign-input mixes, canonical imports and reader-owner
+local shadows shorten references without changing CL control, private makers
+or lexical scope; prefixes are not universally removed.
+
+The release ZIP contains 306 members (305 payload files plus
+`RELEASE-MANIFEST.json`), including the sole `holai/holai.asd`, entry, provider
+data and 92 generated Lisp/map members. Generated core Lisp totals 5,980,663
+bytes; this inventory is not a performance measurement. The user explicitly
+authorized committing and pushing this validated cutover to `tani/holai` main.
 See [verification.json](misc/reports/verification.json),
 [clean-build.json](misc/reports/clean-build.json),
 [compile-diagnostics.json](misc/reports/compile-diagnostics.json) and
@@ -281,7 +312,8 @@ See [OPTIONAL-ENTRY.md](misc/reports/OPTIONAL-ENTRY.md) and
 |---|---|
 | `ml2cl/` | OCaml translator and command-line interface |
 | `holai/runtime/` | Curried calling protocol and compatibility boundary |
-| `holai/generated/` | Generated Lisp, inventory and ASDF system, kept for source comparison |
+| `holai/generated/` | Generated Lisp, inventory and package-provider data, kept for source comparison |
+| `holai.asd`, `holai/all.lisp` | Single ASDF definition and inferred full-core entry |
 | `vendor/` | Pinned HOL Light/OCaml inputs and their licenses |
 | `holai/tests/` | Semantic, kernel, differential and boundary tests; benchmark harnesses |
 | `misc/scripts/` | Build verification, scanning, packaging and reproducible measurements |

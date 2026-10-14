@@ -3,7 +3,7 @@
 (defun profile-core-operation (operation component action)
   (let ((path (namestring (asdf:component-pathname component))))
     (if (search "/generated/" path)
-        (let ((start (get-internal-real-time)) (name (asdf:component-name component)))
+        (let ((start (get-internal-real-time)) (name (pathname-name (asdf:component-pathname component))))
           (format t "~&PROFILE_START ~a ~a~%" operation name) (finish-output)
           (prog1 (cl:funcall action)
             (let ((seconds (/ (- (get-internal-real-time) start)

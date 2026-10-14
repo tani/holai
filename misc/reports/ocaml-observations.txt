@@ -887,6 +887,7 @@ language_function_barrier=42,101,1
 language_function_entry_shadow=142,142,284,284,42,42,42,42:true:true:true:true:true:true:true
 language_function_case_shadow=42,42,42,42:true:true
 language_module_function_scope=42,42,42,142,284,42,42,42,42,42,42,1,285,42,1:42,42,42,142,284,42,42,42,42,42,42,1,285,42,1
+language_module_special=42,42,21
 language_loops=19,3
 language_lazy=0,42,42,1,1:true:true
 language_hash=5,9:true

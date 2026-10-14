@@ -1,7 +1,7 @@
 (require :asdf)
 (asdf:initialize-source-registry `(:source-registry (:directory ,(truename ".")) :inherit-configuration))
 (setf asdf:*asdf-verbose* nil *compile-verbose* nil *load-verbose* nil)
-(asdf:load-system "holai-runtime")
+(asdf:load-system "holai/runtime")
 (defvar *tuple-list-checks* 0)
 (defun check-tuple (value) (incf *tuple-list-checks*) (unless value (error "Tuple-list check ~d failed" *tuple-list-checks*)))
 (let* ((inner (holai.runtime:tuple 3 4)) (pair (holai.runtime:tuple nil inner)))

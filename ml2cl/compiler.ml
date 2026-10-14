@@ -23,7 +23,7 @@ let rec module_function_group = function
  | Origin (origin,node) when origin.rule="local-module-binding" ->
    Option.map (fun (definitions,body,origins) -> definitions,body,origin::origins)
      (module_function_group node)
- | List [Atom "holai.runtime:labelsc";List definitions;body] ->
+ | List [Atom head;List definitions;body] when head="labelsc" || head="holai.runtime:labelsc" ->
    Some (definitions,body,[])
  | _ -> None
 let combine_module_functions head functions body =
@@ -304,8 +304,10 @@ let rec emit c env e =
    if List.length (v indices)<>1 then error loc "Unsupported string index arity";
    form (runtime c "string-get") (emit c env base::List.map (emit c env) (v indices)),"string-read"
  | ExFun _ -> emit_lambda c env e,"lambda"
- | ExLaz (_,body) -> form (runtime c "lazy-create")
-   [form (runtime c "lambdac") [l [a "lazy~unit"];emit c env body]],"lazy-expression"
+ | ExLaz (_,body) ->
+   let parameter=synthetic_local c "lazy~unit" in
+   form (runtime c "lazy-create")
+     [form (runtime c "lambdac") [l [a parameter];emit c env body]],"lazy-expression"
  | ExAsr (_,condition) -> form (runtime c "assert-true")
    [emit c env condition;string c.source;a (string_of_int (Ploc.line_nb loc));
     a (string_of_int (Ploc.first_pos loc-Ploc.bol_pos loc))],"assertion"
@@ -327,7 +329,7 @@ let rec emit c env e =
  | ExIfe (_,q,t,f) -> form "if" [emit c env q;emit c env t;emit c env f],"if"
  | ExSeq (_,es) -> form "progn" (List.map (emit c env) (v es)),"sequence"
  | ExMat (_,x,cs) -> form (runtime c "match") (emit c env x::emit_cases c env (v cs)),"match"
- | ExTry (_,x,cs) -> let ex=Sexp.symbol (fresh c "exception") in
+ | ExTry (_,x,cs) -> let ex=synthetic_local c (Sexp.symbol (fresh c "exception")) in
    let fallback=l [a "_";form (runtime c "raise") [a ex]] in
    form "handler-case" [emit c env x;
      l [a "holai.runtime:ocaml-condition";l [a ex];
@@ -655,8 +657,11 @@ let rec structure c initial signature items =
        let previous=match SM.find_opt s !env.values with Some ({kind=Constructor _;_} as b) -> Some b | _ -> None in
        let non_tuple_payload=match v types with [t] -> non_tuple_type t | _ -> false in
        let b={b with kind=Constructor {fields;tuple_payload;record_fields;private_;maker;maker_logical;exception_=false;family;non_tuple_payload;previous}} in
-       let slots=match record_fields with None -> List.init fields (fun n -> a ("field"^string_of_int n))
-       | Some fields -> [form ":record" (List.map (fun (s,m) -> if m then l [a (Sexp.symbol s);a ":mutable"] else a (Sexp.symbol s)) fields)] in
+       (* Slot symbols are macro-local parameters, not source bindings.  Their
+          names still determine the original record keywords. *)
+       let slot s=a ("#:"^Sexp.symbol s) in
+       let slots=match record_fields with None -> List.init fields (fun n -> slot ("field"^string_of_int n))
+       | Some fields -> [form ":record" (List.map (fun (s,m) -> if m then l [slot s;a ":mutable"] else slot s) fields)] in
        publish s b; l (a b.printed::slots)) (v constructors) in
      push loc "variant-declaration" (form (runtime c "defvariant") (a (Sexp.symbol (match c.lexical_prefix with None -> name | Some prefix -> prefix^"."^name))::cs))
    | TyRec (_,fields) ->
@@ -670,7 +675,8 @@ let rec structure c initial signature items =
      let printed,logical=maker_spelling type_binding in
      c.makers<-SS.add printed c.makers;
      export ("%record-maker:"^name) {type_binding with printed;logical};
-     push loc "record-declaration" (form (runtime c "defrecord") (a type_binding.printed::List.map (fun (s,m) -> if m then l [a (Sexp.symbol s);a ":mutable"] else a (Sexp.symbol s)) labels))
+     let slot s=a ("#:"^Sexp.symbol s) in
+     push loc "record-declaration" (form (runtime c "defrecord") (a type_binding.printed::List.map (fun (s,m) -> if m then l [slot s;a ":mutable"] else slot s) labels))
    | TyLid _ | TyAcc _ | TyApp _ | TyTup _ | TyArr _ | TyQuo _ -> () (* Transparent OCaml type aliases are erased. *)
    | t -> error (MLast.loc_of_ctyp t) "Unsupported type declaration") (v ds)
  | StExc (_,ext,_) -> (match v ext with
@@ -682,7 +688,7 @@ let rec structure c initial signature items =
      let tuple_payload=match v types with [TyTup (_,xs)] -> Some (List.length (v xs)) | _ -> None in
      let previous=match SM.find_opt name !env.values with Some ({kind=Constructor _;_} as b) -> Some b | _ -> None in
      let b={b with kind=Constructor {fields;tuple_payload;record_fields=None;private_=false;maker;maker_logical;exception_=true;family="ocaml.exn";non_tuple_payload=false;previous}} in
-     publish name b;push loc "exception-declaration" (form (runtime c "define-exception") (a b.printed::List.init fields (fun i -> a ("field"^string_of_int i))))
+     publish name b;push loc "exception-declaration" (form (runtime c "define-exception") (a b.printed::List.init fields (fun i -> a ("#:field"^string_of_int i))))
    | _ -> error loc "Exception rebinding is unsupported")
  | StMty (_,name,mt,_) -> env:={ !env with signatures=SM.add (v name) (read_signature !env mt) !env.signatures}
  | StMod (_,recursive,ms) ->
@@ -758,31 +764,39 @@ and resolve_module c env name me : modul * (Sexp.t -> Sexp.t) * package_result l
  | MeStr (_,items) ->
    let lexical_prefix=match c.lexical_prefix with None -> None | Some prefix -> Some (if prefix="" then name else prefix^"."^name) in
    let package=if lexical_prefix=None then c.package^"."^String.lowercase_ascii (Sexp.symbol name) else c.package in
-   let child=context ~counter:c.next ~reference_observer:c.reference_observer ?lexical_prefix package c.source c.text (v items) in
+   let reader_owner=if lexical_prefix=None then None else Some (reader_owner c) in
+   let child=context ~counter:c.next ~reference_observer:c.reference_observer ?lexical_prefix ?reader_owner package c.source c.text (v items) in
    let out=structure child env None (v items) in
    if lexical_prefix<>None then c.metadata<-c.metadata@child.metadata;
    let packages=if lexical_prefix=None then out.packages else [] in
    {package;public=out.public;template=None},out.wrap,packages
  | _ -> error loc "Only static modules and functors are supported"
 let () = local_module_emitter:=Some (fun c env name me ->
- let lexical={c with lexical_prefix=Some (Option.value c.lexical_prefix ~default:"");metadata=[]} in
+ let lexical={c with lexical_prefix=Some (Option.value c.lexical_prefix ~default:"");
+   reader_owner=Some (reader_owner c);metadata=[]} in
  let m,wrap,ps=resolve_module lexical env name me in
  if ps<>[] then error (MLast.loc_of_module_expr me) "Unexpected global package in local module";
  c.metadata<-c.metadata@lexical.metadata;
  m,wrap)
 
 
-let package_declaration ?(initial=false) ?(internals=[]) c =
- let shadow=List.sort_uniq String.compare (List.map (fun s -> fst (spelling c s)) c.own @ SS.elements c.local_functions @ SS.elements c.makers) in
+let package_declaration ?(initial=false) ?(internals=[]) ?(dependencies=[]) ?(same_file=SS.empty) c =
+ let shadow=List.sort_uniq String.compare
+   (List.map (fun s -> fst (spelling c s)) c.own @
+    SS.elements c.local_symbols @ SS.elements c.local_functions @ SS.elements c.makers) in
  let imports=SM.fold (fun _ (b:binding) pkgs -> SM.add b.package (b::Option.value (SM.find_opt b.package pkgs) ~default:[]) pkgs) c.imports SM.empty in
- let imports=SM.bindings imports |> List.map (fun (pkg,bs) -> form ":shadowing-import-from" (a (":"^pkg)::List.map (fun b -> a b.printed) bs)) in
+ let imports=SM.bindings imports |> List.map (fun (pkg,bs) ->
+   form ":shadowing-import-from" (a (":"^pkg)::List.map (fun b -> a b.printed) bs)) in
  let exports=SM.fold (fun _ (b:binding) es ->
    if initial && b.package<>c.package then es else
    let s=a b.printed in match b.kind with
    | Constructor k when not k.private_ -> a k.maker::s::es
    | _ -> s::es) c.exports [] |> List.sort_uniq compare in
  let internals=List.filter (fun s -> not (List.mem s shadow || List.mem (a s) exports)) internals in
- form "defpackage" (a (":"^c.package)::form ":use" [a ":cl"]::
+ let mixed=SS.elements c.used_packages |> List.filter (fun pkg -> pkg<>"cl" && not (SS.mem pkg same_file)) in
+ form "uiop:define-package" (a (":"^c.package)::form ":use" [a ":cl"]::
+   (if initial || mixed=[] then [] else [form ":mix" (a ":cl"::List.map (fun pkg -> a (":"^pkg)) mixed)]) @
    (if shadow=[] then [] else [form ":shadow" (List.map a shadow)]) @
    (if initial then (if internals=[] then [] else [form ":intern" (List.map a internals)]) else imports) @
+   List.map (fun pkg -> form ":import-from" [a (":"^pkg)]) dependencies @
    [form ":export" exports])

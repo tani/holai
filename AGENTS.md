@@ -18,13 +18,15 @@ readable OCaml-to-Lisp translation, even when argument evaluation order differs.
   kernel, differential, source-map, and regeneration checks before release.
 - Keep original licensing in pinned and generated inputs, and pin dependencies.
 - Package with `make release`; its manifest must include the design and source.
-- Current 1.0.0 baseline: all 46 unchanged vendor/CORE_FILES.json inputs,
-  including system.ml and every theory through define.ml, parse/lower/compile/
-  initialize in original order. 122 independent SBCL checks and 1,124 matching
-  output lines (1,117 serialized, three print lines, two benign warnings and
-  two actual Groebner progress lines). Maps: 194,839 core / 205,341 with eleven
-  fixtures. Ten rejection checks preserve existing output; all 94 generated
-  files regenerate identically, including a translator built in a clean directory.
+- Latest completed validation is DESIGN37's unified ASDF/UIOP cutover:
+  `nix develop path:. --command make release` exited 0 in 226.10 seconds.
+  All 46 unchanged vendor/CORE_FILES.json inputs initialize in original order;
+  123 native and 69 independent PROOF checks, 1,143 matching rows (1,136
+  serialized and seven side-effect rows), 194,839 core / 206,277 fixture-inclusive
+  maps, ten protected rejection cases, 94 identical clean outputs and 55 unchanged
+  pins passed. Fresh-cache diagnostics recorded 52 unique production source paths
+  in compile/load order, including 47 genuinely inferred core/entry components,
+  with zero errors, warnings, style warnings or notices.
   Initial types/constants/definitions/axioms: 22/303/263/3. Initial inductive
   definitions: 3; rewrite/conversion/congruence/monotonicity lists: 34/5/8/9.
   Source axioms are exactly INFINITY_AX/SELECT_AX/ETA_AX; the primitive-kernel
@@ -191,13 +193,17 @@ readable OCaml-to-Lisp translation, even when argument evaluation order differs.
 - Two-run ABBA startup medians 97.840→81.957s; cumulative allocation50.95% lower,
   peakRSS16.67% higher. OCamlopt13.715s is a separate historical measurement.
   Never equate cumulative allocation with peak RSS or promise a universal speedup.
-- Read docs/REPOSITORY-LAYOUT.md. Track generated Lisp/inventory/ASDF, but not
-  generated source maps, _build, bin, dist, compiled code or Python caches.
-  make regenerate recreates maps; every source ZIP must include all94outputs.
+- Read docs/REPOSITORY-LAYOUT.md. Track generated Lisp, inventory and
+  package-systems.sexp provider data, but not generated source maps, _build, bin,
+  dist, compiled code or Python caches. make regenerate recreates maps; every
+  source ZIP must include all 94 generated outputs plus root ASD and entry.
 - Historical reports are under misc/reports/history/. Keep current evidence separate
   and update paths when moving files. Keep all vendor digests and licenses.
 - Current layout/API contract: CLI `bin/ml2cl`, packages `holai.*`, systems
-  `holai-runtime`/`holai-generated`. This user-authorized cutover supersedes the earlier retain-hol2cl rule; no compatibility aliases. Regenerate rather than hand-edit outputs.
+  `holai`/`holai/runtime` and inferred `holai/generated/<stem>` systems, all
+  discovered from the single root `holai.asd`. No compatibility aliases.
+  Regenerate rather than hand-edit outputs. DESIGN37 specifies provider data,
+  reader-owner imports/shadows and CL-first safe UIOP mix rules.
 - User authorized initial organization and push to tani/holai main. Subsequent
   unrelated publication requires its own user instruction.
 
@@ -348,8 +354,8 @@ readable OCaml-to-Lisp translation, even when argument evaluation order differs.
   5727348bytes after final header formatting is an inventory, not a performance
   claim. DESIGN33/34/35 measurements and staged metadata examples remain
   historical, not the current API or evidence for this cutover.
-  The full-release gate is satisfied; the user authorizes commit/push to
-  tani/holai main. Never claim a push before it succeeds.
+  This was the preceding checkpoint's satisfied release gate and publication
+  authorization, not authorization or validation of the new DESIGN37 cutover.
 - DESIGN36 lexical-module named function declarations also use ordinary LABELSC.
   Only immediately adjacent named declarations inside one structure combine;
   module declarations/aliases/includes, value or mixed slots, effects and the
@@ -374,3 +380,35 @@ readable OCaml-to-Lisp translation, even when argument evaluation order differs.
   partial and once-only initialization case twice with exact expected results.
   Static search found zero generated FLETC calls or stage tags.
   Validation and authorization are not evidence of publication.
+
+## Unified ASDF/UIOP cutover (DESIGN37)
+
+- Keep exactly one root holai.asd. Main holai and every generated core system
+  use genuine package inference; only the five shared-package runtime sources
+  are explicit components in holai/runtime. Register only the repository root.
+  Require ASDF before reading UIOP declarations in runtime-only scripts.
+- Track all provided packages, including nested/private/empty-export families,
+  in ordered generated package-systems.sexp. First root shell carries runtime,
+  predecessor and external-provider dependencies, excluding all same-file
+  packages. Guarded same-file shells precede complete declarations.
+- Preserve resolved binding identity, observers, source maps, private makers and
+  canonical imports. Lexical module forms use enclosing reader-owner imports
+  and shadow allocation. Shadow ordinary lexical values as well as functions
+  so mixed foreign SPECIAL exports cannot alter lexical scope. CL is first in
+  safe foreign-input mixes; no broad same-file use or new public exports.
+- Audit unique physical source pathnames: runtime five, core 46 in manifest
+  order and holai/all entry, 52 total; core/entry must be actual inferred
+  components. Fingerprint root ASD, entry, provider data and every production
+  source/translator. Regeneration/clean comparisons include .sexp and 94 outputs.
+- Existing constructor/private/parent-capture/collision regressions and the
+  added module UNIT escaped-closure/native runtime-UNIT preservation check passed.
+  Fresh ASDF 3.3.1 smokes loaded runtime alone, the inferred 46-source full core
+  and fusion without parser/later theories. A closed p ==> p proof, private
+  constructors and unchanged three axioms after reload passed.
+  Report counters and differential/map totals from actual reports; historical
+  baseline names and raw evidence stay unchanged.
+- The release archive has 306 members (305 payload plus manifest), only one ASD,
+  entry/provider data and 92 generated Lisp/map members. Core Lisp totals
+  5,980,663 bytes, an inventory rather than performance evidence.
+- The user explicitly authorizes committing and pushing the validated DESIGN37
+  cutover to tani/holai main. Validation alone does not authorize publication.

@@ -10,132 +10,161 @@
 ;; (*              (c) Copyright, John Harrison 1998-2007                       *)
 ;; (* ========================================================================= *)
 
-(cl:eval-when
-  (:compile-toplevel :load-toplevel :execute)
-  (cl:unless
-    (cl:find-package :holai.equal)
-    (defpackage :holai.equal
-      (:use :cl)
-      (:shadow
-        ABS_CONV
-        ALL_CONV
-        ALPHA
-        ALPHA_CONV
-        ALPHA_HACK
-        AP_TERM
-        AP_THM
-        BETA_CONV
-        BETA_RULE
-        BINDER_CONV
-        BINOP2_CONV
-        BINOP_CONV
-        CACHE_CONV
-        CHANGED_CONV
-        COMB2_CONV
-        COMB_CONV
-        COMB_QCONV
-        CONV_RULE
-        DEPTH_BINOP_CONV
-        DEPTH_CONV
-        DEPTH_QCONV
-        EVERY_CONV
-        FIRST_CONV
-        GEN_ALPHA_CONV
-        GSYM
-        LAND_CONV
-        MK_BINOP
-        NO_CONV
-        ONCE_DEPTH_CONV
-        ONCE_DEPTH_QCONV
-        ORELSEC
-        PATH_CONV
-        PAT_CONV
-        PCONV
-        PRINT_TERM_CONV
-        RAND_CONV
-        RATOR_CONV
-        REDEPTH_CONV
-        REDEPTH_QCONV
-        REPEATC
-        REPEATC%
-        REPEATQC
-        SUBS
-        SUBS_CONV
-        SUB_CONV
-        SUB_QCONV
-        SYM
-        SYM_CONV
-        THENC
-        THENCQC
-        THENQC
-        TOP_DEPTH_CONV
-        TOP_DEPTH_QCONV
-        TOP_SWEEP_CONV
-        TOP_SWEEP_QCONV
-        TRY_CONV
-        lhand
-        lhs
-        mk_primed_var
-        path_conv%
-        rhs
-        svariant)
-      (:export
-        ABS_CONV
-        ALL_CONV
-        ALPHA
-        ALPHA_CONV
-        AP_TERM
-        AP_THM
-        BETA_CONV
-        BETA_RULE
-        BINDER_CONV
-        BINOP2_CONV
-        BINOP_CONV
-        CACHE_CONV
-        CHANGED_CONV
-        COMB2_CONV
-        COMB_CONV
-        CONV_RULE
-        DEPTH_BINOP_CONV
-        DEPTH_CONV
-        EVERY_CONV
-        FIRST_CONV
-        GEN_ALPHA_CONV
-        GSYM
-        LAND_CONV
-        MK_BINOP
-        NO_CONV
-        ONCE_DEPTH_CONV
-        ORELSEC
-        PATH_CONV
-        PAT_CONV
-        PRINT_TERM_CONV
-        RAND_CONV
-        RATOR_CONV
-        REDEPTH_CONV
-        REPEATC
-        SUBS
-        SUBS_CONV
-        SUB_CONV
-        SYM
-        SYM_CONV
-        THENC
-        TOP_DEPTH_CONV
-        TOP_SWEEP_CONV
-        TRY_CONV
-        lhand
-        lhs
-        mk_primed_var
-        rhs))))
-
-(defpackage :holai.equal
+(uiop:define-package
+  :holai.equal
   (:use :cl)
   (:shadow
+    ABS%%
     ABS_CONV
+    AFN
     ALL_CONV
     ALPHA
     ALPHA_CONV
     ALPHA_HACK
+    AP_TERM
+    AP_THM
+    ARG
+    ARG~220
+    AVOID
+    B
+    BETA_CONV
+    BETA_RULE
+    BINDER_CONV
+    BINOP2_CONV
+    BINOP_CONV
+    BOD
+    C%
+    C1
+    C2
+    CACHE_CONV
+    CHANGED_CONV
+    CNV
+    COMB2_CONV
+    COMB_CONV
+    COMB_QCONV
+    CONV
+    CONV1
+    CONV2
+    CONV_RULE
+    DEPTH_BINOP_CONV
+    DEPTH_CONV
+    DEPTH_CONV%
+    DEPTH_QCONV
+    EVERY_CONV
+    EXCEPTION~108
+    EXCEPTION~1096
+    EXCEPTION~124
+    EXCEPTION~168
+    EXCEPTION~265
+    EXCEPTION~416
+    EXCEPTION~610
+    EXCEPTION~618
+    EXCEPTION~640
+    EXCEPTION~66
+    EXCEPTION~662
+    EXCEPTION~672
+    EXCEPTION~69
+    EXCEPTION~951
+    EXCEPTION~987
+    F
+    FIRST_CONV
+    GBOD
+    GEN_ALPHA_CONV
+    GSYM
+    GTH
+    GTM
+    GV
+    GVS
+    L
+    L%
+    LAND_CONV
+    LCONV
+    LEFTS
+    LOP
+    LTH
+    MK_BINOP
+    NET
+    NO_CONV
+    ONCE_DEPTH_CONV
+    ONCE_DEPTH_CONV%
+    ONCE_DEPTH_QCONV
+    OP
+    OP%
+    ORELSEC
+    PAT
+    PATH_CONV
+    PATH_CONV%
+    PAT_CONV
+    PBOD
+    PCONV
+    PRINT_TERM_CONV
+    R
+    R%
+    RAND_CONV
+    RATOR_CONV
+    RCONV
+    REDEPTH_CONV
+    REDEPTH_CONV%
+    REDEPTH_QCONV
+    REPEATC
+    REPEATC%
+    REPEATQC
+    RES
+    RTH
+    S
+    S%
+    SUBS
+    SUBS_CONV
+    SUB_CONV
+    SUB_QCONV
+    SVARIANT
+    SYM
+    SYM_CONV
+    T%
+    TH
+    TH1
+    TH2
+    THENC
+    THENCQC
+    THENQC
+    THS
+    TM
+    TM%
+    TM1
+    TM2
+    TOP_DEPTH_CONV
+    TOP_DEPTH_CONV%
+    TOP_DEPTH_QCONV
+    TOP_SWEEP_CONV
+    TOP_SWEEP_CONV%
+    TOP_SWEEP_QCONV
+    TRY_CONV
+    TY
+    V
+    V%
+    X
+    XS
+    Y
+    lhand
+    lhs
+    mk_primed_var
+    path_conv%
+    rhs
+    svariant)
+  (:import-from :holai.basics)
+  (:import-from :holai.fusion)
+  (:import-from :holai.fusion.hol)
+  (:import-from :holai.lib)
+  (:import-from :holai.nets)
+  (:import-from :holai.parser)
+  (:import-from :holai.preterm)
+  (:import-from :holai.printer)
+  (:import-from :holai.runtime)
+  (:export
+    ABS_CONV
+    ALL_CONV
+    ALPHA
+    ALPHA_CONV
     AP_TERM
     AP_THM
     BETA_CONV
@@ -147,11 +176,9 @@
     CHANGED_CONV
     COMB2_CONV
     COMB_CONV
-    COMB_QCONV
     CONV_RULE
     DEPTH_BINOP_CONV
     DEPTH_CONV
-    DEPTH_QCONV
     EVERY_CONV
     FIRST_CONV
     GEN_ALPHA_CONV
@@ -160,33 +187,173 @@
     MK_BINOP
     NO_CONV
     ONCE_DEPTH_CONV
-    ONCE_DEPTH_QCONV
     ORELSEC
     PATH_CONV
     PAT_CONV
-    PCONV
     PRINT_TERM_CONV
     RAND_CONV
     RATOR_CONV
     REDEPTH_CONV
+    REPEATC
+    SUBS
+    SUBS_CONV
+    SUB_CONV
+    SYM
+    SYM_CONV
+    THENC
+    TOP_DEPTH_CONV
+    TOP_SWEEP_CONV
+    TRY_CONV
+    lhand
+    lhs
+    mk_primed_var
+    rhs))
+
+(uiop:define-package
+  :holai.equal
+  (:use :cl)
+  (:mix
+    :cl
+    :holai.basics
+    :holai.fusion
+    :holai.fusion.hol
+    :holai.lib
+    :holai.nets
+    :holai.preterm
+    :holai.printer
+    :holai.runtime)
+  (:shadow
+    ABS%%
+    ABS_CONV
+    AFN
+    ALL_CONV
+    ALPHA
+    ALPHA_CONV
+    ALPHA_HACK
+    AP_TERM
+    AP_THM
+    ARG
+    ARG~220
+    AVOID
+    B
+    BETA_CONV
+    BETA_RULE
+    BINDER_CONV
+    BINOP2_CONV
+    BINOP_CONV
+    BOD
+    C%
+    C1
+    C2
+    CACHE_CONV
+    CHANGED_CONV
+    CNV
+    COMB2_CONV
+    COMB_CONV
+    COMB_QCONV
+    CONV
+    CONV1
+    CONV2
+    CONV_RULE
+    DEPTH_BINOP_CONV
+    DEPTH_CONV
+    DEPTH_CONV%
+    DEPTH_QCONV
+    EVERY_CONV
+    EXCEPTION~108
+    EXCEPTION~1096
+    EXCEPTION~124
+    EXCEPTION~168
+    EXCEPTION~265
+    EXCEPTION~416
+    EXCEPTION~610
+    EXCEPTION~618
+    EXCEPTION~640
+    EXCEPTION~66
+    EXCEPTION~662
+    EXCEPTION~672
+    EXCEPTION~69
+    EXCEPTION~951
+    EXCEPTION~987
+    F
+    FIRST_CONV
+    GBOD
+    GEN_ALPHA_CONV
+    GSYM
+    GTH
+    GTM
+    GV
+    GVS
+    L
+    L%
+    LAND_CONV
+    LCONV
+    LEFTS
+    LOP
+    LTH
+    MK_BINOP
+    NET
+    NO_CONV
+    ONCE_DEPTH_CONV
+    ONCE_DEPTH_CONV%
+    ONCE_DEPTH_QCONV
+    OP
+    OP%
+    ORELSEC
+    PAT
+    PATH_CONV
+    PATH_CONV%
+    PAT_CONV
+    PBOD
+    PCONV
+    PRINT_TERM_CONV
+    R
+    R%
+    RAND_CONV
+    RATOR_CONV
+    RCONV
+    REDEPTH_CONV
+    REDEPTH_CONV%
     REDEPTH_QCONV
     REPEATC
     REPEATC%
     REPEATQC
+    RES
+    RTH
+    S
+    S%
     SUBS
     SUBS_CONV
     SUB_CONV
     SUB_QCONV
+    SVARIANT
     SYM
     SYM_CONV
+    T%
+    TH
+    TH1
+    TH2
     THENC
     THENCQC
     THENQC
+    THS
+    TM
+    TM%
+    TM1
+    TM2
     TOP_DEPTH_CONV
+    TOP_DEPTH_CONV%
     TOP_DEPTH_QCONV
     TOP_SWEEP_CONV
+    TOP_SWEEP_CONV%
     TOP_SWEEP_QCONV
     TRY_CONV
+    TY
+    V
+    V%
+    X
+    XS
+    Y
     lhand
     lhs
     mk_primed_var

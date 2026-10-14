@@ -130,9 +130,12 @@ def main():
     root_count = audit(ROOT / "holai/generated", CORE)
     with tempfile.TemporaryDirectory(dir=BUILD) as temp:
         run(CLI + ["translate", "--output-dir", temp] + CORE)
-        for file in (ROOT / "holai/generated").iterdir():
-            if file.is_file() and file.suffix in {".lisp", ".json", ".asd"}:
-                assert file.read_bytes() == (Path(temp) / file.name).read_bytes(), f"Stale/nondeterministic: {file.name}"
+        generated = sorted(p for p in (ROOT / "holai/generated").iterdir()
+                           if p.is_file() and p.suffix in {".lisp", ".json", ".sexp"})
+        assert len(generated) == 2 * len(CORE) + 2 == 94, len(generated)
+        assert [p.name for p in generated] == sorted(p.name for p in Path(temp).iterdir()), "Generated output file set differs"
+        for file in generated:
+            assert file.read_bytes() == (Path(temp) / file.name).read_bytes(), f"Stale/nondeterministic: {file.name}"
         rejected = [
             (["holai/tests/fixtures/unsupported.ml"], "Unsupported expression"),
             (["holai/tests/fixtures/private_constructor.ml"], "Private constructor"),

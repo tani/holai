@@ -10,108 +10,114 @@
 ;; (*              (c) Copyright, John Harrison 1998-2007                       *)
 ;; (* ========================================================================= *)
 
-(cl:eval-when
-  (:compile-toplevel :load-toplevel :execute)
-  (cl:unless
-    (cl:find-package :holai.canon)
-    (defpackage :holai.canon
-      (:use :cl)
-      (:shadow
-        APP_N_CONV
-        ASM_FOL_TAC
-        ASSOC_CONV
-        CNF_CONV
-        CONDS_CELIM_CONV
-        CONDS_ELIM_CONV
-        CONDS_ELIM_CONV%
-        CONJ_ACI_RULE
-        CONJ_CANON_CONV
-        DISJ_ACI_RULE
-        DISJ_CANON_CONV
-        DNF_CONV
-        ELIM_LAMBDA
-        FOL_CONV
-        GEN_FOL_CONV
-        GEN_NNF_CONV
-        LAMB1_CONV
-        LAMBDA_ELIM_CONV
-        NNFC_CONV
-        NNF_CONV
-        NNF_CONV%
-        NNF_CONV%%
-        NNF_DCONV
-        NOT_DISJ
-        NOT_DISJ_PAIR
-        PRENEX_CONV
-        PRESIMP_CONV
-        PROP_ATOM_CONV
-        SELECT_ELIMS_ICONV
-        SELECT_ELIM_ICONV
-        SELECT_ELIM_TAC
-        SKOLEM_CONV
-        WEAK_CNF_CONV
-        WEAK_DNF_CONV
-        assoc%
-        conv
-        distrib
-        distribute
-        find_conditional
-        find_lambda
-        get_heads
-        get_thm_heads
-        getmin
-        mk_fun
-        strongcnf
-        strongdnf
-        substrongcnf
-        substrongdnf
-        use_fun
-        weakcnf
-        weakdnf)
-      (:export
-        ASM_FOL_TAC
-        ASSOC_CONV
-        CNF_CONV
-        CONDS_CELIM_CONV
-        CONDS_ELIM_CONV
-        CONJ_ACI_RULE
-        CONJ_CANON_CONV
-        DISJ_ACI_RULE
-        DISJ_CANON_CONV
-        DNF_CONV
-        GEN_NNF_CONV
-        LAMBDA_ELIM_CONV
-        NNFC_CONV
-        NNF_CONV
-        PRENEX_CONV
-        PRESIMP_CONV
-        PROP_ATOM_CONV
-        SELECT_ELIM_TAC
-        SKOLEM_CONV
-        WEAK_CNF_CONV
-        WEAK_DNF_CONV))))
-
-(defpackage :holai.canon
+(uiop:define-package
+  :holai.canon
   (:use :cl)
   (:shadow
+    A%
+    AATM
+    AND_TM
+    APPLY_PTH
+    APP_CONV
     APP_N_CONV
+    ARGS
+    ARG~1079
+    ARG~1490
+    ARG~3658
+    ARG~3879
+    ARG~3916
+    ARG~3961
+    ASL
+    ASM_0
+    ASM_1
     ASM_FOL_TAC
+    ASSOC%
     ASSOC_CONV
+    ATM
+    A_TM
+    B%
+    BASE1
+    BASE2
+    BASECONVS
+    BOD
+    BTH
+    BTH%
+    B_TM
+    C%
+    CF
+    CHEADS
     CNF_CONV
+    CNF_CONV%
+    CNV
     CONDS_CELIM_CONV
+    CONDS_CELIM_CONV%
     CONDS_ELIM_CONV
     CONDS_ELIM_CONV%
     CONJ_ACI_RULE
     CONJ_CANON_CONV
+    CONV
+    C_TM
+    DEF
+    DFL
     DISJ_ACI_RULE
     DISJ_CANON_CONV
+    DISTRIB
+    DISTRIBUTE
     DNF_CONV
+    DNF_CONV%
     ELIM_LAMBDA
+    EQ
+    ETH_N
+    ETH_P
+    EXCEPTION~1062
+    EXCEPTION~1474
+    EXCEPTION~1981
+    EXCEPTION~3130
+    EXCEPTION~3205
+    EXCEPTION~3251
+    EXCEPTION~3378
+    EXCEPTION~3464
+    EXCEPTION~3504
+    EXCEPTION~3663
+    EXCEPTION~3666
+    EXCEPTION~3669
+    EXCEPTION~3738
+    EXCEPTION~3831
+    F
+    FALSE_TM
+    FIND_CONDITIONAL
+    FIND_LAMBDA
+    FM
+    FN
     FOL_CONV
+    FTY
+    FVS
     GEN_FOL_CONV
     GEN_NNF_CONV
+    GETMIN
+    GET_HEADS
+    GET_THM_HEADS
+    GL
+    GTM
+    H
+    HALF_MK_ABS_CONV
+    HDDATA
+    HEADSP
+    HOP
+    HOPS
+    ILIST
+    ITM
+    K%
+    L
     LAMB1_CONV
     LAMBDA_ELIM_CONV
+    LCONSTS
+    LEN
+    MATCH_TH
+    MATCH_TH%
+    MK_FUN
+    N
+    NEWHEADS
     NNFC_CONV
     NNF_CONV
     NNF_CONV%
@@ -119,15 +125,401 @@
     NNF_DCONV
     NOT_DISJ
     NOT_DISJ_PAIR
+    NOT_TM
+    NS
+    OP
+    OP%
+    OP%%
+    OPX
+    OR_TM
+    P%
+    P%%
+    PRENEX_CONV
+    PRESIMP_CONV
+    PROPSIMPS
+    PROPSIMP_CONV
+    PROPTSIMP_CONV
+    PROP_ATOM_CONV
+    PTH
+    PTH1
+    PTH2
+    PTH_EQ
+    PTH_EQ%
+    PTH_EXU
+    PTH_IMP
+    PTH_LEFT
+    PTH_NEG
+    PTH_NOT_AND
+    PTH_NOT_EQ
+    PTH_NOT_EQ%
+    PTH_NOT_EXISTS
+    PTH_NOT_EXU
+    PTH_NOT_FORALL
+    PTH_NOT_IMP
+    PTH_NOT_NOT
+    PTH_NOT_OR
+    PTH_RIGHT
+    PTM
+    P_TM
+    Q
+    Q_TM
+    R%
+    R%%
+    RAWDEF
+    S
+    SELECT_AX_THM
+    SELECT_ELIMS_ICONV
+    SELECT_ELIM_CONV
+    SELECT_ELIM_ICONV
+    SELECT_ELIM_TAC
+    SELECT_ELIM_THM
+    SIMP_0
+    SIMP_1
+    SKOLEM_CONV
+    SOFAR
+    STM
+    STRENGTHEN
+    STRONGCNF
+    STRONGDNF
+    SUBSTRONGCNF
+    SUBSTRONGDNF
+    T%
+    TH
+    TH%
+    TH%%
+    TH1
+    TH1%
+    TH2
+    TH2%
+    TH3
+    TH4
+    TH5
+    TH_0
+    TH_1
+    TH_2
+    TH_3
+    TH_COND
+    TH_COND%
+    TH_LN
+    TH_LP
+    TH_N
+    TH_N%
+    TH_NEW
+    TH_P
+    TH_P%
+    TH_RN
+    TH_RP
+    TM
+    TM%
+    TRUE_TM
+    TY
+    USE_FUN
+    V
+    VHEADS
+    VS
+    VS%
+    W%
+    WEAKCNF
+    WEAKDNF
+    WEAK_CNF_CONV
+    WEAK_CNF_CONV%
+    WEAK_DNF_CONV
+    WEAK_DNF_CONV%
+    X
+    Y
+    YOPZ
+    Z
+    assoc%
+    conv
+    distrib
+    distribute
+    find_conditional
+    find_lambda
+    get_heads
+    get_thm_heads
+    getmin
+    mk_fun
+    strongcnf
+    strongdnf
+    substrongcnf
+    substrongdnf
+    use_fun
+    weakcnf
+    weakdnf)
+  (:import-from :holai.basics)
+  (:import-from :holai.bool)
+  (:import-from :holai.class)
+  (:import-from :holai.drule)
+  (:import-from :holai.equal)
+  (:import-from :holai.fusion)
+  (:import-from :holai.fusion.hol)
+  (:import-from :holai.ind_defs)
+  (:import-from :holai.lib)
+  (:import-from :holai.parser)
+  (:import-from :holai.runtime)
+  (:import-from :holai.simp)
+  (:import-from :holai.tactics)
+  (:import-from :holai.theorems)
+  (:import-from :holai.trivia)
+  (:export
+    ASM_FOL_TAC
+    ASSOC_CONV
+    CNF_CONV
+    CONDS_CELIM_CONV
+    CONDS_ELIM_CONV
+    CONJ_ACI_RULE
+    CONJ_CANON_CONV
+    DISJ_ACI_RULE
+    DISJ_CANON_CONV
+    DNF_CONV
+    GEN_NNF_CONV
+    LAMBDA_ELIM_CONV
+    NNFC_CONV
+    NNF_CONV
     PRENEX_CONV
     PRESIMP_CONV
     PROP_ATOM_CONV
-    SELECT_ELIMS_ICONV
-    SELECT_ELIM_ICONV
     SELECT_ELIM_TAC
     SKOLEM_CONV
     WEAK_CNF_CONV
+    WEAK_DNF_CONV))
+
+(uiop:define-package
+  :holai.canon
+  (:use :cl)
+  (:mix
+    :cl
+    :holai.basics
+    :holai.bool
+    :holai.class
+    :holai.drule
+    :holai.equal
+    :holai.fusion
+    :holai.fusion.hol
+    :holai.ind_defs
+    :holai.lib
+    :holai.parser
+    :holai.runtime
+    :holai.simp
+    :holai.tactics
+    :holai.theorems
+    :holai.trivia)
+  (:shadow
+    A%
+    AATM
+    AND_TM
+    APPLY_PTH
+    APP_CONV
+    APP_N_CONV
+    ARGS
+    ARG~1079
+    ARG~1490
+    ARG~3658
+    ARG~3879
+    ARG~3916
+    ARG~3961
+    ASL
+    ASM_0
+    ASM_1
+    ASM_FOL_TAC
+    ASSOC%
+    ASSOC_CONV
+    ATM
+    A_TM
+    B%
+    BASE1
+    BASE2
+    BASECONVS
+    BOD
+    BTH
+    BTH%
+    B_TM
+    C%
+    CF
+    CHEADS
+    CNF_CONV
+    CNF_CONV%
+    CNV
+    CONDS_CELIM_CONV
+    CONDS_CELIM_CONV%
+    CONDS_ELIM_CONV
+    CONDS_ELIM_CONV%
+    CONJ_ACI_RULE
+    CONJ_CANON_CONV
+    CONV
+    C_TM
+    DEF
+    DFL
+    DISJ_ACI_RULE
+    DISJ_CANON_CONV
+    DISTRIB
+    DISTRIBUTE
+    DNF_CONV
+    DNF_CONV%
+    ELIM_LAMBDA
+    EQ
+    ETH_N
+    ETH_P
+    EXCEPTION~1062
+    EXCEPTION~1474
+    EXCEPTION~1981
+    EXCEPTION~3130
+    EXCEPTION~3205
+    EXCEPTION~3251
+    EXCEPTION~3378
+    EXCEPTION~3464
+    EXCEPTION~3504
+    EXCEPTION~3663
+    EXCEPTION~3666
+    EXCEPTION~3669
+    EXCEPTION~3738
+    EXCEPTION~3831
+    F
+    FALSE_TM
+    FIND_CONDITIONAL
+    FIND_LAMBDA
+    FM
+    FN
+    FOL_CONV
+    FTY
+    FVS
+    GEN_FOL_CONV
+    GEN_NNF_CONV
+    GETMIN
+    GET_HEADS
+    GET_THM_HEADS
+    GL
+    GTM
+    H
+    HALF_MK_ABS_CONV
+    HDDATA
+    HEADSP
+    HOP
+    HOPS
+    ILIST
+    ITM
+    K%
+    L
+    LAMB1_CONV
+    LAMBDA_ELIM_CONV
+    LCONSTS
+    LEN
+    MATCH_TH
+    MATCH_TH%
+    MK_FUN
+    N
+    NEWHEADS
+    NNFC_CONV
+    NNF_CONV
+    NNF_CONV%
+    NNF_CONV%%
+    NNF_DCONV
+    NOT_DISJ
+    NOT_DISJ_PAIR
+    NOT_TM
+    NS
+    OP
+    OP%
+    OP%%
+    OPX
+    OR_TM
+    P%
+    P%%
+    PRENEX_CONV
+    PRESIMP_CONV
+    PROPSIMPS
+    PROPSIMP_CONV
+    PROPTSIMP_CONV
+    PROP_ATOM_CONV
+    PTH
+    PTH1
+    PTH2
+    PTH_EQ
+    PTH_EQ%
+    PTH_EXU
+    PTH_IMP
+    PTH_LEFT
+    PTH_NEG
+    PTH_NOT_AND
+    PTH_NOT_EQ
+    PTH_NOT_EQ%
+    PTH_NOT_EXISTS
+    PTH_NOT_EXU
+    PTH_NOT_FORALL
+    PTH_NOT_IMP
+    PTH_NOT_NOT
+    PTH_NOT_OR
+    PTH_RIGHT
+    PTM
+    P_TM
+    Q
+    Q_TM
+    R%
+    R%%
+    RAWDEF
+    S
+    SELECT_AX_THM
+    SELECT_ELIMS_ICONV
+    SELECT_ELIM_CONV
+    SELECT_ELIM_ICONV
+    SELECT_ELIM_TAC
+    SELECT_ELIM_THM
+    SIMP_0
+    SIMP_1
+    SKOLEM_CONV
+    SOFAR
+    STM
+    STRENGTHEN
+    STRONGCNF
+    STRONGDNF
+    SUBSTRONGCNF
+    SUBSTRONGDNF
+    T%
+    TH
+    TH%
+    TH%%
+    TH1
+    TH1%
+    TH2
+    TH2%
+    TH3
+    TH4
+    TH5
+    TH_0
+    TH_1
+    TH_2
+    TH_3
+    TH_COND
+    TH_COND%
+    TH_LN
+    TH_LP
+    TH_N
+    TH_N%
+    TH_NEW
+    TH_P
+    TH_P%
+    TH_RN
+    TH_RP
+    TM
+    TM%
+    TRUE_TM
+    TY
+    USE_FUN
+    V
+    VHEADS
+    VS
+    VS%
+    W%
+    WEAKCNF
+    WEAKDNF
+    WEAK_CNF_CONV
+    WEAK_CNF_CONV%
     WEAK_DNF_CONV
+    WEAK_DNF_CONV%
+    X
+    Y
+    YOPZ
+    Z
     assoc%
     conv
     distrib

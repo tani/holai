@@ -1,7 +1,7 @@
 (require :asdf)
 (asdf:initialize-source-registry `(:source-registry (:directory ,(truename ".")) :inherit-configuration))
 (setf asdf:*asdf-verbose* nil *compile-verbose* nil *load-verbose* nil)
-(asdf:load-system "holai-runtime")
+(asdf:load-system "holai/runtime")
 (holai.runtime:defunc bench-add (a b c) (+ a b c))
 (holai.runtime:defunc bench-return (a) (holai.runtime:lambdac (b c) (+ a b c)))
 (defparameter *bench-lambda* (holai.runtime:lambdac (a b c) (+ a b c)))

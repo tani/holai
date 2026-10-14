@@ -1,13 +1,17 @@
 # Repository inclusion policy
 
 The published project is Holai. The current translator CLI is `bin/ml2cl`,
-packages are `holai.*`, and systems are `holai-runtime` and `holai-generated`; no old-name compatibility aliases are retained.
+packages remain `holai.*`, and systems are `holai`/`holai/runtime` plus inferred
+`holai/generated/<stem>` systems. Exactly one root `holai.asd` provides discovery;
+no old-name compatibility aliases are retained.
 
 ## Keep in Git
 
-- DESIGN.md, AGENTS.md, translator/runtime sources, Makefile and ASDF systems.
+- DESIGN.md, AGENTS.md, translator/runtime sources, Makefile, root holai.asd
+  and maintained holai/all.lisp inferred entry.
 - Generated Lisp: source comparison and debugging are core project goals.
-- Generated inventory/ASDF manifest: readable supported scope and load order.
+- Generated inventory/package-systems.sexp: readable supported scope and complete
+  package-provider mapping. Runtime/predecessor/external imports infer load order.
 - Original pinned HOL Light/OCaml inputs, with every applicable license and
   input digest. They permit reproducible offline builds.
 - Tests and reusable scanning, validation, packaging and measurement scripts.
@@ -34,8 +38,12 @@ use the new paths. Generated Lisp/maps are regenerated for the renamed API; upst
 
 The organization places five OCaml source modules directly in `ml2cl/`, Lisp runtime/generated/tests in `holai/`, and scripts/reports in `misc/`.
 Release notes live in `docs/`; root DESIGN.md, AGENTS.md, build files, licensing and vendor inputs remain.
-The CLI/ASDF/package API is renamed without changing algorithms or data representations.
-No optimization is included. Packaging verifies mandatory files, pins and observation digests.
+The unified ASDF/UIOP cutover preserves the CLI and public package API while
+replacing old systems without aliases. No algorithm or data representation
+changes are included. Packaging verifies mandatory files, pins, observation
+digests and 52 unique production pathnames/classes/order. The 94 generated
+outputs remain 46 Lisp/map pairs plus inventory and provider data; the maintained
+entry and root ASD are separate. Prior 51-unit measurements remain historical.
 
 The structural-match release adds holai/runtime/pattern.lisp and removes production
 Trivia dependencies. The OPTIONAL runtime snapshot is a historical control. Former Lisp libraries

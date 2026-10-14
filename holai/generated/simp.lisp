@@ -10,227 +10,332 @@
 ;; (*              (c) Copyright, John Harrison 1998-2007                       *)
 ;; (* ========================================================================= *)
 
-(cl:eval-when
-  (:compile-toplevel :load-toplevel :execute)
-  (cl:unless
-    (cl:find-package :holai.simp)
-    (defpackage :holai.simp
-      (:use :cl)
-      (:shadow
-        ABBREV_TAC
-        ASM_REWRITE_RULE
-        ASM_REWRITE_TAC
-        ASM_SIMP_TAC
-        AUGMENT_SIMPSET
-        DEPTH_SQCONV
-        DEPTH_SQCONV%
-        EXPAND_TAC
-        GENERAL_REWRITE_CONV
-        GEN_REWRITE_CONV
-        GEN_REWRITE_RULE
-        GEN_REWRITE_TAC
-        GEN_SIMPLIFY_CONV
-        GEN_SUB_CONV
-        IMP_REWRITES_CONV
-        IMP_REWR_CONV
-        ONCE_ASM_REWRITE_RULE
-        ONCE_ASM_REWRITE_TAC
-        ONCE_ASM_SIMP_TAC
-        ONCE_DEPTH_SQCONV
-        ONCE_DEPTH_SQCONV%
-        ONCE_REWRITE_CONV
-        ONCE_REWRITE_RULE
-        ONCE_REWRITE_TAC
-        ONCE_SIMPLIFY_CONV
-        ONCE_SIMP_CONV
-        ONCE_SIMP_RULE
-        ONCE_SIMP_TAC
-        ORDERED_IMP_REWR_CONV
-        ORDERED_REWR_CONV
-        PURE_ASM_REWRITE_RULE
-        PURE_ASM_REWRITE_TAC
-        PURE_ASM_SIMP_TAC
-        PURE_ONCE_ASM_REWRITE_RULE
-        PURE_ONCE_ASM_REWRITE_TAC
-        PURE_ONCE_REWRITE_CONV
-        PURE_ONCE_REWRITE_RULE
-        PURE_ONCE_REWRITE_TAC
-        PURE_REWRITE_CONV
-        PURE_REWRITE_RULE
-        PURE_REWRITE_TAC
-        PURE_SIMP_CONV
-        PURE_SIMP_RULE
-        PURE_SIMP_TAC
-        Prover
-        REDEPTH_SQCONV
-        REDEPTH_SQCONV%
-        REWRITES_CONV
-        REWRITE_CONV
-        REWRITE_RULE
-        REWRITE_TAC
-        REWR_CONV
-        RUN_SUB_CONV
-        SIMPLIFY_CONV
-        SIMP_CONV
-        SIMP_RULE
-        SIMP_TAC
-        Simpset
-        TOP_DEPTH_SQCONV
-        TOP_DEPTH_SQCONV%
-        TOP_SWEEP_SQCONV
-        TOP_SWEEP_SQCONV%
-        apply_prover
-        augment
-        basic_congs
-        basic_convs
-        basic_convs%
-        basic_net
-        basic_net%
-        basic_prover
-        basic_rewrites
-        basic_rewrites%
-        basic_ss
-        collect_condition
-        conv
-        dyn_order
-        empty_ss
-        extend_basic_congs
-        extend_basic_convs
-        extend_basic_convs%
-        extend_basic_rewrites
-        extend_basic_rewrites%
-        lexify
-        make-Prover
-        make-Simpset
-        mk_prover
-        mk_prover%
-        mk_rewrites
-        net_of_cong
-        net_of_conv
-        net_of_thm
-        rehash_convnet
-        set_basic_congs
-        set_basic_convs
-        set_basic_convs%
-        set_basic_rewrites
-        set_basic_rewrites%
-        split_rewrites
-        ss_of_congs
-        ss_of_conv
-        ss_of_maker
-        ss_of_prover
-        ss_of_provers
-        ss_of_thms
-        term_order)
-      (:export
-        ABBREV_TAC
-        ASM_REWRITE_RULE
-        ASM_REWRITE_TAC
-        ASM_SIMP_TAC
-        AUGMENT_SIMPSET
-        DEPTH_SQCONV
-        EXPAND_TAC
-        GENERAL_REWRITE_CONV
-        GEN_REWRITE_CONV
-        GEN_REWRITE_RULE
-        GEN_REWRITE_TAC
-        GEN_SIMPLIFY_CONV
-        IMP_REWR_CONV
-        ONCE_ASM_REWRITE_RULE
-        ONCE_ASM_REWRITE_TAC
-        ONCE_ASM_SIMP_TAC
-        ONCE_DEPTH_SQCONV
-        ONCE_REWRITE_CONV
-        ONCE_REWRITE_RULE
-        ONCE_REWRITE_TAC
-        ONCE_SIMPLIFY_CONV
-        ONCE_SIMP_CONV
-        ONCE_SIMP_RULE
-        ONCE_SIMP_TAC
-        ORDERED_IMP_REWR_CONV
-        ORDERED_REWR_CONV
-        PURE_ASM_REWRITE_RULE
-        PURE_ASM_REWRITE_TAC
-        PURE_ASM_SIMP_TAC
-        PURE_ONCE_ASM_REWRITE_RULE
-        PURE_ONCE_ASM_REWRITE_TAC
-        PURE_ONCE_REWRITE_CONV
-        PURE_ONCE_REWRITE_RULE
-        PURE_ONCE_REWRITE_TAC
-        PURE_REWRITE_CONV
-        PURE_REWRITE_RULE
-        PURE_REWRITE_TAC
-        PURE_SIMP_CONV
-        PURE_SIMP_RULE
-        PURE_SIMP_TAC
-        Prover
-        REDEPTH_SQCONV
-        REWRITES_CONV
-        REWRITE_CONV
-        REWRITE_RULE
-        REWRITE_TAC
-        REWR_CONV
-        SIMPLIFY_CONV
-        SIMP_CONV
-        SIMP_RULE
-        SIMP_TAC
-        Simpset
-        TOP_DEPTH_SQCONV
-        TOP_SWEEP_SQCONV
-        apply_prover
-        augment
-        basic_congs
-        basic_convs
-        basic_net
-        basic_prover
-        basic_rewrites
-        basic_ss
-        empty_ss
-        extend_basic_congs
-        extend_basic_convs
-        extend_basic_rewrites
-        make-Prover
-        make-Simpset
-        mk_prover
-        mk_rewrites
-        net_of_cong
-        net_of_conv
-        net_of_thm
-        set_basic_congs
-        set_basic_convs
-        set_basic_rewrites
-        ss_of_congs
-        ss_of_conv
-        ss_of_maker
-        ss_of_prover
-        ss_of_provers
-        ss_of_thms
-        term_order))))
-
-(defpackage :holai.simp
+(uiop:define-package
+  :holai.simp
   (:use :cl)
   (:shadow
     ABBREV_TAC
+    APPLICATOR
+    APPLY%
+    ARGS1
+    ARGS2
+    ARG~1256
+    ARG~1284
+    ARG~1322
+    ARG~1385
+    ARG~1466
+    ARG~1522
+    ARG~1634
+    ARG~1640
+    ARG~1699
+    ARG~1711
+    ARG~1718
+    ARG~1740
+    ARG~1745
+    ARG~1793
+    ARG~2187
+    ARG~415
+    ARG~616
+    ARG~655
+    ARG~666
+    ARG~680
+    ARG~732
+    ARG~765
+    ARG~790
+    ARG~815
+    ARG~833
+    ARG~854
+    ARG~872
+    ARG~933
+    ARG~943
+    ASL
     ASM_REWRITE_RULE
     ASM_REWRITE_TAC
     ASM_SIMP_TAC
+    AUG
+    AUGMENT%
+    AUGMENTOR
     AUGMENT_SIMPSET
+    AVOIDS
+    AVS
+    BASIC_CONGS%
+    BASIC_CONV
+    BASIC_CONVS%
+    BASIC_NET%
+    BASIC_REWRITES%
+    BOD
+    BUILTIN_NET
+    CANON_THL
+    CF
+    CNV
+    CNVL
+    CNVS
+    COLLECT_CONDITION
+    CONC
+    COND%
+    CONDS
+    CONGS
+    CONV
+    CONVERSIONS
+    CONV_NET
+    CTH
+    CTHMS
+    CVS
+    CXT
     DEPTH_SQCONV
     DEPTH_SQCONV%
+    DEQ
+    DYN_ORDER
+    EQ
+    EQN
+    ETH
+    ETH%
+    ETM
+    EXCEPTION~1061
+    EXCEPTION~1082
+    EXCEPTION~1126
+    EXCEPTION~1138
+    EXCEPTION~1214
+    EXCEPTION~1228
+    EXCEPTION~1297
+    EXCEPTION~1335
+    EXCEPTION~1359
+    EXCEPTION~1399
+    EXCEPTION~1423
+    EXCEPTION~1440
+    EXCEPTION~1480
+    EXCEPTION~1496
+    EXCEPTION~1535
+    EXCEPTION~1551
+    EXCEPTION~611
+    EXCEPTION~690
+    EXCEPTION~700
     EXPAND_TAC
+    EXTEND_BASIC_CONGS%
+    EXTEND_BASIC_CONVS%
+    EXTEND_BASIC_REWRITES%
+    F1
+    F2
+    FINAL_NET
+    FVS
+    GBOD
     GENERAL_REWRITE_CONV
     GEN_REWRITE_CONV
     GEN_REWRITE_RULE
     GEN_REWRITE_TAC
     GEN_SIMPLIFY_CONV
     GEN_SUB_CONV
+    GL
+    GTH
+    GTM
+    GV
+    H1
+    H2
+    IMP_CONJ_CONV
+    IMP_EXISTS_RULE
     IMP_REWRITES_CONV
     IMP_REWR_CONV
+    JTH
+    KEYTM
+    KTH
+    L
+    L%
+    L1
+    L2
+    LCONSTS
+    LEV
+    LEXIFY
+    M
+    MATCHABLE
+    MK_FUN
+    MK_PROVER%
+    N
+    NAME
+    NAME%
+    NET
+    NET%
+    NET%%
+    NEWMAKER
+    NEWPROVER
+    NEWPROVERS
+    OLDHYPS
     ONCE_ASM_REWRITE_RULE
     ONCE_ASM_REWRITE_TAC
     ONCE_ASM_SIMP_TAC
     ONCE_DEPTH_SQCONV
     ONCE_DEPTH_SQCONV%
+    ONCE_REWRITE_CONV
+    ONCE_REWRITE_RULE
+    ONCE_REWRITE_TAC
+    ONCE_SIMPLIFY_CONV
+    ONCE_SIMP_CONV
+    ONCE_SIMP_RULE
+    ONCE_SIMP_TAC
+    ORD
+    ORDERED_IMP_REWR_CONV
+    ORDERED_REWR_CONV
+    PAT
+    PATCONG
+    PCONVS
+    PCONVS1
+    PR
+    PROVER%
+    PROVERS
+    PROVERS%
+    PURE_ASM_REWRITE_RULE
+    PURE_ASM_REWRITE_TAC
+    PURE_ASM_SIMP_TAC
+    PURE_ONCE_ASM_REWRITE_RULE
+    PURE_ONCE_ASM_REWRITE_TAC
+    PURE_ONCE_REWRITE_CONV
+    PURE_ONCE_REWRITE_RULE
+    PURE_ONCE_REWRITE_TAC
+    PURE_REWRITE_CONV
+    PURE_REWRITE_RULE
+    PURE_REWRITE_TAC
+    PURE_SIMP_CONV
+    PURE_SIMP_RULE
+    PURE_SIMP_TAC
+    Prover
+    R%
+    R%%
+    REDEPTH_SQCONV
+    REDEPTH_SQCONV%
+    REHASH_CONVNET
+    REP
+    REWMAKER
+    REWRITES
+    REWRITES_CONV
+    REWRITE_CONV
+    REWRITE_RULE
+    REWRITE_TAC
+    REWR_CONV
+    RS
+    RUN_SUB_CONV
+    S
+    SET_BASIC_CONGS%
+    SET_BASIC_CONVS%
+    SET_BASIC_REWRITES%
+    SIMPLIFY_CONV
+    SIMP_CONV
+    SIMP_RULE
+    SIMP_TAC
+    SOFAR
+    SPLIT_REWRITES
+    SS
+    SS%
+    STATE
+    STH
+    STRAT
+    SUBTM
+    Simpset
+    T%
+    T%%
+    TH
+    TH%
+    TH%%
+    TH1
+    TH2
+    TH3
+    THL
+    THL_CANON
+    THM
+    THMS
+    THS
+    TM
+    TM%
+    TM1
+    TM2
+    TOP
+    TOP_DEPTH_SQCONV
+    TOP_DEPTH_SQCONV%
+    TOP_SWEEP_SQCONV
+    TOP_SWEEP_SQCONV%
+    TRIV
+    TRIV%
+    TTH
+    TY
+    V
+    V%
+    VS
+    W%
+    X
+    X%
+    Y
+    Y%
+    apply_prover
+    augment
+    basic_congs
+    basic_convs
+    basic_convs%
+    basic_net
+    basic_net%
+    basic_prover
+    basic_rewrites
+    basic_rewrites%
+    basic_ss
+    collect_condition
+    conv
+    dyn_order
+    empty_ss
+    extend_basic_congs
+    extend_basic_convs
+    extend_basic_convs%
+    extend_basic_rewrites
+    extend_basic_rewrites%
+    lexify
+    make-Prover
+    make-Simpset
+    mk_prover
+    mk_prover%
+    mk_rewrites
+    net_of_cong
+    net_of_conv
+    net_of_thm
+    rehash_convnet
+    set_basic_congs
+    set_basic_convs
+    set_basic_convs%
+    set_basic_rewrites
+    set_basic_rewrites%
+    split_rewrites
+    ss_of_congs
+    ss_of_conv
+    ss_of_maker
+    ss_of_prover
+    ss_of_provers
+    ss_of_thms
+    term_order)
+  (:import-from :holai.basics)
+  (:import-from :holai.bool)
+  (:import-from :holai.drule)
+  (:import-from :holai.equal)
+  (:import-from :holai.fusion)
+  (:import-from :holai.fusion.hol)
+  (:import-from :holai.itab)
+  (:import-from :holai.lib)
+  (:import-from :holai.nets)
+  (:import-from :holai.parser)
+  (:import-from :holai.runtime)
+  (:import-from :holai.tactics)
+  (:export
+    ABBREV_TAC
+    ASM_REWRITE_RULE
+    ASM_REWRITE_TAC
+    ASM_SIMP_TAC
+    AUGMENT_SIMPSET
+    DEPTH_SQCONV
+    EXPAND_TAC
+    GENERAL_REWRITE_CONV
+    GEN_REWRITE_CONV
+    GEN_REWRITE_RULE
+    GEN_REWRITE_TAC
+    GEN_SIMPLIFY_CONV
+    IMP_REWR_CONV
+    ONCE_ASM_REWRITE_RULE
+    ONCE_ASM_REWRITE_TAC
+    ONCE_ASM_SIMP_TAC
+    ONCE_DEPTH_SQCONV
     ONCE_REWRITE_CONV
     ONCE_REWRITE_RULE
     ONCE_REWRITE_TAC
@@ -256,22 +361,315 @@
     PURE_SIMP_TAC
     Prover
     REDEPTH_SQCONV
-    REDEPTH_SQCONV%
     REWRITES_CONV
     REWRITE_CONV
     REWRITE_RULE
     REWRITE_TAC
     REWR_CONV
-    RUN_SUB_CONV
     SIMPLIFY_CONV
     SIMP_CONV
     SIMP_RULE
     SIMP_TAC
     Simpset
     TOP_DEPTH_SQCONV
+    TOP_SWEEP_SQCONV
+    apply_prover
+    augment
+    basic_congs
+    basic_convs
+    basic_net
+    basic_prover
+    basic_rewrites
+    basic_ss
+    empty_ss
+    extend_basic_congs
+    extend_basic_convs
+    extend_basic_rewrites
+    make-Prover
+    make-Simpset
+    mk_prover
+    mk_rewrites
+    net_of_cong
+    net_of_conv
+    net_of_thm
+    set_basic_congs
+    set_basic_convs
+    set_basic_rewrites
+    ss_of_congs
+    ss_of_conv
+    ss_of_maker
+    ss_of_prover
+    ss_of_provers
+    ss_of_thms
+    term_order))
+
+(uiop:define-package
+  :holai.simp
+  (:use :cl)
+  (:mix
+    :cl
+    :holai.basics
+    :holai.bool
+    :holai.drule
+    :holai.equal
+    :holai.fusion
+    :holai.fusion.hol
+    :holai.itab
+    :holai.lib
+    :holai.nets
+    :holai.parser
+    :holai.runtime
+    :holai.tactics)
+  (:shadow
+    ABBREV_TAC
+    APPLICATOR
+    APPLY%
+    ARGS1
+    ARGS2
+    ARG~1256
+    ARG~1284
+    ARG~1322
+    ARG~1385
+    ARG~1466
+    ARG~1522
+    ARG~1634
+    ARG~1640
+    ARG~1699
+    ARG~1711
+    ARG~1718
+    ARG~1740
+    ARG~1745
+    ARG~1793
+    ARG~2187
+    ARG~415
+    ARG~616
+    ARG~655
+    ARG~666
+    ARG~680
+    ARG~732
+    ARG~765
+    ARG~790
+    ARG~815
+    ARG~833
+    ARG~854
+    ARG~872
+    ARG~933
+    ARG~943
+    ASL
+    ASM_REWRITE_RULE
+    ASM_REWRITE_TAC
+    ASM_SIMP_TAC
+    AUG
+    AUGMENT%
+    AUGMENTOR
+    AUGMENT_SIMPSET
+    AVOIDS
+    AVS
+    BASIC_CONGS%
+    BASIC_CONV
+    BASIC_CONVS%
+    BASIC_NET%
+    BASIC_REWRITES%
+    BOD
+    BUILTIN_NET
+    CANON_THL
+    CF
+    CNV
+    CNVL
+    CNVS
+    COLLECT_CONDITION
+    CONC
+    COND%
+    CONDS
+    CONGS
+    CONV
+    CONVERSIONS
+    CONV_NET
+    CTH
+    CTHMS
+    CVS
+    CXT
+    DEPTH_SQCONV
+    DEPTH_SQCONV%
+    DEQ
+    DYN_ORDER
+    EQ
+    EQN
+    ETH
+    ETH%
+    ETM
+    EXCEPTION~1061
+    EXCEPTION~1082
+    EXCEPTION~1126
+    EXCEPTION~1138
+    EXCEPTION~1214
+    EXCEPTION~1228
+    EXCEPTION~1297
+    EXCEPTION~1335
+    EXCEPTION~1359
+    EXCEPTION~1399
+    EXCEPTION~1423
+    EXCEPTION~1440
+    EXCEPTION~1480
+    EXCEPTION~1496
+    EXCEPTION~1535
+    EXCEPTION~1551
+    EXCEPTION~611
+    EXCEPTION~690
+    EXCEPTION~700
+    EXPAND_TAC
+    EXTEND_BASIC_CONGS%
+    EXTEND_BASIC_CONVS%
+    EXTEND_BASIC_REWRITES%
+    F1
+    F2
+    FINAL_NET
+    FVS
+    GBOD
+    GENERAL_REWRITE_CONV
+    GEN_REWRITE_CONV
+    GEN_REWRITE_RULE
+    GEN_REWRITE_TAC
+    GEN_SIMPLIFY_CONV
+    GEN_SUB_CONV
+    GL
+    GTH
+    GTM
+    GV
+    H1
+    H2
+    IMP_CONJ_CONV
+    IMP_EXISTS_RULE
+    IMP_REWRITES_CONV
+    IMP_REWR_CONV
+    JTH
+    KEYTM
+    KTH
+    L
+    L%
+    L1
+    L2
+    LCONSTS
+    LEV
+    LEXIFY
+    M
+    MATCHABLE
+    MK_FUN
+    MK_PROVER%
+    N
+    NAME
+    NAME%
+    NET
+    NET%
+    NET%%
+    NEWMAKER
+    NEWPROVER
+    NEWPROVERS
+    OLDHYPS
+    ONCE_ASM_REWRITE_RULE
+    ONCE_ASM_REWRITE_TAC
+    ONCE_ASM_SIMP_TAC
+    ONCE_DEPTH_SQCONV
+    ONCE_DEPTH_SQCONV%
+    ONCE_REWRITE_CONV
+    ONCE_REWRITE_RULE
+    ONCE_REWRITE_TAC
+    ONCE_SIMPLIFY_CONV
+    ONCE_SIMP_CONV
+    ONCE_SIMP_RULE
+    ONCE_SIMP_TAC
+    ORD
+    ORDERED_IMP_REWR_CONV
+    ORDERED_REWR_CONV
+    PAT
+    PATCONG
+    PCONVS
+    PCONVS1
+    PR
+    PROVER%
+    PROVERS
+    PROVERS%
+    PURE_ASM_REWRITE_RULE
+    PURE_ASM_REWRITE_TAC
+    PURE_ASM_SIMP_TAC
+    PURE_ONCE_ASM_REWRITE_RULE
+    PURE_ONCE_ASM_REWRITE_TAC
+    PURE_ONCE_REWRITE_CONV
+    PURE_ONCE_REWRITE_RULE
+    PURE_ONCE_REWRITE_TAC
+    PURE_REWRITE_CONV
+    PURE_REWRITE_RULE
+    PURE_REWRITE_TAC
+    PURE_SIMP_CONV
+    PURE_SIMP_RULE
+    PURE_SIMP_TAC
+    Prover
+    R%
+    R%%
+    REDEPTH_SQCONV
+    REDEPTH_SQCONV%
+    REHASH_CONVNET
+    REP
+    REWMAKER
+    REWRITES
+    REWRITES_CONV
+    REWRITE_CONV
+    REWRITE_RULE
+    REWRITE_TAC
+    REWR_CONV
+    RS
+    RUN_SUB_CONV
+    S
+    SET_BASIC_CONGS%
+    SET_BASIC_CONVS%
+    SET_BASIC_REWRITES%
+    SIMPLIFY_CONV
+    SIMP_CONV
+    SIMP_RULE
+    SIMP_TAC
+    SOFAR
+    SPLIT_REWRITES
+    SS
+    SS%
+    STATE
+    STH
+    STRAT
+    SUBTM
+    Simpset
+    T%
+    T%%
+    TH
+    TH%
+    TH%%
+    TH1
+    TH2
+    TH3
+    THL
+    THL_CANON
+    THM
+    THMS
+    THS
+    TM
+    TM%
+    TM1
+    TM2
+    TOP
+    TOP_DEPTH_SQCONV
     TOP_DEPTH_SQCONV%
     TOP_SWEEP_SQCONV
     TOP_SWEEP_SQCONV%
+    TRIV
+    TRIV%
+    TTH
+    TY
+    V
+    V%
+    VS
+    W%
+    X
+    X%
+    Y
+    Y%
     apply_prover
     augment
     basic_congs
@@ -759,7 +1157,7 @@
           ((Failure _) (failwith "REWRITES_CONV"))
           (_ (raise exception~611)))))))
 
-(defvariant prover (Prover field0 field1))
+(defvariant prover (Prover #:field0 #:field1))
 
 (defunc mk_prover (applicator augmentor)
   (labelsc
@@ -775,7 +1173,7 @@
 
 (defunc apply_prover (arg~666 tm) (match arg~666 ((Prover conv _) (#`conv tm))))
 
-(defvariant simpset (Simpset field0 field1 field2 field3))
+(defvariant simpset (Simpset #:field0 #:field1 #:field2 #:field3))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* Very simple prover: recursively simplify then try provers.                *)

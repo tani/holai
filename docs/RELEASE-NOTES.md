@@ -238,3 +238,53 @@ contract and results as history, not the current runtime API or §36 evidence.
 ## Pending discussion
 
 - TODO: Start a discussion of potentially excessive `funcall` usage in this project. Distinguish `holai.runtime:funcall` and curried application from native `CL:FUNCALL`; measure actual call hotspots and allocation before proposing changes. This is an investigation topic, not a demonstrated performance problem or an optimization included in this layout/API cutover.
+
+## Unified ASDF definition and UIOP package inference
+
+DESIGN §37 replaces the previous system definitions with one root `holai.asd`.
+Load `holai` for the complete core or `holai/runtime` for runtime-only use;
+generated `holai/generated/<stem>` systems are genuinely package-inferred.
+Register only the repository root and require ASDF before UIOP package reading.
+The main `holai` system is package-inferred through `holai/all.lisp`; only
+`holai/runtime` has explicit components, its five shared-package files in the
+same root ASD and original order.
+There are no compatibility system aliases. Public `holai.*` packages,
+private constructors, source bindings and algorithms remain unchanged.
+
+Generated `package-systems.sexp` records every physical file's root/nested/private
+provider. The first UIOP root shell declares runtime, predecessor and external
+dependencies, excluding same-file packages. Remaining shells precede canonical
+imports. Safe CL-first foreign-input mixes shorten references without exporting
+private makers or turning lexical values into inherited SPECIAL bindings.
+The inferred `holai/all.lisp` entry raises production compiled units to 52.
+Generated outputs remain 94; clean/release comparisons include the provider data.
+
+The cutover passed `nix develop path:. --command make release` (exit 0,
+226.10 seconds) on aarch64-linux with OCaml 4.14.2, Camlp5 8.02.01 and
+SBCL 2.3.9.nixos. All 46 inputs initialized in original order; 123 native,
+69 PROOF, 46 pattern, 27 protocol, 84 OPTIONAL and 16 tuple checks passed.
+All 1,143 differential rows matched (1,136 serialized plus seven side-effect
+rows), and 194,839 core/206,277 inclusive map entries passed audit.
+Ten rejection cases preserved output. Initial registries remain 22/303/263/3
+with exactly the original three source axioms; initialization retains only the
+two known OCaml-only messages (5,519 OCaml/5,517 SBCL rows), not raw equality.
+Fresh-cache diagnostics recorded 52 unique production paths in compile/load
+order, including 47 genuine inferred core/entry components, with zero errors,
+warnings, style warnings or notices. All 94 clean outputs were identical and
+55 retained input hashes unchanged.
+
+Fresh ASDF 3.3.1 smokes loaded runtime alone, the complete inferred 46-source
+core and fusion without parser/later theories. The full-core smoke proved a
+closed `p ==> p`, checked private constructors and retained the three axioms
+after reload. Existing private/collision/parent-capture coverage and the new
+lexical-module UNIT escaped-closure/native runtime-UNIT preservation check passed.
+Reader-owner local shadows preserve CL control and lexical scope; prefixes
+remain where ownership or collisions require them.
+
+The archive contains 306 members (305 payload plus `RELEASE-MANIFEST.json`),
+only one ASD, entry/provider data and all 92 generated Lisp/map members.
+Core Lisp totals 5,980,663 bytes. The impconv runtime-prefix inventory fell from
+910 to 59; meson remains 51 and metis 105. Increased shadow headers preclude
+inferring smaller total source, and no performance claim is made.
+Earlier §36 counts/timings remain historical. The user explicitly authorized
+committing and pushing this validated cutover to `tani/holai` main.

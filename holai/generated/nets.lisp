@@ -16,29 +16,237 @@
 ;; GNU LGPL version 2.1 with the OCaml linking exception.
 ;; See vendor/ocaml-stdlib/COPYRIGHT, LGPL-2.1 and the retained original sources.
 
+(uiop:define-package
+  :holai.nets
+  (:use :cl)
+  (:shadow
+    A
+    ARGS
+    ARG~2757
+    ARG~3003
+    ARG~3038
+    ARG~3050
+    B
+    BOD
+    BOD%
+    BV
+    C%
+    CANON_EQ
+    CANON_LT
+    CHILD
+    CHILD0
+    COLLECTION
+    Cnet
+    ELEM
+    EXCEPTION~2556
+    EXCEPTION~2568
+    EXCEPTION~2614
+    EXCEPTION~2627
+    EXCEPTION~2645
+    EXCEPTION~2842
+    EXCEPTION~2857
+    EXCEPTION~2872
+    EXCEPTION~2931
+    EXCEPTION~2943
+    FOLLOW
+    H
+    H1
+    H2
+    K%
+    L
+    L1
+    L2
+    LABEL
+    LABEL_FOR_LOOKUP
+    LABEL_TO_STORE
+    LCONSTS
+    Lcnet
+    Lnet
+    M
+    MERGE_INT
+    MERGE_NETS%
+    MERGE_OPT
+    MERGE_SI
+    N1
+    N2
+    NET
+    NET_UPDATE
+    NTMS
+    Netnode
+    OP
+    R
+    R1
+    R2
+    RTMS
+    SET_INSERT
+    SET_MERGE
+    SINSERT
+    T1
+    T2
+    TM
+    TMS
+    UPD
+    UPDATE_INT
+    UPDATE_SI
+    VCHILD
+    Vnet
+    X
+    Y
+    canon_eq
+    canon_lt
+    empty_net
+    enter
+    follow
+    label_for_lookup
+    label_to_store
+    lookup
+    make-Cnet
+    make-Lcnet
+    make-Lnet
+    make-Netnode
+    make-Vnet
+    make-netnode_data
+    merge_nets
+    merge_nets%
+    merge_opt
+    net_update
+    netnode_data
+    set_insert
+    set_merge
+    sinsert
+    upd
+    update_int
+    update_si)
+  (:import-from :holai.basics)
+  (:import-from :holai.fusion.hol)
+  (:import-from :holai.lib)
+  (:import-from :holai.runtime)
+  (:export
+    Cnet
+    Lcnet
+    Lnet
+    Netnode
+    Vnet
+    empty_net
+    enter
+    lookup
+    make-Cnet
+    make-Lcnet
+    make-Lnet
+    make-Netnode
+    make-Vnet
+    make-netnode_data
+    merge_nets
+    netnode_data))
+
 (cl:eval-when
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.nets.sikey)
-    (defpackage :holai.nets.sikey (:use :cl) (:shadow compare) (:export compare))))
+    (uiop:define-package
+      :holai.nets.sikey
+      (:use :cl)
+      (:shadow ARG~11 ARG~7 C% I1 I2 S1 S2 compare)
+      (:export compare))))
 
 (cl:eval-when
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.nets.intkey)
-    (defpackage :holai.nets.intkey (:use :cl) (:shadow compare) (:export compare))))
+    (uiop:define-package
+      :holai.nets.intkey
+      (:use :cl)
+      (:shadow I1 I2 compare)
+      (:export compare))))
 
 (cl:eval-when
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.nets.si_map)
-    (defpackage :holai.nets.si_map
+    (uiop:define-package
+      :holai.nets.si_map
       (:use :cl)
       (:shadow
+        ACCU
+        ARG~1151
+        ARG~1206
+        ARG~1225
+        ARG~263
+        ARG~273
+        ARG~355
+        ARG~390
+        ARG~420
+        ARG~441
+        ARG~47
+        ARG~504
+        ARG~569
+        ARG~635
+        ARG~663
+        ARG~690
+        ARG~853
+        C
+        D
+        D%
+        D1
+        D1%
+        D2
+        D2%
+        DATA
         Empty%
         End
+        F
+        H
+        H1
+        H2
+        HL
+        HR
+        K
+        L
+        L%
+        L1
+        L1%
+        L2
+        L2%
+        LD
+        LH
+        LL
+        LR
+        LRD
+        LRL
+        LRR
+        LRV
+        LV
+        M
         More
         Node
+        P
+        PRES
+        PVD
+        R
+        R%
+        R1
+        R1%
+        R2
+        R2%
+        RD
+        RH
+        RL
+        RLD
+        RLL
+        RLR
+        RLV
+        RR
+        RV
+        S
+        S1
+        S2
+        T%
+        T1
+        T2
+        V
+        V1
+        V2
+        X
         add
         add_max_binding
         add_min_binding
@@ -91,13 +299,90 @@
   (:compile-toplevel :load-toplevel :execute)
   (cl:unless
     (cl:find-package :holai.nets.i_map)
-    (defpackage :holai.nets.i_map
+    (uiop:define-package
+      :holai.nets.i_map
       (:use :cl)
       (:shadow
+        ACCU
+        ARG~1258
+        ARG~1474
+        ARG~1484
+        ARG~1566
+        ARG~1601
+        ARG~1631
+        ARG~1652
+        ARG~1715
+        ARG~1780
+        ARG~1846
+        ARG~1874
+        ARG~1901
+        ARG~2064
+        ARG~2362
+        ARG~2417
+        ARG~2436
+        C
+        D
+        D%
+        D1
+        D1%
+        D2
+        D2%
+        DATA
         Empty%
         End
+        F
+        H
+        H1
+        H2
+        HL
+        HR
+        K
+        L
+        L%
+        L1
+        L1%
+        L2
+        L2%
+        LD
+        LH
+        LL
+        LR
+        LRD
+        LRL
+        LRR
+        LRV
+        LV
+        M
         More
         Node
+        P
+        PRES
+        PVD
+        R
+        R%
+        R1
+        R1%
+        R2
+        R2%
+        RD
+        RH
+        RL
+        RLD
+        RLL
+        RLR
+        RLV
+        RR
+        RV
+        S
+        S1
+        S2
+        T%
+        T1
+        T2
+        V
+        V1
+        V2
+        X
         add
         add_max_binding
         add_min_binding
@@ -146,80 +431,107 @@
         singleton
         union))))
 
-(cl:eval-when
-  (:compile-toplevel :load-toplevel :execute)
-  (cl:unless
-    (cl:find-package :holai.nets)
-    (defpackage :holai.nets
-      (:use :cl)
-      (:shadow
-        Cnet
-        Lcnet
-        Lnet
-        Netnode
-        Vnet
-        canon_eq
-        canon_lt
-        empty_net
-        enter
-        follow
-        label_for_lookup
-        label_to_store
-        lookup
-        make-Cnet
-        make-Lcnet
-        make-Lnet
-        make-Netnode
-        make-Vnet
-        make-netnode_data
-        merge_nets
-        merge_nets%
-        merge_opt
-        net_update
-        netnode_data
-        set_insert
-        set_merge
-        sinsert
-        upd
-        update_int
-        update_si)
-      (:export
-        Cnet
-        Lcnet
-        Lnet
-        Netnode
-        Vnet
-        empty_net
-        enter
-        lookup
-        make-Cnet
-        make-Lcnet
-        make-Lnet
-        make-Netnode
-        make-Vnet
-        make-netnode_data
-        merge_nets
-        netnode_data))))
-
-(defpackage :holai.nets.sikey
+(uiop:define-package
+  :holai.nets.sikey
   (:use :cl)
-  (:shadow compare)
+  (:mix :cl :holai.runtime)
+  (:shadow ARG~11 ARG~7 C% I1 I2 S1 S2 compare)
   (:shadowing-import-from :holai.runtime tuple match defunc <>)
   (:export compare))
 
-(defpackage :holai.nets.intkey
+(uiop:define-package
+  :holai.nets.intkey
   (:use :cl)
-  (:shadow compare)
+  (:mix :cl :holai.runtime)
+  (:shadow I1 I2 compare)
   (:shadowing-import-from :holai.runtime defunc)
   (:export compare))
 
-(defpackage :holai.nets.si_map
+(uiop:define-package
+  :holai.nets.si_map
   (:use :cl)
+  (:mix :cl :holai.runtime)
   (:shadow
+    ACCU
+    ARG~1151
+    ARG~1206
+    ARG~1225
+    ARG~263
+    ARG~273
+    ARG~355
+    ARG~390
+    ARG~420
+    ARG~441
+    ARG~47
+    ARG~504
+    ARG~569
+    ARG~635
+    ARG~663
+    ARG~690
+    ARG~853
+    C
+    D
+    D%
+    D1
+    D1%
+    D2
+    D2%
+    DATA
     Empty%
     End
+    F
+    H
+    H1
+    H2
+    HL
+    HR
+    K
+    L
+    L%
+    L1
+    L1%
+    L2
+    L2%
+    LD
+    LH
+    LL
+    LR
+    LRD
+    LRL
+    LRR
+    LRV
+    LV
+    M
     More
     Node
+    P
+    PRES
+    PVD
+    R
+    R%
+    R1
+    R1%
+    R2
+    R2%
+    RD
+    RH
+    RL
+    RLD
+    RLL
+    RLR
+    RLV
+    RR
+    RV
+    S
+    S1
+    S2
+    T%
+    T1
+    T2
+    V
+    V1
+    V2
+    X
     add
     add_max_binding
     add_min_binding
@@ -290,13 +602,91 @@
     singleton
     union))
 
-(defpackage :holai.nets.i_map
+(uiop:define-package
+  :holai.nets.i_map
   (:use :cl)
+  (:mix :cl :holai.runtime)
   (:shadow
+    ACCU
+    ARG~1258
+    ARG~1474
+    ARG~1484
+    ARG~1566
+    ARG~1601
+    ARG~1631
+    ARG~1652
+    ARG~1715
+    ARG~1780
+    ARG~1846
+    ARG~1874
+    ARG~1901
+    ARG~2064
+    ARG~2362
+    ARG~2417
+    ARG~2436
+    C
+    D
+    D%
+    D1
+    D1%
+    D2
+    D2%
+    DATA
     Empty%
     End
+    F
+    H
+    H1
+    H2
+    HL
+    HR
+    K
+    L
+    L%
+    L1
+    L1%
+    L2
+    L2%
+    LD
+    LH
+    LL
+    LR
+    LRD
+    LRL
+    LRR
+    LRV
+    LV
+    M
     More
     Node
+    P
+    PRES
+    PVD
+    R
+    R%
+    R1
+    R1%
+    R2
+    R2%
+    RD
+    RH
+    RL
+    RLD
+    RLL
+    RLR
+    RLV
+    RR
+    RV
+    S
+    S1
+    S2
+    T%
+    T1
+    T2
+    V
+    V1
+    V2
+    X
     add
     add_max_binding
     add_min_binding
@@ -367,14 +757,83 @@
     singleton
     union))
 
-(defpackage :holai.nets
+(uiop:define-package
+  :holai.nets
   (:use :cl)
+  (:mix :cl :holai.basics :holai.fusion.hol :holai.lib :holai.runtime)
   (:shadow
+    A
+    ARGS
+    ARG~2757
+    ARG~3003
+    ARG~3038
+    ARG~3050
+    B
+    BOD
+    BOD%
+    BV
+    C%
+    CANON_EQ
+    CANON_LT
+    CHILD
+    CHILD0
+    COLLECTION
     Cnet
+    ELEM
+    EXCEPTION~2556
+    EXCEPTION~2568
+    EXCEPTION~2614
+    EXCEPTION~2627
+    EXCEPTION~2645
+    EXCEPTION~2842
+    EXCEPTION~2857
+    EXCEPTION~2872
+    EXCEPTION~2931
+    EXCEPTION~2943
+    FOLLOW
+    H
+    H1
+    H2
+    K%
+    L
+    L1
+    L2
+    LABEL
+    LABEL_FOR_LOOKUP
+    LABEL_TO_STORE
+    LCONSTS
     Lcnet
     Lnet
+    M
+    MERGE_INT
+    MERGE_NETS%
+    MERGE_OPT
+    MERGE_SI
+    N1
+    N2
+    NET
+    NET_UPDATE
+    NTMS
     Netnode
+    OP
+    R
+    R1
+    R2
+    RTMS
+    SET_INSERT
+    SET_MERGE
+    SINSERT
+    T1
+    T2
+    TM
+    TMS
+    UPD
+    UPDATE_INT
+    UPDATE_SI
+    VCHILD
     Vnet
+    X
+    Y
     canon_eq
     canon_lt
     empty_net
@@ -456,7 +915,7 @@
 
 (in-package :holai.nets)
 
-(defvariant term_label (Vnet) (Lcnet field0) (Cnet field0) (Lnet field0))
+(defvariant term_label (Vnet) (Lcnet #:field0) (Cnet #:field0) (Lnet #:field0))
 
 (in-package :holai.nets.sikey)
 
@@ -479,7 +938,7 @@
 
 (in-package :holai.nets.si_map)
 
-(defvariant t% (Empty%) (Node (:record l v d r h)))
+(defvariant t% (Empty%) (Node (:record #:l #:v #:d #:r #:h)))
 
 (defunc height (arg~47) (match arg~47 ((Empty%) 0) ((Node :h h) h)))
 
@@ -706,7 +1165,7 @@
         (cl:declare (cl:ignorable l% pvd r%))
         (if pvd (if (cl:and (== l l%) (== r r%)) m (join l% v d r%)) (concat l% r%))))))
 
-(defvariant enumeration (End) (More field0 field1 field2 field3))
+(defvariant enumeration (End) (More #:field0 #:field1 #:field2 #:field3))
 
 (defunc cardinal (arg~1206)
   (match arg~1206 ((Empty%) 0) ((Node :l l :r r) (+ (+ (cardinal l) 1) (cardinal r)))))
@@ -723,7 +1182,7 @@
 
 (in-package :holai.nets.i_map)
 
-(defvariant t% (Empty%) (Node (:record l v d r h)))
+(defvariant t% (Empty%) (Node (:record #:l #:v #:d #:r #:h)))
 
 (defunc height (arg~1258) (match arg~1258 ((Empty%) 0) ((Node :h h) h)))
 
@@ -950,7 +1409,7 @@
         (cl:declare (cl:ignorable l% pvd r%))
         (if pvd (if (cl:and (== l l%) (== r r%)) m (join l% v d r%)) (concat l% r%))))))
 
-(defvariant enumeration (End) (More field0 field1 field2 field3))
+(defvariant enumeration (End) (More #:field0 #:field1 #:field2 #:field3))
 
 (defunc cardinal (arg~2417)
   (match arg~2417 ((Empty%) 0) ((Node :l l :r r) (+ (+ (cardinal l) 1) (cardinal r)))))
@@ -965,9 +1424,9 @@
 
 (in-package :holai.nets)
 
-(defrecord netnode_data vnet cnets lcnets lnets tips)
+(defrecord netnode_data #:vnet #:cnets #:lcnets #:lnets #:tips)
 
-(defvariant net (Netnode field0))
+(defvariant net (Netnode #:field0))
 
 ;; (* ------------------------------------------------------------------------- *)
 ;; (* The empty net.                                                            *)

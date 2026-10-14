@@ -7,7 +7,7 @@ import zipfile
 root = Path(__file__).resolve().parents[2]
 version = "1.0.0-percent-names"
 core = [Path(name).stem for name in json.loads((root / "vendor/CORE_FILES.json").read_text())]
-required = ["DESIGN.md", "AGENTS.md", "README.md", "docs/RELEASE-NOTES.md", "Makefile", "holai-runtime.asd",
+required = ["DESIGN.md", "AGENTS.md", "README.md", "docs/RELEASE-NOTES.md", "Makefile", "holai.asd", "holai/all.lisp",
             "flake.nix", "flake.lock",
             "ml2cl/sexp.ml", "ml2cl/scope.ml", "ml2cl/compiler.ml", "ml2cl/frontend.ml", "ml2cl/cli.ml",
             "holai/runtime/package.lisp", "holai/runtime/core.lisp", "holai/runtime/format.lisp", "holai/runtime/stdlib.lisp",
@@ -34,7 +34,7 @@ required = ["DESIGN.md", "AGENTS.md", "README.md", "docs/RELEASE-NOTES.md", "Mak
             "misc/reports/history/peak-memory-baseline.txt", "misc/reports/history/peak-memory-defunc.txt",
             "misc/reports/ocaml-observations.txt", "misc/reports/sbcl-observations.txt",
             "misc/reports/ocaml-initialization.txt", "misc/reports/sbcl-initialization.txt",
-            "holai/generated/inventory.json", "holai/generated/holai-generated.asd",
+            "holai/generated/inventory.json", "holai/generated/package-systems.sexp",
             "LICENSE", "THIRD-PARTY-NOTICES.md"]
 required += ["misc/scripts/measure-tuple-list.py", "holai/tests/tuple-list.lisp", "misc/reports/history/TUPLE-LIST.md", "misc/reports/history/tuple-list-startup.json", "misc/reports/history/tuple-list-startup.txt", "misc/reports/history/tuple-list-checks.txt", "holai/tests/profile-performance.lisp", "holai/tests/profile-sets.lisp", "holai/tests/probe-tuple.lisp",
              "misc/reports/history/NEXT-BOTTLENECKS.md", "misc/reports/history/next-bottlenecks.json",
@@ -58,7 +58,15 @@ for name in required:
 for name, digest in pins.items():
     assert hashlib.sha256((root / name).read_bytes()).hexdigest() == digest, f"Pinned source changed: {name}"
 diagnostics = json.loads((root / "misc/reports/compile-diagnostics.json").read_text())
-assert diagnostics["audit_complete"] and diagnostics["exit_code"] == 0 and diagnostics["compiled_unit_count"] == 51
+runtime_units = [f"holai/runtime/{name}.lisp" for name in ["package", "pattern", "core", "format", "stdlib"]]
+expected_units = runtime_units + [f"holai/generated/{name}.lisp" for name in core] + ["holai/all.lisp"]
+assert diagnostics["audit_complete"] and diagnostics["exit_code"] == 0 and diagnostics["compiled_unit_count"] == 52
+assert diagnostics["compiled_units"] == expected_units and len(set(diagnostics["compiled_units"])) == 52
+assert diagnostics["loaded_units"] == expected_units and diagnostics["inferred_load_order_matches_manifest"]
+assert diagnostics["inferred_units"] == expected_units[5:]
+expected_fingerprints = {"holai.asd", "holai/generated/package-systems.sexp", *expected_units,
+                         *(str(p.relative_to(root)) for p in (root / "ml2cl").glob("*.ml"))}
+assert set(diagnostics["code_sha256"]) == expected_fingerprints, "Diagnostic fingerprint coverage differs"
 assert all(diagnostics[k] == 0 for k in ["caught_errors", "caught_warnings", "caught_style_warnings", "warning_notices"])
 for name, digest in diagnostics["code_sha256"].items():
     assert hashlib.sha256((root / name).read_bytes()).hexdigest() == digest, f"Stale diagnostic report: {name}"
@@ -85,6 +93,8 @@ assert verify_initialization(original_init.decode(), lisp_init.decode()) == veri
 assert hashlib.sha256(original_init).hexdigest() == verification["initialization_ocaml_sha256"]
 assert hashlib.sha256(lisp_init).hexdigest() == verification["initialization_sbcl_sha256"]
 excluded = {"_build", "bin", "dist", ".git", "__pycache__"}
+assert sorted(str(p.relative_to(root)) for p in root.rglob("*.asd")
+              if not any(part in excluded for part in p.relative_to(root).parts)) == ["holai.asd"], "Release must contain only root holai.asd"
 files = sorted(p for p in root.rglob("*") if p.is_file() and not any(part in excluded for part in p.relative_to(root).parts)
                and p.suffix not in {".cmo", ".cmi", ".cmx", ".o", ".fasl", ".pyc"})
 dist = root / "dist"

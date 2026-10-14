@@ -10,51 +10,73 @@
 ;; (*              (c) Copyright, John Harrison 1998-2007                       *)
 ;; (* ========================================================================= *)
 
-(cl:eval-when
-  (:compile-toplevel :load-toplevel :execute)
-  (cl:unless
-    (cl:find-package :holai.trivia)
-    (defpackage :holai.trivia
-      (:use :cl)
-      (:shadow
-        ETA_ONE
-        EXISTS_ONE_REP
-        EXISTS_ONE_THM
-        FORALL_ONE_THM
-        I_DEF
-        I_O_ID
-        I_THM
-        o_ASSOC
-        o_DEF
-        o_THM
-        one
-        one_Axiom%
-        one_DEF
-        one_INDUCT
-        one_RECURSION
-        one_axiom
-        one_tydef)
-      (:export
-        ETA_ONE
-        EXISTS_ONE_REP
-        EXISTS_ONE_THM
-        FORALL_ONE_THM
-        I_DEF
-        I_O_ID
-        I_THM
-        o_ASSOC
-        o_DEF
-        o_THM
-        one
-        one_Axiom%
-        one_DEF
-        one_INDUCT
-        one_RECURSION
-        one_axiom
-        one_tydef))))
-
-(defpackage :holai.trivia
+(uiop:define-package
+  :holai.trivia
   (:use :cl)
+  (:shadow
+    ETA_ONE
+    EXISTS_ONE_REP
+    EXISTS_ONE_THM
+    FORALL_ONE_THM
+    I_DEF
+    I_O_ID
+    I_THM
+    o_ASSOC
+    o_DEF
+    o_THM
+    one
+    one_Axiom%
+    one_DEF
+    one_INDUCT
+    one_RECURSION
+    one_axiom
+    one_tydef)
+  (:import-from :holai.bool)
+  (:import-from :holai.class)
+  (:import-from :holai.drule)
+  (:import-from :holai.equal)
+  (:import-from :holai.lib)
+  (:import-from :holai.parser)
+  (:import-from :holai.printer)
+  (:import-from :holai.runtime)
+  (:import-from :holai.simp)
+  (:import-from :holai.tactics)
+  (:import-from :holai.theorems)
+  (:export
+    ETA_ONE
+    EXISTS_ONE_REP
+    EXISTS_ONE_THM
+    FORALL_ONE_THM
+    I_DEF
+    I_O_ID
+    I_THM
+    o_ASSOC
+    o_DEF
+    o_THM
+    one
+    one_Axiom%
+    one_DEF
+    one_INDUCT
+    one_RECURSION
+    one_axiom
+    one_tydef))
+
+(uiop:define-package
+  :holai.trivia
+  (:use :cl)
+  (:mix
+    :cl
+    :holai.bool
+    :holai.class
+    :holai.drule
+    :holai.equal
+    :holai.lib
+    :holai.parser
+    :holai.printer
+    :holai.runtime
+    :holai.simp
+    :holai.tactics
+    :holai.theorems)
   (:shadow
     ETA_ONE
     EXISTS_ONE_REP

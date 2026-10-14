@@ -1,7 +1,7 @@
 (require :asdf)
 (asdf:initialize-source-registry `(:source-registry (:directory ,(truename ".")) :inherit-configuration))
 (setf *compile-verbose* nil *load-verbose* nil)
-(asdf:load-system "holai-runtime")
+(asdf:load-system "holai/runtime")
 (in-package :holai.runtime)
 (defvariant inspection-term (InspectionVar name ty) (InspectionComb left right))
 (defunc inspect-pattern (tm)

@@ -1,7 +1,7 @@
 (require :asdf)
 (asdf:initialize-source-registry `(:source-registry (:directory ,(truename ".")) :inherit-configuration))
 (setf asdf:*asdf-verbose* nil *compile-verbose* nil *load-verbose* nil)
-(asdf:load-system "holai-runtime")
+(asdf:load-system "holai/runtime")
 (holai.runtime:defunc inspect-add (a b c) (+ a b c))
 (defun inspect-call () (inspect-add 1 2 3))
 (format t "~&DEFUNC EXPANSION~%")

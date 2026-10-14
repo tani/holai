@@ -7,121 +7,11 @@
 ;; (*              (c) Copyright, John Harrison 1998-2007                       *)
 ;; (* ========================================================================= *)
 
-(cl:eval-when
-  (:compile-toplevel :load-toplevel :execute)
-  (cl:unless
-    (cl:find-package :holai.define)
-    (defpackage :holai.define
-      (:use :cl)
-      (:shadow
-        ADMISSIBLE_BASE
-        ADMISSIBLE_COMB
-        ADMISSIBLE_COND
-        ADMISSIBLE_CONST
-        ADMISSIBLE_GUARDED_PATTERN
-        ADMISSIBLE_IMP_SUPERADMISSIBLE
-        ADMISSIBLE_LAMBDA
-        ADMISSIBLE_MAP
-        ADMISSIBLE_MATCH
-        ADMISSIBLE_MATCH_SEQPATTERN
-        ADMISSIBLE_NEST
-        ADMISSIBLE_NSUM
-        ADMISSIBLE_RAND
-        ADMISSIBLE_SEQPATTERN
-        ADMISSIBLE_SUM
-        ADMISSIBLE_UNGUARDED_PATTERN
-        APPLY_PROFORMA_TAC
-        CASEWISE
-        CASEWISE_CASES
-        CASEWISE_DEF
-        CASEWISE_WORKS
-        EACK_PROFORMA
-        EXISTS_PAT_CONV
-        GUESS_MEASURE_THEN
-        GUESS_WF_THEN
-        HACK_PROFORMA
-        INDUCTIVE_MEASURE_THEN
-        MAIN_ADMISS_TAC
-        MATCH_SEQPATTERN
-        RECURSION_CASEWISE
-        RECURSION_CASEWISE_PAIRWISE
-        RECURSION_SUPERADMISSIBLE
-        SIMPLIFY_CASE_DISTINCTNESS_CLAUSE
-        SUPERADMISSIBLE_COND
-        SUPERADMISSIBLE_CONST
-        SUPERADMISSIBLE_MATCH_GUARDED_PATTERN
-        SUPERADMISSIBLE_MATCH_SEQPATTERN
-        SUPERADMISSIBLE_MATCH_UNGUARDED_PATTERN
-        SUPERADMISSIBLE_T
-        SUPERADMISSIBLE_TAIL
-        WF_REC_CASES
-        WF_REC_CASES%
-        WF_REC_TAIL_GENERAL%
-        admissible
-        break_down_admissibility
-        close_definition_clauses
-        conv
-        define
-        depair
-        do_clause
-        headonly
-        instantiate_casewise_recursion
-        is_pattern
-        mkname
-        pinstantiate_casewise_recursion
-        process_clause
-        prove_general_recursive_function_exists
-        pure_prove_recursive_function_exists
-        superadmissible
-        tailadmissible
-        tuple_function_existence
-        type_instantiate_defining_const)
-      (:export
-        ADMISSIBLE_BASE
-        ADMISSIBLE_COMB
-        ADMISSIBLE_COND
-        ADMISSIBLE_CONST
-        ADMISSIBLE_GUARDED_PATTERN
-        ADMISSIBLE_IMP_SUPERADMISSIBLE
-        ADMISSIBLE_LAMBDA
-        ADMISSIBLE_MAP
-        ADMISSIBLE_MATCH
-        ADMISSIBLE_MATCH_SEQPATTERN
-        ADMISSIBLE_NEST
-        ADMISSIBLE_NSUM
-        ADMISSIBLE_RAND
-        ADMISSIBLE_SEQPATTERN
-        ADMISSIBLE_SUM
-        ADMISSIBLE_UNGUARDED_PATTERN
-        CASEWISE
-        CASEWISE_CASES
-        CASEWISE_DEF
-        CASEWISE_WORKS
-        MATCH_SEQPATTERN
-        RECURSION_CASEWISE
-        RECURSION_CASEWISE_PAIRWISE
-        RECURSION_SUPERADMISSIBLE
-        SUPERADMISSIBLE_COND
-        SUPERADMISSIBLE_CONST
-        SUPERADMISSIBLE_MATCH_GUARDED_PATTERN
-        SUPERADMISSIBLE_MATCH_SEQPATTERN
-        SUPERADMISSIBLE_MATCH_UNGUARDED_PATTERN
-        SUPERADMISSIBLE_T
-        SUPERADMISSIBLE_TAIL
-        WF_REC_CASES
-        WF_REC_CASES%
-        WF_REC_TAIL_GENERAL%
-        admissible
-        define
-        instantiate_casewise_recursion
-        prove_general_recursive_function_exists
-        pure_prove_recursive_function_exists
-        superadmissible
-        tailadmissible))))
-
-(defpackage :holai.define
+(uiop:define-package
+  :holai.define
   (:use :cl)
   (:shadow
+    A%
     ADMISSIBLE_BASE
     ADMISSIBLE_COMB
     ADMISSIBLE_COND
@@ -138,23 +28,298 @@
     ADMISSIBLE_SEQPATTERN
     ADMISSIBLE_SUM
     ADMISSIBLE_UNGUARDED_PATTERN
+    ADMISS_TAC
+    AJS
+    ALLASMS
+    ALLSIMPS
+    AND_TM
+    ANT
     APPLY_PROFORMA_TAC
+    ARGLISTS
+    ARGS
+    ARGS%
+    ARG~1456
+    ARG~1592
+    ARG~2580
+    ARG~2635
+    ARG~2658
+    ARG~2908
+    ARG~2979
+    ARG~3099
+    ARG~3155
+    ASL
+    ATH
+    ATM
+    AVS
+    AVS%
+    BARGS
+    BASECNV
+    BOD
+    BOD%
+    BOD2
+    BREAK_DOWN_ADMISSIBILITY
+    BTH
+    CARGS
     CASEWISE
     CASEWISE_CASES
     CASEWISE_DEF
     CASEWISE_WORKS
+    CBOD
+    CDASM
+    CJS
+    CLAUSES
+    CLOSE_DEFINITION_CLAUSES
+    CNV
+    CON
+    CONS
+    CONSTANT_MEASURE_THEN
+    CONV
+    CONV0
+    CONV1
+    CONVS
+    CTH
+    DEF
+    DEF%
+    DEPAIR
+    DOMTYS
+    DOMTYS0
+    DO_CLAUSE
+    DTH
+    DTM
+    DTY
     EACK_PROFORMA
+    ELEMMA0
+    ELEMMA1
+    ELIM_LISTOPS_CONV
+    EQ
+    EQS
+    EQ_REFL%
+    ETH
+    ETM
+    EV
+    EV%
+    EVENSIMPS
+    EXCEPTION~1272
+    EXCEPTION~1275
+    EXCEPTION~1493
+    EXCEPTION~1873
+    EXCEPTION~2215
+    EXCEPTION~3200
+    EXCEPTION~3548
+    EXCEPTION~3711
     EXISTS_PAT_CONV
+    EXPAND_PAIRED_ALL_CONV
+    F
+    F%
+    F%%
+    F2
+    FALSE_TM
+    FBOD
+    FIDDLE_CONV
+    FN
+    FNAME
+    FORALL_PAIR_CONV
+    FS
+    FVS
+    F_OCCURS
+    G%
+    GL
     GUESS_MEASURE_THEN
+    GUESS_ORDERING_TAC
     GUESS_WF_THEN
+    GVS
     HACK_PROFORMA
+    HAD
+    HEADONLY
+    HOP
+    I%
     INDUCTIVE_MEASURE_THEN
+    INSTANTIATE_CASEWISE_RECURSION%
+    IS_PATTERN
+    K%
+    L
+    LAMBDA_PAIR_CONV
+    LEFTS
+    LEMMA
+    LSYM
+    LVS
     MAIN_ADMISS_TAC
+    MATCH_SEQPATTERN
+    MIDTYS
+    MKNAME
+    N
+    NAME
+    NARGS
+    NET
+    NUM_TY
+    ONE_TM
+    ORD
+    P%
+    PAIRED_LAMBDA
+    PARM
+    PARMS
+    PARMS0
+    PINSTANTIATE_CASEWISE_RECURSION
+    PRE_GUESS_TAC
+    PROCESS_CLAUSE
+    PROVE_DEPTH_MEASURE_EXISTS
+    PROVE_GENERAL_RECURSIVE_FUNCTION_EXISTS%
+    PTH
+    PTH0
+    PTH1
+    PTH_LEXLEFT
+    PTH_LEXRIGHT
+    PTH_MEASURE
+    PURE_PROVE_RECURSIVE_FUNCTION_EXISTS%
+    PUSHCNV
+    R%
+    R%%
+    RANTY
+    RANTY0
+    RECTYPE_ARITH_EQ_CONV
+    RECURSION_CASEWISE
+    RECURSION_CASEWISE_PAIRWISE
+    RECURSION_SUPERADMISSIBLE
+    REWR1
+    REWR2
+    REWR_FORALL_TH
+    RIGHTS
+    RTH
+    RULE
+    S
+    SIMP1
+    SIMP2
+    SIMP3
+    SIMPLIFY_CASE_DISTINCTNESS_CLAUSE
+    SIMPLIFY_MATCH_WELLDEFINED_TAC
+    SIMPLIFY_WELLDEFINEDNESS_CONV
+    SIMP_ADMISS_TAC
+    SS
+    STH
+    SUPERADMISSIBLE_COND
+    SUPERADMISSIBLE_CONST
+    SUPERADMISSIBLE_MATCH_GUARDED_PATTERN
+    SUPERADMISSIBLE_MATCH_SEQPATTERN
+    SUPERADMISSIBLE_MATCH_UNGUARDED_PATTERN
+    SUPERADMISSIBLE_T
+    SUPERADMISSIBLE_TAIL
+    T%
+    T%%
+    TAC
+    TBOD
+    TH
+    TH%
+    TH%%
+    TH0
+    TH1
+    TH10
+    TH11
+    TH2
+    TH3
+    TH4
+    TH5
+    TH6
+    TH7
+    TH8
+    TH9
+    THS
+    THS3
+    THS4
+    TM
+    TM%
+    TM%%
+    TS
+    TUPLE_FUNCTION_EXISTENCE
+    TY
+    TY1
+    TY2
+    TYNAME
+    TYPE_INSTANTIATE_DEFINING_CONST
+    T_UPDATED
+    V
+    V%
+    VS
+    W%
+    WFASM
+    WFASM%
+    WF_REC_CASES
+    WF_REC_CASES%
+    WF_REC_TAIL_GENERAL%
+    WTH
+    WTM
+    X
+    XTUP
+    ZTY
+    admissible
+    break_down_admissibility
+    close_definition_clauses
+    conv
+    define
+    depair
+    do_clause
+    headonly
+    instantiate_casewise_recursion
+    is_pattern
+    mkname
+    pinstantiate_casewise_recursion
+    process_clause
+    prove_general_recursive_function_exists
+    pure_prove_recursive_function_exists
+    superadmissible
+    tailadmissible
+    tuple_function_existence
+    type_instantiate_defining_const)
+  (:import-from :holai.arith)
+  (:import-from :holai.basics)
+  (:import-from :holai.bool)
+  (:import-from :holai.calc_num)
+  (:import-from :holai.cart)
+  (:import-from :holai.class)
+  (:import-from :holai.drule)
+  (:import-from :holai.equal)
+  (:import-from :holai.fusion)
+  (:import-from :holai.fusion.hol)
+  (:import-from :holai.ind_types)
+  (:import-from :holai.int)
+  (:import-from :holai.iterate)
+  (:import-from :holai.lib)
+  (:import-from :holai.lists)
+  (:import-from :holai.meson)
+  (:import-from :holai.nums)
+  (:import-from :holai.pair)
+  (:import-from :holai.parser)
+  (:import-from :holai.printer)
+  (:import-from :holai.recursion)
+  (:import-from :holai.runtime)
+  (:import-from :holai.simp)
+  (:import-from :holai.tactics)
+  (:import-from :holai.theorems)
+  (:import-from :holai.wf)
+  (:export
+    ADMISSIBLE_BASE
+    ADMISSIBLE_COMB
+    ADMISSIBLE_COND
+    ADMISSIBLE_CONST
+    ADMISSIBLE_GUARDED_PATTERN
+    ADMISSIBLE_IMP_SUPERADMISSIBLE
+    ADMISSIBLE_LAMBDA
+    ADMISSIBLE_MAP
+    ADMISSIBLE_MATCH
+    ADMISSIBLE_MATCH_SEQPATTERN
+    ADMISSIBLE_NEST
+    ADMISSIBLE_NSUM
+    ADMISSIBLE_RAND
+    ADMISSIBLE_SEQPATTERN
+    ADMISSIBLE_SUM
+    ADMISSIBLE_UNGUARDED_PATTERN
+    CASEWISE
+    CASEWISE_CASES
+    CASEWISE_DEF
+    CASEWISE_WORKS
     MATCH_SEQPATTERN
     RECURSION_CASEWISE
     RECURSION_CASEWISE_PAIRWISE
     RECURSION_SUPERADMISSIBLE
-    SIMPLIFY_CASE_DISTINCTNESS_CLAUSE
     SUPERADMISSIBLE_COND
     SUPERADMISSIBLE_CONST
     SUPERADMISSIBLE_MATCH_GUARDED_PATTERN
@@ -165,6 +330,284 @@
     WF_REC_CASES
     WF_REC_CASES%
     WF_REC_TAIL_GENERAL%
+    admissible
+    define
+    instantiate_casewise_recursion
+    prove_general_recursive_function_exists
+    pure_prove_recursive_function_exists
+    superadmissible
+    tailadmissible))
+
+(uiop:define-package
+  :holai.define
+  (:use :cl)
+  (:mix
+    :cl
+    :holai.arith
+    :holai.basics
+    :holai.bool
+    :holai.calc_num
+    :holai.class
+    :holai.drule
+    :holai.equal
+    :holai.fusion
+    :holai.fusion.hol
+    :holai.ind_types
+    :holai.int
+    :holai.iterate
+    :holai.lib
+    :holai.lists
+    :holai.meson
+    :holai.nums
+    :holai.pair
+    :holai.parser
+    :holai.printer
+    :holai.recursion
+    :holai.runtime
+    :holai.simp
+    :holai.tactics
+    :holai.theorems
+    :holai.wf)
+  (:shadow
+    A%
+    ADMISSIBLE_BASE
+    ADMISSIBLE_COMB
+    ADMISSIBLE_COND
+    ADMISSIBLE_CONST
+    ADMISSIBLE_GUARDED_PATTERN
+    ADMISSIBLE_IMP_SUPERADMISSIBLE
+    ADMISSIBLE_LAMBDA
+    ADMISSIBLE_MAP
+    ADMISSIBLE_MATCH
+    ADMISSIBLE_MATCH_SEQPATTERN
+    ADMISSIBLE_NEST
+    ADMISSIBLE_NSUM
+    ADMISSIBLE_RAND
+    ADMISSIBLE_SEQPATTERN
+    ADMISSIBLE_SUM
+    ADMISSIBLE_UNGUARDED_PATTERN
+    ADMISS_TAC
+    AJS
+    ALLASMS
+    ALLSIMPS
+    AND_TM
+    ANT
+    APPLY_PROFORMA_TAC
+    ARGLISTS
+    ARGS
+    ARGS%
+    ARG~1456
+    ARG~1592
+    ARG~2580
+    ARG~2635
+    ARG~2658
+    ARG~2908
+    ARG~2979
+    ARG~3099
+    ARG~3155
+    ASL
+    ATH
+    ATM
+    AVS
+    AVS%
+    BARGS
+    BASECNV
+    BOD
+    BOD%
+    BOD2
+    BREAK_DOWN_ADMISSIBILITY
+    BTH
+    CARGS
+    CASEWISE
+    CASEWISE_CASES
+    CASEWISE_DEF
+    CASEWISE_WORKS
+    CBOD
+    CDASM
+    CJS
+    CLAUSES
+    CLOSE_DEFINITION_CLAUSES
+    CNV
+    CON
+    CONS
+    CONSTANT_MEASURE_THEN
+    CONV
+    CONV0
+    CONV1
+    CONVS
+    CTH
+    DEF
+    DEF%
+    DEPAIR
+    DOMTYS
+    DOMTYS0
+    DO_CLAUSE
+    DTH
+    DTM
+    DTY
+    EACK_PROFORMA
+    ELEMMA0
+    ELEMMA1
+    ELIM_LISTOPS_CONV
+    EQ
+    EQS
+    EQ_REFL%
+    ETH
+    ETM
+    EV
+    EV%
+    EVENSIMPS
+    EXCEPTION~1272
+    EXCEPTION~1275
+    EXCEPTION~1493
+    EXCEPTION~1873
+    EXCEPTION~2215
+    EXCEPTION~3200
+    EXCEPTION~3548
+    EXCEPTION~3711
+    EXISTS_PAT_CONV
+    EXPAND_PAIRED_ALL_CONV
+    F
+    F%
+    F%%
+    F2
+    FALSE_TM
+    FBOD
+    FIDDLE_CONV
+    FN
+    FNAME
+    FORALL_PAIR_CONV
+    FS
+    FVS
+    F_OCCURS
+    G%
+    GL
+    GUESS_MEASURE_THEN
+    GUESS_ORDERING_TAC
+    GUESS_WF_THEN
+    GVS
+    HACK_PROFORMA
+    HAD
+    HEADONLY
+    HOP
+    I%
+    INDUCTIVE_MEASURE_THEN
+    INSTANTIATE_CASEWISE_RECURSION%
+    IS_PATTERN
+    K%
+    L
+    LAMBDA_PAIR_CONV
+    LEFTS
+    LEMMA
+    LSYM
+    LVS
+    MAIN_ADMISS_TAC
+    MATCH_SEQPATTERN
+    MIDTYS
+    MKNAME
+    N
+    NAME
+    NARGS
+    NET
+    NUM_TY
+    ONE_TM
+    ORD
+    P%
+    PAIRED_LAMBDA
+    PARM
+    PARMS
+    PARMS0
+    PINSTANTIATE_CASEWISE_RECURSION
+    PRE_GUESS_TAC
+    PROCESS_CLAUSE
+    PROVE_DEPTH_MEASURE_EXISTS
+    PROVE_GENERAL_RECURSIVE_FUNCTION_EXISTS%
+    PTH
+    PTH0
+    PTH1
+    PTH_LEXLEFT
+    PTH_LEXRIGHT
+    PTH_MEASURE
+    PURE_PROVE_RECURSIVE_FUNCTION_EXISTS%
+    PUSHCNV
+    R%
+    R%%
+    RANTY
+    RANTY0
+    RECTYPE_ARITH_EQ_CONV
+    RECURSION_CASEWISE
+    RECURSION_CASEWISE_PAIRWISE
+    RECURSION_SUPERADMISSIBLE
+    REWR1
+    REWR2
+    REWR_FORALL_TH
+    RIGHTS
+    RTH
+    RULE
+    S
+    SIMP1
+    SIMP2
+    SIMP3
+    SIMPLIFY_CASE_DISTINCTNESS_CLAUSE
+    SIMPLIFY_MATCH_WELLDEFINED_TAC
+    SIMPLIFY_WELLDEFINEDNESS_CONV
+    SIMP_ADMISS_TAC
+    SS
+    STH
+    SUPERADMISSIBLE_COND
+    SUPERADMISSIBLE_CONST
+    SUPERADMISSIBLE_MATCH_GUARDED_PATTERN
+    SUPERADMISSIBLE_MATCH_SEQPATTERN
+    SUPERADMISSIBLE_MATCH_UNGUARDED_PATTERN
+    SUPERADMISSIBLE_T
+    SUPERADMISSIBLE_TAIL
+    T%
+    T%%
+    TAC
+    TBOD
+    TH
+    TH%
+    TH%%
+    TH0
+    TH1
+    TH10
+    TH11
+    TH2
+    TH3
+    TH4
+    TH5
+    TH6
+    TH7
+    TH8
+    TH9
+    THS
+    THS3
+    THS4
+    TM
+    TM%
+    TM%%
+    TS
+    TUPLE_FUNCTION_EXISTENCE
+    TY
+    TY1
+    TY2
+    TYNAME
+    TYPE_INSTANTIATE_DEFINING_CONST
+    T_UPDATED
+    V
+    V%
+    VS
+    W%
+    WFASM
+    WFASM%
+    WF_REC_CASES
+    WF_REC_CASES%
+    WF_REC_TAIL_GENERAL%
+    WTH
+    WTM
+    X
+    XTUP
+    ZTY
     admissible
     break_down_admissibility
     close_definition_clauses

@@ -10,147 +10,153 @@
 ;; (*              (c) Copyright, John Harrison 1998-2007                       *)
 ;; (* ========================================================================= *)
 
-(cl:eval-when
-  (:compile-toplevel :load-toplevel :execute)
-  (cl:unless
-    (cl:find-package :holai.class)
-    (defpackage :holai.class
-      (:use :cl)
-      (:shadow
-        ASM_CASES_TAC
-        BOOL_CASES_AX
-        BOOL_CASES_TAC
-        CCONTR
-        COND_ABS
-        COND_CASES_TAC
-        COND_CLAUSES
-        COND_DEF
-        COND_ELIM_CONV
-        COND_ELIM_THM
-        COND_EXPAND
-        COND_ID
-        COND_RAND
-        COND_RATOR
-        COND_SWAP
-        CONTRAPOS_CONV
-        CONTRAPOS_THM
-        DE_MORGAN_THM
-        EQ_EXT
-        ETA_AX
-        ETA_CONV
-        EXCLUDED_MIDDLE
-        EXISTS_BOOL_THM
-        EXISTS_NOT_THM
-        EXISTS_THM
-        FORALL_BOOL_THM
-        FORALL_NOT_THM
-        FUN_EQ_THM
-        LEFT_EXISTS_IMP_THM
-        LEFT_FORALL_OR_THM
-        LEFT_IMP_FORALL_THM
-        LEFT_OR_FORALL_THM
-        MONO_COND
-        NOT_CLAUSES
-        NOT_EXISTS_THM
-        NOT_FORALL_THM
-        NOT_IMP
-        REFUTE_THEN
-        RIGHT_EXISTS_IMP_THM
-        RIGHT_FORALL_OR_THM
-        RIGHT_IMP_EXISTS_THM
-        RIGHT_OR_FORALL_THM
-        RTAUT_TAC
-        SELECT_AX
-        SELECT_CONV
-        SELECT_REFL
-        SELECT_RULE
-        SELECT_UNIQUE
-        SKOLEM_THM
-        SKOLEM_THM_GEN
-        TAUT
-        UNIQUE_SKOLEM_ALT
-        UNIQUE_SKOLEM_THM
-        bool_INDUCT
-        bool_RECURSION
-        dest_cond
-        dest_select
-        inductive_type_store
-        is_cond
-        is_epsok
-        is_select
-        mk_cond
-        mk_select
-        new_type_definition
-        ok
-        the_type_definitions)
-      (:export
-        ASM_CASES_TAC
-        BOOL_CASES_AX
-        BOOL_CASES_TAC
-        CCONTR
-        COND_ABS
-        COND_CASES_TAC
-        COND_CLAUSES
-        COND_DEF
-        COND_ELIM_CONV
-        COND_ELIM_THM
-        COND_EXPAND
-        COND_ID
-        COND_RAND
-        COND_RATOR
-        COND_SWAP
-        CONTRAPOS_CONV
-        CONTRAPOS_THM
-        DE_MORGAN_THM
-        EQ_EXT
-        ETA_AX
-        ETA_CONV
-        EXCLUDED_MIDDLE
-        EXISTS_BOOL_THM
-        EXISTS_NOT_THM
-        EXISTS_THM
-        FORALL_BOOL_THM
-        FORALL_NOT_THM
-        FUN_EQ_THM
-        LEFT_EXISTS_IMP_THM
-        LEFT_FORALL_OR_THM
-        LEFT_IMP_FORALL_THM
-        LEFT_OR_FORALL_THM
-        MONO_COND
-        NOT_CLAUSES
-        NOT_EXISTS_THM
-        NOT_FORALL_THM
-        NOT_IMP
-        REFUTE_THEN
-        RIGHT_EXISTS_IMP_THM
-        RIGHT_FORALL_OR_THM
-        RIGHT_IMP_EXISTS_THM
-        RIGHT_OR_FORALL_THM
-        SELECT_AX
-        SELECT_CONV
-        SELECT_REFL
-        SELECT_RULE
-        SELECT_UNIQUE
-        SKOLEM_THM
-        SKOLEM_THM_GEN
-        TAUT
-        UNIQUE_SKOLEM_ALT
-        UNIQUE_SKOLEM_THM
-        bool_INDUCT
-        bool_RECURSION
-        dest_cond
-        dest_select
-        inductive_type_store
-        is_cond
-        is_select
-        mk_cond
-        mk_select
-        new_type_definition
-        the_type_definitions))))
-
-(defpackage :holai.class
+(uiop:define-package
+  :holai.class
   (:use :cl)
   (:shadow
+    A%
+    ABS%%
+    ABSNAME
+    ARG~1045
+    ARG~1230
+    ARG~373
+    ARG~557
+    ARG~737
+    ASL
+    ASM_CASES_TAC
+    B%
+    BOD
+    BOOL_CASES_AX
+    BOOL_CASES_TAC
+    BV
+    C%
+    CCONTR
+    COND_ABS
+    COND_CASES_TAC
+    COND_CLAUSES
+    COND_CONG
+    COND_DEF
+    COND_ELIM_CONV
+    COND_ELIM_THM
+    COND_EQ_CLAUSE
+    COND_EXPAND
+    COND_ID
+    COND_RAND
+    COND_RATOR
+    COND_SWAP
+    CONTRAPOS_CONV
+    CONTRAPOS_THM
+    CONV
+    DENEG_RULE
+    DE_MORGAN_THM
+    EQ_EXT
+    ETA_AX
+    ETA_CONV
+    EXCEPTION~1030
+    EXCEPTION~1050
+    EXCEPTION~1084
+    EXCEPTION~1289
+    EXCEPTION~1372
+    EXCEPTION~18
+    EXCEPTION~207
+    EXCEPTION~261
+    EXCEPTION~378
+    EXCEPTION~661
+    EXCEPTION~698
+    EXCLUDED_MIDDLE
+    EXISTS_BOOL_THM
+    EXISTS_NOT_THM
+    EXISTS_THM
+    FORALL_BOOL_THM
+    FORALL_NOT_THM
+    FUN_EQ_THM
+    F_TM
+    GL
+    IS_EPSOK
+    L
+    LEFT_EXISTS_IMP_THM
+    LEFT_FORALL_OR_THM
+    LEFT_IMP_FORALL_THM
+    LEFT_OR_FORALL_THM
+    MONO_COND
+    NOT_CLAUSES
+    NOT_EXISTS_THM
+    NOT_FORALL_THM
+    NOT_IMP
+    OK
+    P%
+    PICKEPS
+    PROP_REWRITE_TAC
+    PTH
+    Q
+    R%
+    REFUTE_THEN
+    REPNAME
+    RIGHT_EXISTS_IMP_THM
+    RIGHT_FORALL_OR_THM
+    RIGHT_IMP_EXISTS_THM
+    RIGHT_OR_FORALL_THM
+    RTAUT_TAC
+    SELECT_AX
+    SELECT_CONV
+    SELECT_REFL
+    SELECT_RULE
+    SELECT_UNIQUE
+    SKOLEM_THM
+    SKOLEM_THM_GEN
+    T%
+    T1
+    T2
+    TAUT
+    TAUT_TAC
+    TH
+    TH%
+    TH0
+    TH1
+    TH2
+    TM
+    TM%
+    TM1
+    TM2
+    TTAC
+    TTH
+    TTH%
+    TY
+    TYNAME
+    UNIQUE_SKOLEM_ALT
+    UNIQUE_SKOLEM_THM
+    W%
+    X
+    Y
+    bool_INDUCT
+    bool_RECURSION
+    dest_cond
+    dest_select
+    inductive_type_store
+    is_cond
+    is_epsok
+    is_select
+    mk_cond
+    mk_select
+    new_type_definition
+    ok
+    the_type_definitions)
+  (:import-from :holai.basics)
+  (:import-from :holai.bool)
+  (:import-from :holai.drule)
+  (:import-from :holai.equal)
+  (:import-from :holai.fusion)
+  (:import-from :holai.fusion.hol)
+  (:import-from :holai.ind_defs)
+  (:import-from :holai.itab)
+  (:import-from :holai.lib)
+  (:import-from :holai.parser)
+  (:import-from :holai.printer)
+  (:import-from :holai.runtime)
+  (:import-from :holai.simp)
+  (:import-from :holai.tactics)
+  (:import-from :holai.theorems)
+  (:export
     ASM_CASES_TAC
     BOOL_CASES_AX
     BOOL_CASES_TAC
@@ -193,7 +199,6 @@
     RIGHT_FORALL_OR_THM
     RIGHT_IMP_EXISTS_THM
     RIGHT_OR_FORALL_THM
-    RTAUT_TAC
     SELECT_AX
     SELECT_CONV
     SELECT_REFL
@@ -204,6 +209,153 @@
     TAUT
     UNIQUE_SKOLEM_ALT
     UNIQUE_SKOLEM_THM
+    bool_INDUCT
+    bool_RECURSION
+    dest_cond
+    dest_select
+    inductive_type_store
+    is_cond
+    is_select
+    mk_cond
+    mk_select
+    new_type_definition
+    the_type_definitions))
+
+(uiop:define-package
+  :holai.class
+  (:use :cl)
+  (:mix
+    :cl
+    :holai.basics
+    :holai.bool
+    :holai.drule
+    :holai.equal
+    :holai.fusion
+    :holai.fusion.hol
+    :holai.ind_defs
+    :holai.itab
+    :holai.lib
+    :holai.parser
+    :holai.printer
+    :holai.runtime
+    :holai.simp
+    :holai.tactics
+    :holai.theorems)
+  (:shadow
+    A%
+    ABS%%
+    ABSNAME
+    ARG~1045
+    ARG~1230
+    ARG~373
+    ARG~557
+    ARG~737
+    ASL
+    ASM_CASES_TAC
+    B%
+    BOD
+    BOOL_CASES_AX
+    BOOL_CASES_TAC
+    BV
+    C%
+    CCONTR
+    COND_ABS
+    COND_CASES_TAC
+    COND_CLAUSES
+    COND_CONG
+    COND_DEF
+    COND_ELIM_CONV
+    COND_ELIM_THM
+    COND_EQ_CLAUSE
+    COND_EXPAND
+    COND_ID
+    COND_RAND
+    COND_RATOR
+    COND_SWAP
+    CONTRAPOS_CONV
+    CONTRAPOS_THM
+    CONV
+    DENEG_RULE
+    DE_MORGAN_THM
+    EQ_EXT
+    ETA_AX
+    ETA_CONV
+    EXCEPTION~1030
+    EXCEPTION~1050
+    EXCEPTION~1084
+    EXCEPTION~1289
+    EXCEPTION~1372
+    EXCEPTION~18
+    EXCEPTION~207
+    EXCEPTION~261
+    EXCEPTION~378
+    EXCEPTION~661
+    EXCEPTION~698
+    EXCLUDED_MIDDLE
+    EXISTS_BOOL_THM
+    EXISTS_NOT_THM
+    EXISTS_THM
+    FORALL_BOOL_THM
+    FORALL_NOT_THM
+    FUN_EQ_THM
+    F_TM
+    GL
+    IS_EPSOK
+    L
+    LEFT_EXISTS_IMP_THM
+    LEFT_FORALL_OR_THM
+    LEFT_IMP_FORALL_THM
+    LEFT_OR_FORALL_THM
+    MONO_COND
+    NOT_CLAUSES
+    NOT_EXISTS_THM
+    NOT_FORALL_THM
+    NOT_IMP
+    OK
+    P%
+    PICKEPS
+    PROP_REWRITE_TAC
+    PTH
+    Q
+    R%
+    REFUTE_THEN
+    REPNAME
+    RIGHT_EXISTS_IMP_THM
+    RIGHT_FORALL_OR_THM
+    RIGHT_IMP_EXISTS_THM
+    RIGHT_OR_FORALL_THM
+    RTAUT_TAC
+    SELECT_AX
+    SELECT_CONV
+    SELECT_REFL
+    SELECT_RULE
+    SELECT_UNIQUE
+    SKOLEM_THM
+    SKOLEM_THM_GEN
+    T%
+    T1
+    T2
+    TAUT
+    TAUT_TAC
+    TH
+    TH%
+    TH0
+    TH1
+    TH2
+    TM
+    TM%
+    TM1
+    TM2
+    TTAC
+    TTH
+    TTH%
+    TY
+    TYNAME
+    UNIQUE_SKOLEM_ALT
+    UNIQUE_SKOLEM_THM
+    W%
+    X
+    Y
     bool_INDUCT
     bool_RECURSION
     dest_cond
