@@ -3286,22 +3286,45 @@ Every selected additional host must pass `holai/tests/compatibility.py`, not
 merely start ASDF. Its `runtime-fixtures` profile compiles/loads the runtime and
 maintained translated fixture consumers without loading the 46-file core.
 It measures defunc/OPTIONAL/tuple-list behavior, standard Random, structural
-matching and stale-consumer rejection, real SIGINT catch/re-enable/default
+matching and stale-consumer rejection, real SIGINT catch/re-enable/previous-hook
 restoration, translated naming and exact OCaml/translated fixture observations.
 The report records concrete counts, exact host identity, all covered source
 fingerprints, per-process 120-second guards, exit codes and log SHA256 digests.
 No full-core theorem/registry/PROOF count is inferred from these checks.
 
-For SIGINT, two signals must actually become Sys.Break across disabling and
-re-enabling catch-break; after disabling it again, the third must terminate
-through restored OS SIG_DFL with exit code -2. Readiness alone is insufficient.
-ECL 26.5.5's weak-storage regression uses a native-compiled creator and native
-`GC_clear_stack` before the fixed pair of `SI:GC` calls, preserving all 28
-assertions rather than adding retries or weakening collection checks.
-Its source proclaims `EXT:CATCH-SIGNAL` to return NULL, although the C
-implementation returns T. Default restoration therefore uses its side effect
-only, restoring real SIG_DFL without consuming that contradictory return value.
-The current ECL run observed both catches, re-enable and third-signal OS exit -2.
+For SIGINT, enabling catch-break saves the existing native Lisp hook and installs
+the Sys.Break adapter. Repeated enable does not replace the saved hook; disabling
+restores that exact previous hook and repeated disable is inert. Re-enabling
+captures the then-current hook afresh. This is the user-approved deviation at
+the otherwise unused false boundary of OCaml Sys.catch_break: restore Lisp's
+native behavior, not the OS SIG_DFL disposition. No signal FFI, signal-mask
+manipulation, thread-profile override or Darwin FFI rebuild is required.
+The independent runtime-only regression installs a native prior hook, checks
+identity restoration across two enable/disable cycles, then delivers a third
+real OS SIGINT to that prior hook on the installing thread. It must not leak
+Sys.Break and must exit normally with code 0. Readiness alone is insufficient.
+SBCL saves/restores the exact public `SB-EXT:*INVOKE-DEBUGGER-HOOK*` value.
+Only `SB-SYS:INTERACTIVE-INTERRUPT` becomes Sys.Break; other conditions forward
+to the saved hook. ECL captures/restores the `SI:TERMINAL-INTERRUPT` fdefinition
+before debugger entry and, on threaded ECL, uses `MP:INTERRUPT-PROCESS` to forward
+to the enabling process. ECL 26.5.5's `EXT:GET-SIGNAL-HANDLER` has a broken
+`ecl_return0` getter; debugger-hook conversion occurs too late, so neither is
+the adapter boundary. ABCL preserves the previous Java Signal handler and target
+thread. CLISP uses ANSI CLOS method discovery/addition/removal on its native
+global handler, including stock threaded builds, without FFI.
+The current local ARM64 Linux `make release` exited 0 in 283.44 seconds:
+all four profiles passed with three real SIGINT deliveries, two Sys.Break catches,
+re-enable and exact prior-hook restoration followed by native prior-hook exit 0.
+SBCL records `sigint_previous_hook_restored=true`; additional-host reports record
+`system_interrupt_previous_hook_restored=true`, all under the
+`restore-previous-native-lisp-hook` policy. Tagged SBCL counts remain 128 native,
+69 PROOF and 1,149 differential rows; all 52 production paths, 93 clean outputs
+and 55 unchanged pins passed. No source proof algorithm changes are involved.
+The new policy's 12-job hosted run remains pending push and observation;
+the earlier 10/12 hosted result and OS-default exit -2 measurements are historical.
+ECL 26.5.5's weak-storage regression uses a native MP worker and join before
+the fixed pair of `SI:GC` calls, preserving all 28 assertions rather than adding
+retries or weakening collection checks. No production cache changes are involved.
 SBCL's cold cache must compile/load all 52 unique production pathnames in
 explicit manifest order, without requiring inferred-system classes or counters.
 Compiler instrumentation scopes diagnostics to actual ASDF COMPILE-OP boundaries. Load/initialization

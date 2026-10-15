@@ -10,12 +10,16 @@
         "aarch64-linux"
         "aarch64-darwin"
       ];
+      # Inspect broken-package metadata, but select only usable candidates below.
+      packagesFor = system: import nixpkgs {
+        inherit system;
+        config.allowBroken = true;
+      };
     in
     {
       devShells = nixpkgs.lib.genAttrs systems (system:
         let
-          # Allow metadata inspection of broken packages, never their selection.
-          pkgs = import nixpkgs { inherit system; config.allowBroken = true; };
+          pkgs = packagesFor system;
           ocamlPackages = pkgs.ocaml-ng.ocamlPackages_4_14;
           candidates = [ "abcl" "sbcl" "ecl" "ccl" "mkcl" "clisp" "cmucl_binary" "clasp-common-lisp" ];
           adapters = [ "sbcl" "ecl" "abcl" "clisp" ];
@@ -128,7 +132,7 @@
         });
       apps = nixpkgs.lib.genAttrs systems (system:
         let
-          pkgs = nixpkgs.legacyPackages.${system};
+          pkgs = packagesFor system;
           shell = self.devShells.${system}.default;
           ids = nixpkgs.lib.splitString "," shell.HOLAI_LISPS;
           app = id: mode: {
@@ -149,7 +153,7 @@
         ]) ids));
       checks = nixpkgs.lib.genAttrs systems (system:
         let
-          pkgs = nixpkgs.legacyPackages.${system};
+          pkgs = packagesFor system;
           ids = nixpkgs.lib.splitString "," self.devShells.${system}.default.HOLAI_LISPS;
           binaries = { cmucl_binary = "lisp"; clasp-common-lisp = "clasp"; };
           evalFlags = { clisp = "-x"; cmucl_binary = "-eval"; mkcl = "-eval"; };

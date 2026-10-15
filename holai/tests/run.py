@@ -108,7 +108,7 @@ def verify_pattern():
 
 
 def verify_interrupt():
-    """Deliver actual SIGINT three times: catch, re-enable/catch, then OS default."""
+    """Deliver actual SIGINT three times: two Sys.Break catches, then the prior Lisp hook."""
     proc = subprocess.Popen(lisp_command("holai/tests/system-interrupt.lisp"),
                             stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True,
                             bufsize=1)
@@ -122,7 +122,8 @@ def verify_interrupt():
     deadline = time.monotonic() + 120
     caught = 0
     catch_ready = 0
-    default_ready = False
+    previous_ready = False
+    previous_restored = False
     try:
         while True:
             line = events.get(timeout=max(0, deadline - time.monotonic()))
@@ -137,13 +138,19 @@ def verify_interrupt():
             elif marker == "SIGINT adapter check passed":
                 caught += 1
                 assert caught == catch_ready, "SIGINT catch marker without readiness"
-            elif marker == "SIGINT default ready":
+            elif marker == "SIGINT previous hook ready":
                 assert caught == catch_ready == 2, "Missing actual initial/re-enabled Sys.Break delivery"
-                default_ready = True
+                assert not previous_ready, "Duplicate prior-hook readiness"
+                previous_ready = True
                 proc.send_signal(signal.SIGINT)
+            elif marker == "SIGINT previous hook restored":
+                assert previous_ready, "Prior hook ran before actual third SIGINT"
+                assert not previous_restored, "Prior hook ran more than once"
+                previous_restored = True
         exit_code = proc.wait(timeout=max(0, deadline - time.monotonic()))
-        assert caught == catch_ready == 2 and default_ready and exit_code == -signal.SIGINT, (
-            "SIGINT must restore the OS default", exit_code, "".join(lines))
+        assert caught == catch_ready == 2 and previous_ready and previous_restored and exit_code == 0, (
+            "SIGINT must restore the previous native Lisp hook without leaking Sys.Break", exit_code, "".join(lines))
+        return exit_code
     finally:
         if proc.poll() is None:
             proc.kill()
@@ -438,7 +445,9 @@ def main():
         "ocaml_full_core_process_timeout_seconds": 600,
         "host_limits": host["full_core_limits"],
         "sigint_adapter_checked": True,
-        "sigint_default_restored": True,
+        "sigint_previous_hook_restored": True,
+        "sigint_policy": "restore-previous-native-lisp-hook",
+        "sigint_deliveries": 3,
         "sigint_catch_cycles": 2,
         "sigint_reenable_verified": True,
         "initial_registry_counts": {"types": 22, "constants": 303, "definitions": 263, "axioms": 3},

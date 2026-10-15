@@ -38,77 +38,95 @@
   (setf *gc-control* (record-update configuration)) unit)
 (define-exception sys_break)
 (defvar *catch-break* nil)
+(defvar *previous-interrupt-hook* nil)
 #+abcl
 (defvar *abcl-sigint-registration* nil)
-#+(and clisp unix)
-(ffi:def-call-out native-sigint-disposition
-  (:name "signal") (:library :default) (:language :stdc)
-  (:arguments (number ffi:int) (handler ffi:c-pointer))
-  (:return-type ffi:c-pointer))
-#+(and clisp unix)
-(defvar *clisp-original-sigint-handler* nil)
-#+(and clisp unix)
-(defun set-native-sigint-disposition (handler)
-  (let ((previous (native-sigint-disposition 2 handler)))
-    ;; Inspect the address, never dereference SIG_ERR ((void *) -1).
-    (when (and previous
-               (= (ffi:foreign-address-unsigned previous)
-                  (1- (ash 1 (ffi:bitsizeof 'ffi:c-pointer)))))
-      (error "Cannot set the native SIGINT disposition"))
-    previous))
 (defun catch-break (enabled)
-  #+sbcl
-  (sb-sys:enable-interrupt sb-unix:sigint
-    (if enabled
-        (lambda (signal info context)
-          (declare (ignore signal info context)) (raise (make-sys_break)))
-        :default))
-  #+ecl
-  (if enabled
-      (ext:set-signal-handler ext:+sigint+
-        (lambda () (raise (make-sys_break))))
-      ;; ECL's compiler declares CATCH-SIGNAL's result NULL. Its :DEFAULT
-      ;; action still installs SIG_DFL; do not test the compiled return value.
-      (ext:catch-signal ext:+sigint+ :default))
-  #+abcl
-  (if enabled
-      (let* ((target (threads:current-thread))
-             (signal (java:jnew "sun.misc.Signal" "INT"))
-             (handler
-               (java:jinterface-implementation "sun.misc.SignalHandler" "handle"
-                 (lambda (signal)
-                   (declare (ignore signal))
-                   ;; Java dispatches on its own thread; raise only on the
-                   ;; Lisp thread that installed this handler.
-                   (threads:interrupt-thread target
-                     (lambda () (raise (make-sys_break))))))))
-        (java:jstatic "handle" "sun.misc.Signal" signal handler)
-        (setf *abcl-sigint-registration* (cons signal handler)))
-      (progn
-        (java:jstatic "handle" "sun.misc.Signal"
-          (if *abcl-sigint-registration* (car *abcl-sigint-registration*)
-              (java:jnew "sun.misc.Signal" "INT"))
-          (java:jfield "sun.misc.SignalHandler" "SIG_DFL"))
-        (setf *abcl-sigint-registration* nil)))
-  #+(and clisp unix)
-  (if enabled
-      (progn
-        (when *clisp-original-sigint-handler*
-          (set-native-sigint-disposition *clisp-original-sigint-handler*))
-        (ext:set-global-handler 'sys::interrupt-condition
-          (lambda (condition)
-            (declare (ignore condition))
-            (raise (make-sys_break)))))
-      (progn
-        (let ((previous
-                (set-native-sigint-disposition (ffi:unsigned-foreign-address 0))))
-          ;; Save only the first disable: subsequent disables return SIG_DFL.
-          (unless *clisp-original-sigint-handler*
-            (setf *clisp-original-sigint-handler* previous)))
-        (ext:set-global-handler 'sys::interrupt-condition nil)))
   #-(or sbcl ecl abcl (and clisp unix))
   (error "SIGINT handling is unsupported on ~A" (lisp-implementation-type))
-  (setf *catch-break* enabled)
+  ;; Capture only at the disabled -> enabled boundary. Repeated calls must
+  ;; neither save our own handler nor discard the hook we displaced.
+  (if enabled
+      (unless *catch-break*
+        #+sbcl
+        (let ((previous sb-ext:*invoke-debugger-hook*))
+          ;; SBCL's native interrupt path enters INVOKE-DEBUGGER with this
+          ;; condition; the public hook precedes disabled-debugger handling.
+          (setf *previous-interrupt-hook* previous
+                sb-ext:*invoke-debugger-hook*
+                (lambda (condition hook)
+                  (declare (ignore hook))
+                  (if (typep condition 'sb-sys:interactive-interrupt)
+                      (raise (make-sys_break))
+                      ;; Preserve the previous hook's calling convention and
+                      ;; its identity as the second argument.
+                      (when previous
+                        (cl:funcall previous condition previous))))))
+        #+ecl
+        (progn
+          ;; ECL 26.5.5 GET-SIGNAL-HANDLER returns no values. Its native
+          ;; dispatcher instead resolves this Lisp function symbol at delivery.
+          ;; Intercept before debugger entry, which is too late for the proof's
+          ;; condition handlers, and preserve the exact previous definition.
+          (unless (fboundp 'si::terminal-interrupt)
+            (error "Cannot capture ECL interrupt hook: missing TERMINAL-INTERRUPT"))
+          (let (#+threads (target mp:*current-process*))
+            (setf *previous-interrupt-hook* (fdefinition 'si::terminal-interrupt)
+                  (fdefinition 'si::terminal-interrupt)
+                  (lambda (&key correctablep)
+                    (declare (ignore correctablep))
+                    ;; Threaded ECL dispatches SIGINT on a servicing thread.
+                    #+threads
+                    (mp:interrupt-process target
+                      (lambda () (raise (make-sys_break))))
+                    #-threads
+                    (raise (make-sys_break))))))
+        #+abcl
+        (let* ((target (threads:current-thread))
+               (signal (java:jnew "sun.misc.Signal" "INT"))
+               (handler
+                 (java:jinterface-implementation "sun.misc.SignalHandler" "handle"
+                   (lambda (signal)
+                     (declare (ignore signal))
+                     ;; Java dispatches on its own thread; raise only on the
+                     ;; Lisp thread that installed this handler.
+                     (threads:interrupt-thread target
+                       (lambda () (raise (make-sys_break))))))))
+          ;; Signal.handle returns the actual displaced Java handler.
+          (setf *previous-interrupt-hook*
+                (java:jstatic "handle" "sun.misc.Signal" signal handler)
+                *abcl-sigint-registration* (cons signal handler)))
+        #+(and clisp unix)
+        (progn
+          (unless (and (fboundp 'sys::global-handler)
+                       (typep #'sys::global-handler 'generic-function)
+                       (find-class 'sys::interrupt-condition nil))
+            (error "Cannot capture CLISP interrupt hook: missing global condition handler"))
+          ;; SET-GLOBAL-HANDLER returns the new METHOD, not the displaced
+          ;; handler. Preserve the exact method, including its closure.
+          (setf *previous-interrupt-hook*
+                (find-method #'sys::global-handler '(progn)
+                  (list (find-class 'sys::interrupt-condition)) nil))
+          (ext:set-global-handler 'sys::interrupt-condition
+            (lambda (condition)
+              (declare (ignore condition))
+              (raise (make-sys_break)))))
+        (setf *catch-break* t))
+      (when *catch-break*
+        #+sbcl
+        (setf sb-ext:*invoke-debugger-hook* *previous-interrupt-hook*)
+        #+ecl
+        (setf (fdefinition 'si::terminal-interrupt) *previous-interrupt-hook*)
+        #+abcl
+        (progn
+          (java:jstatic "handle" "sun.misc.Signal"
+            (car *abcl-sigint-registration*) *previous-interrupt-hook*)
+          (setf *abcl-sigint-registration* nil))
+        #+(and clisp unix)
+        (if *previous-interrupt-hook*
+            (add-method #'sys::global-handler *previous-interrupt-hook*)
+            (ext:set-global-handler 'sys::interrupt-condition nil))
+        (setf *catch-break* nil *previous-interrupt-hook* nil)))
   unit)
 (define-exception assert_failure location)
 (defun assert-true (condition source line column)

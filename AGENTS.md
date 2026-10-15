@@ -41,7 +41,7 @@ readable OCaml-to-Lisp translation, even when argument evaluation order differs.
   and optional HOL Light libraries outside the manifest remain outside the profile.
   Update factual counts from reports when implementation or corpus changes.
 - Current explicit-ASDF release passed locally on ARM64 Linux: `make release`
-  exited 0 in 287.53 seconds, with SBCL full-core and ECL/ABCL/CLISP compatibility.
+  exited 0 in 283.44 seconds, with SBCL full-core and ECL/ABCL/CLISP compatibility.
   Tagged SBCL reports record 128 native/69 PROOF checks, 1,149 differential rows
   (1,146 exact, two structural registry, one Random property), 194,839 core /
   207,058 fixture-inclusive map ranges and ten protected rejections. Fresh cold
@@ -56,7 +56,7 @@ readable OCaml-to-Lisp translation, even when argument evaluation order differs.
   two explicit collections, without production cache changes.
   CI is the configured, actionlint-passed 3 host × 4 Lisp matrix, not a hosted pass:
   SBCL runs release; ECL/ABCL/CLISP run runtime-fixture compatibility. Remote
-  execution of the new push remains pending; prior CLISP failures are unresolved.
+  execution after the new policy's push remains pending; the earlier 10/12 run is historical.
   Captured phase stdout/stderr and public GitHub Actions error annotations support
   precise diagnosis instead of blind retries. Earlier measurements above are history.
 - Keep THEN and the literal source helper then1_ as separate bindings.
@@ -526,7 +526,17 @@ readable OCaml-to-Lisp translation, even when argument evaluation order differs.
   both report that case not applicable (45 structural checks), never passed.
   SBCL/ABCL retain 46.
   Require two actual SIGINT catch cycles across disable/re-enable and a third
-  signal terminating by OS SIG_DFL; never count readiness markers as delivery.
+  signal delivered to the restored native prior hook on the enabling thread,
+  without Sys.Break leakage and with exit 0; readiness is not delivery.
+  SBCL records sigint_previous_hook_restored=true; extras record
+  system_interrupt_previous_hook_restored=true, with three deliveries/two catches.
+  Use SBCL's public SB-EXT:*INVOKE-DEBUGGER-HOOK*
+  (only INTERACTIVE-INTERRUPT becomes Sys.Break; forward unrelated conditions),
+  ECL's pre-debugger SI:TERMINAL-INTERRUPT function entry with exact restoration
+  and MP:INTERRUPT-PROCESS forwarding to the enabling process, ABCL's saved Java
+  Signal handler/target thread, and CLISP's ANSI CLOS global-handler methods.
+  Do not reintroduce libc/LibSystem FFI, signal-mask manipulation, ECL's broken
+  GET-SIGNAL-HANDLER getter or late debugger-hook conversion, or CLISP build overrides.
 - Current evidence is under `misc/reports/implementations/<id>/`; matrix selection,
   explicit profiles and actual per-phase status are in implementation-matrix.json.
   Package availability never implies compatibility; every selected profile's

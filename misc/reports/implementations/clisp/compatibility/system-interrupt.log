@@ -4,7 +4,16 @@
 ;; Loaded file /nix/store/vq1avm1xkapz60nbhrqlr7na0vlg6b19-clisp-2.49.95-unstable-2024-12-28/lib/clisp-2.49.95+/dynmod/asdf.lisp
 
 SIGINT catch ready
+WARNING: Replacing method
+          #<STANDARD-METHOD
+            PROGN (#<STANDARD-CLASS SYSTEM::INTERRUPT-CONDITION>)>
+         in #<STANDARD-GENERIC-FUNCTION SYSTEM::GLOBAL-HANDLER>
 SIGINT adapter check passed
 SIGINT catch ready
+WARNING: Replacing method
+          #<STANDARD-METHOD
+            PROGN (#<STANDARD-CLASS SYSTEM::INTERRUPT-CONDITION>)>
+         in #<STANDARD-GENERIC-FUNCTION SYSTEM::GLOBAL-HANDLER>
 SIGINT adapter check passed
-SIGINT default ready
+SIGINT previous hook ready
+SIGINT previous hook restored

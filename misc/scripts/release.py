@@ -150,9 +150,12 @@ for host in IMPLEMENTATIONS:
     for name, count in {"defunc_protocol_checks": 28, "optional_entry_checks": 84,
                         "tuple_list_checks": 16, "standard_random_checks": 1816,
                         "structural_pattern_checks": 45 if host in NATIVE_NAN_LIMITATIONS else 46,
-                        "system_interrupt_deliveries": 3, "star_naming_observations": 9,
+                        "system_interrupt_deliveries": 3, "system_interrupt_catch_cycles": 2,
+                        "star_naming_observations": 9,
                         "fixture_sources": 3, "translated_fixture_units": 3}.items():
         assert counts[name] == count, f"Incomplete {host} compatibility check: {name}"
+    assert compatibility["system_interrupt_policy"] == "restore-previous-native-lisp-hook"
+    assert compatibility["system_interrupt_previous_hook_restored"]
     assert counts["differential_observations"] > 0
     assert counts["exact_differential_observations"] == counts["differential_observations"]
     logs = compatibility["logs"]
@@ -177,7 +180,7 @@ for host in IMPLEMENTATIONS:
     assert len(processes) == len(compatibility["subprocesses"]), "Duplicate compatibility process logs"
     assert {"compatibility/" + name for name in expected_logs if name.endswith(".log")} <= set(processes)
     for name, process in processes.items():
-        expected_exit = 17 if name == "compatibility/pattern-stale.log" else -2 if name == "compatibility/system-interrupt.log" else 0
+        expected_exit = 17 if name == "compatibility/pattern-stale.log" else 0
         assert process["expected_exit_code"] == expected_exit
     host_log = (evidence / "compatibility/host.log").read_text().splitlines()
     assert [line for line in host_log if line.startswith("HOLAI_HOST_VERSION ")] == ["HOLAI_HOST_VERSION " + identity["version"]]
@@ -273,7 +276,9 @@ for host in ("sbcl",):
     assert stale_markers == [rejection["marker"]]
     assert verification["native_checks"] > 0 and verification["proof_dsl_checks"] > 0
     assert verification["defunc_protocol_checks"] > 0 and verification["standard_random_checks"] > 0
-    assert verification["sigint_adapter_checked"] and verification["sigint_default_restored"]
+    assert verification["sigint_adapter_checked"] and verification["sigint_previous_hook_restored"]
+    assert verification["sigint_policy"] == "restore-previous-native-lisp-hook"
+    assert verification["sigint_deliveries"] == 3
     assert verification["sigint_catch_cycles"] == 2 and verification["sigint_reenable_verified"]
     assert verification["compiled_loaded_inputs"] == [f"vendor/hol-light/{name}.ml" for name in core]
     assert verification["identical_regeneration"] and verification["pinned_inputs_unchanged"]

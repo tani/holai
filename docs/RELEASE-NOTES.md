@@ -20,7 +20,7 @@ The empty holai/all entry and generated provider/load-order S-expression data
 are removed. Generated output is 93 files: 46 Lisp/map pairs plus inventory.
 The maintained ASD is not generated from a manifest; cold diagnostics compare
 actual ASDF compile/load paths against the vendor order and require zero
-compiler diagnostics. The local ARM64 Linux `make release` exited 0 in 287.53
+compiler diagnostics. The local ARM64 Linux `make release` exited 0 in 283.44
 seconds: SBCL full-core and ECL/ABCL/CLISP runtime-fixture profiles, cold audit,
 93 identical clean outputs, 55 unchanged pins and packaging all passed.
 Tagged SBCL evidence records 128 native/69 PROOF checks, 1,149 rows (1,146 exact,
@@ -39,16 +39,37 @@ the other jobs build the translator and run only their runtime-fixture profile.
 SHA pins, read-only permissions and checkout without persisted credentials remain;
 artifact names include both host and implementation.
 
-The preceding hosted run passed full SBCL on all three platforms, but ECL failed
-on Linux and CLISP failed on Darwin/x86 Linux. Outer logs did not expose root
-Lisp diagnostics. Actionlint passed locally; remote execution of the new push's
-12-job matrix remains pending, with no claimed green hosted run or Darwin
-compatibility pass. CLISP's earlier failures remain unresolved. Captured phase
-stdout/stderr and public GitHub Actions error annotations now enable precise
-root diagnosis rather than blind retries. ECL's weak-GC regression uses a native
-MP worker and join, replacing the unstable native `GC_clear_stack` helper;
-the local ECL profile verified all 28 assertions and two explicit collections.
-No production cache behavior changes.
+Hosted run 38657307376 passed 10/12 jobs: all three SBCL full releases, all
+three ECL profiles, all three ABCL profiles and ARM64 Linux CLISP. x86 Linux
+CLISP's threaded sigwait dispatch and Darwin CLISP's missing FFI exposed the
+old OS-default restoration contract. The user-approved boundary now restores
+the exact previous native Lisp hook, not SIG_DFL. Enabling twice preserves the
+saved prior hook; disabling twice is inert; re-enable captures a fresh prior.
+The runtime-only regression installs an independent native hook, catches two
+actual OS SIGINTs as Sys.Break across re-enable, then requires the third to invoke
+that prior hook on the installing thread without a Sys.Break leak and exit 0.
+Release metadata names `sigint_previous_hook_restored` and the explicit
+`restore-previous-native-lisp-hook` policy. Stock NixOS 26.05 packages are used
+on all three targets: no CLISP thread-disable or Darwin FFI override remains.
+The new policy passed the current local ARM64 Linux release in 283.44 seconds.
+All four profiles measured three real deliveries and two catches, exact prior-hook
+restoration across re-enable and third-signal native-hook exit 0. Additional-host
+metadata records `system_interrupt_previous_hook_restored=true`; SBCL records
+`sigint_previous_hook_restored=true`. The new 12-job hosted run remains PENDING
+until push and observation; no remote green result is claimed. Historical reports
+below retain their measured old OS-default exit -2 contract. Failure logs and annotations remain
+available; no warnings or failures are masked. ECL's weak-GC regression retains
+the native MP worker and join; no production cache or proof algorithms change.
+SBCL uses the public `SB-EXT:*INVOKE-DEBUGGER-HOOK*`, restoring its exact old value
+and forwarding every condition other than `INTERACTIVE-INTERRUPT` to that hook.
+ECL saves/restores the pre-debugger `SI:TERMINAL-INTERRUPT` function entry and
+forwards to the enabling process with `MP:INTERRUPT-PROCESS` on threaded builds;
+it does not use the broken ECL 26.5.5 signal-handler getter or late debugger hook.
+ABCL preserves its Java Signal handler and target thread; CLISP uses native
+ANSI CLOS global-handler methods. No libc/LibSystem FFI, signal-mask manipulation
+or special CLISP build is required. This intentionally changes only OCaml's
+otherwise-unused `Sys.catch_break false` boundary to native Lisp restoration;
+enabled interrupts still raise actual Sys.Break, without source proof changes.
 
 ## Historical NixOS 26.05 and three-job platform CI
 

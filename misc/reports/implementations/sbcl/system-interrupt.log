@@ -2,4 +2,5 @@ SIGINT catch ready
 SIGINT adapter check passed
 SIGINT catch ready
 SIGINT adapter check passed
-SIGINT default ready
+SIGINT previous hook ready
+SIGINT previous hook restored

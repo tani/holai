@@ -15,9 +15,9 @@
     "holai/runtime/format.lisp": "89dc91e0d71f165528b090fbb2225ed7380311071b1a071621ccd8497ef6c845",
     "holai/runtime/pattern-registry.lisp": "5ed7aa0788119cb82012ab334d6a657fff5c66fb33d19ba4b26eb7570c310265",
     "holai/runtime/pattern.lisp": "e8d8e16d758b0412172c6960e5429b5be99adec99dcb1a30e73ee6bbf8648a8a",
-    "holai/runtime/stdlib.lisp": "be26085834da8047ece6ad41d03bd7a91a05315614798cddbd6424a54d80fa61",
+    "holai/runtime/stdlib.lisp": "4db6669be379691a935b6566f3a9dee1c1a876c054e46ae72985f8ec763fa0ed",
     "holai/tests/compatibility-fixtures.lisp": "7c9342478a2733e699d2ce15ba6bf8a54bfcb48be79fbf47ee585fe8b4ddbf21",
-    "holai/tests/compatibility.py": "83b340f34b9a464caf61437bb8ee5d7a8f0fa24e0e8509307fabffdfb730acdb",
+    "holai/tests/compatibility.py": "a4d0ca5bf8d7252f98ef3defbbb1535c4750f8e725da343a5a70d12eaf389819",
     "holai/tests/defunc-protocol.lisp": "2bef369542b08075d2aa6e2a8a07a413d75dde20a9fac09318ca02db2a7683e1",
     "holai/tests/fixtures/compatibility_observations.ml": "8ebb1386ddca5befd8bf92ecd9c915f1ca4a44e2fd1b3f33c5afe24ef9870455",
     "holai/tests/fixtures/semantics.ml": "d364498982f183b9247fc41863b173333010710fff591f0e1d924e7b6d98995d",
@@ -26,8 +26,8 @@
     "holai/tests/pattern-stale.lisp": "9f5f904c9386a3e0b2c75e86df7782da44d15e2b5508c3167c052270434d605f",
     "holai/tests/pattern.lisp": "5d2f2534302e3fd42fcd20c36ece00bc97671db2330b5caaecb48eeac75ca87d",
     "holai/tests/random.lisp": "4a4578b63c8a7e589894b87fba02ff5c58627ac577c236c6a6f49a907c2e63ef",
-    "holai/tests/run.py": "afd666cbe49e76c250db738306dfab6d1e1366fb5b1d1800eb917b1ee3a2af65",
-    "holai/tests/system-interrupt.lisp": "ff650f70484344e50c90c24a6b91b3a2c0441819882f2e08f24b8f9bfceec70f",
+    "holai/tests/run.py": "5c3ce53afdb3fead92d7b91b3e73fe7bd0ab8cf04fd00ee86e635e5e3f074f8e",
+    "holai/tests/system-interrupt.lisp": "e15bd4989e2c36cdfae41622ab958ef909d18050be55f9cd90e1155b6cfedbfa",
     "holai/tests/tuple-list.lisp": "5c6e88036db6c4ba576a676e6019af8a580e65176b2a85486c219b5dc62dbdb3",
     "holai.asd": "101c4e4082ce98bdbc07ac34420cfa0f0caed976b32fe7f284d61c1b5355935e",
     "misc/scripts/lisp_host.py": "52d054617072d5700e07533cff09c1a13d739a66aaa803ff40bf3930b1da3112",
@@ -50,9 +50,9 @@
     "compatibility/ocaml-run.log": "1140da07d402c885c02afc34c05a4d9a59290ba9c57984acbf8114bf2f742308",
     "compatibility/optional-entry.log": "da5c7b3138c95bcb998e0db34bd0f5a7cc639a3d06df00b8503df947da0facec",
     "compatibility/pattern-stale.log": "b6949fa57aba56291ab9cb4e5a2f04bcae3b06fc100ecf8ac2f4f9116db8ac24",
-    "compatibility/pattern.log": "4112600fb6981ea762ab88748d76d48e5aeb68af6c2f5eb30867cdd41c6ea462",
+    "compatibility/pattern.log": "379243086e7ede8609f67ad5a37239401eee94c115ffa84e817890753ec32e0d",
     "compatibility/random.log": "dc1861d2b6f3790e59f4b5f4fbb985241cf72a99a50ac83c0a2369a493a94d53",
-    "compatibility/system-interrupt.log": "3cb3569b744c4db6bc2695907d4851a7b0c5c8fb05ddd6f085fb45a80c3038cd",
+    "compatibility/system-interrupt.log": "107aa2dbd9939ebe995fda6473e88cb036960b4e95d0648bbd0ce97a76f4adf5",
     "compatibility/translate.log": "ee4b1633a1f3b417f591f62bc59412e7583d5492e2f1e733f75e79937c4669dd",
     "compatibility/tuple-list.log": "e0c7325d833e54d2329d00a6385b4f569ed9a0499986db5dbec8bb9c0deabfa4"
   },
@@ -63,6 +63,7 @@
     "tuple_list_checks": 16,
     "standard_random_checks": 1816,
     "system_interrupt_deliveries": 3,
+    "system_interrupt_catch_cycles": 2,
     "fixture_sources": 3,
     "translated_fixture_units": 3,
     "star_naming_observations": 9,
@@ -91,7 +92,7 @@
       "expected_exit_code": 0,
       "exit_code": 0,
       "log": "compatibility/host.log",
-      "elapsed_seconds": 1.629375939257443
+      "elapsed_seconds": 1.585372476838529
     },
     {
       "command": [
@@ -114,7 +115,7 @@
       "expected_exit_code": 0,
       "exit_code": 0,
       "log": "compatibility/pattern.log",
-      "elapsed_seconds": 2.672830425668508
+      "elapsed_seconds": 2.848214773926884
     },
     {
       "command": [
@@ -137,7 +138,7 @@
       "expected_exit_code": 17,
       "exit_code": 17,
       "log": "compatibility/pattern-stale.log",
-      "elapsed_seconds": 2.573941744863987
+      "elapsed_seconds": 2.5099438577890396
     },
     {
       "command": [
@@ -160,7 +161,7 @@
       "expected_exit_code": 0,
       "exit_code": 0,
       "log": "compatibility/defunc-protocol.log",
-      "elapsed_seconds": 5.970098889898509
+      "elapsed_seconds": 5.980778632219881
     },
     {
       "command": [
@@ -183,7 +184,7 @@
       "expected_exit_code": 0,
       "exit_code": 0,
       "log": "compatibility/optional-entry.log",
-      "elapsed_seconds": 2.55123926512897
+      "elapsed_seconds": 2.567694467958063
     },
     {
       "command": [
@@ -206,7 +207,7 @@
       "expected_exit_code": 0,
       "exit_code": 0,
       "log": "compatibility/tuple-list.log",
-      "elapsed_seconds": 2.5556144760921597
+      "elapsed_seconds": 2.525843198876828
     },
     {
       "command": [
@@ -229,7 +230,7 @@
       "expected_exit_code": 0,
       "exit_code": 0,
       "log": "compatibility/random.log",
-      "elapsed_seconds": 2.512280608061701
+      "elapsed_seconds": 2.5950400079600513
     },
     {
       "command": [
@@ -249,10 +250,10 @@
         "(uiop:quit 0)"
       ],
       "timeout_seconds": 120,
-      "expected_exit_code": -2,
-      "exit_code": -2,
+      "expected_exit_code": 0,
+      "exit_code": 0,
       "log": "compatibility/system-interrupt.log",
-      "elapsed_seconds": 2.4245195602998137
+      "elapsed_seconds": 2.5569453476928174
     },
     {
       "command": [
@@ -269,7 +270,7 @@
       "expected_exit_code": 0,
       "exit_code": 0,
       "log": "compatibility/translate.log",
-      "elapsed_seconds": 0.07492852071300149
+      "elapsed_seconds": 0.06206543184816837
     },
     {
       "command": [
@@ -286,7 +287,7 @@
       "expected_exit_code": 0,
       "exit_code": 0,
       "log": "compatibility/ocaml-build.log",
-      "elapsed_seconds": 0.08044085465371609
+      "elapsed_seconds": 0.05380282271653414
     },
     {
       "command": [
@@ -297,7 +298,7 @@
       "expected_exit_code": 0,
       "exit_code": 0,
       "log": "compatibility/ocaml-run.log",
-      "elapsed_seconds": 0.002176653128117323
+      "elapsed_seconds": 0.0015604379586875439
     },
     {
       "command": [
@@ -320,7 +321,7 @@
       "expected_exit_code": 0,
       "exit_code": 0,
       "log": "compatibility/fixtures.log",
-      "elapsed_seconds": 3.143982029054314
+      "elapsed_seconds": 3.0221787746995687
     }
   ],
   "native_nan_eql": {
@@ -337,6 +338,8 @@
     "log": "compatibility/pattern-stale.log",
     "log_sha256": "b6949fa57aba56291ab9cb4e5a2f04bcae3b06fc100ecf8ac2f4f9116db8ac24"
   },
+  "system_interrupt_policy": "restore-previous-native-lisp-hook",
+  "system_interrupt_previous_hook_restored": true,
   "translated_sha256": {
     "_build/compatibility/abcl/translated/compatibility_observations.lisp": "b67f97eb4cb48327fb4d1579f783d3d844fa57a3ee992d53eb2785efbd596c40",
     "_build/compatibility/abcl/translated/compatibility_observations.map.json": "861efc6fd991b59b4a3b69aa431acb9e464f8ad47f79bde24380c1ca171ef1ed",

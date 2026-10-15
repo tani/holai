@@ -127,13 +127,15 @@ def main():
 
         started = time.monotonic()
         interrupt = {"command": command("holai/tests/system-interrupt.lisp"),
-                     "timeout_seconds": TIMEOUT, "expected_exit_code": -2,
+                     "timeout_seconds": TIMEOUT, "expected_exit_code": 0,
                      "exit_code": None, "log": "compatibility/system-interrupt.log"}
         evidence["subprocesses"].append(interrupt)
         try:
-            helpers.verify_interrupt()
-            interrupt["exit_code"] = -2  # Asserted by the shared lifecycle helper.
+            interrupt["exit_code"] = helpers.verify_interrupt()
             evidence["counts"]["system_interrupt_deliveries"] = 3
+            evidence["counts"]["system_interrupt_catch_cycles"] = 2
+            evidence["system_interrupt_policy"] = "restore-previous-native-lisp-hook"
+            evidence["system_interrupt_previous_hook_restored"] = True
         finally:
             interrupt["elapsed_seconds"] = time.monotonic() - started
             save()

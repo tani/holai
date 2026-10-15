@@ -98,17 +98,25 @@ archive producer reported 428 payload files before final documentation edits.
 That historical CI ran `nix flake check` plus ordinary `make release` independently
 on each platform. Current CI is the actionlint-passed 12-job Cartesian matrix:
 three systems × SBCL/ECL/ABCL/CLISP, with separate artifacts. Only SBCL runs release;
-other implementations run runtime fixtures. Remote execution of the new push is
-pending; older CLISP failures remain unresolved. Captured phase stdout/stderr and
-public GitHub Actions annotations support root diagnosis rather than blind retries.
+other implementations run runtime fixtures. Hosted run 38657307376 passed 10/12:
+all SBCL/ECL/ABCL jobs and ARM64 Linux CLISP. The two CLISP failures motivated
+the approved previous-native-Lisp-hook restoration policy, not a package rebuild.
+Stock NixOS 26.05 packages retain their native thread/FFI features, with no FFI
+requirement or forced CLISP thread mode. Current local ARM64 Linux `make release`
+passed in 283.44 seconds: all four profiles, 52 production paths, 93 identical
+clean outputs and 55 unchanged pins. Each host measured three real SIGINTs,
+two Sys.Break catches and restored prior-hook delivery with normal exit 0
+(`sigint_previous_hook_restored=true` for SBCL;
+`system_interrupt_previous_hook_restored=true` for additional hosts).
+The new policy's 12-job hosted run remains PENDING until push and observation.
+Captured phase stdout/stderr and public annotations remain available for diagnosis.
 The shell selects only implemented host adapters
 whose pinned packages are usable, requiring SBCL. Packaging verifies actual
 host versions and executable bindings against exported pinned-shell metadata.
 All three platform flake evaluations (`--all-systems --no-build`) and
 actionlint 1.7.12 passed locally. Flake checks cover ASDF startup only, while
-release exercises the production runtime. Three-platform CI is configured;
-hosted Actions and Darwin/x86 runtime results remain unobserved. Current
-runtime evidence is local ARM64 Linux only.
+release exercises the production runtime. New-policy Darwin/x86 runtime results
+remain unobserved; current new-policy runtime evidence is local ARM64 Linux only.
 
 The proof readability policy applies to **software development code** throughout
 the maintained translator-generated and handwritten sources, not just end-user

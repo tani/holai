@@ -56,14 +56,15 @@ SBCL jobs run `HOLAI_LISPS=sbcl make release`; other jobs build the translator a
 run the selected implementation's runtime-fixture compatibility profile only.
 Fail-fast is disabled. SHA-pinned actions, read-only permissions and checkout
 without persisted credentials are retained; artifacts include host and implementation.
-Actionlint passed locally, but remote execution of the new push remains pending.
-The preceding hosted SBCL jobs passed; ECL failed on Linux and CLISP failed on
-Darwin/x86 Linux. Those CLISP failures remain unresolved, not fixed by the local
-ECL weak-GC regression repair. Captured phase stdout/stderr and public GitHub
-Actions error annotations now support precise root diagnosis rather than blind retries.
-The preceding hosted run passed full SBCL on all three hosts, but failed ECL on
-Linux and CLISP on Darwin/x86 Linux. Outer logs did not expose the Lisp root causes;
-the new matrix is not evidence of a green hosted run or verified Darwin compatibility.
+Hosted run 38657307376 passed 10 of 12 jobs: SBCL, ECL and ABCL on all three
+hosts, plus ARM64 Linux CLISP. Its x86 Linux CLISP failure exposed threaded
+SIGINT dispatch; Darwin CLISP lacks FFI. The approved policy now restores the
+previous native Lisp hook when catch-break is disabled, rather than OS SIG_DFL.
+Stock NixOS 26.05 Lisp packages remain unchanged on all three targets; no CLISP
+thread or FFI rebuild is required. The runtime-only regression delivers three
+real SIGINTs: two Sys.Break catches across re-enable, then the independently
+installed prior hook with normal exit 0. This policy's new hosted verification
+is not yet claimed. Phase stdout/stderr and public failure annotations remain.
 
 Expensive additional-host full-core tests and cold diagnostics are opt-in:
 `HOLAI_LISPS=ecl,abcl,clisp make test-full-core` (3600 seconds per full-core
@@ -173,7 +174,7 @@ The [aggregate matrix](misc/reports/implementation-matrix.json) records each
 selected profile's actual status; failed or incomplete reports are not release
 evidence. The root [`verification.json`](misc/reports/verification.json) and
 SBCL-named streams are historical, **not a current validation pass**.
-The current local `make release` exited 0 in 287.53 seconds. All four selected
+The current local `make release` exited 0 in 283.44 seconds. All four selected
 profiles passed; clean regeneration reproduced all 93 outputs and retained all
 55 input pins. Tagged SBCL evidence records 128 native checks, 69 PROOF checks
 and 1,149 observations: 1,146 exact, two structural registry rows and one Random
@@ -186,6 +187,10 @@ The archive producer reported 427 payload files; ZIP byte size is not a fixed co
 The three additional hosts each passed three runtime fixtures and 33 exact rows,
 not full-core verification. ECL's weak-GC test uses a native MP worker and join,
 retaining 28 assertions and two explicit collections without production cache changes.
+All four hosts delivered three real SIGINTs, caught two as Sys.Break and restored
+the independent previous native hook with exit 0; current metadata records
+`sigint_previous_hook_restored` (SBCL) or `system_interrupt_previous_hook_restored`
+(additional hosts), not historical OS-default termination.
 Earlier 269.03-second and 94-output measurements remain historical.
 See also [clean-generation evidence](misc/reports/clean-build.json),
 [coverage](misc/reports/COVERAGE.md), [release notes](docs/RELEASE-NOTES.md)
