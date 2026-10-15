@@ -27,8 +27,12 @@ failed = False
 for host in IMPLEMENTATIONS:
     row = rows.setdefault(host, {})
     if host not in selected:
-        row.update(status="unavailable", full_core_verified=False,
-                   reason=availability.get(host, {}).get("reason") or "Not selected or executable not available on PATH")
+        row.clear()
+        unavailable = availability.get(host, {}).get("available") is False
+        row.update(status="unavailable" if unavailable else "not_selected",
+                   full_core_verified=False, compatibility_passed=False,
+                   reason=availability.get(host, {}).get("reason") if unavailable else
+                   "Not selected for this invocation")
         continue
     env = dict(os.environ, HOLAI_LISP=host)
     directory = ROOT / "misc/reports/implementations" / host

@@ -3,7 +3,9 @@
     "implementation": "sbcl",
     "implementation_type": "SBCL",
     "version": "2.6.4",
-    "executable": "sbcl",
+    "runtime_id": "sbcl",
+    "feature": "sbcl",
+    "executable": "/nix/store/h9w9yp228nxx5fk7zfijl8r7gw6blnl9-sbcl-2.6.4/bin/sbcl",
     "os_stack_limit_bytes": {
       "soft": 8388608,
       "hard": -1
@@ -775,9 +777,9 @@
   "boundary_errors": [],
   "timed_out": false,
   "timeout_seconds": 600,
-  "elapsed_seconds": 82.67483588401228,
+  "elapsed_seconds": 85.04002637695521,
   "command": [
-    "sbcl",
+    "/nix/store/h9w9yp228nxx5fk7zfijl8r7gw6blnl9-sbcl-2.6.4/bin/sbcl",
     "--noinform",
     "--dynamic-space-size",
     "2048",
@@ -785,7 +787,7 @@
     "256",
     "--disable-debugger",
     "--script",
-    "/home/tani/ghq/github.com/tani/holai/_build/host-diagnostics-ib5f377w/audit.lisp"
+    "/home/tani/ghq/github.com/tani/holai/_build/host-diagnostics-5co_broz/audit.lisp"
   ],
   "diagnostic_accounting": "Unmuffled Common Lisp conditions and raw notices within ASDF COMPILE-OP BEGIN/END boundaries; LOAD and source initialization recorded separately",
   "code_sha256": {
@@ -793,14 +795,14 @@
     "ml2cl/compiler.ml": "7518df7d7f1956be70c3505d4903b9864575c15c5cec5e8c65fc7af62cc0ee19",
     "ml2cl/frontend.ml": "b56286522edf82280619f127c70af55944fec944b768c1c0828c745ee067f9ff",
     "ml2cl/sexp.ml": "d9a3a4b1228a270974da90278efeee61d6452ebc21eaddb4468ca4f000292c73",
-    "ml2cl/scope.ml": "ccef88e62d1894e2f2a29bf3dfc4a39e777faa9b1a9ec4d2473b8a6e5ecfe33b",
+    "ml2cl/scope.ml": "1d03846994ea79c3a3b81127c5ec20ce8ee45b78de238959c29b7cc3a7395422",
     "ml2cl/cli.ml": "a8077374662c63484b04549e317a826c893dab57aad1b98406a90cf120e43891",
     "holai/runtime/data.lisp": "1687cc84813032b0fd18a2157e2bff8a32398aea6eae0a22556847abf3f0eab7",
     "holai/runtime/pattern-registry.lisp": "5ed7aa0788119cb82012ab334d6a657fff5c66fb33d19ba4b26eb7570c310265",
-    "holai/runtime/pattern.lisp": "e8d8e16d758b0412172c6960e5429b5be99adec99dcb1a30e73ee6bbf8648a8a",
-    "holai/runtime/core.lisp": "eb3245cfe672be7b605f414d0b2e4c2efc9e542f336311c5ef77affaea2e0ca7",
-    "holai/runtime/format.lisp": "89dc91e0d71f165528b090fbb2225ed7380311071b1a071621ccd8497ef6c845",
-    "holai/runtime/stdlib.lisp": "4db6669be379691a935b6566f3a9dee1c1a876c054e46ae72985f8ec763fa0ed",
+    "holai/runtime/pattern.lisp": "02d5f47c4640c3a2cf8f0e924f1c2ce6f565080a9422d86fee857e3bef3ffdf6",
+    "holai/runtime/core.lisp": "bd5469ad81e3095b6aff8a16f60210cf6c530ed9b7a40bc39cc22791c7dd2d4f",
+    "holai/runtime/format.lisp": "e68e5ae8c1f57ebf60257bafad90ff143ecfe581e4fa1608abcccd2f7ce8d5df",
+    "holai/runtime/stdlib.lisp": "2308ef3a4ac71ed6ce49721f9e8c2896e8f2ef5061deffa2bfc0ea8da6646b12",
     "holai/generated/system.lisp": "f3691cae2e93914d6f7b64f017a9f6f52774b5b245f398c90098081c2fad3c48",
     "holai/generated/lib.lisp": "101829cb1771a86f6228572cb4989fb67d85150783a581ff0c27eec5dc22507a",
     "holai/generated/fusion.lisp": "88e10244039aa65f053ee44ba4cff2c0db46ab648926b63e1075d2013fd0c66e",

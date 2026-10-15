@@ -1,6 +1,98 @@
 # Holai 1.0.0-percent-names
 
-## Explicit ASDF load order, dotted packages and Cartesian CI
+## Eight-candidate selection and native Lisp interrupts
+
+The locked NixOS 26.05 package set now selects every usable candidate, not only
+the original four adapters. Metadata evaluation observed eight derivations on
+x86_64-linux and four on each ARM64 host; evaluation is not runtime evidence.
+
+| Nix candidate / selection ID | Pinned package version | Executable | x86 Linux | ARM64 Linux | ARM64 Darwin |
+| --- | --- | --- | --- | --- | --- |
+| abcl | 1.9.3 | abcl | selected | selected | selected |
+| sbcl | 2.6.4 | sbcl | selected | selected | selected |
+| ecl | 26.5.5 | ecl | selected | selected | selected |
+| ccl | 1.13 | ccl | selected | unsupported | unsupported |
+| mkcl | 1.1.11 | mkcl | selected | broken in pin | unsupported |
+| clisp | 2.49.95-unstable-2024-12-28 | clisp | selected | selected | selected |
+| cmucl_binary | 21d | lisp | selected (i686 binary) | evaluation unavailable | evaluation unavailable |
+| clasp-common-lisp | 2.7.0 | clasp | selected | unsupported | unsupported |
+
+The new versions above come from the locked package definitions, not a claim
+that all binaries passed. CMUCL uses the pinned 32-bit x86 binary package.
+Sources at the locked nixpkgs revision:
+[CCL](https://github.com/NixOS/nixpkgs/blob/a033e66ab94a6bedf2c3d58d93a36319d3cbbbaf/pkgs/development/compilers/ccl/default.nix),
+[MKCL](https://github.com/NixOS/nixpkgs/blob/a033e66ab94a6bedf2c3d58d93a36319d3cbbbaf/pkgs/development/compilers/mkcl/default.nix),
+[CMUCL](https://github.com/NixOS/nixpkgs/blob/a033e66ab94a6bedf2c3d58d93a36319d3cbbbaf/pkgs/development/compilers/cmucl/binary.nix)
+and [Clasp](https://github.com/NixOS/nixpkgs/blob/a033e66ab94a6bedf2c3d58d93a36319d3cbbbaf/pkgs/development/compilers/clasp/default.nix).
+ARM64-hosted QEMU version probes, not native x86 verification, observed
+MKCL `1.1.11`, CMUCL `21d (21D Unicode)` and Clasp
+`cclasp-boehmprecise-2.7.0-cst`, all with exit 0. CCL failed to reach Lisp
+initialization under QEMU; that emulation failure does not establish an
+unsupported native x86 package and does not remove its CI job.
+The launcher validates implementation type and primary feature independently
+of its Nix ID (`:cmu` for CMUCL, `:clasp` for Clasp). Executables and versions
+remain bound to exported pinned-package metadata. ASDF startup uses separate
+read/evaluation steps; a host without bundled ASDF loads the pinned real ASDF
+3.3.4 source dependency. No package-inferred system, generated load-order data
+or readtable change is introduced.
+
+CI crosses three hosts with all eight candidate IDs and explicitly excludes
+the eight unavailable ARM cells above: **16 runnable jobs**, not 24 passes.
+Every actual job requires its selected package and executable; absence fails,
+never skips. SBCL runs the full release; all other implementations run the
+120-second-per-process runtime/translated-fixture profile, not full HOL core.
+The new 16-job matrix is **pending execution**.
+
+The final-source native ARM64 Linux `make release` passed in 286.76 seconds with
+SBCL full-core and ECL/ABCL/CLISP bounded compatibility. Observed SBCL reports
+record 130 native checks, protocol 30, PROOF 69, and 1,150 corpus observations:
+1,147 exact, two structural registry comparisons and one Random property row.
+Map audits covered 194,839 core and 207,095 fixture-inclusive entries.
+The release gate also validated all 52 cold-audited production files,
+93 identical clean outputs and 55 retained input pins. All four hosts passed
+three direct-native interrupt checks; real OS-SIGINT checks passed where
+supported, with ABCL explicitly not applicable. The producer reported 447
+payload files and 6,063,447 bytes before final documentation/repackaging;
+archive size is not fixed. This pass includes the final CCL generic-method,
+MKCL protected-hook setter and shared native-interrupt fixture changes.
+
+Additional implementation execution remains **emulated**, not native x86:
+CMUCL's complete bounded runtime/fixture profile passed in 31.45 seconds under
+QEMU 10.2.4 on ARM64, including 46 pattern checks, protocol 30, OPTIONAL 84,
+tuple 16, Random 1,816, native interrupts 3, real SIGINT deliveries 3/two
+catch cycles, and three translated fixtures with 33 exact observations
+(nine naming rows). Its isolated report is under
+`_build/emulated-reports/cmucl_binary/compatibility.json`, tagged with
+`native_host_validation=false`; it is not native release evidence.
+MKCL's complete bounded runtime/fixture profile also passed under QEMU in
+138.65 seconds overall; every individual subprocess retained the 120-second
+guard. Its isolated `_build/emulated-reports/mkcl/` evidence is tagged
+emulated, not native release evidence.
+Clasp's weak/protocol fixture passed all 30 checks in 113.91 seconds and its
+direct-native interrupt fixture passed three checks in 108.34 seconds under
+QEMU. These isolated results do not establish a complete compatibility pass.
+CCL still requires native-host CI; a pre-initialization QEMU failure does not
+make the pinned x86 package unavailable.
+
+The prior four-implementation matrix has observed hosted evidence:
+[run 38661471081](https://github.com/tani/holai/actions/runs/38661471081),
+commit `ac56ca3`, passed **12/12** jobs. That result is distinct from the
+new eight-candidate changes and does not validate their new adapters.
+
+Interrupt restoration means the exact previous native Lisp hook, not SIG_DFL
+or forced process death. The mandatory direct-native fixture reports
+`Native interrupt checks passed: 3`: two Sys.Break catches across re-enable
+and restored independent prior-hook delivery. Its evidence is separate from
+the readiness-handshaked real-OS-SIGINT fixture. ABCL's OS check is explicitly
+not applicable (no native SIGINT-specific Lisp hook); its direct native Lisp
+thread-interruption checks remain mandatory. No Java/OS signal rewiring is used.
+The prior 12/12 policy included OS interoperability that is now removed.
+Timeout cleanup may kill a
+stuck child, but a cleanup kill or nonzero signal exit never counts as a pass.
+Current execution results and corpus counts must come from fresh per-host
+reports; earlier measurements below are historical.
+
+## Previous checkpoint: explicit ASDF load order, dotted packages and Cartesian CI
 
 Root `holai.asd` now handwrites ordinary serial systems `holai/runtime` and
 `holai`, not package-inferred systems. Runtime-only callers load `holai/runtime`;
@@ -31,8 +123,8 @@ Separate initialization accounting is zero errors/warnings, 21 style warnings
 and 164 notices. The producer reported 427 payload files; ZIP bytes may change
 with final documentation. Older measurements below remain historical.
 
-CI now crosses three hosts (aarch64-linux on ubuntu-24.04-arm, aarch64-darwin
-on macos-15, x86_64-linux on ubuntu-24.04) with SBCL/ECL/ABCL/CLISP: 12 jobs.
+At this checkpoint CI crossed three hosts (aarch64-linux on ubuntu-24.04-arm,
+aarch64-darwin on macos-15, x86_64-linux on ubuntu-24.04) with four Lisps: 12 jobs.
 Fail-fast is disabled. Each validates its Nix system and selected package's
 exported availability; missing targets fail. SBCL runs `HOLAI_LISPS=sbcl make release`;
 the other jobs build the translator and run only their runtime-fixture profile.
@@ -55,10 +147,10 @@ The new policy passed the current local ARM64 Linux release in 283.44 seconds.
 All four profiles measured three real deliveries and two catches, exact prior-hook
 restoration across re-enable and third-signal native-hook exit 0. Additional-host
 metadata records `system_interrupt_previous_hook_restored=true`; SBCL records
-`sigint_previous_hook_restored=true`. The new 12-job hosted run remains PENDING
-until push and observation; no remote green result is claimed. Historical reports
-below retain their measured old OS-default exit -2 contract. Failure logs and annotations remain
-available; no warnings or failures are masked. ECL's weak-GC regression retains
+`sigint_previous_hook_restored=true`. Its hosted follow-up is the observed
+12/12 run linked above; the expanded 16-job matrix is not yet verified.
+Historical reports below retain their measured old OS-default exit -2 contract.
+Failure logs and annotations remain available; no failures are masked. ECL's weak-GC regression retains
 the native MP worker and join; no production cache or proof algorithms change.
 SBCL uses the public `SB-EXT:*INVOKE-DEBUGGER-HOOK*`, restoring its exact old value
 and forwarding every condition other than `INTERACTIVE-INTERRUPT` to that hook.
@@ -82,9 +174,9 @@ Exact toolchain versions and host package versions/executable bindings are
 exported by the shell. Release validation compares actual host identities
 against those pins rather than hardcoding the previous ECL 21.2.1 version.
 
-The default host set is SBCL plus usable ECL/ABCL/CLISP packages on each target;
-the other four candidates remain explicitly excluded if no runtime adapter is
-implemented, even when a package exists. SBCL full-core verification remains
+At that historical checkpoint, SBCL plus usable ECL/ABCL/CLISP packages were
+selected; the other four candidates were excluded by the old adapter gate.
+The eight-candidate cutover above removes that gate. SBCL full-core verification remains
 mandatory, while each selected additional host uses the bounded 120-second
 runtime-fixture profile, never an implied full-core pass.
 
@@ -495,7 +587,7 @@ contract and results as history, not the current runtime API or §36 evidence.
 
 ## Pending discussion
 
-- TODO: Start a discussion of potentially excessive `funcall` usage in this project. Distinguish `holai/runtime/core:funcall` and curried application from native `CL:FUNCALL`; measure actual call hotspots and allocation before proposing changes. This is an investigation topic, not a demonstrated performance problem or an optimization included in this layout/API cutover.
+- The FUNCALL investigation is resolved by the standard bare-FUNCALL cutover below; it establishes no performance improvement or hotspot claim.
 
 ## Unified ASDF definition and UIOP package inference
 
@@ -548,3 +640,26 @@ was already pushed as `36f3a78`. The user now explicitly authorizes committing
 and pushing the verified safe-bare extension with the simple, tidy README rewrite
 to `tani/holai` main. Final repackaging, review, commit and push belong to the
 parent; this authorization is not a claim that publication has occurred.
+
+## Standard FUNCALL cutover
+
+The user-authorized current API removes the redundant runtime application
+wrapper, its shadow/export and dependent imports. Maintained handwritten calls
+and synthetic call forms use bare `funcall`; no alias or reexport remains.
+Definition-package symbols and the translator's reserved control-name allocator
+keep synthetic calls distinct from source functions/values named `funcall`.
+Source binding IDs, scopes and algorithms remain unchanged.
+
+The actual calling protocol remains in the common OPTIONAL curried entry:
+NIL-versus-omitted, partial/excess application, primary-only body results,
+once-only evaluation and captured function identity are unchanged. Exact native
+adapters retain multiple returned values. Sharp-backquote headed applications
+still evaluate arguments before acquiring the head; they are not rewritten to
+eager standard calls.
+
+Source collision behavior is covered by global value/function and local function
+fixtures, including partial application. Protocol checks distinguish native
+quotient/remainder returns from primary-only source entry returns. The current
+benchmark labels the standard call `standard-funcall`; historical wrapper
+measurements and earlier release counts above are not reinterpreted as new
+measurements. Verification for this cutover must be reported from its own run.

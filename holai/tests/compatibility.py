@@ -17,12 +17,13 @@ import time
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "misc/scripts"))
-from lisp_host import HOST_TYPES, command, executable, implementation, report_directory
+from lisp_host import (HOST_FEATURES, HOST_TYPES, NATIVE_SIGINT_LIMITATIONS, RUNTIME_IDS,
+                       command, executable, identity_form, implementation, report_directory)
 
 TIMEOUT = 120
 FIXTURES = ("semantics", "compatibility_observations", "star_names")
 RUNTIME_TESTS = ("defunc-protocol", "optional-entry", "tuple-list", "random",
-                 "pattern", "pattern-stale", "system-interrupt")
+                 "pattern", "pattern-stale", "system-interrupt", "system-interrupt-native")
 
 
 def sha256(path):
@@ -94,14 +95,18 @@ def main():
 
     save()
     try:
-        identity = run(command(extra=["--eval", '(format t "~&HOLAI_HOST_VERSION ~a~%HOLAI_HOST_TYPE ~a~%" (lisp-implementation-version) (lisp-implementation-type))']),
+        identity = run(command(extra=["--eval", identity_form()]),
                        log="host.log").stdout
         version = re.findall(r"(?m)^HOLAI_HOST_VERSION (.+)$", identity)
         types = re.findall(r"(?m)^HOLAI_HOST_TYPE (.+)$", identity)
         assert len(version) == len(types) == 1, "Missing or duplicate host identity"
         assert types[0].lower() == HOST_TYPES[implementation()], "Selected host identity mismatch"
+        features = re.findall(r"(?m)^HOLAI_HOST_FEATURE (.+)$", identity)
+        assert features == [HOST_FEATURES[implementation()]], "Selected host feature mismatch"
         evidence["host"] = {"implementation": implementation(), "implementation_type": types[0],
-                            "version": version[0], "executable": executable()}
+                            "version": version[0], "executable": executable(),
+                            "feature": features[0],
+                            "runtime_id": RUNTIME_IDS.get(implementation(), implementation())}
 
         # Reuse the same native-compiled pattern and actual SIGINT assertions as
         # the full suite, with isolated logs and our bounded process wrapper.
@@ -116,29 +121,50 @@ def main():
         evidence["counts"]["structural_pattern_checks"] = pattern
 
         for name, marker, key, expected in (
-                ("defunc-protocol", "Protocol", "defunc_protocol_checks", 28),
+                ("defunc-protocol", "Protocol", "defunc_protocol_checks", 30),
                 ("optional-entry", "Optional entry", "optional_entry_checks", 84),
                 ("tuple-list", "Tuple-list", "tuple_list_checks", 16),
-                ("random", "Standard Random", "standard_random_checks", 1816)):
+                ("random", "Standard Random", "standard_random_checks", 1816),
+                ("system-interrupt-native", "Native interrupt", "native_interrupt_checks", 3)):
             output = run(command(f"holai/tests/{name}.lisp"), log=name + ".log").stdout
             counts = re.findall(r"(?m)^" + re.escape(marker) + r" checks passed: (\d+)$", output)
             assert len(counts) == 1 and int(counts[0]) == expected, f"Incomplete {name} profile: {counts}"
             evidence["counts"][key] = int(counts[0])
+        evidence["native_interrupt_policy"] = "restore-previous-native-lisp-hook"
+        evidence["native_interrupt_previous_hook_restored"] = True
 
-        started = time.monotonic()
-        interrupt = {"command": command("holai/tests/system-interrupt.lisp"),
-                     "timeout_seconds": TIMEOUT, "expected_exit_code": 0,
-                     "exit_code": None, "log": "compatibility/system-interrupt.log"}
-        evidence["subprocesses"].append(interrupt)
-        try:
-            interrupt["exit_code"] = helpers.verify_interrupt()
-            evidence["counts"]["system_interrupt_deliveries"] = 3
-            evidence["counts"]["system_interrupt_catch_cycles"] = 2
-            evidence["system_interrupt_policy"] = "restore-previous-native-lisp-hook"
-            evidence["system_interrupt_previous_hook_restored"] = True
-        finally:
-            interrupt["elapsed_seconds"] = time.monotonic() - started
+        sigint_limitation = NATIVE_SIGINT_LIMITATIONS.get(implementation())
+        evidence["system_interrupt_policy"] = "restore-previous-native-lisp-hook"
+        evidence["system_interrupt_reason"] = sigint_limitation
+        if sigint_limitation:
+            evidence["system_interrupt_status"] = "not_applicable"
+            evidence["counts"]["system_interrupt_deliveries"] = 0
+            evidence["counts"]["system_interrupt_catch_cycles"] = 0
+            evidence["system_interrupt_previous_hook_restored"] = False
+            (logs / "system-interrupt.log").write_text("OS SIGINT not applicable: " + sigint_limitation + "\n")
             save()
+        else:
+            started = time.monotonic()
+            interrupt = {"command": command("holai/tests/system-interrupt.lisp"),
+                         "timeout_seconds": TIMEOUT, "expected_exit_code": 0,
+                         "exit_code": None, "log": "compatibility/system-interrupt.log"}
+            evidence["subprocesses"].append(interrupt)
+            try:
+                interrupt["exit_code"] = helpers.verify_interrupt()
+                evidence["counts"]["system_interrupt_deliveries"] = 3
+                evidence["counts"]["system_interrupt_catch_cycles"] = 2
+                evidence["system_interrupt_previous_hook_restored"] = True
+                evidence["system_interrupt_status"] = "passed"
+                interrupt["status"] = "passed"
+            except subprocess.TimeoutExpired:
+                interrupt["status"] = evidence["system_interrupt_status"] = "timed_out"
+                raise
+            except Exception:
+                interrupt["status"] = evidence["system_interrupt_status"] = "failed"
+                raise
+            finally:
+                interrupt["elapsed_seconds"] = time.monotonic() - started
+                save()
 
         files = [f"holai/tests/fixtures/{name}.ml" for name in FIXTURES]
         translated = build / "translated"

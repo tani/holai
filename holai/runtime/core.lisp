@@ -1,6 +1,6 @@
 (uiop:define-package :holai.runtime.core
   (:use :cl)
-  (:shadow :funcall :compare :partial := :< :> :<= :>= :Some)
+  (:shadow :compare :partial := :< :> :<= :>= :Some)
   (:import-from :holai.runtime.data
     :tuple :tuple-items :unit :ocaml-condition :raise :ref :deref :assign
     :tuple-value :tuple-value-p :ref-cell :ref-cell-p :unit-value-p)
@@ -8,7 +8,7 @@
     :*pattern-descriptions* :register-pattern-family)
   ;; Keep the compiler phase available before declaration macros are loaded.
   (:import-from :holai.runtime.pattern)
-  (:export :defunc :lambdac :labelsc :fletc :proof :function-value :funcall :partial
+  (:export :defunc :lambdac :labelsc :fletc :proof :function-value :partial
     :define-exception :defvariant :variant-value :variant-tag :variant-fields :variant-type
     := :<> :== :!= :compare :< :> :<= :>=
     :failure :invalid_argument :end_of_file :sys_error :failwith
@@ -53,7 +53,7 @@
               do (setf result
                        (cond
                          ((operator-symbol-p operator)
-                          `(holai.runtime.core:funcall ,operator ,result ,operand))
+                          `(funcall ,operator ,result ,operand))
                          ((and (consp operator)
                                (eq (car operator) 'cl:function)
                                (consp (cdr operator))
@@ -128,7 +128,7 @@
                             (declare (ignore forms))
                             (multiple-value-bind (arguments expression)
                                 (curried-definition parameters
-                                  (list `(cl:funcall ,cell ,@parameters)) cell)
+                                  (list `(funcall ,cell ,@parameters)) cell)
                               `(,name ,arguments (declare (ignorable ,@parameters)) ,expression)))) definitions cells)
          ,@body))))
 
@@ -138,20 +138,91 @@
 
 (defun partial (function &rest initial)
   (lambda (&rest rest) (cl:apply function (append initial rest))))
-(defun funcall (function &rest arguments) (cl:apply function arguments))
 
-;; Only fixed-arity foreign functions use adapters. Cache by arity with weak
-;; keys and values, so the cache does not retain dead dynamic foreign closures.
-;; Generated source functions/lambdas do not pass through this cache.
+;; Only fixed-arity foreign functions use adapters. Neither the native function
+;; nor its adapter may be retained by this cache. Generated entries bypass it.
+#+mkcl
+(ffi:clines
+ "#include <mkcl/gc/gc.h>"
+ "static void *holai_weak_read(void *cell) { return *(void **)cell; }")
+#+mkcl
+(defun make-mkcl-weak-pointer (value)
+  ;; MKCL 1.1.11 has no Lisp weak-pointer API. The cell is collector-owned
+  ;; atomic memory: its contents are not traced. The foreign wrapper roots the
+  ;; cell, not the referent. Boehm removes the link when either object dies;
+  ;; never explicitly free a registered cell. Static objects need no link.
+  (ffi:c-inline (value) (t) t
+    "{ void **cell = (void **)mkcl_alloc_atomic(env, sizeof(void *));
+       void *base = MK_GC_base((void *)#0);
+       *cell = (void *)#0;
+       if (base && MK_GC_general_register_disappearing_link(cell, base) != MK_GC_SUCCESS)
+         mkcl_FEerror(env, \"Cannot register adapter weak pointer\", 0);
+       @(return) = mkcl_make_foreign(env, mk_cl_Cnil, sizeof(void *), cell);
+     }"
+    :one-liner nil :side-effects t))
+#+mkcl
+(defun mkcl-weak-pointer-value (pointer)
+  ;; Reconstitute the strong reference under the collector's allocation lock,
+  ;; before it can decide to reclaim the referent and clear the hidden link.
+  (ffi:c-inline (pointer) (t) t
+    "(mkcl_object)MK_GC_call_with_alloc_lock(holai_weak_read, #0->foreign.data)"
+    :one-liner t :side-effects t))
+#+(or ccl clasp mkcl)
+(defun native-adapter-reference (value)
+  #+ccl (ccl:make-population :type :list :initial-contents (list value))
+  #+clasp (core:make-weak-pointer value)
+  #+mkcl (make-mkcl-weak-pointer value))
+#+(or ccl clasp mkcl)
+(defun native-adapter-reference-value (reference)
+  #+ccl (car (ccl:population-contents reference))
+  #+clasp (core:weak-pointer-value reference)
+  #+mkcl (mkcl-weak-pointer-value reference))
+#+mkcl
+(defstruct mkcl-adapter-cache entries)
 (defvar *native-function-adapters* (make-hash-table :test #'eql))
 (defun make-native-adapter-cache ()
   #+(or sbcl ecl abcl)
   (make-hash-table :test #'eq :weakness :key-and-value)
   #+clisp
   (make-hash-table :test #'eq :weak :key-and-value)
-  #-(or sbcl ecl abcl clisp)
+  #+ccl
+  (make-hash-table :test #'eq :weak :key)
+  #+cmu
+  (make-hash-table :test #'eq :weak-p :key-and-value)
+  #+clasp
+  (make-hash-table :test #'eq :weakness :key)
+  #+mkcl
+  (make-mkcl-adapter-cache)
+  #-(or sbcl ecl abcl clisp ccl cmu clasp mkcl)
   (error "Weak native-function adapter storage is unsupported on ~A"
          (lisp-implementation-type)))
+(defun cached-native-adapter (function table)
+  #+mkcl
+  (progn
+    ;; There is no weak hash constructor in MKCL. Remove expired weak pairs
+    ;; on access; no entry strongly retains a function, adapter or capture.
+    (setf (mkcl-adapter-cache-entries table)
+          (delete-if (lambda (entry)
+                       (null (native-adapter-reference-value (cdr entry))))
+                     (mkcl-adapter-cache-entries table)))
+    (loop for entry in (mkcl-adapter-cache-entries table)
+          when (eq function (native-adapter-reference-value (car entry)))
+            return (native-adapter-reference-value (cdr entry))))
+  #+(or ccl clasp)
+  (let ((reference (gethash function table)))
+    (when reference (native-adapter-reference-value reference)))
+  #-(or ccl clasp mkcl)
+  (gethash function table))
+(defun cache-native-adapter (function adapter table)
+  #+mkcl
+  (push (cons (native-adapter-reference function)
+              (native-adapter-reference adapter))
+        (mkcl-adapter-cache-entries table))
+  #+(or ccl clasp)
+  (setf (gethash function table) (native-adapter-reference adapter))
+  #-(or ccl clasp mkcl)
+  (setf (gethash function table) adapter)
+  adapter)
 (defun make-native-adapter (function arity)
   (cl:labels ((invoke (&rest arguments)
                (let ((count (length arguments)))
@@ -164,8 +235,8 @@
   (let ((table (or (gethash arity *native-function-adapters*)
                    (setf (gethash arity *native-function-adapters*)
                          (make-native-adapter-cache)))))
-    (or (gethash function table)
-        (setf (gethash function table) (make-native-adapter function arity)))))
+    (or (cached-native-adapter function table)
+        (cache-native-adapter function (make-native-adapter function arity) table))))
 
 
 (defmacro define-exception (name &rest slots)

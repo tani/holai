@@ -3,9 +3,12 @@ from pathlib import Path
 import hashlib
 import json
 import os
+import re
 import shutil
 import zipfile
-from lisp_host import HOST_TYPES, NATIVE_NAN_LIMITATIONS, full_core_timeout, selected_implementations
+from lisp_host import (HOST_FEATURES, HOST_TYPES, NATIVE_NAN_LIMITATIONS,
+                       NATIVE_SIGINT_LIMITATIONS, RUNTIME_IDS, full_core_timeout,
+                       selected_implementations)
 
 root = Path(__file__).resolve().parents[2]
 version = "1.0.0-percent-names"
@@ -25,12 +28,27 @@ def verify_pinned_host(identity):
     if host == "sbcl":
         # nixpkgs uses this suffix when constructing a missing upstream version file.
         actual = actual.removesuffix(".nixos")
+    if host == "ccl":
+        # CCL's source formatter adds "Version " and build/platform details.
+        match = re.fullmatch(r"Version ([^ ]+)(?: .*)?", actual)
+        assert match, f"Unrecognized CCL version {actual!r}"
+        actual = match[1]
+    elif host == "clasp-common-lisp":
+        # Exact identity observed from the pinned bytecode-faso package.
+        match = re.fullmatch(r"cclasp-boehmprecise-(\d+\.\d+\.\d+)-cst", actual)
+        assert match, f"Unrecognized pinned Clasp build identity {actual!r}"
+        actual = match[1]
+    elif host in ("mkcl", "cmucl_binary"):
+        # Keep build descriptions in evidence; compare the complete release token.
+        actual = actual.split(maxsplit=1)[0]
     if host == "clisp":
         # CLISP reports its source version plus build details, not nixpkgs' snapshot date.
         assert actual.partition("+")[0] == expected.partition("-unstable-")[0], \
             f"{host} version {actual!r} differs from pinned package {expected!r}"
     else:
         assert actual == expected, f"{host} version {actual!r} differs from pinned {expected!r}"
+    assert identity["feature"] == HOST_FEATURES[host]
+    assert identity["runtime_id"] == RUNTIME_IDS.get(host, host)
     executable = shutil.which(identity["executable"])
     assert executable and Path(executable).resolve() == Path(pinned_executables[host]).resolve(), \
         f"{host} executable differs from the pinned Nix package"
@@ -67,6 +85,7 @@ required = ["DESIGN.md", "AGENTS.md", "README.md", "docs/RELEASE-NOTES.md", "Mak
             "holai/runtime/data.lisp", "holai/runtime/pattern-registry.lisp", "holai/runtime/core.lisp", "holai/runtime/format.lisp", "holai/runtime/stdlib.lisp",
             "holai/tests/run.py", "holai/tests/lisp-tests.lisp", "holai/tests/bootstrap.lisp", "holai/tests/profile-core.lisp", "holai/tests/system-interrupt.lisp",
             "holai/tests/proof-dsl.lisp",
+            "holai/tests/system-interrupt-native.lisp",
             "holai/tests/fixtures/semantics.ml", "holai/tests/fixtures/differential.ml", "holai/tests/fixtures/extended.ml", "holai/tests/fixtures/logic.ml",
             "holai/tests/fixtures/tactical.ml", "holai/tests/fixtures/foundation.ml",
             "holai/tests/fixtures/language.ml", "holai/tests/fixtures/provers.ml",
@@ -112,6 +131,7 @@ required += [f"misc/reports/implementations/sbcl/{name}"
              for name in ["verification.json", "compile-diagnostics.json", "compile-diagnostics.txt",
                           "lisp-observations.txt", "ocaml-observations.txt", "lisp-initialization.txt",
                           "ocaml-initialization.txt", "star-names.json", "system-interrupt.log",
+                          "system-interrupt-native.log",
                           "random.log", "ocaml-comparison.txt", "lisp-comparison.txt",
                           "defunc-protocol.log", "lisp-tests.log", "test-runner.log",
                           "pattern.log", "pattern-stale.log",
@@ -147,15 +167,22 @@ for host in IMPLEMENTATIONS:
     verify_pinned_host(identity)
     assert compatibility["code_sha256"] == compatibility_fingerprints, f"Stale or incomplete {host} source fingerprints"
     counts = compatibility["counts"]
-    for name, count in {"defunc_protocol_checks": 28, "optional_entry_checks": 84,
+    sigint_limitation = NATIVE_SIGINT_LIMITATIONS.get(host)
+    for name, count in {"defunc_protocol_checks": 30, "optional_entry_checks": 84,
                         "tuple_list_checks": 16, "standard_random_checks": 1816,
                         "structural_pattern_checks": 45 if host in NATIVE_NAN_LIMITATIONS else 46,
-                        "system_interrupt_deliveries": 3, "system_interrupt_catch_cycles": 2,
+                        "system_interrupt_deliveries": 0 if sigint_limitation else 3,
+                        "system_interrupt_catch_cycles": 0 if sigint_limitation else 2,
+                        "native_interrupt_checks": 3,
                         "star_naming_observations": 9,
                         "fixture_sources": 3, "translated_fixture_units": 3}.items():
         assert counts[name] == count, f"Incomplete {host} compatibility check: {name}"
     assert compatibility["system_interrupt_policy"] == "restore-previous-native-lisp-hook"
-    assert compatibility["system_interrupt_previous_hook_restored"]
+    assert compatibility["system_interrupt_status"] == ("not_applicable" if sigint_limitation else "passed")
+    assert compatibility["system_interrupt_reason"] == sigint_limitation
+    assert compatibility["system_interrupt_previous_hook_restored"] is (sigint_limitation is None)
+    assert compatibility["native_interrupt_policy"] == "restore-previous-native-lisp-hook"
+    assert compatibility["native_interrupt_previous_hook_restored"]
     assert counts["differential_observations"] > 0
     assert counts["exact_differential_observations"] == counts["differential_observations"]
     logs = compatibility["logs"]
@@ -172,24 +199,30 @@ for host in IMPLEMENTATIONS:
         assert process["exit_code"] == process["expected_exit_code"]
     expected_logs = {"host.log", "pattern.log", "pattern-stale.log",
                      "defunc-protocol.log", "optional-entry.log", "tuple-list.log",
-                     "random.log", "system-interrupt.log", "translate.log",
+                     "random.log", "system-interrupt.log", "system-interrupt-native.log", "translate.log",
                      "ocaml-build.log", "ocaml-run.log", "fixtures.log",
                      "ocaml-observations.txt", "lisp-observations.txt"}
     assert {"compatibility/" + name for name in expected_logs} <= set(logs), f"Incomplete {host} compatibility logs"
     processes = {process["log"]: process for process in compatibility["subprocesses"]}
     assert len(processes) == len(compatibility["subprocesses"]), "Duplicate compatibility process logs"
-    assert {"compatibility/" + name for name in expected_logs if name.endswith(".log")} <= set(processes)
+    process_logs = expected_logs - ({"system-interrupt.log"} if sigint_limitation else set())
+    assert {"compatibility/" + name for name in process_logs if name.endswith(".log")} <= set(processes)
+    if sigint_limitation:
+        assert "compatibility/system-interrupt.log" not in processes
+        assert (evidence / "compatibility/system-interrupt.log").read_text() == "OS SIGINT not applicable: " + sigint_limitation + "\n"
     for name, process in processes.items():
         expected_exit = 17 if name == "compatibility/pattern-stale.log" else 0
         assert process["expected_exit_code"] == expected_exit
     host_log = (evidence / "compatibility/host.log").read_text().splitlines()
     assert [line for line in host_log if line.startswith("HOLAI_HOST_VERSION ")] == ["HOLAI_HOST_VERSION " + identity["version"]]
     assert [line for line in host_log if line.startswith("HOLAI_HOST_TYPE ")] == ["HOLAI_HOST_TYPE " + identity["implementation_type"]]
+    assert [line for line in host_log if line.startswith("HOLAI_HOST_FEATURE ")] == ["HOLAI_HOST_FEATURE " + identity["feature"]]
     for filename, marker, key in (
             ("defunc-protocol.log", "Protocol", "defunc_protocol_checks"),
             ("optional-entry.log", "Optional entry", "optional_entry_checks"),
             ("tuple-list.log", "Tuple-list", "tuple_list_checks"),
-            ("random.log", "Standard Random", "standard_random_checks")):
+            ("random.log", "Standard Random", "standard_random_checks"),
+            ("system-interrupt-native.log", "Native interrupt", "native_interrupt_checks")):
         lines = (evidence / "compatibility" / filename).read_text().splitlines()
         assert [line for line in lines if line.startswith(marker + " checks passed:")] == [
             f"{marker} checks passed: {counts[key]}"]
@@ -268,7 +301,7 @@ for host in ("sbcl",):
     assert rejection["log"] == "pattern-stale.log"
     consumer = Path(rejection["consumer_fasl"])
     assert not consumer.is_absolute() and consumer.parts[0] == "_build"
-    assert ".." not in consumer.parts and consumer.suffix in {".fasl", ".fas", ".abcl"}
+    assert ".." not in consumer.parts and consumer.suffix in {".fasl", ".fas", ".abcl", ".lx64fsl", ".sse2f", ".fasb", ".faso", ".fasp"}
     stale_log = (evidence / rejection["log"]).read_bytes()
     assert hashlib.sha256(stale_log).hexdigest() == rejection["log_sha256"]
     stale_markers = [line for line in stale_log.decode().splitlines()
@@ -278,8 +311,13 @@ for host in ("sbcl",):
     assert verification["defunc_protocol_checks"] > 0 and verification["standard_random_checks"] > 0
     assert verification["sigint_adapter_checked"] and verification["sigint_previous_hook_restored"]
     assert verification["sigint_policy"] == "restore-previous-native-lisp-hook"
+    assert verification["sigint_status"] == "passed" and verification["sigint_reason"] is None
     assert verification["sigint_deliveries"] == 3
     assert verification["sigint_catch_cycles"] == 2 and verification["sigint_reenable_verified"]
+    assert verification["native_interrupt_checks"] == 3
+    assert verification["native_interrupt_policy"] == "restore-previous-native-lisp-hook"
+    assert verification["native_interrupt_previous_hook_restored"]
+    assert (evidence / "system-interrupt-native.log").read_text().splitlines().count("Native interrupt checks passed: 3") == 1
     assert verification["compiled_loaded_inputs"] == [f"vendor/hol-light/{name}.ml" for name in core]
     assert verification["identical_regeneration"] and verification["pinned_inputs_unchanged"]
     observed = (evidence / "ocaml-observations.txt").read_bytes()
@@ -293,7 +331,7 @@ for host in ("sbcl",):
         observed.decode())
     assert baseline_comparison == original_comparison
     total = len(observed.splitlines())
-    assert total == len(lisp_observed.splitlines()) == 1149
+    assert total == len(lisp_observed.splitlines()) == 1150
     assert verification["differential_observations"] == total
     assert verification["exact_differential_observations"] == total - 3
     assert verification["property_validated_random_observations"] == 1
@@ -338,7 +376,8 @@ excluded = {"_build", "bin", "dist", ".git", "__pycache__"}
 assert sorted(str(p.relative_to(root)) for p in root.rglob("*.asd")
               if not any(part in excluded for part in p.relative_to(root).parts)) == ["holai.asd"], "Release must contain only root holai.asd"
 files = sorted(p for p in root.rglob("*") if p.is_file() and not any(part in excluded for part in p.relative_to(root).parts)
-               and p.suffix not in {".cmo", ".cmi", ".cmx", ".o", ".fasl", ".fas", ".abcl", ".cls", ".class", ".pyc"})
+               and p.suffix not in {".cmo", ".cmi", ".cmx", ".o", ".fasl", ".fas", ".abcl", ".cls", ".class", ".pyc",
+                                    ".lx64fsl", ".lx32fsl", ".dx64fsl", ".sse2f", ".fasb", ".faso", ".fasp"})
 dist = root / "dist"
 dist.mkdir(exist_ok=True)
 manifest = {str(p.relative_to(root)): hashlib.sha256(p.read_bytes()).hexdigest() for p in files}

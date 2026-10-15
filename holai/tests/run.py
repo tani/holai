@@ -18,8 +18,9 @@ import time
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "misc/scripts"))
-from lisp_host import (NATIVE_NAN_LIMITATIONS, command as lisp_command,
-                       full_core_timeout, implementation, metadata, report_directory)
+from lisp_host import (NATIVE_NAN_LIMITATIONS, NATIVE_SIGINT_LIMITATIONS,
+                       command as lisp_command, full_core_timeout, implementation,
+                       metadata, report_directory)
 os.chdir(ROOT)
 BUILD = ROOT / "_build"
 BUILD.mkdir(exist_ok=True)
@@ -109,6 +110,8 @@ def verify_pattern():
 
 def verify_interrupt():
     """Deliver actual SIGINT three times: two Sys.Break catches, then the prior Lisp hook."""
+    if implementation() in NATIVE_SIGINT_LIMITATIONS:
+        raise ValueError(NATIVE_SIGINT_LIMITATIONS[implementation()])
     proc = subprocess.Popen(lisp_command("holai/tests/system-interrupt.lisp"),
                             stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True,
                             bufsize=1)
@@ -151,6 +154,8 @@ def verify_interrupt():
         assert caught == catch_ready == 2 and previous_ready and previous_restored and exit_code == 0, (
             "SIGINT must restore the previous native Lisp hook without leaking Sys.Break", exit_code, "".join(lines))
         return exit_code
+    except queue.Empty as error:
+        raise subprocess.TimeoutExpired(proc.args, 120, output="".join(lines)) from error
     finally:
         if proc.poll() is None:
             proc.kill()
@@ -363,7 +368,16 @@ def main():
             assert before == after, "Rejected translation modified prior output"
     quote = json.loads(run(CLI + ["scan"] + CORE + ["holai/tests/fixtures/quotation.ml"]).stdout)[-1]
     assert quote["parsed"] and quote["translated"]
-    verify_interrupt()
+    native_interrupt = run(lisp_command("holai/tests/system-interrupt-native.lisp"),
+                           log="system-interrupt-native.log")
+    native_interrupt_counts = re.findall(r"(?m)^Native interrupt checks passed: (\d+)$",
+                                         native_interrupt.stdout)
+    assert native_interrupt_counts == ["3"], "Incomplete native Lisp interrupt restoration"
+    sigint_limitation = NATIVE_SIGINT_LIMITATIONS.get(implementation())
+    if sigint_limitation:
+        (reports / "system-interrupt.log").write_text("OS SIGINT not applicable: " + sigint_limitation + "\n")
+    else:
+        verify_interrupt()
     random = run(lisp_command("holai/tests/random.lisp"), log="random.log")
     random_checks = int(re.search(r"Standard Random checks passed: (\d+)", random.stdout).group(1))
     run(CLI + ["translate", "--output-dir", "_build/fixtures"] + CORE + FIXTURES)
@@ -444,12 +458,17 @@ def main():
         "full_core_process_timeout_seconds": full_core_timeout(),
         "ocaml_full_core_process_timeout_seconds": 600,
         "host_limits": host["full_core_limits"],
-        "sigint_adapter_checked": True,
-        "sigint_previous_hook_restored": True,
+        "native_interrupt_checks": int(native_interrupt_counts[0]),
+        "native_interrupt_policy": "restore-previous-native-lisp-hook",
+        "native_interrupt_previous_hook_restored": True,
+        "sigint_adapter_checked": sigint_limitation is None,
+        "sigint_status": "not_applicable" if sigint_limitation else "passed",
+        "sigint_reason": sigint_limitation,
+        "sigint_previous_hook_restored": sigint_limitation is None,
         "sigint_policy": "restore-previous-native-lisp-hook",
-        "sigint_deliveries": 3,
-        "sigint_catch_cycles": 2,
-        "sigint_reenable_verified": True,
+        "sigint_deliveries": 0 if sigint_limitation else 3,
+        "sigint_catch_cycles": 0 if sigint_limitation else 2,
+        "sigint_reenable_verified": sigint_limitation is None,
         "initial_registry_counts": {"types": 22, "constants": 303, "definitions": 263, "axioms": 3},
         "initial_source_axioms": ["INFINITY_AX", "SELECT_AX", "ETA_AX"],
         "explicit_primitive_fixture_axioms": 1,
@@ -504,7 +523,7 @@ if __name__ == "__main__":
         path = report_directory() / "verification.json"
         failure = json.loads(path.read_text())
         if failure["status"] != "timed_out":
-            failure["status"] = "failed"
+            failure["status"] = "timed_out" if isinstance(error, subprocess.TimeoutExpired) else "failed"
         failure.update(error_type=type(error).__name__, error_message=str(error))
         if isinstance(error, RegistryProvenanceError):
             failure["generated_registry_provenance"] = error.provenance

@@ -4,7 +4,6 @@
   (:import-from :holai.runtime.data :unit)
   (:import-from :holai.runtime.core
     :invalid-arg :string-of-int :string-concat :function-value)
-  (:shadowing-import-from :holai.runtime.core :funcall)
   (:export :print-string :print-newline :print-flush :pp-print-string :std-formatter
     :buffer-create :buffer-contents :buffer-reset :formatter-of-buffer :get-margin
     :pp-print-char :pp-print-int :pp-print-cut :pp-open-vbox :open-vbox :open-box
@@ -164,7 +163,7 @@
                      (#\d (pp-print-string fmt (string-of-int (pop arguments))))
                      (#\b (pp-print-string fmt (if (pop arguments) "true" "false")))
                      (#\! (pp-print-flush fmt unit)))))
-             (cl:funcall finish)))
+             (funcall finish)))
       (if (zerop arity) (emit) (function-value #'emit arity)))))
 (defun format-fprintf (fmt string)
   (format-continuation fmt string (lambda () unit)))
@@ -182,14 +181,14 @@
       (invalid-arg "Printf: unsupported callback directive"))
     (flet ((emit (&rest arguments)
              (dolist (token tokens)
-               (if (eql token #\!) (cl:funcall flush)
-                   (cl:funcall writer
+               (if (eql token #\!) (funcall flush)
+                   (funcall writer
                      (if (stringp token) token
                          (case token
                            (#\s (pop arguments))
                            (#\d (string-of-int (pop arguments)))
                            (#\b (if (pop arguments) "true" "false")))))))
-             (cl:funcall finish)))
+             (funcall finish)))
       (if (zerop arity) (emit) (function-value #'emit arity)))))
 (defun printf-printf (string)
   (let ((stream *standard-output*))

@@ -1,0 +1,3 @@
+;;; Loading #P"/nix/store/57zcf17cf7kcb5i7dl1hvnwr0xg9fzfs-ecl-26.5.5/lib/ecl-26.5.5/asdf.fas"
+;;; Loading #P"/home/tani/ghq/github.com/tani/holai/holai/tests/system-interrupt-native.lisp"
+Native interrupt checks passed: 3

@@ -7,6 +7,19 @@ module Standard_syntax_function = struct
   let lambda n = n+1
   let use n = (fun m -> lambda m) n
 end;;
+module Standard_funcall_value = struct
+  let funcall = 40
+  let use n =
+    let apply f x = f x in
+    apply (fun x -> funcall + x) n
+end;;
+module Standard_funcall_function = struct
+  let funcall x y = x + y
+  let use n =
+    let saved = funcall n in
+    let funcall f x = f x in
+    funcall saved 22
+end;;
 let standard_library_observations () =
   let cell = ref 3 in
   let original = [cell;cell] in let array = Array.of_list original in
@@ -22,6 +35,7 @@ let standard_library_observations () =
     string_of_num (quo_num (num a) (num b)) ^ ":" ^
     string_of_num (mod_num (num a) (num b))) [7,3;-7,3;7,-3;-7,-3] in
   ["standard_lambda=" ^ int_list_string [Standard_syntax_value.use 3;Standard_syntax_function.use 3];
+   "standard_funcall=" ^ int_list_string [Standard_funcall_value.use 2;Standard_funcall_function.use 20];
    "standard_array=" ^ int_list_string [!(hd original);!(array.(0));!(array.(1))] ^ ":" ^
      bool_string (array.(1) == cell) ^ ":" ^ int_list_string (List.rev !calls) ^ ":" ^
      int_list_string [mapped.(0);mapped.(1);mapped.(2)];

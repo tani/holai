@@ -25,7 +25,25 @@ jobs:
             runner: macos-15
           - platform: x86_64-linux
             runner: ubuntu-24.04
-        implementation: [sbcl, ecl, abcl, clisp]
+        implementation: [abcl, sbcl, ecl, ccl, mkcl, clisp, cmucl_binary, clasp-common-lisp]
+        # All 24 candidates remain visible; pinned packages exclude eight ARM cells.
+        exclude:
+          - host: {platform: aarch64-linux, runner: ubuntu-24.04-arm}
+            implementation: ccl
+          - host: {platform: aarch64-linux, runner: ubuntu-24.04-arm}
+            implementation: mkcl
+          - host: {platform: aarch64-linux, runner: ubuntu-24.04-arm}
+            implementation: cmucl_binary
+          - host: {platform: aarch64-linux, runner: ubuntu-24.04-arm}
+            implementation: clasp-common-lisp
+          - host: {platform: aarch64-darwin, runner: macos-15}
+            implementation: ccl
+          - host: {platform: aarch64-darwin, runner: macos-15}
+            implementation: mkcl
+          - host: {platform: aarch64-darwin, runner: macos-15}
+            implementation: cmucl_binary
+          - host: {platform: aarch64-darwin, runner: macos-15}
+            implementation: clasp-common-lisp
     runs-on: ${{ matrix.host.runner }}
     timeout-minutes: 45
     defaults:
@@ -61,6 +79,21 @@ jobs:
             echo "Expected $EXPECTED_NIX_SYSTEM, got $actual_system" >&2
             exit 1
           fi
+
+      - name: Require selected package availability
+        run: |
+          HOLAI_LISP_AVAILABILITY="$(nix eval --raw "path:.#devShells.${EXPECTED_NIX_SYSTEM}.default.HOLAI_LISP_AVAILABILITY")"
+          export HOLAI_LISP_AVAILABILITY
+          python3 - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+          availability = json.loads(os.environ["HOLAI_LISP_AVAILABILITY"])
+          Path("_build/ci/lisp-availability.json").write_text(json.dumps(availability, indent=2) + "\n")
+          target = os.environ["MATRIX_IMPLEMENTATION"]
+          if not availability[target]["available"]:
+              raise SystemExit(f"{target} unavailable: {availability[target]['reason']}")
+          PY
 
       - name: Check selected ASDF startup
         run: |

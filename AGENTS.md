@@ -40,7 +40,7 @@ readable OCaml-to-Lisp translation, even when argument evaluation order differs.
   All standard-manifest TODOs are complete. Generic OCaml/library completeness
   and optional HOL Light libraries outside the manifest remain outside the profile.
   Update factual counts from reports when implementation or corpus changes.
-- Current explicit-ASDF release passed locally on ARM64 Linux: `make release`
+- Prior explicit-ASDF release passed locally on ARM64 Linux: `make release`
   exited 0 in 283.44 seconds, with SBCL full-core and ECL/ABCL/CLISP compatibility.
   Tagged SBCL reports record 128 native/69 PROOF checks, 1,149 differential rows
   (1,146 exact, two structural registry, one Random property), 194,839 core /
@@ -54,11 +54,19 @@ readable OCaml-to-Lisp translation, even when argument evaluation order differs.
   holai.generated.*. There is no provider/load-order data or empty entry.
   Preserve ECL's native MP worker/join weak-GC regression: all 28 assertions and
   two explicit collections, without production cache changes.
-  CI is the configured, actionlint-passed 3 host × 4 Lisp matrix, not a hosted pass:
-  SBCL runs release; ECL/ABCL/CLISP run runtime-fixture compatibility. Remote
-  execution after the new policy's push remains pending; the earlier 10/12 run is historical.
+  Prior hosted run [38661471081](https://github.com/tani/holai/actions/runs/38661471081)
+  at ac56ca3 passed 12/12. The new three-host/eight-candidate matrix has eight
+  explicit ARM exclusions and 16 runnable jobs; its runtime verification is pending.
+  SBCL runs release; every other selected implementation runs bounded compatibility.
   Captured phase stdout/stderr and public GitHub Actions error annotations support
   precise diagnosis instead of blind retries. Earlier measurements above are history.
+- Final-source native ARM64 Linux release passed in 286.76 seconds;
+  SBCL reports 130 native/30 protocol/69 PROOF checks and 1,150 rows
+  (1,147 exact + two structural registries + one Random property), with
+  194,839 core / 207,095 fixture-inclusive maps, 52 cold units, 93 clean outputs
+  and 55 pins. Current runtime/launcher source fingerprints are validated.
+  MKCL/CMUCL bounded passes and Clasp isolated passes under QEMU are emulated,
+  never native x86 release evidence. Keep earlier 128/129 and 1,149 counts historical.
 - Keep THEN and the literal source helper then1_ as separate bindings.
   The one-subgoal helper must reject multiple branches; do not merge it into
   the grammar-encoded tactical name. Preserve the branch-count regressions.
@@ -207,8 +215,10 @@ readable OCaml-to-Lisp translation, even when argument evaluation order differs.
   for negative divisors/rational operands. int_of_num preserves noninteger and
   signed-63-bit overflow Failure boundaries. Gc get/set retain logical snapshot
   semantics; stack capacity is a launcher setting, not an active native resize.
-  Verify actual SIGINT-to-Sys.Break delivery and restored OS default in each
-  selected native host process, using the parent runner's readiness handshake.
+  Verify native Lisp interrupt catch/re-enable/exact previous-hook restoration
+  on every selected host. Keep real OS-SIGINT evidence separate; ABCL reports
+  it not applicable, not passed. Do not add Java/OS signal rewiring, SIG_DFL,
+  or forced-process-death success. Cleanup kills preserve failure/timeout status.
 - Heap checkpoints are scratch-only development aids. Every release must verify
   full initialization from SBCL and original OCaml, plus every selected
   additional host's bounded runtime/translated-fixture compatibility profile.
@@ -221,19 +231,17 @@ readable OCaml-to-Lisp translation, even when argument evaluation order differs.
   Preserve the OCaml 4.14/Camlp5 8.02 grammar contract and explicit Camlp5/Num
   source overrides, not an old distribution input. Run release inside the
   pinned shell: host versions and executable bindings must match its exported
-  metadata. Package availability is not an implemented runtime adapter.
-  The current 26.05 profile has passed local ARM64 Linux flake checks, a forced
-  fresh compiler build and ordinary four-host release. All three platform flake
-  evaluations and actionlint passed locally, but hosted Actions and Darwin/x86
-  runtime results remain unobserved. Flake checks cover ASDF startup only;
-  production runtime evidence comes from release. Treat 23.11/25.05 results as
-  historical, never as validation of the current pin or hosted runtime.
-  Only usable SBCL/ECL/ABCL/CLISP packages enter the ordinary matrix; SBCL is
-  mandatory. CI runs nix flake check and ordinary make release independently on
-  aarch64-linux, aarch64-darwin and x86_64-linux, with read-only SHA-pinned
-  actions and always-uploaded platform-specific evidence. Keep the prior
-  distribution's measured reports historical; never claim new-pin/platform
-  correctness before actual validation, or add extra full-core CI profiles.
+  metadata. All eight candidate adapters participate when pinned packages are
+  usable; retain genuine platform/broken/evaluation exclusions and require SBCL.
+  Current selection is eight x86 Linux plus four on each ARM64 host; CMUCL uses
+  the pinned i686 binary. CI excludes exactly eight unavailable ARM cells and
+  fails missing actual targets rather than skipping. SBCL alone runs full release;
+  other selected hosts run 120-second runtime/translated-fixture compatibility.
+  Keep prior measured results historical; never claim native/platform correctness
+  from package evaluation, cached binary fetching or emulated execution.
+  The prior 12/12 hosted run is observed; expanded 16-job verification is pending.
+  ASDF checks cover startup only. Supply the real pinned ASDF source for hosts
+  without bundled ASDF; never fake the package or add inferred systems/load files.
 - `make test` needs Camlp5 8.02, OCaml Num for the original-execution oracle,
   all selected pinned native hosts (and ECL's C compiler); production runtime has no external pattern-library dependency.
 - Do not publish or push anywhere unless the user requests that destination.
@@ -243,10 +251,14 @@ readable OCaml-to-Lisp translation, even when argument evaluation order differs.
 
 ## Current implementation and repository policy
 
+- Keep README.md tidy, simple and concise: overview, setup, basic usage and
+  testing only. Put detailed design, counts, benchmarks and history in existing
+  DESIGN/docs/reports; do not duplicate inventories in the README.
 - Production variant: 1.0.0-percent-names. Shared OPTIONAL/supplied-p entries
   across defunc/lambdac/labelsc/fletc; no fixed worker, callc or call-site routing.
   Keep NIL-vs-omitted, primary return, body-once, partial/excess, old-function
-  capture and fletc outer-RHS scope. rt:funcall and list tuples remain unchanged.
+  capture and fletc outer-RHS scope. Standard bare `funcall` replaces the removed
+  runtime wrapper; list tuples remain unchanged. Do not restore its API or alias.
   Historical OPTIONAL checkpoint: 122 native, 27 protocol, 84 OPTIONAL,
   16 tuple checks;1124 matching rows and94 identical clean-generated files.
 - Two-run ABBA startup medians 97.840→81.957s; cumulative allocation50.95% lower,
@@ -369,8 +381,8 @@ readable OCaml-to-Lisp translation, even when argument evaluation order differs.
   do not introduce order temporaries, ANF, source rewrites or optimizations.
   Runtime must install dispatch before generated consumers are read.
   Use Sexp.ReaderPrefix/reader_prefix, preserving Origin spans and prefix width;
-  no text postprocessing. Fragment remains PROOF-only. Runtime funcall/API and
-  manually authored semantic funcall tests stay unchanged.
+  no text postprocessing. Fragment remains PROOF-only. The later standard
+  FUNCALL cutover removes the runtime wrapper without changing reader timing.
   Eight added native consumer checks give measured69 PROOF checks; one new
   tactical computed-head row supplements existing partial/excess coverage.
   Keep the marker isolated after observation capture/std_formatter restoration
@@ -525,18 +537,21 @@ readable OCaml-to-Lisp translation, even when argument evaluation order differs.
   CLISP cannot represent NaN; ECL cannot externalize a compiled NaN literal:
   both report that case not applicable (45 structural checks), never passed.
   SBCL/ABCL retain 46.
-  Require two actual SIGINT catch cycles across disable/re-enable and a third
-  signal delivered to the restored native prior hook on the enabling thread,
-  without Sys.Break leakage and with exit 0; readiness is not delivery.
-  SBCL records sigint_previous_hook_restored=true; extras record
-  system_interrupt_previous_hook_restored=true, with three deliveries/two catches.
+  Require three direct-native interrupt checks on every selected host: two
+  Sys.Break catches across re-enable and exact previous-hook restoration.
+  Keep actual OS-SIGINT evidence separate: two catches and restored prior-hook
+  delivery with exit 0 where supported; ABCL reports OS not applicable with zero
+  deliveries, never passed, while its native Lisp thread checks remain mandatory.
   Use SBCL's public SB-EXT:*INVOKE-DEBUGGER-HOOK*
   (only INTERACTIVE-INTERRUPT becomes Sys.Break; forward unrelated conditions),
   ECL's pre-debugger SI:TERMINAL-INTERRUPT function entry with exact restoration
-  and MP:INTERRUPT-PROCESS forwarding to the enabling process, ABCL's saved Java
-  Signal handler/target thread, and CLISP's ANSI CLOS global-handler methods.
-  Do not reintroduce libc/LibSystem FFI, signal-mask manipulation, ECL's broken
-  GET-SIGNAL-HANDLER getter or late debugger-hook conversion, or CLISP build overrides.
+  and MP:INTERRUPT-PROCESS forwarding to the enabling process, ABCL's native Lisp
+  thread-interruption hook and CLISP's ANSI CLOS global-handler methods.
+  Clasp preserves/restores the exact primary MP:SERVICE-INTERRUPT method
+  specialized CORE:SIGINT; do not mutate CORE:TERMINAL-INTERRUPT or unlock packages.
+  Do not reintroduce Java Signal, libc/LibSystem signal FFI, signal-mask
+  manipulation, ECL's broken GET-SIGNAL-HANDLER getter or late debugger-hook
+  conversion, CLISP build overrides, SIG_DFL or forced-death success.
 - Current evidence is under `misc/reports/implementations/<id>/`; matrix selection,
   explicit profiles and actual per-phase status are in implementation-matrix.json.
   Package availability never implies compatibility; every selected profile's

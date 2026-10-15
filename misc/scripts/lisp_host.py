@@ -1,6 +1,7 @@
 """Pinned Common Lisp host invocations shared by launchers and tooling."""
 from pathlib import Path
 import argparse
+import json
 import resource
 import os
 import subprocess
@@ -11,6 +12,13 @@ EXECUTABLES = {"cmucl_binary": "lisp", "clasp-common-lisp": "clasp"}
 HOST_TYPES = {"abcl": "armed bear common lisp", "sbcl": "sbcl", "ecl": "ecl",
               "ccl": "clozure common lisp", "mkcl": "mkcl", "clisp": "clisp",
               "cmucl_binary": "cmu common lisp", "clasp-common-lisp": "clasp"}
+HOST_FEATURES = {"abcl": "abcl", "sbcl": "sbcl", "ecl": "ecl", "ccl": "ccl",
+                 "mkcl": "mkcl", "clisp": "clisp", "cmucl_binary": "cmu",
+                 "clasp-common-lisp": "clasp"}
+RUNTIME_IDS = {"cmucl_binary": "cmucl", "clasp-common-lisp": "clasp"}
+NATIVE_SIGINT_LIMITATIONS = {
+    "abcl": "ABCL has no native SIGINT-specific Lisp hook; Java/OS signal rewiring is not used",
+}
 NATIVE_NAN_LIMITATIONS = {
     "clisp": {
         "marker": "Pattern native NaN EQL: not applicable (CLISP cannot represent NaN)",
@@ -44,12 +52,23 @@ def implementation():
 
 def full_core_timeout(host=None):
     """Guard for complete native suites and cold production diagnostics."""
-    return 3600 if (implementation() if host is None else host) in ("ecl", "abcl", "clisp") else 600
+    return 600 if (implementation() if host is None else host) == "sbcl" else 3600
 
 
 def executable():
     name = implementation()
-    return os.environ.get("HOLAI_" + name.upper().replace("-", "_"), EXECUTABLES.get(name, name))
+    pinned = json.loads(os.environ.get("HOLAI_LISP_EXECUTABLES", "{}"))
+    return os.environ.get("HOLAI_" + name.upper().replace("-", "_"),
+                          pinned.get(name, EXECUTABLES.get(name, name)))
+
+
+def asdf_bootstrap():
+    """Load real ASDF before any later argument is read in its package."""
+    source = os.environ.get("HOLAI_ASDF_SOURCE")
+    if source:
+        return ('(handler-case (require "asdf") (error (condition) '
+                '(declare (ignore condition)) (load ' + json.dumps(source) + ')))')
+    return '(require "asdf")'
 
 
 def command(path=None, *, core=False, interactive=False, extra=()):
@@ -73,21 +92,31 @@ def command(path=None, *, core=False, interactive=False, extra=()):
                 args += ["-i", str(path)]
             return args + ["-x" if arg == "--eval" else arg for arg in extra]
         eval_flag = {"clisp": "-x", "cmucl_binary": "-eval", "mkcl": "-eval"}.get(name, "--eval")
-        quiet = {"clisp": "--quiet", "cmucl_binary": "-quiet", "mkcl": "--quiet",
-                 "ccl": "--quiet"}.get(name, "--noinform")
-        args = [executable(), quiet, eval_flag, '(require "asdf")',
-                eval_flag, '(setf asdf:*asdf-verbose* nil *load-verbose* nil *compile-verbose* nil)']
-        if name == "abcl":
-            args += ["--noinit"]
-            if not interactive:
-                args += ["--batch"]
-        elif name == "clisp":
-            args += ["-norc"]
+        startup = {
+            "abcl": ["--noinit", "--noinform"],
+            "clisp": ["--quiet", "-norc"],
+            "ccl": ["--no-init", "--quiet"],
+            "mkcl": ["-norc", "--quiet"],
+            "cmucl_binary": ["-noinit", "-nositeinit", "-quiet"],
+            "clasp-common-lisp": ["--norc", "--noinform"],
+        }
+        args = [executable(), *startup[name]]
+        if not interactive:
+            args += {"abcl": ["--batch"], "clisp": [], "ccl": ["--batch"],
+                     "mkcl": ["-nodebug"], "cmucl_binary": ["-batch"],
+                     "clasp-common-lisp": ["--non-interactive"]}[name]
+        if name == "mkcl":
+            # MKCL 1.1.11 emits pre-C23 function declarations. GCC 15's
+            # gnu23 default changes their meaning; compile generated C as C11.
+            # Load CMP before a later argument reads its package-qualified vars.
+            args += [eval_flag, "(require :cmp)",
+                     eval_flag, '(setf compiler::*cc-flags* (concatenate \'string compiler::*cc-flags* " -std=gnu11") compiler::*fast-compile-cc-flags* (concatenate \'string compiler::*fast-compile-cc-flags* " -std=gnu11"))']
+        args += [eval_flag, asdf_bootstrap(),
+                 eval_flag, '(setf asdf:*asdf-verbose* nil *load-verbose* nil *compile-verbose* nil)']
         if not interactive:
             args += [eval_flag, '(setf *debugger-hook* (lambda (condition hook) (declare (ignore hook)) (format *error-output* "~&Unhandled condition: ~a~%" condition) (uiop:quit 1)))']
         if path is not None:
             # LOAD through EVAL avoids implementation-specific script/load switches.
-            import json
             args += [eval_flag, "(load " + json.dumps(str(path)) + ")"]
         extras = list(extra)
         args += [eval_flag if arg == "--eval" else arg for arg in extras]
@@ -112,7 +141,7 @@ def command(path=None, *, core=False, interactive=False, extra=()):
             args = [args[0], *flags, eval_flag, "(progn " + forms[0] + " (values))",
                     eval_flag, "(progn " + "\n".join(forms[1:]) + ")"]
         return args
-    args = [executable(), "--norc", "--eval", "(require :asdf)",
+    args = [executable(), "--norc", "--eval", asdf_bootstrap(),
             "--eval", "(setf asdf:*asdf-verbose* nil *load-verbose* nil *compile-verbose* nil)"]
     if core:
         args += ["--heap-size", str(2048 * 1024 * 1024),
@@ -128,8 +157,16 @@ def command(path=None, *, core=False, interactive=False, extra=()):
     return args
 
 
+def identity_form():
+    feature = HOST_FEATURES[implementation()]
+    return (f'(progn (assert (member :{feature} *features*)) '
+            '(format t "~&HOLAI_HOST_VERSION ~a~%HOLAI_HOST_TYPE ~a~%'
+            'HOLAI_HOST_FEATURE ~a~%" (lisp-implementation-version) '
+            f'(lisp-implementation-type) "{feature}"))')
+
+
 def metadata():
-    proc = subprocess.run(command(extra=["--eval", '(format t "~&HOLAI_HOST_VERSION ~a~%HOLAI_HOST_TYPE ~a~%" (lisp-implementation-version) (lisp-implementation-type))']),
+    proc = subprocess.run(command(extra=["--eval", identity_form()]),
                           cwd=ROOT, capture_output=True, text=True, timeout=120, check=True)
     version = next(line.removeprefix("HOLAI_HOST_VERSION ") for line in proc.stdout.splitlines()
                    if line.startswith("HOLAI_HOST_VERSION "))
@@ -139,6 +176,8 @@ def metadata():
         raise ValueError(f"Selected {implementation()}, but executable reports {actual_type}")
     soft_stack, hard_stack = resource.getrlimit(resource.RLIMIT_STACK)
     return {"implementation": implementation(), "implementation_type": actual_type, "version": version,
+            "runtime_id": RUNTIME_IDS.get(implementation(), implementation()),
+            "feature": HOST_FEATURES[implementation()],
             "executable": executable(), "os_stack_limit_bytes":
             {"soft": soft_stack, "hard": hard_stack}, "full_core_limits":
             {"dynamic_space_mebibytes": 2048, "control_stack_mebibytes": 256}

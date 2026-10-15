@@ -11,35 +11,241 @@
   "availability": {
     "abcl": {
       "available": true,
-      "reason": null
+      "broken": false,
+      "drvPath": "/nix/store/57w6bwraqzn4c0pdccywarb236cjqkrq-abcl-1.9.3.drv",
+      "executable": "/nix/store/y6k5lyn7g98943pw1qwxb798cmhlh8ca-abcl-1.9.3/bin/abcl",
+      "executableName": "abcl",
+      "packageSystem": "aarch64-linux",
+      "platforms": [
+        "x86_64-darwin",
+        "aarch64-darwin",
+        "aarch64-linux",
+        "arc-linux",
+        "armv5tel-linux",
+        "armv6l-linux",
+        "armv7a-linux",
+        "armv7l-linux",
+        "i686-linux",
+        "loongarch64-linux",
+        "m68k-linux",
+        "sh4-linux",
+        "microblaze-linux",
+        "microblazeel-linux",
+        "mips-linux",
+        "mips64-linux",
+        "mips64el-linux",
+        "mipsel-linux",
+        "powerpc-linux",
+        "powerpc64-linux",
+        "powerpc64le-linux",
+        "riscv32-linux",
+        "riscv64-linux",
+        "s390-linux",
+        "s390x-linux",
+        "x86_64-linux"
+      ],
+      "reason": null,
+      "supported": true,
+      "version": "1.9.3"
     },
     "ccl": {
       "available": false,
-      "reason": "Unsupported platform aarch64-linux"
+      "broken": false,
+      "drvPath": null,
+      "executable": null,
+      "executableName": "ccl",
+      "packageSystem": null,
+      "platforms": [
+        "armv6l-linux",
+        "armv7l-linux",
+        "i686-linux",
+        "x86_64-darwin",
+        "x86_64-linux"
+      ],
+      "reason": "Unsupported platform aarch64-linux",
+      "supported": false,
+      "version": "1.13"
     },
     "clasp-common-lisp": {
       "available": false,
-      "reason": "Unsupported platform aarch64-linux"
+      "broken": false,
+      "drvPath": null,
+      "executable": null,
+      "executableName": "clasp",
+      "packageSystem": null,
+      "platforms": [
+        "x86_64-linux",
+        "x86_64-darwin"
+      ],
+      "reason": "Unsupported platform aarch64-linux",
+      "supported": false,
+      "version": "2.7.0"
     },
     "clisp": {
       "available": true,
-      "reason": null
+      "broken": false,
+      "drvPath": "/nix/store/3cl2vsv4si26mdc1nhyw5blb2m8kmivz-clisp-2.49.95-unstable-2024-12-28.drv",
+      "executable": "/nix/store/vq1avm1xkapz60nbhrqlr7na0vlg6b19-clisp-2.49.95-unstable-2024-12-28/bin/clisp",
+      "executableName": "clisp",
+      "packageSystem": "aarch64-linux",
+      "platforms": [
+        "aarch64-linux",
+        "arc-linux",
+        "armv5tel-linux",
+        "armv6l-linux",
+        "armv7a-linux",
+        "armv7l-linux",
+        "i686-linux",
+        "loongarch64-linux",
+        "m68k-linux",
+        "sh4-linux",
+        "microblaze-linux",
+        "microblazeel-linux",
+        "mips-linux",
+        "mips64-linux",
+        "mips64el-linux",
+        "mipsel-linux",
+        "powerpc-linux",
+        "powerpc64-linux",
+        "powerpc64le-linux",
+        "riscv32-linux",
+        "riscv64-linux",
+        "s390-linux",
+        "s390x-linux",
+        "x86_64-linux",
+        "x86_64-darwin",
+        "aarch64-darwin"
+      ],
+      "reason": null,
+      "supported": true,
+      "version": "2.49.95-unstable-2024-12-28"
     },
     "cmucl_binary": {
       "available": false,
-      "reason": "Package attribute missing or evaluation failed"
+      "drvPath": null,
+      "executable": null,
+      "executableName": "lisp",
+      "packageSystem": null,
+      "reason": "Package attribute missing or evaluation failed on aarch64-linux",
+      "version": null
     },
     "ecl": {
       "available": true,
-      "reason": null
+      "broken": false,
+      "drvPath": "/nix/store/kc8qn1ijzndfiw4m4qjgjjpk0nliwgp2-ecl-26.5.5.drv",
+      "executable": "/nix/store/57zcf17cf7kcb5i7dl1hvnwr0xg9fzfs-ecl-26.5.5/bin/ecl",
+      "executableName": "ecl",
+      "packageSystem": "aarch64-linux",
+      "platforms": [
+        "i686-cygwin",
+        "x86_64-cygwin",
+        "x86_64-darwin",
+        "aarch64-darwin",
+        "i686-freebsd",
+        "x86_64-freebsd",
+        "aarch64-freebsd",
+        "x86_64-solaris",
+        "aarch64-linux",
+        "arc-linux",
+        "armv5tel-linux",
+        "armv6l-linux",
+        "armv7a-linux",
+        "armv7l-linux",
+        "i686-linux",
+        "loongarch64-linux",
+        "m68k-linux",
+        "sh4-linux",
+        "microblaze-linux",
+        "microblazeel-linux",
+        "mips-linux",
+        "mips64-linux",
+        "mips64el-linux",
+        "mipsel-linux",
+        "powerpc-linux",
+        "powerpc64-linux",
+        "powerpc64le-linux",
+        "riscv32-linux",
+        "riscv64-linux",
+        "s390-linux",
+        "s390x-linux",
+        "x86_64-linux",
+        "aarch64-netbsd",
+        "armv6l-netbsd",
+        "armv7a-netbsd",
+        "armv7l-netbsd",
+        "i686-netbsd",
+        "m68k-netbsd",
+        "mipsel-netbsd",
+        "powerpc-netbsd",
+        "riscv32-netbsd",
+        "riscv64-netbsd",
+        "x86_64-netbsd",
+        "i686-openbsd",
+        "x86_64-openbsd",
+        "x86_64-redox"
+      ],
+      "reason": null,
+      "supported": true,
+      "version": "26.5.5"
     },
     "mkcl": {
       "available": false,
-      "reason": "Package marked broken in pinned nixpkgs"
+      "broken": true,
+      "drvPath": null,
+      "executable": null,
+      "executableName": "mkcl",
+      "packageSystem": null,
+      "platforms": [
+        "aarch64-linux",
+        "arc-linux",
+        "armv5tel-linux",
+        "armv6l-linux",
+        "armv7a-linux",
+        "armv7l-linux",
+        "i686-linux",
+        "loongarch64-linux",
+        "m68k-linux",
+        "sh4-linux",
+        "microblaze-linux",
+        "microblazeel-linux",
+        "mips-linux",
+        "mips64-linux",
+        "mips64el-linux",
+        "mipsel-linux",
+        "powerpc-linux",
+        "powerpc64-linux",
+        "powerpc64le-linux",
+        "riscv32-linux",
+        "riscv64-linux",
+        "s390-linux",
+        "s390x-linux",
+        "x86_64-linux"
+      ],
+      "reason": "Package marked broken in pinned nixpkgs",
+      "supported": true,
+      "version": "1.1.11"
     },
     "sbcl": {
       "available": true,
-      "reason": null
+      "broken": false,
+      "drvPath": "/nix/store/vkzils4sv9bsinqp57c6i2v8mhay90cp-sbcl-2.6.4.drv",
+      "executable": "/nix/store/h9w9yp228nxx5fk7zfijl8r7gw6blnl9-sbcl-2.6.4/bin/sbcl",
+      "executableName": "sbcl",
+      "packageSystem": "aarch64-linux",
+      "platforms": [
+        "armv6l-linux",
+        "armv7l-linux",
+        "i686-linux",
+        "x86_64-freebsd",
+        "x86_64-solaris",
+        "x86_64-darwin",
+        "x86_64-linux",
+        "aarch64-darwin",
+        "aarch64-linux"
+      ],
+      "reason": null,
+      "supported": true,
+      "version": "2.6.4"
     }
   },
   "hosts": {
@@ -51,7 +257,7 @@
         "log": "misc/reports/implementations/abcl/compatibility-runner.log",
         "log_sha256": "9e95ecd01a6e4827f09d9608f2ab27f5c1a554f450c7d1cab827c7e1be0497e9",
         "report": "misc/reports/implementations/abcl/compatibility.json",
-        "report_sha256": "161b2e5bdfbc5889c5b86e661eb45a243a2e32a597d279d02952c1daf3b8d9c1"
+        "report_sha256": "f52513d61b58abc0420d7195bfa7631ce755b80ada9b5e62d2143355579a1334"
       },
       "compatibility_passed": true,
       "status": "compatibility_passed"
@@ -62,7 +268,7 @@
       "test": {
         "exit_code": 0,
         "log": "misc/reports/implementations/sbcl/test-runner.log",
-        "log_sha256": "2f8d046100ef8d92d7d6aa07478f3a4d8cd106940354b796fb93e9b15df176e6",
+        "log_sha256": "5ce5d3be9c2e23303c7db49bfbeb8c0566cb85104a76d4fd6ef234d0f9cf6985",
         "passed": true
       },
       "status": "full_core_verified",
@@ -81,20 +287,22 @@
         "log": "misc/reports/implementations/ecl/compatibility-runner.log",
         "log_sha256": "fb091d5c5747e074ba6780d776f5656f42eb172307a9fc634b877582c5ce91cc",
         "report": "misc/reports/implementations/ecl/compatibility.json",
-        "report_sha256": "eeedaa706b15c5b85daa6fa15213b2970d1d5ad28c181fe963a0bbfa6df572e0"
+        "report_sha256": "5866715a7663a621de9dd460aecb2102fd84752fc02ae01d7ac574b883bd9c92"
       },
       "compatibility_passed": true,
       "status": "compatibility_passed"
     },
     "ccl": {
       "status": "unavailable",
-      "reason": "Unsupported platform aarch64-linux",
-      "full_core_verified": false
+      "full_core_verified": false,
+      "compatibility_passed": false,
+      "reason": "Unsupported platform aarch64-linux"
     },
     "mkcl": {
       "status": "unavailable",
-      "reason": "Package marked broken in pinned nixpkgs",
-      "full_core_verified": false
+      "full_core_verified": false,
+      "compatibility_passed": false,
+      "reason": "Package marked broken in pinned nixpkgs"
     },
     "clisp": {
       "profile": "runtime-fixtures",
@@ -104,7 +312,7 @@
         "log": "misc/reports/implementations/clisp/compatibility-runner.log",
         "log_sha256": "f96755e3965ff6c1e8200ae3dcb5a8d07e272f5f775c1489adfc5765580ceeef",
         "report": "misc/reports/implementations/clisp/compatibility.json",
-        "report_sha256": "48821fdb299684b4da3ba0faf7bbe259c7175c8225ce311880d961a3d9661e0e"
+        "report_sha256": "d05d54fc9a5c02811c4ea54f8d3e304c629ca779661cdd5d398cb3d653a9e5eb"
       },
       "compatibility_passed": true,
       "status": "compatibility_passed"
@@ -112,11 +320,13 @@
     "cmucl_binary": {
       "status": "unavailable",
       "full_core_verified": false,
-      "reason": "Package attribute missing or evaluation failed"
+      "compatibility_passed": false,
+      "reason": "Package attribute missing or evaluation failed on aarch64-linux"
     },
     "clasp-common-lisp": {
       "status": "unavailable",
       "full_core_verified": false,
+      "compatibility_passed": false,
       "reason": "Unsupported platform aarch64-linux"
     }
   },

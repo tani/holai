@@ -1,0 +1,14 @@
+;; Loading file /nix/store/vq1avm1xkapz60nbhrqlr7na0vlg6b19-clisp-2.49.95-unstable-2024-12-28/lib/clisp-2.49.95+/dynmod/asdf.lisp ...
+;;  Loading file /nix/store/vq1avm1xkapz60nbhrqlr7na0vlg6b19-clisp-2.49.95-unstable-2024-12-28/lib/clisp-2.49.95+/asdf/asdf.fas ...
+;;  Loaded file /nix/store/vq1avm1xkapz60nbhrqlr7na0vlg6b19-clisp-2.49.95-unstable-2024-12-28/lib/clisp-2.49.95+/asdf/asdf.fas
+;; Loaded file /nix/store/vq1avm1xkapz60nbhrqlr7na0vlg6b19-clisp-2.49.95-unstable-2024-12-28/lib/clisp-2.49.95+/dynmod/asdf.lisp
+
+Native interrupt checks passed: 3
+WARNING: Replacing method
+          #<STANDARD-METHOD
+            PROGN (#<STANDARD-CLASS SYSTEM::INTERRUPT-CONDITION>)>
+         in #<STANDARD-GENERIC-FUNCTION SYSTEM::GLOBAL-HANDLER>
+WARNING: Replacing method
+          #<STANDARD-METHOD
+            PROGN (#<STANDARD-CLASS SYSTEM::INTERRUPT-CONDITION>)>
+         in #<STANDARD-GENERIC-FUNCTION SYSTEM::GLOBAL-HANDLER>

@@ -1,6 +1,1 @@
-SIGINT catch ready
-SIGINT adapter check passed
-SIGINT catch ready
-SIGINT adapter check passed
-SIGINT previous hook ready
-SIGINT previous hook restored
+OS SIGINT not applicable: ABCL has no native SIGINT-specific Lisp hook; Java/OS signal rewiring is not used

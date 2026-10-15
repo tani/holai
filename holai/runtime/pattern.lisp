@@ -89,29 +89,29 @@
     `(let ,(mapcar (lambda (pair) (list (car pair) (cdr pair))) env)
        (declare (ignorable ,@(mapcar #'car env))) ,form))
   (defun compile-patterns (patterns values env success failure)
-    (if (null patterns) (cl:funcall success env)
+    (if (null patterns) (funcall success env)
         (compile-pattern (car patterns) (car values) env
                          (lambda (next) (compile-patterns (cdr patterns) (cdr values)
                                                         next success failure)) failure)))
   (defun compile-pattern (ir value env success failure)
     (case (car ir)
-      (:wildcard (cl:funcall success env))
-      (:bind (cl:funcall success (acons (second ir) value env)))
+      (:wildcard (funcall success env))
+      (:bind (funcall success (acons (second ir) value env)))
       (:literal
        (let* ((literal (second ir))
               (test (cond ((stringp literal) `(and (stringp ,value) (string= ,value ,literal)))
                           ((characterp literal) `(and (characterp ,value) (char= ,value ,literal)))
                           ((or (null literal) (eq literal t)) `(eq ,value ',literal))
                           (t `(eql ,value ',literal)))))
-         `(if ,test ,(cl:funcall success env) ,failure)))
-      (:type `(if (typep ,value ',(second ir)) ,(cl:funcall success env) ,failure))
+         `(if ,test ,(funcall success env) ,failure)))
+      (:type `(if (typep ,value ',(second ir)) ,(funcall success env) ,failure))
       (:and (compile-patterns (second ir) (make-list (length (second ir)) :initial-element value)
                              env success failure))
       (:guard
        (compile-pattern (second ir) value env
                         (lambda (bound)
                           `(if ,(pattern-let bound (third ir))
-                               ,(cl:funcall success bound) ,failure)) failure))
+                               ,(funcall success bound) ,failure)) failure))
       (:or
        (let* ((names (pattern-bindings ir)) (join (gensym "MATCHED"))
               (params (mapcar (lambda (x) (declare (ignore x)) (gensym "BOUND")) names))
@@ -121,7 +121,7 @@
                         (compile-pattern (car rest) value env
                                          (lambda (bound) `(,join ,@(mapcar (lambda (name) (cdr (assoc name bound))) names)))
                                          (arms (cdr rest))))))
-           `(flet ((,join ,params (declare (ignorable ,@params)) ,(cl:funcall success joined-env)))
+           `(flet ((,join ,params (declare (ignorable ,@params)) ,(funcall success joined-env)))
               ,(arms (second ir))))))
       (:cons
        (let ((head (gensym "HEAD")) (tail (gensym "TAIL")))
@@ -134,7 +134,7 @@
       (:ref
        (let ((contents (gensym "CONTENTS")))
          `(if (typep ,value 'ref-cell)
-              ,(if (eq (car (second ir)) :wildcard) (cl:funcall success env)
+              ,(if (eq (car (second ir)) :wildcard) (funcall success env)
                    `(let ((,contents (deref ,value)))
                       ,(compile-pattern (second ir) contents env success failure))) ,failure)))
       ((:tuple :vector)
@@ -146,7 +146,7 @@
                 (if (cl:= (length ,items) ,(length patterns))
                     ,(if tuple-p
                          (if (every (lambda (p) (eq (car p) :wildcard)) patterns)
-                             (cl:funcall success env)
+                             (funcall success env)
                              `(destructuring-bind ,vars ,items
                                 (declare (ignorable ,@vars))
                                 ,(compile-patterns patterns vars env success failure)))

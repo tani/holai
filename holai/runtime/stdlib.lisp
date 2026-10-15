@@ -6,7 +6,7 @@
   (:import-from :holai.runtime.core
     :defrecord :record-update :record-field :invalid-arg :define-exception
     :failwith :None :make-Not_found :structural-hash)
-  (:shadowing-import-from :holai.runtime.core :funcall := :Some)
+  (:shadowing-import-from :holai.runtime.core := :Some)
   (:import-from :holai.runtime.pattern :match)
   ;; The terminal runtime includes the initialized standard formatter.
   (:import-from :holai.runtime.format)
@@ -40,10 +40,30 @@
 (defvar *catch-break* nil)
 (defvar *previous-interrupt-hook* nil)
 #+abcl
-(defvar *abcl-sigint-registration* nil)
+(define-condition abcl-native-interrupt (error) ())
+#+abcl
+(defvar *abcl-interrupt-hook* (lambda () (error 'abcl-native-interrupt)))
+#+abcl
+(defun interrupt-abcl-thread (thread)
+  ;; ABCL has queued Lisp thread interrupts, but no established Lisp SIGINT
+  ;; hook. This is explicitly a Lisp interrupt boundary, not OS signal wiring.
+  (threads:interrupt-thread thread
+    (lambda () (funcall *abcl-interrupt-hook*))))
+#+mkcl
+(defun set-mkcl-interrupt-hook (hook)
+  ;; MKCL protects SI with a closed-package flag. Reopen only for this native
+  ;; hook write and restore the exact prior state, including nonlocal exits.
+  (let* ((package (symbol-package 'si::sigint-handler))
+         (closed (si::package-closed-p package)))
+    (unwind-protect
+        (progn
+          (when closed (si::reopen-package package))
+          (setf (fdefinition 'si::sigint-handler) hook))
+      (when closed (si::close-package package)))))
 (defun catch-break (enabled)
-  #-(or sbcl ecl abcl (and clisp unix))
-  (error "SIGINT handling is unsupported on ~A" (lisp-implementation-type))
+  #-(or sbcl ecl abcl (and clisp unix) ccl mkcl cmu clasp)
+  (error "Native Lisp interrupt handling is unsupported on ~A"
+         (lisp-implementation-type))
   ;; Capture only at the disabled -> enabled boundary. Repeated calls must
   ;; neither save our own handler nor discard the hook we displaced.
   (if enabled
@@ -61,7 +81,7 @@
                       ;; Preserve the previous hook's calling convention and
                       ;; its identity as the second argument.
                       (when previous
-                        (cl:funcall previous condition previous))))))
+                        (funcall previous condition previous))))))
         #+ecl
         (progn
           ;; ECL 26.5.5 GET-SIGNAL-HANDLER returns no values. Its native
@@ -75,27 +95,66 @@
                   (fdefinition 'si::terminal-interrupt)
                   (lambda (&key correctablep)
                     (declare (ignore correctablep))
-                    ;; Threaded ECL dispatches SIGINT on a servicing thread.
+                    ;; Native simulations may already be on the installer.
+                    ;; Never synchronously hand an interrupt back to oneself.
                     #+threads
-                    (mp:interrupt-process target
-                      (lambda () (raise (make-sys_break))))
+                    (if (eq target mp:*current-process*)
+                        (raise (make-sys_break))
+                        (mp:interrupt-process target
+                          (lambda () (raise (make-sys_break)))))
                     #-threads
                     (raise (make-sys_break))))))
         #+abcl
-        (let* ((target (threads:current-thread))
-               (signal (java:jnew "sun.misc.Signal" "INT"))
-               (handler
-                 (java:jinterface-implementation "sun.misc.SignalHandler" "handle"
-                   (lambda (signal)
-                     (declare (ignore signal))
-                     ;; Java dispatches on its own thread; raise only on the
-                     ;; Lisp thread that installed this handler.
-                     (threads:interrupt-thread target
-                       (lambda () (raise (make-sys_break))))))))
-          ;; Signal.handle returns the actual displaced Java handler.
+        (let ((target (threads:current-thread)))
+          (setf *previous-interrupt-hook* *abcl-interrupt-hook*
+                *abcl-interrupt-hook*
+                (lambda ()
+                  (if (eq target (threads:current-thread))
+                      (raise (make-sys_break))
+                      (threads:interrupt-thread target
+                        (lambda () (raise (make-sys_break))))))))
+        #+ccl
+        (let ((target ccl:*current-process*))
+          ;; Preserve CCL's generic function and its exact PROCESS method.
           (setf *previous-interrupt-hook*
-                (java:jstatic "handle" "sun.misc.Signal" signal handler)
-                *abcl-sigint-registration* (cons signal handler)))
+                (find-method #'ccl::force-break-in-listener nil
+                  (list (find-class 'ccl:process)) nil))
+          (defmethod ccl::force-break-in-listener ((process ccl:process))
+            (declare (ignore process))
+            (if (eq target ccl:*current-process*)
+                (raise (make-sys_break))
+                (ccl:process-interrupt target
+                  (lambda () (raise (make-sys_break)))))))
+        #+mkcl
+        (let ((target (mt:current-thread)))
+          (setf *previous-interrupt-hook* (fdefinition 'si::sigint-handler))
+          (set-mkcl-interrupt-hook
+            (lambda (signal)
+              (declare (ignore signal))
+              (if (eq target (mt:current-thread))
+                  (raise (make-sys_break))
+                  (mt:interrupt-thread target
+                    (lambda () (raise (make-sys_break))))))))
+        #+cmu
+        (setf *previous-interrupt-hook*
+              (system:enable-interrupt unix:sigint
+                (lambda (signal code context)
+                  (declare (ignore signal code context))
+                  (system:with-interrupts (raise (make-sys_break))))))
+        #+clasp
+        (let ((target mp:*current-process*))
+          ;; Clasp's native POSIX dispatcher raises CORE:SIGINT and invokes
+          ;; this primary method. Preserve its exact method object; modifying
+          ;; the generic's methods does not redefine a package-locked function.
+          (setf *previous-interrupt-hook*
+                (find-method #'mp:service-interrupt nil
+                  (list (find-class 'core:sigint)) nil))
+          (defmethod mp:service-interrupt ((condition core:sigint))
+            (declare (ignore condition))
+            (if (eq target mp:*current-process*)
+                (raise (make-sys_break))
+                (mp:interrupt-process target
+                  (lambda () (raise (make-sys_break)))))))
         #+(and clisp unix)
         (progn
           (unless (and (fboundp 'sys::global-handler)
@@ -118,10 +177,26 @@
         #+ecl
         (setf (fdefinition 'si::terminal-interrupt) *previous-interrupt-hook*)
         #+abcl
-        (progn
-          (java:jstatic "handle" "sun.misc.Signal"
-            (car *abcl-sigint-registration*) *previous-interrupt-hook*)
-          (setf *abcl-sigint-registration* nil))
+        (setf *abcl-interrupt-hook* *previous-interrupt-hook*)
+        #+ccl
+        (if *previous-interrupt-hook*
+            (add-method #'ccl::force-break-in-listener *previous-interrupt-hook*)
+            (let ((installed
+                    (find-method #'ccl::force-break-in-listener nil
+                      (list (find-class 'ccl:process)) nil)))
+              (when installed
+                (remove-method #'ccl::force-break-in-listener installed))))
+        #+mkcl
+        (set-mkcl-interrupt-hook *previous-interrupt-hook*)
+        #+cmu
+        (system:enable-interrupt unix:sigint *previous-interrupt-hook*)
+        #+clasp
+        (if *previous-interrupt-hook*
+            (add-method #'mp:service-interrupt *previous-interrupt-hook*)
+            (let ((installed
+                    (find-method #'mp:service-interrupt nil
+                      (list (find-class 'core:sigint)) nil)))
+              (when installed (remove-method #'mp:service-interrupt installed))))
         #+(and clisp unix)
         (if *previous-interrupt-hook*
             (add-method #'sys::global-handler *previous-interrupt-hook*)

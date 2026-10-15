@@ -1,5 +1,10 @@
 (in-package :hol2cl.runtime)
 
+;; Historical &REST-entry benchmark control, updated to standard FUNCALL.
+;; No runtime-owned application wrapper is defined. Historical timings used
+;; the pre-cutover snapshot; reproduce them from the recorded commit, not this
+;; maintained control source.
+
 (defparameter std-formatter *standard-output*)
 
 ;; Curried source functions are ordinary CL functions accepting &rest arguments.
@@ -63,7 +68,6 @@
 
 (defun partial (function &rest initial)
   (lambda (&rest rest) (cl:apply function (append initial rest))))
-(defun funcall (function &rest arguments) (cl:apply function arguments))
 
 ;; Only fixed-arity foreign functions use adapters. Cache by arity with weak
 ;; keys and values, so the cache does not retain dead dynamic foreign closures.

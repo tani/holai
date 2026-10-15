@@ -1,3 +1,4 @@
 ;;; Loading #P"/nix/store/57zcf17cf7kcb5i7dl1hvnwr0xg9fzfs-ecl-26.5.5/lib/ecl-26.5.5/asdf.fas"
 HOLAI_HOST_VERSION 26.5.5
 HOLAI_HOST_TYPE ECL
+HOLAI_HOST_FEATURE ecl

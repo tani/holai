@@ -8,7 +8,7 @@
 (asdf:load-system "holai/runtime")
 (uiop:define-package :holai.tests.pattern
   (:use :cl)
-  (:shadowing-import-from :holai.runtime.core :defvariant :defrecord :define-exception :funcall := :< :>)
+  (:shadowing-import-from :holai.runtime.core :defvariant :defrecord :define-exception := :< :>)
   (:shadowing-import-from :holai.runtime.data :ref :ref-contents :unit :tuple :match-failure)
   (:shadowing-import-from :holai.runtime.pattern :match :character-code :guard))
 (in-package :holai.tests.pattern)
@@ -39,15 +39,43 @@
 (sb-int:with-float-traps-masked (:invalid)
   (let* ((nan (sb-kernel:make-double-float #x7ff80000 0))
          (matcher (compile nil `(lambda (value) (match value (,nan t) (_ nil))))))
-    (check (eq (cl:funcall matcher nan) (eql nan nan)))))
+    (check (eq (funcall matcher nan) (eql nan nan)))))
 #+ecl
 (write-line "Pattern native NaN EQL: not applicable (ECL native COMPILE cannot externalize a NaN literal)")
 #+abcl
 (let* ((nan (java:jfield "java.lang.Double" "NaN"))
        (matcher (compile nil `(lambda (value) (match value (,nan t) (_ nil))))))
-  (check (eq (cl:funcall matcher nan) (eql nan nan))))
+  (check (eq (funcall matcher nan) (eql nan nan))))
 #+clisp
 (write-line "Pattern native NaN EQL: not applicable (CLISP cannot represent NaN)")
+#+ccl
+(let* ((nan (ccl::double-float-from-bits #x7ff80000 0))
+       (matcher (compile nil `(lambda (value) (match value (,nan t) (_ nil))))))
+  (check (eq (funcall matcher nan) (eql nan nan))))
+#+cmu
+(ext:with-float-traps-masked (:invalid :divide-by-zero)
+  (let* ((zero (coerce (length nil) 'double-float))
+         (nan (funcall (symbol-function '/) zero zero))
+         (matcher (compile nil `(lambda (value) (match value (,nan t) (_ nil))))))
+    (check (eq (funcall matcher nan) (eql nan nan)))))
+#+clasp
+(let* ((nan (core::nan))
+       (matcher (compile nil `(lambda (value) (match value (,nan t) (_ nil))))))
+  (check (eq (funcall matcher nan) (eql nan nan))))
+#+mkcl
+(let* ((nan
+         (funcall
+           (compile nil
+             '(lambda ()
+                ;; Construct a real native quiet NaN without triggering the
+                ;; arithmetic trap policy of MKCL's numeric constructor.
+                (ffi:c-inline () () t
+                  "{ mkcl_object x = mkcl_alloc_raw_doublefloat(env);
+                     mkcl_double_float(x) = __builtin_nan(\"\");
+                     @(return) = x; }"
+                  :one-liner nil :side-effects t)))))
+       (matcher (compile nil `(lambda (value) (match value (,nan t) (_ nil))))))
+  (check (eq (funcall matcher nan) (eql nan nan))))
 (check (match nil (nil t)))
 (check (match t (cl:t t)))
 (check (= (match #(2 3) ((cl:vector a b) (+ a b))) 5))

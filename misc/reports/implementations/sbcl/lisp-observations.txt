@@ -901,7 +901,7 @@ language_assert=true
 language_format=x\n  42
 language_map_set=1:2;3:110;5:26|1,3,4,5,7|3|1,4,5|3|4|true|true|true|1
 language_stdlist=5,7,9:11
-language_random=171660449,565247636,995292387,459184836,228272041,291391471,149701906,1015865717:19,83,4,40,20,66,20,14:212036725,768802637,520673638,483861159
+language_random=283506154,444653003,700857228,838044713,884462020,888228097,478779328,210104577:52,0,0,19,66,28,46,54:539105664,838282536,32248837,390183736
 language_shift:-1:0=-1
 language_shift:-1:1=4611686018427387903
 language_shift:-1:62=1
@@ -1075,6 +1075,7 @@ arith_cancel_invalid=true
 arith_numeral_unchanged=numeral=|-((c:=:fun(num(),fun(num(),bool())) (c:NUMERAL:fun(num(),num()) (c:BIT1:fun(num(),num()) (c:BIT0:fun(num(),num()) (c:BIT0:fun(num(),num()) (c:BIT0:fun(num(),num()) (c:BIT1:fun(num(),num()) c:_0:num()))))))) (c:NUMERAL:fun(num(),num()) (c:BIT1:fun(num(),num()) (c:BIT0:fun(num(),num()) (c:BIT0:fun(num(),num()) (c:BIT0:fun(num(),num()) (c:BIT1:fun(num(),num()) c:_0:num())))))))
 arith_mod_identity=mod_identity=|-((c:=:fun(num(),fun(num(),bool())) ((c:MOD:fun(num(),fun(num(),num())) v:m:num()) v:n:num())) ((c:MOD:fun(num(),fun(num(),num())) v:m:num()) v:n:num()))
 standard_lambda=8,4
+standard_funcall=42,42
 standard_array=3,8,3:true:2,3,4:4,9,16
 standard_gc=16777216,16777217,16777216:true
 standard_num=-3/2:2:1;-3:2;-2:1;3:2

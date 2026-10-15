@@ -12,7 +12,7 @@
 (uiop:define-package :holai.tests.pattern-stale
   (:use :cl)
   (:shadowing-import-from :holai.tests.pattern :separate :value)
-  (:shadowing-import-from :holai.runtime.core :defvariant :defrecord :define-exception :funcall := :< :>)
+  (:shadowing-import-from :holai.runtime.core :defvariant :defrecord :define-exception := :< :>)
   (:shadowing-import-from :holai.runtime.data :ref :ref-contents :unit :tuple :match-failure)
   (:shadowing-import-from :holai.runtime.pattern :match :character-code :guard))
 (in-package :holai.tests.pattern-stale)

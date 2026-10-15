@@ -43,8 +43,9 @@ format printing and stdlib library adapters; no aliases/shared facade are provid
   other host output there. Shared clean-generation and inventory reports stay
   at the report root.
 - Older evidence under misc/reports/history/, including vector-tuple experiments.
-- The old runtime snapshot used by the OPTIONAL benchmark: it is a deliberate
-  test-only control, not another production runtime.
+- The old-entry control used by the OPTIONAL benchmark is test-only, not another
+  production runtime. Its maintained source now uses standard FUNCALL; original
+  timings belong to the pre-cutover committed snapshot, not this updated control.
 
 ## Exclude from Git; regenerate as needed
 
@@ -96,27 +97,26 @@ the combined flake-check/release invocation took 293.62 seconds. Those reports
 retain 94 identical clean-generated outputs and 55 unchanged input pins; the
 archive producer reported 428 payload files before final documentation edits.
 That historical CI ran `nix flake check` plus ordinary `make release` independently
-on each platform. Current CI is the actionlint-passed 12-job Cartesian matrix:
-three systems × SBCL/ECL/ABCL/CLISP, with separate artifacts. Only SBCL runs release;
-other implementations run runtime fixtures. Hosted run 38657307376 passed 10/12:
-all SBCL/ECL/ABCL jobs and ARM64 Linux CLISP. The two CLISP failures motivated
-the approved previous-native-Lisp-hook restoration policy, not a package rebuild.
-Stock NixOS 26.05 packages retain their native thread/FFI features, with no FFI
-requirement or forced CLISP thread mode. Current local ARM64 Linux `make release`
-passed in 283.44 seconds: all four profiles, 52 production paths, 93 identical
-clean outputs and 55 unchanged pins. Each host measured three real SIGINTs,
-two Sys.Break catches and restored prior-hook delivery with normal exit 0
-(`sigint_previous_hook_restored=true` for SBCL;
-`system_interrupt_previous_hook_restored=true` for additional hosts).
-The new policy's 12-job hosted run remains PENDING until push and observation.
-Captured phase stdout/stderr and public annotations remain available for diagnosis.
-The shell selects only implemented host adapters
-whose pinned packages are usable, requiring SBCL. Packaging verifies actual
-host versions and executable bindings against exported pinned-shell metadata.
-All three platform flake evaluations (`--all-systems --no-build`) and
-actionlint 1.7.12 passed locally. Flake checks cover ASDF startup only, while
-release exercises the production runtime. New-policy Darwin/x86 runtime results
-remain unobserved; current new-policy runtime evidence is local ARM64 Linux only.
+on each platform. Current CI crosses three systems with all eight candidate IDs,
+with eight explicit unavailable ARM exclusions: 16 runnable jobs. Only SBCL runs
+release; other implementations run bounded runtime fixtures with separate artifacts.
+The prior four-implementation
+[run 38661471081](https://github.com/tani/holai/actions/runs/38661471081)
+at `ac56ca3` passed 12/12. Its OS-interoperability contract is historical;
+the expanded native-Lisp-only 16-job matrix remains pending.
+The shell selects eight pinned packages on x86 Linux and four on each ARM64 host;
+CMUCL is a 32-bit x86 binary, not an ARM package. Genuine unsupported, broken and
+evaluation-unavailable cells remain explicit. Packaging verifies actual host
+type, feature, version and executable binding against pinned-shell metadata.
+Launchers load real ASDF separately before reading package-qualified forms;
+`HOLAI_ASDF_SOURCE` supplies the pinned dependency if REQUIRE cannot load it.
+The mandatory direct-native interrupt fixture and its log establish two Sys.Break
+catches and exact previous-hook restoration. Real OS-SIGINT evidence is separate:
+ABCL reports not applicable because there is no native SIGINT-specific Lisp hook,
+not a passing OS test. No Java/OS signal rewiring or forced-death pass is used.
+Flake checks cover ASDF startup only; they do not establish runtime/full-core
+compatibility. Captured phase logs and annotations support diagnosis without
+turning skipped, incomplete or historical evidence into a current pass.
 
 The proof readability policy applies to **software development code** throughout
 the maintained translator-generated and handwritten sources, not just end-user

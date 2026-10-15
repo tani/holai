@@ -14,28 +14,60 @@
   #+sbcl (sb-ext:gc :full t)
   #+ecl (si::gc t)
   #+(or abcl clisp) (ext:gc)
-  #-(or sbcl ecl abcl clisp) (error "No GC test adapter for ~A" (lisp-implementation-type)))
+  #+ccl (ccl:gc)
+  #+cmu (ext:gc :full t)
+  #+clasp (gctools:garbage-collect)
+  #+mkcl (si::gc)
+  #-(or sbcl ecl abcl clisp ccl cmu clasp mkcl)
+  (error "No GC test adapter for ~A" (lisp-implementation-type)))
 (defun protocol-weak-pointer (value)
   #+sbcl (sb-ext:make-weak-pointer value)
   #+ecl (ext:make-weak-pointer value)
   #+clisp (ext:make-weak-pointer value)
   #+abcl (ext:make-weak-reference value)
-  #-(or sbcl ecl abcl clisp)
+  #+cmu (ext:make-weak-pointer value)
+  #+(or ccl clasp mkcl) (holai.runtime.core::native-adapter-reference value)
+  #-(or sbcl ecl abcl clisp ccl cmu clasp mkcl)
   (error "No weak-pointer test adapter for ~A" (lisp-implementation-type)))
 (defun protocol-weak-pointer-value (pointer)
   #+sbcl (sb-ext:weak-pointer-value pointer)
   #+ecl (ext:weak-pointer-value pointer)
   #+clisp (ext:weak-pointer-value pointer)
   #+abcl (ext:weak-reference-value pointer)
-  #-(or sbcl ecl abcl clisp)
+  #+cmu (ext:weak-pointer-value pointer)
+  #+(or ccl clasp mkcl) (holai.runtime.core::native-adapter-reference-value pointer)
+  #-(or sbcl ecl abcl clisp ccl cmu clasp mkcl)
   (error "No weak-pointer test adapter for ~A" (lisp-implementation-type)))
-(defun protocol-cache-weakness (table)
-  #+sbcl (sb-ext:hash-table-weakness table)
-  #+ecl (ext:hash-table-weakness table)
-  #+clisp (ext:hash-table-weak-p table)
-  #+abcl (sys:hash-table-weakness table)
-  #-(or sbcl ecl abcl clisp)
-  (error "No weak-table test adapter for ~A" (lisp-implementation-type)))
+;; Compile these boundaries before compiling the creator: otherwise its native
+;; calls still enter the bytecode evaluator, which can retain referent arguments
+;; in interpreter environments after the creator/worker has returned.
+#+(or mkcl cmu)
+(dolist (name '(protocol-weak-pointer protocol-weak-pointer-value protocol-gc))
+  (compile name))
+(defun protocol-cache-storage-p (table)
+  #+sbcl (eq :key-and-value (sb-ext:hash-table-weakness table))
+  #+ecl (eq :key-and-value (ext:hash-table-weakness table))
+  #+clisp (eq :key-and-value (ext:hash-table-weak-p table))
+  #+abcl (eq :key-and-value (sys:hash-table-weakness table))
+  #+cmu (eq :key-and-value (lisp::hash-table-weak-p table))
+  #+(or ccl clasp mkcl)
+  (let ((adapter (holai.runtime.core:function-value #'+ 2)))
+    ;; Check the actual host-specific value storage. The reclamation test below
+    ;; remains mandatory for the adapter, native function and captured vector;
+    ;; a hash-table type check alone cannot establish weak lifetime behavior.
+    #+ccl
+    (let ((reference (gethash #'+ table)))
+      (and (eq :key (ccl:hash-table-weak-p table))
+           (eq :list (ccl:population-type reference))
+           (eq adapter (car (ccl:population-contents reference)))))
+    #+clasp
+    (eq adapter (core:weak-pointer-value (gethash #'+ table)))
+    #+mkcl
+    (and (holai.runtime.core::mkcl-adapter-cache-p table)
+         (some (lambda (entry)
+                 (and (eq #'+ (protocol-weak-pointer-value (car entry)))
+                      (eq adapter (protocol-weak-pointer-value (cdr entry)))))
+               (holai.runtime.core::mkcl-adapter-cache-entries table)))))
 (holai.runtime.core:defunc foo (a b c) (+ (* 100 a) (* 10 b) c))
 (ensure-protocol (= 123 (foo 1 2 3)))
 (ensure-protocol (= 123 (funcall (funcall (foo 1) 2) 3)))
@@ -74,10 +106,15 @@
   (ensure-protocol (= 7 (funcall (funcall a 3) 4)))
   (protocol-gc)
   (ensure-protocol (eq a (holai.runtime.core:function-value fn 2))))
+;; Native exact application preserves all values, unlike a source entry's
+;; deliberate primary-only body result. Both calls use standard FUNCALL.
+(let ((native (holai.runtime.core:function-value #'floor 2)))
+  (ensure-protocol (equal '(3 2) (multiple-value-list (funcall native 17 5)))))
+(let ((source (holai.runtime.core:lambdac (x y) (floor x y))))
+  (ensure-protocol (equal '(3) (multiple-value-list (funcall source 17 5)))))
 (ensure-protocol
-  (eq :key-and-value
-      (protocol-cache-weakness
-        (gethash 2 holai.runtime.core::*native-function-adapters*))))
+  (protocol-cache-storage-p
+    (gethash 2 holai.runtime.core::*native-function-adapters*)))
 (ensure-protocol (multiple-value-bind (symbol present) (find-symbol "*FUNCTION-ARITIES*" :holai.runtime.core)
                     (or (not present) (not (boundp symbol)))))
 (ensure-protocol (handler-case (progn (foo 1 2 3 4) nil) (type-error () t)))
@@ -93,19 +130,20 @@
     (vector (protocol-weak-pointer adapter)
             (protocol-weak-pointer fn)
             (protocol-weak-pointer cell))))
-;; Native compilation keeps the creator's lexical bindings out of ECL's
-;; bytecode interpreter. A separate native worker gives those bindings a
-;; bounded lifetime: PROCESS-JOIN waits for cleanup to clear the environment
-;; and release its Lisp stacks, after the native creator frame has returned.
-#+ecl (compile 'dead-native-adapter)
+;; Native compilation removes interpreter environments on CMUCL. On the Boehm
+;; hosts, a joined worker also bounds conservative native-stack roots.
+#+(or ecl mkcl clasp cmu) (compile 'dead-native-adapter)
 ;; Pass the global creator itself, not a closure that could capture the cell,
 ;; function or adapter. The worker's only result is the weak-pointer vector.
 ;; Separate top-level forms leave creation/join before the two collections.
 (defparameter *dead-native-pointer*
-  #+ecl
+  #+(or ecl clasp)
   (mp:process-join
    (mp:process-run-function "defunc weak-adapter creation" #'dead-native-adapter))
-  #-ecl (dead-native-adapter))
+  #+mkcl
+  (mt:thread-join
+   (mt:thread-run-function "defunc weak-adapter creation" #'dead-native-adapter))
+  #-(or ecl mkcl clasp) (dead-native-adapter))
 (protocol-gc)
 (protocol-gc)
 (ensure-protocol (every (lambda (pointer)

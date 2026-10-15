@@ -79,6 +79,21 @@ only for current candidate code. Baseline checkouts keep their matching old API.
 Parsed, lowered, compiled, initialized and differential-tested remain distinct
 evidence states; relocation alone does not revalidate or remeasure them.
 
+Current FUNCALL cutover: handwritten callers and synthetic call forms use bare
+`funcall`, the standard Common Lisp operation. The runtime-owned wrapper,
+shadow, export and dependent imports are removed without compatibility aliases.
+Macro templates resolve the canonical standard symbol in their definition
+package; the translator reserves FUNCALL through its existing control-name
+allocator, retaining source binding IDs/scopes and `%`-suffixed source spellings.
+Currying remains in the shared OPTIONAL entry, not in an application wrapper:
+NIL versus omission, partial/excess application, body-once and primary-only
+source results remain unchanged. Native exact adapters preserve multiple values,
+and reader-headed applications still acquire their head after their arguments.
+Historical wrapper spellings and measurements below describe earlier revisions,
+not a retained public API. The benchmark's current `standard-funcall` case names
+the standard call; old `runtime-funcall` measurements remain historical and are
+not relabeled as measurements of this cutover.
+
 The layout/API cutover was validated on aarch64-linux inside the pinned Nix
 shell with `make release`: all 46 inputs parsed/lowered/compiled/initialized,
 1,124 differential rows matched, 51 production units compiled with zero
@@ -118,41 +133,40 @@ Camlp5 8.02.01, Num 1.5, camlp-streams 5.0.1, SBCL 2.6.4, ECL 26.5.5,
 ABCL 1.9.3 and CLISP 2.49.95.
 
 The current portability matrix uses the same 26.05 package source throughout.
-Candidate availability is filtered by package evaluation, architecture, broken
-status and implemented runtime adapter, with explicit exclusion reasons.
-Only SBCL/ECL/ABCL/CLISP adapters are implemented; package availability alone
-does not select CCL/MKCL/CMUCL/Clasp. Every shell requires usable SBCL.
-`HOLAI_LISPS` selects hosts, with SBCL mandatory for full-core verification.
-Ordinary matrix phases run the full SBCL suite and the additional hosts'
-120-second-per-process runtime/translated-fixture compatibility profiles.
-All selected profiles gate release, but compatibility is not a full-core claim.
-Only SBCL supplies full oracle/registry/PROOF and cold 52-unit explicit-ASDF
-evidence by default; additional-host full-core runs are explicitly optional.
-Release packaging compares observed host versions and resolved executables with
-`HOLAI_LISP_VERSIONS`/`HOLAI_LISP_EXECUTABLES` exported by the pinned shell;
-the CLISP source-version prefix excludes its separately recorded build details.
-This replaces the obsolete ECL 21.2.1-only version gate without accepting
-arbitrary host versions. Run `make release` inside `nix develop`.
+All eight candidates have explicit launcher/runtime identities: ABCL, SBCL,
+ECL, CCL, MKCL, CLISP, CMUCL and Clasp. Selection is filtered by fully forced
+package evaluation, platform and broken metadata, with retained exclusion reasons
+and pinned version/executable bindings. There is no four-adapter gate.
+Metadata evaluation observed eight selectable derivations on x86_64-linux and
+four on each ARM64 host. CMUCL is the pinned i686 binary package, not an ARM port.
+The complete versions, executables and exclusion table are in
+[release notes](docs/RELEASE-NOTES.md#eight-candidate-selection-and-native-lisp-interrupts).
 
-The SHA-pinned, read-only GitHub Actions workflow uses a fail-fast-disabled
-Cartesian matrix: aarch64-linux (`ubuntu-24.04-arm`), aarch64-darwin (`macos-15`)
-and x86_64-linux (`ubuntu-24.04`), each crossed with SBCL/ECL/ABCL/CLISP.
-All 12 jobs validate their actual Nix system and selected implementation's
-exported package availability; missing targets fail rather than silently skip.
-SBCL jobs run `HOLAI_LISPS=sbcl make release`. Other jobs run `make build` and
-`HOLAI_LISP=<implementation> python3 holai/tests/compatibility.py`, not full core.
-Checkout credentials are not persisted; artifacts are host/implementation-specific
-and retained on failure. Additional-host full-core work remains opt-in.
-The preceding hosted run passed full SBCL on all three platforms, but ECL failed
-on Linux and CLISP failed on Darwin and x86 Linux. Outer logs did not expose the
-underlying Lisp diagnostics. Do not infer a green new matrix or Darwin compatibility.
-Local explicit-ASDF `make release` exited 0 in 287.53 seconds: SBCL full-core,
-all three additional-host compatibility profiles, cold diagnostics, 93-output
-clean regeneration, 55 unchanged pins and packaging passed. Actionlint passed
-locally; execution of the new push's 12-job matrix remains pending, not CI green.
-CLISP's earlier hosted failures remain unresolved. Captured phase stdout/stderr
-and public GitHub Actions error annotations expose failures for precise root
-diagnosis, not blind retries. Flake checks exercise ASDF startup, not production runtime.
+Every shell requires usable SBCL. `HOLAI_LISPS` selects execution profiles.
+SBCL alone supplies mandatory full-core native/OCaml differential and cold
+52-unit diagnostics. Every selected additional host must pass the bounded
+120-second-per-process runtime/translated-fixture profile; compatibility is
+not a full-core pass. Additional-host full-core work remains explicitly opt-in.
+Release compares observed implementation type, primary feature, version and
+resolved executable against pinned-shell metadata, retaining build descriptions
+while checking complete release-version tokens rather than arbitrary substrings.
+Separate startup evaluations load real ASDF before package-qualified forms;
+`HOLAI_ASDF_SOURCE` binds the pinned ASDF dependency for unbundled implementations.
+No package-inferred systems or generated load-order S-expression files are added.
+
+The SHA-pinned read-only Actions workflow crosses three hosts
+(aarch64-linux/ubuntu-24.04-arm, aarch64-darwin/macos-15,
+x86_64-linux/ubuntu-24.04) with eight IDs. Eight explicit ARM exclusions yield
+16 runnable jobs; every actual target fails if unavailable or missing.
+SBCL runs `HOLAI_LISPS=sbcl make release`; seven other IDs use bounded
+compatibility only. Checkout credentials are not persisted; separate
+host/implementation artifacts retain phase logs and public failure annotations.
+The prior four-implementation
+[run 38661471081](https://github.com/tani/holai/actions/runs/38661471081)
+at `ac56ca3` passed 12/12. That historical OS-interoperability policy and result
+do not validate this native-Lisp-only eight-candidate cutover: the expanded
+16-job runtime matrix remains pending. Flake checks exercise ASDF startup,
+not production runtime or full-core compatibility.
 
 Use Camlp5's **MLast AST**, not a regular-expression approximation and not an
 OCaml parser that cannot recognize HOL Light syntax. Separate:
@@ -715,12 +729,13 @@ a logical difference or permission to rewrite the proof.
 Only `language_random=` is property-validated (8/8/4 groups and
 2^30/97/2^30 bounds). The two initial registry rows are structural comparisons;
 all remaining rows compare exactly. Release evidence must derive counts from
-the actual streams (the current expected corpus is 1,149 rows), separately
+the actual streams (the current verified corpus has 1,150 rows), separately
 report one property row and two structural rows, and preserve full raw and
 canonical stream hashes plus actual structured identity in both streams.
-Raw equality is reported, never manufactured. The current SBCL run validated
-this contract: 1,149 rows comprise 1,146 exact comparisons, two structural
-registry comparisons and one Random property row; raw streams are unequal.
+Raw equality is reported, never manufactured. The observed native ARM64 Linux
+final-source release validated this contract: 1,150 rows comprise 1,147 exact comparisons,
+two structural registry comparisons and one Random property row; raw streams
+are unequal. Earlier 1,149-row measurements below are historical.
 
 Initial snapshots precede test-only extensions. Both executions register 22
 types, 303 constants, 263 definitions and exactly INFINITY_AX/SELECT_AX/ETA_AX.
@@ -2565,7 +2580,7 @@ NIL. Empty input is rejected.
 
 An operator reference is either a value symbol or exactly `(cl:function name)`
 with a symbol name (reader spelling `#'name`). Value symbols expand through
-`holai.runtime:funcall`; FUNCTION references expand to named calls, preserving
+standard bare `funcall`; FUNCTION references expand to named calls, preserving
 Common Lisp's separate value and function namespaces, including lexical
 bindings. Keywords, CL:T and CL:NIL are not operator names. THEN and THENL
 are tactic-combining values; ORELSE is a named function and uses `#'ORELSE`.
@@ -2757,9 +2772,9 @@ retain their existing construction. Plain function-value references passed as
 arguments or captured in bindings remain eager references, not reader wrappers:
 the cutover changes application heads, not the meaning of stored function
 values. PROOF recognition, operator grammar and tactical emission (§33) are
-unchanged. Runtime-internal `funcall` expansions and the public
-`holai.runtime:funcall` API remain intact, as do manually authored semantic
-tests of that API.
+unchanged. The subsequent standard FUNCALL cutover removes the public runtime
+wrapper and migrates manually authored semantic callers to bare `funcall`;
+the shared curried entry and native adapter contracts remain intact.
 
 ### 34.2 Intentional late acquisition of the head
 
@@ -3250,14 +3265,15 @@ claim. Documentation-only repackaging does not require repeating initialization.
 
 ## 38. Common Lisp host portability
 
-The implemented hosts are SBCL, ECL, ABCL and CLISP, selected when their package
-is usable on the target platform. Their ordinary correctness profiles differ:
+The implemented candidate set is SBCL, ECL, ABCL, CCL, MKCL, CLISP, CMUCL
+and Clasp, selected when its pinned package is usable on the target platform.
+Their ordinary correctness profiles differ:
 SBCL runs the full 46-file native/OCaml differential suite and release's cold diagnostics;
 every selected additional host runs runtime plus translated-fixture compatibility.
 Compatibility is not full HOL Light initialization or a full-core verified claim.
-Production algorithms use ANSI Common Lisp/UIOP; the only host adapters are
-real SIGINT handling and weak key-and-value storage. Unsupported implementations
-must reject unavailable capabilities explicitly. Random uses standard CL RANDOM
+Production algorithms use ANSI Common Lisp/UIOP; host adapters supply native
+Lisp interrupts and weak key-and-value storage. Unavailable capabilities must
+be reported explicitly, never fabricated as passes. Random uses standard CL RANDOM
 and an explicit private standard random-state. Validate copied-state replay,
 advancement and bounds without assumptions about host-internal entropy/default
 state behavior. Init uses MAKE-RANDOM-STATE T and ignores the integer seed;
@@ -3265,10 +3281,25 @@ no integer-seed replay or OCaml engine is promised.
 
 `misc/scripts/lisp_host.py` owns native argument construction and implementation
 identity for current launchers, native suites and cold diagnostics.
-`HOLAI_LISP=sbcl|ecl|abcl|clisp` selects these available hosts;
-`HOLAI_SBCL`/`HOLAI_ECL`/`HOLAI_ABCL`/`HOLAI_CLISP` optionally select their
-executables. `HOLAI_LISPS` selects the matrix profiles. `run-lisp.sh` replaces
-the SBCL-only launcher without an alias.
+`HOLAI_LISP=abcl|sbcl|ecl|ccl|mkcl|clisp|cmucl_binary|clasp-common-lisp`
+selects the Nix-facing host ID. `HOLAI_<ID>` uppercased with hyphens replaced
+by underscores optionally overrides its executable; ordinary release requires
+the pinned executable binding. Native feature identity is independent:
+`:ccl`, `:mkcl`, `:cmu` and `:clasp` for the additions. `HOLAI_LISPS` selects
+matrix profiles; `run-lisp.sh` replaces the SBCL-only launcher without an alias.
+Batch startup suppresses user initialization and uses each implementation's
+actual CLI: CCL `--no-init --quiet --batch`; MKCL `-norc --quiet -nodebug`;
+CMUCL `-noinit -nositeinit -quiet -batch`; Clasp
+`--norc --noinform --non-interactive`. Clasp `--noinit` is deliberately not
+used: it disables normal image initialization rather than just user init.
+Load/evaluation arguments preserve startup ordering; error hooks exit nonzero,
+while normal completion uses UIOP's implementation-aware quit.
+The recipes follow
+[CCL v1.13](https://github.com/Clozure/ccl/blob/v1.13/level-1/l1-application.lisp),
+[MKCL v1.1.11](https://github.com/jcbeaudoin/MKCL/blob/v1.1.11/src/lsp/cmdline.lsp),
+[Clasp 2.7.0](https://github.com/clasp-developers/clasp/blob/2.7.0/src/core/commandLineOptions.cc)
+and the [CMUCL manual](https://www.common-lisp.net/project/cmucl/downloads/doc/cmu-user/introduction.html)
+(the manual is not separately version-pinned).
 SBCL retains 2048 MiB dynamic space and 256 MiB control stack; ECL uses its
 documented byte-valued heap/C-stack flags with the same budgets, retains native
 Lisp/frame-stack defaults and inherits the OS stack limit. Ordinary additional
@@ -3278,7 +3309,18 @@ ECL/ABCL/CLISP full-core native/cold profiles retain the approved 3600-second
 guard. Ordinary compiler/rejection/isolated checks remain at 120 seconds;
 negative proof-search bounds are unchanged.
 Require ASDF in a separate read/evaluation step before any ASDF/UIOP symbol is
-read. ECL requires a C compiler for compile-file, supplied by the Nix shell.
+read. If REQUIRE fails on an unbundled host such as CMUCL, load the real pinned
+ASDF source named by `HOLAI_ASDF_SOURCE`, not a substitute package.
+ECL and MKCL native compilation require their pinned compiler toolchains.
+MKCL's weak-pointer adapter uses builtin `FFI:CLINES`/`FFI:C-INLINE` with
+its bundled `<mkcl/gc/gc.h>` and configured C compiler for Boehm GC interop.
+That native compilation dependency is unrelated to signal FFI; interrupt
+delivery/restoration stays at native Lisp hooks.
+MKCL 1.1.11 emits C declarations whose empty argument lists use pre-C23
+semantics. Its launcher separately requires CMP, then appends `-std=gnu11`
+to `COMPILER::*CC-FLAGS*` and `COMPILER::*FAST-COMPILE-CC-FLAGS*` before ASDF
+or runtime compilation. This fixes GCC 15's changed default without global
+compiler environment changes or changing other Lisp implementations.
 
 Every release runs SBCL's complete native/PROOF/differential corpus, including
 real weak-retention/protocol, standard Random state/range and SIGINT behavior.
@@ -3286,8 +3328,8 @@ Every selected additional host must pass `holai/tests/compatibility.py`, not
 merely start ASDF. Its `runtime-fixtures` profile compiles/loads the runtime and
 maintained translated fixture consumers without loading the 46-file core.
 It measures defunc/OPTIONAL/tuple-list behavior, standard Random, structural
-matching and stale-consumer rejection, real SIGINT catch/re-enable/previous-hook
-restoration, translated naming and exact OCaml/translated fixture observations.
+matching and stale-consumer rejection, native Lisp interrupt restoration,
+translated naming and exact OCaml/translated fixture observations.
 The report records concrete counts, exact host identity, all covered source
 fingerprints, per-process 120-second guards, exit codes and log SHA256 digests.
 No full-core theorem/registry/PROOF count is inferred from these checks.
@@ -3299,20 +3341,35 @@ captures the then-current hook afresh. This is the user-approved deviation at
 the otherwise unused false boundary of OCaml Sys.catch_break: restore Lisp's
 native behavior, not the OS SIG_DFL disposition. No signal FFI, signal-mask
 manipulation, thread-profile override or Darwin FFI rebuild is required.
-The independent runtime-only regression installs a native prior hook, checks
-identity restoration across two enable/disable cycles, then delivers a third
-real OS SIGINT to that prior hook on the installing thread. It must not leak
-Sys.Break and must exit normally with code 0. Readiness alone is insufficient.
+The mandatory `system-interrupt-native.lisp` fixture invokes the implementation's
+actual native Lisp delivery entry: two Sys.Break catches across re-enable, then
+an independently installed prior hook. It reports exactly three assertions,
+normal exit 0 and separate native-interrupt metadata.
+The additional `system-interrupt.lisp` fixture delivers three real OS SIGINTs
+using readiness handshakes, with two catches and restored-hook exit 0.
+ABCL has no native SIGINT-specific Lisp hook: its OS check is explicitly
+`not_applicable`, with zero OS deliveries and a reason, never a passing OS test.
+Its native Lisp thread-interruption test remains mandatory. Java Signal,
+libc/LibSystem signal rewiring, SIG_DFL and forced-death success are not used.
+Timeout cleanup may kill a child, but the error/timeout remains a failed result.
 SBCL saves/restores the exact public `SB-EXT:*INVOKE-DEBUGGER-HOOK*` value.
 Only `SB-SYS:INTERACTIVE-INTERRUPT` becomes Sys.Break; other conditions forward
 to the saved hook. ECL captures/restores the `SI:TERMINAL-INTERRUPT` fdefinition
 before debugger entry and, on threaded ECL, uses `MP:INTERRUPT-PROCESS` to forward
 to the enabling process. ECL 26.5.5's `EXT:GET-SIGNAL-HANDLER` has a broken
 `ecl_return0` getter; debugger-hook conversion occurs too late, so neither is
-the adapter boundary. ABCL preserves the previous Java Signal handler and target
-thread. CLISP uses ANSI CLOS method discovery/addition/removal on its native
-global handler, including stock threaded builds, without FFI.
-The current local ARM64 Linux `make release` exited 0 in 283.44 seconds:
+the adapter boundary. ABCL uses its native Lisp thread-interruption entry.
+CLISP uses ANSI CLOS method discovery/addition/removal on its native global
+handler, including stock threaded builds, without FFI.
+Clasp preserves/restores the exact primary `MP:SERVICE-INTERRUPT` method
+specialized on `CORE:SIGINT`, using native method discovery/addition/removal.
+The direct-native fixture invokes `(mp:raise 'core:sigint)` along that service
+path. No `CORE:TERMINAL-INTERRUPT` fdefinition mutation or package unlock is used.
+MKCL uses its native SI package-protection APIs around the single
+`SIGINT-HANDLER` fdefinition write. An `UNWIND-PROTECT` restores the prior
+open/closed state even on nonlocal exit; neither runtime nor fixture leaves
+the package globally unlocked.
+Before the native-only cutover, local ARM64 Linux `make release` exited 0 in 283.44 seconds:
 all four profiles passed with three real SIGINT deliveries, two Sys.Break catches,
 re-enable and exact prior-hook restoration followed by native prior-hook exit 0.
 SBCL records `sigint_previous_hook_restored=true`; additional-host reports record
@@ -3320,8 +3377,9 @@ SBCL records `sigint_previous_hook_restored=true`; additional-host reports recor
 `restore-previous-native-lisp-hook` policy. Tagged SBCL counts remain 128 native,
 69 PROOF and 1,149 differential rows; all 52 production paths, 93 clean outputs
 and 55 unchanged pins passed. No source proof algorithm changes are involved.
-The new policy's 12-job hosted run remains pending push and observation;
-the earlier 10/12 hosted result and OS-default exit -2 measurements are historical.
+The preceding four-implementation hosted run passed 12/12 at `ac56ca3`
+(linked above); the expanded 16-job native-only matrix remains pending.
+The earlier 10/12 hosted result and OS-default exit -2 measurements are historical.
 ECL 26.5.5's weak-storage regression uses a native MP worker and join before
 the fixed pair of `SI:GC` calls, preserving all 28 assertions rather than adding
 retries or weakening collection checks. No production cache changes are involved.
@@ -3352,7 +3410,7 @@ and archives retain both `pattern.log` and `pattern-stale.log`, with the latter'
 SHA256 recorded in verification metadata; compiled consumer FASLs are not archived.
 
 Current per-host evidence lives in
-`misc/reports/implementations/{sbcl,ecl,abcl,clisp}/`. SBCL retains full native,
+`misc/reports/implementations/<Nix-facing-ID>/`. SBCL retains full native,
 cold diagnostic and raw initialization/observation reports. Additional hosts
 retain `compatibility.json` and matching `compatibility/` logs. The aggregate
 matrix names each selected profile: `full-core` / `full_core_verified` for SBCL,
@@ -3371,6 +3429,19 @@ relabelled or overwritten with another host's output. Heap image saving remains 
 SBCL-only scratch aid and is never a release prerequisite.
 
 ### Measured ordinary profiles
+
+The final-source native ARM64 Linux release passed in 286.76 seconds with
+SBCL full core and three additional-host compatibility profiles. Observed SBCL
+reports record 130 native/30 protocol/69 PROOF checks, 1,150 observations
+(1,147 exact + two structural registries + one Random property), and
+194,839 core / 207,095 fixture-inclusive map entries. Cold diagnostics covered
+52 production files; clean generation reproduced 93 outputs and retained 55 pins.
+This validates the final runtime/launcher source fingerprints, including CCL
+generic-method restoration, MKCL package-protected hook writes and native fixtures.
+MKCL and CMUCL bounded profiles passed only under ARM64-hosted QEMU; Clasp has
+isolated weak/protocol and interrupt passes under QEMU. None is native x86
+verification or a substitute for the pending 16-job CI matrix. See release notes
+for isolated report locations, measured durations and the historical 12/12 run.
 
 The retained previous-distribution implementation-tagged reports record passing
 SBCL full-core and ECL/ABCL/CLISP runtime-fixture profiles. SBCL executed all 46

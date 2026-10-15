@@ -75,11 +75,13 @@ let allocate_suffix forbidden printed =
    let logical=String.uppercase_ascii printed in
    if forbidden logical then choose (printed^"%") else printed,logical in
  choose printed
+(* Bare synthetic call heads must retain their inherited CL identity. Source
+   bindings with these spellings use the ordinary % target suffix allocator. *)
 let control_names = ["LAMBDA";"FUNCTION";"PROGN";"FLET";"LABELS";"QUOTE";
  "BLOCK";"RETURN-FROM";"CATCH";"THROW";"UNWIND-PROTECT";"HANDLER-CASE";
  "DECLARE";"THE";"DEFUN";"DEFPARAMETER";"DEFPACKAGE";"IN-PACKAGE";
  "EVAL-WHEN";"LET";"LET*";"SETF";"IF";"COND";"DEFUNC";"LAMBDAC";
- "LABELSC";"FLETC"]
+ "LABELSC";"FLETC";"FUNCALL"]
 type context = {
  package:string; source:string; text:string; own:string list; spellings:(string * string) SM.t;
  totals:int SM.t; mutable occurrences:int SM.t; mutable globals:SS.t;
@@ -195,7 +197,7 @@ let runtime_owner name = match name with
  | "array-make" | "array-set" | "bool-and" | "bool-or" | "channel-length"
  | "char-chr" | "close-channel" | "compare" | "cpu-time" | "define-exception"
  | "defrecord" | "defunc" | "defvariant" | "End_of_file" | "end_of_file" | "exception-string"
- | "Failure" | "failure" | "failwith" | "fletc" | "funcall" | "function-value"
+ | "Failure" | "failure" | "failwith" | "fletc" | "function-value"
  | "gcd-num" | "input-line" | "int-div" | "int-mod" | "int-of-num"
  | "int-of-string" | "invalid-arg" | "Invalid_argument" | "invalid_argument" | "labelsc" | "lambdac"
  | "list-exists" | "list-fold-left" | "make-end_of_file" | "make-failure"

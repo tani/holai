@@ -1,1 +1,1 @@
-PASS (sbcl): 46 upstream files; 194839 core source-map entries; 207058 total mapped entries; 10 rejection checks; quotation parsing; deterministic regeneration; 1149 differential observations (1146 exact + 2 structural registry + 1 property-validated Random).
+PASS (sbcl): 46 upstream files; 194839 core source-map entries; 207095 total mapped entries; 10 rejection checks; quotation parsing; deterministic regeneration; 1150 differential observations (1147 exact + 2 structural registry + 1 property-validated Random).

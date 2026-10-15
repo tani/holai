@@ -22,17 +22,40 @@
           pkgs = packagesFor system;
           ocamlPackages = pkgs.ocaml-ng.ocamlPackages_4_14;
           candidates = [ "abcl" "sbcl" "ecl" "ccl" "mkcl" "clisp" "cmucl_binary" "clasp-common-lisp" ];
-          adapters = [ "sbcl" "ecl" "abcl" "clisp" ];
+          binaries = { cmucl_binary = "lisp"; clasp-common-lisp = "clasp"; };
           status = id:
-            let attempt = builtins.tryEval pkgs.${id};
-            in if !attempt.success then { available = false; reason = "Package attribute missing or evaluation failed"; }
-            else if !(pkgs.lib.meta.availableOn pkgs.stdenv.hostPlatform attempt.value)
-              then { available = false; reason = "Unsupported platform ${system}"; }
-            else if attempt.value.meta.broken or false
-              then { available = false; reason = "Package marked broken in pinned nixpkgs"; }
-            else if !(builtins.elem id adapters)
-              then { available = false; reason = "Package available; no implemented runtime adapter"; }
-            else { available = true; reason = null; };
+            let
+              package = pkgs.${id};
+              attempt = builtins.tryEval (
+                let metadata = {
+                      version = package.version;
+                      executableName = binaries.${id} or id;
+                      platforms = package.meta.platforms or [ ];
+                      broken = package.meta.broken or false;
+                      supported = pkgs.lib.meta.availableOn pkgs.stdenv.hostPlatform package;
+                    };
+                in builtins.deepSeq metadata metadata);
+              # Do not instantiate excluded packages merely to report availability.
+              excluded = { executable = null; drvPath = null; packageSystem = null; };
+            in if !attempt.success then excluded // {
+              available = false; reason = "Package attribute missing or evaluation failed on ${system}";
+              version = null; executableName = binaries.${id} or id;
+            }
+            else attempt.value // (
+              if !attempt.value.supported
+                then excluded // { available = false; reason = "Unsupported platform ${system}"; }
+              else if attempt.value.broken
+                then excluded // { available = false; reason = "Package marked broken in pinned nixpkgs"; }
+              else
+                let binding = builtins.tryEval (
+                      let metadata = {
+                            executable = "${package}/bin/${binaries.${id} or id}";
+                            packageSystem = package.system;
+                            drvPath = package.drvPath;
+                          };
+                      in builtins.deepSeq metadata metadata);
+                in if binding.success then binding.value // { available = true; reason = null; }
+                else excluded // { available = false; reason = "Package derivation evaluation failed on ${system}"; });
           available = builtins.filter (id: (status id).available) candidates;
           inherit (ocamlPackages) ocaml;
           streams = ocamlPackages.camlp-streams;
@@ -105,6 +128,7 @@
             CAMLPLIB = "${siteLib camlp5}/camlp5";
             STREAMLIB = "${siteLib streams}/camlp-streams";
             HOLAI_LISPS = builtins.concatStringsSep "," available;
+            HOLAI_ASDF_SOURCE = "${pkgs.asdf}/lib/common-lisp/asdf/build/asdf.lisp";
             HOLAI_REQUIRED_LISPS = "sbcl";
             HOLAI_LISP_AVAILABILITY = builtins.toJSON (builtins.listToAttrs (map (id: {
               name = id; value = status id;
@@ -113,7 +137,7 @@
               name = id; value = pkgs.${id}.version;
             }) available));
             HOLAI_LISP_EXECUTABLES = builtins.toJSON (builtins.listToAttrs (map (id: {
-              name = id; value = "${pkgs.${id}}/bin/${id}";
+              name = id; value = (status id).executable;
             }) available));
             HOLAI_TOOLCHAIN_VERSIONS = builtins.toJSON {
               ocaml = ocaml.version;
@@ -155,16 +179,18 @@
         let
           pkgs = packagesFor system;
           ids = nixpkgs.lib.splitString "," self.devShells.${system}.default.HOLAI_LISPS;
-          binaries = { cmucl_binary = "lisp"; clasp-common-lisp = "clasp"; };
-          evalFlags = { clisp = "-x"; cmucl_binary = "-eval"; mkcl = "-eval"; };
+          shell = self.devShells.${system}.default;
         in builtins.listToAttrs (map (id: {
           name = "asdf-${id}";
-          value = pkgs.runCommand "holai-asdf-${id}" { nativeBuildInputs = [
-            pkgs.${id}
-          ]; } ''
+          value = pkgs.runCommand "holai-asdf-${id}" {
+            nativeBuildInputs = [ pkgs.python3 pkgs.${id} ];
+            HOLAI_LISP = id;
+            HOLAI_LISP_EXECUTABLES = shell.HOLAI_LISP_EXECUTABLES;
+            HOLAI_ASDF_SOURCE = shell.HOLAI_ASDF_SOURCE;
+          } ''
             export HOME=$TMPDIR
-            ${binaries.${id} or id} ${evalFlags.${id} or "--eval"} \
-              '(progn (require "asdf") (funcall (intern "QUIT" "UIOP") 0))'
+            export PYTHONPATH=${self}/misc/scripts
+            python3 -c 'import subprocess; from lisp_host import asdf_bootstrap, command; subprocess.run(command(extra=["--eval", asdf_bootstrap(), "--eval", "(assert (find-package \"ASDF\"))", "--eval", "(assert (find-package \"UIOP\"))"]), check=True, timeout=120)'
             touch "$out"
           '';
         }) ids));

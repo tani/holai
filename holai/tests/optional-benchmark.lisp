@@ -31,4 +31,4 @@
   (measure-entry trial "partial-create-call" (lambda () (funcall (bench-add 1) 2 3)) 300000)
   (measure-entry trial "partial-existing" (lambda () (funcall *bench-prefix* 2 3)) 1000000)
   (measure-entry trial "excess" (lambda () (bench-return 1 2 3)) 300000)
-  (measure-entry trial "runtime-funcall" (lambda () (holai.runtime.core:funcall *bench-lambda* 1 2 3)) 1000000))
+  (measure-entry trial "standard-funcall" (lambda () (funcall *bench-lambda* 1 2 3)) 1000000))

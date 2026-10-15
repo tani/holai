@@ -50,24 +50,24 @@
       (list
         (holai.tactics:FIRST_ASSUM
           (holai.runtime.core:lambdac (th)
-            (holai.runtime.core:funcall holai.tactics:ACCEPT_TAC
-                                  (holai.runtime.core:funcall holai.bool:CONJUNCT2 th))))
+            (funcall holai.tactics:ACCEPT_TAC
+                                  (funcall holai.bool:CONJUNCT2 th))))
         (holai.tactics:FIRST_ASSUM
           (holai.runtime.core:lambdac (th)
-            (holai.runtime.core:funcall holai.tactics:ACCEPT_TAC
-                                  (holai.runtime.core:funcall holai.bool:CONJUNCT1 th)))))))
+            (funcall holai.tactics:ACCEPT_TAC
+                                  (funcall holai.bool:CONJUNCT1 th)))))))
   "p /\\ q ==> q /\\ p" "literal THENL branches")
 
 (let ((branches
         (list
           (holai.tactics:FIRST_ASSUM
             (holai.runtime.core:lambdac (th)
-              (holai.runtime.core:funcall holai.tactics:ACCEPT_TAC
-                                    (holai.runtime.core:funcall holai.bool:CONJUNCT2 th))))
+              (funcall holai.tactics:ACCEPT_TAC
+                                    (funcall holai.bool:CONJUNCT2 th))))
           (holai.tactics:FIRST_ASSUM
             (holai.runtime.core:lambdac (th)
-              (holai.runtime.core:funcall holai.tactics:ACCEPT_TAC
-                                    (holai.runtime.core:funcall holai.bool:CONJUNCT1 th)))))))
+              (funcall holai.tactics:ACCEPT_TAC
+                                    (funcall holai.bool:CONJUNCT1 th)))))))
   (check-closed-proof
     (prove-proof "p /\\ q ==> q /\\ p"
       (proof holai.tactics:DISCH_TAC holai.tactics:THEN
@@ -120,7 +120,7 @@
     (progn
       (prove-proof "T /\\ T"
         (proof #'holai.tactics:CONJ_TAC holai.tactics:THENL
-          (list (holai.runtime.core:funcall holai.tactics:ACCEPT_TAC holai.bool:TRUTH))))
+          (list (funcall holai.tactics:ACCEPT_TAC holai.bool:TRUTH))))
       nil)
     (holai.runtime.core:failure () t))
   "THENL rejects too few branches")
@@ -156,7 +156,7 @@
 
 (let ((compose holai.tactics:THEN))
   (holai.runtime.core:fletc
-      ((named-compose (left right) (holai.runtime.core:funcall compose left right)))
+      ((named-compose (left right) (funcall compose left right)))
     (check-closed-proof
       (prove-proof "p ==> p"
         (proof holai.tactics:DISCH_TAC #'named-compose
@@ -183,12 +183,12 @@
            (push :left-construct trace)
            (holai.runtime.core:lambdac (goal)
              (push :left-run trace)
-             (holai.runtime.core:funcall holai.tactics:DISCH_TAC goal)))
+             (funcall holai.tactics:DISCH_TAC goal)))
          (make-right ()
            (push :right-construct trace)
            (holai.runtime.core:lambdac (goal)
              (push :right-run trace)
-             (holai.runtime.core:funcall
+             (funcall
                (holai.tactics:FIRST_ASSUM holai.tactics:ACCEPT_TAC) goal))))
     (check-closed-proof
       (prove-proof "p ==> p"
@@ -199,7 +199,7 @@
       (setf trace nil)
       (check-closed-proof
         (prove-proof "p ==> p"
-          (holai.runtime.core:funcall holai.tactics:THEN (make-left) (make-right)))
+          (funcall holai.tactics:THEN (make-left) (make-right)))
         "p ==> p" "explicit call identity")
       (check-proof (and (equal expected (reverse trace)) (equal dsl-trace trace))
                    "explicit call has the same once-only trace")
@@ -218,7 +218,7 @@
             #'holai.tactics:ORELSE
             (holai.runtime.core:lambdac (goal)
               (incf right-runs)
-              (holai.runtime.core:funcall holai.tactics:DISCH_TAC goal))))
+              (funcall holai.tactics:DISCH_TAC goal))))
         nil)
       (holai.runtime.core:invalid_argument () t))
     "ORELSE propagates Invalid_argument instead of catching it")
