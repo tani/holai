@@ -3529,7 +3529,9 @@ all three explicitly report `full_core_verified: false`. Fixture fingerprints
 cover Lisp sources, maps, provider data and inventory only; compiled FASLs are
 neither captured by those fingerprints nor shipped.
 
-The final `nix develop path:. --command make release` exited 0 in 269.03 seconds.
+At this historical checkpoint, `nix develop path:. --command make release`
+exited 0 in 269.03 seconds. The following counts describe that older artifact,
+not the current release archive.
 All 46 inputs were regenerated, full tests and cold diagnostics passed, and
 inventory used SBCL's full-core evidence without requiring additional-host
 full-core reports. Fresh isolated clean generation matched all 94 outputs and
