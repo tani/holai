@@ -127,6 +127,9 @@ def verify_interrupt():
     catch_ready = 0
     previous_ready = False
     previous_restored = False
+    # CCL's pinned entry point retains a shell parent; SIGINT sent to that
+    # wrapper alone never reaches Lisp. The physical fixture reports its PID.
+    target_pid = None if implementation() == "ccl" else proc.pid
     try:
         while True:
             line = events.get(timeout=max(0, deadline - time.monotonic()))
@@ -134,10 +137,28 @@ def verify_interrupt():
                 break
             lines.append(line)
             marker = line.strip()
-            if marker == "SIGINT catch ready":
+            if marker.startswith("SIGINT target pid:"):
+                assert implementation() == "ccl" and target_pid is None and catch_ready == 0, (
+                    "Unexpected or repeated SIGINT target PID", marker)
+                match = re.fullmatch(r"SIGINT target pid: ([1-9][0-9]*)", marker)
+                assert match, ("Invalid SIGINT target PID", marker)
+                candidate = int(match.group(1))
+                ancestor = candidate
+                seen = set()
+                while ancestor != proc.pid:
+                    assert ancestor > 1 and ancestor not in seen, (
+                        "SIGINT target is not a child of the launched process", candidate)
+                    seen.add(ancestor)
+                    # POSIX ps also supports non-Linux CCL installations.
+                    parent = subprocess.run(["ps", "-o", "ppid=", "-p", str(ancestor)],
+                                            capture_output=True, text=True, check=True, timeout=10)
+                    ancestor = int(parent.stdout.strip())
+                target_pid = candidate
+            elif marker == "SIGINT catch ready":
+                assert target_pid is not None, "Missing CCL SIGINT target PID handshake"
                 catch_ready += 1
                 assert catch_ready <= 2, "Unexpected extra SIGINT catch cycle"
-                proc.send_signal(signal.SIGINT)
+                os.kill(target_pid, signal.SIGINT)
             elif marker == "SIGINT adapter check passed":
                 caught += 1
                 assert caught == catch_ready, "SIGINT catch marker without readiness"
@@ -145,7 +166,7 @@ def verify_interrupt():
                 assert caught == catch_ready == 2, "Missing actual initial/re-enabled Sys.Break delivery"
                 assert not previous_ready, "Duplicate prior-hook readiness"
                 previous_ready = True
-                proc.send_signal(signal.SIGINT)
+                os.kill(target_pid, signal.SIGINT)
             elif marker == "SIGINT previous hook restored":
                 assert previous_ready, "Prior hook ran before actual third SIGINT"
                 assert not previous_restored, "Prior hook ran more than once"

@@ -222,7 +222,15 @@ def main():
                            if record["exit_code"] != record["expected_exit_code"]), None)
             if failed is not None:
                 try:
-                    message += "\n" + (reports / failed["log"]).read_text(errors="replace")[-7999:]
+                    output = (reports / failed["log"]).read_text(errors="replace")
+                    budget = 10000 - len(message) - 1
+                    if len(output) > budget:
+                        omission = "\n... process output omitted; full output in " + failed["log"] + " ...\n"
+                        available = budget - len(omission)
+                        head = (available + 1) // 2
+                        tail = available // 2
+                        output = output[:head] + omission + output[-tail:]
+                    message += "\n" + output
                 except OSError:
                     pass
             message = message.replace("%", "%25").replace("\r", "%0D").replace("\n", "%0A")

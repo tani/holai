@@ -26,9 +26,9 @@ Sources at the locked nixpkgs revision:
 and [Clasp](https://github.com/NixOS/nixpkgs/blob/a033e66ab94a6bedf2c3d58d93a36319d3cbbbaf/pkgs/development/compilers/clasp/default.nix).
 ARM64-hosted QEMU version probes, not native x86 verification, observed
 MKCL `1.1.11`, CMUCL `21d (21D Unicode)` and Clasp
-`cclasp-boehmprecise-2.7.0-cst`, all with exit 0. CCL failed to reach Lisp
-initialization under QEMU; that emulation failure does not establish an
-unsupported native x86 package and does not remove its CI job.
+`cclasp-boehmprecise-2.7.0-cst`, all with exit 0. The initial CCL user-mode
+QEMU probe failed before Lisp initialization; the later full-system kernel
+reproduction below supersedes that probe, not the native-host CI requirement.
 The launcher validates implementation type and primary feature independently
 of its Nix ID (`:cmu` for CMUCL, `:clasp` for Clasp). Executables and versions
 remain bound to exported pinned-package metadata. ASDF startup uses separate
@@ -41,9 +41,86 @@ the eight unavailable ARM cells above: **16 runnable jobs**, not 24 passes.
 Every actual job requires its selected package and executable; absence fails,
 never skips. SBCL runs the full release; all other implementations run the
 120-second-per-process runtime/translated-fixture profile, not full HOL core.
-The new 16-job matrix is **pending execution**.
+Historical native [run 38668191870](https://github.com/tani/holai/actions/runs/38668191870)
+at `d3ac15b8` passed **15/16** jobs. Only CCL's stale-consumer typed rejection
+failed with exit 255; all other 15 native jobs passed, including the three SBCL
+full releases. This is not a repaired CCL pass or a new 16/16 result.
 
-The final-source native ARM64 Linux `make release` passed in 286.76 seconds with
+### CCL compiler-host repair and measured evidence
+
+Production matching remains the standard-CL static structural compiler, with
+unchanged source bindings, algorithms and data representations and no Trivia
+dependency. Declaration ABI validation must run when a compiled consumer loads;
+successful matching remains independent of the declaration registry.
+
+CCL 1.13's `compiler/nx1.lisp:1151–1164` represents compile-file
+`load-time-value` as a deferred immediate. Its x86 IF compiler
+(`compiler/X86/x862.lisp:8626–8628`) calls `nx2-constant-form-value`
+(`compiler/nx0.lisp:1927–1935`), which treats every immediate as constant.
+Consequently the original direct conditional AND/LTV test can be folded as
+truthy and lose the ABI-check initializer; this is not an exit-code conversion
+or a wrapped typed condition. In contrast, `compiler/nx2.lisp:376–383`
+excludes deferred LTV tokens from `acode-constant-p`.
+Only `#+ccl` now emits a standalone PROGN load-time ABI check followed by the
+IF type test: `compiler/X86/x862.lisp:1818–1819` retains ignored deferred
+immediates, and `lib/nfcomp.lisp:1918–1933` /
+`level-0/nfasload.lisp:455–458` serialize and directly invoke the initializer.
+The other seven implementations retain the exact original AND shape, because
+CLISP can eliminate an unused standalone PROGN load-time value. No runtime
+registry lookup or allocation is added; typed `pattern-declaration-changed`,
+its declaration-name assertion and required child exit 17 remain mandatory.
+
+Under a full-system x86 Linux kernel emulated by QEMU on ARM, the original CCL
+consumer failed with “Stale pattern consumer unexpectedly loaded” and exit 255.
+After the repair, 45 pattern checks and typed `Separate` rejection passed
+(marker 1, child exit 17, VM exit 0) in **105.03 seconds**. This is
+kernel-emulated evidence, not native x86 hardware or a complete compatibility
+profile. The native ARM64 CLISP bounded profile passed in **9.04 seconds**,
+including stale exit 17, preserving its original AND form. Fresh native CCL CI
+remains required; the current-code local release result is recorded below.
+
+Failure annotations now retain escaped head and tail within **10,000 characters**,
+rather than truncating away the root error at the start of a long backtrace.
+An actual failing SBCL smoke exercised this path in 1.29 seconds and preserved
+head, tail and root error. Better diagnostics never count a failed process as a pass.
+
+The real-SIGINT harness exposed a separate test-only boundary: pinned Nix
+`bin/ccl` is a Bash wrapper without `exec`. Signalling its Python `Popen` PID
+missed the Lisp child and produced timeout exit 143. The CCL physical fixture
+now emits exactly one positive `SIGINT target pid: N` marker from `ccl::getpid`;
+the Python harness validates its POSIX `ps` ancestry under the launched wrapper,
+sends all three signals to that Lisp PID, and waits for wrapper exit 0.
+The other seven implementations keep their original `Popen` PID targeting;
+production launcher/runtime behavior is unchanged. In the full-system x86
+kernel VM, the corrected physical check passed in **46.23 seconds**: wrapper
+79, Lisp target 80, three real SIGINT deliveries, two Sys.Break catches,
+prior-hook restoration, wrapper exit 0 and VM exit 0. This isolated emulated
+pass is not a native CCL or complete compatibility pass.
+
+The subsequent complete CCL bounded runtime/translated-fixture profile passed
+in **312.43 seconds** under the full-system x86 Linux guest kernel
+(`_build/ccl-vm-run.sleh3T`, VM exit 0). It recorded 45 patterns, typed
+`Separate` stale rejection/exit 17, protocol 30, OPTIONAL 84, tuple 16,
+Random 1,816, three direct-native interrupt checks and three real SIGINT
+deliveries with two catches, prior-hook restoration and wrapper exit 0.
+All three translated fixture units matched **33 exact OCaml observations**,
+including nine naming rows. This is a complete bounded compatibility pass on
+system-emulated x86 Linux, not native hardware, full HOL core, or a repaired
+16/16 native CI matrix.
+
+The fresh native ARM64 four-implementation `make release` passed in
+**278.84 seconds**, after the matcher, interrupt-harness and logger changes.
+SBCL recorded **130 native / 30 protocol / 69 PROOF** checks and **1,150**
+observations: 1,147 exact, two structural registry comparisons and one Random
+property row. All 52 cold production units had zero compiler diagnostics;
+93 clean outputs were identical and 55 retained pins unchanged. ECL, ABCL and
+CLISP passed bounded compatibility. This is current-code local release evidence,
+not repaired native CCL or 16/16 hosted evidence. Final documentation repackaging
+must determine the archive size and payload count; neither is fixed here.
+
+### Previous pre-repair local release
+
+The pre-repair native ARM64 Linux `make release` passed in 286.76 seconds with
 SBCL full-core and ECL/ABCL/CLISP bounded compatibility. Observed SBCL reports
 record 130 native checks, protocol 30, PROOF 69, and 1,150 corpus observations:
 1,147 exact, two structural registry comparisons and one Random property row.
@@ -51,10 +128,10 @@ Map audits covered 194,839 core and 207,095 fixture-inclusive entries.
 The release gate also validated all 52 cold-audited production files,
 93 identical clean outputs and 55 retained input pins. All four hosts passed
 three direct-native interrupt checks; real OS-SIGINT checks passed where
-supported, with ABCL explicitly not applicable. The producer reported 447
-payload files and 6,063,447 bytes before final documentation/repackaging;
-archive size is not fixed. This pass includes the final CCL generic-method,
-MKCL protected-hook setter and shared native-interrupt fixture changes.
+supported, with ABCL explicitly not applicable. This historical pass includes
+the CCL generic-method, MKCL protected-hook setter and shared native-interrupt
+fixture changes, but predates the deferred-LTV repair. It does not fix the final
+archive's payload count or byte size, or establish a fresh post-repair release.
 
 Additional implementation execution remains **emulated**, not native x86:
 CMUCL's complete bounded runtime/fixture profile passed in 31.45 seconds under
@@ -71,8 +148,9 @@ emulated, not native release evidence.
 Clasp's weak/protocol fixture passed all 30 checks in 113.91 seconds and its
 direct-native interrupt fixture passed three checks in 108.34 seconds under
 QEMU. These isolated results do not establish a complete compatibility pass.
-CCL still requires native-host CI; a pre-initialization QEMU failure does not
-make the pinned x86 package unavailable.
+CCL's later kernel-emulated repair evidence is recorded above; neither its
+initial user-mode emulation failure nor the repaired VM pass substitutes for
+fresh native-host CI.
 
 The prior four-implementation matrix has observed hosted evidence:
 [run 38661471081](https://github.com/tani/holai/actions/runs/38661471081),

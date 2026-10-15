@@ -55,18 +55,56 @@ readable OCaml-to-Lisp translation, even when argument evaluation order differs.
   Preserve ECL's native MP worker/join weak-GC regression: all 28 assertions and
   two explicit collections, without production cache changes.
   Prior hosted run [38661471081](https://github.com/tani/holai/actions/runs/38661471081)
-  at ac56ca3 passed 12/12. The new three-host/eight-candidate matrix has eight
-  explicit ARM exclusions and 16 runnable jobs; its runtime verification is pending.
+  at ac56ca3 passed 12/12. The three-host/eight-candidate matrix has eight
+  explicit ARM exclusions and 16 runnable jobs. Historical native run
+  [38668191870](https://github.com/tani/holai/actions/runs/38668191870) at d3ac15b8
+  passed 15/16; only CCL stale-consumer typed rejection failed with exit 255.
+  Do not call the repaired CCL profile or all 16 native jobs green without new evidence.
   SBCL runs release; every other selected implementation runs bounded compatibility.
   Captured phase stdout/stderr and public GitHub Actions error annotations support
   precise diagnosis instead of blind retries. Earlier measurements above are history.
-- Final-source native ARM64 Linux release passed in 286.76 seconds;
+- Pre-repair native ARM64 Linux release passed in 286.76 seconds;
   SBCL reports 130 native/30 protocol/69 PROOF checks and 1,150 rows
   (1,147 exact + two structural registries + one Random property), with
   194,839 core / 207,095 fixture-inclusive maps, 52 cold units, 93 clean outputs
-  and 55 pins. Current runtime/launcher source fingerprints are validated.
+  and 55 pins. Its runtime/launcher fingerprints validate that historical source only.
   MKCL/CMUCL bounded passes and Clasp isolated passes under QEMU are emulated,
   never native x86 release evidence. Keep earlier 128/129 and 1,149 counts historical.
+- Preserve the static matcher's compile-time descriptor / load-time ABI boundary
+  and registry-independent execution; no source binding, algorithm or data change.
+  CCL 1.13 can fold a direct conditional deferred LOAD-TIME-VALUE and drop its
+  initializer: only #+ccl uses a standalone PROGN ABI check before the IF type test.
+  The other seven implementations retain the original AND guard, since CLISP
+  drops unused standalone PROGN load-time values. Keep typed stale rejection,
+  the declaration name assertion and child exit 17 mandatory on every host.
+  Full-system x86 Linux under ARM QEMU reproduced pre-fix exit 255 and post-fix
+  45 pattern checks / Separate typed rejection marker 1, child exit 17, VM exit 0
+  in 105.03 seconds: emulated evidence, not native hardware or full compatibility.
+  Native ARM64 CLISP's bounded profile passed in 9.04 seconds with stale exit 17.
+  Failure annotations keep escaped head and tail within 10,000 characters;
+  an actual failing SBCL smoke preserved the root error. Never replace a failure
+  with a pass based on diagnostic output or reuse pre-repair release fingerprints.
+- Pinned Nix bin/ccl is a Bash non-exec wrapper. The real-SIGINT test must
+  consume exactly one positive CCL `SIGINT target pid: N` marker, validate POSIX
+  ps ancestry under Popen's wrapper, signal Lisp three times and wait for wrapper
+  exit 0. Signalling only the wrapper missed Lisp and timed out with exit 143.
+  Keep this test-only: other seven hosts retain Popen PID targeting and no
+  production launcher/runtime change is needed. Kernel-emulated physical check
+  passed in 46.23 seconds (wrapper79/Lisp80, three real signals, two Sys.Break
+  catches, restored prior hook, wrapper/VM exit0), not native/full-profile proof.
+- Current-code ARM64 four-host release passed in 278.84 seconds after matcher,
+  interrupt-harness and logger changes: 130 native/30 protocol/69 PROOF,
+  1,150 rows (1,147 exact/two structural/one property), 52 cold units with zero
+  compiler diagnostics, 93 identical clean outputs and 55 unchanged pins.
+  This is local SBCL full-core plus ECL/ABCL/CLISP bounded evidence, not repaired
+  native CCL or hosted 16/16. Documentation repackaging determines final archive
+  bytes/payload count; do not hardcode checkpoint packaging figures as final.
+- Complete CCL bounded runtime/translated-fixture profile passed in 312.43s
+  under a system-emulated x86 Linux kernel (_build/ccl-vm-run.sleh3T, VM exit0):
+  patterns45/stale17 typed Separate/protocol30/OPTIONAL84/tuple16/Random1816,
+  native interrupts3, real SIGINT3/two catches/prior restoration/wrapper0,
+  three fixtures/33 exact OCaml rows/nine naming rows. This is complete bounded
+  emulated compatibility, not native hardware, full HOL core or repaired native16/16.
 - Keep THEN and the literal source helper then1_ as separate bindings.
   The one-subgoal helper must reject multiple branches; do not merge it into
   the grammar-encoded tactical name. Preserve the branch-count regressions.

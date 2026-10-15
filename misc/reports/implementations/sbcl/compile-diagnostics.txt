@@ -1201,7 +1201,7 @@ AUDIT_BEGIN LOAD holai/generated/realarith.lisp
 0..0..1..2..5..18..35..solved at 63
 0..0..1..2..solved at 6
 0..0..2..4..10..18..34..76..138..336..872..2366..solved at 5076
-CPU time (user): 0.3121499999999955d0
+CPU time (user): 0.29989100000000235d0
 LOADED_UNIT holai/generated/realarith.lisp
 AUDIT_END LOAD holai/generated/realarith.lisp
 AUDIT_BEGIN COMPILE holai/generated/real.lisp
@@ -3748,7 +3748,7 @@ Warning: inventing type variables
 0..0..solved at 2
 0..0..1..2..9..19..31..63..105..solved at 121
 0..0..solved at 2
-CPU time (user): 0.008168000000004838d0
+CPU time (user): 0.02897800000000217d0
 0..0..1..3..8..14..33..66..99..154..219..284..365..450..535..843..1220..1621..2226..2892..3660..5020..6510..8326..10667..13397..16922..20942..25267..30727..solved at 35152
 0..0..solved at 2
 0..0..solved at 2

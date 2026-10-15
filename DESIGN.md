@@ -19,7 +19,7 @@ Priority, in order:
 
 1. Preserve source syntax, binding structure, declaration boundaries, names,
    patterns, algorithms, and the direction of recursive calls.
-2. Produce ordinary, reasonably shallow Lisp forms, using Trivia for patterns.
+2. Produce ordinary, reasonably shallow Lisp forms with standard-CL structural patterns.
 3. Make every transformation deterministic and traceable to source locations.
 4. Preserve observable behavior where these priorities allow; report differences
    and test the runtime and kernel separately.
@@ -161,12 +161,62 @@ x86_64-linux/ubuntu-24.04) with eight IDs. Eight explicit ARM exclusions yield
 SBCL runs `HOLAI_LISPS=sbcl make release`; seven other IDs use bounded
 compatibility only. Checkout credentials are not persisted; separate
 host/implementation artifacts retain phase logs and public failure annotations.
-The prior four-implementation
-[run 38661471081](https://github.com/tani/holai/actions/runs/38661471081)
-at `ac56ca3` passed 12/12. That historical OS-interoperability policy and result
-do not validate this native-Lisp-only eight-candidate cutover: the expanded
-16-job runtime matrix remains pending. Flake checks exercise ASDF startup,
+The expanded matrix's historical
+[run 38668191870](https://github.com/tani/holai/actions/runs/38668191870)
+at `d3ac15b8` passed 15/16 native jobs; only CCL's typed stale-consumer
+rejection failed (exit 255). Those other 15 passes do not establish a CCL
+pass or validate the subsequent repair. Flake checks exercise ASDF startup,
 not production runtime or full-core compatibility.
+
+The structural matcher emits standard Common Lisp, with no production Trivia
+dependency. Declaration descriptors are consulted at macro expansion and checked
+against the compiled consumer's ABI at load time; successful matching thereafter
+is registry-independent. This compiler-host boundary must not change source
+bindings, algorithms or data representations. CCL 1.13 folds a direct conditional
+test containing a deferred `load-time-value` and can discard its initializer.
+Only `#+ccl` emits a standalone `(progn (load-time-value <ABI-check>) (if <type-test> ...))`
+instead. The other seven implementations retain the original `and` test:
+CLISP can discard an unused standalone PROGN load-time value. Neither path may
+weaken the typed `pattern-declaration-changed` rejection.
+Primary CCL 1.13 anchors: `compiler/nx1.lisp:1151–1164` creates the deferred
+immediate; `compiler/X86/x862.lisp:8626–8628` folds IF tests through
+`compiler/nx0.lisp:1927–1935`, which treats it as constant.
+`compiler/X86/x862.lisp:1818–1819` retains the ignored deferred immediate in
+the standalone form. Initializer serialization/load anchors are in the release notes.
+
+A full-system x86 Linux kernel under ARM-hosted QEMU reproduced CCL's pre-fix
+exit 255, then passed 45 pattern checks and the named `Separate` typed rejection
+(marker 1, child exit 17; VM exit 0) after the fix in 105.03 seconds. This is
+kernel-emulated evidence, not native x86 hardware or a full compatibility pass.
+The native ARM64 CLISP bounded profile passed in 9.04 seconds with stale exit 17,
+preserving its original guard shape. A fresh native CCL CI pass remains required.
+Failure annotations retain escaped log head and tail within 10,000 characters;
+an actual failing SBCL smoke confirmed preservation of the root error, rather
+than a tail-only backtrace. This diagnostic change does not turn failures into passes.
+
+CCL's real-SIGINT test also distinguishes the launcher wrapper from the Lisp
+process: pinned Nix `bin/ccl` is Bash without `exec`, so signalling `Popen.pid`
+missed Lisp and timed out (exit 143). Test-only CCL output now supplies one
+positive `SIGINT target pid: N` from `ccl::getpid`; Python validates POSIX `ps`
+ancestry under the wrapper, signals that Lisp PID three times, then requires
+wrapper exit 0. The other seven PID paths and production launcher/runtime stay
+unchanged. The physical check passed in 46.23 seconds in the kernel VM
+(wrapper 79, Lisp 80, three signals, two Sys.Break catches, prior-hook restoration,
+wrapper/VM exit 0), not native hardware or full compatibility evidence.
+The fresh native ARM64 four-host `make release` passed in 278.84 seconds after
+the matcher, interrupt harness and logger changes: 130 native/30 protocol/69 PROOF,
+1,150 observations (1,147 exact, two structural, one property), all 52 cold units
+with zero compiler diagnostics, 93 identical clean outputs and 55 unchanged pins.
+This validates current code locally, not the still-required repaired native CI matrix;
+subsequent documentation repackaging does not fix archive bytes or payload count.
+Separately, the complete CCL bounded runtime/translated-fixture profile passed in
+312.43 seconds in the full-system x86 Linux VM (`_build/ccl-vm-run.sleh3T`):
+45 patterns, typed Separate stale rejection/exit 17, protocol 30, OPTIONAL 84,
+tuple 16, Random 1,816, native interrupts 3, real SIGINT deliveries 3 with two
+catches/prior-hook restoration/wrapper exit 0, and three fixture units with
+33 exact OCaml observations (nine naming rows); VM exit 0. This complete
+bounded emulated pass is neither native-hardware nor full-core evidence and
+does not establish a repaired 16/16 native matrix.
 
 Use Camlp5's **MLast AST**, not a regular-expression approximation and not an
 OCaml parser that cannot recognize HOL Light syntax. Separate:
@@ -276,13 +326,13 @@ identifiers are errors; do not invent unresolved Lisp functions and proceed.
 | Nonrecursive local scalar `let` | `let`; a sequential chain may become `let*` |
 | Parallel scalar `let ... and ...` | `let`, with RHSs resolved outside the group |
 | Local recursive functions | `labels`, preserving the source function group |
-| Pattern binding | Trivia destructuring (`match` / `let-match`) |
+| Pattern binding | Static structural destructuring (`match` / `let-match`) |
 | `match e with ...` | `match`, with clauses in source order |
 | Alias pattern `p as x` | `(and x translated-p)` |
 | Guarded branch | `(guard translated-p translated-test)` |
 | `if c then a else b` | `if`; missing `else` returns the unit value |
 | Sequence | `progn`, flattened only for an actual source sequence |
-| `try ... with ...` | Condition handler plus ordered Trivia pattern matching |
+| `try ... with ...` | Condition handler plus ordered structural pattern matching |
 | `raise e` | Raise the translated OCaml condition |
 | Type annotation | Erased after recording its location and rule |
 | Pair / n-tuple | One tuple object, never CL multiple values |
@@ -297,7 +347,7 @@ identifiers are errors; do not invent unresolved Lisp functions and proceed.
 | Record declaration | `defrecord` with source label order and mutability |
 | Record literal / copy-update | Keyword construction / `record-update` |
 | Record read / write | `record-field` / checked `record-assign` |
-| Array literal / pattern | Vector / Trivia vector pattern |
+| Array literal / pattern | Vector / static vector pattern |
 | One-dimensional indexed access / write | Checked runtime array operations |
 | String indexed access | Runtime string observation |
 
@@ -307,7 +357,7 @@ evaluation-order temporaries. Prefer a short stable name and record the rule.
 Do not flatten a pattern binding across a scope boundary where capture could
 change. Sequential scalar `let` flattening is allowed only with resolved names.
 
-All wildcard patterns use the `_` spelling recognized by actual Trivia.
+All wildcard patterns use the static matcher's `_` spelling.
 Incomplete source
 matches must signal an OCaml-compatible match failure, rather than quietly
 returning `nil`. Exceptions caught by a wildcard OCaml handler are OCaml
@@ -352,7 +402,7 @@ zero-argument function, especially when passed as a higher-order value.
 ## 8. Variants, exceptions, and comparison
 
 `defvariant` defines a read-only `defstruct` representation, a positional
-constructor, a Trivia constructor pattern, and comparison metadata. Preserve
+constructor, a static constructor-pattern descriptor, and comparison metadata. Preserve
 constructor declaration order and source tuple-versus-multiple-field shape.
 For example, `Sequent of (term list * term)` has one tuple payload; the
 parentheses affect the AST and must not be discarded opportunistically.
@@ -362,7 +412,7 @@ while `C(a,b)` observes its two fields. It does not bind a first-class tuple
 payload. A constructor declared with one explicitly parenthesized tuple payload
 continues to contain one tuple object. Inline record constructors retain named
 keywords, source field order and mutable flags; omitted pattern fields are
-Trivia wildcards. General constructor/type checking remains the input compiler's
+static matcher wildcards. General constructor/type checking remains the input compiler's
 responsibility.
 
 When source field names do not exist, use deterministic positional names in
@@ -452,7 +502,7 @@ limit. Generated banners must identify the translator version and source
 content digest, not nondeterministic build timestamps or absolute paths.
 
 Pin the upstream commit and source file digests. Record the actual tested
-OCaml, Camlp5, SBCL, and Trivia versions/commits. Re-running generation with
+OCaml, Camlp5 and Lisp-host versions/commits. Re-running generation with
 the same profile must produce identical Lisp and source-map bytes. A release
 contains source inputs sufficient to reproduce the measured initial targets.
 
@@ -484,7 +534,7 @@ Meaningful tests must cover semantic fault lines, not just repeat the printer:
 
 1. Parse and lower all 46 pinned static core inputs using `pa_j` in their
    declared order, including the source system.ml host-configuration adapter.
-2. Compile/load generated code with SBCL and actual upstream Trivia.
+2. Compile/load generated code with SBCL and the standard-CL static matcher.
 3. Verify curried and higher-order calls, tuple arguments, parallel binding,
    lexical capture/shadowing, case collisions, guarded/as/or patterns,
    incomplete matches, and exception propagation.
@@ -528,7 +578,8 @@ translated file as kernel-verified merely because it can be read.
 
 Upstream commit: `233b83c3202370e03c54de2bd090e4d34f677e91`.
 Tested: OCaml 4.14.1, Camlp5 8.02.01, SBCL 2.2.9, on the 64-bit build profile.
-Actual upstream Trivia and its source dependencies are vendored and pinned.
+That historical baseline used actual upstream Trivia and pinned dependencies;
+the current production matcher is the standard-CL static backend described above.
 No original HOL Light or OCaml Map/Set source was patched to obtain these results.
 The previous 0.5 checkpoint had 19 initialized files, 42 independent checks,
 858 output lines and 36,457 core maps. Those test families remain in the

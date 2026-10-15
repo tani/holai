@@ -161,15 +161,23 @@
               (accessor (getf desc :accessor)) (readers (getf desc :readers))
               (active (loop for p in patterns for v in vars for i in indexes
                             unless (eq (car p) :wildcard) collect (cons v i))))
-         `(if (cl:and (load-time-value (check-pattern-signature ',name ',desc) t)
-                      (typep ,value ',(getf desc :class)))
-                ,(cond ((null active) (compile-patterns patterns vars env success failure))
-                       (accessor `(let ((,fields (,accessor ,value)))
-                        (let ,(mapcar (lambda (pair) `(,(car pair) (aref ,fields ,(cdr pair)))) active)
-                          ,(compile-patterns patterns vars env success failure))))
-                       (t `(let ,(mapcar (lambda (pair) `(,(car pair) (,(nth (cdr pair) readers) ,value))) active)
-                             ,(compile-patterns patterns vars env success failure))))
-                ,failure)))
+         (let ((matcher
+                 `(if #-ccl (cl:and (load-time-value (check-pattern-signature ',name ',desc) t)
+                                   (typep ,value ',(getf desc :class)))
+                      #+ccl (typep ,value ',(getf desc :class))
+                      ,(cond ((null active) (compile-patterns patterns vars env success failure))
+                             (accessor `(let ((,fields (,accessor ,value)))
+                              (let ,(mapcar (lambda (pair) `(,(car pair) (aref ,fields ,(cdr pair)))) active)
+                                ,(compile-patterns patterns vars env success failure))))
+                             (t `(let ,(mapcar (lambda (pair) `(,(car pair) (,(nth (cdr pair) readers) ,value))) active)
+                                   ,(compile-patterns patterns vars env success failure))))
+                      ,failure)))
+           ;; CCL 1.13 folds a deferred LOAD-TIME-VALUE token in an IF test
+           ;; as true. CLISP instead needs the value used to retain the check.
+           #+ccl `(progn
+                    (load-time-value (check-pattern-signature ',name ',desc) t)
+                    ,matcher)
+           #-ccl matcher)))
       (otherwise (error "Invalid pattern IR ~s" ir))))
   (defun compile-clauses (value clauses result)
     (loop for clause in clauses collect

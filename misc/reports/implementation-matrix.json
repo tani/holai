@@ -257,7 +257,7 @@
         "log": "misc/reports/implementations/abcl/compatibility-runner.log",
         "log_sha256": "9e95ecd01a6e4827f09d9608f2ab27f5c1a554f450c7d1cab827c7e1be0497e9",
         "report": "misc/reports/implementations/abcl/compatibility.json",
-        "report_sha256": "f52513d61b58abc0420d7195bfa7631ce755b80ada9b5e62d2143355579a1334"
+        "report_sha256": "2ef8bedbf47928e1678b1a811e4197580e1f9b876bb2378466cca28febae59a6"
       },
       "compatibility_passed": true,
       "status": "compatibility_passed"
@@ -287,7 +287,7 @@
         "log": "misc/reports/implementations/ecl/compatibility-runner.log",
         "log_sha256": "fb091d5c5747e074ba6780d776f5656f42eb172307a9fc634b877582c5ce91cc",
         "report": "misc/reports/implementations/ecl/compatibility.json",
-        "report_sha256": "5866715a7663a621de9dd460aecb2102fd84752fc02ae01d7ac574b883bd9c92"
+        "report_sha256": "5ee66bba8b88f001485aaefc69b8073ee1b1dba2ab23de0b8ea8897e7c8b30c9"
       },
       "compatibility_passed": true,
       "status": "compatibility_passed"
@@ -312,7 +312,7 @@
         "log": "misc/reports/implementations/clisp/compatibility-runner.log",
         "log_sha256": "f96755e3965ff6c1e8200ae3dcb5a8d07e272f5f775c1489adfc5765580ceeef",
         "report": "misc/reports/implementations/clisp/compatibility.json",
-        "report_sha256": "d05d54fc9a5c02811c4ea54f8d3e304c629ca779661cdd5d398cb3d653a9e5eb"
+        "report_sha256": "3c7f7c226d548ec89493785c7d200578d75da22b4b5f141e7e00d1952e48e325"
       },
       "compatibility_passed": true,
       "status": "compatibility_passed"

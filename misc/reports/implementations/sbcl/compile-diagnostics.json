@@ -777,7 +777,7 @@
   "boundary_errors": [],
   "timed_out": false,
   "timeout_seconds": 600,
-  "elapsed_seconds": 85.04002637695521,
+  "elapsed_seconds": 78.79640016099438,
   "command": [
     "/nix/store/h9w9yp228nxx5fk7zfijl8r7gw6blnl9-sbcl-2.6.4/bin/sbcl",
     "--noinform",
@@ -787,7 +787,7 @@
     "256",
     "--disable-debugger",
     "--script",
-    "/home/tani/ghq/github.com/tani/holai/_build/host-diagnostics-5co_broz/audit.lisp"
+    "/home/tani/ghq/github.com/tani/holai/_build/host-diagnostics-2in4_qv7/audit.lisp"
   ],
   "diagnostic_accounting": "Unmuffled Common Lisp conditions and raw notices within ASDF COMPILE-OP BEGIN/END boundaries; LOAD and source initialization recorded separately",
   "code_sha256": {
@@ -799,7 +799,7 @@
     "ml2cl/cli.ml": "a8077374662c63484b04549e317a826c893dab57aad1b98406a90cf120e43891",
     "holai/runtime/data.lisp": "1687cc84813032b0fd18a2157e2bff8a32398aea6eae0a22556847abf3f0eab7",
     "holai/runtime/pattern-registry.lisp": "5ed7aa0788119cb82012ab334d6a657fff5c66fb33d19ba4b26eb7570c310265",
-    "holai/runtime/pattern.lisp": "02d5f47c4640c3a2cf8f0e924f1c2ce6f565080a9422d86fee857e3bef3ffdf6",
+    "holai/runtime/pattern.lisp": "1ab31f1bce9e75fcbd57499f9347d34cb1677b97824a59428b32eb3624017d51",
     "holai/runtime/core.lisp": "bd5469ad81e3095b6aff8a16f60210cf6c530ed9b7a40bc39cc22791c7dd2d4f",
     "holai/runtime/format.lisp": "e68e5ae8c1f57ebf60257bafad90ff143ecfe581e4fa1608abcccd2f7ce8d5df",
     "holai/runtime/stdlib.lisp": "2308ef3a4ac71ed6ce49721f9e8c2896e8f2ef5061deffa2bfc0ea8da6646b12",

@@ -11,6 +11,12 @@
 ;; The native fixture selects this shared lifecycle with a dynamically scoped
 ;; feature. Otherwise only the parent supplies the three actual OS SIGINTs.
 (defvar *native-simulation* (member :holai-native-interrupt-test *features*))
+#+ccl
+(unless *native-simulation*
+  ;; Nix's CCL entry point retains a shell parent. Report the actual Lisp PID,
+  ;; not the wrapper PID, without changing native interrupt dispatch.
+  (format t "~&SIGINT target pid: ~D~%" (ccl::getpid))
+  (finish-output))
 (define-condition previous-interrupt (error) ())
 (defvar *previous-deliveries* 0)
 (defvar *interrupt-checks* 0)
