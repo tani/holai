@@ -41,10 +41,25 @@ the eight unavailable ARM cells above: **16 runnable jobs**, not 24 passes.
 Every actual job requires its selected package and executable; absence fails,
 never skips. SBCL runs the full release; all other implementations run the
 120-second-per-process runtime/translated-fixture profile, not full HOL core.
+Native [run 38676192150](https://github.com/tani/holai/actions/runs/38676192150)
+at **`3e1457d2df0efd4e8f8108d894392dd34fc7d54f`** concluded **SUCCESS: 16/16**.
+
+| Native host | Passed implementations | Coverage |
+| --- | --- | --- |
+| x86_64-linux | ABCL, SBCL, ECL, CCL, MKCL, CLISP, CMUCL, Clasp | 1 full release + 7 bounded profiles |
+| aarch64-linux | ABCL, SBCL, ECL, CLISP | 1 full release + 3 bounded profiles |
+| aarch64-darwin | ABCL, SBCL, ECL, CLISP | 1 full release + 3 bounded profiles |
+
+The three SBCL jobs passed the full release/core corpus and 52-unit cold audit;
+the other 13 passed bounded compatibility. This does not establish full-core
+support on the other seven implementations or completeness of optional HOL libraries.
+All eight implementations require three native Lisp interrupt checks; the real OS
+SIGINT checks require three deliveries except ABCL, explicitly not applicable.
+The eight unsupported ARM combinations are exclusions, not passes.
+
 Historical native [run 38668191870](https://github.com/tani/holai/actions/runs/38668191870)
-at `d3ac15b8` passed **15/16** jobs. Only CCL's stale-consumer typed rejection
-failed with exit 255; all other 15 native jobs passed, including the three SBCL
-full releases. This is not a repaired CCL pass or a new 16/16 result.
+at `d3ac15b8` passed **15/16** jobs: CCL's stale-consumer typed rejection failed
+with exit 255. It predates the repair and is separate from the successful run above.
 
 ### CCL compiler-host repair and measured evidence
 
@@ -76,8 +91,8 @@ After the repair, 45 pattern checks and typed `Separate` rejection passed
 (marker 1, child exit 17, VM exit 0) in **105.03 seconds**. This is
 kernel-emulated evidence, not native x86 hardware or a complete compatibility
 profile. The native ARM64 CLISP bounded profile passed in **9.04 seconds**,
-including stale exit 17, preserving its original AND form. Fresh native CCL CI
-remains required; the current-code local release result is recorded below.
+including stale exit 17, preserving its original AND form. These earlier checks
+are separate from the subsequent successful native matrix above.
 
 Failure annotations now retain escaped head and tail within **10,000 characters**,
 rather than truncating away the root error at the start of a long backtrace.
@@ -104,9 +119,9 @@ in **312.43 seconds** under the full-system x86 Linux guest kernel
 Random 1,816, three direct-native interrupt checks and three real SIGINT
 deliveries with two catches, prior-hook restoration and wrapper exit 0.
 All three translated fixture units matched **33 exact OCaml observations**,
-including nine naming rows. This is a complete bounded compatibility pass on
-system-emulated x86 Linux, not native hardware, full HOL core, or a repaired
-16/16 native CI matrix.
+including nine naming rows. This historical complete bounded compatibility pass
+on system-emulated x86 Linux is not native hardware or full HOL core; the later
+native matrix above independently establishes the repaired 16/16 CI result.
 
 The fresh native ARM64 four-implementation `make release` passed in
 **278.84 seconds**, after the matcher, interrupt-harness and logger changes.
@@ -114,9 +129,9 @@ SBCL recorded **130 native / 30 protocol / 69 PROOF** checks and **1,150**
 observations: 1,147 exact, two structural registry comparisons and one Random
 property row. All 52 cold production units had zero compiler diagnostics;
 93 clean outputs were identical and 55 retained pins unchanged. ECL, ABCL and
-CLISP passed bounded compatibility. This is current-code local release evidence,
-not repaired native CCL or 16/16 hosted evidence. Final documentation repackaging
-must determine the archive size and payload count; neither is fixed here.
+CLISP passed bounded compatibility. This is separate current-code local release
+evidence; repaired native CCL and hosted 16/16 evidence are recorded above.
+Final documentation repackaging determines archive size and payload count.
 
 ### Previous pre-repair local release
 

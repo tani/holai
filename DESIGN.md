@@ -161,12 +161,16 @@ x86_64-linux/ubuntu-24.04) with eight IDs. Eight explicit ARM exclusions yield
 SBCL runs `HOLAI_LISPS=sbcl make release`; seven other IDs use bounded
 compatibility only. Checkout credentials are not persisted; separate
 host/implementation artifacts retain phase logs and public failure annotations.
-The expanded matrix's historical
-[run 38668191870](https://github.com/tani/holai/actions/runs/38668191870)
-at `d3ac15b8` passed 15/16 native jobs; only CCL's typed stale-consumer
-rejection failed (exit 255). Those other 15 passes do not establish a CCL
-pass or validate the subsequent repair. Flake checks exercise ASDF startup,
-not production runtime or full-core compatibility.
+Native [run 38676192150](https://github.com/tani/holai/actions/runs/38676192150)
+at `3e1457d2df0efd4e8f8108d894392dd34fc7d54f` concluded **SUCCESS: 16/16 jobs**:
+all eight implementations on x86_64-linux and ABCL/SBCL/ECL/CLISP on each ARM64
+host. Three SBCL jobs passed full release/core corpus and 52-unit cold audits;
+the other 13 passed bounded compatibility, not full-core or optional HOL-library
+completeness. All eight require three native Lisp interrupt checks; real OS SIGINT
+checks require three deliveries except ABCL, explicitly not applicable.
+The historical [run 38668191870](https://github.com/tani/holai/actions/runs/38668191870)
+at `d3ac15b8` passed 15/16, with CCL's typed stale-consumer rejection failing
+(exit 255); it predates the repair. Flake checks exercise ASDF startup only.
 
 The structural matcher emits standard Common Lisp, with no production Trivia
 dependency. Declaration descriptors are consulted at macro expansion and checked
@@ -189,7 +193,7 @@ exit 255, then passed 45 pattern checks and the named `Separate` typed rejection
 (marker 1, child exit 17; VM exit 0) after the fix in 105.03 seconds. This is
 kernel-emulated evidence, not native x86 hardware or a full compatibility pass.
 The native ARM64 CLISP bounded profile passed in 9.04 seconds with stale exit 17,
-preserving its original guard shape. A fresh native CCL CI pass remains required.
+preserving its original guard shape. These earlier checks are separate from the native matrix above.
 Failure annotations retain escaped log head and tail within 10,000 characters;
 an actual failing SBCL smoke confirmed preservation of the root error, rather
 than a tail-only backtrace. This diagnostic change does not turn failures into passes.
@@ -207,16 +211,16 @@ The fresh native ARM64 four-host `make release` passed in 278.84 seconds after
 the matcher, interrupt harness and logger changes: 130 native/30 protocol/69 PROOF,
 1,150 observations (1,147 exact, two structural, one property), all 52 cold units
 with zero compiler diagnostics, 93 identical clean outputs and 55 unchanged pins.
-This validates current code locally, not the still-required repaired native CI matrix;
-subsequent documentation repackaging does not fix archive bytes or payload count.
+This is separate local evidence; the repaired native matrix is recorded above.
+Subsequent documentation repackaging does not fix archive bytes or payload count.
 Separately, the complete CCL bounded runtime/translated-fixture profile passed in
 312.43 seconds in the full-system x86 Linux VM (`_build/ccl-vm-run.sleh3T`):
 45 patterns, typed Separate stale rejection/exit 17, protocol 30, OPTIONAL 84,
 tuple 16, Random 1,816, native interrupts 3, real SIGINT deliveries 3 with two
 catches/prior-hook restoration/wrapper exit 0, and three fixture units with
 33 exact OCaml observations (nine naming rows); VM exit 0. This complete
-bounded emulated pass is neither native-hardware nor full-core evidence and
-does not establish a repaired 16/16 native matrix.
+bounded emulated pass is historical evidence, neither native-hardware nor full-core;
+the subsequent native matrix above independently establishes all 16 job passes.
 
 Use Camlp5's **MLast AST**, not a regular-expression approximation and not an
 OCaml parser that cannot recognize HOL Light syntax. Separate:

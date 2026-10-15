@@ -59,8 +59,13 @@ readable OCaml-to-Lisp translation, even when argument evaluation order differs.
   explicit ARM exclusions and 16 runnable jobs. Historical native run
   [38668191870](https://github.com/tani/holai/actions/runs/38668191870) at d3ac15b8
   passed 15/16; only CCL stale-consumer typed rejection failed with exit 255.
-  Do not call the repaired CCL profile or all 16 native jobs green without new evidence.
-  SBCL runs release; every other selected implementation runs bounded compatibility.
+  Current native [run 38676192150](https://github.com/tani/holai/actions/runs/38676192150)
+  at `3e1457d2df0efd4e8f8108d894392dd34fc7d54f` concluded SUCCESS, 16/16:
+  all eight x86 Linux jobs and ABCL/SBCL/ECL/CLISP on each ARM64 host.
+  Three SBCL jobs passed full release/core corpus and 52-unit cold audits;
+  the other 13 passed bounded compatibility, not full core or optional HOL libraries.
+  All eight require three native Lisp interrupt checks; three real OS SIGINT
+  deliveries are required except ABCL, explicitly not applicable.
   Captured phase stdout/stderr and public GitHub Actions error annotations support
   precise diagnosis instead of blind retries. Earlier measurements above are history.
 - Pre-repair native ARM64 Linux release passed in 286.76 seconds;
@@ -96,15 +101,15 @@ readable OCaml-to-Lisp translation, even when argument evaluation order differs.
   interrupt-harness and logger changes: 130 native/30 protocol/69 PROOF,
   1,150 rows (1,147 exact/two structural/one property), 52 cold units with zero
   compiler diagnostics, 93 identical clean outputs and 55 unchanged pins.
-  This is local SBCL full-core plus ECL/ABCL/CLISP bounded evidence, not repaired
-  native CCL or hosted 16/16. Documentation repackaging determines final archive
-  bytes/payload count; do not hardcode checkpoint packaging figures as final.
+  This is separate local SBCL full-core plus ECL/ABCL/CLISP bounded evidence.
+  The subsequent native matrix above supplies repaired CCL and hosted 16/16 evidence.
+  Documentation repackaging determines final archive bytes/payload count.
 - Complete CCL bounded runtime/translated-fixture profile passed in 312.43s
   under a system-emulated x86 Linux kernel (_build/ccl-vm-run.sleh3T, VM exit0):
   patterns45/stale17 typed Separate/protocol30/OPTIONAL84/tuple16/Random1816,
   native interrupts3, real SIGINT3/two catches/prior restoration/wrapper0,
-  three fixtures/33 exact OCaml rows/nine naming rows. This is complete bounded
-  emulated compatibility, not native hardware, full HOL core or repaired native16/16.
+  three fixtures/33 exact OCaml rows/nine naming rows. This historical bounded
+  emulated compatibility is not native hardware or full HOL core; native CI is above.
 - Keep THEN and the literal source helper then1_ as separate bindings.
   The one-subgoal helper must reject multiple branches; do not merge it into
   the grammar-encoded tactical name. Preserve the branch-count regressions.
@@ -277,7 +282,7 @@ readable OCaml-to-Lisp translation, even when argument evaluation order differs.
   other selected hosts run 120-second runtime/translated-fixture compatibility.
   Keep prior measured results historical; never claim native/platform correctness
   from package evaluation, cached binary fetching or emulated execution.
-  The prior 12/12 hosted run is observed; expanded 16-job verification is pending.
+  The current expanded 16/16 native pass is recorded above; exclusions are not passes.
   ASDF checks cover startup only. Supply the real pinned ASDF source for hosts
   without bundled ASDF; never fake the package or add inferred systems/load files.
 - `make test` needs Camlp5 8.02, OCaml Num for the original-execution oracle,
