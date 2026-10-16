@@ -52,7 +52,7 @@
     (let ((operator (name-text (car form))) (arguments (cdr form)))
       (cond
         ((member operator '("intro" "intros" "assumption" "refl" "split" "taut"
-                            "arith" "skip" "fail") :test #'string=)
+                            "arith" "asm-arith" "skip" "fail") :test #'string=)
          (require-arity command arguments 0)
          (cond
            ((string= operator "intro")
@@ -65,6 +65,7 @@
            ((string= operator "split") #'holai.tactics:CONJ_TAC)
            ((string= operator "taut") holai.itab:ITAUT_TAC)
            ((string= operator "arith") holai.int:ARITH_TAC)
+           ((string= operator "asm-arith") holai.int:ASM_ARITH_TAC)
            ((string= operator "skip") #'holai.tactics:ALL_TAC)
            (t holai.tactics:NO_TAC)))
         ((string= operator "assume")
@@ -107,6 +108,15 @@
          (lambda (goal)
            (funcall (holai.class:BOOL_CASES_TAC
                       (goal-term (first arguments) goal 'bool)) goal)))
+        ((string= operator "induct")
+         (require-arity command arguments 0 1)
+         (if (null arguments)
+             holai.nums:INDUCT_TAC
+             (lambda (goal)
+               (funcall
+                 (funcall holai.tactics:THEN
+                   (holai.tactics:MATCH_MP_TAC (goal-theorem (first arguments) goal))
+                   (holai.tactics:REPEAT #'holai.tactics:STRIP_TAC)) goal))))
         ((string= operator "fix")
          (require-arity command arguments 1)
          (let ((name (name-text (first arguments))))

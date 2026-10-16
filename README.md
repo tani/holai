@@ -99,6 +99,7 @@ Ordinary application uses standard bare `funcall`, not a runtime wrapper.
 See DESIGN for currying, sharp-backquote and namespace rules.
 
 For S-expression terms and named proofs, see the [proof DSL](docs/USER-DSL.md).
+It also supports inductive relations, recursive functions and algebraic datatypes.
 Run its focused checks with `make test-user`.
 
 ## Licenses

@@ -3602,3 +3602,38 @@ The original 46 generated files and all pinned inputs remain unchanged.
 This environment does not provide the pinned Nix/OCaml/Camlp5 toolchain, so full translator regeneration, OCaml differential checks, source-map/clean-generation audits and `make release` were not rerun.
 The new native-suite/release integration is implemented but is not a measured full-release pass or additional-Lisp portability claim.
 
+### 39.2 Inductive relations, recursive functions and algebraic datatypes
+
+The user additionally requests DSL declarations for inductive relations/functions and algebraic datatypes.
+The fourth handwritten component, `holai/user/definitions.lisp`, adds `definductive`, `defrecursive` and `defdatatype` without changing generated sources or pinned inputs.
+Clauses/equations are elaborated as one Boolean conjunction, sharing inferred predicate/function types across clauses; explicit universal binders give clause-local variable scope.
+`definductive` first calls `prove_inductive_relations_exist` and requires an assumption-free theorem before introducing constants via `new_inductive_definition`.
+This prevents unresolved monotonicity obligations from being silently accepted as a completed DSL definition.
+The original rules, induction and cases are registered under the label and `.rules`, `.induction`, `.cases` suffixes; mutual relations share the same declaration bundle.
+
+`defrecursive` invokes the original general `holai.define:define`, or the original `new_recursive_definition` when an initial `(:recursion theorem)` supplies a closed recursion principle.
+The resulting closed equations are registered under the label and `.equations`; no separate functional induction or termination theorem is invented.
+Termination, well-definedness and supported recursion retain the original procedures' limits.
+Successful identical relation/function source declarations are memoized, avoiding reinterpreting defined constants as fresh variables during reload; failed declarations do not replace the previous theorem bundle.
+These caches retain successful results only, and a complete theorem bundle must be closed before registration.
+
+`defdatatype` renders a validated HOL datatype specification and invokes the original `define_type`.
+Field types use the existing type syntax and printer; recursive occurrences remain type-variable placeholders even on a repeated declaration.
+Free field type variables supply the original package's inferred parameters; nested recursion and function-valued fields are delegated to that package.
+The returned induction/recursion pair and public cases/injectivity/distinctness theorems are registered with corresponding suffixes.
+Injectivity is present when a constructor has fields; distinctness is present when multiple constructors exist.
+Each declaration defines one datatype; no new positivity test, GADT or dependent-type system is introduced.
+As with the upstream packages, definitions persist in kernel state, and failure is not a promise of transactional rollback of all possible auxiliary definitions.
+
+The proof DSL adds `induct` for natural induction, `(induct principle)` for a matched induction theorem followed by premise stripping, and `asm-arith` for arithmetic using induction hypotheses.
+The focused suite retains its separate original user-DSL counter and adds a definition counter; full-suite reports and release fingerprint checks include the new component and test source.
+The core-only 52-unit audit and original differential observation boundary remain unchanged.
+
+Focused x86_64 Linux / SBCL 2.2.9 validation passed a fresh complete-core `make test-user`: 102 existing user DSL checks plus 53 definition checks.
+The latter cover parameterized/ground/single-constructor/nested-recursive/function-field datatypes, constructor theorems, explicit datatype recursion, automatically defined recursion, natural and structural induction, mutual relations, inversion, rejection of residual monotonicity assumptions before constant introduction, and preservation of old theorem registrations on failure.
+All four DSL units, both test units and the extended example compiled with zero warning conditions, including style warnings, and no compiler errors.
+The compiled example executed successfully; the definition suite passed twice in the same process, and the existing 69 PROOF/reader checks also passed.
+Eight SBCL macro redefinition conditions were observed during load and recorded separately from compilation; original package notices about invented type variables and benign datatype redefinition remain visible.
+Python syntax checks and `git diff --check` passed.
+These are focused measurements, not a new pinned Nix release/differential/source-map/clean-generation pass or an additional-Lisp compatibility claim.
+

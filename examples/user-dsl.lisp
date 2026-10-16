@@ -43,3 +43,36 @@
 (defthm natural-add-zero
   (forall ((n :type num)) (= (+ n 0) n))
   (arith))
+
+(defdatatype user_tree
+  (user_leaf a)
+  (user_node user_tree user_tree))
+
+(defrecursive tree-size
+  (:recursion user_tree.recursion)
+  (= (user_size (user_leaf x)) 1)
+  (forall (l r)
+    (= (user_size (user_node l r)) (+ (user_size l) (user_size r)))))
+
+(defthm tree-size-positive
+  (forall ((t0 :type (user_tree num))) (<= 1 (user_size t0)))
+  (induct user_tree.induction)
+  (asm-rewrite tree-size)
+  asm-arith)
+
+(definductive user-even
+  (user_even 0)
+  (forall (n) (implies (user_even n) (user_even (+ n 2)))))
+
+(defthm even-step-example
+  (user_even (+ 0 2))
+  (meson user-even.rules))
+
+(defrecursive natural-copy
+  (= (user_copy 0) 0)
+  (forall (n) (= (user_copy ("SUC" n)) ("SUC" (user_copy n)))))
+
+(defthm natural-copy-identity
+  (forall ((n :type num)) (= (user_copy n) n))
+  induct
+  (asm-rewrite natural-copy))

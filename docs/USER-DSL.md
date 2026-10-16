@@ -86,6 +86,8 @@ The data API is `(prove-term statement command-list)`.
 | `(asm-rewrite names...)`, `(asm-simp names...)` | Also use the current hypotheses |
 | `(meson names...)`, `taut`, `arith` | Original assumption-aware MESON, ITAUT, arithmetic tactics |
 | `(cases p)` | Boolean case split |
+| `induct`, `(induct principle)` | Natural number induction / a registered induction theorem, followed by stripping premises |
+| `asm-arith` | Arithmetic using induction hypotheses and other assumptions |
 | `(witness term)` | Existential witness inferred against the existential variable's type |
 | `(have h statement commands...)` | Prove a local lemma under the current hypotheses |
 | `(then commands...)` | Sequence, applying each command to every remaining goal |
@@ -136,7 +138,96 @@ The interactive HOL goal stack is not changed.
 
 `defhol` invokes the original `holai.pair:new_definition` and registers its defining theorem; it does not introduce an axiom.
 HOL constant definitions persist in the existing kernel state.
-Recursive/inductive declarations and a Common Lisp interoperability layer are outside this initial DSL.
+A Common Lisp interoperability layer is outside this DSL.
+
+## Inductive relations
+
+```lisp
+(definductive user-even
+  (user_even 0)
+  (forall (n) (implies (user_even n) (user_even (+ n 2)))))
+
+(defthm even-step-example
+  (user_even (+ 0 2))
+  (meson user-even.rules))
+```
+
+The body consists of introduction clauses, inferred together as one conjunction.
+`user-even` and `user-even.rules` name the introduction theorem; `user-even.induction` is the leastness/induction principle and `user-even.cases` is the inversion theorem.
+The HOL predicate itself is `user_even`; the declaration's label need not be its constant name.
+Put `forall` around clause-local variables; schematic parameters and mutually inductive predicates follow HOL Light's inductive-definition conventions.
+Multiple predicates can occur among the conclusions of the same declaration; their combined rules, induction and cases receive the declaration label.
+Before introducing constants, the DSL calls the original existence prover and rejects any remaining monotonicity assumptions.
+It then invokes `new_inductive_definition` and registers only closed theorems.
+
+## Algebraic datatypes
+
+```lisp
+(defdatatype user_tree
+  (user_leaf a)
+  (user_node user_tree user_tree))
+
+(defdatatype user_flag user_off user_on)
+(defdatatype user_rose (user_rose_node a (list user_rose)))
+```
+
+Each constructor lists its field types; a nullary constructor may be bare or parenthesized.
+Unknown field type names such as `a` become type parameters, in the underlying HOL type package's canonical order.
+The declaration infers the parameter list rather than taking an explicit one.
+Refer to the recursive type by its bare name inside its declaration; after definition its instances use ordinary type application, such as `(user_tree num)`.
+Nested recursion through registered datatypes, such as `(list user_rose)`, is handled by the original datatype package.
+Function-valued fields use `(-> num a)`.
+Type/constructor names must be HOL identifiers; use underscores rather than hyphens in these constant/type names.
+String names preserve case, for example `("Leaf" a)`.
+Nullary constructor terms are written as atoms, not zero-argument applications.
+
+| Registered theorem | Meaning |
+| --- | --- |
+| `user_tree`, `user_tree.induction` | Structural induction |
+| `user_tree.recursion` | Recursion/existence principle |
+| `user_tree.cases` | Constructor exhaustiveness |
+| `user_tree.injective` | Constructor injectivity, when some constructor has fields |
+| `user_tree.distinct` | Constructor distinctness, when there are at least two constructors |
+
+These are original HOL theorems produced by `define_type` and its public theorem accessors.
+The DSL defines one datatype per declaration; it does not add GADTs, dependent indices or a new positivity algorithm.
+
+## Functions defined by recursion
+
+```lisp
+(defrecursive tree-size
+  (:recursion user_tree.recursion)
+  (= (user_size (user_leaf x)) 1)
+  (forall (l r)
+    (= (user_size (user_node l r)) (+ (user_size l) (user_size r)))))
+
+(defthm tree-size-positive
+  (forall ((t0 :type (user_tree num))) (<= 1 (user_size t0)))
+  (induct user_tree.induction)
+  (asm-rewrite tree-size)
+  asm-arith)
+
+(defrecursive natural-copy
+  (= (user_copy 0) 0)
+  (forall (n) (= (user_copy ("SUC" n)) ("SUC" (user_copy n)))))
+
+(defthm copy-identity
+  (forall ((n :type num)) (= (user_copy n) n))
+  induct
+  (asm-rewrite natural-copy))
+```
+
+An initial `(:recursion theorem-name)` selects `new_recursive_definition` with that closed recursion principle; existing generated principles, such as `holai.nums:num_RECURSION`, are also accepted.
+Omitting it selects the original general `holai.define:define`, which recognizes registered datatype recursion and attempts its existing termination/well-definedness proofs.
+Both routes infer all equations together and register the resulting closed theorem as the label and `label.equations`.
+Free left-hand-side variables are universally closed by the backend; explicit `forall` gives clause-local binding before type inference.
+The general backend defines one function at a time; simultaneous definitions require a suitable explicit recursion theorem.
+Termination automation retains the original backend's limits: arbitrary recursive programs are not accepted merely because they are syntactically valid.
+No separate function-induction or termination theorem is fabricated; structural proofs use the datatype/natural-number induction principles.
+
+Successful identical inductive and function declarations are memoized for reloading the same source forms; datatype redeclaration uses the original package's benign-redefinition mechanism.
+New theorem bundles are registered only after validation, so a failed declaration does not replace an existing DSL theorem bundle.
+Kernel definitions are persistent: this does not promise transactional rollback of every auxiliary definition that an upstream definition procedure may introduce before failure.
 
 Malformed DSL syntax and original HOL failures signal `dsl-error`.
 `dsl-error-form` retains the input and `dsl-error-cause` retains the underlying HOL condition or diagnostic text.

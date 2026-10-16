@@ -634,4 +634,16 @@ readable OCaml-to-Lisp translation, even when argument evaluation order differs.
   compiled example executed and new sources had zero compiler warnings.
   Five macro redefinition conditions occurred during load, recorded separately.
   This is not a pinned Nix release or a new other-host portability measurement.
+- DESIGN39.2 adds the fourth optional unit `definitions.lisp`: `definductive`,
+  `defrecursive`, `defdatatype`, registered generated principles, `induct` and
+  `asm-arith`. Relations require closed existence/monotonicity evidence before
+  introducing constants. Never register residual hypotheses as completed results.
+  Identical successful relation/function source forms may reuse their recorded
+  theorem; invalid declarations must not overwrite a registered theorem bundle.
+- Extended focused SBCL 2.2.9 checks passed: 102 existing user checks plus 53
+  definition checks from a fresh complete core, and 69 original PROOF checks.
+  Four user units, two test units and the compiled example had zero compiler
+  warnings; eight macro redefinition conditions were recorded during load.
+  The definition suite also passed twice in one process. Full pinned release,
+  original differential/regeneration audits and extra-host validation were not rerun.
 

@@ -17,9 +17,12 @@ def main():
             timeout=full_core_timeout())
     output = log.read_text()
     counters = re.findall(r"(?m)^User DSL checks passed: (\d+)$", output)
-    if result.returncode or len(counters) != 1 or int(counters[0]) <= 0:
+    definitions = re.findall(r"(?m)^User definition DSL checks passed: (\d+)$", output)
+    if (result.returncode or len(counters) != 1 or int(counters[0]) <= 0
+            or len(definitions) != 1 or int(definitions[0]) <= 0):
         raise RuntimeError(f"User DSL suite failed; see {log}\n{output[-8000:]}")
-    print(f"User DSL checks passed: {counters[0]} (fresh full core; log: {log})")
+    print(f"User DSL checks passed: {counters[0]}; definition checks: {definitions[0]} "
+          f"(fresh full core; log: {log})")
 
 
 if __name__ == "__main__":

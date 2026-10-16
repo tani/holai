@@ -74,13 +74,17 @@
   :serial t
   :components ((:file "package")
                (:file "terms")
-               (:file "proofs"))
+               (:file "proofs")
+               (:file "definitions"))
   :in-order-to ((asdf:test-op (asdf:test-op "holai/user/tests"))))
 
 (asdf:defsystem "holai/user/tests"
   :depends-on ("holai/user")
   :pathname "holai/tests/"
-  :components ((:file "user-dsl"))
+  :serial t
+  :components ((:file "user-dsl")
+               (:file "user-definitions"))
   :perform (asdf:test-op (op system)
              (declare (ignore op system))
-             (uiop:symbol-call :holai.tests.user-dsl :run-tests)))
+             (uiop:symbol-call :holai.tests.user-dsl :run-tests)
+             (uiop:symbol-call :holai.tests.user-dsl :run-definition-tests)))

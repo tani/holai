@@ -127,6 +127,7 @@ required += ["holai/tests/star-allocator.ml", "holai/tests/fixtures/star_names.m
 pins = json.loads((root / "vendor/SOURCES.json").read_text())["input_sha256"]
 required += ["holai/tests/random.lisp"]
 required += ["holai/user/package.lisp", "holai/user/terms.lisp", "holai/user/proofs.lisp",
+             "holai/user/definitions.lisp", "holai/tests/user-definitions.lisp",
              "holai/tests/user-dsl.lisp", "holai/tests/user-dsl-runner.lisp",
              "misc/scripts/test-user.py", "docs/USER-DSL.md", "examples/user-dsl.lisp"]
 required += ["misc/scripts/test-matrix.py", "misc/reports/implementation-matrix.json"]
@@ -312,7 +313,9 @@ for host in ("sbcl",):
     assert stale_markers == [rejection["marker"]]
     assert verification["native_checks"] > 0 and verification["proof_dsl_checks"] > 0
     assert verification["user_dsl_checks"] > 0
-    user_sources = [*(root / "holai/user").glob("*.lisp"), root / "holai/tests/user-dsl.lisp"]
+    assert verification["user_definition_dsl_checks"] > 0
+    user_sources = [*(root / "holai/user").glob("*.lisp"), root / "holai/tests/user-dsl.lisp",
+                    root / "holai/tests/user-definitions.lisp"]
     assert verification["user_dsl_source_sha256"] == {
         str(path.relative_to(root)): hashlib.sha256(path.read_bytes()).hexdigest()
         for path in user_sources}, "Stale user DSL source fingerprints"

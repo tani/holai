@@ -6,6 +6,7 @@
     :dpty :make-Varp :make-Combp :make-Absp :make-Typing :make-Ptycon
     :pretype_of_type :retypecheck :term_of_preterm)
   (:export :term :read-term :hol-type :prove :prove-term :defthm :defhol
+           :definductive :defrecursive :defdatatype
            :theorem :dsl-error :dsl-error-form :dsl-error-cause))
 (in-package :holai.user)
 
@@ -14,7 +15,10 @@
    (cause :initarg :cause :reader dsl-error-cause))
   (:report (lambda (condition stream)
              (format stream "HOL DSL error in ~s: ~a"
-                     (dsl-error-form condition) (dsl-error-cause condition)))))
+                     (dsl-error-form condition)
+                     (let ((cause (dsl-error-cause condition)))
+                       (if (typep cause 'holai.runtime.core:failure)
+                           (holai.runtime.core:exception-string cause) cause))))))
 
 (defun reject (form control &rest arguments)
   (error 'dsl-error :form form :cause (apply #'format nil control arguments)))
