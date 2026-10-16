@@ -129,7 +129,7 @@ required += ["holai/tests/random.lisp"]
 required += ["holai/user/package.lisp", "holai/user/terms.lisp", "holai/user/proofs.lisp",
              "holai/user/definitions.lisp", "holai/tests/user-definitions.lisp",
              "holai/tests/user-dsl.lisp", "holai/tests/user-dsl-runner.lisp",
-             "misc/scripts/test-user.py", "docs/USER-DSL.md", "examples/user-dsl.lisp"]
+             "misc/scripts/test-user.py", "docs/USER-DSL.md", "docs/USER-DSL-SPEC.html", "examples/user-dsl.lisp"]
 required += ["misc/scripts/test-matrix.py", "misc/reports/implementation-matrix.json"]
 required += [f"misc/reports/implementations/sbcl/{name}"
              for name in ["verification.json", "compile-diagnostics.json", "compile-diagnostics.txt",

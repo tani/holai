@@ -1,47 +1,169 @@
 (uiop:define-package :holai.user
   (:nicknames :holai-user)
   (:use :cl)
+  (:shadow :defun :defconstant :deftype :defstruct)
   (:import-from :holai.runtime.data :tuple :fst :snd)
   (:import-from :holai.preterm
     :dpty :make-Varp :make-Combp :make-Absp :make-Typing :make-Ptycon
     :pretype_of_type :retypecheck :term_of_preterm)
-  (:export :term :read-term :hol-type :prove :prove-term :defthm :defhol
-           :definductive :defrecursive :defdatatype
-           :theorem :dsl-error :dsl-error-form :dsl-error-cause))
+  (:export :defun :defconstant :deftype :defstruct :defdatatype :defdatatypes
+    :definductive :defrelations :defequations :defthm :prove
+    :term :read-term :hol-type :theorem :check :describe-definition
+    :bool :num :int :real :-> :prod :list :set :true :false :forall :exists
+    :exists1 :choose :implies :iff :pair :succ :cons :append :map :match
+    :setof :arbitrary :decimal :hol-syntax :as
+    :dsl-error :dsl-error-form :dsl-error-cause :dsl-syntax-error
+    :dsl-name-error :dsl-type-error :dsl-scope-error :definition-conflict
+    :kernel-state-uncertain :dsl-obligation-error))
 (in-package :holai.user)
 
 (define-condition dsl-error (error)
   ((form :initarg :form :reader dsl-error-form)
    (cause :initarg :cause :reader dsl-error-cause))
   (:report (lambda (condition stream)
-             (format stream "HOL DSL error in ~s: ~a"
-                     (dsl-error-form condition)
-                     (let ((cause (dsl-error-cause condition)))
-                       (if (typep cause 'holai.runtime.core:failure)
-                           (holai.runtime.core:exception-string cause) cause))))))
+             (format stream "HOL DSL error in ~s: ~a" (dsl-error-form condition)
+               (let ((cause (dsl-error-cause condition)))
+                 (if (typep cause 'holai.runtime.core:failure)
+                     (holai.runtime.core:exception-string cause) cause))))))
+(define-condition dsl-syntax-error (dsl-error) ())
+(define-condition dsl-name-error (dsl-error) ())
+(define-condition dsl-type-error (dsl-error) ())
+(define-condition dsl-scope-error (dsl-error) ())
+(define-condition definition-conflict (dsl-error) ())
+(define-condition kernel-state-uncertain (dsl-error) ())
+(define-condition dsl-obligation-error (dsl-error) ())
 
-(defun reject (form control &rest arguments)
-  (error 'dsl-error :form form :cause (apply #'format nil control arguments)))
-
-(defun call-with-dsl-context (form thunk)
+(cl:defun reject (form control &rest arguments)
+  (error 'dsl-syntax-error :form form :cause (apply #'format nil control arguments)))
+(cl:defun reject-kind (kind form control &rest arguments)
+  (error kind :form form :cause (apply #'format nil control arguments)))
+(cl:defun call-with-dsl-context (form thunk)
   (handler-case (funcall thunk)
     (dsl-error (condition) (error condition))
     (holai.runtime.core:failure (condition)
       (error 'dsl-error :form form :cause condition))))
-
-(defun name-text (name)
-  (cond ((symbolp name) (string-downcase (symbol-name name)))
-        ((stringp name) name)
-        (t (reject name "Expected a name"))))
-
-(defun proper-list-p (form)
-  ;; LIST-LENGTH detects cycles as well as rejecting dotted lists.
+(cl:defun name-text (name)
+  (if (symbolp name) (string-downcase (symbol-name name))
+      (reject name "Expected a symbol")))
+(cl:defun proper-list-p (form)
   (and (listp form)
-       (handler-case (or (null form) (list-length form))
-         (type-error () nil))))
-
-(defun require-arity (form arguments minimum &optional (maximum minimum))
-  (unless (and (proper-list-p arguments)
-               (<= minimum (length arguments) maximum))
+       (handler-case (or (null form) (list-length form)) (type-error () nil))))
+(cl:defun require-arity (form arguments minimum &optional (maximum minimum))
+  (unless (and (proper-list-p arguments) (<= minimum (length arguments) maximum))
     (reject form "Expected ~d~@[ to ~d~] arguments" minimum
-            (unless (= minimum maximum) maximum))))
+      (unless (= minimum maximum) maximum))))
+(cl:defun require-variables (variables)
+  (unless (and (proper-list-p variables)
+               (every (lambda (x) (and (symbolp x) x (not (eq x t))
+                                       (not (keywordp x))
+                                       (not (find #\& (symbol-name x))))) variables)
+               (= (length variables) (length (remove-duplicates variables))))
+    (reject variables "Expected distinct required variable names"))
+  variables)
+(cl:defun encoded-name (symbol)
+  (unless (symbolp symbol) (reject symbol "Expected a symbol"))
+  (format nil "H~{~6,'0X~}_~{~6,'0X~}"
+    (map 'list #'char-code (if (symbol-package symbol)
+                              (package-name (symbol-package symbol)) "GENSYM"))
+    (map 'list #'char-code (symbol-name symbol))))
+(defvar *variable-names* nil)
+
+(cl:defun variable-name (symbol)
+  ;; Uninterned macro temporaries retain identity inside an elaboration.
+  (or (cdr (assoc symbol *variable-names*))
+      (if (symbol-package symbol) (encoded-name symbol)
+          (let ((name (format nil "G~d" (length *variable-names*))))
+            (push (cons symbol name) *variable-names*) name))))
+
+(defvar *constants* (make-hash-table :test #'eq))
+(defvar *types* (make-hash-table :test #'eq))
+(defvar *constructors* (make-hash-table :test #'eq))
+(defvar *definitions* (make-hash-table :test #'eq))
+(defvar *theorems* (make-hash-table :test #'eq))
+(defvar *type-aliases* (make-hash-table :test #'eq))
+(defvar *kernel-uncertain* nil)
+(defvar *bindings* nil)
+(defvar *annotations* nil)
+(defvar *type-parameters* nil)
+(defvar *strict-names* nil)
+(defvar *macro-environment* nil)
+(defvar *macro-expansions* 0)
+
+(cl:defun result-name (name suffix)
+  (intern (concatenate 'string (symbol-name name) (string-upcase suffix))
+          (symbol-package name)))
+(cl:defun require-owner (name)
+  (unless (and (symbolp name) (not (member name '(t nil)))
+               (eq (symbol-package name) *package*))
+    (reject-kind 'dsl-name-error name "A declaration must own its name in ~a; use SHADOW for inherited names"
+                 (package-name *package*))))
+(cl:defun require-closed-theorem (th form)
+  (unless (null (holai.fusion:hyp th))
+    (reject-kind 'dsl-obligation-error form "Definition has unproved side conditions"))
+  th)
+(cl:defun canonical-source (syntax)
+  (let ((temporaries (make-hash-table :test #'eq)))
+    (labels ((walk (x)
+               (cond ((consp x) (cons (walk (car x)) (walk (cdr x))))
+                     ((and (symbolp x) (null (symbol-package x)))
+                      (or (gethash x temporaries)
+                          (setf (gethash x temporaries) (list :temporary (hash-table-count temporaries)))))
+                     (t x))))
+      (walk syntax))))
+
+(cl:defun cache-definition (name source thunk)
+  (require-owner name)
+  (when *kernel-uncertain*
+    (reject-kind 'kernel-state-uncertain name "Restart from a clean core before introducing definitions"))
+  (let ((old (gethash name *definitions*)))
+    (when old
+      (unless (equal (canonical-source source) (getf old :canonical-source))
+        (reject-kind 'definition-conflict name "A different logical definition already exists"))
+      (return-from cache-definition (getf old :result))))
+  (let ((result (funcall thunk)))
+    (setf (gethash name *definitions*) (list :source source :canonical-source (canonical-source source) :result result))
+    result))
+(cl:defun kernel-definition-call (form thunk)
+  (handler-case (funcall thunk)
+    (error (condition)
+      (setf *kernel-uncertain* t)
+      (error 'kernel-state-uncertain :form form :cause condition))))
+(cl:defun register-definition-results (name entries)
+  (let ((results (mapcar (lambda (entry)
+                          (cons (result-name name (car entry))
+                                (require-closed-theorem (cdr entry) name))) entries)))
+    (dolist (entry results)
+      (when (gethash (car entry) *theorems*)
+        (reject-kind 'definition-conflict (car entry) "Generated theorem name is occupied")))
+    (dolist (entry results) (setf (gethash (car entry) *theorems*) (cdr entry)))
+  (cdar entries)))
+(cl:defun describe-definition (name &optional (stream *standard-output*))
+  (let ((entry (gethash name *definitions*)))
+    (unless entry (reject-kind 'dsl-name-error name "Unknown definition"))
+    (format stream "~s~%~s~%" name entry) entry))
+
+(defvar *type-inductions* (make-hash-table :test #'equal))
+
+(export '(type-variables recursion termination measure well-founded-relation
+          obligation-proofs strong-induction monotonicity-proof simp ref spec _))
+
+(defvar *nil-markers* nil)
+
+(cl:defun declaration-expansion (form)
+  `(let ((*package* (find-package ,(package-name *package*)))) ,form))
+
+(defvar *numeral-markers* nil)
+
+(declaim (ftype function type-variable-p type-variable-name))
+(cl:defun require-type-parameters (specs term form)
+  (let ((declaration (assoc 'type-variables specs)))
+    (when declaration
+      (let ((parameters (cdr declaration)))
+        (require-variables parameters)
+        (unless (every #'type-variable-p parameters)
+          (reject declaration "Expected ?a type parameters"))
+        (dolist (type (holai.fusion:type_vars_in_term term))
+          (unless (find (holai.fusion:dest_vartype type) parameters :key #'type-variable-name :test #'string=)
+            (reject-kind 'dsl-type-error form "Undeclared residual type variable")))))))
+
+(defvar *elaboration-active* nil)

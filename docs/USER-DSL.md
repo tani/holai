@@ -1,238 +1,236 @@
-# HOL proof language
+# Common Lisp proof language
 
-Load `(asdf:load-system "holai/user")`, then use `(in-package :holai.user)`.
-The package's nickname is `holai-user`.
-The optional system depends on the complete translated core; loading `holai` or `holai/runtime` alone retains its existing behavior.
-See [the executable development](../examples/user-dsl.lisp).
+`holai/user` implements the first part of the [v0.3 language specification](USER-DSL-SPEC.html).
+The public package is `holai.user`, with nickname `holai-user`.
+It uses the generated HOL inference, definition and proof procedures; it adds no axioms.
+This implementation replaces the earlier prototype syntax. It does not yet implement the entire specification.
 
-```lisp
-(defthm implication-identity
-  (implies p p)
-  (assume h)
-  (exact h))
-
-(defthm polymorphic-reflexivity
-  (forall (x) (= x x))
-  intro
-  refl)
-
-(defthm conjunction-swap
-  (implies (and p q) (and q p))
-  (meson))
-```
-
-Statements and proof commands are literal data.
-No quote, tuple construction, function-value notation or Lisp lambda is required.
-They are never evaluated as Common Lisp programs by the DSL.
-The normal Lisp reader still reads source files; this is not an untrusted-input reader.
-
-## Terms and types
-
-`(term syntax)` produces a typed HOL term.
-`(read-term syntax :expected-type type)` is its data-driven counterpart.
-`(hol-type syntax)` elaborates a type expression.
-
-| Syntax | Meaning |
-| --- | --- |
-| `x`, `(f x y)` | Inferred variable/constant and curried application |
-| `true`, `false`, `t`, `nil` | HOL truth and falsity |
-| `(= x y)`, `(and p q)`, `(or p q)`, `(not p)` | Equality and connectives |
-| `(implies p q)`, `(iff p q)` | Implication and Boolean equivalence |
-| `(forall (x y) p)`, `(exists (x) p)`, `(exists1 (x) p)` | Quantifiers |
-| `(lambda (x y) body)` | HOL abstraction |
-| `(if p x y)` | HOL conditional |
-| `0`, `42`, `(+ x y)`, `(< x y)` | Numerals and ordinary overloaded constants |
-| `(x :type num)`, `(the num x)` | Explicit term constraint |
-| `(forall ((x :type num) y) p)` | Optional binder constraints |
-| `"!x:num. x + 0 = x"` | Original HOL term syntax, also usable as a subterm |
-| `bool`, `num`, `real`, `a` | Registered ground types or named type variables |
-| `(-> a b c)`, `(list a)`, `(prod a b)` | Right-associated function type and type constructors |
-| `"num->bool"` | Original HOL type syntax, including registered abbreviations |
-
-Symbol spelling is lowercased independently of the caller's package.
-HOL's case-sensitive uppercase names are available as HOL strings, such as `("MAP" f xs)`; existing generated theorem references use package-qualified symbols, such as `holai.bool:TRUTH`.
-Logical aliases are reserved as S-expression variable names.
-Binders must list distinct variable names, but nested binders may shadow names.
-Variables are inferred from use without declarations; unrecognized names follow HOL Light's free-variable convention rather than generating new constants.
-
-Elaboration constructs `holai.preterm` preterms directly, then uses the translated `retypecheck` and `term_of_preterm` functions.
-All uses of a free variable in one term share its inferred type, while each use of a polymorphic constant is freshly instantiated.
-Applications, binders, annotations and expected results contribute constraints.
-For example, `(read-term '(+ x y) :expected-type 'num)` selects natural addition, and the same syntax with expected type `real` selects real addition.
-Proof statements are constrained to `bool` before inference, including strings.
-
-Unconstrained types remain HOL type variables, with upstream's type-invention notice; they are not arbitrarily replaced by a ground type.
-Where several overloaded instances remain possible, the existing HOL interface priority decides the choice; this is not a claim of principal overload resolution.
-Use a type annotation for the intended numeric domain when it is ambiguous.
-Ill-typed applications and infinite types fail rather than inserting coercions.
-The DSL does not change global parser priorities or implicit-type settings.
-
-## Proofs
-
-`(prove statement command ...)` returns a theorem without registering a name.
-`(defthm name statement command ...)` registers a theorem after complete success.
-`(theorem 'name)` retrieves it; names are shared across DSL developments and symbol names are lowercased, whereas string names preserve case.
-An unsuccessful redefinition leaves the previous registered theorem intact.
-The data API is `(prove-term statement command-list)`.
-
-| Command | Effect |
-| --- | --- |
-| `intro`, `intros` | Introduce one / repeatedly introduce universal variables or premises |
-| `(fix x)` | Introduce a universal variable with an explicit name and inferred type |
-| `(assume h)` | Discharge an implication and label its premise |
-| `assumption`, `refl`, `split` | Use a hypothesis, reflexivity, conjunction introduction |
-| `(exact name)`, `(apply name)` | Match and instantiate a theorem / use matching modus ponens |
-| `(rewrite names...)`, `(simp names...)` | Original rewriting / simplification |
-| `(asm-rewrite names...)`, `(asm-simp names...)` | Also use the current hypotheses |
-| `(meson names...)`, `taut`, `arith` | Original assumption-aware MESON, ITAUT, arithmetic tactics |
-| `(cases p)` | Boolean case split |
-| `induct`, `(induct principle)` | Natural number induction / a registered induction theorem, followed by stripping premises |
-| `asm-arith` | Arithmetic using induction hypotheses and other assumptions |
-| `(witness term)` | Existential witness inferred against the existential variable's type |
-| `(have h statement commands...)` | Prove a local lemma under the current hypotheses |
-| `(then commands...)` | Sequence, applying each command to every remaining goal |
-| `(thenl command branch...)` | Match one branch command to each produced subgoal |
-| `(orelse a b)`, `(try a)`, `(repeat a)` | Original failure fallback / optional / repeated tactic |
-| `skip`, `fail` | Identity / failing tactic |
-
-A zero-argument command can be written bare or parenthesized.
-The body is an implicit `then`; multi-command branches use `(then ...)`.
-`thenl` checks branch count through the generated tactical.
-As with HOL Light, `repeat` requires a tactic that eventually fails; repeating `skip` does not terminate.
-Local assumption labels take precedence over registered names inside a proof.
-Names used by rewriting, simplification and MESON may also reference local labels.
+## Load and package
 
 ```lisp
-(defthm branching
-  (and true (implies p p))
-  (thenl split
-    (exact holai.bool:TRUTH)
-    (then intro assumption)))
+(asdf:load-system "holai/user")
 
-(defthm with-local-lemma
-  (implies p p)
-  (assume h)
-  (have local-p p (exact h))
-  (exact local-p))
-
-(defthm with-witness
-  (forall ((x :type bool)) (exists (y) (= y x)))
-  intro
-  (witness x)
-  refl)
+(defpackage :my-proofs
+  (:use :cl :holai.user)
+  (:shadowing-import-from :holai.user
+    :defun :defconstant :deftype :defstruct))
+(in-package :my-proofs)
 ```
 
-Proof-local terms are elaborated using free-variable types from the current goal and hypotheses; a witness also receives its expected type from the goal.
-`have` first creates a separate obligation without adding the lemma to that obligation's hypotheses, so a lemma cannot prove itself.
-Finished batch proofs go through the translated `holai.tactics:prove`, which requires no remaining hypotheses and checks the returned conclusion.
-The interactive HOL goal stack is not changed.
+The four shadowed names are logical definition macros.
+Use `cl:defun` for a host Common Lisp function.
+Logical definitions do not create executable CL functions or host constants.
+Names retain symbol identity, home package and escaped case.
+New declarations must use symbols owned by the source package; use `:shadow` when reusing an inherited CL name.
+The macros retain their source package when compiled and later called from a different REPL package.
 
-## Conservative definitions and diagnostics
+The ordinary reader, `load`, `compile-file` and serial ASDF components are used.
+Compiling a development creates declaration plans without introducing kernel types or constants.
+Loading its FASL performs the definitions and proofs.
+Ordinary CL source retains its normal execution privileges.
+
+## Types and terms
 
 ```lisp
-(defhol identity-definition (= (user_identity x) x))
-(defthm identity-on-booleans
-  (forall ((x :type bool)) (= (user_identity x) x))
-  (rewrite identity-definition))
+?a
+(-> ?a ?b bool)
+(list num)
+(prod num bool)
+
+(deftype predicate (?a)
+  (-> ?a bool))
+
+(term
+  (forall (xs)
+    (declare (type (list ?a) xs))
+    (= (append xs (list)) xs)))
 ```
 
-`defhol` invokes the original `holai.pair:new_definition` and registers its defining theorem; it does not introduce an axiom.
-HOL constant definitions persist in the existing kernel state.
-A Common Lisp interoperability layer is outside this DSL.
+Only `?`-prefixed names denote explicit type variables.
+Unknown type constructors and wrong arities are errors.
+Type annotations use `the` and `declare (type ...)`.
+`declare (values type)` constrains a function's single logical result.
+`declare (type-variables ?a ...)` restricts the permitted residual type variables; omission allows inferred polymorphism.
+Named type variables remain rigid during inference.
+
+Terms include application, `lambda`, `forall`, `exists`, `exists1`, `choose`,
+`and`, `or`, `not`, `implies`, `iff`, `if`, total `cond`,
+`let`, `let*`, `the`, `pair`, `cons`, `list`, `set`, `setof`,
+`arbitrary`, and exhaustive constructor `match`.
+Logical lambda lists contain distinct required symbols, without CL lambda-list keywords.
+Bodies contain one logical term after their declarations.
+Host functions and values are not implicitly called or lifted.
+
+Integer and ratio objects are exact.
+Expected types select `num`, `int` or `real` representations; floating-point literals are rejected.
+An otherwise unconstrained numeral defaults to `num`.
+`nil` requires an unambiguous Boolean or list type; `(list)` explicitly denotes an empty list.
+The original overload resolver still selects overloaded operators.
+The specification's complete ambiguity policy and `decimal` syntax remain pending.
+
+`term` captures literal syntax. `read-term` and `check` are CL functions taking quoted syntax:
+
+```lisp
+(read-term '(+ x y) :expected-type 'num)
+(check '(the real 1/2))
+```
+
+Inspection permits free variables. Named declarations reject undeclared free term names.
+Raw HOL text is available explicitly through `(hol-syntax "...")` in inspection;
+it is currently rejected in strict declarations.
+
+## Functions and theorems
+
+```lisp
+(defun identity-function (x)
+  "The polymorphic identity."
+  (declare (type ?a x))
+  x)
+
+(defconstant empty-numbers
+  (the (list num) (list))
+  "An empty list of natural numbers.")
+
+(defthm identity-equation (x)
+  (declare (type num x))
+  (= (identity-function x) x)
+  (simp identity-function))
+```
+
+A theorem has a name, parameter list, optional docstring, declarations, proposition and proof steps.
+Parameters are fixed while proving and universally closed after success.
+The published theorem must have no open assumptions.
+`prove` has the same form without a name and returns an unregistered theorem.
+`(theorem 'identity-equation)` retrieves a registered theorem.
+Explicitly qualified generated theorem symbols can also be used.
+A failed proof preserves the previous named theorem.
+
+Functions register `.definition` and `.equations` theorems.
+A definition name in `simp` or `rewrite` selects its equations.
+Successful identical definitions are reused on reload; documentation changes do not change their logical identity.
+Uninterned macro temporaries are compared using a canonical representation preserving their sharing.
+A changed logical definition at the same name signals `definition-conflict`.
+
+## Datatypes, recursion and records
+
+```lisp
+(defdatatype tree (?a)
+  (leaf (value ?a))
+  (node (left (tree ?a)) (right (tree ?a))))
+
+(defun tree-size (tree)
+  (declare (type (tree ?a) tree) (values num))
+  (match tree
+    ((leaf value) 1)
+    ((node left right)
+     (+ (tree-size left) (tree-size right)))))
+
+(defthm tree-size-positive (tree)
+  (declare (type (tree ?a) tree))
+  (>= (tree-size tree) 1)
+  (induct tree)
+  (simp tree-size)
+  (asm-arith))
+
+(defstruct point (?a)
+  (x ?a)
+  (y ?a))
+```
+
+Fields contain exactly a name and a type. Their declared order is constructor argument order.
+Datatype parameters are explicit, including `()` for ground types.
+Recursive occurrences preserve that parameter list.
+`defdatatypes` introduces a group sharing one parameter list.
+The backend owns datatype construction, including supported nested recursion.
+The frontend rejects duplicate fields/constructors, unused or undeclared parameters,
+negative recursive fields and groups lacking a recognized constructor witness before calling the backend.
+Recognized witness analysis includes empty lists; it is conservative for other nested type constructors.
+
+Generated theorem names include `.induction`, `.recursion`, `.cases`,
+`.injective` when constructors have fields, and `.distinct` when multiple constructors exist.
+They are interned in the owner's package and are not automatically exported.
+Individual constructor injectivity names remain pending.
+
+A top-level exhaustive `match` with distinct constructor heads is lowered to recursion equations.
+The datatype recursion principle is selected automatically.
+Other recursion uses the original general existence procedure and must have closed existence evidence before introduction.
+An optional `(declare (recursion tree.recursion))` selects a principle explicitly.
+Explicit measure/relation and obligation-completion interfaces are not implemented yet.
+
+`defequations` accepts named simultaneously required equations and an optional recursion declaration:
+
+```lisp
+(defequations tree-size-equations (tree)
+  (declare (type (tree ?a) tree) (recursion tree.recursion))
+  (leaf-case (x) (= (tree-size-equations (leaf x)) 1))
+  (node-case (l r)
+    (= (tree-size-equations (node l r))
+       (+ (tree-size-equations l) (tree-size-equations r)))))
+```
+
+Pattern variables must be exactly the clause's explicit variable list.
+Nullary constructors in patterns use `(constructor)`.
+Coverage is checked; existence and compatibility are proved by the original procedures.
+`defstruct` generates `make-point`, `point-x` and `point-y`, with position arguments and logical projection equations.
+Record update syntax remains pending.
 
 ## Inductive relations
 
 ```lisp
-(definductive user-even
-  (user_even 0)
-  (forall (n) (implies (user_even n) (user_even (+ n 2)))))
+(definductive even (n)
+  (declare (type num n))
+  (zero () (even 0))
+  (step (k) (implies (even k) (even (+ k 2)))))
 
-(defthm even-step-example
-  (user_even (+ 0 2))
-  (meson user-even.rules))
+(defthm even-two ()
+  (even (+ 0 2))
+  (meson even.rules))
 ```
 
-The body consists of introduction clauses, inferred together as one conjunction.
-`user-even` and `user-even.rules` name the introduction theorem; `user-even.induction` is the leastness/induction principle and `user-even.cases` is the inversion theorem.
-The HOL predicate itself is `user_even`; the declaration's label need not be its constant name.
-Put `forall` around clause-local variables; schematic parameters and mutually inductive predicates follow HOL Light's inductive-definition conventions.
-Multiple predicates can occur among the conclusions of the same declaration; their combined rules, induction and cases receive the declaration label.
-Before introducing constants, the DSL calls the original existence prover and rejects any remaining monotonicity assumptions.
-It then invokes `new_inductive_definition` and registers only closed theorems.
+The relation lambda list describes its signature.
+Each rule independently binds its explicit variables.
+Its conclusion must be headed by the relation it declares.
+`defrelations group ()` groups mutually inductive relation clauses of the same shape.
+The complete group's signatures are shared during inference.
+`prove_inductive_relations_exist` must return a theorem without residual monotonicity assumptions before constants are introduced.
+Generated results include `.rules`, `.rules.label`, `.induction`, and `.cases`.
+Group parameters, user monotonicity proofs, explicit strong induction and the set declaration wrapper remain pending.
 
-## Algebraic datatypes
+## Proof steps and macros
 
-```lisp
-(defdatatype user_tree
-  (user_leaf a)
-  (user_node user_tree user_tree))
+Implemented steps include introduction, labeled assumptions, exact/apply, refl, split,
+rewrite/asm-rewrite, simp/asm-simp, MESON, taut, arithmetic,
+then/thenl, orelse/try, bounded progress-sensitive repeat, Boolean cases,
+fix, witness, have, show, proof/by blocks, and inferred structural/natural induction.
+`spec` theorem expressions and explicit global `ref` are available.
+A local `have` cannot refer to itself while being proved.
+`orelse` handles tactic failure, allowing name/type diagnostics to escape.
+Batch proofs preserve the original interactive goal stack.
+The complete keyword/position options, general theorem-expression language,
+branch labels and additional automation adapters remain pending.
 
-(defdatatype user_flag user_off user_on)
-(defdatatype user_rose (user_rose_node a (list user_rose)))
-```
+Ordinary `defmacro` and lexical `macrolet` can generate logical syntax.
+Expansion preserves binders, type declarations, pattern labels and gensym identity.
+Expansion is bounded; expanded terms undergo the same scope and type checks.
+No automatic macro hygiene is claimed.
+Handwritten procedural rule/tactic/conversion registration remains pending.
 
-Each constructor lists its field types; a nullary constructor may be bare or parenthesized.
-Unknown field type names such as `a` become type parameters, in the underlying HOL type package's canonical order.
-The declaration infers the parameter list rather than taking an explicit one.
-Refer to the recursive type by its bare name inside its declaration; after definition its instances use ordinary type application, such as `(user_tree num)`.
-Nested recursion through registered datatypes, such as `(list user_rose)`, is handled by the original datatype package.
-Function-valued fields use `(-> num a)`.
-Type/constructor names must be HOL identifiers; use underscores rather than hyphens in these constant/type names.
-String names preserve case, for example `("Leaf" a)`.
-Nullary constructor terms are written as atoms, not zero-argument applications.
+## State and verification
 
-| Registered theorem | Meaning |
-| --- | --- |
-| `user_tree`, `user_tree.induction` | Structural induction |
-| `user_tree.recursion` | Recursion/existence principle |
-| `user_tree.cases` | Constructor exhaustiveness |
-| `user_tree.injective` | Constructor injectivity, when some constructor has fields |
-| `user_tree.distinct` | Constructor distinctness, when there are at least two constructors |
+Errors derive from `dsl-error` and carry the offending form and underlying cause.
+Unknown names, types, scope leaks, obligations and definition conflicts have condition subclasses.
+If a backend definition call fails after entering the potentially mutating operation,
+`kernel-state-uncertain` prevents further definitions until a clean restart.
+The frontend does not claim rollback of the kernel or arbitrary host side effects.
 
-These are original HOL theorems produced by `define_type` and its public theorem accessors.
-The DSL defines one datatype per declaration; it does not add GADTs, dependent indices or a new positivity algorithm.
+Run `make test-user` or `(asdf:test-system "holai/user")`.
+The current focused SBCL run passes 82 language checks and 68 definition checks.
+The suite checks proofs, definitions, inference, independent packages,
+constructor principles, recursion and induction, reload, macros and rejection cases.
+It is separate from the original core differential and PROOF/reader suites.
+The specification's remaining features include contexts/lemma, general mutual recursion,
+subset/quotient/lifting, existence specification, custom simplification/computation resources,
+interactive sessions, procedural proof extensions and full provenance/replay tooling.
+These are implementation work remaining under v0.3, not completed APIs.
 
-## Functions defined by recursion
-
-```lisp
-(defrecursive tree-size
-  (:recursion user_tree.recursion)
-  (= (user_size (user_leaf x)) 1)
-  (forall (l r)
-    (= (user_size (user_node l r)) (+ (user_size l) (user_size r)))))
-
-(defthm tree-size-positive
-  (forall ((t0 :type (user_tree num))) (<= 1 (user_size t0)))
-  (induct user_tree.induction)
-  (asm-rewrite tree-size)
-  asm-arith)
-
-(defrecursive natural-copy
-  (= (user_copy 0) 0)
-  (forall (n) (= (user_copy ("SUC" n)) ("SUC" (user_copy n)))))
-
-(defthm copy-identity
-  (forall ((n :type num)) (= (user_copy n) n))
-  induct
-  (asm-rewrite natural-copy))
-```
-
-An initial `(:recursion theorem-name)` selects `new_recursive_definition` with that closed recursion principle; existing generated principles, such as `holai.nums:num_RECURSION`, are also accepted.
-Omitting it selects the original general `holai.define:define`, which recognizes registered datatype recursion and attempts its existing termination/well-definedness proofs.
-Both routes infer all equations together and register the resulting closed theorem as the label and `label.equations`.
-Free left-hand-side variables are universally closed by the backend; explicit `forall` gives clause-local binding before type inference.
-The general backend defines one function at a time; simultaneous definitions require a suitable explicit recursion theorem.
-Termination automation retains the original backend's limits: arbitrary recursive programs are not accepted merely because they are syntactically valid.
-No separate function-induction or termination theorem is fabricated; structural proofs use the datatype/natural-number induction principles.
-
-Successful identical inductive and function declarations are memoized for reloading the same source forms; datatype redeclaration uses the original package's benign-redefinition mechanism.
-New theorem bundles are registered only after validation, so a failed declaration does not replace an existing DSL theorem bundle.
-Kernel definitions are persistent: this does not promise transactional rollback of every auxiliary definition that an upstream definition procedure may introduce before failure.
-
-Malformed DSL syntax and original HOL failures signal `dsl-error`.
-`dsl-error-form` retains the input and `dsl-error-cause` retains the underlying HOL condition or diagnostic text.
-Proof fallback catches original HOL tactic failures before this outer diagnostic conversion, preserving the generated `ORELSE` semantics.
-Host interrupts and unrelated implementation errors are not swallowed.
-
-Run `(asdf:test-system "holai/user")` for the focused type-inference and proof suite, or `make test-user` in the configured Lisp environment.
-This exercises the new layer against the complete generated core, independently of the translator's existing OCaml differential/release checks.
+See [examples/user-dsl.lisp](../examples/user-dsl.lisp) for a compilable development.

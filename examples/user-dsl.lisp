@@ -1,78 +1,64 @@
-;; Load (asdf:load-system "holai/user") before loading this development.
-(in-package :holai.user)
+;; (asdf:load-system "holai/user"), then LOAD or COMPILE-FILE this file.
+(defpackage :holai.examples.user
+  (:use :cl :holai.user)
+  (:shadowing-import-from :holai.user :defun :defconstant :deftype :defstruct)
+  (:export :tree :leaf :node :tree-size :tree-size-positive :even :even-two))
+(in-package :holai.examples.user)
 
-(defthm implication-identity
-  (implies p p)
+(defmacro implies* (p q)
+  `(implies ,p ,q))
+
+(defthm implication-identity (p)
+  "Every proposition implies itself."
+  (declare (type bool p))
+  (implies* p p)
   (assume h)
   (exact h))
 
-(defthm polymorphic-reflexivity
-  (forall (x) (= x x))
-  intro
-  refl)
+(defun identity-function (x)
+  "The polymorphic identity function."
+  (declare (type ?a x))
+  x)
 
-(defthm conjunction-swap
-  (implies (and p q) (and q p))
-  (meson))
+(defthm boolean-identity (x)
+  (declare (type bool x))
+  (= (identity-function x) x)
+  (simp identity-function))
 
-(defthm branching-example
-  (and true (implies p p))
-  (thenl split
-    (exact holai.bool:TRUTH)
-    (then intro assumption)))
+(defdatatype tree (?a)
+  "Binary trees with values at their leaves."
+  (leaf (value ?a))
+  (node (left (tree ?a)) (right (tree ?a))))
 
-(defthm local-lemma-example
-  (implies p p)
-  (assume h)
-  (have local-p p (exact h))
-  (exact local-p))
+(defun tree-size (tree)
+  "Count the leaves."
+  (declare (type (tree ?a) tree) (values num))
+  (match tree
+    ((leaf value) 1)
+    ((node left right)
+     (+ (tree-size left) (tree-size right)))))
 
-(defthm inferred-witness
-  (forall ((x :type num)) (exists (y) (= y x)))
-  intro
-  (witness x)
-  refl)
+(defthm tree-size-positive (tree)
+  (declare (type (tree ?a) tree))
+  (>= (tree-size tree) 1)
+  (induct tree)
+  (simp tree-size)
+  (asm-arith))
 
-(defhol identity-definition
-  (= (user_identity x) x))
+(defstruct point (?a)
+  (x ?a)
+  (y ?a))
 
-(defthm boolean-identity
-  (forall ((x :type bool)) (= (user_identity x) x))
-  (rewrite identity-definition))
+(defthm first-coordinate (x y)
+  (declare (type ?a x y))
+  (= (point-x (make-point x y)) x)
+  (simp point-x))
 
-(defthm natural-add-zero
-  (forall ((n :type num)) (= (+ n 0) n))
-  (arith))
+(definductive even (n)
+  (declare (type num n))
+  (zero () (even 0))
+  (step (k) (implies (even k) (even (+ k 2)))))
 
-(defdatatype user_tree
-  (user_leaf a)
-  (user_node user_tree user_tree))
-
-(defrecursive tree-size
-  (:recursion user_tree.recursion)
-  (= (user_size (user_leaf x)) 1)
-  (forall (l r)
-    (= (user_size (user_node l r)) (+ (user_size l) (user_size r)))))
-
-(defthm tree-size-positive
-  (forall ((t0 :type (user_tree num))) (<= 1 (user_size t0)))
-  (induct user_tree.induction)
-  (asm-rewrite tree-size)
-  asm-arith)
-
-(definductive user-even
-  (user_even 0)
-  (forall (n) (implies (user_even n) (user_even (+ n 2)))))
-
-(defthm even-step-example
-  (user_even (+ 0 2))
-  (meson user-even.rules))
-
-(defrecursive natural-copy
-  (= (user_copy 0) 0)
-  (forall (n) (= (user_copy ("SUC" n)) ("SUC" (user_copy n)))))
-
-(defthm natural-copy-identity
-  (forall ((n :type num)) (= (user_copy n) n))
-  induct
-  (asm-rewrite natural-copy))
+(defthm even-two ()
+  (even (+ 0 2))
+  (meson even.rules))

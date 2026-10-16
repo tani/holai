@@ -1,51 +1,65 @@
 (in-package :holai.user)
+(declaim (ftype function goal-term command-tactic))
 
-(defvar *theorems* (make-hash-table :test #'equal))
-
-(defun theorem-key (name)
-  (unless (or (symbolp name) (stringp name))
-    (reject name "Expected a theorem name"))
-  ;; DSL names are independent of the host package of an unqualified symbol.
-  (name-text name))
-
-(defun theorem (name)
-  "Look up a DSL theorem or an explicitly qualified generated theorem symbol."
-  (or (gethash (theorem-key name) *theorems*)
+(cl:defun theorem (name)
+  "Return a registered theorem or an explicitly qualified generated theorem."
+  (or (and (symbolp name) (gethash name *theorems*))
       (when (and (symbolp name) (boundp name)
                  (let ((package (symbol-package name)))
-                   (and package
-                        (uiop:string-prefix-p "HOLAI." (package-name package)))))
+                   (and package (uiop:string-prefix-p "HOLAI." (package-name package)))))
         (let ((value (symbol-value name)))
-          ;; Observation uses the public kernel API, never private constructors.
           (handler-case (progn (holai.fusion:concl value) value)
             (holai.runtime.core:failure () nil))))
-      (reject name "Unknown theorem")))
+      (reject-kind 'dsl-name-error name "Unknown theorem")))
 
-(defun goal-theorem (name goal)
-  (let ((label (theorem-key name)))
-    (or (loop for entry in (fst goal)
-              when (string= label (fst entry)) return (snd entry))
-        (theorem name))))
+(cl:defun goal-theorem (name goal)
+  (if (consp name)
+      (case (car name)
+        (ref (require-arity name (cdr name) 1) (theorem (second name)))
+        (spec (unless (>= (length name) 3) (reject name "SPEC needs a theorem and terms"))
+          (reduce (lambda (th syntax)
+                    (holai.bool:ISPEC (goal-term syntax goal) th))
+                  (cddr name) :initial-value (goal-theorem (second name) goal)))
+        (otherwise (reject name "Unknown theorem expression")))
+      (or (loop for entry in (fst goal)
+                when (string= (variable-name name) (fst entry)) return (snd entry))
+          (theorem name))))
 
-(defun goal-variables (goal)
+(cl:defun rewrite-theorem (name goal)
+  (if (and (symbolp name) (gethash name *constants*)
+           (not (gethash name *theorems*)))
+      (theorem (result-name name ".equations"))
+      (goal-theorem name goal)))
+
+(cl:defun goal-variables (goal)
   (holai.fusion:freesl
     (cons (snd goal) (mapcar (lambda (entry) (holai.fusion:concl (snd entry)))
                            (fst goal)))))
 
-(defun goal-term (syntax goal &optional expected-type)
-  (read-term syntax :expected-type expected-type :variables (goal-variables goal)))
+(cl:defun goal-term (syntax goal &optional expected-type expected-hol-type)
+  (let* ((variables (goal-variables goal))
+         (names (mapcar (lambda (v) (fst (holai.fusion:dest_var v))) variables)))
+    (labels ((symbols (form)
+               (cond ((consp form) (append (symbols (car form)) (symbols (cdr form))))
+                     ((symbolp form) (list form)))))
+      (let ((*bindings* (append *bindings*
+                         (remove-if-not (lambda (symbol)
+                                          (member (variable-name symbol) names :test #'string=))
+                                        (symbols syntax)))))
+        (read-term syntax :expected-type expected-type :expected-hol-type expected-hol-type
+                          :variables variables)))))
 
-(defun sequence-tactics (commands)
+(cl:defun sequence-tactics (commands)
   ;; THEN applies each following command to every remaining subgoal.
   (reduce (lambda (left right) (funcall holai.tactics:THEN left right))
           (mapcar #'command-tactic commands) :initial-value #'holai.tactics:ALL_TAC))
 
-(defun theorem-list-tactic (names constructor)
+(cl:defun theorem-list-tactic (names constructor)
   (lambda (goal)
     (funcall (funcall constructor
-                     (mapcar (lambda (name) (goal-theorem name goal)) names)) goal)))
+                     (mapcar (lambda (name) (rewrite-theorem name goal)) names)) goal)))
 
-(defun command-tactic (command)
+(cl:defun command-tactic (command)
   (let* ((form (if (and command (symbolp command)) (list command) command)))
     (unless (and (consp form) (proper-list-p form) (symbolp (car form)))
       (reject command "Expected a proof command"))
@@ -69,9 +83,16 @@
            ((string= operator "skip") #'holai.tactics:ALL_TAC)
            (t holai.tactics:NO_TAC)))
         ((string= operator "assume")
-         (require-arity command arguments 1)
-         (holai.tactics:DISCH_THEN
-           (holai.tactics:LABEL_TAC (theorem-key (first arguments)))))
+         (require-arity command arguments 1 2)
+         (let ((tactic (holai.tactics:DISCH_THEN
+                        (holai.tactics:LABEL_TAC (variable-name (first arguments))))))
+           (lambda (goal)
+             (when (second arguments)
+               (unless (holai.fusion:aconv
+                         (fst (funcall holai.basics:dest_imp (snd goal)))
+                         (goal-term (second arguments) goal 'bool))
+                 (reject command "ASSUME proposition differs from antecedent")))
+             (funcall tactic goal))))
         ((member operator '("exact" "apply") :test #'string=)
          (require-arity command arguments 1)
          (lambda (goal)
@@ -88,7 +109,7 @@
                  ((string= operator "simp") #'holai.simp:SIMP_TAC)
                  ((string= operator "asm-simp") holai.simp:ASM_SIMP_TAC)
                  (t holai.meson:ASM_MESON_TAC))))
-        ((string= operator "then") (sequence-tactics arguments))
+        ((member operator '("then" "proof" "by" "all-goals") :test #'string=) (sequence-tactics arguments))
         ((string= operator "thenl")
          (unless arguments (reject command "THENL needs a tactic and its branches"))
          (funcall holai.tactics:THENL (command-tactic (first arguments))
@@ -98,11 +119,24 @@
          (holai.tactics:ORELSE (command-tactic (first arguments))
                               (command-tactic (second arguments))))
         ((member operator '("try" "repeat") :test #'string=)
-         (require-arity command arguments 1)
-         (let ((tactic (command-tactic (first arguments))))
+         (require-arity command arguments 1 (if (string= operator "repeat") 3 1))
+         (let* ((tactic (command-tactic (first arguments)))
+                (limit (if (cdr arguments)
+                           (progn (unless (and (eq (second arguments) :max-steps)
+                                               (integerp (third arguments))
+                                               (plusp (third arguments)))
+                                    (reject command "Expected positive :MAX-STEPS"))
+                                  (third arguments)) 1000)))
            (if (string= operator "try")
                (holai.tactics:ORELSE tactic #'holai.tactics:ALL_TAC)
-               (holai.tactics:REPEAT tactic))))
+               (lambda (goal)
+                 (let ((remaining limit))
+                   (funcall (holai.tactics:REPEAT
+                              (holai.tactics:CHANGED_TAC
+                                (lambda (g)
+                                  (unless (plusp remaining)
+                                    (reject command "REPEAT resource limit"))
+                                  (decf remaining) (funcall tactic g)))) goal))))))
         ((string= operator "cases")
          (require-arity command arguments 1)
          (lambda (goal)
@@ -110,17 +144,29 @@
                       (goal-term (first arguments) goal 'bool)) goal)))
         ((string= operator "induct")
          (require-arity command arguments 0 1)
-         (if (null arguments)
-             holai.nums:INDUCT_TAC
+         (if (null arguments) holai.nums:INDUCT_TAC
              (lambda (goal)
-               (funcall
-                 (funcall holai.tactics:THEN
-                   (holai.tactics:MATCH_MP_TAC (goal-theorem (first arguments) goal))
-                   (holai.tactics:REPEAT #'holai.tactics:STRIP_TAC)) goal))))
+               (let* ((variable (find (variable-name (first arguments)) (goal-variables goal)
+                                      :key (lambda (v) (fst (holai.fusion:dest_var v)))
+                                      :test #'string=))
+                      (principle (if variable
+                                     (let* ((type (holai.fusion:type_of variable))
+                                            (parts (holai.fusion:dest_type type)))
+                                       (or (gethash (fst parts) *type-inductions*)
+                                           (when (string= (fst parts) "num") holai.nums:num_INDUCTION)
+                                           (reject command "No registered induction principle")))
+                                     (goal-theorem (first arguments) goal)))
+                      (intro (funcall holai.tactics:THEN
+                               (holai.tactics:MATCH_MP_TAC principle)
+                               (holai.tactics:REPEAT #'holai.tactics:STRIP_TAC))))
+                 (funcall (if variable
+                              (funcall holai.tactics:THEN
+                                (holai.tactics:SPEC_TAC (tuple variable variable)) intro)
+                              intro) goal)))))
         ((string= operator "fix")
          (require-arity command arguments 1)
-         (let ((name (name-text (first arguments))))
-           (binder-preterm (first arguments))
+         (let ((name (variable-name (first arguments))))
+           (require-variables (list (first arguments)))
            (lambda (goal)
              (let ((variable (fst (funcall holai.basics:dest_forall (snd goal)))))
                (funcall (funcall holai.tactics:X_GEN_TAC
@@ -131,19 +177,12 @@
          (lambda (goal)
            (let* ((variable (fst (funcall holai.basics:dest_exists (snd goal))))
                   (type (holai.fusion:type_of variable))
-                  (witness (funcall term_of_preterm
-                             (funcall retypecheck
-                               (mapcar (lambda (v)
-                                         (tuple (fst (holai.fusion:dest_var v))
-                                                (pretype_of_type (holai.fusion:type_of v))))
-                                       (goal-variables goal))
-                               (make-Typing (syntax-preterm (first arguments))
-                                            (pretype_of_type type))))))
+                  (witness (goal-term (first arguments) goal nil type)))
              (funcall (funcall holai.tactics:EXISTS_TAC witness) goal))))
         ((string= operator "have")
          (unless (>= (length arguments) 3)
            (reject command "HAVE needs a label, proposition and proof commands"))
-         (let ((label (theorem-key (first arguments)))
+         (let ((label (variable-name (first arguments)))
                (proof (sequence-tactics (cddr arguments))))
            (lambda (goal)
              (funcall
@@ -152,33 +191,40 @@
                    (goal-term (second arguments) goal 'bool)
                    (holai.tactics:LABEL_TAC label))
                  (list proof #'holai.tactics:ALL_TAC)) goal))))
+        ((string= operator "show")
+         (unless (>= (length arguments) 2) (reject command "SHOW needs a proposition and proof"))
+         (let ((proof (sequence-tactics (cdr arguments))))
+           (lambda (goal)
+             (unless (holai.fusion:aconv (snd goal) (goal-term (first arguments) goal 'bool))
+               (reject command "SHOW differs from the current goal"))
+             (funcall proof goal))))
         (t (reject command "Unknown proof command ~a" operator))))))
 
-(defun prove-term (statement commands)
-  "Infer a proposition and execute proof commands, requiring a closed kernel theorem."
-  (unless (proper-list-p commands) (reject commands "Expected a list of proof commands"))
-  (call-with-dsl-context statement
-    (lambda ()
-      (holai.tactics:prove
-        (tuple (read-term statement :expected-type 'bool)
-               (sequence-tactics commands))))))
+(cl:defun prove-declaration (parameters body)
+  (require-variables parameters)
+  (multiple-value-bind (rest specs)
+      (declaration-body body parameters '(type type-variables ignorable simp) t)
+    (unless (>= (length rest) 2) (reject body "Expected a proposition and proof steps"))
+    (when (second (assoc 'simp specs))
+      (reject body "SIMP declaration needs a local simpset context, not implemented yet"))
+    (let* ((*bindings* parameters) (*strict-names* t) (*variable-names* nil) (*elaboration-active* t)
+           (*annotations* (annotation-bindings specs))
+           (statement (read-term (first rest) :expected-type 'bool))
+           (variables (mapcar (lambda (symbol)
+                                (or (find (variable-name symbol) (holai.fusion:frees statement)
+                                          :key (lambda (v) (fst (holai.fusion:dest_var v))) :test #'string=)
+                                    (read-term symbol))) parameters))
+           (result (call-with-dsl-context body
+                     (lambda () (holai.tactics:prove (tuple statement (sequence-tactics (cdr rest))))))))
+      (let ((closed (reduce (lambda (v th) (funcall holai.bool:GEN v th))
+                            variables :from-end t :initial-value result)))
+        (require-type-parameters specs (holai.fusion:concl closed) body)
+        closed))))
 
-(defmacro prove (statement &body commands)
-  `(prove-term ',statement ',commands))
-
-(defmacro defthm (name statement &body commands)
-  "Register NAME only after proving the entire statement without open hypotheses."
-  `(setf (gethash (theorem-key ',name) *theorems*)
-         (prove-term ',statement ',commands)))
-
-(defun define-term (name statement)
-  (call-with-dsl-context statement
-    (lambda ()
-      (let* ((key (theorem-key name))
-             (definition (funcall holai.pair:new_definition
-                                 (read-term statement :expected-type 'bool))))
-        (setf (gethash key *theorems*) definition)))))
-
-(defmacro defhol (name statement)
-  "Introduce a conservative HOL definition and register its defining theorem."
-  `(define-term ',name ',statement))
+(defmacro prove (parameters &body body &environment environment)
+  `(prove-declaration ',parameters ',(expand-dsl body environment)))
+(defmacro defthm (name parameters &body body &environment environment)
+  (declaration-expansion `(progn
+     (require-owner ',name)
+     (let ((result (prove-declaration ',parameters ',(expand-dsl body environment))))
+       (setf (gethash ',name *theorems*) result)))))

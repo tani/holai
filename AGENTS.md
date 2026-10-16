@@ -647,3 +647,25 @@ readable OCaml-to-Lisp translation, even when argument evaluation order differs.
   The definition suite also passed twice in one process. Full pinned release,
   original differential/regeneration audits and extra-host validation were not rerun.
 
+
+### Current user language increment (specification v0.3)
+
+- The user authorized implementation after v0.3; the design snapshot is in
+  `docs/USER-DSL-SPEC.html`. Keep its full target distinct from the implemented
+  subset in `docs/USER-DSL.md` and DESIGN39.3.
+- Preserve symbol/package identity, source-package capture, ?a variables,
+  DECLARE/THE, explicit lambda lists and `(field type)` datatype/record syntax.
+  Use CL:DEFUN for host helpers; never redefine CL's standard symbols.
+- Keep inference and proofs in the generated procedures. Numeral/NIL elaboration
+  must use the inferred type and same-typed kernel substitution. Unresolved NIL,
+  invalid numeric types, unbound names and open proof obligations must fail.
+- COMPILE-FILE must not introduce kernel types/constants. Preserve source/FASL
+  loading, same-definition reuse, gensym canonicalization and conflict rejection.
+  A potentially partial backend failure must not be described as rolled back.
+- Preserve constructor coverage and independent wildcard variables, checked
+  correspondence of named rules/equations, package independence, parameter
+  order and absence of new axioms. Run `make test-user` after changes.
+- Current focused SBCL evidence is 82 language checks, 68 definition checks,
+  and 69 independent PROOF/reader checks. Four user units, two tests and the
+  example compile with zero compiler warnings/errors; 15 macro redefinition
+  load conditions are separate. This is not full v0.3/release/other-host evidence.

@@ -3637,3 +3637,84 @@ Eight SBCL macro redefinition conditions were observed during load and recorded 
 Python syntax checks and `git diff --check` passed.
 These are focused measurements, not a new pinned Nix release/differential/source-map/clean-generation pass or an additional-Lisp compatibility claim.
 
+
+### 39.3 Common Lisp embedded DSL, specification v0.3
+
+The user authorized implementation after reviewing the v0.3 specification on
+2026-10-16. `docs/USER-DSL-SPEC.html` preserves that design snapshot; its original
+design-phase freeze language is superseded by this implementation authorization.
+`docs/USER-DSL.md` records the actual supported subset and the remaining work.
+This is the first implementation increment, not full v0.3 conformance.
+
+The same four optional handwritten units now use CL symbol identity rather than
+case-folded string keys. Logical DEFUN/DEFCONSTANT/DEFTYPE/DEFSTRUCT have separate
+symbols, imported through SHADOWING-IMPORT-FROM. Their macros retain the declaring
+source package across compilation and later execution. Public logical names are
+encoded injectively from the package and symbol names for the generated core;
+CL's standard definition cells are not changed. Builtin mathematical names use
+an explicit alias table. Generated theorem names stay in the owner's package.
+
+Types use explicit ?a variables, declared datatype parameter order, THE, and
+DECLARE TYPE/VALUES/TYPE-VARIABLES. Unknown type constructors and undeclared
+logical names fail. Inference, occurs checks and constant instantiation still
+belong to generated preterm procedures. Numeral and NIL placeholders receive
+types from that inference, are replaced by same-typed kernel terms, and cannot
+escape as free schematic variables. Numerals support exact num/int/real values;
+NIL requires Boolean or list information. The upstream operator-overload policy
+is retained for this increment; complete strict ambiguity handling is pending.
+
+Logical DEFUN covers nonrecursive and automatically recognized recursion.
+Distinct constructor branches are lowered to simultaneous equations and the
+registered datatype recursion principle is inferred. The original recursive
+existence procedure must prove the required closed theorem before introduction;
+other recursion uses the original general existence procedure. DEFEQUATIONS
+provides explicit labelled equations. DEFTHM and PROVE take explicit parameters,
+prove the open parameterized statement, then GEN parameters in declaration order
+and check allowed type variables on the closed result. Registered proofs have no
+open hypotheses. Local HAVE uses the original subgoal mechanism. REPEAT requires
+progress and has a bound. Goal-local variables remain available after FIX.
+
+DEFDATATYPE/DEFDATATYPES use `(field type)` pairs and explicit regular type
+parameters, including mutual groups and tested nested lists/function fields.
+The adapter constructs inputs for the original DEFINE_TYPE_RAW and retains
+induction, recursion, cases, injectivity and distinctness results. Conservative
+preflight witness/variance checks reject unsupported cases before mutation.
+DEFSTRUCT derives positional MAKE-name constructors and name-field projections.
+Constructor matrices check match coverage; wildcard occurrences receive separate
+fresh variables. DEFINDUCTIVE and parameter-free DEFRELATIONS provide named rules
+and mutual least relations, rejecting residual monotonicity conditions before
+constant introduction. Named clause results are matched against their source
+propositions using checked kernel proofs, not assigned solely by conjunct order.
+
+Ordinary DEFMACRO/MACROLET expand at capture time with their lexical environment.
+The frontend preserves binder lists, declarations, pattern labels and CL special
+syntax. Gensym sharing is retained during elaboration and canonicalized for
+successful-definition reload comparison. COMPILE-FILE does not introduce logical
+constants or types. Loading FASLs introduces checked declarations; identical
+reload reuses constants while changed logical definitions fail. Host code keeps
+normal CL execution privileges. A potentially mutating backend failure marks the
+kernel uncertain and prevents further definition introduction; no rollback of
+kernel or arbitrary host effects is promised.
+
+Remaining v0.3 work includes proof contexts/lemma, general mutual recursion,
+explicit measure/relation and obligation completion, subset/quotient/lifting,
+existence specifications, full conversions/computation/simpset resources,
+procedural proof extension registration, interactive sessions, full standard-name
+coverage and complete provenance/replay tooling. Unsupported declarations are
+not implemented by adding axioms. The original four-unit optional ASD order,
+runtime/full-core boundary and native observation boundary remain unchanged.
+
+Focused x86_64 Linux / Ubuntu SBCL 2.2.9 validation: the final fresh complete-core
+`make test-user` passes 82 term/proof/package checks and 68 definition checks.
+The latter include compile-without-kernel-mutation, FASL loading/reloading,
+parameter ordering, mutual and nested types, record projections, wildcard
+independence, labelled rules, recursion/induction, no new axioms and negative cases.
+A separate fresh-image compilation of all four optional units, both test units
+and the example has zero compiler warnings (including style warnings) or errors.
+Fifteen macro redefinition conditions during load are counted separately.
+The compiled example executes, the definition suite passes twice in one process,
+and the original independent PROOF/reader suite retains all 69 passing checks.
+Runtime messages about invented type variables are not zero-load-diagnostic
+claims. Generated/runtime/translator/vendor inputs are unchanged.
+The pinned Nix release, OCaml differential, source-map/regeneration audits and
+additional-host compatibility were not rerun for this optional-layer increment.

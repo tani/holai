@@ -99,7 +99,9 @@ Ordinary application uses standard bare `funcall`, not a runtime wrapper.
 See DESIGN for currying, sharp-backquote and namespace rules.
 
 For S-expression terms and named proofs, see the [proof DSL](docs/USER-DSL.md).
-It also supports inductive relations, recursive functions and algebraic datatypes.
+The v0.3 implementation uses CL packages, `?a` type variables, `declare`,
+logical `defun`/`defthm`, named-field datatypes, records and inductive relations.
+The [manual](docs/USER-DSL.md) distinguishes implemented features from the remaining specification.
 Run its focused checks with `make test-user`.
 
 ## Licenses
