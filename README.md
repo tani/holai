@@ -71,6 +71,7 @@ Then evaluate:
 (asdf:load-asd #p"/absolute/path/to/holai/holai.asd")
 (asdf:load-system "holai/runtime")   ; Runtime only
 (asdf:load-system "holai")           ; Full pinned core
+(asdf:load-system "holai/user")      ; Type-inferred proof DSL (holai.user / holai-user)
 ```
 
 The root ASD explicitly orders ordinary serial systems; packages are not
@@ -96,6 +97,9 @@ Use bare `proof` for development notation and nest it for non-left grouping.
 Named functions use `#'name`; function-valued operators use their symbols.
 Ordinary application uses standard bare `funcall`, not a runtime wrapper.
 See DESIGN for currying, sharp-backquote and namespace rules.
+
+For S-expression terms and named proofs, see the [proof DSL](docs/USER-DSL.md).
+Run its focused checks with `make test-user`.
 
 ## Licenses
 

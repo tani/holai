@@ -126,6 +126,9 @@ required += ["holai/runtime/pattern.lisp", "holai/tests/pattern.lisp", "holai/te
 required += ["holai/tests/star-allocator.ml", "holai/tests/fixtures/star_names.ml", "holai/tests/star-names.py", "holai/tests/star-names.lisp", "misc/reports/star-names.json", "misc/reports/STAR-NAMES.md"]
 pins = json.loads((root / "vendor/SOURCES.json").read_text())["input_sha256"]
 required += ["holai/tests/random.lisp"]
+required += ["holai/user/package.lisp", "holai/user/terms.lisp", "holai/user/proofs.lisp",
+             "holai/tests/user-dsl.lisp", "holai/tests/user-dsl-runner.lisp",
+             "misc/scripts/test-user.py", "docs/USER-DSL.md", "examples/user-dsl.lisp"]
 required += ["misc/scripts/test-matrix.py", "misc/reports/implementation-matrix.json"]
 required += [f"misc/reports/implementations/sbcl/{name}"
              for name in ["verification.json", "compile-diagnostics.json", "compile-diagnostics.txt",
@@ -308,6 +311,11 @@ for host in ("sbcl",):
                      if line.startswith("Pattern stale FASL rejected:")]
     assert stale_markers == [rejection["marker"]]
     assert verification["native_checks"] > 0 and verification["proof_dsl_checks"] > 0
+    assert verification["user_dsl_checks"] > 0
+    user_sources = [*(root / "holai/user").glob("*.lisp"), root / "holai/tests/user-dsl.lisp"]
+    assert verification["user_dsl_source_sha256"] == {
+        str(path.relative_to(root)): hashlib.sha256(path.read_bytes()).hexdigest()
+        for path in user_sources}, "Stale user DSL source fingerprints"
     assert verification["defunc_protocol_checks"] > 0 and verification["standard_random_checks"] > 0
     assert verification["sigint_adapter_checked"] and verification["sigint_previous_hook_restored"]
     assert verification["sigint_policy"] == "restore-previous-native-lisp-hook"

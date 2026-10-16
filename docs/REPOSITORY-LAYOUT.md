@@ -6,6 +6,12 @@ static descendants. Root `holai.asd` handwrites ordinary serial systems:
 load `holai` for the core or `holai/runtime` for the runtime. No inferred
 per-source systems or old-name compatibility aliases remain.
 
+The optional `holai/user` system adds handwritten proof-language sources in
+`holai/user/`, depending on the full generated core without changing its order.
+Its public package is `holai.user`, with nickname `holai-user`; focused tests
+use `holai/user/tests`. Documentation and a complete development are in
+`docs/USER-DSL.md` and `examples/user-dsl.lisp`.
+
 The current explicit-load-order/dotted-package `make release` passed locally on
 ARM64 Linux in 287.53 seconds: SBCL full-core, all three additional-host
 compatibility profiles, cold diagnostics, 93 identical clean outputs, 55 unchanged

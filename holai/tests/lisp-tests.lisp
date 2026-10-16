@@ -437,3 +437,5 @@
               (holai.runtime.core:= (rest axioms) *initial-source-axioms*))
          "source axioms remain unchanged beside the one explicit primitive-kernel fixture axiom"))
 (format t "Native checks passed: ~d~%" *checks*)
+;; The optional language runs after every original observation and registry check.
+(asdf:test-system "holai/user")

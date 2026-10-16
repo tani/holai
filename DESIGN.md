@@ -3561,3 +3561,44 @@ release matrix. Nix `test-<id>` apps use the ordinary host-appropriate suite;
 `full-core-<id>` explicitly runs that host's complete native suite. Neither
 optional command is invoked by ordinary `make test` or `make release`.
 
+## 39. Inferred proof language in holai.user
+
+The user requested a proof DSL under `holai.user` (nickname `holai-user`) built on the generated core, with active type inference and no Common Lisp interoperability layer.
+This authorizes a new optional ordinary serial system `holai/user` in the single root ASD, depending on `holai`, plus `holai/user/tests`.
+The existing runtime and 46-file core systems retain their original physical order and behavior.
+The handwritten layer lives in `holai/user/{package,terms,proofs}.lisp`; generated files, translation rules and pinned inputs are unchanged.
+
+Literal S-expression syntax becomes generated preterm constructors, not generated Lisp code or a second type checker.
+HOL strings enter through the original lexer/preterm parser and follow the same type-checking path.
+The generated `retypecheck` and `term_of_preterm` own unification, occurs checking, polymorphic constant instantiation and overload resolution.
+Expected proposition types are supplied before inference; proof-local terms inherit goal/hypothesis variable types, and witnesses inherit the existential variable's type.
+`fix` obtains its variable type from the universally quantified goal, and `exact` uses the original `MATCH_ACCEPT_TAC` to instantiate theorem parameters and types.
+Unconstrained types remain schematic, while ambiguous overloads retain upstream interface priority; no completeness or principal-overload inference claim is made.
+The DSL does not alter global parser settings, implicit types or overload priority.
+
+Proof commands construct the original tacticals and tactics, including `SUBGOAL_THEN` for local lemma obligations.
+Completed proofs pass through the original `prove`, with its closed-hypothesis and expected-conclusion checks.
+Named theorem registration occurs only after success; `defhol` uses the original conservative `holai.pair:new_definition`, never `new_axiom`.
+The normal Lisp source reader remains in use, but DSL terms/commands have no host evaluation escape.
+The batch interface does not mutate the interactive goal stack.
+See `docs/USER-DSL.md` for the full grammar, names, failure behavior and deliberate first-version limits.
+
+`asdf:test-system "holai/user"` and `make test-user` run focused type/proof regression checks against the complete core.
+The native suite invokes them only after all original observations and registry assertions, keeping the original differential corpus unchanged.
+The native report records a separate user DSL count and source fingerprints; packaging requires the sources, documentation, example and current fingerprints.
+The core-only cold audit continues to describe exactly its existing 52 units; it is not evidence for the optional DSL's compilation.
+Focused implementation measurements and their limits are recorded below after verification; earlier full release and portability reports are historical, not validation of this addition.
+
+### 39.1 Focused validation
+
+On x86_64 Linux with Ubuntu SBCL 2.2.9, a fresh complete-core `make test-user` passed 102 user DSL checks.
+The suite covers expected-type overload selection, shared schematic types, constant polymorphism, binder shadowing, goal-local variable types, matching theorem instantiation, local lemma obligations, conservative definitions and rejection of invalid/incomplete proofs and infinite types.
+Compiled `examples/user-dsl.lisp` also executed successfully; the suite passed twice in the same process.
+A forced compilation of the three DSL units, test unit and example recorded zero compiler warning conditions, including style warnings, and no compilation errors.
+Loading those compiled macros recorded five SBCL `REDEFINITION-WITH-DEFMACRO` conditions separately; these are not zero-load-diagnostics evidence.
+The existing independent runtime PROOF/reader suite passed all 69 checks after loading the new layer.
+Python syntax checks passed for the modified native/release harness and new focused launcher; `git diff --check` passed.
+The original 46 generated files and all pinned inputs remain unchanged.
+This environment does not provide the pinned Nix/OCaml/Camlp5 toolchain, so full translator regeneration, OCaml differential checks, source-map/clean-generation audits and `make release` were not rerun.
+The new native-suite/release integration is implemented but is not a measured full-release pass or additional-Lisp portability claim.
+

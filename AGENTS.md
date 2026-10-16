@@ -619,3 +619,19 @@ readable OCaml-to-Lisp translation, even when argument evaluation order differs.
   release. The current dotted-package/explicit-ASDF candidate still requires a
   fresh parent release; none of those historical results verifies this cutover.
 
+## Optional user proof language (DESIGN39)
+
+- The user authorizes `holai.user` with nickname `holai-user`, maintained in
+  `holai/user/`, and ordinary `holai/user` / `holai/user/tests` systems in the
+  existing root ASD. Preserve core/runtime ordering and runtime-only loading.
+- Use the generated preterm inference, overload resolution and checked `prove`;
+  do not duplicate the type checker or add axioms to implement DSL commands.
+  Keep literal term/proof syntax independent of host Lisp evaluation.
+- Run `make test-user` for this layer. Native integration runs after all original
+  observations and registry checks; retain separate user counts/fingerprints.
+  DSL compilation is separate from the existing 52-unit core cold audit.
+- Focused SBCL 2.2.9 evidence: 102 DSL and 69 existing PROOF/reader checks passed;
+  compiled example executed and new sources had zero compiler warnings.
+  Five macro redefinition conditions occurred during load, recorded separately.
+  This is not a pinned Nix release or a new other-host portability measurement.
+
