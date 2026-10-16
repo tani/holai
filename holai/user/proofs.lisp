@@ -1,9 +1,10 @@
 (in-package :holai.user)
 (declaim (ftype function goal-term command-tactic))
 
-(cl:defun theorem (name)
+(cl:defun lookup-theorem (name)
   "Return a registered theorem or an explicitly qualified generated theorem."
-  (or (and (symbolp name) (gethash name *theorems*))
+  (or (cdr (assoc name *local-theorems*))
+      (and (symbolp name) (gethash name *theorems*))
       (when (and (symbolp name) (boundp name)
                  (let ((package (symbol-package name)))
                    (and package (uiop:string-prefix-p "HOLAI." (package-name package)))))
@@ -12,7 +13,18 @@
             (holai.runtime.core:failure () nil))))
       (reject-kind 'dsl-name-error name "Unknown theorem")))
 
+(cl:defun theorem (name)
+  (let ((th (lookup-theorem name)))
+    (when *record-proof-references*
+      (pushnew (list name (getf (gethash name *provenance*) :version) th) *proof-references* :test #'equal))
+    th))
+
 (cl:defun goal-theorem (name goal)
+  (when (and (consp name) (symbolp (car name)))
+    (unless (eq (car name) (find-symbol (string-upcase (symbol-name (car name))) :holai.user))
+      (reject name "Unknown theorem-expression operator; import or qualify HOLAI.USER names"))
+    (let ((handler (gethash (name-text (car name)) *theorem-expressions*)))
+      (when handler (return-from goal-theorem (funcall handler name goal)))))
   (if (consp name)
       (case (car name)
         (ref (require-arity name (cdr name) 1) (theorem (second name)))
@@ -26,6 +38,9 @@
           (theorem name))))
 
 (cl:defun rewrite-theorem (name goal)
+  (when (and (symbolp name) (gethash name *constants*)
+             (handler-case (theorem name) (dsl-name-error () nil)))
+    (reject-kind 'dsl-ambiguous-name name "Ambiguous constant and theorem; use (REF name) or a generated equation name"))
   (if (and (symbolp name) (gethash name *constants*)
            (not (gethash name *theorems*)))
       (theorem (result-name name ".equations"))
@@ -51,19 +66,31 @@
 
 (cl:defun sequence-tactics (commands)
   ;; THEN applies each following command to every remaining subgoal.
-  (reduce (lambda (left right) (funcall holai.tactics:THEN left right))
-          (mapcar #'command-tactic commands) :initial-value #'holai.tactics:ALL_TAC))
+  (reduce (lambda (left command)
+            (if (and *focus-refiner* (consp command) (symbolp (car command))
+                     (string= (name-text (car command)) "focus"))
+                (let ((refiner (funcall *focus-refiner* command)))
+                  (lambda (goal) (funcall refiner (funcall left goal))))
+                (funcall holai.tactics:THEN left (command-tactic command))))
+          commands :initial-value #'holai.tactics:ALL_TAC))
 
 (cl:defun theorem-list-tactic (names constructor)
   (lambda (goal)
     (funcall (funcall constructor
                      (mapcar (lambda (name) (rewrite-theorem name goal)) names)) goal)))
 
-(cl:defun command-tactic (command)
+(cl:defun base-command-tactic (command)
   (let* ((form (if (and command (symbolp command)) (list command) command)))
     (unless (and (consp form) (proper-list-p form) (symbolp (car form)))
       (reject command "Expected a proof command"))
     (let ((operator (name-text (car form))) (arguments (cdr form)))
+      (when *tactic-command-resolver*
+        (let ((tactic (funcall *tactic-command-resolver* form)))
+          (when tactic (return-from base-command-tactic tactic))))
+      (unless (eq (car form) (find-symbol (string-upcase (symbol-name (car form))) :holai.user))
+        (reject command "Unknown proof operator; import or qualify HOLAI.USER names"))
+      (let ((handler (gethash operator *proof-commands*)))
+        (when handler (return-from base-command-tactic (funcall handler form))))
       (cond
         ((member operator '("intro" "intros" "assumption" "refl" "split" "taut"
                             "arith" "asm-arith" "skip" "fail") :test #'string=)
@@ -135,7 +162,7 @@
                               (holai.tactics:CHANGED_TAC
                                 (lambda (g)
                                   (unless (plusp remaining)
-                                    (reject command "REPEAT resource limit"))
+                                    (reject-kind 'dsl-resource-exhausted command "REPEAT resource limit"))
                                   (decf remaining) (funcall tactic g)))) goal))))))
         ((string= operator "cases")
          (require-arity command arguments 1)
@@ -200,31 +227,74 @@
              (funcall proof goal))))
         (t (reject command "Unknown proof command ~a" operator))))))
 
+(defvar *goal-labels* (make-hash-table :test #'eq))
+(cl:defun goal-metadata (goal)
+  (or (gethash goal *goal-labels*)
+      (loop for old being the hash-keys of *goal-labels* using (hash-value value)
+            when (holai.runtime.core:= old goal) return value)))
+(cl:defun command-tactic (command)
+  (let ((tactic (base-command-tactic command)))
+    (lambda (goal)
+      (let* ((state
+               #+sbcl (handler-case
+                        (sb-ext:with-timeout (getf *automation-options* :timeout 30)
+                          (funcall tactic goal))
+                        (sb-ext:timeout ()
+                          (reject-kind 'dsl-resource-exhausted command "Proof command timeout"))
+                        (tactic-failure (cause)
+                          (holai.runtime.core:failwith (princ-to-string cause)))
+                        (holai.runtime.stdlib:sys_break (cause)
+                          (error 'dsl-interrupted :form command :cause cause)))
+               #-sbcl (handler-case (funcall tactic goal)
+                        (tactic-failure (cause)
+                          (holai.runtime.core:failwith (princ-to-string cause)))))
+             (label (goal-metadata goal)))
+        (when label
+          (dolist (subgoal (second (holai.runtime.data:tuple-items state)))
+            (unless (goal-metadata subgoal)
+              (setf (gethash subgoal *goal-labels*) label))))
+        state))))
+
 (cl:defun prove-declaration (parameters body)
   (require-variables parameters)
   (multiple-value-bind (rest specs)
       (declaration-body body parameters '(type type-variables ignorable simp) t)
     (unless (>= (length rest) 2) (reject body "Expected a proposition and proof steps"))
-    (when (second (assoc 'simp specs))
-      (reject body "SIMP declaration needs a local simpset context, not implemented yet"))
-    (let* ((*bindings* parameters) (*strict-names* t) (*variable-names* nil) (*elaboration-active* t)
-           (*annotations* (annotation-bindings specs))
-           (statement (read-term (first rest) :expected-type 'bool))
+    (when (and (second (assoc 'simp specs)) (not *context-active*))
+      (reject body "SIMP declaration requires a local proof context"))
+    (let* ((*goal-labels* (make-hash-table :test #'eq))
+           (*record-proof-references* t) (*proof-references* nil)
+           (parameters (require-variables (append *context-parameters* parameters)))
+           (*bindings* parameters) (*strict-names* t) (*variable-names* nil) (*elaboration-active* t)
+           (*annotations* (append (annotation-bindings specs) *annotations*))
+           (statement (read-term
+                        (reduce (lambda (assumption p) `(implies ,(second assumption) ,p))
+                                *context-assumptions* :from-end t :initial-value (first rest))
+                        :expected-type 'bool))
            (variables (mapcar (lambda (symbol)
                                 (or (find (variable-name symbol) (holai.fusion:frees statement)
                                           :key (lambda (v) (fst (holai.fusion:dest_var v))) :test #'string=)
                                     (read-term symbol))) parameters))
            (result (call-with-dsl-context body
-                     (lambda () (holai.tactics:prove (tuple statement (sequence-tactics (cdr rest))))))))
+                     (lambda () (funcall *proof-executor*
+                       (lambda () (holai.tactics:prove
+                         (tuple statement (sequence-tactics
+                           (append (mapcar (lambda (a) `(assume ,(first a))) *context-assumptions*)
+                                   (cdr rest))))))))
+                     :failure-kind 'dsl-proof-failure :expected statement)))
       (let ((closed (reduce (lambda (v th) (funcall holai.bool:GEN v th))
                             variables :from-end t :initial-value result)))
         (require-type-parameters specs (holai.fusion:concl closed) body)
-        closed))))
+        (require-closed-theorem closed body)
+        (when (second (assoc 'simp specs)) (push closed *local-simp-theorems*))
+        (values closed (reverse *proof-references*))))))
 
 (defmacro prove (parameters &body body &environment environment)
   `(prove-declaration ',parameters ',(expand-dsl body environment)))
 (defmacro defthm (name parameters &body body &environment environment)
   (declaration-expansion `(progn
      (require-owner ',name)
-     (let ((result (prove-declaration ',parameters ',(expand-dsl body environment))))
-       (setf (gethash ',name *theorems*) result)))))
+     (multiple-value-bind (result references)
+         (prove-declaration ',parameters ',(expand-dsl body environment))
+       (publish-theorem ',name result '(defthm ,name ,parameters ,@body) references
+                        '(defthm ,name ,parameters ,@(expand-dsl body environment)))))))

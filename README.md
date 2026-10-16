@@ -100,8 +100,11 @@ See DESIGN for currying, sharp-backquote and namespace rules.
 
 For S-expression terms and named proofs, see the [proof DSL](docs/USER-DSL.md).
 The v0.3 implementation uses CL packages, `?a` type variables, `declare`,
-logical `defun`/`defthm`, named-field datatypes, records and inductive relations.
-The [manual](docs/USER-DSL.md) distinguishes implemented features from the remaining specification.
+logical definitions, mutual datatypes/recursion, inductive relations, proof
+contexts, subsets/quotients/lifting, immutable proof resources and checked computation.
+It includes procedural extensions, interactive sessions and source/provenance replay.
+The [manual](docs/USER-DSL.md) and [implementation matrix](docs/USER-DSL-IMPLEMENTATION.md)
+document the APIs and the pinned core's backend bounds.
 Run its focused checks with `make test-user`.
 
 ## Licenses

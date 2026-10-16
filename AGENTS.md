@@ -648,11 +648,11 @@ readable OCaml-to-Lisp translation, even when argument evaluation order differs.
   original differential/regeneration audits and extra-host validation were not rerun.
 
 
-### Current user language increment (specification v0.3)
+### First user language increment (specification v0.3; historical)
 
 - The user authorized implementation after v0.3; the design snapshot is in
-  `docs/USER-DSL-SPEC.html`. Keep its full target distinct from the implemented
-  subset in `docs/USER-DSL.md` and DESIGN39.3.
+  `docs/USER-DSL-SPEC.html`. DESIGN39.3 records the first subset; DESIGN39.4
+  and `docs/USER-DSL-IMPLEMENTATION.md` supersede its remaining-work list.
 - Preserve symbol/package identity, source-package capture, ?a variables,
   DECLARE/THE, explicit lambda lists and `(field type)` datatype/record syntax.
   Use CL:DEFUN for host helpers; never redefine CL's standard symbols.
@@ -665,7 +665,48 @@ readable OCaml-to-Lisp translation, even when argument evaluation order differs.
 - Preserve constructor coverage and independent wildcard variables, checked
   correspondence of named rules/equations, package independence, parameter
   order and absence of new axioms. Run `make test-user` after changes.
-- Current focused SBCL evidence is 82 language checks, 68 definition checks,
+- First-increment focused SBCL evidence was 82 language checks, 68 definition checks,
   and 69 independent PROOF/reader checks. Four user units, two tests and the
   example compile with zero compiler warnings/errors; 15 macro redefinition
   load conditions are separate. This is not full v0.3/release/other-host evidence.
+
+### Complete user language surface (DESIGN39.4)
+
+- The user explicitly requested the entire v0.3 implementation. The manual and
+  implementation matrix document current syntax, concrete decisions and native
+  backend bounds; the HTML snapshot retains the original design history.
+- Keep eight optional units in explicit serial order: package, terms, proofs,
+  definitions, resources, constructions, recursive-definitions, development.
+  Preserve the original six runtime plus 46 core order and observation boundary.
+- Contexts close assumptions/parameters; specifications use checked existence
+  and Skolemization. Mutual functions use native simultaneous existence, never
+  mutually assumed declarations. Pending recursion/monotonicity names remain
+  unavailable until every labelled obligation has a closed proof.
+- Subsets require nonemptiness; quotients require equivalence. Keep the checked
+  canonical relation definition for lambda/polymorphic theorem transfer. Lifting
+  handles one quotient relation instance per stage using the native first-order
+  procedure. Preserve actual source/result type instantiation and named-relation
+  handling for polymorphic/Boolean equality quotients.
+- Resource parents, theorems, condition provers and computation callbacks capture
+  immutable versions. Preserve restored native search/compute settings, actual
+  goal selection, branch labels, progress bounds and extension-effect guards,
+  including delayed tactic justifications. No axioms may fill missing proofs.
+- Manifests contain inert metadata, not trusted deserialized theorems. Replay
+  trusted CL source through proofs. Record conservative kernel-axiom bounds,
+  theorem/reference versions, extension/resource history and noncryptographic IDs.
+- Fresh x86_64 Linux / SBCL 2.2.9 `make test-user` passed 82 basic, 68 definition,
+  235 advanced and 12 isolated contract checks. The normal process retains the
+  original three axioms; explicit axiom/state-mutation tests use a second process.
+  All eight units, three normal test units, the isolated fixture and example
+  compile with zero compiler errors/warnings including style warnings;
+  30 load redefinition conditions are
+  separate. Definitions passed twice (68 each), advanced checks passed 235 then
+  227 on reuse (eight pending-only checks are skipped), and original PROOF/reader
+  checks passed 69. Keep this separate from core cold-audit/release evidence.
+- The public binding TSV has 6,712 rows, including nested owners/reexports and
+  implementation values. Procedures require explicit argument-kind signatures;
+  this count is not a count of DSL commands. Regenerate using user-descriptors.lisp.
+- SBCL supplies the bounded-proof timer backend. Do not infer additional-host
+  compatibility or a new pinned Nix/OCaml/regeneration/release pass from these
+  optional-layer tests. Source fingerprints and release manifests must retain
+  all optional units/tests and the implementation/inventory documentation.

@@ -3718,3 +3718,125 @@ Runtime messages about invented type variables are not zero-load-diagnostic
 claims. Generated/runtime/translator/vendor inputs are unchanged.
 The pinned Nix release, OCaml differential, source-map/regeneration audits and
 additional-host compatibility were not rerun for this optional-layer increment.
+
+
+### 39.4 Complete v0.3 user-language surface
+
+The user requested implementation of the entire v0.3 language on 2026-10-16.
+This increment supersedes the remaining-work list in 39.3. The historical HTML
+specification now links to `docs/USER-DSL.md` and
+`docs/USER-DSL-IMPLEMENTATION.md`; the latter maps all 33 specification sections
+to concrete source/tests and records native backend bounds. The implementation
+adds no generated/runtime/translator/vendor changes and preserves the literal
+six-runtime plus 46-core ASDF order and native observation boundary.
+
+Eight explicit optional units are loaded serially: package, terms, proofs,
+definitions, resources, constructions, recursive-definitions and development.
+The four added units separate proof resources/automation, conservative type and
+specification constructions, simultaneous definitions, and development tooling.
+The test system has three normal units. Separate contract runners deliberately
+exercise explicit axioms and irreversible uncertain-state handling without
+contaminating normal theorem/axiom observations.
+
+Inference retains the generated checker and now rejects unresolved overloads by
+checking native candidates with restored interface state. Exact decimal literals,
+finite dimension types, built-in list/pair/Boolean patterns, aliases and record
+updates are available. Type/arity/duplicate declaration preflight rejects hidden
+constant type parameters and conflicting annotations before kernel introduction.
+Constructor injectivity results are also registered under constructor names.
+
+Proof contexts carry fixed parameters, labelled assumptions, local lemmas and
+simpset/compset/automation defaults. Theorems discharge context assumptions and
+universally close parameters. Contextual functions and relations abstract fixed
+parameters; contextual existence specifications use proved Skolemization before
+native specification. First-order inductive relations support fixed group
+parameters, local rule labels, mutual component principles, requested strong
+induction and deferred monotonicity. Rules are matched by checked propositions;
+repeated labels across members have qualified group names preserving escaped case.
+
+Primitive and mutual datatype recursion infer the common native recursion
+principle. General simultaneous functions prove an encoded existence statement
+over tagged argument sums and product results, then specify all names together.
+Conditional decrease guards remain outside result tuples. Inferred numeric or
+acyclic orders and explicit per-function measures, well-founded relations and
+closed obligation proofs are supported. Stable pending plans expose native
+hypotheses as :obligation-N; incomplete names are unavailable. Completion checks
+all proofs before introduction and retains canonical source/reload identity.
+No assumed termination, mutual assumptions or extra axioms replace these proofs.
+
+Subsets prove nonemptiness before original type definition. Quotients prove
+equivalence and conservatively name their relation before original quotient
+construction. The canonical relation is essential for lambda-defined and
+polymorphic first-order theorem transfer; folding a beta/eta-expanded equality
+indiscriminately would also rewrite Boolean equivalences. Ground equality
+quotients can fold source equality, while generic/Boolean cases use the named
+relation. Deflift checks type instances, argument positions, result signatures
+and closed well-definedness evidence. One quotient relation instance is supported
+per lifting stage; composition handles multiple stages. Original first-order
+lifting does not claim arbitrary higher-order transfer.
+
+Theorem expressions, native rule adapters and structured proof commands include
+instantiation/generalization, positioned theorem conversion, obtain/calc,
+constructor/natural branch labels, real goal-state focus and generalized induction.
+Goal metadata survives native state copying. Generalization precedes induction
+variable abstraction. Case splitting preserves conjunctions inside motives and
+introduces only actual constructor variables. Interactive sessions retain native
+immutable goalstates, use checked final justifications without rerunning host
+commands, and leave the generated interactive goal stack untouched.
+
+Simpsets and compsets capture immutable parents/theorems/callback registries;
+redefining extensions or their referenced theorem names cannot alter older
+resources. Conditional rewrites use native proof-producing simplification, with
+strict mode reporting genuinely unproved conditions. Computation restores native
+import/stop settings and respects conditional evaluation. Conversions check
+closed equality, input correspondence and result type; repeated traversal requires
+progress. MESON bounds/settings and other search-engine timeout limits are
+explicit. SBCL provides the timer backend; additional hosts are not validated.
+
+Procedural defrule/deftactic/defconversion use host CL lambda lists and declared
+argument kinds. Their checked contracts include late tactic justifications and
+kernel effect detection. Errors distinguish ordinary proof failure, scope/type,
+obligations, timeout, interruption, invalid contracts and uncertain state.
+Definition-side proof retry cannot certify missing evidence. Changed logical
+source conflicts; identical successful source and canonical gensyms reuse
+results. Potentially partial backend failure blocks further declarations; no
+kernel or arbitrary-host-effect rollback is promised.
+
+The public descriptor TSV inventories 6,712 binding/owner rows across all 46
+modules and nested owners, including reexports and implementation details.
+Direct theorem/term use, explicitly typed procedural registration and
+implementation-only values are distinguished. The count is not a DSL command
+count. Regeneration uses holai/tests/user-descriptors.lisp against the pinned core.
+Source replay and inert manifests record normalized judgments, theorem versions
+and references, expanded sources, extension/resource histories, the host/basis
+and a conservative upper bound of current kernel axioms. Deterministic FNV-1a IDs
+are reference identifiers, not signatures. Only reexecuted trusted CL source
+reconstructs proofs; serialized judgments are not accepted as theorems.
+Inspection CHECK returns type variables and actual overload selections alongside
+its original term/type/free-variable values. Interactive GOAL permits free names;
+named declarations remain strict. FIND-THEOREMS accepts :pattern and uses original
+typed term matching, retaining explicit binders or stripping leading universals
+when the pattern is unquantified. Specific condition families refine broad
+diagnostics; explicit tactic-failure is adapted to native ORELSE failure handling.
+
+Focused x86_64 Linux / SBCL 2.2.9 evidence: final fresh `make test-user` exited 0
+with 82 language, 68 definition, 235 advanced and 12 isolated contract checks.
+The normal process preserves all three original axioms; the isolated process
+explicitly adds one test-only axiom before testing illicit mutation/blocked state.
+Its contracts exercise immediate mutation and delayed justifications in definition
+and interactive proofs, with failed interactive state left unchanged. The effect
+guard handles native errors before re-signalling, so debugger entry cannot bypass
+classification of a possibly partial mutation.
+All eight units, three normal test units, the isolated fixture and the example
+compile with zero compiler errors/warnings (including style warnings). Thirty
+macro redefinition
+conditions during load are separate. The compiled example executes; definition
+checks pass twice (68 each), advanced checks pass 235 then 227 on reuse (eight
+pending-only checks skip), and independent original PROOF/reader checks pass 69.
+Python syntax checks and `git diff --check` passed in final review.
+All fenced Lisp examples in the user manual also executed successfully.
+DSL fingerprints cover every optional source/test; release required files retain
+the manuals, snapshot, implementation matrix and inventory/generator.
+This is optional-layer evidence, separate from the historical 52-unit cold audit.
+The pinned Nix release, OCaml differential, source-map/regeneration audits and
+additional-Lisp compatibility were not rerun.

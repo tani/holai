@@ -43,7 +43,7 @@
     (check-proof (prove () (= (match (node (leaf 0) (leaf 1)) ((leaf _) 0) ((node _ _) 1)) 1) (simp))
                  '(= (match (node (leaf 0) (leaf 1)) ((leaf _) 0) ((node _ _) 1)) 1))
     (defequations tree-size-equations (tree)
-      (declare (type (tree ?a) tree) (recursion tree.recursion))
+      (declare (type (tree ?a) tree) (values num) (recursion tree.recursion))
       (leaf-case (x) (= (tree-size-equations (leaf x)) 1))
       (node-case (l r) (= (tree-size-equations (node l r))
                           (+ (tree-size-equations l) (tree-size-equations r)))))

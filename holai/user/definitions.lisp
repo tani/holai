@@ -1,6 +1,8 @@
 (in-package :holai.user)
 
 (cl:defun ensure-result-names (name suffixes)
+  (unless (= (length suffixes) (length (remove-duplicates (mapcar (lambda (s) (result-name name s)) suffixes))))
+    (reject-kind 'definition-conflict name "Generated theorem names collide"))
   (dolist (suffix suffixes)
     (when (gethash (result-name name suffix) *theorems*)
       (reject-kind 'definition-conflict name "Generated theorem name already exists: ~a" suffix))))
@@ -107,6 +109,7 @@
                   (reject constructor "Expected (constructor (field type) ...)"))
                 (let ((name (first constructor)) (fields (cdr constructor)))
                   (require-owner name)
+                  (when fields (ensure-result-names name '(".injective")))
                   (when (or (member name constructor-names) (gethash name *constants*))
                     (reject-kind 'definition-conflict name "Constructor name is occupied"))
                   (push name constructor-names)
@@ -146,7 +149,9 @@
                      (entries (list (cons ".induction" induction) (cons ".recursion" recursion)
                                     (cons ".cases" (holai.ind_types:cases native)))))
                 (setf (gethash name *types*) (list native (length parameters))
-                      (gethash native *type-inductions*) induction)
+                      (gethash native *type-inductions*) induction
+                      (gethash native *type-recursions*) recursion
+                      (gethash native *type-cases*) (holai.ind_types:cases native))
                 (when (> (length constructors) 1)
                   (push (cons ".distinct" (holai.ind_types:distinctness native)) entries))
                 (when (some #'cdr constructors)
@@ -155,6 +160,7 @@
             (dolist (entry metadata)
               (setf (gethash (car entry) *constructors*) (cdr entry)
                     (gethash (car entry) *constants*) (encoded-name (car entry))))
+            (when *datatype-completion* (funcall *datatype-completion* metadata))
             (unless (member group-name names)
               (register-definition-results group-name
                 (list (cons ".induction" induction) (cons ".recursion" recursion))))
@@ -170,6 +176,7 @@
     (unless (and (= (length free) 1)
                  (string= (fst (holai.fusion:dest_var (car free))) (encoded-name name)))
       (reject-kind 'dsl-scope-error name "Unbound variable or unused function in definition"))
+    (require-visible-type-variables equations (list (holai.fusion:type_of (car free))) name)
     (car free)))
 (cl:defun close-parameters (parameters term)
   (reduce (lambda (parameter body) (list 'forall (list parameter) body))
@@ -177,11 +184,15 @@
 (cl:defun define-function (name parameters body)
   (require-variables parameters)
   (multiple-value-bind (rest specs)
-      (declaration-body body parameters '(type values type-variables ignorable recursion termination) t)
+      (declaration-body body parameters '(type values type-variables ignorable recursion termination measure well-founded-relation obligation-proofs) t)
     (require-arity name rest 1)
+    (when (assoc 'measure specs) (require-arity specs (cdr (assoc 'measure specs)) 1))
     (when (and (assoc 'termination specs) (not (equal (assoc 'termination specs) '(termination :auto))))
-      (reject specs "Only TERMINATION :AUTO is currently implemented"))
-    (let ((expression (first rest)))
+      (reject specs "TERMINATION accepts :AUTO; use MEASURE or WELL-FOUNDED-RELATION for explicit ordering"))
+    (when (> (count-if #'identity (mapcar (lambda (key) (assoc key specs))
+                                        '(termination measure well-founded-relation))) 1)
+      (reject specs "TERMINATION, MEASURE and WELL-FOUNDED-RELATION are exclusive"))
+    (let ((expression (normalize-match-syntax (first rest))))
       (cache-definition name (list 'defun parameters specs expression)
         (lambda ()
           (ensure-result-names name '(".definition" ".equations"))
@@ -191,16 +202,20 @@
                  (recursive (contains-symbol-p (list name) expression))
                  (matchp (and (consp expression) (eq (car expression) 'match)
                               (member (second expression) parameters)))
-                 (clauses nil) (principle nil))
+                 (clauses nil) (principle nil) (lowered-match nil))
             (setf (gethash name *constants*) (encoded-name name))
+            (when (and (not recursive) (or (assoc 'measure specs) (assoc 'well-founded-relation specs)))
+              (reject specs "An ordering declaration must be used by recursive calls"))
             (when matchp
               ;; Expand only disjoint constructor branches into recursion equations.
-              (let ((patterns (mapcar #'first (cddr expression))))
+              (let* ((patterns (mapcar #'first (cddr expression)))
+                     (base-patterns (mapcar #'coverage-pattern patterns)))
                 (dolist (pattern patterns) (pattern-variables pattern))
                 (unless (exhaustive-patterns-p (mapcar #'list patterns))
-                  (reject expression "MATCH is not exhaustive"))
-                (when (and (every #'consp patterns)
-                           (= (length patterns) (length (remove-duplicates patterns :key #'car))))
+                  (reject-kind 'dsl-coverage-error expression "MATCH is not exhaustive"))
+                (when (and (every #'consp base-patterns)
+                           (= (length base-patterns) (length (remove-duplicates base-patterns :key #'car))))
+                  (setf lowered-match t)
                   (let* ((scrutinee (second expression))
                          (type (cdr (assoc scrutinee *annotations*))))
                     (dolist (branch (cddr expression))
@@ -218,8 +233,8 @@
                         (require-variables variables)
                         (push (close-parameters (append variables other-parameters) equation) clauses)))
                     (setf principle
-                      (theorem (result-name (getf (gethash (caar patterns) *constructors*) :type)
-                                            ".recursion")))))))
+                      (gethash (first (gethash (getf (gethash (caar base-patterns) *constructors*) :type) *types*))
+                               *type-recursions*))))))
             (unless clauses
               (let ((result-type (second (assoc 'values specs))))
                 (push (close-parameters parameters
@@ -232,7 +247,9 @@
                    (explicit (second (assoc 'recursion specs)))
                    (recursion (if explicit (theorem explicit) principle))
                    (result
-                     (if (or recursive principle explicit)
+                     (if (or recursive principle explicit lowered-match)
+                       (if *recursive-introducer*
+                         (funcall *recursive-introducer* name parameters specs equations function recursion)
                          (progn
                            (require-closed-theorem
                              (if recursion
@@ -242,7 +259,7 @@
                            (kernel-definition-call name
                              (lambda () (if recursion
                                             (funcall holai.recursion:new_recursive_definition recursion equations)
-                                            (funcall holai.define:define equations)))))
+                                            (funcall holai.define:define equations))))))
                          (kernel-definition-call name
                            (lambda () (funcall holai.pair:new_definition equations))))))
               (require-closed-theorem result name)
@@ -252,9 +269,32 @@
               (values result (gethash name *constants*)))))))))
 
 ;; The dynamic provisional constant table must never escape a failed definition.
-(cl:defun introduce-function (name parameters body)
+(cl:defun define-context-function (name parameters body)
+  (when *context-parameters*
+    (require-variables (append *context-parameters* parameters))
+    (let* ((context (copy-list *context-parameters*))
+           (*context-function-bindings* (remove name *context-function-bindings* :key #'car))
+           (annotations (loop for p in context for type = (cdr (assoc p *annotations*))
+                              when type collect `(type ,type ,p)))
+           (body (labels ((walk (x bound)
+                            (cond ((and (eq x name) (not (member name bound)))
+                                   `(,name ,@context))
+                                  ((and (consp x) (member (car x) '(lambda forall exists exists1 choose)))
+                                   (list* (car x) (second x)
+                                          (mapcar (lambda (body) (walk body (append (second x) bound))) (cddr x))))
+                                  ((consp x) (mapcar (lambda (part) (walk part bound)) x)) (t x))))
+                   (mapcar (lambda (form) (if (and (consp form) (eq (car form) 'declare)) form (walk form parameters))) body)))
+           (*context-parameters* nil))
+      (let ((result (define-function name (append context parameters)
+                                    (append (when annotations `((declare ,@annotations))) body))))
+        (setf (gethash name *constants*) (encoded-name name))
+        ;; Install into the caller's dynamic context after leaving the suppressed scope.
+        (return-from define-context-function (values result context)))))
   (let ((result (define-function name parameters body)))
     (setf (gethash name *constants*) (encoded-name name)) result))
+(cl:defun introduce-function (name parameters body)
+  (multiple-value-bind (result context) (define-context-function name parameters body)
+    (when context (push (cons name context) *context-function-bindings*)) result))
 (defmacro defun (name parameters &body body &environment environment)
   (declaration-expansion `(introduce-function ',name ',parameters ',(expand-dsl body environment))))
 (defmacro defconstant (name expression &optional docstring &environment environment)
@@ -264,10 +304,8 @@
 (cl:defun relation-clauses (name parameters body)
   (require-variables parameters)
   (multiple-value-bind (rules specs)
-      (declaration-body body parameters '(type type-variables strong-induction) t)
+      (declaration-body body parameters '(type type-variables strong-induction monotonicity-proof) t)
     (unless rules (reject name "An inductive relation needs rules"))
-    (when (second (assoc 'strong-induction specs))
-      (reject name "Explicit strong-induction generation is not implemented yet"))
     (let ((types (annotation-bindings specs)) (labels nil) (propositions nil))
       (dolist (rule rules)
         (unless (and (proper-list-p rule) (>= (length rule) 3)) (reject rule "Malformed rule"))
@@ -300,43 +338,9 @@
           (setf *kernel-uncertain* t)
           (reject-kind 'kernel-state-uncertain proposition "Backend did not return the declared labelled clause")))))
 
-(cl:defun define-relations (group parameters body)
-  (unless (null parameters) (reject parameters "Parameterized relation groups are not implemented yet"))
-  (let ((clauses (if (stringp (first body)) (rest body) body)))
-    (cache-definition group (list 'defrelations parameters clauses)
-      (lambda ()
-        (let* ((*constants* (copy-table *constants*)) (*strict-names* t)
-               (*variable-names* nil) (*elaboration-active* t) (*annotations* nil) (props nil) (labels nil))
-          (dolist (clause clauses)
-            (require-owner (first clause))
-            (when (gethash (first clause) *constants*)
-              (reject-kind 'definition-conflict clause "Relation already defined"))
-            (setf (gethash (first clause) *constants*) (encoded-name (first clause))))
-          (dolist (clause clauses)
-            (multiple-value-bind (propositions names signature)
-                (relation-clauses (first clause) (second clause) (cddr clause))
-              (when signature (push (cons (first clause) signature) *annotations*))
-              (setf props (append props propositions) labels (append labels names))))
-          (ensure-result-names group (append '(".rules" ".induction" ".cases")
-                                      (mapcar (lambda (label) (concatenate 'string ".rules." (symbol-name label))) labels)))
-          (let ((proposition (read-term (cons 'and props) :expected-type 'bool)))
-            (require-closed-theorem
-              (funcall holai.ind_defs:prove_inductive_relations_exist proposition) group)
-            (let* ((result (kernel-definition-call group
-                             (lambda () (funcall holai.ind_defs:new_inductive_definition proposition))))
-                   (parts (holai.runtime.data:tuple-items result))
-                   (rules (funcall holai.bool:CONJUNCTS (first parts)))
-                   (entries (list (cons ".rules" (first parts)) (cons ".induction" (second parts))
-                                  (cons ".cases" (third parts)))))
-              (loop for label in labels for proposition in props
-                    do (push (cons (concatenate 'string ".rules." (symbol-name label))
-                                   (match-labelled-result proposition rules)) entries))
-              (register-definition-results group entries)
-              result)))))))
 (cl:defun introduce-relations (group parameters body)
-  (let ((result (define-relations group parameters body)))
-    (dolist (clause (if (stringp (first body)) (rest body) body))
-      (setf (gethash (car clause) *constants*) (encoded-name (car clause)))) result))
+  (unless *relation-introducer* (reject group "Load the complete HOLAI/USER ASDF system"))
+  (funcall *relation-introducer* group parameters body))
 (cl:defun expand-relation-body (body environment)
   (mapcar (lambda (form)
             (if (or (stringp form) (and (consp form) (eq (car form) 'declare))) form
@@ -351,7 +355,7 @@
 (defmacro defrelations (group parameters &body clauses &environment environment)
   (declaration-expansion `(introduce-relations ',group ',parameters
      ',(mapcar (lambda (clause)
-                 (if (stringp clause) clause
+                 (if (or (stringp clause) (eq (car clause) 'declare)) clause
                      (list* (first clause) (second clause)
                             (expand-relation-body (cddr clause) environment)))) clauses))))
 
@@ -370,6 +374,7 @@
             `((declare (type (,name ,@parameters) ,record-variable) (values ,(second field)))
               (match ,record-variable
                 ((,constructor ,@(mapcar #'first fields)) ,(first field)))))))
+      (setf (gethash name *records*) (list :parameters parameters :fields fields :constructor constructor))
       result)))
 (defmacro defstruct (name parameters &body fields)
   (declaration-expansion `(introduce-record ',name ',parameters ',fields)))
@@ -377,7 +382,7 @@
 (cl:defun introduce-equations (name parameters body)
   (require-variables parameters)
   (multiple-value-bind (clauses specs)
-      (declaration-body body parameters '(type values type-variables recursion) t)
+      (declaration-body body parameters '(type values type-variables ignorable recursion termination measure well-founded-relation obligation-proofs) t)
     (unless clauses (reject name "Expected defining equations"))
     (cache-definition name (list 'defequations parameters specs clauses)
       (lambda ()
@@ -406,7 +411,7 @@
                     (reject clause "Equation must define this function at the declared arity"))
                   (push (cdr lhs) rows)
                   (let ((pattern-vars (mapcan #'pattern-variables (cdr lhs))))
-                    (require-variables pattern-vars)
+                    (require-pattern-variables pattern-vars)
                     (unless (and (subsetp pattern-vars variables) (subsetp variables pattern-vars))
                       (reject clause "Equation variables must be exactly the pattern variables")))
                   (let ((annotations (annotation-bindings specs)))
@@ -427,14 +432,17 @@
                                   (require-definition-frees proposition name)))
                  (recursion-name (second (assoc 'recursion specs)))
                  (recursion (and recursion-name (theorem recursion-name))))
-            (require-closed-theorem
-              (if recursion (funcall holai.recursion:prove_recursive_functions_exist recursion proposition)
-                  (funcall holai.define:prove_general_recursive_function_exists
-                    (funcall holai.bool:mk_exists (tuple function proposition)))) name)
-            (let* ((result (kernel-definition-call name
-                             (lambda () (if recursion
-                                            (funcall holai.recursion:new_recursive_definition recursion proposition)
-                                            (funcall holai.define:define proposition)))))
+            (let* ((result (if *recursive-introducer*
+                               (funcall *recursive-introducer* name parameters specs proposition function recursion)
+                               (progn
+                                 (require-closed-theorem
+                                   (if recursion (funcall holai.recursion:prove_recursive_functions_exist recursion proposition)
+                                       (funcall holai.define:prove_general_recursive_function_exists
+                                         (funcall holai.bool:mk_exists (tuple function proposition)))) name)
+                                 (kernel-definition-call name
+                                   (lambda () (if recursion
+                                                  (funcall holai.recursion:new_recursive_definition recursion proposition)
+                                                  (funcall holai.define:define proposition)))))))
                    (entries (list (cons ".definition" result) (cons ".equations" result)))
                    (rules (funcall holai.bool:CONJUNCTS result)))
               (when (= (length rules) (length labels))

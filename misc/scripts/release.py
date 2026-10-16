@@ -127,9 +127,13 @@ required += ["holai/tests/star-allocator.ml", "holai/tests/fixtures/star_names.m
 pins = json.loads((root / "vendor/SOURCES.json").read_text())["input_sha256"]
 required += ["holai/tests/random.lisp"]
 required += ["holai/user/package.lisp", "holai/user/terms.lisp", "holai/user/proofs.lisp",
-             "holai/user/definitions.lisp", "holai/tests/user-definitions.lisp",
+             "holai/user/definitions.lisp", "holai/user/resources.lisp", "holai/user/constructions.lisp",
+             "holai/user/recursive-definitions.lisp", "holai/user/development.lisp", "holai/tests/user-definitions.lisp", "holai/tests/user-advanced.lisp",
              "holai/tests/user-dsl.lisp", "holai/tests/user-dsl-runner.lisp",
-             "misc/scripts/test-user.py", "docs/USER-DSL.md", "docs/USER-DSL-SPEC.html", "examples/user-dsl.lisp"]
+             "holai/tests/user-contracts.lisp", "holai/tests/user-contracts-runner.lisp",
+             "holai/tests/user-descriptors.lisp", "misc/scripts/test-user.py",
+             "docs/USER-DSL.md", "docs/USER-DSL-SPEC.html", "docs/USER-DSL-IMPLEMENTATION.md",
+             "docs/USER-DSL-NATIVE-DESCRIPTORS.tsv", "examples/user-dsl.lisp"]
 required += ["misc/scripts/test-matrix.py", "misc/reports/implementation-matrix.json"]
 required += [f"misc/reports/implementations/sbcl/{name}"
              for name in ["verification.json", "compile-diagnostics.json", "compile-diagnostics.txt",
@@ -314,8 +318,8 @@ for host in ("sbcl",):
     assert verification["native_checks"] > 0 and verification["proof_dsl_checks"] > 0
     assert verification["user_dsl_checks"] > 0
     assert verification["user_definition_dsl_checks"] > 0
-    user_sources = [*(root / "holai/user").glob("*.lisp"), root / "holai/tests/user-dsl.lisp",
-                    root / "holai/tests/user-definitions.lisp"]
+    assert verification["user_advanced_dsl_checks"] > 0
+    user_sources = [*(root / "holai/user").glob("*.lisp"), *(root / "holai/tests").glob("user-*.lisp")]
     assert verification["user_dsl_source_sha256"] == {
         str(path.relative_to(root)): hashlib.sha256(path.read_bytes()).hexdigest()
         for path in user_sources}, "Stale user DSL source fingerprints"

@@ -413,6 +413,8 @@ def main():
     assert len(user_dsl_markers) == 1, "Missing or duplicate user DSL check counter"
     definition_markers = re.findall(r"(?m)^User definition DSL checks passed: (\d+)$", native.stdout)
     assert len(definition_markers) == 1, "Missing or duplicate definition DSL counter"
+    advanced_markers = re.findall(r"(?m)^User advanced DSL checks passed: (\d+)$", native.stdout)
+    assert len(advanced_markers) == 1, "Missing or duplicate advanced DSL counter"
     observations = differential()
     checks = int(re.search(r"Native checks passed: (\d+)", native.stdout).group(1))
     observed = (BUILD / "ocaml-observations.txt").read_bytes()
@@ -445,10 +447,10 @@ def main():
         "proof_dsl_checks": proof_dsl_checks,
         "user_dsl_checks": int(user_dsl_markers[0]),
         "user_definition_dsl_checks": int(definition_markers[0]),
+        "user_advanced_dsl_checks": int(advanced_markers[0]),
         "user_dsl_source_sha256": {
             str(path.relative_to(ROOT)): hashlib.sha256(path.read_bytes()).hexdigest()
-            for path in [*(ROOT / "holai/user").glob("*.lisp"), ROOT / "holai/tests/user-dsl.lisp",
-                         ROOT / "holai/tests/user-definitions.lisp"]},
+            for path in [*(ROOT / "holai/user").glob("*.lisp"), *(ROOT / "holai/tests").glob("user-*.lisp")]},
         "pattern_host_specific_cases": {"sbcl_nan_bit_construction": implementation() == "sbcl",
                                         "abcl_nan_java_double": implementation() == "abcl"},
         "native_nan_eql": native_nan_eql,
